@@ -1,0 +1,123 @@
+---
+title: Checkbox
+description: Checkbox 
+isServerComponent: false
+source: /packages/react/src/components/checkbox/checkbox.tsx
+themeSource: /packages/system/src/recipes/checkbox.ts
+---
+
+## Import
+
+- `Checkbox` - A checkbox component.
+- `CheckboxGroup` - Group wrapper for composing multiple checkboxes.
+
+```jsx
+import { Checkbox, CheckboxGroup } from "@dreamy-ui/react";
+```
+
+- `Checkbox` - A checkbox component.
+- `CheckboxGroup` - Group wrapper for composing multiple checkboxes.
+
+## Usage
+
+<Wrapper>
+	<Checkbox>
+		<>Default</>
+	</Checkbox>
+</Wrapper>
+
+```tsx
+<Checkbox>
+	Default
+</Checkbox>
+```
+
+### Scheme
+
+Change the color scheme of the checkbox.
+
+<Wrapper>
+	{["primary", "secondary", "success", "warning", "error", "info"].map((scheme) => (
+		<Checkbox key={scheme} scheme={scheme}>
+			{scheme}
+		</Checkbox>
+	))}
+</Wrapper>
+
+```tsx
+{["primary", "secondary", "success", "warning", "error", "info"].map((scheme) => (
+	<Checkbox key={scheme} scheme={scheme}>
+		{scheme}
+	</Checkbox>
+))}
+```
+
+### Variant
+
+Change the apperance variant of the checkbox.
+
+<Wrapper>
+	{["outline", "solid"].map((variant) => (
+		<Checkbox key={variant} variant={variant}>
+		{variant}
+		</Checkbox>
+	))}
+</Wrapper>
+
+```tsx
+{["outline", "solid"].map((variant) => (
+	<Checkbox key={variant} variant={variant}>
+		{variant}
+	</Checkbox>
+))}
+```
+
+### Size
+
+Change the checkbox size.
+
+<Wrapper>
+	{["sm", "md", "lg"].map((size) => (
+		<Checkbox key={size} size={size}>
+			{size}
+		</Checkbox>
+	))}
+</Wrapper>
+
+```tsx
+{["sm", "md", "lg"].map((size) => (
+	<Checkbox key={size} size={size}>
+		{size}
+	</Checkbox>
+))}
+```
+
+### Checkbox group
+
+Use `CheckboxGroup` to compose multiple checkboxes. Use `value` and `onChange` in `<CheckboxGroup />` to control the selected checkboxes. CheckboxGroup also accepts all the variant props of the Checkbox component.
+
+Every Checkbox in the CheckboxGroup should have a unique `value` prop.
+
+<Wrapper>
+	<CheckboxGroupControl />
+</Wrapper>
+
+```tsx
+function CheckboxGroupControl() {
+    const [value, setValue] = useState<Array<string | number>>(["1"]);
+
+    return (
+        <>
+            <Text>Selected: {value.join(", ")}</Text>
+            <CheckboxGroup
+                value={value}
+                onChange={setValue}
+            >
+                <Checkbox value="1">Option 1</Checkbox>
+                <Checkbox value="2">Option 2</Checkbox>
+                <Checkbox value="3">Option 3</Checkbox>
+            </CheckboxGroup>
+        </>
+    );
+}
+```

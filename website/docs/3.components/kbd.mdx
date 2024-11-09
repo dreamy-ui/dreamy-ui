@@ -1,0 +1,59 @@
+---
+title: Keyboard Key
+description: Keyboard key can be used to let users know which keys some action signifies.
+isServerComponent: true
+source: /packages/react/src/components/kbd/kbd.tsx
+themeSource: /packages/system/src/recipes/kbd.ts
+---
+
+## Import
+
+- `Kbd` - The Keyboard key component.
+
+```tsx
+import { Kbd } from "@dreamy-ui/react/rsc";
+```
+
+## Usage
+
+You can press action key and `i` to toggle the color mode.
+
+<Wrapper>
+	<Kbd>^i</Kbd>
+</Wrapper>
+
+```tsx
+<Kbd>^i</Kbd>
+```
+
+### Sizes
+
+The `Kbd` component comes in three sizes: small, medium (default), and large.
+
+<Wrapper>	
+	<Kbd size="sm">Esc</Kbd>
+	<Kbd size="md">Enter</Kbd>
+	<Kbd size="lg">Space</Kbd>
+</Wrapper>
+
+```tsx
+<Kbd size="sm">Esc</Kbd>
+<Kbd size="md">Enter</Kbd>
+<Kbd size="lg">Space</Kbd>
+```
+
+### Rendering platform specific action key
+
+You can utilize `useActionKey` hook to get the platform specific action key. Returns "⌘" for MacOS and "Ctrl" for other platforms.
+
+<Wrapper>
+	<PlatformSpecificKbd />
+</Wrapper>
+
+```tsx
+import { useActionKey } from "@dreamy-ui/react";
+
+const actionKey = useActionKey();
+
+<Kbd>{actionKey} + K</Kbd>
+```

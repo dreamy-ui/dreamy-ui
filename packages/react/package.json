@@ -1,0 +1,47 @@
+{
+	"name": "@dreamy-ui/react",
+	"version": "0.0.1",
+	"description": "Dreamy UI library for React",
+	"type": "module",
+	"keywords": ["react", "ui", "css-in-js", "component-library"],
+	"author": "imexoodeex",
+	"license": "MIT",
+	"scripts": {
+		"build": "tsup",
+		"dev": "tsup --watch",
+		"typecheck": "tsc --noEmit"
+	},
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs"
+		},
+		"./rsc": {
+			"types": "./dist/rsc.d.ts",
+			"import": "./dist/rsc.js",
+			"require": "./dist/rsc.cjs"
+		}
+	},
+	"devDependencies": {
+		"@pandacss/dev": "^0.45.1",
+		"@types/react": "^18.2.73",
+		"@types/react-dom": "^18.2.7",
+		"tsup": "^8.0.2",
+		"typescript": "^5.4.3"
+	},
+	"dependencies": {
+		"@dreamy-ui/system": "workspace:*",
+		"@popperjs/core": "^2.11.8",
+		"@react-aria/focus": "^3.18.3",
+		"@zag-js/focus-visible": "^0.74.2",
+		"aria-hidden": "^1.2.4",
+		"framer-motion": "^11.0.24",
+		"framesync": "^6.1.2",
+		"react": "^18.",
+		"react-dom": "^18.2.0",
+		"react-focus-lock": "^2.12.1",
+		"react-remove-scroll": "^2.5.10",
+		"react-textarea-autosize": "^8.5.3"
+	}
+}

@@ -1,0 +1,198 @@
+---
+title: Slider
+description: Slider is a component that allows you to select a value from a range of values.
+isServerComponent: false
+source: /packages/react/src/components/slider/slider.tsx
+themeSource: /packages/system/src/recipes/slider.ts
+---
+
+## Import
+
+- `Slider` - The Slider component with context.
+- `SliderTrack` - The track for the slider.
+- `SliderFilledTrack` - The filled track for the slider.
+- `SliderThumb` - The thumb for the slider.
+
+```tsx
+import { Slider, SliderTrack, SliderFilledTrack, SliderThumb } from "@dreamy-ui/react";
+```
+
+## Usage
+
+<Wrapper>
+	<Slider>
+		<SliderTrack>
+			<SliderFilledTrack />
+			<SliderThumb />
+		</SliderTrack>
+	</Slider>
+</Wrapper>
+
+```tsx
+<Slider>
+	<SliderTrack>
+		<SliderFilledTrack />
+		<SliderThumb />
+	</SliderTrack>
+</Slider>
+```
+
+### Max, Min, Step
+
+You can change the max, min, and step of the Slider by using the `max`, `min`, and `step` props.
+
+<Wrapper>
+	<MaxMinSlider />
+</Wrapper>
+
+```tsx
+function MaxMinSlider() {
+    const [value, setValue] = useState(0);
+
+    return (
+        <>
+            <Text>
+                Slider value: {value}
+            </Text>
+
+            <Slider
+                min={0}
+                max={50}
+                step={10}
+                value={value}
+                onChange={setValue}
+                >
+                <SliderTrack>
+                    <SliderFilledTrack />
+                    <SliderThumb />
+                </SliderTrack>
+            </Slider>
+        </>
+    );
+}
+```
+
+### Size
+
+You can change the size of the Slider by using the `size` prop.
+
+<Wrapper>
+	<VStack w="full" gap={10}>
+		<Slider size='sm'>
+			<SliderTrack>
+				<SliderFilledTrack />
+				<SliderThumb />
+			</SliderTrack>
+		</Slider>
+		<Slider size='md'>
+			<SliderTrack>
+				<SliderFilledTrack />
+				<SliderThumb />
+			</SliderTrack>
+		</Slider>
+		<Slider size='lg'>
+			<SliderTrack>
+				<SliderFilledTrack />
+				<SliderThumb />
+			</SliderTrack>
+		</Slider>
+	</VStack>
+</Wrapper>
+
+```tsx
+<VStack w="full" gap={10}>
+	<Slider size='sm'>
+		<SliderTrack>
+			<SliderFilledTrack />
+			<SliderThumb />
+		</SliderTrack>
+	</Slider>
+	<Slider size='md'>
+		<SliderTrack>
+			<SliderFilledTrack />
+			<SliderThumb />
+		</SliderTrack>
+	</Slider>
+	<Slider size='lg'>
+		<SliderTrack>
+			<SliderFilledTrack />
+			<SliderThumb />
+		</SliderTrack>
+	</Slider>
+</VStack>
+```
+
+### Orientation
+
+You can change the orientation of the Slider by using the `orientation` prop.
+
+<Wrapper>
+	<Slider orientation="vertical" h="200px">
+		<SliderTrack>
+			<SliderFilledTrack />
+			<SliderThumb />
+		</SliderTrack>
+	</Slider>
+</Wrapper>
+
+```tsx
+<Slider orientation="vertical" h="200px">
+	<SliderTrack>
+		<SliderFilledTrack />
+		<SliderThumb />
+	</SliderTrack>
+</Slider>
+```
+
+### Reversed
+
+You can reverse the Slider by using the `isReversed` prop.
+
+<Wrapper>	
+	<Slider isReversed>
+		<SliderTrack>
+			<SliderFilledTrack />
+			<SliderThumb />
+		</SliderTrack>
+	</Slider>
+</Wrapper>
+
+```tsx
+<Slider isReversed>
+	<SliderTrack>
+		<SliderFilledTrack />
+		<SliderThumb />
+	</SliderTrack>
+</Slider>
+```
+
+### Controlled
+
+You can control the Slider by using the `value` prop.
+ControlledSlider
+
+<Wrapper>
+	<ControlledSlider />
+</Wrapper>
+
+```tsx
+function ControlledSlider() {
+    const [value, setValue] = useState(0);
+
+    return (
+        <>
+            <Text>
+                Slider value: {value}
+            </Text>
+
+            <Slider value={value} onChange={setValue}>
+                <SliderTrack>
+                    <SliderFilledTrack />
+                    <SliderThumb />
+                </SliderTrack>
+            </Slider>
+        </>
+    );
+}
+
+```

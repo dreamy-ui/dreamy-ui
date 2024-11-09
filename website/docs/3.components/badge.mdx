@@ -1,0 +1,127 @@
+---
+title: Badge
+description: Badge can be used to highlight important information.
+isServerComponent: true
+source: /packages/react/src/components/badge/badge.tsx
+themeSource: /packages/system/src/recipes/badge.ts
+---
+
+## Import
+
+- `Badge` - The main Badge component.
+
+```jsx
+import { Badge } from "@dreamy-ui/react/rsc";
+```
+
+## Usage
+
+<Wrapper>
+    <Badge scheme="success">New</Badge>
+</Wrapper>
+
+```tsx
+<Badge scheme="success">New</Badge>
+```
+
+### Variants
+
+You can change the variant of the Badge by using the `variant` prop.
+
+<Wrapper> 
+<HStack>
+  <Badge variant="outline">Outline</Badge>
+    <Badge variant="subtle">Subtle</Badge>
+  </HStack>
+</Wrapper>
+
+```tsx
+<HStack>
+  <Badge variant="outline">Outline</Badge>
+  <Badge variant="subtle">Subtle</Badge>
+</HStack>
+```
+
+### (Color) Schemes
+
+You can change the color scheme of the Badge by using the `scheme` prop. Don't mistake this with the css `colorScheme` property.
+
+<Wrapper>
+<HStack>
+  <Badge scheme="primary">Primary</Badge>
+  <Badge scheme="secondary">Secondary</Badge>
+  <Badge scheme="success">Success</Badge>
+  <Badge scheme="warning">Warning</Badge>
+  <Badge scheme="error">Error</Badge>
+  <Badge scheme="info">Info</Badge>
+    <Badge scheme="none">None</Badge>
+  </HStack>
+</Wrapper>
+
+```tsx
+<HStack>
+  <Badge scheme="primary">Primary</Badge>
+  <Badge scheme="secondary">Secondary</Badge>
+  <Badge scheme="success">Success</Badge>
+  <Badge scheme="warning">Warning</Badge>
+  <Badge scheme="error">Error</Badge>
+  <Badge scheme="info">Info</Badge>
+  <Badge scheme="none">None</Badge>
+</HStack>
+```
+
+### Schemes with variants
+
+You can combine the `variant` and `scheme` props to create a badge with different variants and colors.
+
+<Wrapper>
+  <HStack>
+    <Badge variant="outline" scheme="primary">
+      <>Primary</>
+    </Badge>
+    <Badge variant="outline" scheme="secondary">
+      <>Secondary</>
+    </Badge>
+    <Badge variant="outline" scheme="success">
+      <>Success</>
+    </Badge>
+    <Badge variant="outline" scheme="warning">
+      <>Warning</>
+    </Badge>
+    <Badge variant="outline" scheme="error">
+      <>Error</>
+    </Badge>
+    <Badge variant="outline" scheme="info">
+      <>Info</>
+    </Badge>
+    <Badge variant="outline" scheme="none">
+      <>None</>
+    </Badge>
+  </HStack>
+</Wrapper>
+
+```tsx
+<HStack>
+  <Badge variant="outline" scheme="primary">
+    Primary
+  </Badge>
+  <Badge variant="outline" scheme="secondary">
+    Secondary
+  </Badge>
+  <Badge variant="outline" scheme="success">
+    Success
+  </Badge>
+  <Badge variant="outline" scheme="warning">
+    Warning
+  </Badge>
+  <Badge variant="outline" scheme="error">
+    Error
+  </Badge>
+  <Badge variant="outline" scheme="info">
+    Info
+  </Badge>
+  <Badge variant="outline" scheme="none">
+    None
+  </Badge>
+</HStack>
+```

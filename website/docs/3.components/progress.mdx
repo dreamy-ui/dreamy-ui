@@ -1,0 +1,58 @@
+---
+title: Progress
+description: Progress is used to display the progress of a task.
+isServerComponent: true
+source: /packages/react/src/components/Progress/Progress.tsx
+themeSource: /packages/system/src/recipes/progress.ts
+---
+
+## Import
+
+- `Progress` - The Progress component.
+
+```jsx
+import { Progress } from "@dreamy-ui/react/rsc";
+```
+
+## Usage
+
+<Wrapper>
+	<Progress value={50} />
+</Wrapper>
+
+```tsx
+<Progress value={50} />
+```
+
+### Sizes
+
+You can set the size of the progress by using the `size` prop.
+
+<Wrapper>
+	<VStack w='full' gap={5}>
+		<Progress value={50} size="sm" />
+    <Progress value={50} size="md" />
+		<Progress value={50} size="lg" />
+	</VStack>
+</Wrapper>
+
+```tsx
+<VStack gap={5}>
+  <Progress value={50} size="sm" />
+  <Progress value={50} size="md" />
+  <Progress value={50} size="lg" />
+</VStack>
+``` 
+
+### Indeterminate Progress
+
+You can make the progress indeterminate by using the `isIndeterminate` prop. You can customize `speed` prop to change the speed of the indeterminate animation.
+
+<Wrapper>
+	<Progress isIndeterminate speed="0.8s" />
+</Wrapper>
+
+```tsx
+<Progress isIndeterminate speed="0.8s" />
+```
+

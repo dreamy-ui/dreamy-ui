@@ -1,0 +1,45 @@
+---
+title: Divider
+description: Divider is used to display line separator between elements.
+isServerComponent: true
+source: /packages/react/src/components/divider/divider.tsx
+themeSource: /packages/system/src/recipes/divider.ts
+---
+
+## Import
+
+- `Divider` - The Divider component.
+
+```jsx
+import { Divider } from "@dreamy-ui/react/rsc";
+```
+
+## Usage
+
+<Wrapper>
+	<Divider />
+</Wrapper>
+
+```tsx
+<Divider />
+```
+
+### Orientation
+
+You can change the orientation of the Divider by using the `orientation` prop.
+
+<Wrapper>
+	**Horizontal**
+	<Divider orientation="horizontal" />
+
+	**Vertical**
+	<Divider orientation="vertical" h="100px" />
+</Wrapper>
+
+```tsx
+**Horizontal**
+<Divider orientation="horizontal" />
+
+**Vertical**
+<Divider orientation="vertical" h="100px" />
+```

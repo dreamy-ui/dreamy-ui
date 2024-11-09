@@ -1,0 +1,96 @@
+---
+title: Alert
+description: Alert signalizes the user about important information.
+isServerComponent: false
+source: /packages/react/src/components/Alert/alert.tsx
+themeSource: /packages/system/src/recipes/alert.ts
+---
+
+## Import
+
+- `Alert`: The main container for the alert.
+- `AlertIcon`: The icon for the alert that changes based on the `status` prop.
+- `AlertTitle`: The title of the alert.
+- `AlertDescription`: The description of the alert.
+
+```tsx
+import { Alert, AlertTitle, AlertDescription, AlertIcon } from "@dreamy-ui/react";
+```
+
+## Usage
+
+<Wrapper>
+	<Alert status="warning">
+		<AlertIcon />
+		<AlertTitle>Warning</AlertTitle>
+		<AlertDescription>Dream may boost Developer efficiency.</AlertDescription>
+	</Alert>
+</Wrapper>
+
+```tsx
+<Alert status="warning">
+    <AlertIcon />
+    <AlertTitle>Warning</AlertTitle>
+    <AlertDescription>Dream may boost your Developer efficiency.</AlertDescription>
+</Alert>
+```
+
+### Status
+
+The `status` prop changes the color of the alert and the icon.
+
+<Wrapper>
+  <VStack spacing={3} w="100%">
+    <Alert status='error'>
+      <AlertIcon />
+      <AlertTitle>Error</AlertTitle>
+      <AlertDescription>There has been an error!</AlertDescription>
+    </Alert>  
+
+    <Alert status='success'>
+      <AlertIcon />
+      <AlertTitle>Success</AlertTitle>
+      <AlertDescription>Your visit has been created!</AlertDescription>
+    </Alert>
+
+    <Alert status='warning'>
+      <AlertIcon />
+      <AlertTitle>Warning</AlertTitle>
+      <AlertDescription>We may have some issues.</AlertDescription>
+    </Alert>
+
+    <Alert status='info'>
+      <AlertIcon />
+      <AlertTitle>Info</AlertTitle>
+      <AlertDescription>Your credit card information will expire soon. Please update.</AlertDescription>
+    </Alert>
+	</VStack>
+</Wrapper>
+
+```tsx
+<VStack spacing={3} w="100%">
+  <Alert status='error'>
+    <AlertIcon />
+    <AlertTitle>Error</AlertTitle>
+    <AlertDescription>There has been an error!</AlertDescription>
+  </Alert>  
+
+  <Alert status='success'>
+    <AlertIcon />
+    <AlertTitle>Success</AlertTitle>
+    <AlertDescription>Your visit has been created!</AlertDescription>
+  </Alert>
+
+  <Alert status='warning'>
+    <AlertIcon />
+    <AlertTitle>Warning</AlertTitle>
+    <AlertDescription>We may have some issues.</AlertDescription>
+  </Alert>
+
+  <Alert status='info'>
+    <AlertIcon />
+    <AlertTitle>Info</AlertTitle>
+    <AlertDescription>Your credit card information will expire soon. Please update.</AlertDescription>
+  </Alert>
+</VStack>
+```

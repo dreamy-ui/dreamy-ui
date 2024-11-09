@@ -1,0 +1,90 @@
+---
+title: Installation
+---
+
+# Install Dreamy UI
+
+To install Dreamy UI, go to your project directory and run the following command:
+
+```bash
+pnpm add @dreamy-ui/react @dreamy-ui/system framer-motion @pandacss/dev
+```
+
+### 1. Follow panda CSS installation steps
+
+Install panda by following the [panda CSS installation](https://panda-css.com/docs/overview/getting-started#installation) for your framework.
+
+### 2. Add Dream preset
+
+After installing, you should configure your panda config with Dream preset. Copy and paste the following code into your `panda.config.ts` file:
+
+```ts
+import { createDreamPreset } from "@dreamy-ui/system";
+import { defineConfig } from "@pandacss/dev";
+import pandaPreset from "@pandacss/preset-panda";
+
+export default defineConfig({
+	preflight: true,
+    watch: true,
+    jsxFramework: "react",
+    jsxStyleProps: "all",
+    outExtension: "js",
+    importMap: "@dreamy-ui/system",
+	include: [
+		"./app/**/*.{js,jsx,ts,tsx}", // Replace with your app source directory
+	],
+	presets: [
+        pandaPreset,
+        createDreamPreset()
+    ],
+	theme: {
+		extend: {}
+	},
+	globalCss: {
+		extend: {}
+	},
+	staticCss: {
+		extend: {}
+	}
+});
+```
+
+### 3. Add Dream Provider
+
+Add `DreamProvider` to the root of your app. It is a wrapper for your app, which provides Dreamy UI with all the necessary context.
+
+```tsx
+import { DreamProvider } from "@dreamy-ui/react";
+
+export default function App() {
+	return (
+		<DreamProvider>
+			<YourApp />
+		</DreamProvider>
+	);
+}
+```
+
+### 4. Try and see Dream in action
+
+Create a new component and use some Dreamy UI components.
+
+```tsx
+import { Button } from "@dreamy-ui/react";
+
+export default function Index() {
+	return (
+		<Button variant="primary">
+			I am a Dream Button 🚀
+		</Button>
+	);
+}
+```
+
+## Framework guides
+
+- [Remix](/docs/frameworks/remix)
+- [Next.js](/docs/frameworks/nextjs)
+- [Vite](/docs/frameworks/vite)
+- [Astro](/docs/frameworks/astro)
+

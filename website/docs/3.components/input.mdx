@@ -1,0 +1,138 @@
+---
+title: Input
+description: Input is one of the main form elements.
+isServerComponent: false
+source: /packages/react/src/components/input/input.tsx
+themeSource: /packages/system/src/recipes/input.ts
+---
+
+## Import
+
+- `Input` - The Input component.
+- `InputRSC` - The Input component for RSC usage without client handlers.
+
+```tsx
+import { Input } from "@dreamy-ui/react";
+import { InputRSC } from "@dreamy-ui/react/rsc";
+```
+
+## Usage
+
+<Wrapper>
+	<Input placeholder="Enter your username" />
+</Wrapper>
+
+```tsx
+<Input placeholder="Enter your username" />
+```
+
+### Input Size
+
+<Wrapper>
+	<VStack w="full">
+		<Input placeholder="Enter your username" size="sm" />
+		<Input placeholder="Enter your username" size="md" />
+		<Input placeholder="Enter your username" size="lg" />
+	</VStack>
+</Wrapper>
+
+```tsx
+<VStack w="full">
+	<Input placeholder="Enter your username" size="sm" />
+	<Input placeholder="Enter your username" size="md" />
+	<Input placeholder="Enter your username" size="lg" />
+</VStack>	
+```
+
+### Input Variant
+
+<Wrapper>
+	<VStack w="full">
+		<Input placeholder="Enter your username" variant="outline" />
+		<Input placeholder="Enter your username" variant="filled" />
+		<Input placeholder="Enter your username" variant="flushed" />
+	</VStack>
+</Wrapper>
+
+```tsx
+<VStack w="full">
+	<Input placeholder="Enter your username" variant="outline" />
+	<Input placeholder="Enter your username" variant="filled" />
+	<Input placeholder="Enter your username" variant="flushed" />
+</VStack>
+```
+
+### Invalid
+
+Pass `isInvalid` prop to the `Input` to show the error state.
+
+<Wrapper>
+	<VStack w="full">
+		<Input placeholder="Enter your username" variant="outline" isInvalid />
+		<Input placeholder="Enter your username" variant="filled" isInvalid />
+		<Input placeholder="Enter your username" variant="flushed" isInvalid />
+	</VStack>
+</Wrapper>
+```tsx
+<VStack w="full">
+	<Input placeholder="Enter your username" variant="outline" isInvalid />
+	<Input placeholder="Enter your username" variant="filled" isInvalid />
+	<Input placeholder="Enter your username" variant="flushed" isInvalid />
+</VStack>
+```
+
+### Input Group
+
+Combine `Input` with `InputGroup` to create a add elements on the left or right side of the input.
+
+Due to specificity of the `Input` component, space for addons won't be added automatically, so you will need to add padding left (`pl`) or right (`pr`) to the `Input` to make space for the addons.
+
+<Wrapper>
+	<InputGroup variant="filled">
+		<InputLeftAddon>
+			<Icon asComp={<BiSearch />} boxSize="5" />
+		</InputLeftAddon>
+		<Input pl="10" placeholder="Search for..." />
+	</InputGroup>	
+</Wrapper>
+
+```tsx
+<InputGroup variant="filled">
+	<InputLeftAddon>
+		<Icon as={BiSearch} boxSize="5" />
+	</InputLeftAddon>
+	<Input pl="10" placeholder="Search for..." />
+</InputGroup>	
+```
+
+### Usage with Field
+
+Combine `Input` with `Field` to create a nice looking form element.
+
+<Wrapper>
+	<Field>
+		<FieldLabel>Username</FieldLabel>
+		<Input placeholder="Enter your username" />
+		<FieldHelpText>Username should not contain special characters.</FieldHelpText>
+	</Field>
+</Wrapper>
+
+```tsx
+<Field>
+	<FieldLabel>Username</FieldLabel>
+	<Input placeholder="Enter your username" />
+	<FieldHelpText>Username should not contain special characters.</FieldHelpText>
+</Field>	
+```
+
+### RSC Usage
+
+InputRSC is a RSC compatible component that does not use client handlers.
+
+<Wrapper>
+	<InputRSC placeholder="Enter your username" />
+</Wrapper>
+
+```tsx
+<InputRSC placeholder="Enter your username" />
+```

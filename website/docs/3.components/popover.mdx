@@ -1,0 +1,211 @@
+---
+title: Popover
+description: Popover allows to create dialog that shows next to the trigger element.
+isServerComponent: false
+source: /packages/react/src/components/popover/popover.tsx
+themeSource: /packages/system/src/recipes/popover.ts
+---
+
+## Import
+
+- `Popover` - The Popover component with context.
+- `PopoverContent` - The content for the popover.
+- `PopoverHeader` - The header for the popover.
+- `PopoverBody` - The body for the popover.
+- `PopoverFooter` - The footer for the popover.
+- `PopoverCloseButton` - The close button for the popover.
+- `PopoverAnchor` - The anchor for the popover.
+- `PopoverArrow` - The arrow for the popover.
+- `PopoverTrigger` - The trigger for the popover.
+
+```tsx
+import { 
+	Popover,
+    PopoverContent,
+    PopoverHeader,
+    PopoverBody,
+    PopoverFooter,
+    PopoverCloseButton,
+    PopoverAnchor,
+    PopoverArrow,
+    PopoverTrigger
+ } from "@dreamy-ui/react";
+```
+
+## Usage
+
+When Popover opens, focus is sent to PopoverContent. When it closes, focus is returned to the trigger.
+
+<Wrapper>
+	<BasicPopover />
+</Wrapper>
+
+```tsx
+export function BasicPopover() {
+    return (
+        <Popover>
+            <PopoverTrigger>
+                <Button variant={"primary"}>Open Popover</Button>
+            </PopoverTrigger>
+
+            <PopoverContent>
+                <PopoverArrow />
+                <PopoverCloseButton />
+                <PopoverHeader>Delete Post</PopoverHeader>
+                <PopoverBody>
+                    Are you sure you want to delete this post? This action cannot be undone.
+                </PopoverBody>
+                <PopoverFooter>
+                    <Button variant={"primary"}>Delete</Button>
+                </PopoverFooter>
+            </PopoverContent>
+        </Popover>
+    );
+}
+```
+
+### Controlled Popover
+
+Most of the time, you'll want to control the popover's open state. Use `useControllable` hook to do that.
+
+<Wrapper>
+	<ControlledPopover />
+</Wrapper>
+
+```tsx
+export function ControlledPopover() {
+    const { isOpen, onOpen, onClose } = useControllable();
+
+    const handleDelete = useCallback(() => {
+        /**
+         * Handle delete logic...
+         */
+        onClose();
+    }, [onClose]);
+
+    return (
+        <Popover isOpen={isOpen} onOpen={onOpen} onClose={onClose}>
+            <PopoverTrigger>
+                <Button variant={"primary"}>Open Popover</Button>
+            </PopoverTrigger>
+
+            <PopoverContent>
+                <PopoverArrow />
+                <PopoverCloseButton />
+                <PopoverHeader>Delete Post</PopoverHeader>
+                <PopoverBody>
+                    Are you sure you want to delete this post? This action cannot be undone.
+                </PopoverBody>
+                <PopoverFooter>
+                    <Button variant={"solid"} onClick={onClose}>
+                        Cancel
+                    </Button>
+                    <Button variant={"primary"} onClick={handleDelete}>
+                        Delete
+                    </Button>
+                </PopoverFooter>
+            </PopoverContent>
+        </Popover>
+    );
+}
+```
+
+### Initial Focus
+
+You can set the initial focus element using `initialFocusRef` prop.
+
+<Wrapper>
+	<FocusPopover />
+</Wrapper>
+
+```tsx
+export function FocusPopover() {
+    const { isOpen, onOpen, onClose } = useControllable();
+    const initialFocusRef = useRef<HTMLButtonElement>(null);
+
+    return (
+        <Popover
+            isOpen={isOpen}
+            onOpen={onOpen}
+            onClose={onClose}
+            initialFocusRef={initialFocusRef}
+        >
+            <PopoverTrigger>
+                <Button variant={"primary"}>Open Popover</Button>
+            </PopoverTrigger>
+
+            <PopoverContent>
+                <PopoverArrow />
+                <PopoverCloseButton />
+                <PopoverHeader>Delete Post</PopoverHeader>
+                <PopoverBody>
+                    Are you sure you want to delete this post? This action cannot be undone.
+                </PopoverBody>
+                <PopoverFooter>
+                    <Button variant={"solid"} onClick={onClose} ref={initialFocusRef}>
+                        Cancel
+                    </Button>
+                    <Button variant={"primary"}>Delete</Button>
+                </PopoverFooter>
+            </PopoverContent>
+        </Popover>
+    );
+}
+```
+
+### Placement
+
+You can customize the placement of the popover relative to the trigger element using the `placement` prop.
+
+<Wrapper>
+	<PlacementPopovers />
+</Wrapper>
+
+```tsx
+export function PlacementPopovers() {
+    return (
+        <Flex wrapped gap={2}>
+            {(
+                [
+                    "top",
+                    "bottom",
+                    "left",
+                    "right",
+                    "top-start",
+                    "top-end",
+                    "bottom-start",
+                    "bottom-end",
+                    "left-start",
+                    "left-end",
+                    "right-start",
+                    "right-end"
+                ] satisfies PlacementWithLogical[]
+            ).map((placement) => (
+                <PlacementPopover key={placement} placement={placement} />
+            ))}
+        </Flex>
+    );
+}
+
+export function PlacementPopover({ placement }: { placement: PlacementWithLogical }) {
+    return (
+        <Popover placement={placement}>
+            <PopoverTrigger>
+                <Button variant={"primary"}>{placement}</Button>
+            </PopoverTrigger>
+
+            <PopoverContent>
+                <PopoverArrow />
+                <PopoverCloseButton />
+                <PopoverHeader>Delete Post</PopoverHeader>
+                <PopoverBody>
+                    Are you sure you want to delete this post? This action cannot be undone.
+                </PopoverBody>
+                <PopoverFooter>
+                    <Button variant={"primary"}>Delete</Button>
+                </PopoverFooter>
+            </PopoverContent>
+        </Popover>
+    );
+}
+```

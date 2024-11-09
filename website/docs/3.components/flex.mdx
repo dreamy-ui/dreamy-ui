@@ -1,0 +1,113 @@
+---
+title: Flex
+description: Flex is a `div` tag that is flexbox by default.
+isServerComponent: true
+source: /packages/react/src/components/flex/flex.tsx
+themeSource: /packages/system/styled-system/jsx/flex.js
+---
+
+## Import
+
+- `Flex` - The Flex component.
+
+```tsx
+import { Flex } from "@dreamy-ui/react/rsc";
+```
+
+## Usage
+
+<Wrapper>
+	<Flex color="white" w="full" h="100px">
+		<Flex center bg="green.400" w="100px" color='black/87'>
+			<>1</>
+		</Flex>
+		<Flex center bg="blue.400" w="1/3">
+			<>2</>
+		</Flex>
+		<Flex center bg="purple.400" flex={1}>
+			<>3</>
+		</Flex>
+	</Flex>
+</Wrapper>
+
+```tsx
+<Flex color="white" w="full" h="100px">
+  <Flex center bg="green.400" w="100px" color='black/87'>
+    1
+   </Flex>
+  <Flex center bg="blue.400" w="1/3">
+    2
+  </Flex>
+  <Flex center bg="purple.400" flex={1}>
+    3
+  </Flex>
+</Flex>
+```
+
+### Examples
+
+Using **boolean props**
+
+<Wrapper>
+	<Flex wFull contentBetween itemsCenter>
+		<Heading>Flex</Heading>
+    <Button variant="primary">
+        <>Button</>
+    </Button>
+	</Flex>
+</Wrapper>
+
+```tsx
+<Flex wFull contentBetween itemsCenter>
+    <Heading>Flex</Heading>
+    <Button variant="primary">
+        Button
+    </Button>
+</Flex>
+```
+
+Using **props**
+
+<Wrapper>
+	<Flex w="full" justifyContent="space-between" alignItems="center">
+    <Heading>Flex</Heading>
+    <Button variant="primary">
+        <>Button</>
+    </Button>
+	</Flex>
+</Wrapper>
+
+```tsx
+<Flex w="full" justifyContent="space-between" alignItems="center">
+    <Heading>Flex</Heading>
+    <Button variant="primary">
+        Button
+    </Button>
+</Flex>
+```
+
+Using **className css**
+  
+<Wrapper>
+	<Flex w="full" justifyContent="space-between" alignItems="center">
+		<Heading>Flex</Heading>
+		<Button variant="primary">
+        <>Button</>
+		</Button>
+	</Flex>
+</Wrapper>
+
+```tsx
+<Flex 
+    className={css({
+      w: "full",
+      justifyContent: "space-between",
+      alignItems: "center"
+    })}
+>
+    <Heading>Flex</Heading>
+    <Button variant="primary">
+        Button
+    </Button>
+</Flex>
+````

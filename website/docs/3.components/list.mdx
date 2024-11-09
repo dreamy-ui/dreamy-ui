@@ -1,0 +1,54 @@
+---
+title: List
+description: List can be used to create a list of data.
+isServerComponent: true
+source: /packages/react/src/components/list/list.tsx
+themeSource: /packages/system/src/recipes/list.ts
+---
+
+## Import
+
+- `List` - The List component.
+- `ListItem` - The List item component.
+
+```tsx
+import { List, ListItem } from "@dreamy-ui/react/rsc";
+```
+
+## Usage
+
+<Wrapper>
+	<List>
+		<ListItem>i5-10400f</ListItem>
+		<ListItem>RTX 4060ti</ListItem>
+		<ListItem>32GB RAM</ListItem>
+	</List>
+</Wrapper>
+
+```tsx
+<List>
+	<ListItem>i5-10400f</ListItem>
+	<ListItem>RTX 4060ti</ListItem>
+	<ListItem>32GB RAM</ListItem>
+</List>
+```
+
+### Ordered List
+
+Simply pass the `ordered` prop to the `List` component to create an ordered list. It will render `ol` tag, instead of `ul`.
+
+<Wrapper>
+	<List ordered>
+		<ListItem>i5-10400f</ListItem>
+		<ListItem>RTX 4060ti</ListItem>
+		<ListItem>32GB RAM</ListItem>
+	</List>
+</Wrapper>
+
+```tsx
+<List ordered>
+	<ListItem>i5-10400f</ListItem>
+	<ListItem>RTX 4060ti</ListItem>
+	<ListItem>32GB RAM</ListItem>
+</List>
+```

@@ -1,0 +1,60 @@
+---
+title: Link
+description: Link is used to provide a way to navigate to different pages or sections of the same page.
+isServerComponent: true
+source: /packages/react/src/components/link/link.tsx
+themeSource: /packages/system/src/recipes/link.ts
+---
+
+## Import
+
+- `Link` - The Link component.
+
+```tsx
+import { Link } from "@dreamy-ui/react/rsc";
+```
+
+## Usage
+
+<Wrapper>
+	<Link href="/">
+		<>Home</>
+	</Link>
+</Wrapper>
+```tsx
+<Link href="/">Home</Link>
+```
+
+### External Link
+
+You can use the `isExternal` prop to open the link in a new tab.
+
+<Wrapper>
+	<Link href="https://www.google.com" isExternal>
+		<>Google</>
+	</Link>
+</Wrapper>
+
+```tsx
+<Link href="https://www.google.com" isExternal>
+	Google
+</Link>
+```
+
+### Using Dream Link with other frameworks
+
+In this example we'll combine Remix (`react-router`) Link component with Dream Link component.
+
+```tsx
+import { Link as DreamLink, type LinkProps as DreamLinkProps } from "@dreamy-ui/react";
+import { Link as RemixLink, type LinkProps as RemixLinkProps } from "@remix-run/react";
+import { forwardRef } from "react";
+
+export interface LinkProps extends DreamLinkProps, Omit<RemixLinkProps, keyof DreamLinkProps> {}
+
+export const Link = forwardRef<HTMLAnchorElement, LinkProps>((props, ref) => {
+    return <DreamLink ref={ref} as={RemixLink} {...props} />;
+});
+
+Link.displayName = "Link";
+```

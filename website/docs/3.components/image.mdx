@@ -1,0 +1,117 @@
+---
+title: Image
+description: Image is a `img` tag and it provides bunch of styled features.
+isServerComponent: false
+source: /packages/react/src/components/image/image.tsx
+themeSource: /packages/system/recipes/image.ts
+---
+
+## Import
+
+- `Image` - The Image component.
+- `ImageRSC` - The Image component for RSC usage without client handlers.
+
+```tsx
+import { Image } from "@dreamy-ui/react";
+import { ImageRSC } from "@dreamy-ui/react/rsc";
+```
+
+## Usage
+
+Image contains bunch of helpful props to make it easier to use. Provide a `fallbackSrc` to show a backup image if the main image fails to load.
+
+Photo by <a href="https://unsplash.com/@carltraw?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Carl Raw</a> on <a href="https://unsplash.com/photos/close-up-photography-of-lucky-arcade-with-bar-bar-and-star-7H7KVCihBvI?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>
+
+<Wrapper> 
+	<Image 
+		src="/slots.jpg"
+    alt="Tuesday slots" 
+		fallbackSrc="https://via.placeholder.com/250x164" 
+		w="250px"
+		rounded="lg"
+	/>
+</Wrapper>
+
+```tsx
+<Image 
+  src="https://dream-ui.com/slots.jpg" 
+  alt="Tuesday slots" 
+  fallbackSrc="https://via.placeholder.com/250x164" 
+  w="250px"
+  rounded="lg"
+/>
+```
+
+### Zoom on hover
+
+Use `zoomOnHover` to zoom in the image on hover.
+
+<Wrapper> 
+  <Image 
+    src="/slots.jpg"
+    alt="Tuesday slots" 
+    fallbackSrc="https://via.placeholder.com/250x164" 
+    w="250px"
+    rounded="lg"
+    zoomOnHover
+  />
+</Wrapper>
+
+```tsx
+<Image 
+  src="https://dream-ui.com/slots.jpg" 
+  alt="Tuesday slots" 
+  fallbackSrc="https://via.placeholder.com/250x164" 
+  w="250px"
+  rounded="lg"
+  zoomOnHover
+/> 
+```
+
+### Blur shadow
+
+Use `blurShadow` to add a blurred shadow to the image.
+
+<Wrapper>
+  <Image 
+    src="/slots.jpg"
+    alt="Tuesday slots" 
+    fallbackSrc="https://via.placeholder.com/250x164" 
+    w="250px"
+    rounded="lg"
+    blurShadow
+	/>
+</Wrapper>
+
+```tsx
+<Image 
+  src="https://dream-ui.com/slots.jpg" 
+  alt="Tuesday slots" 
+  fallbackSrc="https://via.placeholder.com/250x164" 
+  w="250px"
+  rounded="lg"
+  blurShadow
+/>
+```
+
+### RSC Usage
+
+ImageRSC is a server-side compatible component that does not use client handlers.
+
+<Wrapper>
+  <ImageRSC 
+    src="/slots.jpg"
+    alt="Tuesday slots" 
+    w="250px"
+    rounded="lg"
+  />
+</Wrapper>
+
+```tsx
+<ImageRSC 
+  src="/slots.jpg"
+  alt="Tuesday slots" 
+  w="250px"
+  rounded="lg"
+/>
+```

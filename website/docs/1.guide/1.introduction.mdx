@@ -1,0 +1,47 @@
+---
+title: Introduction
+---
+
+# Introduction
+
+Dreamy UI is a React UI library that provides a set of customizable components and utilities to build performant, websites with ease.
+
+## Motivation
+
+> info: Note: this isn't about which library is better, every library has its own pros and cons.
+
+Many UI libraries are built on top of CSS-in-JS libraries like [Styled Components](https://styled-components.com/) or [Emotion](https://emotion.sh/). These libraries provide a great developer experience, but they come with a cost: they use runtime CSS styles, which slow down rendering, performance and limit some features, like streaming, etc.
+
+Dreamy UI is built on top of [Panda CSS](https://panda-css.com/), which is a CSS-in-JS library that provides strongly typed CSS styles, that are generated at **build time**, incredibly improving website performance and not decreasing developer experience.
+
+## Solution
+
+Introducing Dreamy UI, a library that allows you to write your favourite CSS-in-JS code, while still enjoying native CSS performance. Ba! Dream comes with many utilities to write your website even faster. **Boolean style props**. Let's say you are sure your flex component will be column, so instead of typing `flexDir="column"`, it is possible to write `col` or `column` as prop 🎉. You can mix and use any styling style to your preference.
+
+Dream is **highly customizable**, meaning you can change any component style in panda config. Dream Provider accepts only runtime props, for example: default animation transition, motion variants for animations, etc.
+
+If you have had used any CSS-in-JS library, you are fully familiar with styling components and you'll have no problem with Dream.
+
+---
+
+## FAQ
+
+### What's the difference between Dream and tailwind/panda CSS?
+
+Dream is a component library, which uses Panda CSS and it's peer dependency. Tailwind and panda CSS are not component libraries, they are styling engines that provide a set of utilities to write CSS styles.
+
+### Does Dreamy UI support SSR?
+
+Yes, Dreamy UI supports SSR. You can use it with Next.js, Remix, etc.
+
+### Why does Dreamy UI use framer motion?
+
+[Framer motion](https://www.framer.com/motion/) is a great library for animations, which provides ease of using animations in React. It is well tested and makes working with animations a breeze.
+
+### Does Dreamy UI support React Server Components?
+
+Yes, Dreamy UI supports React Server Components. You can use it with Next.js or Remix, etc. Most basic components are supported and Dream provides set of RSC component alternatives for client ones, for example `Input` component has a RSC version called `InputRSC`, which works the same, but doesn't offer support for `Field` usage.
+
+### Does Dreamy UI work in other libraries like Vue, Solid, etc?
+
+No, Dreamy UI is a React library. It is not designed to work with other libraries.

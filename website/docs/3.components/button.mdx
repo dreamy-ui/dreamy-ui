@@ -1,0 +1,157 @@
+---
+title: Button
+description: Button is a primary action element that performs an action when clicked.
+isServerComponent: false
+source: /packages/react/src/components/Button/Button.tsx
+themeSource: /packages/system/src/recipes/Button.ts
+---
+
+## Import
+
+- `Button` - The true Button component.
+
+```jsx
+import { Button } from "@dreamy-ui/react";
+```
+
+## Usage
+
+<Wrapper>
+	<Button w="fit-content">Button</Button>
+</Wrapper>
+
+```tsx
+<Button>Button</Button>
+```
+
+### Variants
+
+You can change the variant of the Button by using the `variant` prop.
+
+<Wrapper>
+	<Flex wrapped gap={2}>
+		<Button variant="primary">Primary</Button>
+    <Button variant="secondary">Secondary</Button>
+		<Button variant="solid">Solid</Button>
+		<Button variant="outline">Outline</Button>
+		<Button variant="ghost">Ghost</Button>
+	</Flex>
+</Wrapper>
+
+```tsx
+<Flex wrapped gap={2}>
+  <Button variant="primary">Primary</Button>
+  <Button variant="secondary">Secondary</Button>
+  <Button variant="solid">Solid</Button>
+  <Button variant="outline">Outline</Button>
+  <Button variant="ghost">Ghost</Button>
+</Flex>
+```
+
+### Sizes
+
+You can set the size of the Button by using the `size` prop.
+
+<Wrapper>
+	<Flex wrapped gap={2}>
+		<Button size="sm">Small</Button>
+		<Button size="md">Medium</Button>
+		<Button size="lg">Large</Button>
+	</Flex>
+</Wrapper>
+
+```tsx
+<Flex wrapped gap={2}>
+  <Button size="sm">Small</Button>
+  <Button size="md">Medium</Button>
+  <Button size="lg">Large</Button>
+</Flex>
+``` 
+
+### Color
+
+When using `solid`, `outline` and `ghost` variants, the background will follow the current color.
+
+<Wrapper>
+	<Flex wrapped gap={2}>
+		<Button variant="solid" color="success">Solid success</Button>
+		<Button variant="outline" color="warning">Outline warning</Button>
+		<Button variant="ghost" color="error">Ghost error</Button>
+	</Flex>
+</Wrapper>
+
+```tsx
+<Flex wrapped gap={2}>
+  <Button variant="solid" color="success">Solid success</Button>
+  <Button variant="outline" color="warning">Outline warning</Button>
+  <Button variant="ghost" color="error">Ghost error</Button>
+</Flex>
+```
+
+### Using Icons
+
+You can add icons on left or right side of the Button by using the `leftIcon` or `rightIcon` prop.
+
+**Left Icon**
+
+<Wrapper>
+	<Flex wrapped gap={2}>
+		<Button leftIcon={<IoClose />}>Cancel</Button>
+		<Button leftIcon={<HiOutlineMail />} variant="primary">Home</Button>
+	</Flex>
+</Wrapper>
+
+```tsx
+<Flex wrapped gap={2}>
+  <Button leftIcon={<IoClose />}>Cancel</Button>
+  <Button leftIcon={<HiOutlineMail />} variant="primary">Home</Button>
+</Flex>
+``` 
+
+**Right Icon**
+
+<Wrapper>
+	<Flex wrapped gap={2}>
+		<Button rightIcon={<IoClose />}>Cancel</Button>
+		<Button rightIcon={<HiOutlineMail />} variant="primary">Home</Button>
+	</Flex>
+</Wrapper>
+
+```tsx
+<Flex wrapped gap={2}>
+  <Button rightIcon={<IoClose />}>Cancel</Button>
+  <Button rightIcon={<HiOutlineMail />} variant="primary">Home</Button>
+</Flex>
+``` 
+
+### Loading State
+
+You can show the loading state of the Button by using the `isLoading` prop.
+
+<Wrapper>
+	<Button w="fit-content" isLoading variant="primary">Loading</Button>
+</Wrapper>
+
+```tsx
+<Button isLoading variant="primary">Loading</Button>  
+```
+
+**With label**
+
+<Wrapper>
+	<Button w="fit-content" isLoading variant="primary" loadingText="Loading">Loading</Button>
+</Wrapper>
+
+```tsx
+<Button isLoading variant="primary" loadingText="Loading">Loading</Button>
+```
+
+**With label and spinner on the right**
+
+<Wrapper>
+	<Button w="fit-content" isLoading variant="primary" loadingText="Loading" spinnerPlacement="end">Loading</Button>
+</Wrapper>
+
+```tsx
+<Button isLoading variant="primary" loadingText="Loading" spinnerPlacement="end">Loading</Button>
+```

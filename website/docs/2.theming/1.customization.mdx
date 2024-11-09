@@ -1,0 +1,128 @@
+---
+title: Customization
+---
+
+# Customization
+
+Dreamy UI depends on [pandaCSS](https://panda-css.com) as build-time css-in-js styling engine.
+That means every customization related to styling should be done in panda config.
+
+## Dream Preset & Theming
+
+Dreamy UI comes with a preset for pandaCSS. You should already have it in your project if you followed the installation guide.
+Dream Preset contains only most basic styling options like background color, fonts, etc. If you want to customize more, you can extend the theme in panda config.
+
+Most basic panda config would look like this. You can extend any theme property you want in `theme.extend` object.
+
+```ts
+export default defineConfig({
+    preflight: true,
+    jsxFramework: "react",
+    jsxStyleProps: "all",
+    outExtension: "js",
+    include: [
+        "./app/**/*.{js,jsx,ts,tsx}",
+    ],
+    importMap: "@dreamy-ui/system",
+    presets: [
+        pandaPreset,
+        createDreamPreset()
+    ],
+    theme: {
+        extend: {
+			/**
+			 * Extend theme properties here
+			*/
+        }
+    } 
+})
+```
+
+`createDreamPreset` accepts the object argument with following types:
+
+```ts
+interface PresetOptions {
+    backgrounds: {
+        light: string;
+        dark: string;
+    };
+    fonts: {
+        body: string;
+        heading: string;
+        mono: string;
+    };
+    primaryColor: string;
+    secondaryColor: string;
+    rounded: BorderRadius;
+    /**
+     * Color for the primary button. It depends on the `primaryColor` option.
+     * @default Dream will automatically resolve contrast to match the `primaryColor` option.
+     */
+    buttonPrimaryTextColor: string;
+    /**
+     * Color for the secondary button. It depends on the `secondaryColor` option.
+     * @default Dream will automatically resolve contrast to match the `secondaryColor` option.
+     */
+    buttonSecondaryTextColor: string;
+}
+```
+
+> info: Tip: If body font is provided and heading font is not, Dream will automatically use body font for headings.
+
+## Customizing Components
+
+Every component in Dreamy UI has it's own recipe/slot recipe. You can customize any component by extending the theme in panda config.
+
+Let's make the `Flex` component to have `flexDirection: "column"` by default.
+
+```ts
+/**
+ * ...
+ * theme.extend
+ */
+recipes: {
+	flex: {
+		base: {
+			flexDirection: "column"
+		}
+	}
+}
+```
+
+Now let's make the `Button` component to have `bg: "blue"` by default in the solid variant.
+Button is a multi-part recipe, so we need to import `buttonParts` from `@dreamy-ui/system`.
+
+```ts
+import { parts } from "@dreamy-ui/system";
+
+...
+recipes: {
+	button: {
+		variants: { // variants allow us to have multiple variants
+			variant: { // select `variant` variant
+				solid: parts.button({ // select `solid` part and extend `base` from `parts.button`
+					base: {
+						bg: "blue"
+					}
+				})
+			}
+		}
+	}
+}
+```
+
+Now the hardest and most complicated part: Customizing slot recipes. Slot recipes and recipes that have multiple JSX components that are exported for user to use.
+
+Let's make the `Field` root gap to be `0.5` smaller than the default.
+
+> info: Tip: Don't know how slots are named? Check the component's theme source, by going to component doc and clicking "Theme Source" button.
+
+```ts
+recipes: {
+	field: {
+		root: {
+			gap: 1
+		}
+	}
+}
+```

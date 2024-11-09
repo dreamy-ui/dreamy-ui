@@ -1,0 +1,63 @@
+{
+	"$schema": "https://biomejs.dev/schemas/1.7.1/schema.json",
+	"formatter": {
+		"enabled": true,
+		"formatWithErrors": true,
+		"indentStyle": "tab",
+		"indentWidth": 4,
+		"lineEnding": "lf",
+		"lineWidth": 100,
+		"attributePosition": "auto"
+	},
+	"organizeImports": { "enabled": true },
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"correctness": {
+				"noUnusedVariables": "warn",
+				"useExhaustiveDependencies": "warn"
+			},
+			"suspicious": {
+				"noExplicitAny": "off",
+				"noArrayIndexKey": "off"
+			},
+			"complexity": {
+				"noForEach": "off",
+				"noStaticOnlyClass": "off",
+				"noUselessLoneBlockStatements": "off",
+				"noBannedTypes": "off",
+				"noUselessTypeConstraint": "off"
+			},
+			"style": {
+				"noParameterAssign": "off",
+				"useTemplate": "off",
+				"noNonNullAssertion": "off"
+			},
+			"a11y": {
+				"useMediaCaption": "off"
+			},
+			"security": {
+				"noDangerouslySetInnerHtml": "off"
+			}
+		}
+	},
+	"javascript": {
+		"formatter": {
+			"enabled": true,
+			"indentStyle": "space",
+			"lineEnding": "lf",
+			"indentWidth": 4,
+			"jsxQuoteStyle": "double",
+			"quoteProperties": "asNeeded",
+			"trailingCommas": "none",
+			"semicolons": "always",
+			"arrowParentheses": "always",
+			"bracketSpacing": true,
+			"bracketSameLine": false,
+			"quoteStyle": "double",
+			"attributePosition": "multiline"
+		}
+	},
+	"overrides": [{ "include": ["@remix-run/eslint-config"] }]
+}

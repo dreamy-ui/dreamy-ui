@@ -1,0 +1,43 @@
+---
+title: Icon
+description: Icon is a styled `svg`, that allows you to style custom icons using Dream props.
+isServerComponent: true
+source: /packages/react/src/components/icon/icon.tsx
+themeSource: /packages/system/recipes/icon.ts
+---
+
+## Import
+
+- `Icon` - The Icon component.
+
+```jsx
+import { Icon } from "@dreamy-ui/react/rsc";
+```
+
+## Usage with other icon libraries
+
+Since Dream does not provide any icons, you will want to use other icon libraries like `react-icons`, `lucide-react` or `@heroicons/react`.
+
+<Wrapper>
+	<Icon asComp={<FiCoffee />} />
+</Wrapper>
+
+```tsx
+<Icon as={FiCoffee} />
+```
+
+**or** 
+
+with `asChild` prop Dream will merge child component with Icon.
+
+<Wrapper>
+	<Icon asChild>
+		<FiCoffee />
+	</Icon>
+</Wrapper>
+
+```tsx
+<Icon asChild>
+  <FiCoffee />
+</Icon>
+```

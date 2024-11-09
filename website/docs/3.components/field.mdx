@@ -1,0 +1,148 @@
+---
+title: Field
+description: Field provides a way to add accessible labels to form elements.
+isServerComponent: false
+source: /packages/react/src/components/field/field.tsx
+themeSource: /packages/system/src/recipes/field.ts
+---
+
+## Import
+
+- `Field` - The main Field component.
+- `FieldLabel` - The label for the field.
+- `FieldHelpText` - The help text for the field.
+- `FieldError` - The error for the field.
+
+```jsx
+import { Field, FieldLabel, FieldHelpText, FieldError } from "@dreamy-ui/react";
+```
+
+## Usage
+
+<Wrapper>
+	<Field>
+		<FieldLabel>
+			<>Username</>
+		</FieldLabel>
+		<Input placeholder="Enter your username" />
+		<FieldHelpText>
+			<>This is the username you will use to login</>
+		</FieldHelpText>
+	</Field>
+</Wrapper>
+
+```tsx
+<Field>
+	<FieldLabel>
+		Username
+	</FieldLabel>
+	<Input placeholder="Enter your username" />
+	<FieldHelpText>
+		This is the username you will use to login
+	</FieldHelpText>
+</Field>
+```
+
+- **Required**
+
+<Wrapper>
+	<Field isRequired>
+		<FieldLabel>
+			<>Username</>
+		</FieldLabel>
+		<Input placeholder="Enter your username" defaultValue="Donut" />
+	</Field>
+</Wrapper>
+
+```tsx
+<Field isRequired>
+	<FieldLabel>
+		Username
+	</FieldLabel>
+	<Input placeholder="Enter your username" defaultValue="Donut" />
+</Field>
+```
+
+- **Invalid**
+
+<Wrapper>
+	<Field isInvalid>
+		<FieldLabel>
+			<>Username</>
+		</FieldLabel>
+		<Input placeholder="Enter your username" />
+	</Field>
+</Wrapper>
+
+```tsx
+<Field isInvalid>
+	<FieldLabel>
+		Username
+	</FieldLabel>
+	<Input placeholder="Enter your username" />
+</Field>
+```
+
+- **Disabled**
+
+<Wrapper>
+	<Field isDisabled>
+		<FieldLabel>
+			<>Username</>
+		</FieldLabel>
+		<Input placeholder="Enter your username" />
+	</Field>
+</Wrapper>
+
+```tsx
+<Field isDisabled>
+	<FieldLabel>
+		Username
+	</FieldLabel>
+	<Input placeholder="Enter your username" />	
+</Field>		
+```
+
+### Field Error
+
+Field error **will show only** when the `Field` has `isInvalid` prop.
+
+<Wrapper>
+	<Field isInvalid>
+		<FieldLabel>
+		<>Username</>
+		</FieldLabel>
+		<Input placeholder="Enter your username" defaultValue="x" />
+		<FieldError>
+			<>This username is too short!</>
+		</FieldError>
+	</Field>
+</Wrapper>
+
+```tsx
+<Field isInvalid>
+	<FieldLabel>
+		Username
+	</FieldLabel>
+	<Input placeholder="Enter your username" defaultValue="x" />
+	<FieldError>
+		This username is too short!
+	</FieldError>
+</Field>
+```
+
+### Field Help Text
+
+Field help text can be used to prompt the user with additional information.
+
+<Wrapper>
+	<Field>
+		<FieldLabel>
+			<>Username</>
+		</FieldLabel>
+		<Input placeholder="Enter your username" />
+		<FieldHelpText>
+			This is the username you will use to login
+		</FieldHelpText>
+	</Field>
+</Wrapper>

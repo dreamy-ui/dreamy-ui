@@ -1,0 +1,142 @@
+---
+title: Pin Input
+description: Pin Input can be used to collect a pin code from authenticator app.
+isServerComponent: false
+source: /packages/react/src/components/pin-input/input.tsx  
+themeSource: /packages/system/src/recipes/input.ts
+---
+
+## Import
+
+- `PinInput` - The Pin Input component with context.
+- `PinInputField` - The field for the pin input.
+
+```tsx
+import { PinInput, PinInputField } from "@dreamy-ui/react";
+```
+
+## Usage
+
+`PinInput` does not have any wrapper by default, so you probably want to use `stacked` prop to tell Dream to wrap it into a `HStack`. Use `wrapperProps` to customize the `HStack` component.
+
+<Wrapper>
+	<PinInput stacked>
+		<PinInputField />
+		<PinInputField />
+		<PinInputField />
+	</PinInput>
+</Wrapper>
+
+```tsx
+<PinInput stacked>
+  <PinInputField />
+  <PinInputField />
+  <PinInputField />
+</PinInput>
+```
+
+### Pin Input Size
+
+<Wrapper> 
+	<VStack w="full">
+    <PinInput stacked size="sm">
+      <PinInputField />
+      <PinInputField />
+      <PinInputField />
+    </PinInput>
+
+    <PinInput stacked size="md">
+      <PinInputField />
+      <PinInputField />
+      <PinInputField />
+    </PinInput>
+
+    <PinInput stacked size="lg">
+      <PinInputField />
+      <PinInputField />
+      <PinInputField />
+    </PinInput>
+  </VStack>
+</Wrapper>
+
+### Pin Input Variant
+
+<Wrapper>
+	<VStack w="full">
+		<PinInput stacked variant="outline">
+      <PinInputField />
+      <PinInputField />
+      <PinInputField />
+   </PinInput>
+
+    <PinInput stacked variant="filled">
+       <PinInputField />
+       <PinInputField />
+       <PinInputField />
+    </PinInput>
+ 
+    <PinInput stacked variant="flushed">
+      <PinInputField />
+			<PinInputField />
+			<PinInputField />
+		</PinInput>
+	</VStack>
+</Wrapper>
+
+```tsx
+<VStack w="full">
+  <PinInput stacked variant="outline">
+      <PinInputField />
+      <PinInputField />
+      <PinInputField />
+   </PinInput>
+
+   <PinInput stacked variant="filled">
+       <PinInputField />
+       <PinInputField />
+       <PinInputField />
+    </PinInput>
+ 
+     <PinInput stacked variant="flushed">
+        <PinInputField />
+		<PinInputField />
+		<PinInputField />
+	 </PinInput>
+</VStack>
+```
+
+### Invalid
+Pass `isInvalid` prop to the `PinInput` to show the error state.
+
+<Wrapper>
+	<PinInput stacked isInvalid>
+		<PinInputField />
+		<PinInputField />
+	</PinInput>
+</Wrapper>
+
+```tsx
+<PinInput stacked isInvalid>
+	<PinInputField />
+	<PinInputField />
+ </PinInput>
+```
+
+### Disabled
+Pass `isDisabled` prop to the `PinInput` to show the disabled state.
+
+<Wrapper>
+	<PinInput stacked isDisabled>
+		<PinInputField />
+	  <PinInputField />
+		<PinInputField />
+	</PinInput>
+</Wrapper>
+
+```tsx
+<PinInput stacked isDisabled>
+	<PinInputField />
+	<PinInputField />
+	<PinInputField />
+</PinInput>
+```

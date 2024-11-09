@@ -1,0 +1,143 @@
+---
+title: Checkbox Card
+description: A selectable card component that behaves like a checkbox
+isServerComponent: false
+source: /packages/react/src/components/checkbox-card/checkbox-card.tsx
+themeSource: /packages/system/src/recipes/checkbox-card.ts
+---
+
+## Import
+
+- `CheckboxCard` - A selectable card component that behaves like a checkbox.
+- `CheckboxGroup` - Group wrapper for composing multiple checkbox cards.
+
+```jsx
+import { CheckboxCard, CheckboxGroup } from "@dreamy-ui/react";
+```
+
+- `CheckboxCard` - A selectable card component that behaves like a checkbox.
+- `CheckboxGroup` - Group wrapper for composing multiple checkbox cards.
+
+## Usage
+
+<Wrapper>
+	<VStack w='250px'>
+		<CheckboxCard title="Default Checkbox Card" description="This is a description" />
+	</VStack>
+</Wrapper>
+
+```tsx
+<CheckboxCard title="Default Checkbox Card" description="This is a description" />
+```
+
+### Variant
+
+Change the variant of the checkbox card.
+
+<Wrapper>	
+	<VStack w='250px'>
+		{["outline", "subtle"].map((variant) => (
+			<CheckboxCard key={variant} variant={variant} title={variant} description={`Description for ${variant} variant`} />
+		))}
+	</VStack>
+</Wrapper>
+
+```tsx
+{["outline", "subtle"].map((variant) => (
+	<CheckboxCard 
+		key={variant} 
+		variant={variant} 
+		title={variant} 
+		description={`Description for ${variant} variant`} 
+	/>
+))}
+```
+
+### Checkbox variant
+
+Change the checkbox variant of the checkbox card.
+	
+<Wrapper>
+	<VStack w='250px'>
+		{["solid", "outline"].map((variant) => (
+			<CheckboxCard key={variant} checkboxVariant={variant} title={variant} description={`Description for ${variant} variant`} />
+		))}
+	</VStack>
+</Wrapper>
+
+```tsx
+{["solid", "outline"].map((variant) => (
+	<CheckboxCard 
+		key={variant} 
+		checkboxVariant={variant} 
+		title={variant} 
+		description={`Description for ${variant} variant`} 
+	/>
+))}
+```
+
+### Scheme
+
+Change the color scheme of the checkbox card.
+
+<Wrapper>
+	<VStack w='250px'>
+		{["primary", "secondary", "success", "warning", "error", "info"].map((scheme) => (
+			<CheckboxCard key={scheme} scheme={scheme} title={(scheme)} description={`Description for ${scheme}`} />
+		))}
+	</VStack>
+</Wrapper>
+
+```tsx
+{["primary", "secondary", "success", "warning", "error", "info"].map((scheme) => (
+	<CheckboxCard key={scheme} scheme={scheme} title={(scheme)} description={`Description for ${scheme}`} />
+))}
+```
+
+### Size
+
+Change the checkbox card size.
+
+<Wrapper>
+	<VStack w='250px'>
+		{["sm", "md", "lg"].map((size) => (
+			<CheckboxCard key={size} size={size} title={`${size.toUpperCase()} Size`} description={`Description for ${size} size`} />
+		))}
+	</VStack>
+</Wrapper>
+
+```tsx
+{["sm", "md", "lg"].map((size) => (
+	<CheckboxCard key={size} size={size} title={`${size.toUpperCase()} Size`} description={`Description for ${size} size`} />
+))}
+```
+
+### Checkbox Group
+
+Use `CheckboxGroup` to compose multiple checkboxes or checkbox cards.
+
+
+<Wrapper>
+	<CheckboxCardGroupControl />
+</Wrapper>
+
+
+```tsx
+function CheckboxCardGroupControl() {
+	const [value, setValue] = useState<Array<string | number>>(["1"]);
+
+	return (
+		<>
+			<Text>Selected: {value.join(", ")}</Text>
+			<CheckboxGroup
+				value={value}
+				onChange={setValue}
+			>
+				<CheckboxCard value="1" title="Option 1" description="Description for Option 1" />
+				<CheckboxCard value="2" title="Option 2" description="Description for Option 2" />
+				<CheckboxCard value="3" title="Option 3" description="Description for Option 3" />
+			</CheckboxGroup>
+		 </>
+	);
+}
+```

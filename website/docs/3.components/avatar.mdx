@@ -1,0 +1,107 @@
+---
+title: Avatar
+description: Avatar is a simple `div` tag with styled system.
+isServerComponent: false
+source: /packages/react/src/components/Avatar/Avatar.tsx
+themeSource: /packages/system/src/recipes/avatar.ts
+---
+
+## Import
+
+- `Avatar` - The main component that wraps the avatar.
+- `AvatarGroup` - The wrapper component for stacking multiple avatars.
+
+```jsx
+import { Avatar, AvatarGroup } from "@dreamy-ui/react";
+```
+
+## Usage
+
+<Wrapper>
+  <Avatar
+    src="https://i.pinimg.com/564x/52/60/e9/5260e925c459e3d1206d654822b0d863.jpg"
+    name="My Wifey"
+  />
+</Wrapper>
+
+```tsx
+<Avatar
+  src="https://i.pinimg.com/564x/52/60/e9/5260e925c459e3d1206d654822b0d863.jpg"
+  name="My Wifey"
+/>
+```
+
+### Sizes
+
+You can set the size of the avatar by using the `size` prop.
+
+<Wrapper>
+  <HStack>
+    <Avatar
+      size="sm"
+      src="https://i.pinimg.com/564x/52/60/e9/5260e925c459e3d1206d654822b0d863.jpg"
+      name="My Wifey"
+    />
+    <Avatar
+      size="md"
+      src="https://i.pinimg.com/564x/52/60/e9/5260e925c459e3d1206d654822b0d863.jpg"
+      name="My Wifey"
+    />
+    <Avatar
+      size="lg"
+      src="https://i.pinimg.com/564x/52/60/e9/5260e925c459e3d1206d654822b0d863.jpg"
+      name="My Wifey"
+    />
+	</HStack>
+</Wrapper>
+
+```tsx
+<HStack>
+  <Avatar
+    size="sm"
+    src="https://i.pinimg.com/564x/52/60/e9/5260e925c459e3d1206d654822b0d863.jpg"
+    name="My Wifey"
+  />
+  <Avatar
+    size="md"
+    src="https://i.pinimg.com/564x/52/60/e9/5260e925c459e3d1206d654822b0d863.jpg"
+    name="My Wifey"
+  />
+  <Avatar
+    size="lg"
+    src="https://i.pinimg.com/564x/52/60/e9/5260e925c459e3d1206d654822b0d863.jpg"
+    name="My Wifey"
+  />
+</HStack>
+``` 
+
+### Avatar Group
+
+AvatarGroup is a wrapper around Avatars that displays a number of avatars grouped together in a stack.
+Use `maxAvatars` prop to limit the number of avatars displayed.
+
+<Wrapper>
+  <AvatarGroup arGroup maxAvatars={4}>
+    <Avatar name="Dream" src="/eee.png" />
+    <Avatar name="Dream" src="/eee.png" />
+    <Avatar name="Dream" src="/eee.png" />
+    <Avatar name="Dream" src="/eee.png" />
+    <Avatar name="Dream" src="/eee.png" />
+    <Avatar name="Dream" src="/eee.png" />
+    <Avatar name="Dream" src="/eee.png" />
+    <Avatar name="Dream" src="/eee.png" />
+  </AvatarGroup>
+</Wrapper>
+
+```tsx
+<AvatarGroup maxAvatars={4}>
+  <Avatar name="Dream" src="/eee.png" />
+  <Avatar name="Dream" src="/eee.png" />
+  <Avatar name="Dream" src="/eee.png" />
+  <Avatar name="Dream" src="/eee.png" />
+  <Avatar name="Dream" src="/eee.png" />
+  <Avatar name="Dream" src="/eee.png" />
+  <Avatar name="Dream" src="/eee.png" />
+  <Avatar name="Dream" src="/eee.png" />
+</AvatarGroup>
+```

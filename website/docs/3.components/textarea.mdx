@@ -1,0 +1,159 @@
+---
+title: Textarea
+description: Textarea component allows you to easily create multi-line text inputs.
+isServerComponent: false
+source: /packages/react/src/components/textarea/textarea.tsx
+themeSource: /packages/system/src/recipes/textarea.ts
+---
+
+## Import
+
+- `Textarea` - The Textarea component.
+- `TextareaRSC` - The Textarea component with context.
+
+```tsx
+import { Textarea } from "@dreamy-ui/react";
+import { TextareaRSC } from "@dreamy-ui/react/rsc";
+```
+
+## Usage
+
+Textarea resizes automatically as it's content grows.
+
+<Wrapper>
+	<Textarea placeholder="Enter your bio" />
+</Wrapper>
+
+```tsx
+<Textarea placeholder="Enter your bio" />
+```
+
+### Min and Max rows
+
+Use `minRows` and `maxRows` props to control the number of rows the textarea can expand to.
+
+<Wrapper>
+	<Textarea placeholder="Enter your bio" minRows={2} maxRows={4} />
+</Wrapper>
+
+```tsx
+<Textarea placeholder="Enter your bio" minRows={2} maxRows={4} />
+```
+
+### Resize
+
+Pass `resize` prop to the `Textarea` to enable resizing.
+
+<Wrapper>	
+	<Textarea placeholder="Enter your bio" resize="none" />
+	<Textarea placeholder="Enter your bio" resize="vertical" />
+	<Textarea placeholder="Enter your bio" resize="horizontal" />
+	<Textarea placeholder="Enter your bio" resize="both" />
+</Wrapper>
+
+```tsx
+<Textarea placeholder="Enter your bio" resize="none" />
+<Textarea placeholder="Enter your bio" resize="vertical" />
+<Textarea placeholder="Enter your bio" resize="horizontal" />
+<Textarea placeholder="Enter your bio" resize="both" />
+```
+
+### Textarea Size
+
+<Wrapper>
+	<VStack w="full">
+		<Textarea placeholder="Enter your bio" size="sm" />
+		<Textarea placeholder="Enter your bio" size="md" />
+		<Textarea placeholder="Enter your bio" size="lg" />
+	</VStack>
+</Wrapper>
+
+```tsx
+<VStack w="full">
+	<Textarea placeholder="Enter your bio" size="sm" />
+	<Textarea placeholder="Enter your bio" size="md" />
+	<Textarea placeholder="Enter your bio" size="lg" />
+</VStack>	
+```
+
+### Textarea Variant
+
+<Wrapper>	
+	<VStack w="full">
+		<Textarea placeholder="Enter your bio" variant="outline" />
+		<Textarea placeholder="Enter your bio" variant="filled" />
+		<Textarea placeholder="Enter your bio" variant="flushed" />
+	</VStack>
+</Wrapper>
+
+```tsx
+<VStack w="full">
+	<Textarea placeholder="Enter your bio" variant="outline" />
+	<Textarea placeholder="Enter your bio" variant="filled" />
+	<Textarea placeholder="Enter your bio" variant="flushed" />
+</VStack>
+```
+
+### Invalid
+
+Pass `isInvalid` prop to the `Textarea` to show the error state.
+
+<Wrapper>	
+	<VStack w="full">
+		<Textarea placeholder="Enter your bio" variant="outline" isInvalid />
+		<Textarea placeholder="Enter your bio" variant="filled" isInvalid />
+		<Textarea placeholder="Enter your bio" variant="flushed" isInvalid />
+	</VStack>
+</Wrapper>
+
+```tsx
+<VStack w="full">
+	<Textarea placeholder="Enter your bio" variant="outline" isInvalid />
+	<Textarea placeholder="Enter your bio" variant="filled" isInvalid />
+	<Textarea placeholder="Enter your bio" variant="flushed" isInvalid />
+</VStack>
+```
+
+### Usage with Field
+
+Combine `Textarea` with `Field` to create a nice looking form element.
+
+<Wrapper>
+	<Field>
+		<FieldLabel>Biography</FieldLabel>
+		<Textarea placeholder="Enter your bio" />
+		<FieldHelpText>Username should not contain special characters.</FieldHelpText>
+	</Field>	
+</Wrapper>
+
+```tsx
+<Field>
+	<FieldLabel>Biography</FieldLabel>
+	<Textarea placeholder="Enter your bio" />
+	<FieldHelpText>Your biography should not contain any slurs.</FieldHelpText>
+</Field>	
+```
+
+### No auto resize
+
+If you want to disable the auto resize of the textarea, simply use `TextareaNoAutoSize` component.
+
+<Wrapper>
+	<TextareaNoAutoSize placeholder="Enter your bio" />
+</Wrapper>
+
+```tsx
+<TextareaNoAutoSize placeholder="Enter your bio" />
+```
+
+### RSC usage
+
+TextareaRSC is a RSC compatible component that does not use client handlers.
+
+<Wrapper>
+	<TextareaRSC placeholder="Enter your bio" />
+</Wrapper>
+
+```tsx
+<TextareaRSC placeholder="Enter your bio" />
+```
