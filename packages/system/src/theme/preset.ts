@@ -8,7 +8,6 @@ import { parts, recipes } from "../recipes/index";
 import { conditions } from "./conditions";
 import { globalCss } from "./global-css";
 import { keyframes } from "./keyframes";
-import { patters } from "./patters/index";
 import { staticCss } from "./staticCss";
 import { textStyles } from "./text-styles";
 import { utilities } from "./utils/index";
@@ -87,9 +86,9 @@ export function createDreamPreset(
         },
         globalCss,
         utilities,
-        patterns: {
-            extend: patters
-        },
+        // patterns: {
+        //     extend: patters
+        // },
         staticCss
     });
 
