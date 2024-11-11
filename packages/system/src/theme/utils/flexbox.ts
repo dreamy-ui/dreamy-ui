@@ -131,19 +131,7 @@ export const flexboxUtilities: UtilityConfig = {
     },
     wrapped: {
         values: { type: "boolean" },
-        transform: (value, args) => {
-            console.log(
-                JSON.stringify(
-                    {
-                        value,
-                        typeof: typeof value,
-                        assert: !!value,
-                        args
-                    },
-                    null,
-                    2
-                )
-            );
+        transform: (value) => {
             if (!value) return {};
             return {
                 flexWrap: "wrap"

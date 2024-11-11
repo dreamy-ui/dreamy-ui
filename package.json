@@ -4,7 +4,9 @@
 	"description": "",
 	"private": true,
 	"packageManager": "pnpm@9.1.4",
-	"workspaces": ["packages/**"],
+	"workspaces": [
+		"packages/**"
+	],
 	"scripts": {
 		"dev:system": "cd packages/system && pnpm run dev",
 		"dev:react": "cd packages/react && pnpm run dev",
@@ -24,7 +26,8 @@
 	"devDependencies": {
 		"@biomejs/biome": "1.9.2",
 		"concurrently": "^8.2.2",
-		"turbo": "^2.0.14"
+		"turbo": "^2.0.14",
+		"typescript": "^5.6.3"
 	},
 	"dependencies": {
 		"@changesets/cli": "^2.27.9"

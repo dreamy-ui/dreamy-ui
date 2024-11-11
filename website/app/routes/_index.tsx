@@ -6,6 +6,7 @@ import { BsDiscord } from "react-icons/bs";
 import { IoArrowForward } from "react-icons/io5";
 import { MdOutlineCloud } from "react-icons/md";
 import { CACHE_DURATION, CacheHeaders } from "~/src/.server/cache";
+import Features from "../src/ui/pages/landing/Features";
 
 export const meta: MetaFunction = () => {
     return [{ title: "Dreamy UI - Build performant, websites with ease!" }];
@@ -25,7 +26,7 @@ export default function Index() {
                 col
                 wFull
                 pos={"relative"}
-                minH={"calc(100vh - 32rem)"}
+
             >
                 <Flex
                     py={2}
@@ -37,6 +38,7 @@ export default function Index() {
                     fontWeight={"semibold"}
                     gap={3}
                     itemsCenter
+                    
                 >
                     <Icon as={MdOutlineCloud} />
                     This is a dream!
@@ -119,9 +121,10 @@ export default function Index() {
 
             <Flex
                 col
-                center
                 wFull
-            ></Flex>
+            >
+                <Features />
+            </Flex>
         </>
     );
 }

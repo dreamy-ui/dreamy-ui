@@ -1,7 +1,7 @@
 import { defineRecipe } from "@pandacss/dev";
 
 export const divider = defineRecipe({
-    className: "Dream-divider",
+    className: "dream-divider",
     jsx: ["Divider"],
     base: {
         backgroundColor: "{colors.border.muted}",

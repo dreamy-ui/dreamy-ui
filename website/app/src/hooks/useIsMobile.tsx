@@ -1,9 +1,10 @@
-import { useLayoutEffect, useState } from "react";
+import { useSafeLayoutEffect } from "@dreamy-ui/react";
+import { useState } from "react";
 
 export default function useIsMobile() {
     const [isMobile, setIsMobile] = useState(false);
 
-    useLayoutEffect(() => {
+    useSafeLayoutEffect(() => {
         setIsMobile(typeof window !== "undefined" && window.innerWidth < 768);
     }, []);
 

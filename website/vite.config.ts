@@ -42,12 +42,10 @@ export default defineConfig({
         // }),
         remix({
             future: {
-                v3_singleFetch: false,
                 v3_throwAbortReason: true,
                 v3_relativeSplatPath: true,
                 v3_fetcherPersist: true,
-                v3_lazyRouteDiscovery: false,
-                unstable_optimizeDeps: true
+                v3_lazyRouteDiscovery: false
             }
         }),
         babel({

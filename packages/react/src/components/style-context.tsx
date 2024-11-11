@@ -34,7 +34,7 @@ export const createStyleContext = <R extends StyleRecipe>(
         Component: T,
         slot?: StyleSlot<R>
     ): ComponentVariants<T, R> => {
-        const StyledComponent = forwardRef<T, ComponentProps<T>>((props, ref) => {
+        const StyledComponent = forwardRef((props: any, ref) => {
             const [variantProps, otherProps] = recipe.splitVariantProps(props);
             const slotStyles = recipe(variantProps) as StyleSlotRecipe<R>;
             const forwardedVariantProps = useMemo(() => {
@@ -63,7 +63,7 @@ export const createStyleContext = <R extends StyleRecipe>(
 
     const withContext = <T extends ElementType>(Component: T, slot?: StyleSlot<R>): T => {
         if (!slot) return Component;
-        const StyledComponent = forwardRef<T, ComponentProps<T>>((props, ref) => {
+        const StyledComponent = forwardRef((props: any, ref) => {
             const slotStyles = useContext(StyleContext);
             return createElement(Component, {
                 ...props,
