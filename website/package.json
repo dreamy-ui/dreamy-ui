@@ -1,6 +1,6 @@
 {
 	"name": "dream-ui-website",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"private": true,
 	"sideEffects": false,
 	"type": "module",
@@ -18,7 +18,6 @@
 		"@mdx-js/react": "^3.0.1",
 		"@mdx-js/rollup": "^3.0.1",
 		"@pandabox/unplugin": "^0.1.3",
-		"@pandabox/unplugin-panda-macro": "^0.0.4",
 		"@pandacss/preset-panda": "^0.45.1",
 		"@remix-run/css-bundle": "^2.14.0",
 		"@remix-run/express": "^2.11.2",
@@ -38,7 +37,6 @@
 		"react-compiler-runtime": "19.0.0-beta-8a03594-20241020",
 		"react-dom": "^18.3.1",
 		"react-icons": "^5.0.1",
-		"react-lorem-ipsum": "^1.4.10",
 		"rehype-expressive-code": "^0.35.3",
 		"rehype-pretty-code": "^0.13.2",
 		"remark-parse": "^11.0.0",
@@ -47,6 +45,7 @@
 		"shiki": "^1.10.3",
 		"source-map-support": "^0.5.21",
 		"unified": "^11.0.5",
+		"vite-bundle-visualizer": "^1.2.1",
 		"vite-plugin-babel": "^1.2.0",
 		"vite-plugin-inspect": "^0.8.7",
 		"zod": "^3.23.8"

@@ -14,6 +14,13 @@ import {
     InputGroup,
     InputLeftAddon,
     InputRightAddon,
+    Modal,
+    ModalBody,
+    ModalCloseButton,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    ModalOverlay,
     Slider,
     SliderFilledTrack,
     SliderMark,
@@ -31,7 +38,8 @@ import {
     TableColumnHeader,
     TableHeader,
     TableRow,
-    Tabs
+    Tabs,
+    useControllable
 } from "@dreamy-ui/react";
 import {
     Badge,
@@ -52,11 +60,29 @@ export default function Test() {
 
     const [checked, setChecked] = useState(false);
 
+    const { isOpen, onClose, onOpen } = useControllable();
+
     return (
         <Flex
             col
             gap={10}
         >
+            <Button onClick={onOpen}>Open Modal</Button>
+
+            <Modal
+                isOpen={isOpen}
+                onClose={onClose}
+            >
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader> Modal</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>This is a modal!</ModalBody>
+                    <ModalFooter>
+                        <Button onClick={onClose}>Close</Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
             <Grid
                 columns={3}
                 rowGap={4}

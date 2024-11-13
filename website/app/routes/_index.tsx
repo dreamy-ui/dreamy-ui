@@ -8,7 +8,13 @@ import { MdOutlineCloud } from "react-icons/md";
 import { CACHE_DURATION, CacheHeaders } from "~/src/.server/cache";
 
 export const meta: MetaFunction = () => {
-    return [{ title: "Dreamy UI - Build performant, websites with ease!" }];
+    return [
+        { title: "Dreamy UI - Build performant, websites with ease!" },
+        {
+            description:
+                "Build performant, accessible, websites with ease using Dreamy UI. Level up your UI with next-gen DX."
+        }
+    ];
 };
 
 export const headers = CacheHeaders.cache(CACHE_DURATION.DEFAULT);

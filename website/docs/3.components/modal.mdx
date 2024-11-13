@@ -150,7 +150,7 @@ export default function ScrollBehaviorModal() {
 }
 ```
 
-- **outside**: The modal body will scroll outside the modal.
+- **outside**: The modal body will scroll outside the modal. If your content is long and it bugs the modal position, ensure to set the `placement="top"` prop.
 
 <Wrapper>
 	<ScrollableOutsideModal />
@@ -166,7 +166,13 @@ export function ScrollableOutsideModal() {
                 Open Modal
             </Button>
 
-            <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="outside" size={"lg"}>
+            <Modal
+                isOpen={isOpen}
+                onClose={onClose}
+                scrollBehavior="outside"
+                placement="top"
+                size={"lg"}
+            >
                 <ModalOverlay />
                 <ModalContent>
                     <ModalHeader>Modal Header</ModalHeader>
