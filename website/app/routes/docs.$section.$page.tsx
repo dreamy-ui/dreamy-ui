@@ -1,5 +1,5 @@
 import { Button } from "@dreamy-ui/react";
-import { Flex, HStack, Heading, Text, VStack } from "@dreamy-ui/react/rsc";
+import { Flex, Heading, Text, VStack } from "@dreamy-ui/react/rsc";
 import type { LoaderFunctionArgs, MetaArgs, MetaFunction } from "@remix-run/node";
 import {
     type ClientLoaderFunctionArgs,
@@ -108,7 +108,6 @@ export default function DocsSectionPage() {
             as={"main"}
             w={"full"}
             pb={20}
-            maxW={"full"}
             overflowX={"auto"}
             flexGrow={0}
             pt={{
@@ -120,6 +119,7 @@ export default function DocsSectionPage() {
                 <Flex
                     col
                     gap={4}
+                    w={"full"}
                 >
                     <Heading size={"3xl"}>{meta.title}</Heading>
                     {mdxDescription ? (
@@ -128,7 +128,18 @@ export default function DocsSectionPage() {
                         <Text>{meta.description}</Text>
                     )}
 
-                    <HStack>
+                    <Flex
+                        wrapped
+                        gap={2}
+                        itemsStretch={"stretch"}
+                        css={{
+                            "& > *": {
+                                mdDown: {
+                                    flex: "1 1 180px"
+                                }
+                            }
+                        }}
+                    >
                         {[meta.source, meta.themeSource].map((s, i) => {
                             if (!s) return null;
 
@@ -174,7 +185,7 @@ export default function DocsSectionPage() {
                                 ? "Server Component"
                                 : "Client Component"}
                         </Button>
-                    </HStack>
+                    </Flex>
                 </Flex>
             )}
 

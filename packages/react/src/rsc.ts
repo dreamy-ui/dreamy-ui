@@ -5,6 +5,7 @@ export { Badge, type BadgeProps } from "./components/badge";
 export { Box, type BoxProps } from "./components/box/box";
 export { Divider, type DividerProps } from "./components/divider";
 export { Flex, type FlexProps } from "./components/flex/flex";
+export { Grid, GridItem, type GridItemProps, type GridProps } from "./components/grid";
 export { Heading, type HeadingProps } from "./components/heading";
 export { Icon, type IconProps } from "./components/icon";
 export { ImageRSC, type ImageRSCProps } from "./components/image/image-rsc";

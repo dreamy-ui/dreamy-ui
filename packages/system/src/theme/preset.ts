@@ -1,3 +1,4 @@
+import { patters } from "@/theme/patters";
 import { resolveButtonColors } from "@/theme/resolve-button-colors";
 import { createSemanticTokens } from "@/theme/semantic-tokens";
 import { createTokens } from "@/theme/tokens";
@@ -86,9 +87,9 @@ export function createDreamPreset(
         },
         globalCss,
         utilities,
-        // patterns: {
-        //     extend: patters
-        // },
+        patterns: {
+            extend: patters
+        },
         staticCss
     });
 

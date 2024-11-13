@@ -9,7 +9,7 @@ import { nextTick } from "@/utils/ticks";
 import type { HTMLDreamProps } from "@/utils/types";
 import { styled } from "@dreamy-ui/system/jsx";
 import { type ButtonVariantProps, button } from "@dreamy-ui/system/recipes";
-import { forwardRef, useCallback, useMemo } from "react";
+import { forwardRef, useCallback } from "react";
 
 export interface UniversalButtonProps extends ButtonSpinnerOptions {
     /**
@@ -79,7 +79,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             isDisabled: isDisabledRipple
         } = useRipple();
 
-        const isMobile = useMemo(() => {
+        const isMobile = useCallback(() => {
             const result = navigator.userAgent.match(
                 /(iphone)|(ipod)|(ipad)|(android)|(blackberry)|(windows phone)|(symbian)/i
             );
@@ -92,7 +92,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
                 rest.onClick?.(e);
                 if (disableRipple || isDisabled || isDisabledRipple) return;
 
-                if (isMobile) {
+                if (isMobile()) {
                     onPointerDownRipple(e);
                     nextTick(() => {
                         nextTick(() => {
@@ -109,15 +109,15 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
                 onRippleClickHandler,
                 isDisabledRipple,
                 rest.onClick,
-                isMobile,
-                onPointerDownRipple
+                onPointerDownRipple,
+                isMobile
             ]
         );
 
         const onPointerDown = useCallback(
             (e: React.PointerEvent<HTMLButtonElement>) => {
                 rest.onPointerDown?.(e);
-                if (disableRipple || isDisabled || isDisabledRipple || isMobile) return;
+                if (disableRipple || isDisabled || isDisabledRipple || isMobile()) return;
                 onPointerDownRipple(e);
             },
             [

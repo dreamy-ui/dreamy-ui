@@ -1,5 +1,7 @@
-import { flex } from "@/theme/patters/flex";
+import { divider } from "./divider";
+import { stack } from "./stack";
 
 export const patters = {
-    flex
+    divider,
+    stack
 };

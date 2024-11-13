@@ -70,9 +70,10 @@ export default defineConfig({
             },
             "figure[data-rehype-pretty-code-figure]": {
                 // it was breaking on mobile with 100%
-                width: "100dvw",
+                width: "100%",
                 maxWidth: "100%",
                 overflowX: "auto",
+                margin: "auto",
                 marginTop: 4,
                 marginBottom: 4
             },

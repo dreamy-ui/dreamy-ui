@@ -1,0 +1,111 @@
+---
+title: Tooltip
+description: Tooltip is an interactive component that displays information when hovering over an element.
+isServerComponent: false
+source: /packages/react/src/components/tooltip/tooltip.tsx
+themeSource: /packages/system/src/recipes/tooltip.ts
+---
+
+## Import
+
+- `Tooltip` - The Tooltip component.
+
+```tsx
+import { Tooltip } from "@dreamy-ui/react";
+```
+
+## Usage
+
+Base usage of a Tooltip.
+
+<Wrapper>
+    <Tooltip content="I am visible on hover">
+        <Text w='fit-content'>Hover me</Text>
+    </Tooltip>
+</Wrapper>
+
+```tsx
+<Tooltip content="I am visible on hover">
+    <Text>Hover me</Text>
+</Tooltip>
+```
+
+### Open and close delay
+
+You can control the open and close delay of the tooltip by using the `openDelay` and `closeDelay` props.
+
+<Wrapper>
+    <Tooltip content="I am visible on hover after 1000 miliseconds" openDelay={1000}>
+        <Text w='fit-content'>Hover me (1s open)</Text>
+    </Tooltip>
+        <Tooltip content="I am closed after 1000 miliseconds" closeDelay={1000}>
+        <Text w='fit-content'>Hover me (1s close)</Text>
+    </Tooltip>
+</Wrapper>
+
+```tsx
+<Tooltip content="I am visible on hover after 1000 miliseconds" openDelay={1000}>
+    <Text>Hover me (1s open)</Text>
+</Tooltip>
+<Tooltip content="I am closed after 1000 miliseconds" closeDelay={1000}>
+    <Text>Hover me (1s close)</Text>
+</Tooltip>
+```
+
+### Close handlers
+
+You can control the close behavior of the tooltip by using the `closeOnClick`, `closeOnPointerDown`, `closeOnEsc`, and `closeOnScroll` props.
+
+By default, the tooltip will close on click, pointer down, esc key, but not on scroll.
+
+<Wrapper>
+    <Tooltip content="I am not closed on click" closeOnClick={false}>
+        <Text w='fit-content'>Close on click false</Text>
+    </Tooltip>
+    <Tooltip content="I am not closed on pointer down" closeOnPointerDown={false}>
+        <Text w='fit-content'>Close on pointer down false</Text>
+    </Tooltip>
+    <Tooltip content="I am not closed on esc key" closeOnEsc={false}>
+        <Text w='fit-content'>Close on esc key false</Text>
+    </Tooltip>
+    <Tooltip content="I am closed on scroll" closeOnScroll>
+        <Text w='fit-content'>Close on scroll</Text>
+    </Tooltip>
+</Wrapper>
+
+```tsx
+<Tooltip content="I am not closed on click" closeOnClick={false}>
+    <Text>Close on click false</Text>
+</Tooltip>
+<Tooltip content="I am not closed on pointer down" closeOnPointerDown={false}>
+    <Text>Close on pointer down false</Text>
+</Tooltip>
+<Tooltip content="I am not closed on esc key" closeOnEsc={false}>
+    <Text>Close on esc key false</Text>
+</Tooltip>
+<Tooltip content="I am closed on scroll" closeOnScroll>
+    <Text>Close on scroll</Text>
+</Tooltip>
+```
+
+### Arrow 
+
+You can control the arrow of the tooltip by using the `hasArrow` and `arrowSize` props.
+
+<Wrapper>
+    <Tooltip content="I have no arrow" hasArrow={false}>
+        <Text w='fit-content'>No arrow</Text>
+    </Tooltip>
+    <Tooltip content="I have an arrow" arrowSize={15}>
+        <Text w='fit-content'>Arrow size 15</Text>
+    </Tooltip>
+</Wrapper>
+
+```tsx
+<Tooltip content="I have no arrow" hasArrow={false}>
+    <Text>No arrow</Text>
+</Tooltip>
+<Tooltip content="I have an arrow" arrowSize={15}>
+    <Text>Arrow size 15</Text>
+</Tooltip>
+```

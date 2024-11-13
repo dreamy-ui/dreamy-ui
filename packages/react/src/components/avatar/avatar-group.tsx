@@ -1,9 +1,8 @@
 import type { AvatarProps } from "@/components/avatar/avatar";
 import { Box } from "@/components/box";
-import { Flex } from "@/components/flex";
+import { Flex, type FlexProps } from "@/components/flex";
 import { getValidChildren } from "@/utils/children";
 import { compact } from "@/utils/compact";
-import type { HTMLDreamProps } from "@/utils/types";
 import type { SystemProperties } from "@dreamy-ui/system/types";
 import { cloneElement, forwardRef } from "react";
 
@@ -25,9 +24,7 @@ interface AvatarGroupOptions {
     maxAvatars?: number;
 }
 
-export interface AvatarGroupProps
-    extends AvatarGroupOptions,
-        Omit<HTMLDreamProps<"div">, "children"> {}
+export interface AvatarGroupProps extends AvatarGroupOptions, Omit<FlexProps, "children"> {}
 
 /**
  * AvatarGroup displays a number of avatars grouped together in a stack.
@@ -67,8 +64,18 @@ export const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
         });
 
         return (
-            <Flex ref={ref} role="group" data-part="group" {...rest}>
-                {excess > 0 && <Box marginStart={spacing} data-part="excess">{`+${excess}`}</Box>}
+            <Flex
+                ref={ref}
+                role="group"
+                data-part="group"
+                {...rest}
+            >
+                {excess > 0 && (
+                    <Box
+                        marginStart={spacing}
+                        data-part="excess"
+                    >{`+${excess}`}</Box>
+                )}
                 {clones}
             </Flex>
         );

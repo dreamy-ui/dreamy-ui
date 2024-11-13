@@ -1,10 +1,9 @@
-import type { MotionBoxProps } from "@/components/box";
-import { MotionFlex } from "@/components/flex";
+import { MotionFlex, type MotionFlexProps } from "@/components/flex";
 import { useTabsContext } from "@/components/tabs/use-tabs";
 import { useCanUseDOM, useDefaultTransition } from "@/provider";
 import { forwardRef } from "react";
 
-export interface TabIndicatorProps extends MotionBoxProps {}
+export interface TabIndicatorProps extends MotionFlexProps {}
 
 /**
  * Tab Indicator that animates when the tab is selected.

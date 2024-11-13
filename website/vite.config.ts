@@ -32,13 +32,21 @@ const reactCompilerConfig = {
 
 export default defineConfig({
     plugins: [
-        // Inspect(),
+        // Inspect({
+        //     build: true
+        // }),
         // remixDevTools(),
         mdx(),
         // pandabox.vite({
-        //     optimizeCss: false,
-        //     outfile: "./panda.css"
-        //     // exclude: ["./styled-system", "styled-system", "styled-system/*", "../packages/*"]
+        //     optimizeJs: "auto",
+        //     exclude: [
+        //         "./styled-system",
+        //         "styled-system",
+        //         "styled-system/*",
+        //         "../packages/*",
+        //         "@dreamy-ui/system",
+        //         "@dreamy-ui/react"
+        //     ]
         // }),
         remix({
             future: {

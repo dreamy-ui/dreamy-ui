@@ -1,8 +1,14 @@
-import { Button, MotionFlex, TRANSITION_EASINGS, useReducedMotion } from "@dreamy-ui/react";
+import {
+    Button,
+    MotionFlex,
+    TRANSITION_EASINGS,
+    useReducedMotion,
+    useSafeLayoutEffect
+} from "@dreamy-ui/react";
 import { Box, Flex, Icon } from "@dreamy-ui/react/rsc";
 import { useLocation } from "@remix-run/react";
 import { AnimatePresence } from "framer-motion";
-import { useLayoutEffect, useState } from "react";
+import { useState } from "react";
 import { BiChevronDown } from "react-icons/bi";
 import { useSections } from "~/routes/docs";
 import { OnThisPageHeadings } from "~/src/ui/docs/OnThisPage";
@@ -37,8 +43,7 @@ function DocsNav() {
     const { sections } = useSections();
 
     const location = useLocation();
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-    useLayoutEffect(() => {
+    useSafeLayoutEffect(() => {
         setIsOpen(false);
     }, [location.pathname]);
 
@@ -108,8 +113,9 @@ function OnThisPageNav() {
     const [isOpen, setIsOpen] = useState(false);
 
     const location = useLocation();
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-    useLayoutEffect(() => {
+    useSafeLayoutEffect(() => {
+        if (!location.hash) return;
+
         setTimeout(() => {
             setIsOpen(false);
         }, 700);

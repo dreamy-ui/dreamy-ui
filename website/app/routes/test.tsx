@@ -33,7 +33,17 @@ import {
     TableRow,
     Tabs
 } from "@dreamy-ui/react";
-import { Badge, Flex, Heading, Kbd, Text, VStack } from "@dreamy-ui/react/rsc";
+import {
+    Badge,
+    Divider,
+    Flex,
+    Grid,
+    GridItem,
+    Heading,
+    Kbd,
+    Text,
+    VStack
+} from "@dreamy-ui/react/rsc";
 import { useEffect, useMemo, useState } from "react";
 import { IoAdd, IoRemove } from "react-icons/io5";
 
@@ -47,6 +57,46 @@ export default function Test() {
             col
             gap={10}
         >
+            <Grid
+                columns={3}
+                rowGap={4}
+                columnGap={2}
+            >
+                <GridItem
+                    colSpan={2}
+                    p={2}
+                    bg={"red"}
+                    color="black"
+                >
+                    1
+                </GridItem>
+                <GridItem
+                    p={2}
+                    bg={"red"}
+                    rowSpan={2}
+                >
+                    1
+                </GridItem>
+                <GridItem
+                    p={2}
+                    bg={"red"}
+                >
+                    1
+                </GridItem>
+                <GridItem
+                    p={2}
+                    bg={"red"}
+                >
+                    1
+                </GridItem>
+            </Grid>
+
+            <Divider />
+            <Divider
+                orientation="vertical"
+                h={"100px"}
+            />
+
             <Heading size={"5xl"}>Testing</Heading>
 
             <Table

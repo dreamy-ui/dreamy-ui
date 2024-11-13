@@ -1,7 +1,7 @@
-import type { Root } from "@mdx-js/mdx/internal-create-format-aware-processors";
 import type { MDXRemoteSerializeResult } from "next-mdx-remote";
 import { serialize } from "next-mdx-remote/serialize";
 import fs from "node:fs/promises";
+import type { Root } from "node_modules/remark-parse/lib";
 import rehypePrettyCode, { type Options } from "rehype-pretty-code";
 import remarkParse from "remark-parse";
 import { unified } from "unified";

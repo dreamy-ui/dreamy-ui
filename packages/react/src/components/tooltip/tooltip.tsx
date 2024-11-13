@@ -140,12 +140,7 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>((props, ref) => 
             <AnimatePresence>
                 {tooltip.isOpen && !isDisabled && (
                     <PortalComponent {...(disablePortal ? {} : (portalProps as any))}>
-                        <Box
-                            {...tooltip.getTooltipPositionerProps()}
-                            style={{
-                                pointerEvents: "none"
-                            }}
-                        >
+                        <Box {...tooltip.getTooltipPositionerProps()}>
                             <StyledTooltip
                                 variants={variants}
                                 initial="exit"

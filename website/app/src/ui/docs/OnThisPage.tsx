@@ -1,5 +1,17 @@
-import { Box, Flex, type FlexProps, Heading } from "@dreamy-ui/react/rsc";
-import { Fragment, memo } from "react";
+import { Button, useEventListener } from "@dreamy-ui/react";
+import {
+    Box,
+    Divider,
+    Link as DreamLink,
+    Flex,
+    type FlexProps,
+    Heading,
+    Icon
+} from "@dreamy-ui/react/rsc";
+import { useLocation } from "@remix-run/react";
+import { Fragment, memo, useState } from "react";
+import { BiChevronUp, BiEdit } from "react-icons/bi";
+import { useSections } from "~/routes/docs";
 import { useDoc } from "~/routes/docs.$section.$page";
 import { Link } from "~/src/ui/global/Link";
 
@@ -48,6 +60,10 @@ export default function OnThisPage() {
             >
                 <OnThisPageHeadings gap={1} />
             </Flex>
+
+            <Divider />
+
+            <ActionButtons />
         </Flex>
     );
 }
@@ -98,3 +114,74 @@ export const OnThisPageHeadings = memo((props: FlexProps) => {
         </Flex>
     );
 });
+
+function ActionButtons() {
+    const { pathname } = useLocation();
+    const { sections } = useSections();
+
+    const [hasScrolled, setHasScrolled] = useState(false);
+    useEventListener(
+        "scroll",
+        () => {
+            if (window.scrollY > 0 && !hasScrolled) {
+                setHasScrolled(true);
+            } else if (window.scrollY === 0 && hasScrolled) {
+                setHasScrolled(false);
+            }
+        },
+        null,
+        { fireOnMount: true }
+    );
+
+    function getGithubDocPath() {
+        const path = pathname.split("/").slice(2).join("/");
+        let folder = path.split("/")[0];
+        let file = path.split("/")[1];
+
+        const folderIndex = sections.findIndex(
+            (s) => s.title.toLowerCase() === folder.toLowerCase()
+        );
+        folder = `${folderIndex + 1}.${folder}`;
+
+        if (!folder.includes("components")) {
+            const fileIndex = sections[folderIndex].sections.findIndex((s) => s.slug === pathname);
+            file = `${fileIndex + 1}.${file}`;
+        }
+        return `${folder}/${file}`;
+    }
+    const githubDocUrl = `https://github.com/${import.meta.env.VITE_SOURCE_REPO}/blob/main/website/docs/${getGithubDocPath()}.mdx`;
+
+    return (
+        <Flex
+            col
+            gap={2}
+            pl={2}
+            color={"fg.medium"}
+        >
+            <Button
+                variant={"link"}
+                justifyContent={"space-between"}
+                asComp={
+                    <DreamLink
+                        href={githubDocUrl}
+                        isExternal
+                    />
+                }
+                rightIcon={<Icon as={BiEdit} />}
+            >
+                Edit this page
+            </Button>
+            <Button
+                variant={"link"}
+                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                rightIcon={<Icon as={BiChevronUp} />}
+                justifyContent={"space-between"}
+                opacity={hasScrolled ? 1 : 0}
+                transition={"opacity 0.2s"}
+                transitionTimingFunction={"ease-in-out"}
+            >
+                Back to top
+            </Button>
+        </Flex>
+    );
+}

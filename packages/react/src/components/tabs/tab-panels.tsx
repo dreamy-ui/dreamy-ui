@@ -1,9 +1,8 @@
-import { Flex } from "@/components/flex";
-import type { HTMLDreamProps } from "@/utils/types";
+import { Flex, type FlexProps } from "@/components/flex";
 import { forwardRef } from "react";
 import { useTabPanels } from "./use-tabs";
 
-export interface TabPanelsProps extends HTMLDreamProps<"div"> {}
+export interface TabPanelsProps extends FlexProps {}
 
 /**
  * TabPanel
@@ -17,7 +16,12 @@ export const TabPanelsBase = forwardRef<HTMLDivElement, TabPanelsProps>(
     function TabPanels(props, ref) {
         const panelsProps = useTabPanels(props);
 
-        return <Flex {...panelsProps} ref={ref} />;
+        return (
+            <Flex
+                {...panelsProps}
+                ref={ref}
+            />
+        );
     }
 );
 

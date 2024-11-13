@@ -1,5 +1,6 @@
 import { IconButton, useEventListener } from "@dreamy-ui/react";
-import { Flex, HStack } from "@dreamy-ui/react/rsc";
+import { Flex } from "@dreamy-ui/react/rsc";
+import { HStack } from "@dreamy-ui/system/jsx";
 import { memo, useState } from "react";
 import { Link } from "~/src/ui/global/Link";
 import Search from "~/src/ui/global/Search";
@@ -61,6 +62,7 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: Props) {
                         base: 2,
                         md: 4
                     }}
+                    itemsStart
                 >
                     <Link
                         to={"/discord"}

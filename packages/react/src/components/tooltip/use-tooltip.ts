@@ -245,18 +245,21 @@ export function useTooltip(props: Partial<UseTooltipProps> = {}) {
     );
 
     const getTooltipPositionerProps: PropGetter = useCallback(
-        (props = {}, forwardedRef = null) =>
-            getPopperProps(
+        (props = {}, forwardedRef = null) => {
+            console.log("arrow size", arrowSize);
+            return getPopperProps(
                 {
                     ...props,
                     style: {
                         ...props.style,
+                        pointerEvents: "none",
                         [popperCSSVars.arrowSize.var]: arrowSize ? `${arrowSize}px` : undefined,
                         [popperCSSVars.arrowShadowColor.var]: arrowShadowColor
                     }
                 },
                 forwardedRef
-            ),
+            );
+        },
         [getPopperProps, arrowSize, arrowShadowColor]
     );
 

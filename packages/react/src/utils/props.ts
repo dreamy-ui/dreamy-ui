@@ -59,3 +59,23 @@ export function pick<T extends Record<string, any>, K extends keyof T>(object: T
     }
     return result;
 }
+
+export function splitProps<T extends Record<string, any>, K extends Array<keyof T>>(
+    props: T,
+    keys: K
+): [Pick<T, K[number]>, Omit<T, K[number]>] {
+    const picked: Pick<T, K[number]> = {} as Pick<T, K[number]>;
+    const rest: Omit<T, K[number]> = {} as Omit<T, K[number]>;
+
+    const keySet = new Set(keys);
+
+    for (const key in props) {
+        if (keySet.has(key as K[number])) {
+            picked[key as K[number]] = props[key];
+        } else {
+            (rest as any)[key] = props[key];
+        }
+    }
+
+    return [picked, rest];
+}

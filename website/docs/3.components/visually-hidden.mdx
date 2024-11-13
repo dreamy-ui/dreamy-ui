@@ -1,0 +1,37 @@
+---
+title: Visually Hidden
+description: Visually Hidden is a component that hides content from the screen while keeping it accessible to screen readers.
+isServerComponent: true
+source: /packages/react/src/components/visually-hidden/visually-hidden.tsx
+themeSource: /packages/system/styled-system/patterns/grid.js
+---
+
+## Import
+
+- `VisuallyHidden` - The Visually Hidden component that hides content from the screen while keeping it accessible to screen readers.
+
+```tsx
+import { VisuallyHidden } from "@dreamy-ui/react/rsc";
+```
+
+## Usage
+
+Base usage of a Visually Hidden component.
+
+<Wrapper>
+    <Button color="error" w='fit-content'>
+        <>Destroy</>
+        <VisuallyHidden>
+            <>Content accessible only to screen readers</>
+		</VisuallyHidden>
+	</Button>
+</Wrapper>
+
+```tsx
+<Button color="error">
+    Destroy
+    <VisuallyHidden>
+        Content accessible only to screen readers
+    </VisuallyHidden>
+</Button>
+```

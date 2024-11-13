@@ -17,6 +17,7 @@ export default function AppLayout({ children }: PropsWithChildren) {
         <>
             <MotionFlex
                 flex={1}
+                w={"full"}
                 animate={{
                     x: isMenuOpen ? "-80vw" : 0
                 }}

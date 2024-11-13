@@ -91,7 +91,7 @@ export class ExpressApp {
                 "/assets",
                 express.static("build/client/assets", { immutable: true, maxAge: "1y" })
             );
-            this.app.use(express.static("public", { maxAge: "1h" }));
+            this.app.use(express.static("public", { maxAge: "1m" }));
         }
         this.app.use(morgan("short"));
 

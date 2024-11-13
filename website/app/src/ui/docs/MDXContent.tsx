@@ -42,13 +42,16 @@ import {
     TableRow,
     Tabs,
     Textarea,
-    TextareaNoAutoSize
+    TextareaNoAutoSize,
+    Tooltip
 } from "@dreamy-ui/react";
 import {
     Badge,
     Box,
     Divider,
     Flex,
+    Grid,
+    GridItem,
     HStack,
     Heading,
     type HeadingProps,
@@ -63,7 +66,8 @@ import {
     Stack,
     Text,
     TextareaRSC,
-    VStack
+    VStack,
+    VisuallyHidden
 } from "@dreamy-ui/react/rsc";
 import type * as mdx from "@mdx-js/react";
 import { useLocation } from "@remix-run/react";
@@ -197,7 +201,11 @@ const DreamComponents = {
     ImageRSC,
     InputRSC,
     TextareaRSC,
-    TextareaNoAutoSize
+    TextareaNoAutoSize,
+    Grid,
+    GridItem,
+    Tooltip,
+    VisuallyHidden
 };
 
 function Wrapper({ children }: PropsWithChildren) {
