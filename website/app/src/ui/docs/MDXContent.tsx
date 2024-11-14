@@ -63,6 +63,8 @@ import {
     List,
     ListItem,
     Progress,
+    Skeleton,
+    SkeletonText,
     Stack,
     Text,
     TextareaRSC,
@@ -205,7 +207,9 @@ const DreamComponents = {
     Grid,
     GridItem,
     Tooltip,
-    VisuallyHidden
+    VisuallyHidden,
+    Skeleton,
+    SkeletonText
 };
 
 function Wrapper({ children }: PropsWithChildren) {

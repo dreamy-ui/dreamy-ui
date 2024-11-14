@@ -1,0 +1,100 @@
+---
+title: Skeleton
+description: Skeleton is used to show a loading state for a component, while keeping the layout size.
+isServerComponent: true
+source: /packages/react/src/components/skeleton/skeleton.tsx
+themeSource: /packages/system/styled-system/patterns/skeleton.js
+---
+
+## Import
+
+- `Skeleton` - The Skeleton component.
+- `SkeletonText` - The Skeleton for text content.
+
+```tsx
+import { Skeleton, SkeletonText } from "@dreamy-ui/react/rsc";
+```
+
+## Usage
+
+Base usage of a Skeleton.
+
+<Wrapper>
+    <VStack maxW='300px' gap={4}>
+        <HStack>
+            <Skeleton
+                boxSize="10"
+                rounded={"full"}
+            />
+            <SkeletonText
+                lines={2}
+            />
+        </HStack>
+        <Skeleton h='150px' />
+    </VStack>
+</Wrapper>
+
+```tsx
+<VStack maxW='300px' gap={4}>
+    <HStack>
+        <Skeleton
+            boxSize="10"
+            rounded={"full"}
+        />
+        <SkeletonText
+            lines={2}
+        />
+    </HStack>
+    <Skeleton h='150px' />
+</VStack>
+```
+
+### Variants
+
+<Wrapper>
+    <Flex wrapped gap={6}>
+        {["pulse", "shine", "none"].map(variant => (
+            <VStack w='300px'>
+                <Text>{variant}</Text>
+                <VStack gap={4}>
+                    <HStack>
+                        <Skeleton
+                            variant={variant}
+                            boxSize="10"
+                            rounded={"full"}
+                        />
+                        <SkeletonText
+                            variant={variant}
+                            lines={2}
+                        />
+                    </HStack>
+                    <Skeleton h='150px' variant={variant} />
+                </VStack>
+            </VStack>
+        ))}
+    </Flex>
+</Wrapper>
+
+```tsx
+<Flex wrapped gap={6}>
+    {["pulse", "shine", "none"].map(variant => (
+        <VStack w='300px'>
+            <Text>{variant}</Text>
+            <VStack gap={4}>
+                <HStack>
+                    <Skeleton
+                        variant={variant}
+                        boxSize="10"
+                        rounded={"full"}
+                    />
+                    <SkeletonText
+                        variant={variant}
+                        lines={2}
+                    />
+                </HStack>
+                <Skeleton h='150px' variant={variant} />
+            </VStack>
+        </VStack>
+    ))}
+</Flex>
+```

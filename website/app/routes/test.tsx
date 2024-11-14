@@ -49,6 +49,8 @@ import {
     GridItem,
     Heading,
     Kbd,
+    Skeleton,
+    SkeletonText,
     Text,
     VStack
 } from "@dreamy-ui/react/rsc";
@@ -67,6 +69,21 @@ export default function Test() {
             col
             gap={10}
         >
+            <Flex
+                gap={4}
+                row
+            >
+                <Skeleton
+                    boxSize="10"
+                    rounded={"full"}
+                />
+                <SkeletonText
+                    variant={"shine"}
+                    maxW="100%"
+                    lines={2}
+                />
+            </Flex>
+
             <Button onClick={onOpen}>Open Modal</Button>
 
             <Modal
@@ -456,6 +473,7 @@ export default function Test() {
             <Slider
                 defaultValue={25}
                 size={"sm"}
+                scheme={"info"}
             >
                 <SliderTrack>
                     <SliderFilledTrack />

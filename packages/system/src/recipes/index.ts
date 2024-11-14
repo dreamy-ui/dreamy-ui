@@ -12,6 +12,7 @@ import { list } from "@/recipes/list";
 import { modal } from "@/recipes/modal";
 import { popover } from "@/recipes/popover";
 import { progress } from "@/recipes/progress";
+import { skeleton } from "@/recipes/skeleton";
 import { slider } from "@/recipes/slider";
 import { spinner } from "@/recipes/spinner";
 import { tabs } from "@/recipes/tabs";
@@ -47,7 +48,8 @@ export const recipes = {
     checkbox,
     checkboxCard,
     snippet,
-    table
+    table,
+    skeleton
 };
 
 export const parts = {

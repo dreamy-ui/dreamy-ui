@@ -14,6 +14,12 @@ export { Kbd, type KbdProps } from "./components/kbd";
 export { Link, type LinkProps } from "./components/link";
 export { List, ListItem, type ListItemProps, type ListProps } from "./components/list";
 export { Progress, type ProgressProps } from "./components/progress";
+export {
+    Skeleton,
+    SkeletonText,
+    type SkeletonProps,
+    type SkeletonTextProps
+} from "./components/skeleton";
 export { Spinner, type SpinnerProps } from "./components/spinner";
 export { Stack, type StackProps } from "./components/stack";
 export { HStack, type HStackProps } from "./components/stack/hstack";

@@ -34,5 +34,12 @@ export const keyframes = defineKeyframes({
     stripe: {
         from: { backgroundPosition: "1rem 0" },
         to: { backgroundPosition: "0 0" }
+    },
+    pulse: {
+        "50%": { opacity: "0.5" }
+    },
+    "bg-position": {
+        from: { backgroundPosition: "var(--animate-from, 1rem) 0" },
+        to: { backgroundPosition: "var(--animate-to, 0) 0" }
     }
 });
