@@ -4,10 +4,8 @@ import type { LoaderFunctionArgs, MetaArgs, MetaFunction } from "@remix-run/node
 import {
     type ClientLoaderFunctionArgs,
     type ShouldRevalidateFunctionArgs,
-    isRouteErrorResponse,
     json,
-    useLocation,
-    useRouteError
+    useLocation
 } from "@remix-run/react";
 import { useEffect, useMemo } from "react";
 import { AiFillThunderbolt } from "react-icons/ai";
@@ -19,6 +17,7 @@ import { cacheClientLoader, useCachedRouteLoaderData } from "~/src/functions/cli
 import MDXContent from "~/src/ui/docs/MDXContent";
 import { Link } from "~/src/ui/global/Link";
 import type { ComponentDocFrontmatter } from "~/types";
+import { ErrorBoundary } from "./$";
 
 export function meta({ data }: MetaArgs<typeof loader>) {
     return [
@@ -195,78 +194,4 @@ export default function DocsSectionPage() {
         </Flex>
     );
 }
-
-export function ErrorBoundary() {
-    const error = useRouteError();
-
-    if (
-        typeof error === "object" &&
-        error !== null &&
-        "status" in error &&
-        "headers" in error &&
-        typeof error.status === "number"
-    ) {
-        return (
-            <Flex
-                flex={1}
-                full
-                col
-                gap={4}
-                as={"main"}
-                p={4}
-            >
-                <VStack itemsStart>
-                    <Heading size={"2xl"}>{error.status}</Heading>
-
-                    <Heading size={"lg"}>
-                        {error.status === 404
-                            ? "Doc could not be found"
-                            : error.status === 403
-                              ? "Access denied"
-                              : "Error"}
-                    </Heading>
-                </VStack>
-            </Flex>
-        );
-    }
-
-    if (isRouteErrorResponse(error)) {
-        return (
-            <Flex
-                flex={1}
-                full
-                col
-                gap={4}
-                as={"main"}
-            >
-                <VStack itemsStart>
-                    <h1>Error</h1>
-                    <p>{error.status}</p>
-                    <pre>{error.statusText}</pre>
-                </VStack>
-            </Flex>
-        );
-    }
-
-    if (error instanceof Error) {
-        return (
-            <Flex
-                flex={1}
-                full
-                col
-                gap={4}
-                as={"main"}
-                bg={"red/20"}
-                p={4}
-                rounded={"md"}
-            >
-                <VStack itemsStart>
-                    <Heading color={"error"}>{error.message}</Heading>
-                    <pre>{error.stack}</pre>
-                </VStack>
-            </Flex>
-        );
-    }
-
-    return <div>Something went wrong</div>;
-}
+export { ErrorBoundary };

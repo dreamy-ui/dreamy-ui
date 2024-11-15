@@ -74,13 +74,14 @@ interface PresetOptions {
 Every component in Dreamy UI has it's own recipe/slot recipe. You can customize any component by extending the theme in panda config.
 
 Let's make the `Flex` component to have `flexDirection: "column"` by default.
+Flex uses a pattern, so we need to extends the patterns.
 
 ```ts
 /**
  * ...
  * theme.extend
  */
-recipes: {
+patterns: {
 	flex: {
 		base: {
 			flexDirection: "column"

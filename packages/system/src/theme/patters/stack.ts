@@ -1,11 +1,10 @@
 import { definePattern } from "@pandacss/dev";
 
 export const stack = definePattern({
-    jsx: ["Stack", "HStack", "VStack"],
     description: "stack pattern"
     // defaultValues: {
-    //     direction: "row"
-    // },
+    //     align: "center"
+    // }
     // transform(props) {
     //     const { align, justify, direction, gap, ...rest } = props;
     //     return {

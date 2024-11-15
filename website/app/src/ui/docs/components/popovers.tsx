@@ -138,7 +138,7 @@ export function PlacementPopovers() {
     return (
         <Flex
             wrapped
-            gap={2}
+            gap={5}
         >
             {(
                 [

@@ -18,7 +18,7 @@ import { Link } from "~/src/ui/global/Link";
 export default function OnThisPage() {
     const doc = useDoc();
 
-    if (!doc) {
+    if (!doc.headings?.length) {
         return (
             <Box
                 w={"200px"}

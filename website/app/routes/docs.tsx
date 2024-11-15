@@ -43,11 +43,8 @@ export default function DocsLayout() {
             gap={5}
         >
             <MemoSectionsNav />
-
             <MemoMobileDocsNav />
-
             <Outlet />
-
             <MemoOnThisPage />
         </Flex>
     );
@@ -56,4 +53,3 @@ export default function DocsLayout() {
 const MemoSectionsNav = memo(SectionsNav);
 const MemoOnThisPage = memo(OnThisPage);
 const MemoMobileDocsNav = memo(MobileDocsNav);
-// const MemoOutlet = memo(Outlet);
