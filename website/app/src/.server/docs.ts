@@ -10,11 +10,11 @@ import { cachified } from "~/src/.server/cache";
 import { env } from "~/src/.server/env";
 import { octokit } from "~/src/.server/github";
 import { Logger } from "~/src/.server/logger";
-import { capitalize } from "~/src/functions/string";
+import { capitalize, filenameToSlug } from "~/src/functions/string";
 import { createHId } from "~/src/ui/docs/MDXContent";
 
 export class Docs {
-    private static shouldFetchGithubDocs = false; // make it `true` to fetch github docs instead from disk in development mode
+    private static shouldFetchGithubDocs = true; // make it `true` to fetch github docs instead from disk in development mode
     private static shouldCacheDocs =
         process.env.NODE_ENV === "production" || Docs.shouldFetchGithubDocs;
     // private static docs = new Map<
@@ -171,13 +171,13 @@ export class Docs {
                 ? await Docs.serialize(mdxContent.frontmatter.description)
                 : null;
 
-        const sections = await Docs.getSections();
-        const currentFolder = sections.find((section) => section.title.toLowerCase() === folder);
-        if (!currentFolder) {
-            throw new Error(
-                "Missing current folder in Docs.docs current: " + folder + " file: " + file
-            );
-        }
+        // const sections = await Docs.getSections();
+        // const currentFolder = sections.find((section) => section.title.toLowerCase() === folder);
+        // if (!currentFolder) {
+        //     throw new Error(
+        //         "Missing current folder in Docs.docs current: " + folder + " file: " + file
+        //     );
+        // }
 
         const createdFile = new DocsFile(
             file,
@@ -198,13 +198,7 @@ export class Docs {
         //     })
         // });
 
-        return cachified({
-            key: `docs-${folder}-${file}`,
-            forceFresh: true,
-            ttl: Docs.shouldCacheDocs ? minToMs(5) : 0,
-            staleWhileRevalidate: Docs.shouldCacheDocs ? daysToMs(30) : 0,
-            getFreshValue: () => createdFile
-        });
+        return createdFile;
     }
 
     /**
@@ -461,15 +455,6 @@ export function filenameToTitle(filename: string) {
             .replaceAll("?", "")
             .toLowerCase()
     );
-}
-
-function filenameToSlug(filename: string) {
-    return filename
-        .replaceAll(" ", "-")
-        .replaceAll(".", "")
-        .replaceAll("/", "")
-        .replaceAll("?", "")
-        .toLowerCase();
 }
 
 function removeIndex(filename: string) {

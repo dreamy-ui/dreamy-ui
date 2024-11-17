@@ -32,7 +32,7 @@ const envSchema = z.object({
     // GitHub repo to pull docs from
     VITE_SOURCE_REPO: z.string().optional().superRefine(requiredInProduction),
 
-    // Redis database url'
+    // Redis database url to use instead of lru in-memory cache
     REDIS_URL: z.string().optional()
 });
 

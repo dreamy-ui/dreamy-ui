@@ -37,9 +37,9 @@ function useStatusIcon(status: Status) {
                     <svg viewBox="0 0 512 512">
                         <path
                             fill="none"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="32"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="32"
                             d="M416 128 192 384l-96-96"
                         />
                     </svg>
@@ -47,7 +47,10 @@ function useStatusIcon(status: Status) {
             case "warning":
                 return (
                     // biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
-                    <svg stroke-width="0" viewBox="0 0 256 256">
+                    <svg
+                        strokeWidth="0"
+                        viewBox="0 0 256 256"
+                    >
                         <path
                             d="M224,91.55v72.9a8,8,0,0,1-2.34,5.66l-51.55,51.55a8,8,0,0,1-5.66,2.34H91.55a8,8,0,0,1-5.66-2.34L34.34,170.11A8,8,0,0,1,32,164.45V91.55a8,8,0,0,1,2.34-5.66L85.89,34.34A8,8,0,0,1,91.55,32h72.9a8,8,0,0,1,5.66,2.34l51.55,51.55A8,8,0,0,1,224,91.55Z"
                             opacity="0.2"
@@ -70,8 +73,14 @@ function useStatusIcon(status: Status) {
             default:
                 return (
                     // biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
-                    <svg stroke-width="0" viewBox="0 0 256 256">
-                        <path d="M224,128a96,96,0,1,1-96-96A96,96,0,0,1,224,128Z" opacity="0.2" />
+                    <svg
+                        strokeWidth="0"
+                        viewBox="0 0 256 256"
+                    >
+                        <path
+                            d="M224,128a96,96,0,1,1-96-96A96,96,0,0,1,224,128Z"
+                            opacity="0.2"
+                        />
                         <path d="M144,176a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176Zm88-48A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128ZM124,96a12,12,0,1,0-12-12A12,12,0,0,0,124,96Z" />
                     </svg>
                 );
