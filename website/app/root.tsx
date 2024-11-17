@@ -60,8 +60,12 @@ export function shouldRevalidate(_: ShouldRevalidateFunctionArgs) {
 
 const motionFeatures = () => import("framer-motion").then((mod) => mod.domMax);
 
+export function useRoot() {
+    return useRouteLoaderData<typeof loader>("root")!;
+}
+
 export function Layout({ children }: PropsWithChildren) {
-    const data = useRouteLoaderData<typeof loader>("root");
+    const data = useRoot();
     const { colorMode } = data ?? {};
 
     useEffect(() => {

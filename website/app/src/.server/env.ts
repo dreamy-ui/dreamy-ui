@@ -30,7 +30,10 @@ const envSchema = z.object({
     GITHUB_TOKEN: z.string().optional().superRefine(requiredInProduction),
 
     // GitHub repo to pull docs from
-    VITE_SOURCE_REPO: z.string().optional().superRefine(requiredInProduction)
+    VITE_SOURCE_REPO: z.string().optional().superRefine(requiredInProduction),
+
+    // Redis database url'
+    REDIS_URL: z.string().optional()
 });
 
 export const env = envSchema.parse(process.env);

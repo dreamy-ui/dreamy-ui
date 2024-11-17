@@ -1,5 +1,6 @@
 import type { MDXRemoteSerializeResult } from "next-mdx-remote";
 import { serialize } from "next-mdx-remote/serialize";
+import cluster from "node:cluster";
 import fs from "node:fs/promises";
 import type { Root } from "node_modules/remark-parse/lib";
 import rehypePrettyCode, { type Options } from "rehype-pretty-code";
@@ -16,41 +17,77 @@ export class Docs {
     private static shouldFetchGithubDocs = false; // make it `true` to fetch github docs instead from disk in development mode
     private static shouldCacheDocs =
         process.env.NODE_ENV === "production" || Docs.shouldFetchGithubDocs;
-    private static docs = new Map<
-        string,
-        {
-            index: number;
-            files: DocsFile[];
-        }
-    >();
+    // private static docs = new Map<
+    //     string,
+    //     {
+    //         index: number;
+    //         files: DocsFile[];
+    //     }
+    // >();
 
-    private static async fetchLocalDocs() {
+    private static async fetchLocalDocs(fetchFileContents = false): Promise<Sections> {
         const folderNames = await fs.readdir("docs");
 
-        for (let folderName of folderNames) {
+        const docs: Sections = [];
+
+        for (const folderName of folderNames) {
             const filenames = await fs.readdir(`docs/${folderName}`);
 
             const index = getIndex(folderName);
 
-            const files = await Promise.all<DocsFile>(
-                filenames.map(async (filename) => {
-                    const content = await fs.readFile(`docs/${folderName}/${filename}`, "utf-8");
+            if (fetchFileContents) {
+                const files = await Promise.all<DocsFile>(
+                    filenames.map(async (filename) => {
+                        const content = await fs.readFile(
+                            `docs/${folderName}/${filename}`,
+                            "utf-8"
+                        );
 
-                    const mdxContent = await Docs.serialize(content);
+                        const mdxContent = await Docs.serialize(content);
 
-                    const fileIndex = getIndex(filename);
-                    filename = removeIndex(filename);
+                        const fileIndex = getIndex(filename);
+                        filename = removeIndex(filename);
 
-                    return new DocsFile(filename, content, mdxContent, fileIndex);
-                })
-            );
+                        const doc = new DocsFile(filename, content, mdxContent, fileIndex);
+                        return cachified({
+                            key: `docs-${folderName}-${filename}`,
+                            forceFresh: true,
+                            ttl: Docs.shouldCacheDocs ? minToMs(5) : 0,
+                            staleWhileRevalidate: Docs.shouldCacheDocs ? daysToMs(30) : 0,
+                            getFreshValue: () => doc
+                        });
+                    })
+                );
 
-            folderName = removeIndex(folderName);
-            Docs.docs.set(folderName, {
-                index,
-                files
-            });
+                docs.push({
+                    title: capitalize(folderName),
+                    sections: files.map((file) => ({
+                        name: filenameToTitle(file.filename),
+                        slug: `/docs/${removeIndex(folderName)}/${filenameToSlug(file.filename)}`,
+                        index: file.index
+                    })),
+                    index
+                });
+            } else {
+                docs.push({
+                    title: capitalize(removeIndex(folderName)),
+                    sections: filenames.map((filename) => {
+                        const name = filenameToTitle(removeIndex(filename));
+
+                        return {
+                            name,
+                            slug: `/docs/${filenameToSlug(removeIndex(folderName))}/${filenameToSlug(
+                                name
+                            )}`,
+                            index: getIndex(filename)
+                        };
+                    }),
+                    index
+                });
+            }
         }
+
+        return docs;
     }
 
     private static async fetchLocalDoc(filepath: string) {
@@ -65,7 +102,6 @@ export class Docs {
 
         const serializeStart = performance.now();
         const mdxContent = await Docs.serialize(content);
-        // console.log("mdxContent", mdxContent);
         Logger.debug(`Docs.serialize took ${performance.now() - serializeStart}ms`);
 
         const mdxFrontmatterDescription =
@@ -83,28 +119,16 @@ export class Docs {
             mdxContent.scope.headings as Heading[]
         ) as ValidDocsFile;
 
-        const currentFolder = Docs.docs.get(folder);
-        if (!currentFolder) {
-            throw new Error(
-                "Missing current folder in Docs.docs current: " + folder + " file: " + file
-            );
-        }
+        // const sections = await Docs.getSections();
 
-        Docs.docs.set(folder, {
-            ...currentFolder,
-            files: currentFolder.files.map((file) => {
-                if (file.filename === doc.filename) {
-                    return doc;
-                }
-                return file;
-            })
-        });
+        // const currentFolder = sections.find((section) => section.title.toLowerCase() === folder);
+        // if (!currentFolder) {
+        //     throw new Error(
+        //         "Missing current folder in Docs.docs current: " + folder + " file: " + file
+        //     );
+        // }
 
-        // await Docs.fetchLocalDocs();
-
-        // const doc = Docs.docs.get(folder)?.files.find((f) => f.filename === file);
-
-        return doc ?? null;
+        return doc;
     }
 
     /**
@@ -147,7 +171,8 @@ export class Docs {
                 ? await Docs.serialize(mdxContent.frontmatter.description)
                 : null;
 
-        const currentFolder = Docs.docs.get(folder);
+        const sections = await Docs.getSections();
+        const currentFolder = sections.find((section) => section.title.toLowerCase() === folder);
         if (!currentFolder) {
             throw new Error(
                 "Missing current folder in Docs.docs current: " + folder + " file: " + file
@@ -163,17 +188,23 @@ export class Docs {
             mdxContent.scope.headings as Heading[]
         ) as ValidDocsFile;
 
-        Docs.docs.set(folder, {
-            ...currentFolder,
-            files: currentFolder.files.map((file) => {
-                if (file.filename === createdFile.filename) {
-                    return createdFile;
-                }
-                return file;
-            })
-        });
+        // Docs.docs.set(folder, {
+        //     ...currentFolder,
+        //     files: currentFolder.files.map((file) => {
+        //         if (file.filename === createdFile.filename) {
+        //             return createdFile;
+        //         }
+        //         return file;
+        //     })
+        // });
 
-        return createdFile;
+        return cachified({
+            key: `docs-${folder}-${file}`,
+            forceFresh: true,
+            ttl: Docs.shouldCacheDocs ? minToMs(5) : 0,
+            staleWhileRevalidate: Docs.shouldCacheDocs ? daysToMs(30) : 0,
+            getFreshValue: () => createdFile
+        });
     }
 
     /**
@@ -199,6 +230,8 @@ export class Docs {
 
         const folders = folderArr.map((folder: any) => folder.name) as string[];
 
+        const docs: Sections = [];
+
         // fetch every folder file names and resort them
         for (let folder of folders) {
             const folderIndex = getIndex(folder);
@@ -214,54 +247,18 @@ export class Docs {
 
             const filenames = files.map((file: any) => file.name) as string[];
 
-            const foundFolder = Docs.docs.get(folder);
-            if (!foundFolder) {
-                const newFiles = await Promise.all<DocsFile>(
-                    files.map(async (file: any) => {
-                        const index = getIndex(file.name);
-                        const filename = removeIndex(file.name);
-
-                        return new DocsFile(filename, null, null, index);
-                    })
-                );
-
-                Docs.docs.set(folder, {
-                    index: folderIndex,
-                    files: newFiles
-                });
-                continue;
-            }
-
-            // update the index of folder
-            Docs.docs.set(folder, {
-                ...foundFolder,
+            docs.push({
+                title: capitalize(folder),
+                sections: filenames.map((filename) => ({
+                    name: filenameToTitle(removeIndex(filename)),
+                    slug: `/docs/${folder}/${filenameToSlug(removeIndex(filename))}`,
+                    index: getIndex(filename)
+                })),
                 index: folderIndex
             });
-
-            // update the index of files
-            for (const filename of filenames) {
-                const fileIndex = getIndex(filename);
-                const fileName = removeIndex(filename);
-
-                const foundFile = foundFolder.files.find((file) => file.filename === fileName);
-                if (!foundFile) continue;
-
-                Docs.docs.set(folder, {
-                    ...foundFolder,
-                    files: foundFolder.files.map((file) => {
-                        if (file.filename === fileName) {
-                            // console.log("found file", file.filename, fileName);
-                            return {
-                                ...file,
-                                index: fileIndex
-                            };
-                        }
-                        // console.log("not found file", file);
-                        return file;
-                    })
-                });
-            }
         }
+
+        return docs;
     }
 
     /**
@@ -300,10 +297,10 @@ export class Docs {
                 throw new Error("Missing data in response from GitHub");
             }
 
-            const index = getIndex(folderName);
+            // const index = getIndex(folderName);
             folderName = removeIndex(folderName);
 
-            const fileContents = await Promise.all<DocsFile>(
+            await Promise.all<DocsFile>(
                 (files.data as any).map(async (file: any) => {
                     // console.log("file", file);
                     const downloadUrl = file.download_url;
@@ -333,38 +330,40 @@ export class Docs {
                     ) as ValidDocsFile;
 
                     const key = `docs-${folderName}-${filename}`;
-                    console.log("key", key);
 
                     return cachified({
                         key,
                         ttl: Docs.shouldCacheDocs ? minToMs(5) : 0,
-                        staleWhileRevalidate: Docs.shouldCacheDocs ? minToMs(60) : 0,
+                        staleWhileRevalidate: Docs.shouldCacheDocs ? daysToMs(30) : 0,
                         getFreshValue: () => doc
                     });
                 })
             );
 
-            Docs.docs.set(folderName, {
-                index,
-                files: fileContents
-            });
+            // Docs.docs.set(folderName, {
+            //     index,
+            //     files: fileContents
+            // });
         }
     }
 
     public static async fetchDocsOnStartup() {
-        if (process.env.NODE_ENV === "production" || Docs.shouldFetchGithubDocs) {
+        if (
+            (process.env.NODE_ENV === "production" && cluster.isPrimary) ||
+            Docs.shouldFetchGithubDocs
+        ) {
             return Docs.fetchGithubDocsOnStartup();
         }
 
         return Docs.fetchLocalDocs();
     }
 
-    private static async fetchFreshDocsStructure() {
+    private static async fetchFreshDocsStructure(fetchFileContents = false): Promise<Sections> {
         if (process.env.NODE_ENV === "production" || Docs.shouldFetchGithubDocs) {
             return Docs.fetchGithubDocsFolder();
         }
 
-        return Docs.fetchLocalDocs();
+        return Docs.fetchLocalDocs(fetchFileContents);
     }
 
     private static async fetchFreshDoc(filepath: string) {
@@ -375,35 +374,23 @@ export class Docs {
         return Docs.fetchLocalDoc(filepath);
     }
 
-    public static getDocsAsArray() {
-        return Array.from(Docs.docs);
-    }
+    // public static getDocsAsArray() {
+    //     return Array.from(Docs.docs);
+    // }
 
-    public static async getSections(): Promise<ISection[]> {
+    public static async getSections(): Promise<LocalSection[]> {
         return await cachified({
             key: "docs-sections",
-            ttl: Docs.shouldCacheDocs ? minToMs(10) : 10_000,
+            ttl: Docs.shouldCacheDocs ? minToMs(5) : 10_000,
             staleWhileRevalidate: Docs.shouldCacheDocs ? daysToMs(30) : 30_000,
             getFreshValue: async () => {
-                await Docs.fetchFreshDocsStructure();
+                const docsStructure = await Docs.fetchFreshDocsStructure(false);
 
                 // return sorted sections
-                return Array.from(Docs.docs)
-                    .map(([folderName, { index, files }]) => {
-                        const title = capitalize(folderName);
-                        // console.log("files", files);
-                        const sections = files
-                            .map(({ filename, index }) => {
-                                return {
-                                    name: filenameToTitle(filename),
-                                    slug: `/docs/${folderName}/${filenameToSlug(filename)}`,
-                                    index
-                                };
-                            })
-                            .sort((a, b) => a.index - b.index);
-
+                return docsStructure
+                    .map(({ title, sections, index }) => {
                         return {
-                            title,
+                            title: filenameToTitle(removeIndex(title)),
                             sections,
                             index
                         };
@@ -417,32 +404,24 @@ export class Docs {
         return cachified({
             key: `docs-${folder}-${page}`,
             ttl: Docs.shouldCacheDocs ? minToMs(5) : 0,
-            staleWhileRevalidate: Docs.shouldCacheDocs ? minToMs(60) : 0,
+            staleWhileRevalidate: Docs.shouldCacheDocs ? daysToMs(30) : 0,
             getFreshValue: async () => {
-                const folderIndex = Docs.docs.get(folder)?.index;
-                const fileIndex = Docs.docs
-                    .get(folder)
-                    ?.files.find((file) => file.filename === page)?.index;
+                // await new Promise((resolve) => setTimeout(resolve, 1000));
+                Logger.info(`Fetching doc: docs-${folder}-${page}`);
 
+                const sections = await Docs.getSections();
+
+                const folderIndex = sections.find(
+                    (section) => removeIndex(section.title).toLowerCase() === folder.toLowerCase()
+                )?.index;
                 if (!folderIndex) {
-                    throw new Error(
-                        "Missing folder index: " + folder + ", in docs: " + Docs.docs.get(folder)
-                    );
+                    throw new Error("Missing folder index: " + folder);
                 }
-
-                // if (!fileIndex) {
-                // throw new Error(
-                //     "Missing file index: " +
-                //         page +
-                //         ", in docs: " +
-                //         JSON.stringify(
-                //             Docs.docs.get(folder)?.files.map((file) => file.filename)
-                //         )
-                // );
-                // }
+                const fileIndex = sections[folderIndex - 1].sections.find(
+                    (section) => section.name.toLowerCase() === filenameToTitle(page).toLowerCase()
+                )?.index;
 
                 const filepath = `${folderIndex}.${folder}/${fileIndex !== -1 ? `${fileIndex}.` : ""}${page}.mdx`;
-
                 const doc = await Docs.fetchFreshDoc(filepath);
 
                 return doc;
@@ -561,6 +540,17 @@ interface Page {
     name: string;
     slug: string;
 }
+
+interface LocalPage extends Page {
+    index: number;
+}
+
+interface LocalSection {
+    index: number;
+    title: string;
+    sections: LocalPage[];
+}
+type Sections = LocalSection[];
 
 function getHeadings(tree: Root) {
     const headings = new Array<Heading>();

@@ -22,6 +22,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { BiSearch } from "react-icons/bi";
 import { MdNavigateNext } from "react-icons/md";
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
+import { useRoot } from "~/root";
 import type { action } from "~/routes/api.docs.search";
 import { cachePageData } from "~/src/functions/clientCache";
 import { capitalize } from "~/src/functions/string";
@@ -148,7 +149,8 @@ export default function Search() {
         setActive(0);
     }, [fetcher?.data, recentSearches]);
 
-    const actionKey = useActionKey();
+    const { isMac } = useRoot();
+    const actionKey = useActionKey(isMac ? "⌘" : "Ctrl");
 
     return (
         <>

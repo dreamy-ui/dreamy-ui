@@ -20,9 +20,6 @@ export { parts as radioParts };
 
 export const radio = defineRecipe({
     className: "dream-radio",
-    /**
-     * "CheckboxCard" is there, so variants can be passed to checkbox through card
-     */
     jsx: ["Radio", "RadioGroup"],
     base: parts({
         root: {
@@ -44,6 +41,7 @@ export const radio = defineRecipe({
             alignItems: "center",
             justifyContent: "center",
             mr: 2,
+            scale: 0,
             flexShrink: 0,
             overflow: "hidden",
             borderWidth: "1px",

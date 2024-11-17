@@ -1,7 +1,11 @@
 import type { Cache, CacheEntry, CachifiedOptions } from "@epic-web/cachified";
 import { cachified as baseCachified, totalTtl } from "@epic-web/cachified";
+import { remember } from "@epic-web/remember";
 import type { HeadersFunction } from "@remix-run/node";
+import Redis from "ioredis";
 import { LRUCache } from "lru-cache";
+import { Logger } from "~/src/.server/logger";
+import { env } from "./env";
 
 /**
  * Cache control headers
@@ -35,28 +39,66 @@ export enum CACHE_DURATION {
 /**
  * LRU for docs
  */
-const lruInstance = new LRUCache<string, CacheEntry>({ max: 1000 });
+const useRedis = !!env.REDIS_URL;
+const lruInstance = useRedis
+    ? undefined
+    : remember("lru", () => new LRUCache<string, CacheEntry>({ max: 1000 }));
+const redisInstance = useRedis
+    ? remember("redis", () => {
+          const redis = new Redis(env.REDIS_URL as string);
+          redis.once("ready", () => {
+              Logger.success("Redis is ready");
+          });
+
+          return redis;
+      })
+    : undefined;
+
+Logger.info(`Using ${useRedis ? "Redis" : "LRU"} cache`);
 
 interface LruCache extends Cache {
     clear(): void;
 }
 
 export const lru: LruCache = {
-    set(key, value) {
+    async set(key, value) {
         const ttl = totalTtl(value?.metadata);
-        return lruInstance.set(key, value, {
-            ttl: ttl === Number.POSITIVE_INFINITY ? undefined : ttl,
-            start: value?.metadata?.createdTime
-        });
+        if (lruInstance) {
+            return lruInstance.set(key, value, {
+                ttl: ttl === Number.POSITIVE_INFINITY ? undefined : ttl,
+                start: value?.metadata?.createdTime
+            });
+        }
+        return await redisInstance?.set(key, JSON.stringify(value), "PX", ttl);
     },
-    get(key) {
-        return lruInstance.get(key);
+    async get(key) {
+        if (lruInstance) {
+            return lruInstance.get(key);
+        }
+        const start = performance.now();
+        const redisValue = await redisInstance?.get(key);
+        const end = performance.now();
+        console.log(`Redis get ${key} took ${end - start}ms`);
+        if (!redisValue) {
+            return null;
+        }
+        try {
+            return JSON.parse(redisValue);
+        } catch (_) {
+            return redisValue;
+        }
     },
     delete(key) {
-        return lruInstance.delete(key);
+        if (lruInstance) {
+            return lruInstance.delete(key);
+        }
+        return redisInstance?.del(key);
     },
     clear() {
-        lruInstance.clear();
+        if (lruInstance) {
+            lruInstance.clear();
+        }
+        return redisInstance?.flushall();
     }
 };
 

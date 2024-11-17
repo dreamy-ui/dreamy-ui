@@ -2,7 +2,7 @@ import { type LoaderFunctionArgs, redirect } from "@remix-run/node";
 import { Docs } from "~/src/.server/docs";
 
 export async function loader(_: LoaderFunctionArgs) {
-    const firstSection = Docs.getDocsAsArray()[0];
+    const sections = await Docs.getSections();
 
-    throw redirect(`/docs/${firstSection[0]}/${firstSection[1].files[0].filename}`);
+    throw redirect(`/docs/${sections[0].title}/${sections[0].sections[0].name}`);
 }
