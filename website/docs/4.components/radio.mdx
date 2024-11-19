@@ -1,0 +1,99 @@
+---
+title: Radio
+description: Radio is used to select a single option from a list of options.
+isServerComponent: false
+source: /packages/react/src/components/radio/radio.tsx
+themeSource: /packages/system/src/recipes/radio.ts
+---
+
+## Import
+
+- `Radio` - A Radio component.
+- `RadioGroup` - Group wrapper for composing multiple Radioes.
+
+```jsx
+import { Radio, RadioGroup } from "@dreamy-ui/react";
+```
+
+## Usage
+
+<Wrapper>
+	<Radio defaultChecked>
+		<>Default</>
+	</Radio>
+</Wrapper>
+
+```tsx
+<Radio defaultChecked>
+	Default
+</Radio>
+```
+
+### Radio Group
+
+`RadioGroup` allows easily composing multiple Radioes. 
+
+Use `defaultValue`, `value` and `onChange` in `<RadioGroup />` to control the selected Radioes.
+
+<Wrapper>
+	<RadioGroup defaultValue="1">
+		<Radio value="1">First</Radio>
+		<Radio value="2">Second</Radio>
+	</RadioGroup>
+</Wrapper>
+
+```tsx
+<RadioGroup defaultValue="1">
+	<Radio value="1">First</Radio>
+	<Radio value="2">Second</Radio>
+</RadioGroup>
+```
+
+
+### Scheme
+
+Change the color scheme of the Radio.
+
+<Wrapper>
+	<RadioGroup defaultValue="primary">
+		{["primary", "secondary", "success", "warning", "error", "info"].map((scheme) => (
+			<Radio key={scheme} scheme={scheme} value={scheme}>
+				{scheme}
+			</Radio>
+		))}
+	</RadioGroup>
+</Wrapper>
+
+```tsx
+<RadioGroup defaultValue="primary">
+	{["primary", "secondary", "success", "warning", "error", "info"].map((scheme) => (
+		<Radio key={scheme} scheme={scheme} value={scheme}>
+			{scheme}
+		</Radio>
+	))}
+</RadioGroup>
+```
+
+### Size
+
+Change the Radio size.
+
+<Wrapper>
+	<RadioGroup defaultValue="md">
+		{["sm", "md", "lg"].map((size) => (
+			<Radio key={size} size={size} value={size}>
+				{size}
+			</Radio>
+		))}
+	</RadioGroup>
+</Wrapper>
+
+```tsx
+<RadioGroup defaultValue="md">
+	{["sm", "md", "lg"].map((size) => (
+		<Radio key={size} size={size} value={size}>
+			{size}
+		</Radio>
+	))}
+</RadioGroup>
+```

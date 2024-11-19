@@ -154,9 +154,16 @@ export const checkboxCard = defineRecipe({
                 root: {
                     borderWidth: "1px",
                     borderColor: "border.muted",
+                    transition: "border-color 0.1s",
+                    _hover: {
+                        borderColor: "border.hover"
+                    },
                     _checked: {
                         borderColor: "var(--checkbox-bg)",
-                        boxShadow: "0 0 0 0.5px var(--checkbox-bg)"
+                        boxShadow: "0 0 0 0.5px var(--checkbox-bg)",
+                        _hover: {
+                            borderColor: "var(--checkbox-bg)"
+                        }
                     },
                     _focusVisible: {
                         borderColor: "border.hover",

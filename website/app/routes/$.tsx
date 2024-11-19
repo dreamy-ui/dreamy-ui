@@ -24,6 +24,7 @@ export default function () {
 
 export function ErrorBoundary() {
     const error = useRouteError();
+    console.log("error", error);
 
     const data = useMemo(() => {
         const data = {
@@ -34,6 +35,12 @@ export function ErrorBoundary() {
 
         if (error instanceof Response) {
             data.status = error.status;
+        }
+
+        if (error instanceof Error) {
+            data.title = error.name;
+            data.description = error.message;
+            data.status = 500;
         }
 
         if (isRouteErrorResponse(error)) {
@@ -48,6 +55,7 @@ export function ErrorBoundary() {
     return (
         <Flex
             w={"100%"}
+            maxW={"md"}
             flex={1}
             center
             col
@@ -64,7 +72,7 @@ export function ErrorBoundary() {
             <Heading>
                 {data.status} {data.title}
             </Heading>
-            <Text>{data.description}</Text>
+            <Text textAlign={"center"}>{data.description}</Text>
         </Flex>
     );
 }

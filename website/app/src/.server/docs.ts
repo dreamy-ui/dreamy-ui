@@ -14,7 +14,7 @@ import { capitalize, filenameToSlug } from "~/src/functions/string";
 import { createHId } from "~/src/ui/docs/MDXContent";
 
 export class Docs {
-    private static shouldFetchGithubDocs = true; // make it `true` to fetch github docs instead from disk in development mode
+    private static shouldFetchGithubDocs = false; // make it `true` to fetch github docs instead from disk in development mode
     private static shouldCacheDocs =
         process.env.NODE_ENV === "production" || Docs.shouldFetchGithubDocs;
     // private static docs = new Map<

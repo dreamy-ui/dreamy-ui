@@ -12,6 +12,7 @@ import { list } from "@/recipes/list";
 import { modal } from "@/recipes/modal";
 import { popover } from "@/recipes/popover";
 import { progress } from "@/recipes/progress";
+import { radio, radioParts } from "@/recipes/radio";
 import { skeleton } from "@/recipes/skeleton";
 import { slider } from "@/recipes/slider";
 import { spinner } from "@/recipes/spinner";
@@ -49,7 +50,8 @@ export const recipes = {
     checkboxCard,
     snippet,
     table,
-    skeleton
+    skeleton,
+    radio
 };
 
 export const parts = {
@@ -57,5 +59,6 @@ export const parts = {
     checkbox: checkboxParts,
     avatar: avatarParts,
     checkboxCard: checkboxCardParts,
-    snippet: snippetParts
+    snippet: snippetParts,
+    radio: radioParts
 };

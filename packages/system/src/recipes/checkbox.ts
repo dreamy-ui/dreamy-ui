@@ -13,6 +13,9 @@ const parts = defineParts({
     },
     label: {
         selector: '& [data-part="label"]'
+    },
+    group: {
+        selector: ".dream-checkbox-group:has(&)"
     }
 });
 
@@ -20,11 +23,12 @@ export { parts as checkboxParts };
 
 export const checkbox = defineRecipe({
     className: "dream-checkbox",
-    /**
-     * "CheckboxCard" is there, so variants can be passed to checkbox through card
-     */
-    jsx: ["Checkbox", "CheckboxGroup", "CheckboxCard"],
+    jsx: ["Checkbox", "CheckboxGroup"],
     base: parts({
+        group: {
+            flexDirection: "column",
+            gap: 0.5
+        },
         root: {
             position: "relative",
             display: "inline-flex",
@@ -46,7 +50,7 @@ export const checkbox = defineRecipe({
             mr: 2,
             flexShrink: 0,
             overflow: "hidden",
-            borderWidth: "1px",
+            borderWidth: "2px",
             borderStyle: "solid",
             borderRadius: "l1",
             transition: "border-color 0.1s, background-color 0.1s",
@@ -55,7 +59,7 @@ export const checkbox = defineRecipe({
                 boxShadow: "0 0 0 1.5px {colors.primary}"
             },
             ".group:is(:hover)&": {
-                bg: "{colors.border.muted}"
+                bg: "alpha.50"
             }
         },
         label: {

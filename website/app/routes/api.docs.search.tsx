@@ -2,7 +2,6 @@ import { type ActionFunctionArgs, data } from "@remix-run/node";
 import { cachified } from "~/src/.server/cache";
 import { Docs, filenameToTitle } from "~/src/.server/docs";
 import { invariant } from "~/src/functions/invariant";
-import { copyObjectWithoutKeys } from "~/src/functions/objects";
 
 export async function action({ request }: ActionFunctionArgs) {
     try {
@@ -28,14 +27,14 @@ export async function action({ request }: ActionFunctionArgs) {
 
                             return await Promise.all(
                                 files.map(async (file) => {
-                                    const docFile = await Docs.getDoc(
-                                        doc.title.toLowerCase(),
-                                        file.name
-                                    );
+                                    // const docFile = await Docs.getDoc(
+                                    //     doc.title.toLowerCase(),
+                                    //     file.name
+                                    // );
 
                                     return {
                                         filename: file.name,
-                                        content: docFile?.content,
+                                        // content: docFile?.content,
                                         path: file.slug
                                     };
                                 })
@@ -49,30 +48,29 @@ export async function action({ request }: ActionFunctionArgs) {
                     return doc.filename.toLowerCase().includes(query.toLowerCase());
                 });
 
-                const docsByContent = new Array<(typeof names)[number]>();
+                // const docsByContent = new Array<(typeof names)[number]>();
 
                 // if names are less than 10, search by content to fill up the gap to 10 found docs
-                if (names.length < 10) {
-                    const missingDocsNumber = 10 - names.length;
-                    const foundDocs = docs.filter((doc) => {
-                        return doc.content?.toLowerCase().includes(query.toLowerCase());
-                    });
+                // if (names.length < 10) {
+                //     const missingDocsNumber = 10 - names.length;
+                //     const foundDocs = docs.filter((doc) => {
+                //         return doc.content?.toLowerCase().includes(query.toLowerCase());
+                //     });
 
-                    if (foundDocs.length) {
-                        for (let i = 0; i < Math.min(missingDocsNumber, foundDocs.length); i++) {
-                            if (names.find((doc) => doc.filename === foundDocs[i].filename))
-                                continue;
+                //     if (foundDocs.length) {
+                //         for (let i = 0; i < Math.min(missingDocsNumber, foundDocs.length); i++) {
+                //             if (names.find((doc) => doc.filename === foundDocs[i].filename))
+                //                 continue;
 
-                            docsByContent.push(foundDocs[i]);
-                        }
-                    }
-                }
+                //             docsByContent.push(foundDocs[i]);
+                //         }
+                //     }
+                // }
 
-                const result = [...names, ...docsByContent].map((doc) => {
-                    const woContent = removeContent(doc);
+                const result = names.map((doc) => {
                     return {
-                        ...woContent,
-                        filename: filenameToTitle(woContent.filename)
+                        ...doc,
+                        filename: filenameToTitle(doc.filename)
                     };
                 });
 
@@ -92,10 +90,10 @@ export async function action({ request }: ActionFunctionArgs) {
     }
 }
 
-function removeContent(doc: {
-    filename: string;
-    content: string | undefined;
-    path: string;
-}) {
-    return copyObjectWithoutKeys(doc, ["content"]);
-}
+// function removeContent(doc: {
+//     filename: string;
+//     content: string | undefined;
+//     path: string;
+// }) {
+//     return copyObjectWithoutKeys(doc, ["content"]);
+// }

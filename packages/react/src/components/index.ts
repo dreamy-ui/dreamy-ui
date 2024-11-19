@@ -23,6 +23,7 @@ export * from "./popover";
 export * from "./popper";
 export * from "./portal";
 export * from "./progress";
+export * from "./radio";
 export * from "./ripple";
 export * from "./slider";
 export * from "./snippet";

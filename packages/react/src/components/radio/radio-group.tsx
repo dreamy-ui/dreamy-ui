@@ -1,44 +1,42 @@
 import { createContext } from "@/provider/create-context";
 import { Flex, type FlexProps } from "@/rsc";
 import { cx } from "@dreamy-ui/system/css";
-import type { CheckboxVariantProps } from "@dreamy-ui/system/recipes";
+import type { RadioVariantProps } from "@dreamy-ui/system/recipes";
 import { useMemo } from "react";
 import {
-    type UseCheckboxGroupProps,
-    type UseCheckboxGroupReturn,
-    useCheckboxGroup
-} from "./use-checkbox-group";
+    type UseRadioGroupProps,
+    type UseRadioGroupReturn,
+    useRadioGroup
+} from "./use-radio-group";
 
-export interface CheckboxGroupContext
+export interface RadioGroupContext
     extends Pick<
-            UseCheckboxGroupReturn,
+            UseRadioGroupReturn,
             "onChange" | "value" | "isDisabled" | "isInvalid" | "isRequired" | "isReadOnly"
         >,
-        CheckboxVariantProps {
+        RadioVariantProps {
     /**
      * Should reduce motion
      */
     reduceMotion?: boolean;
 }
 
-export const [CheckboxGroupProvider, useCheckboxGroupContext] = createContext<CheckboxGroupContext>(
-    {
-        name: "CheckboxGroupContext",
-        strict: false
-    }
-);
+export const [RadioGroupProvider, useRadioGroupContext] = createContext<RadioGroupContext>({
+    name: "RadioGroupContext",
+    strict: false
+});
 
-export interface CheckboxGroupProps
-    extends UseCheckboxGroupProps,
-        CheckboxVariantProps,
+export interface RadioGroupProps
+    extends UseRadioGroupProps,
+        RadioVariantProps,
         Omit<FlexProps, "defaultValue" | "onChange"> {}
 
 /**
- * CheckboxGroup component. Useful for grouping multiple checkboxes together.
+ * RadioGroup component. Useful for grouping multiple Radioes together.
  *
- * @See Docs https://dream-ui.com/docs/components/checkbox-group
+ * @See Docs https://dream-ui.com/docs/components/radio
  */
-export function CheckboxGroup(props: CheckboxGroupProps) {
+export function RadioGroup(props: RadioGroupProps) {
     const {
         scheme,
         size,
@@ -50,14 +48,9 @@ export function CheckboxGroup(props: CheckboxGroupProps) {
         isInvalid,
         reduceMotion,
         onChange: onChangeProp,
-        defaultValue,
         ...rest
     } = props;
-    const { value, onChange } = useCheckboxGroup({
-        onChange: onChangeProp,
-        defaultValue,
-        ...props
-    });
+    const { value, onChange } = useRadioGroup({ onChange: onChangeProp, ...props });
 
     const group = useMemo(
         () => ({
@@ -87,15 +80,15 @@ export function CheckboxGroup(props: CheckboxGroupProps) {
     );
 
     return (
-        <CheckboxGroupProvider value={group}>
+        <RadioGroupProvider value={group}>
             <Flex
                 {...rest}
-                className={cx("dream-checkbox-group", rest.className)}
+                className={cx("dream-radio-group", rest.className)}
             >
                 {children}
             </Flex>
-        </CheckboxGroupProvider>
+        </RadioGroupProvider>
     );
 }
 
-CheckboxGroup.displayName = "CheckboxGroup";
+RadioGroup.displayName = "RadioGroup";

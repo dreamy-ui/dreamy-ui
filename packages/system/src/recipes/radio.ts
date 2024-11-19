@@ -5,6 +5,9 @@ const parts = defineParts({
     root: {
         selector: "&"
     },
+    wrapper: {
+        selector: '& [data-part="wrapper"]'
+    },
     control: {
         selector: '& [data-part="control"]'
     },
@@ -13,6 +16,9 @@ const parts = defineParts({
     },
     label: {
         selector: '& [data-part="label"]'
+    },
+    group: {
+        selector: ".dream-radio-group:has(&)"
     }
 });
 
@@ -22,6 +28,10 @@ export const radio = defineRecipe({
     className: "dream-radio",
     jsx: ["Radio", "RadioGroup"],
     base: parts({
+        group: {
+            flexDirection: "column",
+            gap: 0.5
+        },
         root: {
             position: "relative",
             display: "inline-flex",
@@ -35,25 +45,41 @@ export const radio = defineRecipe({
                 opacity: 0.6
             }
         },
-        control: {
+        wrapper: {
             position: "relative",
+            mr: 2,
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "center",
-            mr: 2,
-            scale: 0,
             flexShrink: 0,
             overflow: "hidden",
-            borderWidth: "1px",
+            borderWidth: "2px",
             borderStyle: "solid",
-            borderRadius: "l1",
+            borderColor: "{colors.border.muted}",
+            borderRadius: "full",
             transition: "border-color 0.1s, background-color 0.1s",
             _focusVisible: {
                 bg: "{colors.border.muted}",
                 boxShadow: "0 0 0 1.5px {colors.primary}"
             },
             ".group:is(:hover)&": {
-                bg: "{colors.border.muted}"
+                bg: "{colors.alpha.50}"
+            },
+            ".group:is([data-checked])&": {
+                borderColor: "var(--radio-bg)"
+            }
+        },
+        control: {
+            zIndex: 10,
+            opacity: 0,
+            scale: 0,
+            transformOrigin: "center",
+            borderRadius: "full",
+            transition: "opacity 0.1s, scale 0.2s",
+            transitionTimingFunction: "ease-in-out",
+            ".group:is([data-checked])&": {
+                opacity: 1,
+                scale: 1
             }
         },
         label: {
@@ -71,27 +97,39 @@ export const radio = defineRecipe({
     variants: {
         size: {
             sm: parts({
-                control: {
+                wrapper: {
                     width: "4",
                     height: "4"
+                },
+                control: {
+                    width: "1.5",
+                    height: "1.5"
                 },
                 label: {
                     fontSize: "sm"
                 }
             }),
             md: parts({
-                control: {
+                wrapper: {
                     width: "5",
                     height: "5"
+                },
+                control: {
+                    width: "2",
+                    height: "2"
                 },
                 label: {
                     fontSize: "md"
                 }
             }),
             lg: parts({
-                control: {
+                wrapper: {
                     width: "6",
                     height: "6"
+                },
+                control: {
+                    width: "2.5",
+                    height: "2.5"
                 },
                 label: {
                     fontSize: "lg"
@@ -99,43 +137,32 @@ export const radio = defineRecipe({
             })
         },
         variant: {
-            outline: parts({
-                control: {
-                    borderColor: "{colors.border.default}",
-                    ".group:is([data-checked])&": {
-                        borderColor: "var(--checkbox-bg)"
-                    },
-                    ".group:is(:active)&": {
-                        borderColor: "var(--checkbox-bg)"
-                    },
-                    color: "var(--checkbox-bg)"
-                }
-            }),
             solid: parts({
                 control: {
+                    background: "var(--radio-bg)",
                     ".group:is([data-checked])&": {
-                        background: "var(--checkbox-bg)",
-                        borderColor: "var(--checkbox-bg)"
+                        ".group:is(:active, [data-active])&": {
+                            opacity: 1
+                        }
                     },
-                    ".group:is(:active)&": {
-                        background: "var(--checkbox-bg)/50",
-                        borderColor: "var(--checkbox-bg)"
+                    ".group:is(:active, [data-active])&": {
+                        scale: 0.5,
+                        opacity: 0.5,
+                        background: "var(--radio-bg)"
+                    }
+                },
+                wrapper: {
+                    ".group:is([data-checked])&": {
+                        ".group:is(:active, [data-active])&": {
+                            borderColor: "var(--radio-bg)"
+                        }
                     },
-                    borderColor: "{colors.border.default}"
+                    ".group:is(:active, [data-active])&": {
+                        borderColor: "var(--radio-bg)/50"
+                    }
                 }
             })
         },
-        scheme: getColorSchemes(
-            "--checkbox-bg",
-            (scheme) => {
-                return {
-                    color:
-                        scheme === "success" || scheme === "warning" || scheme === "info"
-                            ? "black/87"
-                            : "white/87"
-                } as Record<any, any>;
-            },
-            "root"
-        )
+        scheme: getColorSchemes("--radio-bg", undefined, "root")
     }
 });

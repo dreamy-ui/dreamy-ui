@@ -77,6 +77,9 @@ export default defineConfig({
                 marginTop: 4,
                 marginBottom: 4
             },
+            "code span[data-line]": {
+                width: "full"
+            },
             "span[data-rehype-pretty-code-figure]": {
                 fontSize: "small",
                 marginInline: "0.1rem",
@@ -89,6 +92,9 @@ export default defineConfig({
                         color: "{colors.secondary} !important"
                     }
                 }
+            },
+            "span[data-highlighted-line]": {
+                background: "{colors.success}/12 !important"
             },
             li: {
                 _marker: {

@@ -21,6 +21,8 @@ import {
     ModalFooter,
     ModalHeader,
     ModalOverlay,
+    Radio,
+    RadioGroup,
     Slider,
     SliderFilledTrack,
     SliderMark,
@@ -69,6 +71,11 @@ export default function Test() {
             col
             gap={10}
         >
+            <RadioGroup>
+                <Radio value={"primary"}>Primary</Radio>
+                <Radio value={"secondary"}>Secondary</Radio>
+            </RadioGroup>
+
             <Flex
                 gap={4}
                 row

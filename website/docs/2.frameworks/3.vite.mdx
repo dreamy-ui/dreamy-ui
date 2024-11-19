@@ -1,0 +1,43 @@
+---
+title: Using Vite
+---
+
+# Using Dreamy UI with Vite
+
+Set up Dreamy UI in your Vite project.
+
+## 1. Follow the Panda CSS installation guide
+
+Follow the [Panda CSS installation guide](https://panda-css.com/docs/installation/vite) to set up Panda CSS in your Vite project.
+
+## 2. Install Dreamy UI
+
+Install Dreamy UI in your project:
+
+```bash
+pnpm install @dreamy-ui/react @dreamy-ui/system
+```
+
+## 2. Configure panda.config.ts
+
+Configure environment and panda presets in your `panda.config.ts` file:
+
+```ts {2-3, 8-16}
+import { defineConfig } from "@pandacss/dev";
+import { createDreamPreset } from "@dreamy-ui/system";
+import pandaPreset from "@pandacss/preset-panda";
+
+
+export default defineConfig({
+	...,
+	preflight: true,
+    jsxFramework: "react",
+    jsxStyleProps: "all",
+    outExtension: "js",
+    importMap: "@dreamy-ui/system",
+    presets: [
+        pandaPreset,
+        createDreamPreset()
+    ]
+});
+```

@@ -26,6 +26,8 @@ import {
     MotionBox,
     PinInput,
     PinInputField,
+    Radio,
+    RadioGroup,
     Slider,
     SliderFilledTrack,
     SliderThumb,
@@ -209,7 +211,9 @@ const DreamComponents = {
     Tooltip,
     VisuallyHidden,
     Skeleton,
-    SkeletonText
+    SkeletonText,
+    Radio,
+    RadioGroup
 };
 
 function Wrapper({ children }: PropsWithChildren) {
@@ -227,41 +231,6 @@ function Wrapper({ children }: PropsWithChildren) {
         </Flex>
     );
 }
-
-// interface ComponentCodeProps {
-//     code: string;
-//     component: React.ReactNode;
-// }
-
-// function ComponentCode({ code, component }: ComponentCodeProps) {
-//     const [showCode, setShowCode] = useState(false);
-
-//     return (
-//         <Flex
-//             col
-//             w={"auto"}
-//         >
-//             <HStack>
-//                 <Button
-//                     variant={"ghost"}
-//                     size={"sm"}
-//                     onClick={() => setShowCode(false)}
-//                 >
-//                     Preview
-//                 </Button>
-//                 <Button
-//                     variant={"ghost"}
-//                     size={"sm"}
-//                     onClick={() => setShowCode(true)}
-//                 >
-//                     Code
-//                 </Button>
-//             </HStack>
-
-//             {showCode ? <pre>{code}</pre> : component}
-//         </Flex>
-//     );
-// }
 
 const icons = {
     IoClose,
