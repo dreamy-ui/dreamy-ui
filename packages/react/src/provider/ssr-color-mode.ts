@@ -1,6 +1,6 @@
 import type { ColorMode } from "@/provider";
 
-export function getColorModeHTMLProps(ssrColorMode: ColorMode | undefined | null) {
+export function getColorModeHTMLProps(ssrColorMode: ColorMode | undefined | null = "light") {
     return {
         style: {
             colorScheme: ssrColorMode || undefined
@@ -11,7 +11,9 @@ export function getColorModeHTMLProps(ssrColorMode: ColorMode | undefined | null
     };
 }
 
-export function getSSRColorMode(cookiesOrRequest: string | Request | undefined): ColorMode | undefined {
+export function getSSRColorMode(
+    cookiesOrRequest: string | Request | undefined
+): ColorMode | undefined {
     if (typeof cookiesOrRequest === "undefined") {
         return undefined;
     }

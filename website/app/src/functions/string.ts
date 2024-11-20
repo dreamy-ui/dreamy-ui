@@ -6,10 +6,12 @@ export function capitalize(str: string) {
 }
 
 export function filenameToSlug(filename: string) {
-    return filename
-        .replaceAll(" ", "-")
-        .replaceAll(".", "")
-        .replaceAll("/", "")
-        .replaceAll("?", "")
-        .toLowerCase();
+    return (
+        filename
+            .replaceAll(" ", "-")
+            // .replaceAll(".", "")
+            .replaceAll("/", "")
+            .replaceAll("?", "")
+            .toLowerCase()
+    );
 }

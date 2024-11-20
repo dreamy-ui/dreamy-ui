@@ -94,7 +94,7 @@ export default defineConfig({
                 }
             },
             "span[data-highlighted-line]": {
-                background: "{colors.success}/12 !important"
+                bg: "linear-gradient(to right, {colors.success/12}, transparent)"
             },
             li: {
                 _marker: {

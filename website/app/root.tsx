@@ -1,4 +1,5 @@
-import { DreamProvider, getColorModeHTMLProps, getSSRColorMode } from "@dreamy-ui/react";
+import { DreamProvider } from "@dreamy-ui/react";
+import { getColorModeHTMLProps, getSSRColorMode } from "@dreamy-ui/react/rsc";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import {
     Links,
@@ -7,9 +8,10 @@ import {
     Scripts,
     ScrollRestoration,
     type ShouldRevalidateFunctionArgs,
+    useLoaderData,
     useRouteLoaderData
 } from "@remix-run/react";
-import { type PropsWithChildren, useEffect } from "react";
+import { useEffect } from "react";
 import AppLayout from "~/src/ui/global/Layout";
 import styles from "./index.css?url";
 import { getServerCookie } from "./src/functions/cookies";
@@ -64,9 +66,8 @@ export function useRoot() {
     return useRouteLoaderData<typeof loader>("root")!;
 }
 
-export function Layout({ children }: PropsWithChildren) {
-    const data = useRoot();
-    const { colorMode } = data ?? {};
+export function Layout({ children }: { children: React.ReactNode }) {
+    const { colorMode } = useLoaderData<typeof loader>();
 
     useEffect(() => {
         (window as any).hydrated = true;
@@ -75,7 +76,7 @@ export function Layout({ children }: PropsWithChildren) {
     return (
         <html
             lang="en"
-            {...getColorModeHTMLProps(colorMode ?? "light")}
+            {...getColorModeHTMLProps(colorMode)}
         >
             <head>
                 <meta charSet="utf-8" />

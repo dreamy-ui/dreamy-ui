@@ -11,7 +11,7 @@ interface ProvidersProps extends PropsWithChildren {
 export function Providers({ children, colorMode }: ProvidersProps) {
     return (
         <DreamProvider
-            motionFeatures={domMax as any}
+            motionFeatures={domMax}
             colorMode={colorMode}
             framerMotionStrict
             useUserPreferenceColorMode

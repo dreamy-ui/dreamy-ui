@@ -375,8 +375,8 @@ export class Docs {
     public static async getSections(): Promise<LocalSection[]> {
         return await cachified({
             key: "docs-sections",
-            ttl: Docs.shouldCacheDocs ? minToMs(5) : 10_000,
-            staleWhileRevalidate: Docs.shouldCacheDocs ? daysToMs(30) : 30_000,
+            ttl: Docs.shouldCacheDocs ? minToMs(5) : 0,
+            staleWhileRevalidate: Docs.shouldCacheDocs ? daysToMs(30) : 10_000,
             getFreshValue: async () => {
                 const docsStructure = await Docs.fetchFreshDocsStructure(false);
 
@@ -450,7 +450,7 @@ export function filenameToTitle(filename: string) {
     return capitalize(
         filename
             .replaceAll("-", " ")
-            .replaceAll(".", "")
+            // .replaceAll(".", "")
             .replaceAll("/", "")
             .replaceAll("?", "")
             .toLowerCase()
@@ -462,7 +462,10 @@ function removeIndex(filename: string) {
         return filename.split(".")[0];
     }
 
-    return filename.split(".")[1];
+    return filename
+        .slice(filename.indexOf(".") + 1)
+        .replaceAll(".mdx", "")
+        .replaceAll(".md", "");
 }
 
 function getIndex(filename: string) {

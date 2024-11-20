@@ -1,0 +1,108 @@
+---
+title: Using Remix
+---
+
+# Using Dreamy UI with Remix
+
+Set up Dreamy UI in your Remix project.
+
+## 1. Follow the Panda CSS installation guide
+
+Follow the [Panda CSS installation guide](https://panda-css.com/docs/installation/remix) to set up Panda CSS in your Remix project.
+
+## 2. Install Dreamy UI
+
+Install Dreamy UI in your project:
+
+```bash
+pnpm install @dreamy-ui/react @dreamy-ui/system
+```
+
+## 2. Configure panda.config.ts
+
+Configure environment and panda presets in your `panda.config.ts` file:
+
+```ts {2-3, 8-16}
+import { defineConfig } from "@pandacss/dev";
+import { createDreamPreset } from "@dreamy-ui/system";
+import pandaPreset from "@pandacss/preset-panda";
+
+
+export default defineConfig({
+	...,
+	preflight: true,
+    jsxFramework: "react",
+    jsxStyleProps: "all",
+    outExtension: "js",
+    importMap: "@dreamy-ui/system",
+    presets: [
+        pandaPreset,
+        createDreamPreset()
+    ]
+});
+```
+
+## 3. Add Dreamy Provider
+
+After configuring Panda CSS, finally we can add the main Dreamy Provider to your `app/root.tsx`.
+
+To fix color mode flashing on document request, we need to get color mode from the loader, to render the correct color mode.
+
+```tsx {2-4, 6-10, 12, 15, 20, 29-36}
+...
+import { DreamProvider } from "@dreamy-ui/react";
+import { getColorModeHTMLProps, getSSRColorMode } from "@dreamy-ui/react/rsc";
+import type { LoaderFunctionArgs } from "@remix-run/node";
+
+export function loader({ request }: LoaderFunctionArgs) {
+    return {
+        colorMode: getSSRColorMode(request)
+    };
+}
+
+const domMax = () => import("framer-motion").then((mod) => mod.domMax);
+
+export function Layout({ children }: { children: React.ReactNode }) {
+    const { colorMode } = useLoaderData<typeof loader>();
+
+    return (
+        <html
+            lang="en"
+            {...getColorModeHTMLProps(colorMode)}
+        >
+            <head>
+                <meta charSet="utf-8" />
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+                <Meta />
+                <Links />
+            </head>
+            <body>
+                <DreamProvider
+                    motionFeatures={domMax}
+                    colorMode={colorMode}
+                    framerMotionStrict
+                    useUserPreferenceColorMode
+                >
+                    {children}
+                </DreamProvider>
+                <ScrollRestoration />
+                <Scripts />
+            </body>
+        </html>
+    );
+}
+
+...
+```
+
+## 4. Start using Dreamy UI
+
+Let's write some Dreamy UI in `app/routes/_index.tsx`.
+
+```tsx {1, 4}
+import { Button } from "@dreamy-ui/react";
+
+export default function Index() {
+    return <Button>Hello World</Button>;
+}
+```

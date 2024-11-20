@@ -4,14 +4,10 @@ import { ExpressApp } from "server/app";
 import { Logger } from "~/src/.server/logger";
 
 if (cluster.isPrimary) {
-    for (
-        let i = 0;
-        i <
-        (process.env.NODE_ENV === "production"
-            ? Number(process.env.CORES) || os.availableParallelism()
-            : 1);
-        i++
-    ) {
+    const cores =
+        process.env.NODE_ENV === "production" ? Number(process.env.CORES) || os.cpus().length : 1;
+
+    for (let i = 0; i < cores; i++) {
         const worker = cluster.fork();
 
         worker.on("online", () => {

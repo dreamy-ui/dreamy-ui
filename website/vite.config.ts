@@ -7,6 +7,8 @@ import sourceMapSupport from "source-map-support";
 import { defineConfig } from "vite";
 import babel from "vite-plugin-babel";
 import tsconfigPaths from "vite-tsconfig-paths";
+// import pandabox from "@pandabox/unplugin";
+// import Inspect from "vite-plugin-inspect";
 
 installGlobals({ nativeFetch: false });
 sourceMapSupport.install({
@@ -38,7 +40,7 @@ export default defineConfig({
         // remixDevTools(),
         mdx(),
         // pandabox.vite({
-        //     optimizeJs: "auto",
+        //     optimizeJs: "macro",
         //     exclude: [
         //         "./styled-system",
         //         "styled-system",

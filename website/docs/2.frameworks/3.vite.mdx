@@ -41,3 +41,37 @@ export default defineConfig({
     ]
 });
 ```
+
+## 3. Add Dreamy Provider
+
+After configuring Panda CSS, finally we can add the main Dreamy Provider to your app root:
+
+```tsx {2-3, 6-10, 12}
+...
+import { DreamyProvider } from "@dreamy-ui/react";
+import { domMax } from "framer-motion";
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+    <DreamyProvider
+        motionFeatures={domMax}
+        framerMotionStrict
+        useUserPreferenceColorMode
+    >
+        <App />
+    </DreamyProvider>
+);
+```
+
+## 4. Start using Dreamy UI
+
+Now you can start using Dreamy UI in your `src/App.tsx`.
+
+```tsx
+import { Button } from "@dreamy-ui/react";
+ 
+function App() {
+    return <Button>Dreamy UI!</Button>;
+}
+ 
+export default App;
+```
