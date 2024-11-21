@@ -395,6 +395,7 @@ export class Docs {
     }
 
     public static async getDoc(folder: string, page: string): Promise<ValidDocsFile | null> {
+        console.log("should cache docs", Docs.shouldCacheDocs);
         return cachified({
             key: `docs-${folder}-${page}`,
             ttl: Docs.shouldCacheDocs ? minToMs(5) : 0,

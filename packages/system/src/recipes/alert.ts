@@ -1,54 +1,65 @@
-import { defineSlotRecipe } from "@pandacss/dev";
+import { defineParts, defineRecipe } from "@pandacss/dev";
 
-export const alert = defineSlotRecipe({
-    className: "Dream-alert",
+const parts = defineParts({
+    root: { selector: "&" },
+    icon: { selector: "& [data-part='icon']" },
+    title: { selector: "& [data-part='title']" },
+    description: { selector: "& [data-part='description']" }
+});
+
+export const alert = defineRecipe({
+    className: "dream-alert",
     description: "Dreamy UI Alert component",
-    slots: ["root", "icon", "title", "description"],
-    jsx: ["Alert", "AlertIcon", "AlertTitle", "AlertDescription"],
-    base: {
+    jsx: ["Alert"],
+    base: parts({
         root: {
             display: "flex",
-            alignItems: "center",
+            flexDirection: "column",
             paddingX: 4,
             paddingY: 3,
             borderRadius: "l2",
             fontSize: "md",
             width: "100%",
-            gap: 2
+            gap: 0.5
         },
         title: {
+            display: "flex",
+            alignItems: "center",
             fontWeight: "semibold",
             fontSize: "md",
             textWrap: "wrap"
         },
-        description: {},
+        description: {
+            ml: 7
+        },
         icon: {
             width: "5",
             height: "5",
+            mr: 2,
             flexShrink: 0,
-            "[data-status=success] &": {
+            "[data-status=success]&": {
                 color: "{colors.success}",
                 fill: "{colors.success}",
                 stroke: "{colors.success}"
             },
-            "[data-status=warning] &": {
+            "[data-status=warning]&": {
                 color: "{colors.warning}",
                 fill: "{colors.warning}"
             },
-            "[data-status=error] &": {
+            "[data-status=error]&": {
                 color: "{colors.error}",
                 fill: "{colors.error}"
             },
-            "[data-status=info] &": {
+            "[data-status=info]&": {
                 color: "{colors.info}",
                 fill: "{colors.info}",
                 stroke: "{colors.info}"
             }
         }
-    },
+    }),
     variants: {
         variant: {
-            subtle: {
+            subtle: parts({
                 root: {
                     "&[data-status=success]": {
                         bg: "{colors.success}/10"
@@ -63,8 +74,8 @@ export const alert = defineSlotRecipe({
                         bg: "{colors.info}/10"
                     }
                 }
-            },
-            outline: {
+            }),
+            outline: parts({
                 root: {
                     borderWidth: 1,
                     borderStyle: "solid",
@@ -81,7 +92,7 @@ export const alert = defineSlotRecipe({
                         borderColor: "{colors.info}"
                     }
                 }
-            }
+            })
         }
     },
     defaultVariants: {

@@ -1,6 +1,7 @@
 /**
  * This entry point is for the server-side compatible components and functions.
  */
+export { Alert, type AlertProps } from "./components/alert";
 export { Badge, type BadgeProps } from "./components/badge";
 export { Box, type BoxProps } from "./components/box/box";
 export { Divider, type DividerProps } from "./components/divider";

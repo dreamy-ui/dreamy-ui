@@ -3,10 +3,6 @@ import {
     AccordionContent,
     AccordionItem,
     AccordionTrigger,
-    Alert,
-    AlertDescription,
-    AlertIcon,
-    AlertTitle,
     Avatar,
     AvatarGroup,
     Button,
@@ -48,6 +44,7 @@ import {
     Tooltip
 } from "@dreamy-ui/react";
 import {
+    Alert,
     Badge,
     Box,
     Divider,
@@ -129,9 +126,6 @@ export function createHId(text: ReactNode) {
 
 const DreamComponents = {
     Alert,
-    AlertIcon,
-    AlertTitle,
-    AlertDescription,
     Box,
     Flex,
     Button,
@@ -324,10 +318,8 @@ const components = {
                     {...rest}
                     status="error"
                     boxShadow={"xs"}
-                >
-                    <AlertIcon />
-                    <AlertTitle>Error parsing blockquote</AlertTitle>
-                </Alert>
+                    title="Error parsing blockquote"
+                />
             );
         }
 
@@ -353,10 +345,8 @@ const components = {
                 my={4}
                 {...rest}
                 boxShadow={"xs"}
-            >
-                <AlertIcon />
-                <AlertTitle>{content}</AlertTitle>
-            </Alert>
+                title={content}
+            />
         );
     },
     img: ({ alt = "image", ...props }) => {
