@@ -246,7 +246,7 @@ export function useTooltip(props: Partial<UseTooltipProps> = {}) {
 
     const getTooltipPositionerProps: PropGetter = useCallback(
         (props = {}, forwardedRef = null) => {
-            console.log("arrow size", arrowSize);
+            "arrow size", arrowSize;
             return getPopperProps(
                 {
                     ...props,

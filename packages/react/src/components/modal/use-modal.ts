@@ -148,7 +148,6 @@ export function useModal(props: UseModalProps) {
              * When you click on the overlay, we want to remove only the topmost modal
              */
             if (!modalManager.isTopModal(dialogRef.current)) return;
-            console.log("is top modal on overlay click");
 
             if (closeOnOverlayClick) {
                 onClose?.();

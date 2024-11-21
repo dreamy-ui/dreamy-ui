@@ -1,3 +1,4 @@
+import { useSafeLayoutEffect } from "@dreamy-ui/react";
 import type { SerializeFrom } from "@remix-run/node";
 import {
     type ClientLoaderFunctionArgs,
@@ -6,7 +7,6 @@ import {
     useRouteLoaderData
 } from "@remix-run/react";
 import { useState } from "react";
-import { useSafeLayoutEffect } from "../../../../packages/react/src/components/descendant/utils";
 
 export interface CacheAdapter {
     getItem: (key: string) => any | Promise<any>;
@@ -32,8 +32,6 @@ export const cacheClientLoader = async <T extends unknown>(
         key: string;
     }
 > => {
-    console.log("CLIENT LOADER isHydrated", isHydrated());
-
     const existingData = isHydrated() ? await clientCache.getItem(key) : undefined;
     const data = existingData ? JSON.parse(existingData) : await serverLoader();
 
@@ -55,7 +53,6 @@ export function useCachedLoaderData<T extends any>() {
 
     // Unpack deferred data from the server
     useSafeLayoutEffect(() => {
-        console.log("loaderData", loaderData);
         (window as any).cacheKey = loaderData?.key;
         if (loaderData?.serverLoaderPromise) {
             loaderData.serverLoaderPromise

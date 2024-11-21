@@ -415,9 +415,6 @@ export function useSlider(props: UseSliderProps) {
         [thumbPercent, orientation, isReversed]
     );
 
-    console.log({
-        isReversed
-    });
     const getThumbProps: PropGetter = useCallback(
         (props = {}, ref = null) => {
             return {

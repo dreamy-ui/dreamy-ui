@@ -42,7 +42,6 @@ export async function action({ request }: ActionFunctionArgs) {
                         })
                     )
                 ).flat();
-                console.log(docs);
 
                 const names = docs.filter((doc) => {
                     return doc.filename.toLowerCase().includes(query.toLowerCase());

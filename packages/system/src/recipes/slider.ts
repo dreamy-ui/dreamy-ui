@@ -99,7 +99,7 @@ export const slider = defineSlotRecipe({
     },
     defaultVariants: {
         size: "md",
-        scheme: "secondary"
+        scheme: "primary"
     },
     variants: {
         size: {

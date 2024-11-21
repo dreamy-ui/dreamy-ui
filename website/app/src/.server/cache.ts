@@ -78,7 +78,7 @@ export const lru: LruCache = {
         const start = performance.now();
         const redisValue = await redisInstance?.get(key);
         const end = performance.now();
-        console.log(`Redis get ${key} took ${end - start}ms`);
+        Logger.debug(`Redis get ${key} took ${end - start}ms`);
         if (!redisValue) {
             return null;
         }
@@ -98,7 +98,7 @@ export const lru: LruCache = {
         if (lruInstance) {
             lruInstance.clear();
         }
-        return redisInstance?.flushall();
+        return redisInstance?.flushdb();
     }
 };
 

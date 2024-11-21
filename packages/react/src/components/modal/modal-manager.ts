@@ -20,10 +20,6 @@ class ModalManager {
     }
 
     isTopModal(modal: HTMLElement | null) {
-        console.log({
-            modal,
-            modals: this.modals
-        });
         if (!modal) return false;
         return this.modals.get(modal) === this.modals.size;
     }

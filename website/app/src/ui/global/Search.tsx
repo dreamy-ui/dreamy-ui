@@ -13,7 +13,8 @@ import {
     getActionKeyCode,
     useActionKey,
     useControllable,
-    useEventListener
+    useEventListener,
+    useUpdateEffect
 } from "@dreamy-ui/react";
 import { Flex, Icon, Kbd, Spinner, Text } from "@dreamy-ui/react/rsc";
 import type { SerializeFrom } from "@remix-run/node";
@@ -28,7 +29,6 @@ import { cachePageData } from "~/src/functions/clientCache";
 import { capitalize } from "~/src/functions/string";
 import useDebounce from "~/src/hooks/useDebounce";
 import { Link, type LinkProps } from "~/src/ui/global/Link";
-import { useUpdateEffect } from "../../../../../packages/react/src/hooks/use-update-effect";
 
 interface RecentSearch {
     filename: string;
