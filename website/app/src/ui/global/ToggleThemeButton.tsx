@@ -35,6 +35,7 @@ export function ToggleThemeButton() {
             <IconButton
                 variant={"ghost"}
                 aria-label="Toggle color mode"
+                data-umami-event="Toggle Theme"
                 icon={
                     <Icon
                         as={colorMode === "light" ? BiMoon : BiSun}

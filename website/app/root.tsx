@@ -96,6 +96,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 </DreamProvider>
                 <ScrollRestoration />
                 <Scripts />
+                <script
+                    defer
+                    src="https://analytics.dreamy-ui.com/script.js"
+                    data-website-id="24f8ae64-8f5d-42f2-b50f-86f7b2b672a8"
+                />
             </body>
         </html>
     );
