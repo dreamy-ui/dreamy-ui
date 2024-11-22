@@ -3,22 +3,24 @@ title: Visually Hidden
 description: Visually Hidden is a component that hides content from the screen while keeping it accessible to screen readers.
 isServerComponent: true
 source: /packages/react/src/components/visually-hidden/visually-hidden.tsx
-themeSource: /packages/system/styled-system/patterns/grid.js
+themeSource: /packages/system/styled-system/patterns/visually-hidden.js
 ---
 
 ## Import
 
 - `VisuallyHidden` - The Visually Hidden component that hides content from the screen while keeping it accessible to screen readers.
+- `VisuallyHiddenInput` - The `VisuallyHidden`, but an input element. Useful for hidden form data.
 
 ```tsx
-import { VisuallyHidden } from "@dreamy-ui/react/rsc";
+import { VisuallyHidden, VisuallyHiddenInput } from "@dreamy-ui/react/rsc";
 ```
 
 ## Usage
 
-Base usage of a Visually Hidden component.
+Base usage of a Visually Hidden component and a Visually Hidden Input component.
 
 <Wrapper>
+    <VisuallyHiddenInput name="intent" value="update" />
     <Button color="error" w='fit-content'>
         <>Destroy</>
         <VisuallyHidden>
@@ -28,6 +30,7 @@ Base usage of a Visually Hidden component.
 </Wrapper>
 
 ```tsx
+<VisuallyHiddenInput name="intent" value="update" />
 <Button color="error">
     Destroy
     <VisuallyHidden>

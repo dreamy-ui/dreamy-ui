@@ -69,7 +69,8 @@ import {
     Text,
     TextareaRSC,
     VStack,
-    VisuallyHidden
+    VisuallyHidden,
+    VisuallyHiddenInput
 } from "@dreamy-ui/react/rsc";
 import type * as mdx from "@mdx-js/react";
 import { useLocation } from "@remix-run/react";
@@ -209,7 +210,8 @@ const DreamComponents = {
     SkeletonText,
     Radio,
     RadioGroup,
-    Snippet
+    Snippet,
+    VisuallyHiddenInput
 };
 
 function Wrapper({ children }: PropsWithChildren) {
