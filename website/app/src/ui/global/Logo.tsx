@@ -34,12 +34,7 @@ export function Logo() {
                             ease: TRANSITION_EASINGS.easeInOut
                         }}
                     >
-                        <Heading
-                            size={"xl"}
-                            bold
-                        >
-                            Dreamy UI
-                        </Heading>
+                        <Heading size={"xl"}>Dreamy UI</Heading>
                     </MotionBox>
                     <MotionBox
                         initial={{ y: 0 }}
@@ -49,12 +44,7 @@ export function Logo() {
                             ease: TRANSITION_EASINGS.easeInOut
                         }}
                     >
-                        <Heading
-                            size={"xl"}
-                            bold
-                        >
-                            Your UI
-                        </Heading>
+                        <Heading size={"xl"}>Your UI</Heading>
                     </MotionBox>
                 </Box>
                 <Badge scheme={"secondary"}>Beta</Badge>

@@ -19,6 +19,7 @@ export const text = definePattern({
             fontWeight: map(variant, (v) =>
                 v === "heading" ? "bold" : v === "link" ? "semibold" : undefined
             ),
+            fontFamily: map(variant, (v) => (v === "heading" ? "heading" : undefined)),
             transition: map(variant, (v) => (v === "link" ? "colors" : undefined)),
             _hover: map(variant, (v) =>
                 v === "link" ? ({ color: "{colors.fg.max}" } as any) : undefined
