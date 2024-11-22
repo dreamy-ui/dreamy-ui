@@ -1,0 +1,137 @@
+---
+title: Snippet
+description: Snippet provides a simple way to display code snippets with a copy button.
+isServerComponent: false
+source: /packages/react/src/components/snippet/snippet.tsx
+themeSource: /packages/system/src/recipes/snippet.ts
+---
+
+## Import
+
+- `Snippet` - The code snippet component with a copy button, that times out after 5 seconds.
+
+```tsx
+import { Snippet } from "@dreamy-ui/react";
+```
+
+## Usage
+
+<Wrapper>
+	<Snippet>
+		<>pnpm install @dreamy-ui/react @dreamy-ui/system</>
+	</Snippet>
+</Wrapper>
+
+```tsx
+<Snippet>
+	pnpm install @dreamy-ui/react @dreamy-ui/system
+</Snippet>
+```
+
+### Variants 
+
+<Wrapper>
+	<Snippet variant="bordered">
+		<>pnpm install @dreamy-ui/react @dreamy-ui/system</>
+	</Snippet>
+	<Snippet variant="solid">
+		<>pnpm install @dreamy-ui/react @dreamy-ui/system</>
+	</Snippet>
+</Wrapper>
+
+```tsx
+<Snippet variant="bordered">
+	pnpm install @dreamy-ui/react @dreamy-ui/system
+</Snippet>
+<Snippet variant="solid">
+	pnpm install @dreamy-ui/react @dreamy-ui/system
+</Snippet>
+```
+
+### Sizes
+
+<Wrapper>
+	<Snippet size="sm">
+		<>pnpm install @dreamy-ui/react @dreamy-ui/system</>
+	</Snippet>
+	<Snippet size="md">
+		<>pnpm install @dreamy-ui/react @dreamy-ui/system</>
+	</Snippet>
+	<Snippet size="lg">
+		<>pnpm install @dreamy-ui/react @dreamy-ui/system</>
+	</Snippet>
+</Wrapper>
+
+```tsx
+<Snippet size="sm">
+	pnpm install @dreamy-ui/react @dreamy-ui/system
+</Snippet>
+<Snippet size="md">
+	pnpm install @dreamy-ui/react @dreamy-ui/system
+</Snippet>
+<Snippet size="lg">
+	pnpm install @dreamy-ui/react @dreamy-ui/system
+</Snippet>
+```
+
+### Schemes
+
+<Wrapper>
+	{["primary", "secondary", "success", "warning", "info", "error", "none"].map((scheme) => (
+		<Stack
+			key={scheme}
+			direction={{
+				base: "column",
+				md: "row"
+			}}
+			alignItems={{
+				base: "start",
+				md: "center"
+			}}
+			w='full'
+		>
+			<Text minW={20}>{scheme}</Text>	
+			<Snippet key={scheme} scheme={scheme} w='full'>
+				pnpm install @dreamy-ui/react @dreamy-ui/system
+			</Snippet>
+		</Stack>
+	))}
+</Wrapper>
+
+```tsx
+{["primary", "secondary", "success", "warning", "info", "error", "none"].map((scheme) => (
+	<Stack
+		key={scheme}
+		direction={{
+			base: "column",
+			md: "row"
+		}} 
+		alignItems={{
+			base: "start",
+			md: "center"
+		}}`
+		w='full'
+	>
+		<Text minW={20}>{scheme}</Text>	
+		<Snippet key={scheme} scheme={scheme} w='full'>
+			pnpm install @dreamy-ui/react @dreamy-ui/system
+		</Snippet>
+	</Stack>
+))}
+```
+
+### Disable Tooltip
+
+You can disable the "Copy To Clipboard" tooltip by using the `disableTooltip` prop.
+
+<Wrapper>
+	<Snippet disableTooltip>
+		<>pnpm install @dreamy-ui/react @dreamy-ui/system</>
+	</Snippet>
+</Wrapper>
+
+```tsx
+<Snippet disableTooltip>
+	pnpm install @dreamy-ui/react @dreamy-ui/system
+</Snippet>
+```

@@ -28,6 +28,7 @@ import {
     SliderFilledTrack,
     SliderThumb,
     SliderTrack,
+    Snippet,
     Tab,
     TabList,
     TabPanel,
@@ -207,7 +208,8 @@ const DreamComponents = {
     Skeleton,
     SkeletonText,
     Radio,
-    RadioGroup
+    RadioGroup,
+    Snippet
 };
 
 function Wrapper({ children }: PropsWithChildren) {

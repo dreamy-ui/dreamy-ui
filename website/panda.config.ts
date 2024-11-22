@@ -113,6 +113,7 @@ export default defineConfig({
             css: [
                 {
                     properties: {
+                        minW: [20],
                         maxW: ["300px"],
                         bg: ["secondary", "blue.400", "purple.400"],
                         color: ["white"],
