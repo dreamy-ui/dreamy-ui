@@ -17,7 +17,6 @@ import { skeleton } from "@/recipes/skeleton";
 import { slider } from "@/recipes/slider";
 import { spinner } from "@/recipes/spinner";
 import { tabs } from "@/recipes/tabs";
-import { text } from "@/recipes/text";
 import { textarea } from "@/recipes/textarea";
 import { tooltip } from "@/recipes/tooltip";
 import { accordion } from "./accordion";
@@ -27,7 +26,6 @@ import { table } from "./table";
 
 export const recipes = {
     button,
-    text,
     icon,
     modal,
     input,

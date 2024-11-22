@@ -1,12 +1,13 @@
 import { dream } from "@/components/factory";
+import { splitProps } from "@/utils";
 import type { HTMLDreamProps } from "@/utils/types";
 import { styled } from "@dreamy-ui/system/jsx";
-import { type TextVariantProps, text } from "@dreamy-ui/system/recipes";
+import { type TextProperties, text } from "@dreamy-ui/system/patterns";
 import { forwardRef } from "react";
 
-export interface HeadingProps extends HTMLDreamProps<"h3">, TextVariantProps {}
+export interface HeadingProps extends HTMLDreamProps<"h3">, TextProperties {}
 
-const StyledHeading = styled(dream.h3, text);
+const StyledHeading = styled(dream.h3);
 
 /**
  * Heading component
@@ -14,12 +15,18 @@ const StyledHeading = styled(dream.h3, text);
  * @See Docs https://dream-ui.com/docs/components/heading
  */
 export const Heading = forwardRef<HTMLParagraphElement, HeadingProps>((props, ref) => {
+    const [patternProps, restProps] = splitProps(props, ["variant", "size"]);
+
+    const styleProps = text.raw({
+        variant: "heading",
+        ...patternProps
+    });
+
     return (
         <StyledHeading
-            variant={"heading"}
-            size={"2xl"}
             ref={ref}
-            {...props}
+            {...styleProps}
+            {...restProps}
         />
     );
 });

@@ -1,12 +1,13 @@
 import { dream } from "@/components/factory";
+import { splitProps } from "@/utils";
 import type { HTMLDreamProps } from "@/utils/types";
 import { styled } from "@dreamy-ui/system/jsx";
-import { type TextVariantProps, text } from "@dreamy-ui/system/recipes";
+import { type TextProperties, text } from "@dreamy-ui/system/patterns";
 import { forwardRef } from "react";
 
-export interface TextProps extends HTMLDreamProps<"p">, TextVariantProps {}
+export interface TextProps extends HTMLDreamProps<"p">, TextProperties {}
 
-const StyledText = styled(dream.p, text);
+const StyledText = styled(dream.p);
 
 /**
  * Text component.
@@ -14,10 +15,15 @@ const StyledText = styled(dream.p, text);
  * @See Docs https://dream-ui.com/docs/components/text
  */
 export const Text = forwardRef<HTMLParagraphElement, TextProps>((props, ref) => {
+    const [patternProps, restProps] = splitProps(props, ["variant", "size"]);
+
+    const styleProps = text.raw(patternProps);
+
     return (
         <StyledText
             ref={ref}
-            {...props}
+            {...styleProps}
+            {...restProps}
         />
     );
 });
