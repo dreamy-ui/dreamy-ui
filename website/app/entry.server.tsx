@@ -12,14 +12,14 @@ import { renderToPipeableStream } from "react-dom/server";
 import { Docs } from "~/src/.server/docs";
 import { Logger } from "~/src/.server/logger";
 
-const ABORT_DELAY = 5_000;
-
 const redirects = [
     {
         path: "/discord",
         redirect: "https://discord.gg/gTSuFWnWy8"
     }
 ];
+
+export const streamTimeout = 5000;
 
 export default function handleRequest(
     request: Request,
@@ -41,11 +41,10 @@ export default function handleRequest(
 
         const resolver = isBot ? "onAllReady" : "onShellReady";
 
-        const { pipe, abort } = renderToPipeableStream(
+        const { pipe } = renderToPipeableStream(
             <RemixServer
                 context={remixContext}
                 url={request.url}
-                abortDelay={ABORT_DELAY}
             />,
             {
                 [resolver]() {
@@ -78,8 +77,6 @@ export default function handleRequest(
                 }
             }
         );
-
-        setTimeout(abort, ABORT_DELAY);
     });
 }
 

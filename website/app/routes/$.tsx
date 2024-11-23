@@ -1,6 +1,6 @@
 import { Flex, Heading, Icon, Text } from "@dreamy-ui/react/rsc";
 import type { LoaderFunctionArgs } from "@remix-run/node";
-import { type MetaFunction, isRouteErrorResponse, useRouteError } from "@remix-run/react";
+import { type MetaFunction, data, isRouteErrorResponse, useRouteError } from "@remix-run/react";
 import { useMemo } from "react";
 import { LuAlertCircle } from "react-icons/lu";
 
@@ -13,8 +13,9 @@ export function meta() {
 }
 
 export async function loader(_: LoaderFunctionArgs) {
-    return new Response("Not found", {
-        status: 404
+    return data("Not found", {
+        status: 404,
+        statusText: "Not found"
     });
 }
 
