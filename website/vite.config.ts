@@ -1,6 +1,5 @@
 import mdx from "@mdx-js/rollup";
 import { vitePlugin as remix } from "@remix-run/dev";
-import { installGlobals } from "@remix-run/node";
 import * as fs from "node:fs";
 import * as url from "node:url";
 import sourceMapSupport from "source-map-support";
@@ -10,7 +9,13 @@ import tsconfigPaths from "vite-tsconfig-paths";
 // import pandabox from "@pandabox/unplugin";
 // import Inspect from "vite-plugin-inspect";
 
-installGlobals({ nativeFetch: false });
+declare module "@remix-run/node" {
+    // or cloudflare, deno, etc.
+    interface Future {
+        v3_singleFetch: true;
+    }
+}
+
 sourceMapSupport.install({
     retrieveSourceMap: (source) => {
         const match = source.startsWith("file://");
@@ -55,7 +60,9 @@ export default defineConfig({
                 v3_throwAbortReason: true,
                 v3_relativeSplatPath: true,
                 v3_fetcherPersist: true,
-                v3_lazyRouteDiscovery: false
+                v3_lazyRouteDiscovery: true,
+                v3_singleFetch: true,
+                v3_routeConfig: true
             }
         }),
         babel({

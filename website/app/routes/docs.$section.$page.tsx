@@ -4,7 +4,7 @@ import type { LoaderFunctionArgs, MetaArgs, MetaFunction } from "@remix-run/node
 import {
     type ClientLoaderFunctionArgs,
     type ShouldRevalidateFunctionArgs,
-    json,
+    data,
     useLocation
 } from "@remix-run/react";
 import { useEffect, useMemo } from "react";
@@ -42,16 +42,14 @@ export async function loader({ params }: LoaderFunctionArgs) {
     });
 
     if (!doc) {
-        throw json(null, {
+        throw data(null, {
             status: 404
         });
     }
 
     const frontmatter = doc.mdxContent.frontmatter;
 
-    // await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    return json(
+    return data(
         {
             mdxSource: doc.mdxContent,
             mdxDescription: doc.mdxFrontmatterDescription,
@@ -84,7 +82,7 @@ export default function DocsSectionPage() {
 
     const loc = useLocation();
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: we dont want to scroll when clicked (yet)
+    // biome-ignore lint/correctness/useExhaustiveDependencies: we don't want to scroll when clicked (yet)
     useEffect(() => {
         if (loc.hash) {
             const el = document.getElementById(loc.hash.slice(1));

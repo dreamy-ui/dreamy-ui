@@ -49,6 +49,7 @@ import {
     Badge,
     Box,
     Divider,
+    Link as DreamLink,
     Flex,
     Grid,
     GridItem,
@@ -59,7 +60,6 @@ import {
     ImageRSC,
     InputRSC,
     Kbd,
-    Link,
     List,
     ListItem,
     Progress,
@@ -96,6 +96,7 @@ import {
     FocusPopover,
     PlacementPopovers
 } from "~/src/ui/docs/components/popovers";
+import { Link } from "~/src/ui/global/Link";
 import { ControlledTabs, VariantTabs } from "./components/Tabs";
 import { CheckboxCardGroupControl, CheckboxGroupControl } from "./components/checkboxes";
 import { ControlledSlider, MaxMinSlider } from "./components/sliders";
@@ -133,7 +134,7 @@ const DreamComponents = {
     Button,
     Icon,
     Heading,
-    Link,
+    Link: DreamLink,
     Text,
     Stack,
     VStack,
@@ -281,8 +282,30 @@ const components = {
     a: ({ href, children, ...props }) => {
         const isExternal = href?.startsWith("http");
 
+        if (href?.startsWith("/")) {
+            return (
+                <Link
+                    to={href || "#"}
+                    target={isExternal ? "_blank" : undefined}
+                    _hover={{
+                        textDecoration: "underline"
+                    }}
+                    color={"secondary"}
+                    {...props}
+                >
+                    {children}{" "}
+                    {isExternal && (
+                        <Icon
+                            as={HiExternalLink}
+                            display={"inline-block"}
+                        />
+                    )}
+                </Link>
+            );
+        }
+
         return (
-            <Link
+            <DreamLink
                 href={href || "#"}
                 target={isExternal ? "_blank" : undefined}
                 _hover={{
@@ -298,7 +321,7 @@ const components = {
                         display={"inline-block"}
                     />
                 )}
-            </Link>
+            </DreamLink>
         );
     },
     em: (props: any) => (
@@ -432,7 +455,7 @@ function DefaultHeading({ mt, mb, ...props }: HeadingProps) {
                     opacity: isHovered ? 1 : 0
                 }}
             >
-                <Link
+                <DreamLink
                     href={`#${hId}`}
                     cursor="pointer"
                     onClick={() => {
@@ -446,10 +469,10 @@ function DefaultHeading({ mt, mb, ...props }: HeadingProps) {
                     >
                         #
                     </Heading>
-                </Link>
+                </DreamLink>
             </MotionBox>
 
-            <Link
+            <DreamLink
                 href={`#${hId}`}
                 scrollMarginTop={24}
                 role="group"
@@ -466,7 +489,7 @@ function DefaultHeading({ mt, mb, ...props }: HeadingProps) {
                     }}
                     {...props}
                 />
-            </Link>
+            </DreamLink>
         </Flex>
     );
 }
