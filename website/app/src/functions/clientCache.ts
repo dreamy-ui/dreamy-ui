@@ -142,7 +142,7 @@ export function isHydrated() {
 }
 
 export function cachePageData(slug: string) {
-    return fetch(`${slug}?_data=routes%2Fdocs.%24section.%24page`)
+    return fetch(`/api/docs/prefetch?slug=${slug}`)
         .then((res) => res.json())
         .then((data) => {
             clientCache.setItem(slug, JSON.stringify(data));

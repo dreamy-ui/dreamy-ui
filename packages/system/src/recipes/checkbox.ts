@@ -50,7 +50,7 @@ export const checkbox = defineRecipe({
             mr: 2,
             flexShrink: 0,
             overflow: "hidden",
-            borderWidth: "2px",
+            borderWidth: "1px",
             borderStyle: "solid",
             borderRadius: "l1",
             transition: "border-color 0.1s, background-color 0.1s",
