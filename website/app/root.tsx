@@ -8,7 +8,6 @@ import {
     Scripts,
     ScrollRestoration,
     type ShouldRevalidateFunctionArgs,
-    useLoaderData,
     useRouteLoaderData
 } from "@remix-run/react";
 import { useEffect } from "react";
@@ -67,7 +66,7 @@ export function useRoot() {
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
-    const { colorMode } = useLoaderData<typeof loader>();
+    const { colorMode } = useRoot() ?? {};
 
     useEffect(() => {
         (window as any).hydrated = true;

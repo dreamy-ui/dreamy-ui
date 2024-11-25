@@ -15,7 +15,7 @@ export const text = definePattern({
     transform(props, { map }) {
         const { variant, size, ...rest } = props;
         return {
-            textStyle: size,
+            textStyle: size ?? map(variant, (v) => (v === "heading" ? "xl" : undefined)),
             fontWeight: map(variant, (v) =>
                 v === "heading" ? "bold" : v === "link" ? "semibold" : undefined
             ),

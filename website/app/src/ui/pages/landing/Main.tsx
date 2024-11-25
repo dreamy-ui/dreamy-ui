@@ -9,7 +9,7 @@ export default function Main() {
     return (
         <Flex
             gap={5}
-            py={{
+            pt={{
                 base: 0,
                 md: 16
             }}
@@ -34,7 +34,7 @@ export default function Main() {
 
             <Heading
                 size={{
-                    base: "3xl",
+                    base: "4xl",
                     md: "6xl"
                 }}
                 fontWeight={"bold"}
@@ -73,7 +73,12 @@ export default function Main() {
                 UI
             </Heading>
 
-            <Text size="lg">Build performant, accessible, websites with ease.</Text>
+            <Text
+                size="lg"
+                color="fg.medium"
+            >
+                Build performant, accessible, websites with ease.
+            </Text>
 
             <HStack mt={5}>
                 <Button
@@ -105,6 +110,19 @@ export default function Main() {
                     Discord
                 </Button>
             </HStack>
+
+            {/* <Image
+                pos={"absolute"}
+                src={"/dream.svg"}
+                alt="Dreamy UI"
+                rounded={"lg"}
+                right={0}
+                h={44}
+                blur={"2xl"}
+                filter={"auto"}
+                opacity={0.5}
+                transform={"translateY(50%) translateX(-5%)"}
+            /> */}
         </Flex>
     );
 }

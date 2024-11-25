@@ -42,6 +42,13 @@ export default defineConfig({
                         value: "#fbb36a"
                     }
                 }
+            },
+            keyframes: {
+                downUp: {
+                    "0%": { transform: "translateY(0)" },
+                    "50%": { transform: "translateY(20px)" },
+                    "100%": { transform: "translateY(0)" }
+                }
             }
         }
     },
@@ -113,6 +120,7 @@ export default defineConfig({
             css: [
                 {
                     properties: {
+                        animationDelay: ["0s", "0.5s", "1s", "1.5s", "2s"],
                         minW: [20],
                         maxW: ["300px"],
                         bg: ["secondary", "blue.400", "purple.400"],

@@ -1,4 +1,4 @@
-import { json, type LoaderFunctionArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@remix-run/node";
 import { CACHE_DURATION, CacheHeaders } from "~/src/.server/cache";
 import { Docs } from "~/src/.server/docs";
 
@@ -6,7 +6,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
     const searchParams = new URL(request.url).searchParams;
 
     const splitted = searchParams.get("slug")?.split("/") ?? [];
-    console.log("slug", splitted);
     const section = splitted[2] as string;
     const page = splitted[3] as string;
 
@@ -21,7 +20,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
         });
     }
 
-    return json(
+    return Response.json(
         {
             mdxSource: doc.mdxContent,
             mdxDescription: doc.mdxFrontmatterDescription,

@@ -132,7 +132,7 @@ export default function DocsSectionPage() {
                         css={{
                             "& > *": {
                                 mdDown: {
-                                    flex: "1 1 180px"
+                                    flex: "1 1 150px"
                                 }
                             }
                         }}

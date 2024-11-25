@@ -1,6 +1,12 @@
-import type { MetaFunction } from "@remix-run/node";
+import { Flex } from "@dreamy-ui/react/rsc";
+import { type MetaFunction, data } from "@remix-run/node";
 import { CACHE_DURATION, CacheHeaders } from "~/src/.server/cache";
-import Main from "~/src/ui/index/Main";
+import { getLandingPageCodes } from "~/src/.server/codes";
+import BuiltFor from "~/src/ui/pages/landing/BuiltFor";
+import EverythingYouNeed from "~/src/ui/pages/landing/EverythingYouNeed";
+import Features from "~/src/ui/pages/landing/Features";
+import FloatingComponents from "~/src/ui/pages/landing/FloatingComponents";
+import Main from "~/src/ui/pages/landing/Main";
 
 export const meta: MetaFunction = () => {
     return [
@@ -12,19 +18,29 @@ export const meta: MetaFunction = () => {
     ];
 };
 
+export async function loader() {
+    const codes = await getLandingPageCodes();
+
+    return data(codes, {
+        headers: CacheHeaders.cache(CACHE_DURATION.DEFAULT, undefined, true)
+    });
+}
+
 export const headers = CacheHeaders.cache(CACHE_DURATION.DEFAULT);
 
 export default function Index() {
     return (
-        <>
+        <Flex
+            wFull
+            col
+            gap={20}
+            mb={20}
+        >
             <Main />
-
-            {/* <Flex
-                col
-                wFull
-            >
-                <Features />
-            </Flex> */}
-        </>
+            <FloatingComponents />
+            <BuiltFor />
+            <Features />
+            <EverythingYouNeed />
+        </Flex>
     );
 }

@@ -14,7 +14,7 @@ export class CacheHeaders {
     public static cache(
         maxAge: CACHE_DURATION,
         headersInit?: ReturnType<HeadersFunction>,
-        skipVary = false // skip the vary header, mostly used for responses
+        skipVary = false // skip the vary header, mostly used for non-document responses
     ): ReturnType<HeadersFunction> {
         const headers = new Headers(headersInit);
 
