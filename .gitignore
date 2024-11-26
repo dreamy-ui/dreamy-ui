@@ -4,3 +4,5 @@ packages/system/dist
 packages/react/dist
 .turbo
 pnpm-lock.yaml
+dump.rdb
+website/dump.rdb

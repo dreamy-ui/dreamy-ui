@@ -3,6 +3,7 @@ import { type MetaFunction, data } from "@remix-run/node";
 import { CACHE_DURATION, CacheHeaders } from "~/src/.server/cache";
 import { getLandingPageCodes } from "~/src/.server/codes";
 import BuiltFor from "~/src/ui/pages/landing/BuiltFor";
+import Communities from "~/src/ui/pages/landing/Community";
 import EverythingYouNeed from "~/src/ui/pages/landing/EverythingYouNeed";
 import Features from "~/src/ui/pages/landing/Features";
 import FloatingComponents from "~/src/ui/pages/landing/FloatingComponents";
@@ -41,6 +42,7 @@ export default function Index() {
             <BuiltFor />
             <Features />
             <EverythingYouNeed />
+            <Communities />
         </Flex>
     );
 }

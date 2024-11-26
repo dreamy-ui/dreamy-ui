@@ -5,7 +5,7 @@ export default function BuiltFor() {
         <Flex
             col
             gap={2}
-            mt={20}
+            mt={10}
         >
             <Heading
                 size="xl"

@@ -49,18 +49,7 @@ export default function Main() {
                 >
                     dream
                 </Box>{" "}
-                websites with <br />{" "}
-                <Box
-                    as={"span"}
-                    // bgGradient={"to-r"}
-                    // gradientFrom={"primary/33"}
-                    // gradientTo={"secondary/33"}
-                    // px={2}
-                    // rounded={"sm"}
-                >
-                    next-gen DX
-                </Box>{" "}
-                and{" "}
+                websites with <br /> <Box as={"span"}>next-gen DX</Box> and{" "}
                 <Box
                     as={"span"}
                     textGradient={"to-r"}
@@ -110,19 +99,6 @@ export default function Main() {
                     Discord
                 </Button>
             </HStack>
-
-            {/* <Image
-                pos={"absolute"}
-                src={"/dream.svg"}
-                alt="Dreamy UI"
-                rounded={"lg"}
-                right={0}
-                h={44}
-                blur={"2xl"}
-                filter={"auto"}
-                opacity={0.5}
-                transform={"translateY(50%) translateX(-5%)"}
-            /> */}
         </Flex>
     );
 }
