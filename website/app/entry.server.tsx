@@ -12,13 +12,6 @@ import { renderToPipeableStream } from "react-dom/server";
 import { Docs } from "~/src/.server/docs";
 import { Logger } from "~/src/.server/logger";
 
-const redirects = [
-    {
-        path: "/discord",
-        redirect: "https://discord.gg/gTSuFWnWy8"
-    }
-];
-
 export const streamTimeout = 5000;
 
 export default function handleRequest(
@@ -28,12 +21,6 @@ export default function handleRequest(
     remixContext: EntryContext,
     loadContext: AppLoadContext
 ) {
-    for (const redirect of redirects) {
-        if (new URL(request.url).pathname === redirect.path) {
-            return Response.redirect(redirect.redirect, 302);
-        }
-    }
-
     return new Promise((resolve, reject) => {
         let shellRendered = false;
 

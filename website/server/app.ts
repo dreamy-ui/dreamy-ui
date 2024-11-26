@@ -11,6 +11,7 @@ import type { Server } from "node:http";
 import * as path from "node:path";
 import { performance } from "node:perf_hooks";
 import * as url from "node:url";
+import redirects from "~/redirects";
 import { Logger } from "~/src/.server/logger";
 import pack from "../package.json";
 
@@ -94,6 +95,12 @@ export class ExpressApp {
             this.app.use(express.static("public", { maxAge: "1m" }));
         }
         this.app.use(morgan("short"));
+
+        for (const redirect of redirects) {
+            this.app.get(redirect.path, (_req, res) => {
+                return res.redirect(redirect.redirect);
+            });
+        }
 
         this.app.all("*", remixHandler);
     }
