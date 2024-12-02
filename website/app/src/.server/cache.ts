@@ -33,7 +33,9 @@ export class CacheHeaders {
 }
 
 export enum CACHE_DURATION {
-    DEFAULT = 60 * 5
+    DEFAULT = 60 * 5,
+    ONE_WEEK = 60 * 60 * 24 * 7,
+    ONE_MONTH = 60 * 60 * 24 * 30
 }
 
 /**

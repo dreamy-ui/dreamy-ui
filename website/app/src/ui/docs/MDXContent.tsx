@@ -242,6 +242,8 @@ const components = {
     p: (props) => (
         <Text
             mb={2}
+            color={"fg.medium"}
+            fontWeight={400}
             {...props}
         />
     ),
@@ -425,6 +427,8 @@ const components = {
     strong: (props: any) => (
         <Text
             as="strong"
+            color={"fg"}
+            fontWeight={600}
             {...props}
         />
     ),
@@ -483,7 +487,7 @@ function DefaultHeading({ mt, mb, ...props }: HeadingProps) {
                     id={hId}
                     textDecoration={hash === `#${hId}` ? "underline" : "none"}
                     scrollMarginTop={24}
-                    lineClamp={1}
+                    // lineClamp={1}
                     _hover={{
                         textDecoration: "underline"
                     }}

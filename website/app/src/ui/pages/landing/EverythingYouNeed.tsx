@@ -28,7 +28,7 @@ const features = [
     {
         title: "Smooth animations",
         icon: MdAnimation,
-        description: "Smooth animations for a better user experience"
+        description: "Beautiful smooth animations"
     },
     {
         title: "No runtime styles",
@@ -42,11 +42,11 @@ export default function EverythingYouNeed() {
         <Flex
             col
             gap={10}
+            mt={10}
         >
             <Flex
                 col
                 gap={2}
-                mt={20}
             >
                 <Heading
                     size="4xl"
@@ -58,8 +58,8 @@ export default function EverythingYouNeed() {
                         px={2}
                         py={0.5}
                         rounded={"sm"}
-                        bg={"secondary/12"}
-                        color={"secondary"}
+                        bg={"info/12"}
+                        color={"info"}
                         ml={1}
                     >
                         need
@@ -112,16 +112,18 @@ function Feature({ title, description, icon }: FeatureProps) {
             rounded={"l2"}
             border={"1px solid"}
             borderColor={"border.muted"}
-            bg={"alpha.50"}
+            bg={"bg/70"}
+            backdropBlur={"sm"}
+            backdropFilter={"auto"}
         >
             <HStack>
                 <Icon
                     as={icon}
-                    // color={"secondary"}
+                    color={"info"}
                 />
                 <Text
                     fontWeight={"semibold"}
-                    // color={"secondary"}
+                    color={"info"}
                 >
                     {title}
                 </Text>

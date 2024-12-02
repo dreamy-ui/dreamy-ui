@@ -23,6 +23,10 @@ import {
     ModalOverlay,
     Radio,
     RadioGroup,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
     Slider,
     SliderFilledTrack,
     SliderMark,
@@ -71,6 +75,15 @@ export default function Test() {
             col
             gap={10}
         >
+            <Select>
+                <SelectTrigger placeholder={"Select type"} />
+                <SelectContent>
+                    <SelectItem value={"1"}>1</SelectItem>
+                    <SelectItem value={"2"}>2</SelectItem>
+                    <SelectItem value={"3"}>3</SelectItem>
+                </SelectContent>
+            </Select>
+
             <RadioGroup>
                 <Radio value={"primary"}>Primary</Radio>
                 <Radio value={"secondary"}>Secondary</Radio>

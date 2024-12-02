@@ -62,13 +62,13 @@ export const accordion = defineSlotRecipe({
             outline: {
                 item: {
                     borderBottom: "1px solid",
-                    borderColor: "{colors.border.default}"
+                    borderColor: "{colors.border.muted}"
                 }
             },
             solid: {
                 item: {
                     borderBottom: "1px solid",
-                    borderColor: "{colors.border.default}",
+                    borderColor: "{colors.border.muted}",
                     _last: {
                         borderBottom: "none"
                     }

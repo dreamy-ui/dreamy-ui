@@ -39,7 +39,7 @@ export const field = defineSlotRecipe({
         },
         helpText: {
             fontSize: "sm",
-            color: "{colors.fg.muted}"
+            color: "{colors.fg.medium}"
         },
         requiredIndicator: {
             color: "{colors.error}",

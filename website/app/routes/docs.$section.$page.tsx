@@ -47,13 +47,11 @@ export async function loader({ params }: LoaderFunctionArgs) {
         });
     }
 
-    const frontmatter = doc.mdxContent.frontmatter;
-
     return data(
         {
             mdxSource: doc.mdxContent,
             mdxDescription: doc.mdxFrontmatterDescription,
-            frontmatter,
+            frontmatter: doc.mdxContent.frontmatter,
             headings: doc.headings
         },
         {

@@ -13,6 +13,7 @@ import { modal } from "@/recipes/modal";
 import { popover } from "@/recipes/popover";
 import { progress } from "@/recipes/progress";
 import { radio, radioParts } from "@/recipes/radio";
+import { select } from "@/recipes/select";
 import { skeleton } from "@/recipes/skeleton";
 import { slider } from "@/recipes/slider";
 import { spinner } from "@/recipes/spinner";
@@ -49,7 +50,8 @@ export const recipes = {
     snippet,
     table,
     skeleton,
-    radio
+    radio,
+    select
 };
 
 export const parts = {

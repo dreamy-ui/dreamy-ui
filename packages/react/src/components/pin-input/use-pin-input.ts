@@ -176,7 +176,7 @@ export function usePinInput(props: UsePinInputProps = {}): UsePinInputReturn {
     }, [descendants]);
 
     const focusNext = useCallback(
-        (index: number) => {
+        (index: number, select = false) => {
             if (!moveFocus || !manageFocus) {
                 return;
             }
@@ -184,6 +184,27 @@ export function usePinInput(props: UsePinInputProps = {}): UsePinInputReturn {
             if (next) {
                 requestAnimationFrame(() => {
                     next.node?.focus();
+                    if (select) {
+                        next.node?.select();
+                    }
+                });
+            }
+        },
+        [descendants, moveFocus, manageFocus]
+    );
+
+    const focusPrev = useCallback(
+        (index: number, select = false) => {
+            if (!moveFocus || !manageFocus) {
+                return;
+            }
+            const prev = descendants.prevEnabled(index, false);
+            if (prev) {
+                requestAnimationFrame(() => {
+                    prev.node?.focus();
+                    if (select) {
+                        prev.node?.select();
+                    }
                 });
             }
         },
@@ -294,6 +315,10 @@ export function usePinInput(props: UsePinInputProps = {}): UsePinInputReturn {
                     } else {
                         setMoveFocus(false);
                     }
+                } else if (event.key === "ArrowRight" && manageFocus) {
+                    focusNext(index, true);
+                } else if (event.key === "ArrowLeft" && manageFocus) {
+                    focusPrev(index, true);
                 }
             };
 
@@ -328,6 +353,8 @@ export function usePinInput(props: UsePinInputProps = {}): UsePinInputReturn {
         [
             descendants,
             focusedIndex,
+            focusNext,
+            focusPrev,
             getNextValue,
             id,
             mask,

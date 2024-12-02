@@ -75,6 +75,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
     return (
         <html
             lang="en"
+            suppressContentEditableWarning
+            suppressHydrationWarning
             {...getColorModeHTMLProps(colorMode)}
         >
             <head>
@@ -90,6 +92,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 <DreamProvider
                     motionFeatures={motionFeatures}
                     colorMode={colorMode}
+                    useUserPreferenceColorMode
+                    framerMotionStrict
                 >
                     <AppLayout>{children}</AppLayout>
                 </DreamProvider>

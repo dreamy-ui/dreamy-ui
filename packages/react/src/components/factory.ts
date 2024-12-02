@@ -68,14 +68,14 @@ function factory() {
     return new Proxy(withAsProps, {
         /**
          * @example
-         * Dream("div")
+         * dream("div")
          */
         apply(_target, _thisArg, argArray: [DOMElements]) {
             return withAsProps(...argArray);
         },
         /**
          * @example
-         * <Dream.div />
+         * <dream.div />
          */
         get(_, ...element: [DOMElements]) {
             if (!cache.has(element[0])) {

@@ -1,7 +1,7 @@
 import { useClipboard } from "@/hooks";
-import { useReducedMotion } from "@/provider";
 import type { PropGetter } from "@/utils";
 import { dataAttr } from "@/utils/attr";
+import { objectToDeps } from "@/utils/object";
 import type { HTMLDreamProps } from "@/utils/types";
 import type { SnippetVariantProps } from "@dreamy-ui/system/recipes";
 import { useFocusRing } from "@react-aria/focus";
@@ -84,8 +84,6 @@ export interface UseSnippetProps
 }
 
 export function useSnippet(props: UseSnippetProps) {
-    const globalReduceMotion = useReducedMotion();
-
     const {
         ref,
         children,
@@ -105,8 +103,6 @@ export function useSnippet(props: UseSnippetProps) {
         className,
         ...otherProps
     } = props;
-
-    const reduceMotion = props?.reduceMotion ?? globalReduceMotion ?? false;
 
     const tooltipProps: Partial<TooltipProps> = {
         content: "Copy to clipboard",
@@ -131,15 +127,13 @@ export function useSnippet(props: UseSnippetProps) {
         return str ? `${str} ` : "";
     }, [symbol]);
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     const getSnippetProps = useCallback<PropGetter>(
         () => ({
             ...otherProps,
-            reduceMotion,
-            isMultiLine,
             ref
         }),
-        // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-        [isMultiLine, otherProps, reduceMotion, ref]
+        [objectToDeps(otherProps), ref]
     );
 
     const onCopy = useCallback(() => {

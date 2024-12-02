@@ -91,7 +91,7 @@ export default function Features() {
             wFull
             col
             gap={20}
-            py={20}
+            mt={10}
         >
             {features.map((feature, i) => (
                 <Feature

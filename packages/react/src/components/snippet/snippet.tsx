@@ -104,7 +104,7 @@ export const Snippet = forwardRef<HTMLDivElement, SnippetProps>((props, ref) => 
 
 Snippet.displayName = "Snippet";
 
-function CheckIcon(props: SVGProps<SVGSVGElement>) {
+export function CheckIcon(props: SVGProps<SVGSVGElement>) {
     return (
         <svg
             aria-hidden="true"

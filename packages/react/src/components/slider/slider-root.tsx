@@ -9,7 +9,7 @@ export const SliderRoot = forwardRef<HTMLDivElement, SliderProps>((props, ref) =
 
     return (
         <SliderProvider value={rest}>
-            <Box {...(getRootProps(undefined, ref) as any)} {...props} />
+            <Box {...(getRootProps(undefined, ref) as any)} />
         </SliderProvider>
     );
 });

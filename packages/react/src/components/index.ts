@@ -24,6 +24,7 @@ export * from "./portal";
 export * from "./progress";
 export * from "./radio";
 export * from "./ripple";
+export * from "./select";
 export * from "./slider";
 export * from "./snippet";
 export * from "./spinner";
