@@ -6,3 +6,4 @@ packages/react/dist
 pnpm-lock.yaml
 dump.rdb
 website/dump.rdb
+*.tmp.driveupload
