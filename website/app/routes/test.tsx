@@ -60,8 +60,21 @@ import {
     Text,
     VStack
 } from "@dreamy-ui/react/rsc";
+import type { ActionFunctionArgs } from "@remix-run/node";
+import { Form, useNavigation } from "@remix-run/react";
 import { useEffect, useMemo, useState } from "react";
 import { IoAdd, IoRemove } from "react-icons/io5";
+
+export async function action({ request }: ActionFunctionArgs) {
+    const formData = await request.formData();
+    const value = formData.get("test-select");
+
+    console.log("value", value);
+
+    return {
+        success: true
+    };
+}
 
 export default function Test() {
     const [count, setCount] = useState(0);
@@ -70,19 +83,39 @@ export default function Test() {
 
     const { isOpen, onClose, onOpen } = useControllable();
 
+    const navigation = useNavigation();
+
     return (
         <Flex
             col
             gap={10}
         >
-            <Select>
-                <SelectTrigger placeholder={"Select type"} />
-                <SelectContent>
-                    <SelectItem value={"1"}>1</SelectItem>
-                    <SelectItem value={"2"}>2</SelectItem>
-                    <SelectItem value={"3"}>3</SelectItem>
-                </SelectContent>
-            </Select>
+            <Form method="post">
+                <Select
+                    selectedItemBackgroundScheme={"none"}
+                    name={"test-select"}
+                    // variant={"solid"}
+                >
+                    <SelectTrigger placeholder={"Select type"} />
+                    <SelectContent>
+                        {Array.from({ length: 100 }).map((_, i) => (
+                            <SelectItem
+                                key={i}
+                                value={i.toString()}
+                            >
+                                {i}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+                <Button
+                    type="submit"
+                    color={"primary"}
+                    isLoading={navigation.state === "submitting"}
+                >
+                    Submit
+                </Button>
+            </Form>
 
             <RadioGroup>
                 <Radio value={"primary"}>Primary</Radio>

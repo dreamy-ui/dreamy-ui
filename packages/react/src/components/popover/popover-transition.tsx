@@ -1,5 +1,6 @@
 import { MotionBox } from "@/components/box";
 import { PopoverArrow, type PopoverArrowProps } from "@/components/popover/popover-arrow";
+import { transformReducedMotion } from "@/components/transitions/transition-utils";
 import { useMotionVariants } from "@/provider";
 import type { HTMLDreamProps } from "@/utils/types";
 import type { HTMLMotionProps } from "framer-motion";
@@ -37,13 +38,13 @@ export const PopoverTransition = forwardRef(function PopoverTransition(
 ) {
     const { children, arrowProps, ...rest } = props;
 
-    const { isOpen, hasArrow } = usePopoverContext();
+    const { isOpen, hasArrow, reduceMotion } = usePopoverContext();
     const { popover } = useMotionVariants();
 
     return (
         <MotionBox
             ref={ref}
-            variants={popover.default}
+            variants={transformReducedMotion(popover.default, reduceMotion)}
             initial={false}
             animate={isOpen ? "initial" : "exit"}
             {...rest}

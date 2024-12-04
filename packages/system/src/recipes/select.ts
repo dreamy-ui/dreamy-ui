@@ -1,3 +1,4 @@
+import { getColorSchemes } from "@/recipes/color-scheme";
 import { defineSlotRecipe } from "@pandacss/dev";
 
 export const select = defineSlotRecipe({
@@ -100,6 +101,10 @@ export const select = defineSlotRecipe({
             "&[data-focused]": {
                 bg: "alpha.50"
             },
+            ".group[data-selected-strategy='both'] &[data-selected]": {
+                bg: "var(--selected-item-background)",
+                color: "var(--selected-item-color)"
+            },
             _disabled: {
                 pointerEvents: "none",
                 opacity: "0.5"
@@ -123,16 +128,27 @@ export const select = defineSlotRecipe({
                     bg: "transparent",
                     borderWidth: "1px",
                     borderColor: "border.muted",
+                    transition: "border-color {durations.normal} {easings.easeInOut}",
+                    _hover: {
+                        borderColor: "border.hover"
+                    },
                     _expanded: {
                         borderColor: "border.hover"
                     }
                 }
             },
-            subtle: {
+            solid: {
                 trigger: {
-                    borderWidth: "1px",
+                    borderWidth: "0px",
                     borderColor: "transparent",
-                    bg: "bg.muted"
+                    bg: "alpha.50",
+                    transition: "background 0.2s {easings.easeInOut}",
+                    _hover: {
+                        bg: "alpha.100"
+                    },
+                    _expanded: {
+                        bg: "alpha.100"
+                    }
                 }
             }
         },
@@ -242,10 +258,25 @@ export const select = defineSlotRecipe({
                     }
                 }
             }
-        }
+        },
+        selectedItemBackgroundScheme: getColorSchemes(
+            "--selected-item-background",
+            (scheme) => {
+                return {
+                    "--selected-item-color":
+                        scheme === "success" || scheme === "warning" || scheme === "info"
+                            ? "color-mix(in srgb, black 87%, transparent)"
+                            : scheme === "none"
+                              ? "colors.bg"
+                              : "color-mix(in srgb, white 87%, transparent)"
+                } as Record<any, any>;
+            },
+            "root"
+        )
     },
     defaultVariants: {
         size: "md",
-        variant: "outline"
+        variant: "outline",
+        selectedItemBackgroundScheme: "primary"
     }
 });

@@ -176,9 +176,7 @@ export default function DocsSectionPage() {
                             transition={`translate {durations.fast} {easings.ease-in-out},
                                         background-color {durations.normal} {easings.ease-in-out}`}
                         >
-                            {frontmatter.isServerComponent
-                                ? "Server Component"
-                                : "Client Component"}
+                            {frontmatter.isServerComponent ? "Server" : "Client"} Component
                         </Button>
                     </Flex>
                 </Flex>

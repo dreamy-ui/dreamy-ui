@@ -12,7 +12,7 @@ const StyledItem = styled(dream.button);
 export const SelectItemBase = forwardRef<HTMLDivElement, SelectItemProps>(
     function SelectItem(props, ref) {
         const { selectedStrategy, selectedKeys } = useSelectContext();
-        const itemProps = useSelectItem({ ...props, name: props.children?.toString() }, ref);
+        const itemProps = useSelectItem(props, ref);
 
         return (
             <StyledItem {...(itemProps as any)}>
