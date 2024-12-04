@@ -39,7 +39,8 @@ const [DescendantsContextProvider, useDescendantsContext] = createContext<UseDes
  * - Its enabled index compared to other enabled descendants
  */
 function useDescendant<T extends HTMLElement = HTMLElement, K extends Record<string, any> = {}>(
-    options?: DescendantOptions<K>
+    options?: DescendantOptions<K>,
+    customProps?: Record<string, any>
 ) {
     const descendants = useDescendantsContext();
     const [index, setIndex] = useState(-1);
@@ -61,14 +62,15 @@ function useDescendant<T extends HTMLElement = HTMLElement, K extends Record<str
     });
 
     const refCallback = options
-        ? cast<React.RefCallback<T>>(descendants.register(options))
+        ? cast<React.RefCallback<T>>(descendants.register({ ...options, ...customProps }))
         : cast<React.RefCallback<T>>(descendants.register);
 
     return {
         descendants,
         index,
         enabledIndex: descendants.enabledIndexOf(ref.current),
-        register: mergeRefs(refCallback, ref)
+        register: mergeRefs(refCallback, ref),
+        ...customProps
     };
 }
 
@@ -86,7 +88,8 @@ export function createDescendantContext<
 
     const _useDescendantsContext = () => cast<DescendantsManager<T, K>>(useDescendantsContext());
 
-    const _useDescendant = (options?: DescendantOptions<K>) => useDescendant<T, K>(options);
+    const _useDescendant = (options?: DescendantOptions<K>, customProps?: Record<string, any>) =>
+        useDescendant<T, K>(options, customProps);
 
     const _useDescendants = () => useDescendants<T, K>();
 

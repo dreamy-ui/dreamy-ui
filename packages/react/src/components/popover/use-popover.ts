@@ -4,6 +4,7 @@ import { useAnimationState } from "@/hooks/use-animation-state";
 import { useFocusOnHide, useFocusOnShow } from "@/hooks/use-focus-effect";
 import { useFocusOnPointerDown } from "@/hooks/use-focus-on-pointer-down";
 import { mergeRefs } from "@/hooks/use-merge-refs";
+import { useReducedMotion } from "@/provider";
 import { type DOMAttributes, type PropGetter, callAllHandlers } from "@/utils";
 import { type LazyMode, lazyControl } from "@/utils/lazy";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
@@ -125,12 +126,14 @@ export interface UsePopoverProps extends Omit<UsePopperProps, "enabled"> {
      * as it might affect scrolling performance.
      */
     computePositionOnMount?: boolean;
+    reduceMotion?: boolean;
 }
 
 /**
  * @internal
  */
 export function usePopover(props: UsePopoverProps = {}) {
+    const globalReduceMotion = useReducedMotion();
     const {
         closeOnBlur = true,
         closeOnEsc = true,
@@ -146,6 +149,7 @@ export function usePopover(props: UsePopoverProps = {}) {
         isLazy,
         lazyBehavior = "unmount",
         computePositionOnMount,
+        reduceMotion = globalReduceMotion ?? false,
         ...popperProps
     } = props;
 
@@ -331,6 +335,15 @@ export function usePopover(props: UsePopoverProps = {}) {
                 triggerProps.onClick = callAllHandlers(props.onClick, onToggle);
             }
 
+            triggerProps.onBlur = callAllHandlers(props.onBlur, (event) => {
+                const relatedTarget = getRelatedTarget(event);
+                const isValidBlur = !contains(popoverRef.current, relatedTarget);
+
+                if (isOpen && closeOnBlur && isValidBlur) {
+                    onClose();
+                }
+            });
+
             if (trigger === TRIGGER.hover) {
                 /**
                  * Any content that shows on pointer hover should also show on keyboard focus.
@@ -342,14 +355,6 @@ export function usePopover(props: UsePopoverProps = {}) {
                     // If openTimeout.current does not exist, the user is using keyboard focus (not mouse hover/click)
                     if (openTimeout.current === undefined) {
                         onOpen();
-                    }
-                });
-                triggerProps.onBlur = callAllHandlers(props.onBlur, (event) => {
-                    const relatedTarget = getRelatedTarget(event);
-                    const isValidBlur = !contains(popoverRef.current, relatedTarget);
-
-                    if (isOpen && closeOnBlur && isValidBlur) {
-                        onClose();
                     }
                 });
 
@@ -437,6 +442,7 @@ export function usePopover(props: UsePopoverProps = {}) {
     return {
         forceUpdate,
         isOpen,
+        reduceMotion,
         onAnimationComplete: animated.onComplete,
         onClose,
         getAnchorProps,

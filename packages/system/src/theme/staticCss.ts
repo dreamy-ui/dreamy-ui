@@ -6,6 +6,7 @@ export const staticCss: ReturnType<typeof defineConfig>["staticCss"] = {
             {
                 properties: {
                     position: ["absolute", "relative"],
+                    color: ["colors.white/87", "colors.black/87"],
                     top: [0, "50%"],
                     left: [0],
                     right: [0],

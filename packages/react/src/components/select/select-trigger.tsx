@@ -1,9 +1,10 @@
 import { PopoverTrigger } from "@/components/popover";
 import { SelectIndicator, SelectIndicatorGroup } from "@/components/select/select";
 import { useSelectContext } from "@/components/select/select-context";
+import { useSafeLayoutEffect } from "@/hooks";
 import type { HTMLDreamProps } from "@/utils/types";
 import { styled } from "@dreamy-ui/system/jsx";
-import { forwardRef, useMemo } from "react";
+import { forwardRef, useState } from "react";
 import { dream } from "../factory";
 
 export interface SelectTriggerProps extends HTMLDreamProps<"button"> {
@@ -12,22 +13,22 @@ export interface SelectTriggerProps extends HTMLDreamProps<"button"> {
 
 const StyledTrigger = styled(dream.button);
 
-/**
- *
- */
 export const SelectTriggerBase = forwardRef<HTMLButtonElement, SelectTriggerProps>(
     function SelectTrigger({ children, placeholder, ...rest }, ref) {
         const { getTriggerProps, selectedKeys, descendants } = useSelectContext();
 
-        const selectedNames = useMemo(() => {
-            return selectedKeys.map((key) => {
-                const item: any = Array.from(descendants.values()).find((node: any) => {
-                    console.log("node", node);
-                    return node.node.value === key;
-                });
-                return item?.node.name;
+        const selectedNames = selectedKeys.map((key) => {
+            const item: any = Array.from(descendants.values()).find((node: any) => {
+                return node.node.value === key;
             });
-        }, [selectedKeys, descendants]);
+            return item?.textValue;
+        });
+
+        const [, forceUpdate] = useState({});
+
+        useSafeLayoutEffect(() => {
+            forceUpdate({});
+        }, []);
 
         return (
             <PopoverTrigger>

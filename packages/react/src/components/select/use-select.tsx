@@ -47,20 +47,42 @@ export interface UseSelectProps<T extends boolean = false>
      */
     onClose?: () => void;
     /**
+     * Default value for the select.
+     */
+    defaultValue?: T extends true ? string[] : string;
+    /**
+     * Controlled value for the select.
+     */
+    value?: T extends true ? string[] : string;
+    /**
      * Handler that is called when the selection changes.
      */
     onChangeValue?: (value: T extends true ? string[] : string) => void;
+    /**
+     * Whether to enable autocomplete.
+     * @default "off"
+     */
+    autoComplete?: "on" | "off";
     /**
      * Whether to disable animation.
      * @default false
      */
     reduceMotion?: boolean;
+    /**
+     * The props to be passed to the popover.
+     */
     popoverProps?: PopoverProps;
+    /**
+     * Whether to close the popover when an item is selected.
+     * @default true for non-multiple select, false for multiple select
+     */
+    closeOnSelect?: boolean;
 }
 
 export function useSelect(props: UseSelectProps) {
-    let {
-        reduceMotion,
+    const globalReduceMotion = useReducedMotion();
+    const {
+        reduceMotion = globalReduceMotion ?? false,
         isOpen: isOpenProp,
         onOpen: onOpenProp,
         onClose: onCloseProp,
@@ -68,16 +90,19 @@ export function useSelect(props: UseSelectProps) {
         ref,
         isMultiple = false,
         name,
+        closeOnSelect = !isMultiple,
         selectedStrategy = "both",
         isInvalid,
         onChangeValue,
         onChange,
         popoverProps,
+        isRequired,
+        isDisabled,
+        defaultValue,
+        value,
+        autoComplete = "off",
         ...rest
     } = props;
-
-    const globalReduceMotion = useReducedMotion();
-    reduceMotion ??= globalReduceMotion ?? false;
 
     const descendants = useSelectDescendants();
 
@@ -89,10 +114,20 @@ export function useSelect(props: UseSelectProps) {
     });
 
     const domRef = useDOMRef(ref);
-    const triggerRef = useRef<HTMLElement>(null);
+    const triggerRef = useRef<HTMLButtonElement>(null);
     const popoverRef = useRef<HTMLDivElement>(null);
+    const selectRef = useRef<HTMLSelectElement>(null);
 
-    const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+    let [selectedKeys, setSelectedKeys] = useState<string[]>(
+        defaultValue
+            ? isMultiple
+                ? (defaultValue as unknown as string[])
+                : [defaultValue as string]
+            : []
+    );
+    if (value) {
+        selectedKeys = isMultiple ? (value as unknown as string[]) : [value as string];
+    }
     const [focusedIndex, setFocusedIndex] = useState(-1);
 
     useSafeLayoutEffect(() => {
@@ -137,8 +172,11 @@ export function useSelect(props: UseSelectProps) {
                       ? [...prev, value]
                       : [value]
             );
+            if (closeOnSelect) {
+                onClose();
+            }
         },
-        [isMultiple]
+        [isMultiple, closeOnSelect, onClose]
     );
 
     const getRootProps: PropGetter = useCallback(
@@ -159,20 +197,33 @@ export function useSelect(props: UseSelectProps) {
         (props, ref) => {
             const onKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
                 if (!isOpen) return;
+
+                function scrollToFocusedItem(index: number) {
+                    if (index === -1) return;
+                    const item = descendants.item(index);
+                    if (!item) return;
+                    item.node.scrollIntoView({ block: "nearest" });
+                }
+
                 switch (e.key) {
                     case "ArrowUp":
                         e.preventDefault();
                         if (focusedIndex === -1) {
                             setFocusedIndex(0);
                         } else {
-                            setFocusedIndex((prev) => prev - 1);
+                            setFocusedIndex((prev) => {
+                                scrollToFocusedItem(prev - 1);
+                                return prev - 1;
+                            });
                         }
                         break;
                     case "ArrowDown":
                         e.preventDefault();
-                        setFocusedIndex((prev) =>
-                            prev + 1 >= descendants.count() ? prev : prev + 1
-                        );
+                        setFocusedIndex((prev) => {
+                            const val = prev + 1 >= descendants.count() ? prev : prev + 1;
+                            scrollToFocusedItem(val);
+                            return val;
+                        });
                         break;
                     case "Enter":
                         if (focusedIndex === -1) return;
@@ -218,6 +269,11 @@ export function useSelect(props: UseSelectProps) {
                 style: {
                     ...props?.style,
                     width: contentWidth + "px"
+                },
+                rootProps: {
+                    style: {
+                        zIndex: "var(--z-index-dropdown)"
+                    }
                 }
             };
         },
@@ -245,6 +301,24 @@ export function useSelect(props: UseSelectProps) {
         [handleItemChange]
     );
 
+    const getHiddenSelectProps: PropGetter = useCallback(
+        (props = {}) =>
+            ({
+                triggerRef,
+                selectRef: domRef,
+                selectionMode: isMultiple ? "multiple" : "single",
+                placeholder: props.placeholder,
+                name,
+                isRequired,
+                autoComplete,
+                isDisabled,
+                onChange,
+                selectedKeys,
+                ...props
+            }) as const,
+        [domRef, isMultiple, name, isRequired, autoComplete, isDisabled, onChange, selectedKeys]
+    );
+
     return {
         domRef,
         name,
@@ -254,17 +328,22 @@ export function useSelect(props: UseSelectProps) {
         selectedKeys,
         focusedIndex,
         setSelectedKeys,
+        selectRef,
         setFocusedIndex,
         isOpen,
         onOpen,
         selectedStrategy,
         onClose,
+        isDisabled,
+        isRequired,
         popoverRef,
         onToggle,
         getRootProps,
         getTriggerProps,
         getContentProps,
+        defaultValue,
         getItemProps,
+        getHiddenSelectProps,
         descendants,
         rest
     };
@@ -282,22 +361,29 @@ export const [
 export interface UseSelectItemProps extends HTMLDreamProps<"button"> {
     isDisabled?: boolean;
     value: string;
+    textValue?: ReactNode;
 }
 
 /**
  * @internal
  */
-export function useSelectItem(props: UseSelectItemProps, ref: React.Ref<any> = null) {
-    const { getItemProps, focusedIndex, setFocusedIndex } = useSelectContext();
-    const { index, register } = useSelectDescendant({
-        disabled: props?.isDisabled || props?.disabled || false
-    });
+export function useSelectItem(props: UseSelectItemProps, ref: React.Ref<any> = null): any {
+    const { getItemProps, focusedIndex, setFocusedIndex, selectedKeys } = useSelectContext();
+    const { index, register } = useSelectDescendant(
+        {
+            disabled: props?.isDisabled || props?.disabled || false
+        },
+        {
+            textValue: props.children
+        }
+    );
 
     return getItemProps({
         ...props,
         ref: mergeRefs(register, ref),
         index,
         "data-focused": dataAttr(focusedIndex === index),
+        "data-selected": dataAttr(selectedKeys.includes(props.value)),
         onPointerEnter: callAllHandlers(props?.onPointerEnter, () => {
             setFocusedIndex(index);
         })

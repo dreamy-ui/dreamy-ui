@@ -1,4 +1,5 @@
 import { Popover } from "@/components/popover";
+import { HiddenSelect } from "@/components/select/select-hidden";
 import {
     SelectDescendantsProvider,
     type UseSelectProps,
@@ -19,6 +20,7 @@ export const SelectRoot = forwardRef<HTMLDivElement, SelectProps>(function Selec
     return (
         <SelectProvider value={ctx}>
             <Box {...ctx.getRootProps({ className }, ref)}>
+                <HiddenSelect {...(ctx.getHiddenSelectProps() as any)} />
                 <Popover
                     placement="bottom"
                     isOpen={ctx.isOpen}
@@ -27,6 +29,8 @@ export const SelectRoot = forwardRef<HTMLDivElement, SelectProps>(function Selec
                     hasArrow={false}
                     initialFocusRef={ctx.triggerRef}
                     {...props.popoverProps}
+                    lazyBehavior="keepMounted"
+                    reduceMotion={ctx.reduceMotion}
                 >
                     <SelectDescendantsProvider value={ctx.descendants}>
                         {children}

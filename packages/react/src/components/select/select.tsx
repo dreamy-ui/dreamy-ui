@@ -21,10 +21,10 @@ export const Select = withProvider(SelectRoot, "root");
 export const SelectTrigger = withContext(SelectTriggerBase, "trigger");
 export const SelectContent = withContext(SelectContentBase, "content");
 export const SelectItem = withContext(SelectItemBase, "item");
-export const SelectItemIndicator = withContext(SelectItemIndicatorBase, "itemIndicator");
 
 /**
  * @internal
  */
 export const SelectIndicatorGroup = withContext(Box, "indicatorGroup");
 export const SelectIndicator = withContext(SelectIndicatorBase, "indicator");
+export const SelectItemIndicator = withContext(SelectItemIndicatorBase, "itemIndicator");
