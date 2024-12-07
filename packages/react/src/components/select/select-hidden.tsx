@@ -5,13 +5,13 @@ import type { FocusableElement } from "@/utils/types";
 import { type RefObject, useState } from "react";
 
 export interface HiddenSelectProps {
-    selectionMode: "multiple" | "single";
     placeholder: string;
     multiple: boolean;
     autoComplete: string;
-    onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
     triggerRef: RefObject<FocusableElement>;
-    selectRef: RefObject<HTMLSelectElement>;
+    domRef: RefObject<HTMLSelectElement>;
+    onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+    onChangeValue: (value: string | string[]) => void;
 }
 
 /**
@@ -27,14 +27,18 @@ export function useHiddenSelect(props: HiddenSelectProps) {
         descendants,
         name,
         isDisabled,
+
         isRequired,
+        onChange,
+        onChangeValue,
         isInvalid,
-        selectRef
+        isMultiple,
+        id
     } = useSelectContext();
-    const { autoComplete, selectionMode, onChange } = props;
+    const { autoComplete, domRef } = props;
 
     useSafeLayoutEffect(() => {
-        const el = selectRef.current;
+        const el = domRef.current;
         if (!el?.form) return;
         const formResetListener = () => {
             setSelectedKeys(
@@ -52,6 +56,7 @@ export function useHiddenSelect(props: HiddenSelectProps) {
     return {
         descendants,
         selectedKeys,
+        id,
         containerProps: {
             "aria-hidden": true,
             "data-a11y-ignore": "aria-hidden-focus"
@@ -63,19 +68,16 @@ export function useHiddenSelect(props: HiddenSelectProps) {
             disabled: isDisabled,
             required: isRequired,
             invalid: isInvalid,
-            value:
-                selectionMode === "multiple"
-                    ? [...selectedKeys].map((k) => String(k))
-                    : ([...selectedKeys][0] ?? ""),
-            multiple: selectionMode === "multiple",
+            value: isMultiple ? selectedKeys.map((k) => String(k)) : (selectedKeys[0] ?? ""),
+            multiple: isMultiple,
             onChange: (e: React.ChangeEvent<HTMLSelectElement>) => {
-                setSelectedKeys(
-                    typeof e.target.value === "string"
-                        ? e.target.value.includes(",")
-                            ? e.target.value.split(",")
-                            : [e.target.value]
-                        : e.target.value
-                );
+                const val = isMultiple
+                    ? Array.from(e.target.selectedOptions).map((o) => o.value)
+                    : [e.target.value];
+
+                setSelectedKeys(val);
+                domRef.current!.value = isMultiple ? val.join(",") : val[0];
+                onChangeValue?.((isMultiple ? val : val[0]) as any);
                 onChange?.(e);
             }
         }
@@ -87,11 +89,11 @@ export function useHiddenSelect(props: HiddenSelectProps) {
  * form autofill, mobile form navigation, and native form submission.
  */
 export function HiddenSelect(props: HiddenSelectProps) {
-    const { selectRef, placeholder } = props;
+    const { domRef, placeholder } = props;
 
-    const { containerProps, selectProps, descendants } = useHiddenSelect({
+    const { containerProps, selectProps, descendants, id, selectedKeys } = useHiddenSelect({
         ...props,
-        selectRef
+        domRef
     });
 
     const [, forceUpdate] = useState({});
@@ -111,14 +113,19 @@ export function HiddenSelect(props: HiddenSelectProps) {
                 {placeholder}
                 <select
                     {...selectProps}
-                    ref={selectRef}
+                    ref={domRef}
                 >
                     <option />
                     {items.map((item: any) => {
+                        const isSelected = selectProps.multiple
+                            ? selectedKeys.includes(item.node.value)
+                            : undefined;
+
                         return (
                             <option
-                                key={item.node.key}
+                                key={`${id}-${item.node.value}`}
                                 value={item.node.value}
+                                selected={isSelected}
                             >
                                 {item.textValue}
                             </option>

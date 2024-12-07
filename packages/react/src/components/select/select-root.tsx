@@ -6,20 +6,24 @@ import {
     useSelect
 } from "@/components/select/use-select";
 import { Box } from "@/rsc";
-import { forwardRef } from "react";
+import type { ReactNode } from "react";
 import { SelectProvider } from "./select-context";
 
-export interface SelectProps extends UseSelectProps {}
+export interface SelectProps<T extends boolean> extends UseSelectProps<T> {
+    children?: ReactNode;
+    className?: string;
+}
 
-export const SelectRoot = forwardRef<HTMLDivElement, SelectProps>(function SelectRoot(
-    { children, className, ...props },
-    ref
-) {
-    const { rest, ...ctx } = useSelect(props);
+export function SelectRoot<T extends boolean = false>({
+    children,
+    className,
+    ...props
+}: SelectProps<T>) {
+    const { rest, ...ctx } = useSelect<T>(props);
 
     return (
-        <SelectProvider value={ctx}>
-            <Box {...ctx.getRootProps({ className }, ref)}>
+        <SelectProvider value={ctx as any}>
+            <Box {...ctx.getRootProps({ className })}>
                 <HiddenSelect {...(ctx.getHiddenSelectProps() as any)} />
                 <Popover
                     placement="bottom"
@@ -39,4 +43,4 @@ export const SelectRoot = forwardRef<HTMLDivElement, SelectProps>(function Selec
             </Box>
         </SelectProvider>
     );
-});
+}

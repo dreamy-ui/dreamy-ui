@@ -3,8 +3,8 @@ import { useLoaderData } from "@remix-run/react";
 import { MDXRemote, type MDXRemoteSerializeResult } from "next-mdx-remote";
 import { BiLogoTypescript } from "react-icons/bi";
 import { FaBorderStyle } from "react-icons/fa";
-import { LuPaintbrush2 } from "react-icons/lu";
 import type { loader } from "~/routes/_index";
+import { LuPaintbrushVertical } from "react-icons/lu";
 
 const features = [
     {
@@ -49,7 +49,7 @@ const features = [
                 {[
                     {
                         text: "Recipes.",
-                        icon: LuPaintbrush2,
+                        icon: LuPaintbrushVertical,
                         description: "Generates css for only what you use."
                     },
                     {

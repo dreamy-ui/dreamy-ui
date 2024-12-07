@@ -102,6 +102,7 @@ export function useCachedRouteLoaderData<T extends any>(routeKey: string) {
             loaderData.serverLoaderPromise
                 .then((newData: any) => {
                     // set only if the page hasn't changed
+                    if ((window as any).cacheKey !== loaderData?.key) return;
 
                     const newDataString = JSON.stringify(newData);
                     if (newDataString !== JSON.stringify(currentData)) {

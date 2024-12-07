@@ -101,10 +101,11 @@ export const select = defineSlotRecipe({
             "&[data-focused]": {
                 bg: "alpha.50"
             },
-            ".group[data-selected-strategy='both'] &[data-selected]": {
-                bg: "var(--selected-item-background)",
-                color: "var(--selected-item-color)"
-            },
+            ".group[data-selected-strategy='both'] &[data-selected], .group[data-selected-strategy='background'] &[data-selected]":
+                {
+                    bg: "var(--selected-item-background)",
+                    color: "var(--selected-item-color)"
+                },
             _disabled: {
                 pointerEvents: "none",
                 opacity: "0.5"

@@ -24,6 +24,10 @@ import {
     PinInputField,
     Radio,
     RadioGroup,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
     Slider,
     SliderFilledTrack,
     SliderThumb,
@@ -99,6 +103,7 @@ import {
 import { Link } from "~/src/ui/global/Link";
 import { ControlledTabs, VariantTabs } from "./components/Tabs";
 import { CheckboxCardGroupControl, CheckboxGroupControl } from "./components/checkboxes";
+import { AsyncSelect, ControlledSelect } from "./components/selects";
 import { ControlledSlider, MaxMinSlider } from "./components/sliders";
 
 interface Props {
@@ -212,7 +217,13 @@ const DreamComponents = {
     Radio,
     RadioGroup,
     Snippet,
-    VisuallyHiddenInput
+    VisuallyHiddenInput,
+    Select,
+    SelectItem,
+    SelectTrigger,
+    SelectContent,
+    AsyncSelect,
+    ControlledSelect
 };
 
 function Wrapper({ children }: PropsWithChildren) {

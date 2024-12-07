@@ -69,7 +69,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
     const { colorMode } = useRoot() ?? {};
 
     useEffect(() => {
-        (window as any).hydrated = true;
+        setTimeout(() => {
+            (window as any).hydrated = true;
+        }, 1000);
     }, []);
 
     return (

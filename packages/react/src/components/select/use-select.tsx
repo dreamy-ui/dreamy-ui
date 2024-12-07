@@ -14,16 +14,20 @@ import {
     type ReactNode,
     useCallback,
     useEffect,
+    useId,
     useRef,
     useState
 } from "react";
+import { flushSync } from "react-dom";
 import type { UserFeedbackProps } from "../input/input";
 import { useSelectContext } from "./select-context";
 
-export interface UseSelectProps<T extends boolean = false>
-    extends HTMLDreamProps<"select">,
-        UserFeedbackProps,
-        useControllableProps {
+export interface UseSelectProps<T extends boolean> extends UserFeedbackProps, useControllableProps {
+    children?: ReactNode;
+    /**
+     * The class name for the wrapper. You probably want to style the select trigger, use `SelectTrigger` instead.
+     */
+    className?: string;
     /**
      * Ref to the DOM node.
      */
@@ -59,6 +63,14 @@ export interface UseSelectProps<T extends boolean = false>
      */
     onChangeValue?: (value: T extends true ? string[] : string) => void;
     /**
+     * Native handler that is called when the selection changes.
+     */
+    onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+    /**
+     * The name of the select, used for html form submission.
+     */
+    name?: string;
+    /**
      * Whether to enable autocomplete.
      * @default "off"
      */
@@ -79,7 +91,7 @@ export interface UseSelectProps<T extends boolean = false>
     closeOnSelect?: boolean;
 }
 
-export function useSelect(props: UseSelectProps) {
+export function useSelect<T extends boolean>(props: UseSelectProps<T>) {
     const globalReduceMotion = useReducedMotion();
     const {
         reduceMotion = globalReduceMotion ?? false,
@@ -113,10 +125,14 @@ export function useSelect(props: UseSelectProps) {
         onClose: onCloseProp
     });
 
+    /**
+     * Id for the hidden select key mapping.
+     */
+    const id = useId();
+
     const domRef = useDOMRef(ref);
     const triggerRef = useRef<HTMLButtonElement>(null);
     const popoverRef = useRef<HTMLDivElement>(null);
-    const selectRef = useRef<HTMLSelectElement>(null);
 
     let [selectedKeys, setSelectedKeys] = useState<string[]>(
         defaultValue
@@ -125,9 +141,10 @@ export function useSelect(props: UseSelectProps) {
                 : [defaultValue as string]
             : []
     );
-    if (value) {
+    if (typeof value !== "undefined") {
         selectedKeys = isMultiple ? (value as unknown as string[]) : [value as string];
     }
+
     const [focusedIndex, setFocusedIndex] = useState(-1);
 
     useSafeLayoutEffect(() => {
@@ -165,18 +182,29 @@ export function useSelect(props: UseSelectProps) {
 
     const handleItemChange = useCallback(
         (value: string) => {
-            setSelectedKeys((prev) =>
-                prev.includes(value)
-                    ? prev.filter((v) => v !== value)
-                    : isMultiple
-                      ? [...prev, value]
-                      : [value]
-            );
+            if (domRef.current) {
+                const newValues = isMultiple
+                    ? selectedKeys.includes(value)
+                        ? selectedKeys.filter((v) => v !== value)
+                        : [...selectedKeys, value]
+                    : [value];
+
+                if (isMultiple) {
+                    flushSync(() => {
+                        setSelectedKeys(newValues);
+                    });
+                }
+
+                if (!isMultiple) {
+                    domRef.current.value = newValues[0];
+                }
+                domRef.current?.dispatchEvent(new Event("change", { bubbles: true }));
+            }
             if (closeOnSelect) {
                 onClose();
             }
         },
-        [isMultiple, closeOnSelect, onClose]
+        [closeOnSelect, onClose, domRef.current, isMultiple, selectedKeys]
     );
 
     const getRootProps: PropGetter = useCallback(
@@ -305,22 +333,19 @@ export function useSelect(props: UseSelectProps) {
         (props = {}) =>
             ({
                 triggerRef,
-                selectRef: domRef,
-                selectionMode: isMultiple ? "multiple" : "single",
+                domRef,
                 placeholder: props.placeholder,
                 name,
                 isRequired,
                 autoComplete,
                 isDisabled,
-                onChange,
                 selectedKeys,
                 ...props
             }) as const,
-        [domRef, isMultiple, name, isRequired, autoComplete, isDisabled, onChange, selectedKeys]
+        [domRef, name, isRequired, autoComplete, isDisabled, selectedKeys]
     );
 
     return {
-        domRef,
         name,
         triggerRef,
         reduceMotion,
@@ -328,7 +353,6 @@ export function useSelect(props: UseSelectProps) {
         selectedKeys,
         focusedIndex,
         setSelectedKeys,
-        selectRef,
         setFocusedIndex,
         isOpen,
         onOpen,
@@ -338,10 +362,14 @@ export function useSelect(props: UseSelectProps) {
         isRequired,
         popoverRef,
         onToggle,
+        isMultiple,
         getRootProps,
         getTriggerProps,
         getContentProps,
         defaultValue,
+        id,
+        onChange,
+        onChangeValue,
         getItemProps,
         getHiddenSelectProps,
         descendants,

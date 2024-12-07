@@ -1,25 +1,34 @@
 import { Flex, Heading, Icon, Text } from "@dreamy-ui/react/rsc";
 import type { LoaderFunctionArgs } from "@remix-run/node";
-import { type MetaFunction, data, isRouteErrorResponse, useRouteError } from "@remix-run/react";
+import {
+    type MetaArgs,
+    type MetaFunction,
+    data,
+    isRouteErrorResponse,
+    useRouteError
+} from "@remix-run/react";
 import { useMemo } from "react";
-import { LuAlertCircle } from "react-icons/lu";
+import { LuCircleAlert } from "react-icons/lu";
 
-export function meta() {
+export function meta({ error }: MetaArgs<typeof loader>) {
     return [
         {
-            title: "Dreamy UI"
+            title:
+                typeof error === "object" && error !== null && "data" in error
+                    ? error.data
+                    : "Dreamy UI"
         }
     ] satisfies ReturnType<MetaFunction>;
 }
 
 export async function loader(_: LoaderFunctionArgs) {
-    return data("Not found", {
+    throw data("Not found", {
         status: 404,
         statusText: "Not found"
     });
 }
 
-export default function () {
+export default function Component() {
     return <ErrorBoundary />;
 }
 
@@ -68,7 +77,7 @@ export function ErrorBoundary() {
         >
             <Icon
                 boxSize={"10"}
-                as={LuAlertCircle}
+                as={LuCircleAlert}
             />
             <Heading>
                 {data.status} {data.title}

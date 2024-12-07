@@ -1,0 +1,363 @@
+---
+title: Select
+description: Select allows to create a dropdown list of options.
+isServerComponent: false
+source: /packages/react/src/components/select/select.tsx
+themeSource: /packages/system/src/recipes/select.ts
+---
+
+## Import
+
+- `Select` - The Select component with context.
+- `SelectTrigger` - The trigger for the Select.
+- `SelectContent` - The content for the Select as popover.
+- `SelectItem` - The item for the Select.
+
+
+```tsx
+import { 
+	Select,
+    SelectItem,
+    SelectContent,
+    SelectTrigger
+ } from "@dreamy-ui/react";
+```
+
+## Usage
+
+Basic usage of Select.
+
+<Wrapper>
+	<Select>
+        <SelectTrigger maxW="xs" placeholder="Select a favorite fruit" />
+        <SelectContent>
+            <SelectItem value="strawberry">Strawberry</SelectItem>
+            <SelectItem value="banana">Banana</SelectItem>
+            <SelectItem value="orange">Orange</SelectItem>
+        </SelectContent>
+    </Select>
+</Wrapper>
+
+```tsx
+<Select>
+    <SelectTrigger placeholder="Select a favorite fruit" />
+    <SelectContent>
+        <SelectItem value="strawberry">Strawberry</SelectItem>
+        <SelectItem value="banana">Banana</SelectItem>
+        <SelectItem value="orange">Orange</SelectItem>
+    </SelectContent>
+</Select>
+```
+
+### Size
+
+Select comes with 4 different sizes.
+
+<Wrapper>
+    {["xs", "sm", "md", "lg"].map((size) => (
+        <Select size={size}>
+            <SelectTrigger maxW="xs" placeholder="Select a favorite fruit" />
+            <SelectContent>
+                <SelectItem value="strawberry">Strawberry</SelectItem>
+                <SelectItem value="banana">Banana</SelectItem>
+                <SelectItem value="orange">Orange</SelectItem>
+            </SelectContent>
+        </Select>
+    ))}
+</Wrapper>
+
+```tsx
+{["xs", "sm", "md", "lg"].map((size) => (
+    <Select size={size}>
+        <SelectTrigger maxW="xs" placeholder="Select a favorite fruit" />
+        <SelectContent>
+            <SelectItem value="strawberry">Strawberry</SelectItem>
+            <SelectItem value="banana">Banana</SelectItem>
+            <SelectItem value="orange">Orange</SelectItem>
+        </SelectContent>
+    </Select>
+))}
+```
+
+### Variant
+
+Select can be used in `outline` or `solid` variant.
+
+<Wrapper>
+    {["outline", "solid"].map((variant) => (
+        <Select variant={variant}>
+            <SelectTrigger maxW="xs" placeholder="Select a favorite fruit" />
+            <SelectContent>
+                <SelectItem value="strawberry">Strawberry</SelectItem>
+                <SelectItem value="banana">Banana</SelectItem>
+                <SelectItem value="orange">Orange</SelectItem>
+            </SelectContent>
+        </Select>
+    ))}
+</Wrapper>
+
+```tsx
+{["outline", "solid"].map((variant) => (
+    <Select variant={variant}>
+        <SelectTrigger maxW="xs" placeholder="Select a favorite fruit" />
+        <SelectContent>
+            <SelectItem value="strawberry">Strawberry</SelectItem>
+            <SelectItem value="banana">Banana</SelectItem>
+            <SelectItem value="orange">Orange</SelectItem>
+        </SelectContent>
+    </Select>
+))}
+```
+
+### Selected Item Background Scheme
+
+You can customize the background color of the selected item. This will only apply if [`selectedStrategy`](#selected-strategy) is set to `both` or `background`.
+
+<Wrapper>
+    {["primary", "success", "warning", "info", "error", "none"].map((scheme) => (
+        <>
+            <Text>{scheme}</Text>
+            <Select selectedItemBackgroundScheme={scheme} defaultValue="strawberry">
+                <SelectTrigger maxW="xs" placeholder="Select a favorite fruit" />
+                <SelectContent>
+                    <SelectItem value="strawberry">Strawberry</SelectItem>
+                    <SelectItem value="banana">Banana</SelectItem>
+                    <SelectItem value="orange">Orange</SelectItem>
+                </SelectContent>
+            </Select>
+        </>
+    ))}
+</Wrapper>
+
+```tsx
+{["primary", "success", "warning", "info", "error", "none"].map((scheme) => (
+    <>
+        <Text>{scheme}</Text>
+        <Select selectedItemBackgroundScheme={scheme} defaultValue="strawberry">
+            <SelectTrigger maxW="xs" placeholder="Select a favorite fruit" />
+            <SelectContent>
+                <SelectItem value="strawberry">Strawberry</SelectItem>
+                <SelectItem value="banana">Banana</SelectItem>
+                <SelectItem value="orange">Orange</SelectItem>
+            </SelectContent>
+        </Select>
+    </>
+))}
+```
+
+### Controlled
+
+<Wrapper>
+    <ControlledSelect />
+</Wrapper>
+
+```tsx
+export function ControlledSelect() {
+    const [value, setValue] = useState<string>("strawberry");
+
+    return (
+        <Select
+            value={value}
+            onChangeValue={setValue}
+        >
+            <SelectTrigger
+                maxW="xs"
+                placeholder="Select a favorite fruit"
+            />
+            <SelectContent>
+                <SelectItem value="strawberry">Strawberry</SelectItem>
+                <SelectItem value="banana">Banana</SelectItem>
+                <SelectItem value="orange">Orange</SelectItem>
+            </SelectContent>
+        </Select>
+    );
+}
+```
+
+### Selected Strategy
+
+You can customize how the selected value is marked as selected.
+
+<Wrapper>
+    {["both", "checkmark", "background"].map((strategy) => (
+        <>
+            <Text>{strategy}</Text>
+            <Select
+                key={strategy}
+                selectedStrategy={strategy}
+            >
+                <SelectTrigger
+                    maxW="xs"
+                    placeholder="Select a favorite fruit"
+                />
+                <SelectContent>
+                    <SelectItem value="strawberry">Strawberry</SelectItem>
+                    <SelectItem value="banana">Banana</SelectItem>
+                    <SelectItem value="orange">Orange</SelectItem>
+                </SelectContent>
+            </Select>
+        </>
+    ))}
+</Wrapper>
+
+```tsx
+<Wrapper>
+    {["both", "checkmark", "background"].map((strategy) => (
+        <>
+            <Text>{strategy}</Text>
+            <Select
+                key={strategy}
+                selectedStrategy={strategy}
+            >
+                <SelectTrigger
+                    maxW="xs"
+                    placeholder="Select a favorite fruit"
+                />
+                <SelectContent>
+                    <SelectItem value="strawberry">Strawberry</SelectItem>
+                    <SelectItem value="banana">Banana</SelectItem>
+                    <SelectItem value="orange">Orange</SelectItem>
+                </SelectContent>
+            </Select>
+        </>
+    ))}
+</Wrapper>
+```
+
+### Multiple
+
+You can use the `isMultiple` prop to allow multiple selection. Now `onChangeValue` will return an array of values, instead of a single string value.
+
+<Wrapper>
+    <Select isMultiple>
+        <SelectTrigger
+            maxW="xs"
+            placeholder="Select a favorite fruit"
+        />
+        <SelectContent>
+            <SelectItem value="strawberry">Strawberry</SelectItem>
+            <SelectItem value="banana">Banana</SelectItem>
+            <SelectItem value="orange">Orange</SelectItem>
+        </SelectContent>
+    </Select>
+</Wrapper>
+
+```tsx
+export function MultipleSelect() {
+    return (
+        <Select isMultiple>
+            <SelectTrigger
+                maxW="xs"
+                placeholder="Select a favorite fruit"
+            />
+            <SelectContent>
+                <SelectItem value="strawberry">Strawberry</SelectItem>
+                <SelectItem value="banana">Banana</SelectItem>
+                <SelectItem value="orange">Orange</SelectItem>
+            </SelectContent>
+        </Select>
+    );
+}
+```
+
+### Async loading
+
+You can fetch data when the Select is opened.
+
+<Wrapper>
+    <AsyncSelect />
+</Wrapper>
+
+```tsx
+export function AsyncSelect() {
+    const [isLoading, setIsLoading] = useState(true);
+    const [fruits, setFruits] = useState<string[]>([]);
+
+    function fetchFruits() {
+        if (fruits.length > 0) return;
+
+        fetch("/api/fake-select-data") // slowed by 1 second
+            .then((res) => res.json())
+            .then(setFruits)
+            .finally(() => setIsLoading(false));
+    }
+
+    return (
+        <Select onOpen={fetchFruits}>
+            <SelectTrigger
+                maxW="xs"
+                placeholder="Select a favorite fruit"
+            />
+            <SelectContent>
+                {isLoading && (
+                    <Spinner
+                        color="primary"
+                        py={4}
+                    />
+                )}
+                {fruits.map((fruit) => (
+                    <SelectItem
+                        key={fruit}
+                        value={fruit}
+                    >
+                        {fruit}
+                    </SelectItem>
+                ))}
+            </SelectContent>
+        </Select>
+    );
+}
+```
+
+### Close on select
+
+You can customize whether the Select should close when an item is selected. Defalult is `true` for non-multiple select, `false` for multiple select.
+
+<Wrapper>
+    <Select closeOnSelect={false}>
+        <SelectTrigger maxW="xs" placeholder="Select a favorite fruit" />
+        <SelectContent>
+            <SelectItem value="strawberry">Strawberry</SelectItem>
+            <SelectItem value="banana">Banana</SelectItem>
+            <SelectItem value="orange">Orange</SelectItem>
+        </SelectContent>
+    </Select>
+</Wrapper>
+
+```tsx
+<Select closeOnSelect={false}>
+    <SelectTrigger maxW="xs" placeholder="Select a favorite fruit" />
+    <SelectContent>
+        <SelectItem value="strawberry">Strawberry</SelectItem>
+        <SelectItem value="banana">Banana</SelectItem>
+        <SelectItem value="orange">Orange</SelectItem>
+    </SelectContent>
+</Select>
+```
+
+### Reduce motion
+
+You can disable the animation of the Select by setting the `reduceMotion` prop to `true`. You'll see no difference now if your device has currently reduced motion enabled globally.
+
+<Wrapper>
+    <Select reduceMotion>
+        <SelectTrigger maxW="xs" placeholder="Select a favorite fruit" />
+        <SelectContent>
+            <SelectItem value="strawberry">Strawberry</SelectItem>
+            <SelectItem value="banana">Banana</SelectItem>
+            <SelectItem value="orange">Orange</SelectItem>
+        </SelectContent>
+    </Select>
+</Wrapper>
+
+
+```tsx
+<Select reduceMotion>
+    <SelectTrigger maxW="xs" placeholder="Select a favorite fruit" />
+    <SelectContent>
+        <SelectItem value="strawberry">Strawberry</SelectItem>
+        <SelectItem value="banana">Banana</SelectItem>
+        <SelectItem value="orange">Orange</SelectItem>
+    </SelectContent>
+</Select>
+```
