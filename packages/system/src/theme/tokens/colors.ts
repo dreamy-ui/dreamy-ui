@@ -3,7 +3,10 @@ import { defineTokens } from "@pandacss/dev";
 export function defineColorTokens() {
     return defineTokens.colors({
         current: { value: "currentColor" },
-
+        fgInternal: {
+            50: { value: "#1b1b1f" },
+            900: { value: "#e9eeff" }
+        },
         blackAlpha: {
             50: { value: "rgba(0, 0, 0, 0.04)" },
             100: { value: "rgba(0, 0, 0, 0.08)" },

@@ -47,14 +47,14 @@ export function createColorTokens({
             },
             medium: {
                 value: {
-                    _light: "#1b1b1f/60",
-                    _dark: "#e9eeff/60"
+                    _light: "{colors.fgInternal.50/60}",
+                    _dark: "{colors.fgInternal.900/60}"
                 }
             },
             disabled: {
                 value: {
-                    _light: "#1b1b1f/38",
-                    _dark: "#e9eeff/38"
+                    _light: "{colors.fgInternal.50/38}",
+                    _dark: "{colors.fgInternal.900/38}"
                 }
             }
         },
