@@ -3,7 +3,6 @@ import { Box } from "@/components/box";
 import { Flex, type FlexProps } from "@/components/flex";
 import { getValidChildren } from "@/utils/children";
 import { compact } from "@/utils/compact";
-import type { SystemProperties } from "@dreamy-ui/system/types";
 import { cloneElement, forwardRef } from "react";
 
 interface AvatarGroupOptions {
@@ -14,10 +13,10 @@ interface AvatarGroupOptions {
      */
     children: React.ReactNode;
     /**
-     * The space between the avatars in the group.
+     * The space between the avatars in the group. To use a token use `token()` function from `@dreamy-ui/system`.
      * @default "-0.75rem"
      */
-    spacing?: SystemProperties["margin"];
+    spacing?: string | number;
     /**
      * The maximum number of visible avatars
      */
@@ -56,7 +55,7 @@ export const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
             const isFirstAvatar = index === 0;
 
             const childProps = {
-                marginEnd: isFirstAvatar ? 0 : spacing,
+                style: { marginInlineEnd: isFirstAvatar ? 0 : spacing },
                 showBorder: true
             } satisfies AvatarProps;
 
@@ -72,7 +71,7 @@ export const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
             >
                 {excess > 0 && (
                     <Box
-                        marginStart={spacing}
+                        style={{ marginInlineStart: spacing }}
                         data-part="excess"
                     >{`+${excess}`}</Box>
                 )}

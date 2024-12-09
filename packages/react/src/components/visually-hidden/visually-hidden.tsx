@@ -4,9 +4,9 @@ import { styled } from "@dreamy-ui/system/jsx";
 import { visuallyHidden } from "@dreamy-ui/system/patterns";
 import { type ComponentProps, forwardRef } from "react";
 
-export type VisuallyHiddenProps = ComponentProps<typeof DreamVisuallyHidden>;
-
 const DreamVisuallyHidden = styled(dream.span);
+
+export type VisuallyHiddenProps = ComponentProps<typeof DreamVisuallyHidden>;
 
 /**
  * VisuallyHidden component.
@@ -26,6 +26,8 @@ export const VisuallyHidden = forwardRef<HTMLSpanElement, VisuallyHiddenProps>((
         />
     );
 });
+
+const DreamVisuallyHiddenInput = styled(dream.input);
 
 export type VisuallyHiddenInputProps = ComponentProps<typeof DreamVisuallyHiddenInput>;
 
@@ -50,5 +52,3 @@ export const VisuallyHiddenInput = forwardRef<HTMLInputElement, VisuallyHiddenIn
         );
     }
 );
-
-const DreamVisuallyHiddenInput = styled(dream.input);

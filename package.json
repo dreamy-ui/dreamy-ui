@@ -18,7 +18,8 @@
 		"dev": "turbo dev",
 		"start": "cd website && pnpm run start",
 		"build": "turbo build",
-		"publish": "changeset publish"
+		"publish": "changeset publish",
+		"storybook": "cd packages/react && pnpm run storybook dev"
 	},
 	"keywords": [],
 	"author": "imexoodeex",

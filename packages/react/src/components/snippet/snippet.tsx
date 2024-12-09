@@ -74,6 +74,8 @@ export const Snippet = forwardRef<HTMLDivElement, SnippetProps>((props, ref) => 
                         <pre
                             key={`${index}-${t}`}
                             data-part="pre"
+                            // biome-ignore lint/a11y/noNoninteractiveTabindex: <explanation>
+                            tabIndex={0}
                         >
                             {!hideSymbol && <span data-part="symbol">{symbolBefore}</span>}
                             {t}
@@ -87,6 +89,8 @@ export const Snippet = forwardRef<HTMLDivElement, SnippetProps>((props, ref) => 
             <pre
                 ref={preRef}
                 data-part="pre"
+                // biome-ignore lint/a11y/noNoninteractiveTabindex: <explanation>
+                tabIndex={0}
             >
                 {!hideSymbol && <span data-part="symbol">{symbolBefore}</span>}
                 {children}

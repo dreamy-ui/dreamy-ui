@@ -5,8 +5,11 @@ export const staticCss: ReturnType<typeof defineConfig>["staticCss"] = {
         css: [
             {
                 properties: {
+                    // @ts-expect-error - it works
+                    srOnly: [true],
                     position: ["absolute", "relative"],
                     color: ["colors.white/87", "colors.black/87"],
+                    aspectRatio: [1],
                     top: [0, "50%"],
                     left: [0],
                     right: [0],
@@ -19,6 +22,8 @@ export const staticCss: ReturnType<typeof defineConfig>["staticCss"] = {
                     rounded: ["inherit"],
                     opacity: [0],
                     op: [0],
+                    px: ["0 !important"],
+                    py: ["0 !important"],
                     display: ["flex"],
                     alignItems: ["center"],
                     lineHeight: ["normal"],
@@ -27,6 +32,15 @@ export const staticCss: ReturnType<typeof defineConfig>["staticCss"] = {
                     visibility: ["visible", "hidden"]
                 }
             }
-        ]
+        ],
+        patterns: {
+            text: [
+                {
+                    properties: {
+                        variant: ["heading"]
+                    }
+                }
+            ]
+        }
     }
 };

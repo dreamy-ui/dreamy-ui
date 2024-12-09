@@ -22,9 +22,9 @@ const ProgressFilledTrack = forwardRef<HTMLDivElement, ProgressFilledTrackProps>
         <Box
             data-part="filled-track"
             ref={ref}
+            {...rest}
             style={{ width: `${progress.percent}%`, ...rest.style }}
             {...progress.bind}
-            {...rest}
         />
     );
 });
@@ -55,7 +55,9 @@ interface ProgressOptions {
 export interface ProgressProps
     extends ProgressOptions,
         ProgressVariantProps,
-        HTMLDreamProps<"div"> {}
+        HTMLDreamProps<"div"> {
+    "aria-label": string;
+}
 
 const StyledProgress = styled(dream.div, progress);
 

@@ -18,6 +18,7 @@ export const TabBase = forwardRef<HTMLButtonElement, TabProps>(function Tab(prop
         <Button
             size={"sm"}
             variant={"ghost"}
+            disableRipple
             {...tabProps}
         >
             {children}

@@ -89,12 +89,16 @@ export function useRadio(props: UseRadioProps = {}) {
 
     const [checkedState, setCheckedState] = useState(!!defaultChecked);
 
-    const isControlled = isCheckedProp !== undefined;
-    const isChecked = groupContext
-        ? groupContext.value === value
-        : isControlled
-          ? isCheckedProp
-          : checkedState;
+    const isControlled = useMemo(() => isCheckedProp !== undefined, [isCheckedProp]);
+    const isChecked = useMemo(
+        () =>
+            groupContext
+                ? groupContext.value === value
+                : isControlled
+                  ? isCheckedProp
+                  : checkedState,
+        [groupContext, isCheckedProp, value, checkedState, isControlled]
+    );
 
     const domRef = useRef<HTMLLabelElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -105,7 +109,10 @@ export function useRadio(props: UseRadioProps = {}) {
     const isInteractionDisabled = useMemo(() => isDisabled || isReadOnly, [isDisabled, isReadOnly]);
 
     const [isActive, setActive] = useState(false);
-    const active = isActive && !isInteractionDisabled;
+    const active = useMemo(
+        () => isActive && !isInteractionDisabled,
+        [isActive, isInteractionDisabled]
+    );
 
     const { isFocusVisible, focusProps } = useFocusRing({
         autoFocus

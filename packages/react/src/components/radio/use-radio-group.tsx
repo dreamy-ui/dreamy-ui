@@ -46,40 +46,23 @@ export function useRadioGroup(props: UseRadioGroupProps = {}) {
 
     const handleChange = useCallback(
         (eventOrValue: React.ChangeEvent<HTMLInputElement> | string | number) => {
-            if (!value) return;
-
-            const isChecked = isInputEvent(eventOrValue)
-                ? eventOrValue.target.checked
-                : value !== eventOrValue;
-
-            const selectedValue = isInputEvent(eventOrValue)
+            let selectedValue: string | number = isInputEvent(eventOrValue)
                 ? eventOrValue.target.value
                 : eventOrValue;
 
-            const nextValue = isChecked ? selectedValue : "";
+            if (typeof selectedValue === "string") {
+                selectedValue = Number(selectedValue) || selectedValue;
+            }
 
-            setValue(nextValue);
+            setValue(selectedValue);
         },
-        [setValue, value]
-    );
-
-    const getRadioProps = useCallback(
-        (props: Record<string, any> = {}) => {
-            const checkedKey = isNative ? "checked" : "isChecked";
-            return {
-                ...props,
-                [checkedKey]: value === props.value,
-                onChange: handleChange
-            };
-        },
-        [handleChange, isNative, value]
+        [setValue]
     );
 
     return {
         value,
         onChange: handleChange,
         setValue,
-        getRadioProps,
         ...rest
     };
 }

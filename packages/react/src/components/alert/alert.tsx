@@ -2,10 +2,10 @@ import { dream } from "@/components/factory";
 import { Icon, Text } from "@/rsc";
 import type { HTMLDreamProps, Status } from "@/utils/types";
 import { styled } from "@dreamy-ui/system/jsx";
-import { alert } from "@dreamy-ui/system/recipes";
+import { type AlertVariantProps, alert } from "@dreamy-ui/system/recipes";
 import { forwardRef, useMemo } from "react";
 
-export interface AlertProps extends Omit<HTMLDreamProps<"div">, "title"> {
+export interface AlertProps extends Omit<HTMLDreamProps<"div">, "title">, AlertVariantProps {
     /**
      * The status of the alert.
      * @default "info"
@@ -72,6 +72,7 @@ function useStatusIcon(status: Status) {
                     <svg
                         viewBox="0 0 512 512"
                         role={"img"}
+                        aria-hidden
                     >
                         <path
                             fill="none"
@@ -88,6 +89,7 @@ function useStatusIcon(status: Status) {
                         strokeWidth="0"
                         viewBox="0 0 256 256"
                         role={"img"}
+                        aria-hidden
                     >
                         <path
                             d="M224,91.55v72.9a8,8,0,0,1-2.34,5.66l-51.55,51.55a8,8,0,0,1-5.66,2.34H91.55a8,8,0,0,1-5.66-2.34L34.34,170.11A8,8,0,0,1,32,164.45V91.55a8,8,0,0,1,2.34-5.66L85.89,34.34A8,8,0,0,1,91.55,32h72.9a8,8,0,0,1,5.66,2.34l51.55,51.55A8,8,0,0,1,224,91.55Z"
@@ -101,6 +103,7 @@ function useStatusIcon(status: Status) {
                     <svg
                         viewBox="0 0 256 256"
                         role={"img"}
+                        aria-hidden
                     >
                         <path
                             d="M215.46,216H40.54C27.92,216,20,202.79,26.13,192.09L113.59,40.22c6.3-11,22.52-11,28.82,0l87.46,151.87C236,202.79,228.08,216,215.46,216Z"
@@ -115,6 +118,7 @@ function useStatusIcon(status: Status) {
                         strokeWidth="0"
                         viewBox="0 0 256 256"
                         role={"img"}
+                        aria-hidden
                     >
                         <path
                             d="M224,128a96,96,0,1,1-96-96A96,96,0,0,1,224,128Z"

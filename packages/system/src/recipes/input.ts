@@ -3,6 +3,7 @@ import { defineRecipe } from "@pandacss/dev";
 export const input = defineRecipe({
     className: "dream-input",
     jsx: ["Input", "PinInput", "PinInputField", "InputGroup"],
+    staticCss: ["*"],
     base: {
         appearance: "none",
         borderRadius: "l2",

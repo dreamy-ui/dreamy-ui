@@ -32,7 +32,8 @@ export const snippet = defineRecipe({
             // bg: "transparent !important"
         },
         pre: {
-            p: 0
+            p: 0,
+            overflowX: "auto"
         },
         symbol: {
             userSelect: "none"

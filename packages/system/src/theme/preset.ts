@@ -46,7 +46,7 @@ export interface PresetOptions {
 export const defaultPresetOptions = {
     backgrounds: {
         light: "#fff",
-        dark: "#111117"
+        dark: "#0D0D0E"
     },
     fonts: {
         body: "sans-serif",

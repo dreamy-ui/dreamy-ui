@@ -56,15 +56,18 @@ const InputAddon = forwardRef<HTMLDivElement, InputAddonProps>(function InputAdd
     return (
         <Flex
             ref={ref}
-            position={"absolute"}
-            flex={"0 0 auto"}
-            w={"auto"}
-            display={"flex"}
-            alignItems={"center"}
-            whiteSpace={"nowrap"}
-            top={"50%"}
-            transform={"translateY(-50%)"}
-            p={3}
+            style={{
+                position: "absolute",
+                top: "50%",
+                transform: "translateY(-50%)",
+                flex: "0 0 auto",
+                width: "auto",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                whiteSpace: "nowrap",
+                paddingInline: "0.75rem"
+            }}
             {...props}
         />
     );

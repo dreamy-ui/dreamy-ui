@@ -10,6 +10,7 @@ export const tabs = defineSlotRecipe({
             display: "flex"
         },
         tabList: {
+            width: "100%",
             display: "flex",
             height: "fit",
             gap: 2,
@@ -18,8 +19,7 @@ export const tabs = defineSlotRecipe({
             _scrollbar: {
                 display: "none"
             },
-            overflow: "visible",
-            overflowX: "clip"
+            overflow: "auto"
         },
         tab: {
             zIndex: 0,
@@ -53,12 +53,16 @@ export const tabs = defineSlotRecipe({
                     backgroundColor: "{colors.alpha.100}"
                 },
                 tab: {
-                    borderRadius: "l2"
+                    borderRadius: "l2",
+                    _hover: {
+                        backgroundColor: "alpha.50!"
+                    }
                 },
                 tabIndicator: {
-                    backgroundColor: "{colors.alpha.200}",
+                    backgroundColor: "alpha.100",
                     top: 0,
-                    bottom: 0
+                    bottom: 0,
+                    zIndex: -1
                 }
             },
             underline: {
@@ -71,18 +75,18 @@ export const tabs = defineSlotRecipe({
                 tabIndicator: {
                     backgroundColor: "{colors.primary}",
                     height: "2px",
-                    bottom: "-1px"
+                    bottom: "-1px",
+                    zIndex: 1
                 },
                 tab: {
                     overflow: "visible",
-                    "& [data-part=ripple]": {
-                        display: "none !important",
-                        opacity: 0,
-                        visibility: "hidden"
-                    },
+                    color: "{colors.fg.medium}",
                     _hover: {
                         background: "transparent !important",
                         color: "{colors.fg.max}"
+                    },
+                    _selected: {
+                        color: "{colors.fg}"
                     }
                 }
             },
@@ -94,7 +98,7 @@ export const tabs = defineSlotRecipe({
                     width: "fit-content"
                 },
                 tabIndicator: {
-                    backgroundColor: "{colors.alpha.200}",
+                    backgroundColor: "{colors.alpha.100}",
                     top: 0,
                     bottom: 0
                 }

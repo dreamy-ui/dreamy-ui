@@ -33,8 +33,8 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
                 {...props}
                 className={cx(
                     css({
-                        px: 0,
-                        py: 0,
+                        px: "0 !important",
+                        py: "0 !important",
                         aspectRatio: 1
                     }),
                     props.className

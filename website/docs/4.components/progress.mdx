@@ -16,12 +16,14 @@ import { Progress } from "@dreamy-ui/react/rsc";
 
 ## Usage
 
+Use `value` prop to set the progress value 0 - 100. `aria-label` prop is required for accessibility.
+
 <Wrapper>
-	<Progress value={50} />
+	<Progress value={50} aria-label="Progress" />
 </Wrapper>
 
 ```tsx
-<Progress value={50} />
+<Progress value={50} aria-label="Progress" />
 ```
 
 ### Sizes
@@ -30,29 +32,55 @@ You can set the size of the progress by using the `size` prop.
 
 <Wrapper>
 	<VStack w='full' gap={5}>
-		<Progress value={50} size="sm" />
-    <Progress value={50} size="md" />
-		<Progress value={50} size="lg" />
+		<Progress value={50} size="sm" aria-label="Progress" />
+    	<Progress value={50} size="md" aria-label="Progress" />
+		<Progress value={50} size="lg" aria-label="Progress" />
 	</VStack>
 </Wrapper>
 
 ```tsx
 <VStack gap={5}>
-  <Progress value={50} size="sm" />
-  <Progress value={50} size="md" />
-  <Progress value={50} size="lg" />
+    <Progress value={50} size="sm" aria-label="Progress" />
+    <Progress value={50} size="md" aria-label="Progress" />
+    <Progress value={50} size="lg" aria-label="Progress" />
 </VStack>
 ``` 
+
+### Scheme
+
+You can set the color of the progress by using the `scheme` prop.
+
+<Wrapper>
+	<VStack gap={5}>
+		<Progress scheme="primary" value={50} aria-label="Progress" />
+		<Progress scheme="secondary" value={50} aria-label="Progress" />
+		<Progress scheme="success" value={50} aria-label="Progress" />
+		<Progress scheme="warning" value={50} aria-label="Progress" />
+		<Progress scheme="error" value={50} aria-label="Progress" />
+		<Progress scheme="info" value={50} aria-label="Progress" />
+	</VStack>
+</Wrapper>
+
+```tsx
+<VStack gap={5}>
+    <Progress scheme="primary" value={50} aria-label="Progress" />
+    <Progress scheme="secondary" value={50} aria-label="Progress" />
+    <Progress scheme="success" value={50} aria-label="Progress" />
+    <Progress scheme="warning" value={50} aria-label="Progress" />
+    <Progress scheme="error" value={50} aria-label="Progress" />
+    <Progress scheme="info" value={50} aria-label="Progress" />
+</VStack>
+```
 
 ### Indeterminate Progress
 
 You can make the progress indeterminate by using the `isIndeterminate` prop. You can customize `speed` prop to change the speed of the indeterminate animation.
 
 <Wrapper>
-	<Progress isIndeterminate speed="0.8s" />
+	<Progress isIndeterminate speed="0.8s" aria-label="Progress" />
 </Wrapper>
 
 ```tsx
-<Progress isIndeterminate speed="0.8s" />
+<Progress isIndeterminate speed="0.8s" aria-label="Progress" />
 ```
 

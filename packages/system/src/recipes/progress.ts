@@ -1,4 +1,5 @@
 import { defineParts, defineRecipe } from "@pandacss/dev";
+import { getColorSchemes } from "./color-scheme";
 
 const parts = defineParts({
     root: { selector: "&" },
@@ -16,7 +17,7 @@ export const progress = defineRecipe({
             position: "relative"
         },
         filledTrack: {
-            bg: "{colors.primary}",
+            bg: "var(--progress-color)",
             transition: "width 0.3s {easings.easeInOut}",
             height: "full"
         }
@@ -43,9 +44,11 @@ export const progress = defineRecipe({
             lg: parts({
                 root: { h: "4", rounded: "l1" }
             })
-        }
+        },
+        scheme: getColorSchemes("--progress-color", undefined, "root")
     },
     defaultVariants: {
-        size: "md"
+        size: "md",
+        scheme: "primary"
     }
 });

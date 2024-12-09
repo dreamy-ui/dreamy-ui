@@ -10,6 +10,7 @@ import { percentToValue, roundValueToStep, valueToPercent } from "@/utils/number
 import type { HTMLDreamProps } from "@/utils/types";
 import type { SliderVariantProps } from "@dreamy-ui/system/recipes";
 import { useCallback, useId, useMemo, useRef, useState } from "react";
+import { useFieldContext } from "../field/field-root";
 
 interface SliderContext extends Omit<UseSliderReturn, "getInputProps" | "getRootProps"> {}
 
@@ -141,6 +142,9 @@ export function useSlider(props: UseSliderProps) {
         "aria-labelledby": ariaLabelledBy,
         ...htmlProps
     } = props;
+
+    const field = useFieldContext();
+    console.log("field", field);
 
     const onChangeStart = useCallbackRef(onChangeStartProp);
     const onChangeEnd = useCallbackRef(onChangeEndProp);
@@ -433,7 +437,7 @@ export function useSlider(props: UseSliderProps) {
                 "aria-disabled": ariaAttr(isDisabled),
                 "aria-readonly": ariaAttr(isReadOnly),
                 "aria-label": ariaLabel,
-                "aria-labelledby": ariaLabel ? undefined : ariaLabelledBy,
+                "aria-labelledby": field ? field.labelId : ariaLabel ? undefined : ariaLabelledBy,
                 style: {
                     ...props.style,
                     ...orient({
@@ -457,6 +461,7 @@ export function useSlider(props: UseSliderProps) {
             isDragging,
             ariaValueText,
             min,
+            field,
             max,
             value,
             orientation,
