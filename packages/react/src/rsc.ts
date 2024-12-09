@@ -29,9 +29,7 @@ export { Text, type TextProps } from "./components/text";
 export { TextareaRSC, type TextareaRSCProps } from "./components/textarea/textarea-rsc";
 export {
     VisuallyHidden,
-    VisuallyHiddenInput,
-    type VisuallyHiddenInputProps,
-    type VisuallyHiddenProps
+    VisuallyHiddenInput
 } from "./components/visually-hidden";
 export {
     getColorModeHTMLProps,

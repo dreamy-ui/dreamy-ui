@@ -44,9 +44,13 @@ export enum CACHE_DURATION {
 const useRedis = !!env.REDIS_URL;
 const lruInstance = useRedis
     ? undefined
-    : remember("lru", () => new LRUCache<string, CacheEntry>({ max: 1000 }));
+    : remember("lru", () => {
+          Logger.info("Using LRU cache");
+          return new LRUCache<string, CacheEntry>({ max: 1000 });
+      });
 const redisInstance = useRedis
     ? remember("redis", () => {
+          Logger.info("Using Redis cache");
           const redis = new Redis(env.REDIS_URL as string);
           redis.once("ready", () => {
               Logger.success("Redis is ready");
@@ -55,8 +59,6 @@ const redisInstance = useRedis
           return redis;
       })
     : undefined;
-
-Logger.info(`Using ${useRedis ? "Redis" : "LRU"} cache`);
 
 interface LruCache extends Cache {
     clear(): void;

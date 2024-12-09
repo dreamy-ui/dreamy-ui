@@ -15,6 +15,31 @@ export const meta: MetaFunction = () => {
         {
             description:
                 "Build performant, accessible, websites with ease using Dreamy UI. Level up your UI with next-gen DX."
+        },
+        {
+            property: "og:image",
+            content: "/dream-ui-wallpaper.png"
+        },
+        {
+            property: "og:image:width",
+            content: "2560"
+        },
+        {
+            property: "og:image:height",
+            content: "1080"
+        },
+        {
+            property: "og:image:type",
+            content: "image/png"
+        },
+        {
+            property: "og:title",
+            content: "Dreamy UI - Build performant, websites with ease!"
+        },
+        {
+            property: "og:description",
+            content:
+                "Build performant, accessible, websites with ease using Dreamy UI. Level up your UI with next-gen DX."
         }
     ];
 };

@@ -19,13 +19,66 @@ import { Link } from "~/src/ui/global/Link";
 import type { ComponentDocFrontmatter } from "~/types";
 import { ErrorBoundary } from "./$";
 
-export function meta({ data }: MetaArgs<typeof loader>) {
+export function meta({ data, params }: MetaArgs<typeof loader>) {
     return [
         {
             title: data ? `${data.frontmatter.title} - Dreamy UI` : "Doc not found - Dreamy UI"
         },
         {
             description: data?.frontmatter?.description ?? undefined
+        },
+        {
+            property: "og:image",
+            content: `/docs/${params.section}/${params.page}.og-image.png`
+        },
+        {
+            property: "og:image:width",
+            content: "1920"
+        },
+        {
+            property: "og:image:height",
+            content: "822.857144"
+        },
+        {
+            property: "og:image:type",
+            content: "image/png"
+        },
+        {
+            property: "og:title",
+            content: data?.frontmatter.title ? `${data.frontmatter.title} - Dreamy UI` : "Dreamy UI"
+        },
+        {
+            property: "og:description",
+            content: data?.frontmatter.description ?? undefined
+        },
+        // twitter
+        {
+            name: "twitter:card",
+            content: "summary_large_image"
+        },
+        {
+            name: "twitter:image",
+            content: `/docs/${params.section}/${params.page}.og-image.png`
+        },
+        {
+            name: "twitter:title",
+            content: data?.frontmatter.title ? `${data.frontmatter.title} - Dreamy UI` : "Dreamy UI"
+        },
+        {
+            name: "twitter:description",
+            content: data?.frontmatter.description ?? undefined
+        },
+        {
+            name: "twitter:image:alt",
+            content: data?.frontmatter.title ?? "Dreamy UI"
+        },
+        {
+            name: "twitter:image:width",
+            content: "1920"
+        },
+        {
+            name: "twitter:image:height",
+            content: "822.857144"
         }
     ] satisfies ReturnType<MetaFunction>;
 }
