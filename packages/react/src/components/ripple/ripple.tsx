@@ -10,7 +10,7 @@ export interface RippleProps {
     ripples: RippleType[];
     currentRipple: string | null;
     color?: string;
-    motionProps?: HTMLMotionProps<"span">;
+    motionProps?: HTMLMotionProps<"div">;
     style?: React.CSSProperties;
     onClear: (key: React.Key) => void;
 }
@@ -44,7 +44,6 @@ export function Ripple(props: RippleProps) {
                         key={ripple.key}
                     >
                         <MotionBox
-                            as={"span"}
                             initial={{
                                 scale: 0,
                                 opacity: 0.4
