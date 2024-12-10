@@ -1,5 +1,6 @@
 import { Image, ImageRSC } from "@/components";
 import type { Meta } from "@storybook/react";
+// @ts-ignore
 import coffeeNCookies from "./assets/coffee-n-cookies.webp";
 
 export default {

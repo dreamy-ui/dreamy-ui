@@ -15,6 +15,7 @@
 		"build:system": "cd packages/system && pnpm run panda:codegen && pnpm run build:fast",
 		"build:react": "cd packages/react && pnpm run build:fast",
 		"build:lib": "pnpm run build:system && pnpm run build:react",
+		"typecheck": "concurrently \"cd packages/system && pnpm run typecheck\" \"cd packages/react && pnpm run typecheck\" \"cd website && pnpm run typecheck\"",
 		"dev": "turbo dev",
 		"start": "cd website && pnpm run start",
 		"build": "turbo build",
