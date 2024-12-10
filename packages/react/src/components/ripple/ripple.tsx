@@ -2,12 +2,11 @@
 
 import { MotionBox } from "@/components/box";
 import { clampValue } from "@/utils/number";
-import type { HTMLDreamProps } from "@/utils/types";
 import type { HTMLMotionProps } from "framer-motion";
 import { AnimatePresence } from "framer-motion";
 import type { RippleType } from "./use-ripple";
 
-export interface RippleProps extends HTMLDreamProps<"span"> {
+export interface RippleProps {
     ripples: RippleType[];
     currentRipple: string | null;
     color?: string;

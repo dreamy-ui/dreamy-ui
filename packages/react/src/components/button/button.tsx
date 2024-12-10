@@ -191,7 +191,6 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
                             }}
                         >
                             <Ripple
-                                onClick={onRippleClickHandler}
                                 onClear={onClearRipple}
                                 currentRipple={currentRipple}
                                 ripples={ripples}
