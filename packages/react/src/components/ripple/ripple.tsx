@@ -44,6 +44,7 @@ export function Ripple(props: RippleProps) {
                         key={ripple.key}
                     >
                         <MotionBox
+                            as={"span"}
                             initial={{
                                 scale: 0,
                                 opacity: 0.4
