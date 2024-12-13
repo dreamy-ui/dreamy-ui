@@ -1,0 +1,105 @@
+---
+title: Gotchas
+---
+
+# Gotchas
+
+In this document we'll list some gotchas about how to use Dreamy UI.
+
+## Using tokens
+
+### Typography
+
+Use `size` or `textStyle` for typography instead of only `fontSize`. These properties will apply the correct font size, line height and font weight, including responsive sizes.
+
+```tsx
+<Text size="sm">Small text</Text>
+<Text size="md">Medium text</Text>
+<Text size="lg">Large text</Text>
+<Text textStyle="sm">Small text</Text>
+<Text textStyle="md">Medium text</Text>
+<Text textStyle="lg">Large text</Text>
+```
+
+Main colors for foreground are `fg`, `fg.max`, `fg.medium` and `fg.disabled`. Use these tokens for typography.
+
+```tsx
+<Text color="fg">Main text</Text>
+<Text color="fg.max">Max text</Text>
+<Text color="fg.medium">Secondary text</Text>
+<Text color="fg.disabled">Disabled text</Text>
+```
+
+### Background colors
+
+Background colors are `bg`, which will be the current background color. `bg.light` and `bg.dark` are the light and dark background colors.
+
+```tsx
+<Box bg="bg">Current Background</Box>
+<Box bg="bg.light">Light background</Box>
+<Box bg="bg.dark">Dark background</Box>
+```
+
+### Action colors
+
+Main action colors are `primary` and `secondary`. Use these colors for buttons, links, etc.
+
+```tsx
+<Button color="primary">Primary</Button>
+<Button color="secondary">Secondary</Button>
+```
+
+Dreamy exports a `success`, `warning`, `error` and `info` semantic tokens to easily signalize the status of an action.
+
+```tsx
+<Box bg="success">Success</Box>
+<Box bg="warning">Warning</Box>
+<Box bg="error">Error</Box>
+<Box bg="info">Info</Box>
+```
+
+### Alphas
+
+Alphas are easy way to create a slightly transparent color. These colors will be black alphas for light color mode and white alphas for dark.
+
+```tsx
+<Box bg="alpha.50">Alpha 50</Box>
+<Box bg="alpha.100">Alpha 100</Box>
+<Box bg="alpha.150">Alpha 150</Box>
+<Box bg="alpha.200">Alpha 200</Box>
+<Box bg="alpha.300">Alpha 300</Box>
+<Box bg="alpha.400">Alpha 400</Box>
+<Box bg="alpha.500">Alpha 500</Box>
+<Box bg="alpha.600">Alpha 600</Box>
+<Box bg="alpha.700">Alpha 700</Box>
+<Box bg="alpha.800">Alpha 800</Box>
+<Box bg="alpha.900">Alpha 900</Box>
+```
+
+### Other tokens
+
+Using other radii, blur, shadows, etc.
+
+When building your app, use tokens for consistency.
+
+```tsx
+<Box rounded="lg">Rounded box</Box>
+<Box blur="sm">Blurred box</Box>
+<Box shadow="lg">Shadowed box</Box>
+<Box transition="ease-in-out {durations.fast}">Fast transition</Box>
+```
+
+For more information visit [Panda CSS docs](https://panda-css.com/docs/customization/theme), since Dreamy UI extends Panda CSS default preset.
+
+## Lazy loading
+
+Dreamy UI can be used with a lazily loaded framer-motion. If your bundler supports lazy loading, you can import framer-motion like this:
+
+```tsx
+const domMax = () => import("framer-motion").then((mod) => mod.domMax);
+...
+<DreamProvider motionFeatures={domMax}>
+    {children}
+</DreamProvider>
+```
+
