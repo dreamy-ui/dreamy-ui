@@ -38,12 +38,17 @@ const reactCompilerConfig = {
 };
 
 export default defineConfig({
+    build: {
+        minify: true,
+    },
     plugins: [
         // Inspect({
         //     build: true
         // }),
         // remixDevTools(),
-        mdx(),
+        mdx({
+            development: true
+        }),
         // pandabox.vite({
         //     optimizeJs: "macro",
         //     exclude: [
@@ -79,9 +84,5 @@ export default defineConfig({
     },
     esbuild: {
         exclude: ["@dreamy-ui/system", "@dreamy-ui/system/*", "@dreamy-ui/react"],
-        minifySyntax: true,
-        minifyIdentifiers: true,
-        minifyWhitespace: true,
-        treeShaking: true
     }
 });

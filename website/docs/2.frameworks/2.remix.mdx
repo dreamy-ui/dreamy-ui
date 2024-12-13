@@ -63,7 +63,7 @@ export function loader({ request }: LoaderFunctionArgs) {
 const domMax = () => import("framer-motion").then((mod) => mod.domMax);
 
 export function Layout({ children }: { children: React.ReactNode }) {
-    const { colorMode } = useLoaderData<typeof loader>();
+    const { colorMode } = useRouteLoaderData<typeof loader>("root") ?? {};
 
     return (
         <html

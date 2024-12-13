@@ -19,7 +19,8 @@ function resetDurations(obj: any): Variants {
 
 export function transformReducedMotion(variants: any, shouldReduceMotion: boolean) {
     if (shouldReduceMotion) {
-        return resetDurations(variants);
+        const variantsCopy = JSON.parse(JSON.stringify(variants));
+        return resetDurations(variantsCopy);
     }
     return variants;
 }

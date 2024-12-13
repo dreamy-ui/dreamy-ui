@@ -27,11 +27,6 @@ export interface PresetOptions {
     secondaryColor: string;
     rounded: BorderRadius;
     /**
-     * Whether to generate boolean utilities.
-     * @default true
-     */
-    useUtilities: boolean;
-    /**
      * Color for the primary button. It depends on the `primaryColor` option.
      * @default Dream will automatically resolve contrast to match the `primaryColor` option.
      */
@@ -57,8 +52,7 @@ export const defaultPresetOptions = {
     secondaryColor: "{colors.purple.400}",
     buttonPrimaryTextColor: "white",
     buttonSecondaryTextColor: "white",
-    rounded: "md",
-    useUtilities: true
+    rounded: "md"
 } satisfies PresetOptions;
 
 export function createDreamPreset(

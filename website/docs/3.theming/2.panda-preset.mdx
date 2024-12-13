@@ -1,0 +1,54 @@
+---
+title: Panda Preset
+---
+
+# Panda Preset
+
+Dreamy UI comes with a preset for pandaCSS, which provides tokens, patterns, recipes and utilities that are required for components to be styled.
+
+`createDreamPreset` function accepts the object argument with following types:
+
+```ts
+interface PresetOptions {
+    /**
+     * The background color for your app.
+     */
+    backgrounds: {
+        light: string;
+        dark: string;
+    };
+    /**
+     * Fonts for body, heading and mono. If heading font is not provided, it will use body font for headings.
+     */
+    fonts: {
+        body: string;
+        heading: string;
+        mono: string;
+    };
+    /**
+     * Primary color for your app.
+     * @default "blue.500"
+     */
+    primaryColor: string;
+    /**
+     * Secondary color for your app.
+     * @default "purple.400"
+     */
+    secondaryColor: string;
+    /**
+     * Border radius for your app.
+     * @default "md"
+     */
+    rounded: BorderRadius;
+    /**
+     * Color for the primary button. It depends on the `primaryColor` option.
+     * @default Dream will automatically resolve contrast to match the `primaryColor` option.
+     */
+    buttonPrimaryTextColor: string;
+    /**
+     * Color for the secondary button. It depends on the `secondaryColor` option.
+     * @default Dream will automatically resolve contrast to match the `secondaryColor` option.
+     */
+    buttonSecondaryTextColor: string;
+}
+```

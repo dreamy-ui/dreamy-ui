@@ -63,7 +63,10 @@ export default function Index() {
         <Flex
             wFull
             col
-            gap={20}
+            gap={{
+                base: 24,
+                xl: 40
+            }}
             mb={20}
         >
             <Main />

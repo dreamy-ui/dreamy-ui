@@ -5,9 +5,9 @@
 	"sideEffects": false,
 	"type": "module",
 	"scripts": {
-		"build": "remix vite:build",
+		"build": "remix vite:build && tsup",
 		"dev": "cross-env NODE_ENV=development node --import=tsx --watch --watch-path=./server server/server.ts -",
-		"start": "cross-env NODE_ENV=production node --env-file .env --import=tsx server/server.ts",
+		"start": "cross-env NODE_ENV=production node --env-file .env build/server/server.js",
 		"typecheck": "tsc"
 	},
 	"dependencies": {
@@ -50,6 +50,7 @@
 		"satori": "^0.12.0",
 		"shiki": "^1.10.3",
 		"source-map-support": "^0.5.21",
+		"tsup": "^8.0.2",
 		"unified": "^11.0.5",
 		"vite-bundle-visualizer": "^1.2.1",
 		"vite-plugin-babel": "^1.2.0",

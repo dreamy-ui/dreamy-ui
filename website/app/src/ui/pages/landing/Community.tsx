@@ -30,7 +30,6 @@ export default function Communities() {
             <Flex
                 col
                 gap={2}
-                mt={20}
                 itemsCenter
             >
                 <Heading

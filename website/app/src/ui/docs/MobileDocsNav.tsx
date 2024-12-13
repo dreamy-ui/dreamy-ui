@@ -93,7 +93,7 @@ function DocsNav() {
                         ease: TRANSITION_EASINGS.easeInOut
                     }}
                     overflowY={"scroll"}
-                    maxH={"calc(100vh - 63px - 40px)"}
+                    maxH={"calc(100dvh - 63px - 40px)"}
                 >
                     <Box p={4}>
                         {sections.map((section) => (

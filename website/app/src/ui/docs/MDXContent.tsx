@@ -22,6 +22,14 @@ import {
     MotionBox,
     PinInput,
     PinInputField,
+    Popover,
+    PopoverArrow,
+    PopoverBody,
+    PopoverCloseButton,
+    PopoverContent,
+    PopoverFooter,
+    PopoverHeader,
+    PopoverTrigger,
     Radio,
     RadioGroup,
     Select,
@@ -223,7 +231,15 @@ const DreamComponents = {
     SelectTrigger,
     SelectContent,
     AsyncSelect,
-    ControlledSelect
+    ControlledSelect,
+    Popover,
+    PopoverTrigger,
+    PopoverContent,
+    PopoverArrow,
+    PopoverCloseButton,
+    PopoverHeader,
+    PopoverBody,
+    PopoverFooter
 };
 
 function Wrapper({ children }: PropsWithChildren) {

@@ -6,13 +6,11 @@ import type { Application } from "express";
 import express from "express";
 import morgan from "morgan";
 import assert from "node:assert";
-import * as fs from "node:fs";
 import type { Server } from "node:http";
-import * as path from "node:path";
 import { performance } from "node:perf_hooks";
-import * as url from "node:url";
 import redirects from "~/redirects";
 import { Logger } from "~/src/.server/logger";
+import * as build from "../build/server/index.js";
 import pack from "../package.json";
 
 declare module "@remix-run/node" {
@@ -21,8 +19,6 @@ declare module "@remix-run/node" {
         version: string;
     }
 }
-
-const BUILD_PATH = path.resolve("build/server/index.js");
 
 export class ExpressApp {
     private app: Application;
@@ -41,15 +37,6 @@ export class ExpressApp {
     private async initialize() {
         assert(this.observer);
         this.observer.observe({ type: "measure", buffered: true });
-
-        performance.mark(PerformanceMark.ServerImport);
-        const initialBuild = await this.reimportServer();
-        performance.mark(PerformanceMark.ServerImportDone);
-        performance.measure(
-            "Server import",
-            PerformanceMark.ServerImport,
-            PerformanceMark.ServerImportDone
-        );
 
         const getLoadContext: GetLoadContextFunction = () => {
             return {
@@ -77,8 +64,8 @@ export class ExpressApp {
         const remixHandler = createRequestHandler({
             build: viteDevServer
                 ? async () => viteDevServer.ssrLoadModule("virtual:remix/server-build")
-                : await this.reimportServer(),
-            mode: initialBuild.mode,
+                : build as any,
+            mode: build.mode,
             getLoadContext
         });
 
@@ -103,13 +90,6 @@ export class ExpressApp {
         }
 
         this.app.all("*", remixHandler);
-    }
-
-    private async reimportServer() {
-        const stat = fs.statSync(BUILD_PATH);
-        const BUILD_URL = url.pathToFileURL(BUILD_PATH).href;
-
-        return await import(BUILD_URL + "?t=" + stat.mtimeMs);
     }
 
     public async run() {

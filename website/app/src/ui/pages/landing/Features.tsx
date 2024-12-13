@@ -3,8 +3,8 @@ import { useLoaderData } from "@remix-run/react";
 import { MDXRemote, type MDXRemoteSerializeResult } from "next-mdx-remote";
 import { BiLogoTypescript } from "react-icons/bi";
 import { FaBorderStyle } from "react-icons/fa";
-import type { loader } from "~/routes/_index";
 import { LuPaintbrushVertical } from "react-icons/lu";
+import type { loader } from "~/routes/_index";
 
 const features = [
     {
@@ -91,7 +91,6 @@ export default function Features() {
             wFull
             col
             gap={20}
-            mt={10}
         >
             {features.map((feature, i) => (
                 <Feature

@@ -53,14 +53,14 @@ export function useCachedLoaderData<T extends any>() {
 
     // Unpack deferred data from the server
     useSafeLayoutEffect(() => {
-        (window as any).cacheKey = loaderData?.key;
+        // (window as any).cacheKey = loaderData?.key;
         if (loaderData?.serverLoaderPromise) {
             loaderData.serverLoaderPromise
                 .then((newData: any) => {
                     /**
                      * Checking if the page has changed, since page can be changed, before the promise resolves.
                      */
-                    if ((window as any).cacheKey !== loaderData?.key) return;
+                    // if ((window as any).cacheKey !== loaderData?.key) return;
 
                     const newDataString = JSON.stringify(newData);
                     if (newDataString !== JSON.stringify(currentData)) {
@@ -102,7 +102,7 @@ export function useCachedRouteLoaderData<T extends any>(routeKey: string) {
             loaderData.serverLoaderPromise
                 .then((newData: any) => {
                     // set only if the page hasn't changed
-                    if ((window as any).cacheKey !== loaderData?.key) return;
+                    // if ((window as any).cacheKey !== loaderData?.key) return;
 
                     const newDataString = JSON.stringify(newData);
                     if (newDataString !== JSON.stringify(currentData)) {

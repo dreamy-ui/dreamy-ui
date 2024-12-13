@@ -42,7 +42,6 @@ export default function EverythingYouNeed() {
         <Flex
             col
             gap={10}
-            mt={10}
         >
             <Flex
                 col

@@ -209,3 +209,47 @@ export function PlacementPopover({ placement }: { placement: PlacementWithLogica
     );
 }
 ```
+
+### Reduce Motion
+
+You can customize the reduce motion behavior of the popover using the `reduceMotion` prop.
+
+<Wrapper>
+    <Popover reduceMotion>
+        <PopoverTrigger>
+            <Button variant={"primary"} w='fit-content'>Reduced Motion</Button>
+        </PopoverTrigger>
+
+        <PopoverContent>
+            <PopoverArrow />
+            <PopoverCloseButton />
+            <PopoverHeader>Delete Post</PopoverHeader>
+            <PopoverBody>
+                Are you sure you want to delete this post? This action cannot be undone.
+            </PopoverBody>
+            <PopoverFooter>
+                <Button variant={"primary"}>Delete</Button>
+            </PopoverFooter>
+        </PopoverContent>
+    </Popover>
+</Wrapper>
+
+```tsx
+<Popover reduceMotion>
+    <PopoverTrigger>
+        <Button variant={"primary"}>Reduced Motion</Button>
+    </PopoverTrigger>
+
+    <PopoverContent>
+        <PopoverArrow />
+        <PopoverCloseButton />
+        <PopoverHeader>Delete Post</PopoverHeader>
+        <PopoverBody>
+            Are you sure you want to delete this post? This action cannot be undone.
+        </PopoverBody>
+        <PopoverFooter>
+            <Button variant={"primary"}>Delete</Button>
+        </PopoverFooter>
+    </PopoverContent>
+</Popover>
+```

@@ -7,9 +7,8 @@ title: Customization
 Dreamy UI depends on [pandaCSS](https://panda-css.com) as build-time css-in-js styling engine.
 That means every customization related to styling should be done in panda config.
 
-## Dream Preset & Theming
+## Theming
 
-Dreamy UI comes with a preset for pandaCSS. You should already have it in your project if you followed the installation guide.
 Dream Preset contains only most basic styling options like background color, fonts, etc. If you want to customize more, you can extend the theme in panda config.
 
 Most basic panda config would look like this. You can extend any theme property you want in `theme.extend` object.
@@ -36,35 +35,6 @@ export default defineConfig({
         }
     } 
 })
-```
-
-`createDreamPreset` accepts the object argument with following types:
-
-```ts
-interface PresetOptions {
-    backgrounds: {
-        light: string;
-        dark: string;
-    };
-    fonts: {
-        body: string;
-        heading: string;
-        mono: string;
-    };
-    primaryColor: string;
-    secondaryColor: string;
-    rounded: BorderRadius;
-    /**
-     * Color for the primary button. It depends on the `primaryColor` option.
-     * @default Dream will automatically resolve contrast to match the `primaryColor` option.
-     */
-    buttonPrimaryTextColor: string;
-    /**
-     * Color for the secondary button. It depends on the `secondaryColor` option.
-     * @default Dream will automatically resolve contrast to match the `secondaryColor` option.
-     */
-    buttonSecondaryTextColor: string;
-}
 ```
 
 > info: Tip: If body font is provided and heading font is not, Dream will automatically use body font for headings.
@@ -100,10 +70,10 @@ import { parts } from "@dreamy-ui/system";
 recipes: {
 	button: {
 		variants: { // variants allow us to have multiple variants
-			variant: { // select `variant` variant
+			variant: { // select `variant` property
 				solid: parts.button({ // select `solid` part and extend `base` from `parts.button`
 					base: {
-						bg: "blue"
+						bg: "blue.500"
 					}
 				})
 			}

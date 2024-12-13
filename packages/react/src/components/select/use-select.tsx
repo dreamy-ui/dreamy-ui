@@ -93,6 +93,7 @@ export interface UseSelectProps<T extends boolean> extends UserFeedbackProps, us
 
 export function useSelect<T extends boolean>(props: UseSelectProps<T>) {
     const globalReduceMotion = useReducedMotion();
+
     const {
         reduceMotion = globalReduceMotion ?? false,
         isOpen: isOpenProp,

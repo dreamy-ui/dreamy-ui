@@ -11,6 +11,7 @@ import { PassThrough } from "node:stream";
 import { renderToPipeableStream } from "react-dom/server";
 import { Docs } from "~/src/.server/docs";
 import { Logger } from "~/src/.server/logger";
+import { lru } from "./src/.server/cache";
 
 export const streamTimeout = 5000;
 
@@ -76,3 +77,8 @@ export function handleDataRequest(
 }
 
 Docs.fetchDocsOnStartup();
+
+if (process.env.NODE_ENV === "development") {
+    lru.clear();
+}
+
