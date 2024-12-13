@@ -4,6 +4,7 @@ import { HStack } from "@dreamy-ui/system/jsx";
 import { memo, useState } from "react";
 import { Link } from "~/src/ui/global/Link";
 import Search from "~/src/ui/global/Search";
+import GithubButton from "./GithubButton";
 import { Logo } from "./Logo";
 import { ToggleThemeButton } from "./ToggleThemeButton";
 import HamburgerMenu from "./mobile/HamburgerMenu";
@@ -88,6 +89,7 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: Props) {
                     </Link>
                     <MemoSearch />
 
+                    <MemoGithubButton />
                     <MemoToggleThemeButton />
 
                     <IconButton
@@ -112,3 +114,4 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: Props) {
 const MemoLogo = memo(Logo);
 const MemoSearch = memo(Search);
 const MemoToggleThemeButton = memo(ToggleThemeButton);
+const MemoGithubButton = memo(GithubButton);
