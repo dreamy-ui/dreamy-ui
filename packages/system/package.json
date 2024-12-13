@@ -1,6 +1,6 @@
 {
 	"name": "@dreamy-ui/system",
-	"version": "0.0.2",
+	"version": "0.0.4",
 	"description": "A design system for Dreamy UI React component library",
 	"type": "module",
 	"keywords": ["ui", "design-system"],
@@ -11,7 +11,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/imexoodeex/dream-ui",
+		"url": "https://github.com/dreamy-ui/dreamy-ui",
 		"directory": "packages/system"
 	},
 	"scripts": {
@@ -19,6 +19,7 @@
 		"dev": "concurrently \"panda codegen --watch\" \"tsup --watch\"",
 		"typecheck": "tsc --noEmit"
 	},
+	"files": ["/dist", "/styled-system"],
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",

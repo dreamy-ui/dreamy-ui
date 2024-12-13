@@ -1,70 +1,71 @@
 {
-  "name": "@dreamy-ui/react",
-  "version": "0.0.2",
-  "description": "Dreamy UI library for React",
-  "type": "module",
-  "keywords": [
-    "react",
-    "ui",
-    "css-in-js",
-    "component-library"
-  ],
-  "author": "imexoodeex",
-  "license": "MIT",
-  "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
-    "typecheck": "tsc --noEmit",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
-    "prepare": "panda codegen"
-  },
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
-    },
-    "./rsc": {
-      "types": "./dist/rsc.d.ts",
-      "import": "./dist/rsc.js",
-      "require": "./dist/rsc.cjs"
-    }
-  },
-  "devDependencies": {
-    "@chromatic-com/storybook": "3.2.2",
-    "@pandacss/dev": "^0.45.2",
-    "@pandacss/preset-panda": "^0.45.1",
-    "@storybook/addon-a11y": "^8.4.7",
-    "@storybook/addon-essentials": "^8.4.7",
-    "@storybook/addon-interactions": "8.4.7",
-    "@storybook/addon-onboarding": "8.4.7",
-    "@storybook/addon-themes": "^8.4.7",
-    "@storybook/blocks": "8.4.7",
-    "@storybook/react": "^8.4.7",
-    "@storybook/react-vite": "^8.4.7",
-    "@storybook/test": "8.4.7",
-    "@types/react": "^18.2.73",
-    "@types/react-dom": "^18.2.7",
-    "storybook": "^8.4.7",
-    "tsup": "^8.0.2",
-    "typescript": "^5.4.3",
-    "vite": "^5.4.10",
-    "vite-tsconfig-paths": "^4.2.1"
-  },
-  "dependencies": {
-    "@dreamy-ui/system": "workspace:*",
-    "@popperjs/core": "^2.11.8",
-    "@react-aria/focus": "^3.18.3",
-    "@zag-js/focus-visible": "^0.74.2",
-    "aria-hidden": "^1.2.4",
-    "framer-motion": "^11.0.24",
-    "framesync": "^6.1.2",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-focus-lock": "^2.12.1",
-    "react-icons": "^5.0.1",
-    "react-remove-scroll": "^2.5.10",
-    "react-textarea-autosize": "^8.5.3"
-  }
+	"name": "@dreamy-ui/react",
+	"version": "0.0.4",
+	"description": "Dreamy UI library for React",
+	"type": "module",
+	"keywords": ["react", "ui", "css-in-js", "component-library"],
+	"author": "imexoodeex",
+	"license": "MIT",
+	"scripts": {
+		"build": "tsup",
+		"dev": "tsup --watch",
+		"typecheck": "tsc --noEmit",
+		"storybook": "storybook dev -p 6006",
+		"build-storybook": "storybook build",
+		"prepare": "panda codegen"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/dreamy-ui/dreamy-ui",
+		"directory": "packages/react"
+	},
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs"
+		},
+		"./rsc": {
+			"types": "./dist/rsc.d.ts",
+			"import": "./dist/rsc.js",
+			"require": "./dist/rsc.cjs"
+		}
+	},
+	"files": ["/dist"],
+	"devDependencies": {
+		"@chromatic-com/storybook": "3.2.2",
+		"@pandacss/dev": "^0.45.2",
+		"@pandacss/preset-panda": "^0.45.1",
+		"@storybook/addon-a11y": "^8.4.7",
+		"@storybook/addon-essentials": "^8.4.7",
+		"@storybook/addon-interactions": "8.4.7",
+		"@storybook/addon-onboarding": "8.4.7",
+		"@storybook/addon-themes": "^8.4.7",
+		"@storybook/blocks": "8.4.7",
+		"@storybook/react": "^8.4.7",
+		"@storybook/react-vite": "^8.4.7",
+		"@storybook/test": "8.4.7",
+		"@types/react": "^18.2.73",
+		"@types/react-dom": "^18.2.7",
+		"storybook": "^8.4.7",
+		"tsup": "^8.0.2",
+		"typescript": "^5.4.3",
+		"vite": "^5.4.10",
+		"vite-tsconfig-paths": "^4.2.1"
+	},
+	"dependencies": {
+		"@dreamy-ui/system": "workspace:*",
+		"@popperjs/core": "^2.11.8",
+		"@react-aria/focus": "^3.18.3",
+		"@zag-js/focus-visible": "^0.74.2",
+		"aria-hidden": "^1.2.4",
+		"framer-motion": "^11.0.24",
+		"framesync": "^6.1.2",
+		"react": "^18.3.1",
+		"react-dom": "^18.3.1",
+		"react-focus-lock": "^2.12.1",
+		"react-icons": "^5.0.1",
+		"react-remove-scroll": "^2.5.10",
+		"react-textarea-autosize": "^8.5.3"
+	}
 }
