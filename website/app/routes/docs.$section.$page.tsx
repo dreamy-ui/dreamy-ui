@@ -29,7 +29,7 @@ export function meta({ data, params }: MetaArgs<typeof loader>) {
         },
         {
             property: "og:image",
-            content: `/docs/${params.section}/${params.page}/og-image.png`
+            content: `/docs/${params.section}/${params.page}/og-image`
         },
         {
             property: "og:image:width",
@@ -58,7 +58,7 @@ export function meta({ data, params }: MetaArgs<typeof loader>) {
         },
         {
             name: "twitter:image",
-            content: `/docs/${params.section}/${params.page}/og-image.png`
+            content: `/docs/${params.section}/${params.page}/og-image`
         },
         {
             name: "twitter:title",
