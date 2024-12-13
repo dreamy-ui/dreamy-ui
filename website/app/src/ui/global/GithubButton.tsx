@@ -1,5 +1,6 @@
 import { IconButton, MotionBox, TRANSITION_EASINGS } from "@dreamy-ui/react";
 import { Icon } from "@dreamy-ui/react/rsc";
+import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { FaGithub, FaStar } from "react-icons/fa";
 import { Link } from "./Link";
@@ -26,32 +27,36 @@ export default function GithubButton() {
             pos={"relative"}
             icon={
                 <>
-                    <MotionBox
-                        initial={{ y: 0, scale: 0 }}
-                        animate={{ y: isHovered ? -30 : 0, scale: 1 }}
-                        transition={{
-                            duration: 0.3,
-                            ease: TRANSITION_EASINGS.easeInOut
-                        }}
-                        pos={"absolute"}
-                    >
-                        <Icon as={FaGithub} />
-                    </MotionBox>
-                    <MotionBox
-                        initial={{ y: 0, scale: 0 }}
-                        animate={{ y: isHovered ? 0 : 30, scale: 1 }}
-                        transition={{
-                            duration: 0.3,
-                            ease: TRANSITION_EASINGS.easeInOut
-                        }}
-                        pos={"absolute"}
-                    >
-                        <Icon
-                            as={FaStar}
-                            filter={"drop-shadow(0 0 5px rgba(193, 167, 22, 0.5))"}
-                            color={"yellow.500"}
-                        />
-                    </MotionBox>
+                    <AnimatePresence initial={false}>
+                        <MotionBox
+                            initial={{ y: 0, scale: 0 }}
+                            animate={{ y: isHovered ? -30 : 0, scale: 1 }}
+                            transition={{
+                                duration: 0.3,
+                                ease: TRANSITION_EASINGS.easeInOut
+                            }}
+                            pos={"absolute"}
+                        >
+                            <Icon as={FaGithub} />
+                        </MotionBox>
+                    </AnimatePresence>
+                    <AnimatePresence initial={false}>
+                        <MotionBox
+                            initial={{ y: 0, scale: 0 }}
+                            animate={{ y: isHovered ? 0 : 30, scale: 1 }}
+                            transition={{
+                                duration: 0.3,
+                                ease: TRANSITION_EASINGS.easeInOut
+                            }}
+                            pos={"absolute"}
+                        >
+                            <Icon
+                                as={FaStar}
+                                filter={"drop-shadow(0 0 5px rgba(193, 167, 22, 0.5))"}
+                                color={"yellow.500"}
+                            />
+                        </MotionBox>
+                    </AnimatePresence>
                 </>
             }
             aria-label={"Github"}
