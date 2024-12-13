@@ -11,10 +11,18 @@ import Main from "~/src/ui/pages/landing/Main";
 
 export const meta: MetaFunction = () => {
     return [
-        { title: "Dreamy UI - Build performant, websites with ease!" },
+        { title: "Dreamy UI - Build websites with next-gen DX!" },
         {
             description:
                 "Build performant, accessible, websites with ease using Dreamy UI. Level up your UI with next-gen DX."
+        },
+        {
+            property: "og:title",
+            content: "Build performant, accessible websites with Dreamy UI"
+        },
+        {
+            property: "image",
+            content: "/dream-ui-wallpaper.png"
         },
         {
             property: "og:image",
@@ -34,12 +42,38 @@ export const meta: MetaFunction = () => {
         },
         {
             property: "og:title",
-            content: "Dreamy UI - Build performant, websites with ease!"
+            content: "Dreamy UI - Build websites with next-gen DX!"
         },
         {
             property: "og:description",
             content:
                 "Build performant, accessible, websites with ease using Dreamy UI. Level up your UI with next-gen DX."
+        },
+        {
+            name: "og:url",
+            content: "https://dreamy-ui.com"
+        },
+        // twitter
+        {
+            name: "twitter:card",
+            content: "summary_large_image"
+        },
+        {
+            name: "twitter:image",
+            content: "/dream-ui-wallpaper.png"
+        },
+        {
+            name: "twitter:title",
+            content: "Build performant, accessible websites with Dreamy UI"
+        },
+        {
+            name: "twitter:description",
+            content:
+                "Build performant, accessible, websites with ease using Dreamy UI. Level up your UI with next-gen DX."
+        },
+        {
+            name: "twitter:image",
+            content: "/dream-ui-wallpaper.png"
         }
     ];
 };
