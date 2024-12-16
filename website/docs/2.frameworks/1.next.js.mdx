@@ -15,18 +15,17 @@ Follow the [Panda CSS installation guide](https://panda-css.com/docs/installatio
 Install Dreamy UI in your project:
 
 ```bash
-pnpm install @dreamy-ui/react @dreamy-ui/system
+pnpm install @dreamy-ui/react @dreamy-ui/system motion @pandacss/preset-panda
 ```
 
 ## 2. Configure panda.config.ts
 
 Configure environment and panda presets in your `panda.config.ts` file:
 
-```ts {2-3, 8-16}
+```ts {2-3, 7-15}
 import { defineConfig } from "@pandacss/dev";
 import { createDreamPreset } from "@dreamy-ui/system";
 import pandaPreset from "@pandacss/preset-panda";
-
 
 export default defineConfig({
 	...,
@@ -52,7 +51,7 @@ First create a `providers.tsx` file in `app/providers.tsx`. This is where you wi
 "use client";
 
 import { type ColorMode, DreamProvider } from "@dreamy-ui/react";
-import { domMax } from "framer-motion";
+import { domMax } from "motion/react";
 import type { PropsWithChildren } from "react";
 
 interface ProvidersProps extends PropsWithChildren {
@@ -64,7 +63,7 @@ export function Providers({ children, colorMode }: ProvidersProps) {
         <DreamProvider
             motionFeatures={domMax}
             colorMode={colorMode}
-            framerMotionStrict
+            motionStrict
             useUserPreferenceColorMode
         >
             {children}
@@ -93,11 +92,12 @@ export default async function RootLayout({
     const colorMode = getSSRColorMode((await cookies()).toString());
 
     return (
-        <html lang="en" suppressHydrationWarning>
-            <body
-                className={`${geistSans.variable} ${geistMono.variable}`}
-                {...getColorModeHTMLProps(colorMode)}
-            >
+        <html 
+            lang="en" 
+            suppressHydrationWarning 
+            {...getColorModeHTMLProps(colorMode)}
+        >
+            <body className={`${geistSans.variable} ${geistMono.variable}`}>
                 <Providers colorMode={colorMode}>{children}</Providers>
             </body>
         </html>

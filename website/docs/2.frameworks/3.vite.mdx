@@ -15,18 +15,17 @@ Follow the [Panda CSS installation guide](https://panda-css.com/docs/installatio
 Install Dreamy UI in your project:
 
 ```bash
-pnpm install @dreamy-ui/react @dreamy-ui/system
+pnpm install @dreamy-ui/react @dreamy-ui/system motion @pandacss/preset-panda
 ```
 
 ## 2. Configure panda.config.ts
 
 Configure environment and panda presets in your `panda.config.ts` file:
 
-```ts {2-3, 8-16}
+```ts {2-3, 7-15}
 import { defineConfig } from "@pandacss/dev";
 import { createDreamPreset } from "@dreamy-ui/system";
 import pandaPreset from "@pandacss/preset-panda";
-
 
 export default defineConfig({
 	...,
@@ -49,12 +48,12 @@ After configuring Panda CSS, finally we can add the main Dreamy Provider to your
 ```tsx {2-3, 6-10, 12}
 ...
 import { DreamyProvider } from "@dreamy-ui/react";
-import { domMax } from "framer-motion";
+import { domMax } from "motion/react";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
     <DreamyProvider
         motionFeatures={domMax}
-        framerMotionStrict
+        motionStrict
         useUserPreferenceColorMode
     >
         <App />

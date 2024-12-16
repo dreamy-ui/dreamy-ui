@@ -1,6 +1,6 @@
 import { TRANSITION_DEFAULTS, TRANSITION_EASINGS } from "@/utils";
 import { isNumeric } from "@/utils/number";
-import type { Transition, Variants } from "framer-motion";
+import type { Transition, Variants } from "motion/react";
 
 type VariantKeys = "modal" | "overlay" | "tooltip" | "popover" | "collapse" | "checkboxCheckIcon";
 export type DefaultVariants = Record<VariantKeys, { default: Variants }>;

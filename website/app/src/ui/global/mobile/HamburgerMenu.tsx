@@ -1,4 +1,4 @@
-import { type SVGMotionProps, m } from "framer-motion";
+import { type SVGMotionProps, m } from "motion/react";
 import { memo, useMemo } from "react";
 
 interface Props extends SVGMotionProps<SVGSVGElement> {

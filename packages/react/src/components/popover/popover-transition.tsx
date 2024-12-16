@@ -3,7 +3,7 @@ import { PopoverArrow, type PopoverArrowProps } from "@/components/popover/popov
 import { transformReducedMotion } from "@/components/transitions/transition-utils";
 import { useMotionVariants } from "@/provider";
 import type { HTMLDreamProps } from "@/utils/types";
-import type { HTMLMotionProps } from "framer-motion";
+import type { HTMLMotionProps } from "motion/react";
 import type React from "react";
 import { forwardRef } from "react";
 import { usePopoverContext } from "./popover-context";
@@ -14,16 +14,16 @@ type HTMLMotionDreamProps<T extends keyof React.ReactHTML> = Omit<
 > & {
     children?: React.ReactNode;
 } & Omit<
-        HTMLMotionProps<T>,
-        | "style"
-        | "onDrag"
-        | "onDragEnd"
-        | "onDragStart"
-        | "onAnimationStart"
-        | "variants"
-        | "transition"
-        | "children"
-    >;
+    HTMLMotionProps<T>,
+    | "style"
+    | "onDrag"
+    | "onDragEnd"
+    | "onDragStart"
+    | "onAnimationStart"
+    | "variants"
+    | "transition"
+    | "children"
+>;
 
 export interface PopoverTransitionProps extends HTMLMotionDreamProps<"section"> {
     /**

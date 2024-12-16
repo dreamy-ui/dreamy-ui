@@ -5,7 +5,7 @@ import {
 } from "@/components/popover/popover-transition";
 import { callAll } from "@/utils";
 import type { HTMLDreamProps } from "@/utils/types";
-import type { HTMLMotionProps } from "framer-motion";
+import type { HTMLMotionProps } from "motion/react";
 import { forwardRef } from "react";
 
 export interface PopoverContentProps extends PopoverTransitionProps {

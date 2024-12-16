@@ -1,4 +1,4 @@
-import type { Target, TargetAndTransition, Transition } from "framer-motion";
+import type { Target, TargetAndTransition, Transition } from "motion/react";
 
 function resetDurations(obj: any): Variants {
     // Loop through each key in the object

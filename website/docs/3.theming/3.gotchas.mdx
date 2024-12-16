@@ -93,10 +93,10 @@ For more information visit [Panda CSS docs](https://panda-css.com/docs/customiza
 
 ## Lazy loading
 
-Dreamy UI can be used with a lazily loaded framer-motion. If your bundler supports lazy loading, you can import framer-motion like this:
+Dreamy UI can be used with a lazily loaded motion/react. If your bundler supports lazy loading, you can import motion/react like this:
 
 ```tsx
-const domMax = () => import("framer-motion").then((mod) => mod.domMax);
+const domMax = () => import("motion/react").then((mod) => mod.domMax);
 ...
 <DreamProvider motionFeatures={domMax}>
     {children}

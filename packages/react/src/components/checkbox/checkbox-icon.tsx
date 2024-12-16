@@ -1,6 +1,6 @@
 import { defaultMotionVariants } from "@/provider/motion";
 import { TRANSITION_EASINGS } from "@/utils";
-import { type SVGMotionProps, m } from "framer-motion";
+import { type SVGMotionProps, m } from "motion/react";
 import type { UseCheckboxReturn } from "./use-checkbox";
 
 export interface IconCustomProps {

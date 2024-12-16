@@ -6,12 +6,12 @@ import { omit, pick } from "@/utils";
 import type { HTMLDreamProps } from "@/utils/types";
 import { isCssProperty, styled } from "@dreamy-ui/system/jsx";
 import { tooltip } from "@dreamy-ui/system/recipes";
-import { AnimatePresence, type HTMLMotionProps, isValidMotionProp, m } from "framer-motion";
+import { AnimatePresence, type HTMLMotionProps, isValidMotionProp, m } from "motion/react";
 import { Children, Fragment, cloneElement, forwardRef, useMemo } from "react";
 
 export interface TooltipProps
     extends Omit<HTMLDreamProps<"div">, "direction" | "offset" | "content">,
-        Partial<UseTooltipProps> {
+    Partial<UseTooltipProps> {
     /**
      * The React component to use as the
      * trigger for the tooltip

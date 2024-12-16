@@ -1,6 +1,6 @@
 import { IconButton, Image, TRANSITION_EASINGS, useColorMode } from "@dreamy-ui/react";
 import { Flex, Icon, Text } from "@dreamy-ui/react/rsc";
-import { AnimatePresence, m } from "framer-motion";
+import { AnimatePresence, m } from "motion/react";
 import { BsArrowRight } from "react-icons/bs";
 import { Link } from "../Link";
 

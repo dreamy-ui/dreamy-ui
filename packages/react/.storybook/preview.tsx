@@ -1,5 +1,5 @@
 import type { Preview } from "@storybook/react";
-import { domMax } from "framer-motion";
+import { domMax } from "motion/react";
 import React from "react";
 import { BiMoon, BiSun } from "react-icons/bi";
 import { IconButton } from "../src/components/button/icon-button";

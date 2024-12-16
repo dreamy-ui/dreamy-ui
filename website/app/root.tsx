@@ -59,7 +59,7 @@ export function shouldRevalidate(_: ShouldRevalidateFunctionArgs) {
     return false;
 }
 
-const motionFeatures = () => import("framer-motion").then((mod) => mod.domMax);
+const motionFeatures = () => import("motion/react").then((mod) => mod.domMax);
 
 export function useRoot() {
     return useRouteLoaderData<typeof loader>("root")!;
@@ -95,7 +95,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                     motionFeatures={motionFeatures}
                     colorMode={colorMode}
                     useUserPreferenceColorMode
-                    framerMotionStrict
+                    motionStrict
                 >
                     <AppLayout>{children}</AppLayout>
                 </DreamProvider>

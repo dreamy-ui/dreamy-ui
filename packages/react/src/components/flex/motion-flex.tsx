@@ -4,7 +4,7 @@ import { splitProps } from "@/utils";
 import type { HTMLDreamProps } from "@/utils/types";
 import { isCssProperty, styled } from "@dreamy-ui/system/jsx";
 import { type FlexProperties, flex } from "@dreamy-ui/system/patterns";
-import { type MotionProps, isValidMotionProp, m } from "framer-motion";
+import { type MotionProps, isValidMotionProp, m } from "motion/react";
 import { forwardRef } from "react";
 
 const StyledMotionFlex = styled(
@@ -43,4 +43,4 @@ MotionFlex.displayName = "MotionFlex";
 type MotionAndFlexProps = MotionProps & FlexProperties;
 type FlexWithNoMotionProps = Omit<HTMLDreamProps<"div">, keyof MotionAndFlexProps>;
 
-export interface MotionFlexProps extends FlexWithNoMotionProps, FlexProperties, MotionProps {}
+export interface MotionFlexProps extends FlexWithNoMotionProps, FlexProperties, MotionProps { }

@@ -1,7 +1,7 @@
 import { type UseModalProps, type UseModalReturn, useModal } from "@/components/modal/use-modal";
 import { Portal, type PortalProps } from "@/components/portal";
 import { createContext } from "@/provider/create-context";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "motion/react";
 import { useMemo } from "react";
 
 interface ModalContext extends ModalOptions, UseModalReturn {

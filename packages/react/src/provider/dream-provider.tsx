@@ -9,7 +9,7 @@ import {
     LazyMotion,
     MotionConfig,
     type Transition
-} from "framer-motion";
+} from "motion/react";
 import type React from "react";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { type DefaultVariants, defaultDefaultTransition, defaultMotionVariants } from "./motion";
@@ -33,9 +33,9 @@ interface DreamContext {
 const DreamContext = createContext<DreamContext | null>(null);
 
 interface DreamProviderProps
-    extends Partial<Omit<DreamContext, "hasHydrated" | "initialColorMode">> {
+    extends Partial<Omit<DreamContext, "hasHydrated" | "initialColorMode" | "toggleColorMode" | "setColorMode" | "hasHydrated">> {
     motionFeatures: FeatureBundle | LazyFeatureBundle;
-    framerMotionStrict?: boolean;
+    motionStrict?: boolean;
     children: React.ReactNode;
 }
 
@@ -51,7 +51,7 @@ export function DreamProvider({
     defaultColorMode = "light",
     reduceMotion: InitialReduceMotion = false,
     motionFeatures,
-    framerMotionStrict = false
+    motionStrict = false
 }: DreamProviderProps) {
     const [reduceMotion, setReduceMotion] = useState(InitialReduceMotion);
     const [colorMode, setResolvedColorMode] = useState<ColorMode>(
@@ -156,7 +156,7 @@ export function DreamProvider({
             >
                 <LazyMotion
                     features={motionFeatures}
-                    strict={framerMotionStrict}
+                    strict={motionStrict}
                 >
                     {children}
                 </LazyMotion>

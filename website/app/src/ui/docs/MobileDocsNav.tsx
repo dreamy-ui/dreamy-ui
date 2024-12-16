@@ -7,7 +7,7 @@ import {
 } from "@dreamy-ui/react";
 import { Box, Flex, Icon } from "@dreamy-ui/react/rsc";
 import { useLocation } from "@remix-run/react";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "motion/react";
 import { useState } from "react";
 import { BiChevronDown } from "react-icons/bi";
 import { useSections } from "~/routes/docs";

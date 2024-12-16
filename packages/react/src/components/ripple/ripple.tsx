@@ -2,8 +2,8 @@
 
 import { MotionBox } from "@/components/box";
 import { clampValue } from "@/utils/number";
-import type { HTMLMotionProps } from "framer-motion";
-import { AnimatePresence } from "framer-motion";
+import type { HTMLMotionProps } from "motion/react";
+import { AnimatePresence } from "motion/react";
 import type { RippleType } from "./use-ripple";
 
 export interface RippleProps {

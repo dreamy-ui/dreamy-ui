@@ -1,6 +1,6 @@
 import { IconButton, MotionBox, TRANSITION_EASINGS } from "@dreamy-ui/react";
 import { Icon } from "@dreamy-ui/react/rsc";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "motion/react";
 import { useState } from "react";
 import { FaGithub, FaStar } from "react-icons/fa";
 import { Link } from "./Link";

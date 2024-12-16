@@ -1,6 +1,6 @@
 import { useMotionVariants } from "@/provider";
 import { css, cx } from "@dreamy-ui/system/css";
-import { AnimatePresence, type Variants as _Variants } from "framer-motion";
+import { AnimatePresence, type Variants as _Variants } from "motion/react";
 import { forwardRef, useMemo } from "react";
 import { MotionBox, type MotionBoxProps } from "../box/motion-box";
 import type { WithTransitionConfig } from "./transition-utils";
@@ -25,7 +25,7 @@ export interface CollapseOptions {
 
 export type ICollapse = CollapseProps;
 
-export interface CollapseProps extends WithTransitionConfig<MotionBoxProps>, CollapseOptions {}
+export interface CollapseProps extends WithTransitionConfig<MotionBoxProps>, CollapseOptions { }
 
 /**
  * Collapse component.

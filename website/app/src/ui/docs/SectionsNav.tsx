@@ -1,7 +1,7 @@
 import { Button, Collapse } from "@dreamy-ui/react";
 import { Flex, Icon } from "@dreamy-ui/react/rsc";
 import { useLocation } from "@remix-run/react";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "motion/react";
 import { memo, useState } from "react";
 import { BiChevronRight } from "react-icons/bi";
 import { useSections } from "~/routes/docs";

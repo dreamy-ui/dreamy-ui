@@ -1,6 +1,6 @@
 import { MotionFlex, TRANSITION_EASINGS } from "@dreamy-ui/react";
 import { Box, Flex, HStack, Heading, Icon, Link, Text } from "@dreamy-ui/react/rsc";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "motion/react";
 import { useState } from "react";
 import { BsGithub } from "react-icons/bs";
 import { FaDiscord } from "react-icons/fa";

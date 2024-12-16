@@ -1,7 +1,7 @@
 import { useLatestRef } from "@/hooks/use-latest-ref";
 import { getEventPoint, isMultiTouchEvent } from "@/utils/event";
-import { addPointerEvent } from "framer-motion";
 import sync, { cancelSync, getFrameData } from "framesync";
+import { addPointerEvent } from "motion/react";
 import { useEffect, useRef } from "react";
 
 export interface UsePanEventProps {
@@ -79,7 +79,7 @@ export class PanEvent {
 
     private handlers: Partial<PanEventHandlers> = {};
 
-    private removeListeners: Function = () => { };
+    private removeListeners: Function = () => {};
 
     /**
      * Minimal pan distance required before recognizing the pan.
@@ -105,7 +105,7 @@ export class PanEvent {
         try {
             event.stopPropagation();
             // event.preventDefault();
-        } catch (_) { }
+        } catch (_) {}
 
         // get and save the `pointerdown` event info in history
         // we'll use it to compute the `offset`

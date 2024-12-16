@@ -1,6 +1,6 @@
 import { FocusLock } from "@/components/focus-lock";
 import { useModalContext } from "@/components/modal/modal-root";
-import { usePresence } from "framer-motion";
+import { usePresence } from "motion/react";
 import { useEffect } from "react";
 import { RemoveScroll } from "react-remove-scroll";
 import { useModalManager } from "./modal-manager";
