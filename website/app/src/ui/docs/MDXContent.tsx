@@ -113,6 +113,7 @@ import { ControlledTabs, VariantTabs } from "./components/Tabs";
 import { CheckboxCardGroupControl, CheckboxGroupControl } from "./components/checkboxes";
 import { AsyncSelect, ControlledSelect } from "./components/selects";
 import { ControlledSlider, MaxMinSlider } from "./components/sliders";
+import { Collapsed, Scaled } from "./components/transitions";
 
 interface Props {
     mdxContent: MdxContent;
@@ -239,7 +240,9 @@ const DreamComponents = {
     PopoverCloseButton,
     PopoverHeader,
     PopoverBody,
-    PopoverFooter
+    PopoverFooter,
+    Collapsed,
+    Scaled
 };
 
 function Wrapper({ children }: PropsWithChildren) {

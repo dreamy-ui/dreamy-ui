@@ -1,6 +1,10 @@
 import { useMotionVariants } from "@/provider";
 import { css, cx } from "@dreamy-ui/system/css";
-import { AnimatePresence, type Variants as _Variants } from "motion/react";
+import {
+    AnimatePresence,
+    type AnimatePresenceProps,
+    type Variants as _Variants
+} from "motion/react";
 import { forwardRef, useMemo } from "react";
 import { MotionBox, type MotionBoxProps } from "../box/motion-box";
 import type { WithTransitionConfig } from "./transition-utils";
@@ -21,11 +25,15 @@ export interface CollapseOptions {
      * @default "auto"
      */
     endingHeight?: number | string;
+    /**
+     * Props to pass to the AnimatePresence component
+     */
+    animatePresenceProps?: AnimatePresenceProps;
 }
 
 export type ICollapse = CollapseProps;
 
-export interface CollapseProps extends WithTransitionConfig<MotionBoxProps>, CollapseOptions { }
+export interface CollapseProps extends WithTransitionConfig<MotionBoxProps>, CollapseOptions {}
 
 /**
  * Collapse component.
@@ -43,6 +51,7 @@ export const Collapse = forwardRef<HTMLDivElement, CollapseProps>((props, ref) =
         className,
         transition,
         transitionEnd,
+        animatePresenceProps,
         ...rest
     } = props;
 
@@ -74,6 +83,7 @@ export const Collapse = forwardRef<HTMLDivElement, CollapseProps>((props, ref) =
         <AnimatePresence
             initial={false}
             custom={custom}
+            {...animatePresenceProps}
         >
             {show && (
                 <MotionBox

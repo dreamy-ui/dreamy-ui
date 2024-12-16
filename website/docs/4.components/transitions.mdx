@@ -1,0 +1,141 @@
+---
+title: Transitions
+description: Transitions allow for easy way to animate stuff.
+isServerComponent: false
+source: /packages/react/src/components/transitions/transitions.tsx
+---
+
+## Import
+
+- `Collapse` - The Collapse component, that animates the height of the content.
+- `Scale` - The Scale component, that scales the element.
+
+```tsx
+import { Collapse, Scale } from "@dreamy-ui/react";
+```
+
+## Collapse
+
+Base usage of the Collapse component.
+
+<Wrapper>
+    <Collapsed />
+</Wrapper>
+
+```tsx
+export function Collapsed() {
+    const [isOpen, setIsOpen] = useState(false);
+
+    return (
+        <>
+            <Button
+                w={"min-content"}
+                onClick={() => setIsOpen(!isOpen)}
+            >
+                Toggle
+            </Button>
+            <Collapse
+                w={"full"}
+                in={isOpen}
+            >
+                <Box
+                    bg={"primary"}
+                    color={"white"}
+                    p={4}
+                    rounded={"md"}
+                    w={"full"}
+                >
+                    Hello
+                </Box>
+            </Collapse>
+        </>
+    );
+}
+```
+
+## Scale
+
+Base usage of the Scale component.
+
+<Wrapper>
+    <Scaled />
+</Wrapper>
+
+```tsx
+export function Scaled() {
+    const [isOpen, setIsOpen] = useState(false);
+
+    return (
+        <>
+            <Button
+                w={"min-content"}
+                onClick={() => setIsOpen(!isOpen)}
+            >
+                Toggle
+            </Button>
+            <Scale
+                w={"full"}
+                in={isOpen}
+            >
+                <Box
+                    bg={"primary"}
+                    color={"white"}
+                    p={4}
+                    rounded={"md"}
+                    w={"full"}
+                >
+                    Hello
+                </Box>
+            </Scale>
+        </>
+    );
+}
+```
+
+### Starting and ending height
+
+You can set the starting and ending height of the content by setting the `startingHeight` and `endingHeight` props.
+
+<Wrapper>
+    <Collapsed startingHeight={10} endingHeight={80} />
+</Wrapper>
+
+```tsx
+<Collapsed startingHeight={10} endingHeight={80} />
+```
+
+### Animate Opacity
+
+You can disable the opacity animation by setting the `animateOpacity` prop to `false`. This option works for both the Collapse and Scale components.
+
+<Wrapper>
+    <Collapsed animateOpacity={false} />
+</Wrapper>
+
+```tsx
+<Collapsed animateOpacity={false} />
+```
+
+### Unmount on exit
+
+You can unmount component on exit animation by setting the `unmountOnExit` prop to `true`. This option works for both the Collapse and Scale components.
+
+<Wrapper>
+    <Collapsed unmountOnExit />
+</Wrapper>
+
+```tsx
+<Collapsed unmountOnExit />
+```
+
+### Initial scale
+
+You can set the initial scale of the content by setting the `initialScale` prop. This option works for only for Scale component.
+
+<Wrapper>
+    <Scaled initialScale={0} />
+</Wrapper>
+
+```tsx
+<Scaled initialScale={0} />
+```
