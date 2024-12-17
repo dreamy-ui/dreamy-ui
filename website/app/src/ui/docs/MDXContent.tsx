@@ -114,6 +114,7 @@ import { CheckboxCardGroupControl, CheckboxGroupControl } from "./components/che
 import { AsyncSelect, ControlledSelect } from "./components/selects";
 import { ControlledSlider, MaxMinSlider } from "./components/sliders";
 import { Collapsed, Scaled } from "./components/transitions";
+import { ControlledAccordion } from "./components/accordions";
 
 interface Props {
     mdxContent: MdxContent;
@@ -242,7 +243,8 @@ const DreamComponents = {
     PopoverBody,
     PopoverFooter,
     Collapsed,
-    Scaled
+    Scaled,
+    ControlledAccordion
 };
 
 function Wrapper({ children }: PropsWithChildren) {
