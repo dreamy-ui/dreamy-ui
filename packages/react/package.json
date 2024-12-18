@@ -1,6 +1,6 @@
 {
 	"name": "@dreamy-ui/react",
-	"version": "0.0.4",
+	"version": "0.1.0",
 	"description": "Dreamy UI library for React",
 	"type": "module",
 	"keywords": [

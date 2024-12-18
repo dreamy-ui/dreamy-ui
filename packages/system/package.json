@@ -1,9 +1,12 @@
 {
 	"name": "@dreamy-ui/system",
-	"version": "0.0.4",
+	"version": "0.1.0",
 	"description": "A design system for Dreamy UI React component library",
 	"type": "module",
-	"keywords": ["ui", "design-system"],
+	"keywords": [
+		"ui",
+		"design-system"
+	],
 	"author": "imexoodeex",
 	"license": "MIT",
 	"publishConfig": {
@@ -19,7 +22,10 @@
 		"dev": "concurrently \"panda codegen --watch\" \"tsup --watch\"",
 		"typecheck": "tsc --noEmit"
 	},
-	"files": ["/dist", "/styled-system"],
+	"files": [
+		"/dist",
+		"/styled-system"
+	],
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
