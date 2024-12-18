@@ -12,7 +12,7 @@ import type { SliderVariantProps } from "@dreamy-ui/system/recipes";
 import { useCallback, useId, useMemo, useRef, useState } from "react";
 import { useFieldContext } from "../field/field-root";
 
-interface SliderContext extends Omit<UseSliderReturn, "getInputProps" | "getRootProps"> {}
+interface SliderContext extends Omit<UseSliderReturn, "getRootProps" | "getInputProps"> {}
 
 export const [SliderProvider, useSliderContext] = createContext<SliderContext>({
     name: "SliderContext",
@@ -24,7 +24,6 @@ export interface UseSliderProps
     extends SliderVariantProps,
         Omit<HTMLDreamProps<"div">, "id" | "name" | "onChange"> {
     ref?: ReactRef<HTMLDivElement>;
-    as?: React.ElementType;
     /**
      * The minimum allowed value of the slider. Cannot be greater than max.
      * @default 0
@@ -68,7 +67,11 @@ export interface UseSliderProps
     /**
      * Function called whenever the slider value changes  (by dragging or clicking)
      */
-    onChange?(value: number): void;
+    onChange?(event: React.ChangeEvent<HTMLInputElement>): void;
+    /**
+     * Function called whenever the slider value changes with value only (by dragging or clicking)
+     */
+    onChangeValue?(value: number): void;
     /**
      * The base `id` to use for the slider and its components
      */
@@ -121,7 +124,7 @@ const BORDER_SIZE = 28 / 2;
 export function useSlider(props: UseSliderProps) {
     const {
         ref,
-        as,
+        id,
         name,
         value: valueProp,
         max = 100,
@@ -133,6 +136,7 @@ export function useSlider(props: UseSliderProps) {
         defaultValue,
         orientation = "horizontal",
         onChange,
+        onChangeValue,
         onChangeStart: onChangeStartProp,
         onChangeEnd: onChangeEndProp,
         focusThumbOnChange = true,
@@ -144,7 +148,6 @@ export function useSlider(props: UseSliderProps) {
     } = props;
 
     const field = useFieldContext();
-    console.log("field", field);
 
     const onChangeStart = useCallbackRef(onChangeStartProp);
     const onChangeEnd = useCallbackRef(onChangeEndProp);
@@ -155,7 +158,7 @@ export function useSlider(props: UseSliderProps) {
     const [computedValue, setValue] = useControllableState({
         value: valueProp,
         defaultValue: defaultValue ?? getDefaultValue(min, max),
-        onChange
+        onChange: onChangeValue
     });
 
     const [isDragging, setDragging] = useState(false);
@@ -512,6 +515,13 @@ export function useSlider(props: UseSliderProps) {
         [min, max, value, orientation, isReversed, isDisabled]
     );
 
+    const getInputProps: PropGetter = useCallback(
+        (props = {}, ref = null) => {
+            return { ...props, ref, value, name, id, type: "range" };
+        },
+        [value, name, id]
+    );
+
     return {
         value,
         trackValue,
@@ -527,7 +537,8 @@ export function useSlider(props: UseSliderProps) {
         getTrackProps,
         getInnerTrackProps,
         getThumbProps,
-        getMarkerProps
+        getMarkerProps,
+        getInputProps
     };
 }
 

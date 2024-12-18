@@ -21,6 +21,8 @@ import {
     ModalFooter,
     ModalHeader,
     ModalOverlay,
+    PinInput,
+    PinInputField,
     Radio,
     RadioGroup,
     Select,
@@ -68,8 +70,10 @@ import { IoAdd, IoRemove } from "react-icons/io5";
 export async function action({ request }: ActionFunctionArgs) {
     const formData = await request.formData();
     const value = formData.get("test-select");
+    const sliderValue = formData.get("slider");
 
     console.log("value", value);
+    console.log("sliderValue", sliderValue);
 
     return {
         success: true
@@ -85,11 +89,25 @@ export default function Test() {
 
     const navigation = useNavigation();
 
+    const [pin, setPin] = useState("123");
+
     return (
         <Flex
             col
             gap={10}
         >
+            <Checkbox onChangeValue={(e) => console.log(e)}>Hello</Checkbox>
+
+            <PinInput
+                value={pin}
+                onChange={setPin}
+                stacked
+            >
+                <PinInputField />
+                <PinInputField />
+                <PinInputField />
+            </PinInput>
+
             <Form method="post">
                 <Select
                     selectedItemBackgroundScheme={"none"}
@@ -108,6 +126,15 @@ export default function Test() {
                         ))}
                     </SelectContent>
                 </Select>
+                <Slider
+                    name={"slider"}
+                    defaultValue={25}
+                >
+                    <SliderTrack>
+                        <SliderFilledTrack />
+                        <SliderThumb />
+                    </SliderTrack>
+                </Slider>
                 <Button
                     type="submit"
                     color={"primary"}
@@ -661,7 +688,7 @@ function ReversedSliders() {
                 h={"200px"}
                 isReversed
                 value={reversedValue}
-                onChange={setReversedValue}
+                onChangeValue={setReversedValue}
             >
                 <SliderTrack>
                     <SliderFilledTrack />
@@ -676,7 +703,7 @@ function ReversedSliders() {
                 // step={20}
                 isReversed
                 value={reversedValue}
-                onChange={setReversedValue}
+                onChangeValue={setReversedValue}
             >
                 <SliderTrack>
                     <SliderFilledTrack />

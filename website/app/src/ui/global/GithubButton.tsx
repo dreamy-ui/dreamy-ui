@@ -3,6 +3,7 @@ import { Icon } from "@dreamy-ui/react/rsc";
 import { AnimatePresence } from "motion/react";
 import { useState } from "react";
 import { FaGithub, FaStar } from "react-icons/fa";
+import { Link } from "./Link";
 
 export default function GithubButton() {
     const [isHovered, setIsHovered] = useState(false);
@@ -11,12 +12,12 @@ export default function GithubButton() {
         <IconButton
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
-            // asComp={
-            //     <Link
-            //         isExternal
-            //         to={`https://github.com/${import.meta.env.VITE_SOURCE_REPO}`}
-            //     />
-            // }
+            asComp={
+                <Link
+                    isExternal
+                    to={`https://github.com/${import.meta.env.VITE_SOURCE_REPO}`}
+                />
+            }
             display={{
                 base: "none",
                 md: "flex"

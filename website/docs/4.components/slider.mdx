@@ -60,7 +60,7 @@ function MaxMinSlider() {
                 max={50}
                 step={10}
                 value={value}
-                onChange={setValue}
+                onChangeValue={setValue}
                 >
                 <SliderTrack>
                     <SliderFilledTrack />
@@ -185,7 +185,7 @@ function ControlledSlider() {
                 Slider value: {value}
             </Text>
 
-            <Slider value={value} onChange={setValue}>
+            <Slider value={value} onChangeValue={setValue}>
                 <SliderTrack>
                     <SliderFilledTrack />
                     <SliderThumb />

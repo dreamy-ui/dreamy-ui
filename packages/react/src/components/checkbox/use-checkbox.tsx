@@ -38,6 +38,10 @@ interface Props extends HTMLDreamProps<"input">, IconCustomProps {
      * The icon to be displayed when the checkbox is checked.
      */
     icon?: ReactNode | ((props: CheckboxIconProps) => ReactNode);
+    /**
+     * The callback function with value, instead of event, when the checkbox is changed.
+     */
+    onChangeValue?: (value: boolean) => void;
 }
 
 export interface UseCheckboxProps extends Props, UserFeedbackProps {
@@ -82,6 +86,7 @@ export function useCheckbox(props: UseCheckboxProps = {}) {
         isRequired = isRequiredField,
         defaultChecked,
         onChange,
+        onChangeValue,
         tabIndex,
         "aria-label": ariaLabel,
         "aria-labelledby": ariaLabelledBy,
@@ -137,8 +142,17 @@ export function useCheckbox(props: UseCheckboxProps = {}) {
             setActive(false);
 
             onChangeProp?.(event);
+            onChangeValue?.(event.target.checked);
         },
-        [isReadOnly, isDisabled, isChecked, isControlled, isIndeterminate, onChangeProp]
+        [
+            isReadOnly,
+            isDisabled,
+            isChecked,
+            isControlled,
+            isIndeterminate,
+            onChangeProp,
+            onChangeValue
+        ]
     );
 
     const getRootProps: PropGetter = useCallback(() => {

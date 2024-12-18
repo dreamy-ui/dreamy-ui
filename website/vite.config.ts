@@ -10,7 +10,6 @@ import tsconfigPaths from "vite-tsconfig-paths";
 // import Inspect from "vite-plugin-inspect";
 
 declare module "@remix-run/node" {
-    // or cloudflare, deno, etc.
     interface Future {
         v3_singleFetch: true;
     }
@@ -39,7 +38,7 @@ const reactCompilerConfig = {
 
 export default defineConfig({
     build: {
-        minify: true,
+        minify: true
     },
     plugins: [
         // Inspect({
@@ -83,6 +82,6 @@ export default defineConfig({
         exclude: ["@dreamy-ui/system", "@dreamy-ui/system/*", "@dreamy-ui/react"]
     },
     esbuild: {
-        exclude: ["@dreamy-ui/system", "@dreamy-ui/system/*", "@dreamy-ui/react"],
+        exclude: ["@dreamy-ui/system", "@dreamy-ui/system/*", "@dreamy-ui/react"]
     }
 });

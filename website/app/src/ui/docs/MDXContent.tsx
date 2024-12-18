@@ -109,12 +109,13 @@ import {
     PlacementPopovers
 } from "~/src/ui/docs/components/popovers";
 import { Link } from "~/src/ui/global/Link";
-import { ControlledTabs, VariantTabs } from "./components/Tabs";
+import { ControlledAccordion } from "./components/accordions";
 import { CheckboxCardGroupControl, CheckboxGroupControl } from "./components/checkboxes";
+import { ControlledPinInput } from "./components/inputs";
 import { AsyncSelect, ControlledSelect } from "./components/selects";
 import { ControlledSlider, MaxMinSlider } from "./components/sliders";
+import { ControlledTabs, VariantTabs } from "./components/tabs";
 import { Collapsed, Scaled } from "./components/transitions";
-import { ControlledAccordion } from "./components/accordions";
 
 interface Props {
     mdxContent: MdxContent;
@@ -244,7 +245,8 @@ const DreamComponents = {
     PopoverFooter,
     Collapsed,
     Scaled,
-    ControlledAccordion
+    ControlledAccordion,
+    ControlledPinInput
 };
 
 function Wrapper({ children }: PropsWithChildren) {

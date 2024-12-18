@@ -35,6 +35,30 @@ import { PinInput, PinInputField } from "@dreamy-ui/react";
 </PinInput>
 ```
 
+### Controlled
+
+<Wrapper>
+  <ControlledPinInput />
+</Wrapper>
+
+```tsx
+export function ControlledPinInput() {
+    const [pin, setPin] = useState("69");
+
+    return (
+        <PinInput
+            value={pin}
+            onChange={setPin}
+            stacked
+        >
+            <PinInputField />
+            <PinInputField />
+            <PinInputField />
+        </PinInput>
+    );
+}
+```
+
 ### Pin Input Size
 
 <Wrapper> 

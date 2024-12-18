@@ -14,7 +14,7 @@ export function MaxMinSlider() {
                 max={50}
                 step={10}
                 value={value}
-                onChange={setValue}
+                onChangeValue={setValue}
             >
                 <SliderTrack>
                     <SliderFilledTrack />
@@ -34,7 +34,7 @@ export function ControlledSlider() {
 
             <Slider
                 value={value}
-                onChange={setValue}
+                onChangeValue={setValue}
             >
                 <SliderTrack>
                     <SliderFilledTrack />
