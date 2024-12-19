@@ -13,6 +13,6 @@ export default defineConfig((options) => ({
     bundle: true,
     splitting: false,
     outDir: "dist",
-    external: ["react", "react-dom", "@pandacss/dev", "@dreamy-ui/system", "motion/react"],
+    external: ["react", "react-dom", "@pandacss/dev", "@dreamy-ui/system", "motion"],
     ...options
 }));

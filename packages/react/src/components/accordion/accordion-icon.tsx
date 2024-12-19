@@ -1,11 +1,10 @@
 import type { HTMLDreamProps } from "@/utils/types";
-import { styled } from "@dreamy-ui/system/jsx";
 import { forwardRef } from "react";
-import { dream } from "../factory";
+import { dreamy } from "../factory";
 
 export interface AccordionIconProps extends HTMLDreamProps<"svg"> {}
 
-const StyledIcon = styled(dream.svg);
+const StyledIcon = dreamy.svg;
 
 export const AccordionIconBase = forwardRef<SVGSVGElement, AccordionIconProps>(
     function AccordionIcon(props, ref) {

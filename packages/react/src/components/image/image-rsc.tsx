@@ -1,15 +1,14 @@
 import { Box } from "@/components/box/box";
 import { ariaAttr } from "@/utils/attr";
 import { objectToDeps } from "@/utils/object";
-import { styled } from "@dreamy-ui/system/jsx";
 import { image } from "@dreamy-ui/system/recipes";
 import { cloneElement, forwardRef, useMemo } from "react";
-import { dream } from "../factory";
+import { dreamy } from "../factory";
 import type { ImageProps } from "./image";
 
 export interface ImageRSCProps extends Omit<ImageProps, "onError" | "onLoad" | "fallbackSrc"> {}
 
-const StyledImage = styled(dream.img, image);
+const StyledImage = dreamy("img", image);
 
 /**
  * RSC compatible version of Image component.
@@ -68,7 +67,7 @@ export const ImageRSC = forwardRef<HTMLImageElement, ImageRSCProps>(function Ima
                 {blurShadow &&
                     cloneElement(img, {
                         "data-part": "blurred",
-                        className: shared.className?.replace("Dream-image", ""),
+                        className: shared.className?.replace("dream-image", ""),
                         "aria-hidden": ariaAttr(true)
                     })}
             </Box>

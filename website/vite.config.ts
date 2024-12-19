@@ -33,7 +33,7 @@ sourceMapSupport.install({
 });
 
 const reactCompilerConfig = {
-    target: "18"
+    target: "19"
 };
 
 export default defineConfig({

@@ -1,7 +1,6 @@
 import type { HTMLDreamProps } from "@/utils/types";
-import { styled } from "@dreamy-ui/system/jsx";
 import { forwardRef } from "react";
-import { dream } from "../factory";
+import { dreamy } from "../factory";
 import type { IconProps } from "../icon";
 import { AccordionIcon } from "./accordion";
 import { useAccordionItemContext } from "./accordion-context";
@@ -22,7 +21,7 @@ export interface AccordionTriggerProps extends HTMLDreamProps<"button"> {
     iconProps?: IconProps;
 }
 
-const StyledTrigger = styled(dream.button);
+const StyledTrigger = dreamy.button;
 
 /**
  * AccordionButton is used expands and collapses an accordion item.

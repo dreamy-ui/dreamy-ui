@@ -13,7 +13,7 @@ export interface UsePanEventProps {
     threshold?: number;
 }
 
-export function usePanEvent(ref: React.RefObject<HTMLElement>, options: UsePanEventProps) {
+export function usePanEvent(ref: React.RefObject<HTMLElement | null>, options: UsePanEventProps) {
     const { onPan, onPanStart, onPanEnd, onPanSessionStart, onPanSessionEnd, threshold } = options;
 
     const hasPanEvents = Boolean(

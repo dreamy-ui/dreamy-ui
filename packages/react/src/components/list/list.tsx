@@ -1,6 +1,5 @@
-import { dream } from "@/components/factory";
+import { dreamy } from "@/components/factory";
 import type { HTMLDreamProps } from "@/utils/types";
-import { styled } from "@dreamy-ui/system/jsx";
 import { type ListVariantProps, list } from "@dreamy-ui/system/recipes";
 import { forwardRef } from "react";
 
@@ -10,7 +9,7 @@ export interface ListProps extends HTMLDreamProps<"ol">, ListVariantProps {
     unordered?: boolean;
 }
 
-const StyledList = styled(dream.ol, list);
+const StyledList = dreamy("ol", list);
 
 /**
  * List component
@@ -34,7 +33,7 @@ export const List = forwardRef<HTMLOListElement | HTMLUListElement, ListProps>((
 
 export interface ListItemProps extends HTMLDreamProps<"li"> {}
 
-const StyledListItem = styled(dream.li);
+const StyledListItem = dreamy.li;
 
 export const ListItem = forwardRef<HTMLLIElement, ListItemProps>((props, ref) => {
     return (

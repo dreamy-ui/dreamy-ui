@@ -1,13 +1,12 @@
-import { styled } from "@dreamy-ui/system/jsx";
 import { type RadioVariantProps, radio } from "@dreamy-ui/system/recipes";
 import { forwardRef } from "react";
-import { dream } from "../factory";
+import { dreamy } from "../factory";
 import { VisuallyHiddenInput } from "../visually-hidden";
 import { type UseRadioProps, useRadio } from "./use-radio";
 
 export interface RadioProps extends UseRadioProps, RadioVariantProps {}
 
-const StyledRadio = styled(dream.div, radio);
+const StyledRadio = dreamy("div", radio);
 
 /**
  * Radio component

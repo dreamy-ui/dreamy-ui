@@ -1,12 +1,11 @@
-import { dream } from "@/components/factory";
-import { styled } from "@dreamy-ui/system/jsx";
 import { input } from "@dreamy-ui/system/recipes";
 import { forwardRef } from "react";
+import { dreamy } from "../factory";
 import type { InputProps } from "./input";
 
 export interface InputRSCProps extends Omit<InputProps, "onChange" | "onFocus" | "onBlur"> {}
 
-const StyledInput = styled(dream.input, input);
+const StyledInput = dreamy("input", input);
 
 /**
  * RSC compatible version of Input component.

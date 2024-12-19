@@ -1,8 +1,7 @@
 import { Box, type BoxProps } from "@/components/box/box";
-import { styled } from "@dreamy-ui/system/jsx";
 import { type SpinnerVariantProps, spinner } from "@dreamy-ui/system/recipes";
 import { forwardRef } from "react";
-import { dream } from "../factory";
+import { dreamy } from "../factory";
 
 export interface SpinnerProps extends BoxProps, SpinnerVariantProps {
     /**
@@ -31,7 +30,7 @@ export interface SpinnerProps extends BoxProps, SpinnerVariantProps {
     labelProps?: BoxProps;
 }
 
-const StyledSpinner = styled(dream.div, spinner);
+const StyledSpinner = dreamy("div", spinner);
 
 /**
  * Spinner indicates a loading state for a user.

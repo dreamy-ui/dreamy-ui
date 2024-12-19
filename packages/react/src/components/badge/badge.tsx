@@ -1,12 +1,11 @@
-import { dream } from "@/components/factory";
 import type { HTMLDreamProps } from "@/utils/types";
-import { styled } from "@dreamy-ui/system/jsx";
 import { type BadgeVariantProps, badge } from "@dreamy-ui/system/recipes";
 import { forwardRef } from "react";
+import { dreamy } from "../factory";
 
 export interface BadgeProps extends HTMLDreamProps<"div">, BadgeVariantProps {}
 
-const DreamBadge = styled(dream.div, badge);
+const DreamBadge = dreamy("div", badge);
 
 /**
  * Badge component

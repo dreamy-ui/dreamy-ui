@@ -1,12 +1,11 @@
-import { styled } from "@dreamy-ui/system/jsx";
 import { textarea } from "@dreamy-ui/system/recipes";
 import { forwardRef } from "react";
-import { dream } from "../factory";
+import { dreamy } from "../factory";
 import type { TextareaNoAutoSizeProps } from "./textarea";
 
 export type TextareaRSCProps = Omit<TextareaNoAutoSizeProps, "onChange" | "onBlur" | "onFocus">;
 
-const StyledTextareaNoAutoSize = styled(dream.textarea, textarea);
+const StyledTextareaNoAutoSize = dreamy("textarea", textarea);
 
 /**
  * TextareaRSC component.

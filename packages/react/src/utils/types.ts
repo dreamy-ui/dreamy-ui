@@ -1,4 +1,5 @@
 import type { Assign, DistributiveOmit, JsxStyleProps } from "@dreamy-ui/system/types";
+import type React from "react";
 import type { ComponentPropsWithoutRef, ElementType, FunctionComponent } from "react";
 
 interface HtmlProps {
@@ -43,10 +44,10 @@ export interface FocusableElement {
 
 export type Dict<T = any> = Record<string, T>;
 
-export type DOMElements = keyof JSX.IntrinsicElements;
+export type DOMElements = keyof React.JSX.IntrinsicElements;
 
 export type HTMLDreamComponents = {
-    [Tag in DOMElements]: DreamComponent<Tag, {}>;
+    [Tag in DOMElements]: DreamComponent<React.ComponentType<Tag>, {}>;
 };
 
 export type DreamComponent<T extends ElementType, P extends Dict = {}> = FunctionComponent<

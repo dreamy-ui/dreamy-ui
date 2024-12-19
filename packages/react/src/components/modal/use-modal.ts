@@ -83,7 +83,7 @@ export function useModal(props: UseModalProps) {
      *
      * @see https://developer.paciellogroup.com/blog/2018/06/the-current-state-of-modal-dialog-accessibility/
      */
-    useAriaHidden(dialogRef, isOpen && useInert);
+    useAriaHidden(dialogRef as any, isOpen && useInert);
 
     /**
      * Hook used to manage multiple or nested modals

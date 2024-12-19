@@ -1,12 +1,11 @@
-import { dream } from "@/components/factory";
+import { dreamy } from "@/components/factory";
 import type { HTMLDreamProps } from "@/utils/types";
-import { styled } from "@dreamy-ui/system/jsx";
 import { type KbdVariantProps, kbd } from "@dreamy-ui/system/recipes";
 import { forwardRef } from "react";
 
 export interface KbdProps extends HTMLDreamProps<"div">, KbdVariantProps {}
 
-const DreamKbd = styled(dream.div, kbd);
+const DreamKbd = dreamy("div", kbd);
 
 /**
  * Kbd component

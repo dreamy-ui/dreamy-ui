@@ -2,12 +2,11 @@
 
 import { ButtonIcon } from "@/components/button/button-icon";
 import { ButtonSpinner, type ButtonSpinnerOptions } from "@/components/button/button-spinner";
-import { dream } from "@/components/factory";
+import { dreamy } from "@/components/factory";
 import { Ripple } from "@/components/ripple/ripple";
 import { useRipple } from "@/components/ripple/use-ripple";
 import { nextTick } from "@/utils/ticks";
 import type { HTMLDreamProps } from "@/utils/types";
-import { styled } from "@dreamy-ui/system/jsx";
 import { type ButtonVariantProps, button } from "@dreamy-ui/system/recipes";
 import { forwardRef, useCallback } from "react";
 
@@ -47,7 +46,7 @@ interface Props extends UniversalButtonProps {
 
 export interface ButtonProps extends HTMLDreamProps<"button">, ButtonVariantProps, Props {}
 
-const StyledButton = styled(dream.button, button);
+const StyledButton = dreamy("button", button);
 
 /**
  * Button component

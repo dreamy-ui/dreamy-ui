@@ -27,7 +27,7 @@ class ModalManager {
 
 export const modalManager = new ModalManager();
 
-export function useModalManager(ref: RefObject<HTMLElement>, isOpen?: boolean) {
+export function useModalManager(ref: RefObject<HTMLElement | null>, isOpen?: boolean) {
     const [index, setIndex] = useState(0);
 
     useEffect(() => {

@@ -8,22 +8,22 @@ import type React from "react";
 import { forwardRef } from "react";
 import { usePopoverContext } from "./popover-context";
 
-type HTMLMotionDreamProps<T extends keyof React.ReactHTML> = Omit<
+type HTMLMotionDreamProps<T extends keyof HTMLElementTagNameMap> = Omit<
     HTMLDreamProps<T>,
     keyof HTMLMotionProps<T>
 > & {
     children?: React.ReactNode;
 } & Omit<
-    HTMLMotionProps<T>,
-    | "style"
-    | "onDrag"
-    | "onDragEnd"
-    | "onDragStart"
-    | "onAnimationStart"
-    | "variants"
-    | "transition"
-    | "children"
->;
+        HTMLMotionProps<T>,
+        | "style"
+        | "onDrag"
+        | "onDragEnd"
+        | "onDragStart"
+        | "onAnimationStart"
+        | "variants"
+        | "transition"
+        | "children"
+    >;
 
 export interface PopoverTransitionProps extends HTMLMotionDreamProps<"section"> {
     /**

@@ -1,13 +1,12 @@
-import { dream } from "@/components/factory";
+import { dreamy } from "@/components/factory";
 import { splitProps } from "@/utils";
 import type { HTMLDreamProps } from "@/utils/types";
-import { styled } from "@dreamy-ui/system/jsx";
 import { type TextProperties, text } from "@dreamy-ui/system/patterns";
 import { forwardRef } from "react";
 
 export interface HeadingProps extends HTMLDreamProps<"h3">, TextProperties {}
 
-const StyledHeading = styled(dream.h3);
+const StyledHeading = dreamy.h3;
 
 /**
  * Heading component

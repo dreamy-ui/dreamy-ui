@@ -1,12 +1,11 @@
 "use client";
 
-import { dream } from "@/components/factory";
 import { useField } from "@/components/field/use-field";
 import { useInputGroup } from "@/components/input/input-group";
 import type { HTMLDreamProps } from "@/utils/types";
-import { styled } from "@dreamy-ui/system/jsx";
 import { type InputVariantProps, input } from "@dreamy-ui/system/recipes";
 import { forwardRef, useMemo } from "react";
+import { dreamy } from "../factory";
 
 export interface UserFeedbackProps {
     /**
@@ -43,7 +42,7 @@ export interface UserFeedbackProps {
 
 export interface InputProps extends HTMLDreamProps<"input">, InputVariantProps, UserFeedbackProps {}
 
-const StyledInput = styled(dream.input, input);
+const StyledInput = dreamy("input", input);
 
 /**
  * Input component

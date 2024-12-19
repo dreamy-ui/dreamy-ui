@@ -1,14 +1,13 @@
-import { styled } from "@dreamy-ui/system/jsx";
 import { snippet } from "@dreamy-ui/system/recipes";
 import { type SVGProps, cloneElement, forwardRef, useMemo } from "react";
 import { IconButton } from "../button";
-import { dream } from "../factory";
+import { dreamy } from "../factory";
 import { Tooltip } from "../tooltip";
 import { type UseSnippetProps, useSnippet } from "./use-snippet";
 
 export interface SnippetProps extends UseSnippetProps {}
 
-const StyledSnippet = styled(dream.div, snippet);
+const StyledSnippet = dreamy("div", snippet);
 
 /**
  * Snippet component. Use with `useSnippet` hook.

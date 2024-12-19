@@ -9,12 +9,12 @@ import { useEventListener } from "./use-event-listener";
 import { useUpdateEffect } from "./use-update-effect";
 
 export interface UseFocusOnHideOptions {
-    focusRef: RefObject<FocusableElement>;
+    focusRef: RefObject<FocusableElement | null>;
     shouldFocus?: boolean;
     visible?: boolean;
 }
 
-function preventReturnFocus(containerRef: React.RefObject<HTMLElement>) {
+function preventReturnFocus(containerRef: React.RefObject<HTMLElement | null>) {
     const el = containerRef.current;
     if (!el) return false;
 
@@ -35,7 +35,7 @@ function preventReturnFocus(containerRef: React.RefObject<HTMLElement>) {
  * element in the viewport.
  */
 export function useFocusOnHide(
-    containerRef: RefObject<HTMLElement>,
+    containerRef: RefObject<HTMLElement | null>,
     options: UseFocusOnHideOptions
 ) {
     const { shouldFocus: shouldFocusProp, visible, focusRef } = options;
@@ -68,7 +68,7 @@ export interface UseFocusOnShowOptions {
     visible?: boolean;
     shouldFocus?: boolean;
     preventScroll?: boolean;
-    focusRef?: React.RefObject<FocusableElement>;
+    focusRef?: React.RefObject<FocusableElement | null>;
 }
 
 const defaultOptions: UseFocusOnShowOptions = {
@@ -77,7 +77,7 @@ const defaultOptions: UseFocusOnShowOptions = {
 };
 
 export function useFocusOnShow<T extends HTMLElement>(
-    target: React.RefObject<T> | T,
+    target: React.RefObject<T | null> | T | null,
     options = defaultOptions
 ) {
     const { focusRef, preventScroll, shouldFocus, visible } = options;

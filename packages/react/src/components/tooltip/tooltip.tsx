@@ -11,7 +11,7 @@ import { Children, Fragment, cloneElement, forwardRef, useMemo } from "react";
 
 export interface TooltipProps
     extends Omit<HTMLDreamProps<"div">, "direction" | "offset" | "content">,
-    Partial<UseTooltipProps> {
+        Partial<UseTooltipProps> {
     /**
      * The React component to use as the
      * trigger for the tooltip
@@ -103,7 +103,7 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>((props, ref) => 
         const child = Children.only(children) as React.ReactElement & {
             ref?: React.Ref<any>;
         };
-        return cloneElement(child, tooltip.getTriggerProps(child.props, child.ref));
+        return cloneElement(child, tooltip.getTriggerProps(child.props as object, child.ref));
     }, [shouldWrap, children, tooltip.getTriggerProps]);
 
     const hasAriaLabel = !!ariaLabel;

@@ -1,7 +1,6 @@
-import { dream } from "@/components/factory";
+import { dreamy } from "@/components/factory";
 import { splitProps } from "@/utils";
 import type { HTMLDreamProps } from "@/utils/types";
-import { styled } from "@dreamy-ui/system/jsx";
 import {
     type GridItemProperties,
     type GridProperties,
@@ -14,7 +13,7 @@ export interface GridProps
     extends Omit<HTMLDreamProps<"div">, keyof GridProperties>,
         GridProperties {}
 
-const DreamGrid = styled(dream.div);
+const DreamGrid = dreamy.div;
 
 /**
  * Flex component

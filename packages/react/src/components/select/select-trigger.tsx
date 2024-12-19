@@ -3,15 +3,14 @@ import { SelectIndicator, SelectIndicatorGroup } from "@/components/select/selec
 import { useSelectContext } from "@/components/select/select-context";
 import { useSafeLayoutEffect } from "@/hooks";
 import type { HTMLDreamProps } from "@/utils/types";
-import { styled } from "@dreamy-ui/system/jsx";
 import { forwardRef, useState } from "react";
-import { dream } from "../factory";
+import { dreamy } from "../factory";
 
 export interface SelectTriggerProps extends HTMLDreamProps<"button"> {
     placeholder?: string;
 }
 
-const StyledTrigger = styled(dream.button);
+const StyledTrigger = dreamy.button;
 
 export const SelectTriggerBase = forwardRef<HTMLButtonElement, SelectTriggerProps>(
     function SelectTrigger({ children, placeholder, ...rest }, ref) {

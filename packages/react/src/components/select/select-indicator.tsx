@@ -1,9 +1,8 @@
-import { dream } from "@/components/factory";
+import { dreamy } from "@/components/factory";
 import type { IconProps } from "@/rsc";
-import { styled } from "@dreamy-ui/system/jsx";
 import { forwardRef } from "react";
 
-const StyledIcon = styled(dream.svg);
+const StyledIcon = dreamy.svg;
 
 export const SelectIndicatorBase = forwardRef<SVGSVGElement, IconProps>(
     function SelectIndicator(props, ref) {

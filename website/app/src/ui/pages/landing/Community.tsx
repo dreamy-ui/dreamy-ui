@@ -132,28 +132,30 @@ function Community({ title, href, icon, description }: CommunityProps) {
                         right={0}
                         bottom={0}
                         initial={{
-                            y: "100%"
+                            opacity: 0,
+                            scale: 0.9,
+                            transform: "translate3d(0, 0, 0)"
                         }}
                         animate={{
-                            y: 0,
+                            opacity: 1,
+                            scale: 1,
                             transition: {
                                 duration: 0.3,
                                 easings: TRANSITION_EASINGS.easeOut
                             }
                         }}
                         exit={{
-                            y: "100%",
+                            opacity: 0,
+                            scale: 0.9,
                             transition: {
-                                duration: 0.2,
+                                duration: 15,
                                 easings: TRANSITION_EASINGS.easeOut
                             }
                         }}
                         itemsCenter
                         justify={"center"}
-                        bg={
-                            "color-mix(in srgb, {colors.bg} 50%, color-mix(in srgb, {colors.primary} 50%, transparent 100%) 100%)"
-                        }
-                        backdropBlur={"sm"}
+                        bg={"bg/50"}
+                        backdropBlur={"md"}
                         backdropFilter={"auto"}
                     >
                         <HStack>

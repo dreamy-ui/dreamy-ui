@@ -8,6 +8,7 @@ import { SelectTriggerBase } from "@/components/select/select-trigger";
 import { createStyleContext } from "@/components/style-context";
 import { Box } from "@/rsc";
 import { type SelectVariantProps, select } from "@dreamy-ui/system/recipes";
+import type React from "react";
 import type { PropsWithChildren } from "react";
 import { SelectRoot } from "./select-root";
 import type { UseSelectProps } from "./use-select";
@@ -21,7 +22,7 @@ type SelectProps<T extends boolean> = UseSelectProps<T> & SelectVariantProps & P
  *
  * @See Docs https://dream-ui.com/docs/components/select
  */
-export const Select: <T extends boolean = false>(props: SelectProps<T>) => JSX.Element =
+export const Select: <T extends boolean = false>(props: SelectProps<T>) => React.JSX.Element =
     withProvider(SelectRoot, "root") as any;
 export const SelectTrigger = withContext(SelectTriggerBase, "trigger");
 export const SelectContent = withContext(SelectContentBase, "content");

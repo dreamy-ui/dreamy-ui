@@ -1,5 +1,16 @@
 # @dreamy-ui/react
 
+## 0.2.0
+
+### Minor Changes
+
+-   Support for react 19
+
+### Patch Changes
+
+-   Updated dependencies
+    -   @dreamy-ui/system@0.2.0
+
 ## 0.1.0
 
 ### Minor Changes

@@ -1,13 +1,12 @@
 import { Box } from "@/components/box/box";
-import { dream } from "@/components/factory";
 import {
     type GetProgressPropsOptions,
     getProgressProps
 } from "@/components/progress/progress.utils";
 import type { HTMLDreamProps } from "@/utils/types";
-import { styled } from "@dreamy-ui/system/jsx";
 import { type ProgressVariantProps, progress } from "@dreamy-ui/system/recipes";
 import { forwardRef, useMemo } from "react";
+import { dreamy } from "../factory";
 
 interface ProgressFilledTrackProps extends HTMLDreamProps<"div">, GetProgressPropsOptions {}
 
@@ -59,7 +58,7 @@ export interface ProgressProps
     "aria-label": string;
 }
 
-const StyledProgress = styled(dream.div, progress);
+const StyledProgress = dreamy("div", progress);
 
 /**
  * Progress component

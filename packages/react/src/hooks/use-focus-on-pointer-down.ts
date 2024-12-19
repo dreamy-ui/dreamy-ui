@@ -2,7 +2,7 @@ import { useEventListener } from "./use-event-listener";
 
 export interface UseFocusOnMouseDownProps {
     enabled?: boolean;
-    ref: React.RefObject<HTMLElement>;
+    ref: React.RefObject<HTMLElement | null>;
     elements?: Array<React.RefObject<HTMLElement> | HTMLElement | null>;
 }
 

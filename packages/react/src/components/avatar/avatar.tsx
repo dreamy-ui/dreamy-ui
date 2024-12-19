@@ -2,15 +2,14 @@ import { AvatarImage } from "@/components/avatar/avatar-image";
 import { initials } from "@/components/avatar/avatar-name";
 import type { AvatarOptions } from "@/components/avatar/avatar-types";
 import { GenericAvatarIcon } from "@/components/avatar/generic-avatar-icon";
-import { dream } from "@/components/factory";
 import { callAllHandlers } from "@/utils";
 import { dataAttr } from "@/utils/attr";
 import { randomColor } from "@/utils/color";
 import type { HTMLDreamProps } from "@/utils/types";
-import { styled } from "@dreamy-ui/system/jsx";
 import { type AvatarVariantProps, avatar } from "@dreamy-ui/system/recipes";
 import { token } from "@dreamy-ui/system/tokens";
 import { forwardRef, useMemo, useState } from "react";
+import { dreamy } from "../factory";
 
 export interface AvatarProps
     extends Omit<HTMLDreamProps<"span">, "onError">,
@@ -20,7 +19,7 @@ export interface AvatarProps
     iconLabel?: string;
 }
 
-const StyledBase = styled(dream.span, avatar);
+const StyledBase = dreamy("span", avatar);
 
 /**
  * Avatar component

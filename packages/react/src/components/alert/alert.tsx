@@ -1,9 +1,8 @@
-import { dream } from "@/components/factory";
 import { Icon, Text } from "@/rsc";
 import type { HTMLDreamProps, Status } from "@/utils/types";
-import { styled } from "@dreamy-ui/system/jsx";
 import { type AlertVariantProps, alert } from "@dreamy-ui/system/recipes";
 import { forwardRef, useMemo } from "react";
+import { dreamy } from "../factory";
 
 export interface AlertProps extends Omit<HTMLDreamProps<"div">, "title">, AlertVariantProps {
     /**
@@ -25,7 +24,7 @@ export interface AlertProps extends Omit<HTMLDreamProps<"div">, "title">, AlertV
     icon?: React.ReactNode;
 }
 
-const StyledAlert = styled(dream.div, alert);
+const StyledAlert = dreamy("div", alert);
 
 /**
  * Alert component

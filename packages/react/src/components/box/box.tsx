@@ -1,11 +1,10 @@
-import { dream } from "@/components/factory";
+import { dreamy } from "@/components/factory";
 import type { HTMLDreamProps } from "@/utils/types";
-import { styled } from "@dreamy-ui/system/jsx";
 import { forwardRef } from "react";
 
 export interface BoxProps extends HTMLDreamProps<"div"> {}
 
-const DreamBox = styled(dream.div);
+const DreamBox = dreamy.div;
 
 /**
  * Box component

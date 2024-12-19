@@ -1,10 +1,9 @@
 import { Box } from "@/components/box";
 import { Text, type TextProps } from "@/components/text";
 import { createContext } from "@/provider/create-context";
-import { styled } from "@dreamy-ui/system/jsx";
 import { type CheckboxCardVariantProps, checkboxCard } from "@dreamy-ui/system/recipes";
 import { type ElementType, type ReactElement, cloneElement, forwardRef, useMemo } from "react";
-import { dream } from "../factory";
+import { dreamy } from "../factory";
 import { VisuallyHiddenInput } from "../visually-hidden";
 import { CheckboxIcon } from "./checkbox-icon";
 import { type UseCheckboxProps, useCheckbox } from "./use-checkbox";
@@ -21,7 +20,7 @@ export interface CheckboxCardProps extends UseCheckboxProps, CheckboxCardVariant
     descriptionProps?: TextProps;
 }
 
-const StyledCheckbox = styled(dream.div, checkboxCard);
+const StyledCheckbox = dreamy("div", checkboxCard);
 
 /**
  * CheckboxCard component

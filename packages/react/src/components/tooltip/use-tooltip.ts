@@ -125,19 +125,19 @@ export function useTooltip(props: Partial<UseTooltipProps> = {}) {
 
     const ref = useRef<HTMLElement>(null);
 
-    const enterTimeout = useRef<number>();
+    const enterTimeout = useRef<number>(null);
     const clearEnterTimeout = useCallback(() => {
         if (enterTimeout.current) {
             clearTimeout(enterTimeout.current);
-            enterTimeout.current = undefined;
+            enterTimeout.current = null;
         }
     }, []);
 
-    const exitTimeout = useRef<number>();
+    const exitTimeout = useRef<number>(null);
     const clearExitTimeout = useCallback(() => {
         if (exitTimeout.current) {
             clearTimeout(exitTimeout.current);
-            exitTimeout.current = undefined;
+            exitTimeout.current = null;
         }
     }, []);
 
@@ -297,7 +297,7 @@ export type UseTooltipReturn = ReturnType<typeof useTooltip>;
 
 const closeEventName = "dream-ui:close-tooltip";
 
-function useCloseEvent(ref: RefObject<Element>, close: () => void) {
+function useCloseEvent(ref: RefObject<Element | null>, close: () => void) {
     useEffect(() => {
         const doc = getDoc(ref);
         doc.addEventListener(closeEventName, close);

@@ -1,11 +1,10 @@
-import { dream } from "@/components/factory";
+import { dreamy } from "@/components/factory";
 import { splitProps } from "@/utils";
 import type { HTMLDreamProps } from "@/utils/types";
-import { styled } from "@dreamy-ui/system/jsx";
 import { visuallyHidden } from "@dreamy-ui/system/patterns";
 import { forwardRef } from "react";
 
-const DreamVisuallyHidden = styled(dream.span);
+const DreamVisuallyHidden = dreamy.span;
 
 /**
  * VisuallyHidden component.
@@ -26,7 +25,7 @@ export const VisuallyHidden = forwardRef<HTMLSpanElement, HTMLDreamProps<"span">
     );
 });
 
-const DreamVisuallyHiddenInput = styled(dream.input);
+const DreamVisuallyHiddenInput = dreamy.input;
 
 /**
  * VisuallyHiddenInput component.

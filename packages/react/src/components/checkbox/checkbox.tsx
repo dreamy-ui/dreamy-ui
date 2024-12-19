@@ -1,14 +1,13 @@
-import { styled } from "@dreamy-ui/system/jsx";
 import { type CheckboxVariantProps, checkbox } from "@dreamy-ui/system/recipes";
 import { type ReactElement, cloneElement, forwardRef, useMemo } from "react";
-import { dream } from "../factory";
+import { dreamy } from "../factory";
 import { VisuallyHiddenInput } from "../visually-hidden";
 import { CheckboxIcon } from "./checkbox-icon";
 import { type UseCheckboxProps, useCheckbox } from "./use-checkbox";
 
 export interface CheckboxProps extends UseCheckboxProps, CheckboxVariantProps {}
 
-const StyledCheckbox = styled(dream.div, checkbox);
+const StyledCheckbox = dreamy("div", checkbox);
 
 /**
  * Checkbox component

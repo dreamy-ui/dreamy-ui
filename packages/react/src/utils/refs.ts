@@ -1,10 +1,10 @@
 export function getRef(child: React.ReactElement) {
-    if ("ref" in child.props) return child.props.ref;
+    if ("ref" in (child?.props as object)) return (child.props as { ref: React.Ref<unknown> }).ref;
     if ("ref" in child) return child.ref;
     return null;
 }
 
-type PossibleRef<T> = React.Ref<T> | undefined;
+type PossibleRef<T> = React.Ref<T> | unknown | undefined;
 
 export function setRef<T>(ref: PossibleRef<T>, value: T) {
     if (typeof ref === "function") {

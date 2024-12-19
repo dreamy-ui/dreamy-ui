@@ -34,7 +34,7 @@ export interface UsePopoverProps extends Omit<UsePopperProps, "enabled"> {
     /**
      * The `ref` of the element that should receive focus when the popover opens.
      */
-    initialFocusRef?: React.RefObject<{ focus(): void }>;
+    initialFocusRef?: React.RefObject<{ focus(): void } | null>;
     /**
      * If `true`, focus will be returned to the element that triggers the popover
      * when it closes
@@ -307,8 +307,8 @@ export function usePopover(props: UsePopoverProps = {}) {
         [referenceRef]
     );
 
-    const openTimeout = useRef<number>();
-    const closeTimeout = useRef<number>();
+    const openTimeout = useRef<number>(null);
+    const closeTimeout = useRef<number>(null);
 
     const maybeReferenceRef = useCallback(
         (node: Element) => {
@@ -353,7 +353,7 @@ export function usePopover(props: UsePopoverProps = {}) {
                  */
                 triggerProps.onFocus = callAllHandlers(props.onFocus, () => {
                     // If openTimeout.current does not exist, the user is using keyboard focus (not mouse hover/click)
-                    if (openTimeout.current === undefined) {
+                    if (openTimeout.current === null) {
                         onOpen();
                     }
                 });
@@ -378,7 +378,7 @@ export function usePopover(props: UsePopoverProps = {}) {
 
                     if (openTimeout.current) {
                         clearTimeout(openTimeout.current);
-                        openTimeout.current = undefined;
+                        openTimeout.current = null;
                     }
 
                     closeTimeout.current = window.setTimeout(() => {

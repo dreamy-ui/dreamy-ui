@@ -1,15 +1,14 @@
 "use client";
 
 import { Box } from "@/components/box";
-import { dream } from "@/components/factory";
 import { callAllHandlers, omit } from "@/utils";
 import { ariaAttr } from "@/utils/attr";
 import { objectToDeps } from "@/utils/object";
 import type { HTMLDreamProps } from "@/utils/types";
-import { styled } from "@dreamy-ui/system/jsx";
 import { image } from "@dreamy-ui/system/recipes";
 import type { SystemProperties } from "@dreamy-ui/system/types";
 import { cloneElement, forwardRef, useMemo } from "react";
+import { dreamy } from "../factory";
 
 export interface ImageProps extends HTMLDreamProps<"img">, SystemProperties {
     /**
@@ -30,7 +29,7 @@ export interface ImageProps extends HTMLDreamProps<"img">, SystemProperties {
     blurShadow?: boolean;
 }
 
-const StyledImage = styled(dream.img, image);
+const StyledImage = dreamy("img", image);
 
 /**
  * Native image with useful helpers.

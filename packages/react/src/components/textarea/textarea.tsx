@@ -1,8 +1,7 @@
-import { dream } from "@/components/factory";
+import { dreamy } from "@/components/factory";
 import { useField } from "@/components/field/use-field";
 import type { UserFeedbackProps } from "@/components/input";
 import type { HTMLDreamProps } from "@/utils/types";
-import { styled } from "@dreamy-ui/system/jsx";
 import { type TextareaVariantProps, textarea } from "@dreamy-ui/system/recipes";
 import { type ComponentType, forwardRef } from "react";
 import TextareaAutosize, { type TextareaAutosizeProps } from "react-textarea-autosize";
@@ -13,7 +12,7 @@ export interface TextareaProps
         Omit<TextareaAutosizeProps, keyof HTMLDreamProps<"textarea">>,
         UserFeedbackProps {}
 
-const StyledTextarea = styled(dream(TextareaAutosize), textarea);
+const StyledTextarea = dreamy(TextareaAutosize, textarea);
 
 /**
  * Textarea component.
@@ -31,7 +30,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>((props, r
     );
 });
 
-const StyledTextareaNoAutoSize = styled(dream.textarea, textarea);
+const StyledTextareaNoAutoSize = dreamy("textarea", textarea);
 
 export type TextareaNoAutoSizeProps = HTMLDreamProps<"textarea"> &
     TextareaVariantProps &

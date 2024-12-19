@@ -1,13 +1,12 @@
-import { dream } from "@/components/factory";
+import { dreamy } from "@/components/factory";
 import { splitProps } from "@/utils";
 import type { HTMLDreamProps } from "@/utils/types";
-import { styled } from "@dreamy-ui/system/jsx";
 import { type TextProperties, text } from "@dreamy-ui/system/patterns";
 import { forwardRef } from "react";
 
 export interface TextProps extends HTMLDreamProps<"p">, TextProperties {}
 
-const StyledText = styled(dream.p);
+const StyledText = dreamy.p;
 
 /**
  * Text component.
