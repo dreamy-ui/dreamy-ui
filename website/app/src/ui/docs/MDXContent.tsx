@@ -93,6 +93,7 @@ import { BiSearch } from "react-icons/bi";
 import { FiCoffee } from "react-icons/fi";
 import { HiExternalLink, HiOutlineMail } from "react-icons/hi";
 import { IoClose } from "react-icons/io5";
+import { PiConfetti } from "react-icons/pi";
 import type { MdxContent } from "~/src/.server/docs";
 import { PlatformSpecificKbd } from "~/src/ui/docs/components/kbds";
 import {
@@ -269,7 +270,8 @@ const icons = {
     IoClose,
     HiOutlineMail,
     FiCoffee,
-    BiSearch
+    BiSearch,
+    PiConfetti
 };
 
 const components = {

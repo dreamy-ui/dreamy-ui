@@ -120,6 +120,40 @@ export function ControlledAccordion() {
 }
 ```
 
+### With icon
+
+<Wrapper>
+	<Accordion>
+		{Array.from({ length: 3 }).map((_, index) => (
+			<AccordionItem key={index}>
+				<AccordionTrigger>
+					<HStack>
+						<Icon asComp={<PiConfetti />} color="fg.medium" />
+						<Text>Item {index + 1}</Text>
+					</HStack>
+				</AccordionTrigger>
+				<AccordionContent>Hi!</AccordionContent>
+			</AccordionItem>
+		))}
+	</Accordion>
+</Wrapper>
+
+```tsx
+<Accordion>
+	{Array.from({ length: 3 }).map((_, index) => (
+		<AccordionItem key={index}>
+			<AccordionTrigger>
+				<HStack>
+					<Icon as={PiConfetti} color="fg.medium" />
+					<Text>Item {index + 1}</Text>
+				</HStack>
+			</AccordionTrigger>
+			<AccordionContent>Hi!</AccordionContent>
+		</AccordionItem>
+	))}
+</Accordion>
+	```
+
 ### Variants
 
 You can change the variant of the Accordion by using the `variant` prop.

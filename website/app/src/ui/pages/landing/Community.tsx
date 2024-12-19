@@ -148,7 +148,7 @@ function Community({ title, href, icon, description }: CommunityProps) {
                             opacity: 0,
                             scale: 0.9,
                             transition: {
-                                duration: 15,
+                                duration: 0.15,
                                 easings: TRANSITION_EASINGS.easeOut
                             }
                         }}

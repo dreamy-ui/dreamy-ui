@@ -21,6 +21,7 @@ export const accordion = defineSlotRecipe({
             alignItems: "center",
             justifyContent: "space-between",
             cursor: "pointer",
+            fontFamily: "body",
             width: "100%",
             paddingY: "var(--accordion-padding-y)",
             fontSize: "md",
@@ -29,12 +30,14 @@ export const accordion = defineSlotRecipe({
         },
         content: {
             textAlign: "left",
+            color: "fg.medium",
             paddingBottom: "calc(var(--accordion-padding-y) * 2)"
         },
         icon: {
             width: 4,
             height: 4,
             transition: "transform 0.2s {easings.default}",
+            color: "fg.medium",
             "[data-expanded] &": {
                 transform: "rotate(180deg)"
             }
