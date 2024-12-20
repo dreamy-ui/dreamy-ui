@@ -23,6 +23,7 @@ import { tooltip } from "@/recipes/tooltip";
 import { accordion } from "./accordion";
 import { checkbox, checkboxParts } from "./checkbox";
 import { snippet, snippetParts } from "./snippet";
+import { switchRecipe } from "./switch";
 import { table } from "./table";
 
 export const recipes = {
@@ -51,7 +52,8 @@ export const recipes = {
     table,
     skeleton,
     radio,
-    select
+    select,
+    switchRecipe
 };
 
 export const parts = {

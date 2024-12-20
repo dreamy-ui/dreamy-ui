@@ -30,4 +30,6 @@ export const MotionBox = forwardRef<HTMLDivElement, MotionBoxProps>((props, ref)
 
 type BoxWithNoMotionProps = Omit<HTMLDreamProps<"div">, keyof MotionProps>;
 
-export interface MotionBoxProps extends BoxWithNoMotionProps, MotionProps { }
+export interface MotionBoxProps extends BoxWithNoMotionProps, MotionProps {
+    ref?: React.Ref<HTMLDivElement>;
+}

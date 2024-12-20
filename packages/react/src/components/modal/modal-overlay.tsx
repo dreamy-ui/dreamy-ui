@@ -4,13 +4,14 @@ import { useMotionVariants } from "@/provider";
 import { AnimatePresence } from "motion/react";
 import { forwardRef } from "react";
 
-export interface ModalOverlayProps extends MotionBoxProps { }
+export interface ModalOverlayProps extends MotionBoxProps {}
 
 export const ModalOverlayBase = forwardRef<HTMLDivElement, ModalOverlayProps>((props, ref) => {
     const { isOpen } = useModalContext();
     const { overlay } = useMotionVariants();
 
     return (
+        // @ts-expect-error
         <AnimatePresence>
             {isOpen && (
                 <MotionBox

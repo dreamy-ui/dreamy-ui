@@ -239,7 +239,7 @@ export function useRadio(props: UseRadioProps = {}) {
             "aria-describedby": ariaDescribedBy,
             "aria-disabled": isDisabled,
             className: "peer",
-            ...focusProps
+            ...(focusProps as any)
         };
     }, [
         handleChange,
@@ -271,7 +271,7 @@ export function useRadio(props: UseRadioProps = {}) {
 
     const getLabelProps: PropGetter = useCallback(
         () => ({
-            id: labelId,
+            htmlFor: labelId,
             "data-part": "label"
         }),
         [labelId]

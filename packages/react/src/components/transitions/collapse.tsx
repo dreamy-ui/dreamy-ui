@@ -80,6 +80,7 @@ export const Collapse = forwardRef<HTMLDivElement, CollapseProps>((props, ref) =
     );
 
     return (
+        // @ts-expect-error
         <AnimatePresence
             initial={false}
             custom={custom}

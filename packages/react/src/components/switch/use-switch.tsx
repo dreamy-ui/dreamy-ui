@@ -1,65 +1,64 @@
 import { useCallbackRef } from "@/hooks";
 import { mergeRefs } from "@/hooks/use-merge-refs";
 import { useReducedMotion } from "@/provider";
-import { type PropGetter, callAll, callAllHandlers } from "@/utils";
+import { type PropGetter, TRANSITION_EASINGS, callAllHandlers } from "@/utils";
 import { ariaAttr, dataAttr } from "@/utils/attr";
+import { objectToDeps } from "@/utils/object";
 import type { HTMLDreamProps } from "@/utils/types";
 import { cx } from "@dreamy-ui/system/css";
 import { useFocusRing } from "@react-aria/focus";
+import type { Transition } from "motion/react";
 import { type ReactNode, type Ref, useCallback, useId, useMemo, useRef, useState } from "react";
+import type { MotionBoxProps } from "../box";
 import { useSafeLayoutEffect } from "../descendant/utils";
 import { useField } from "../field/use-field";
 import type { UserFeedbackProps } from "../input";
-import { useCheckboxGroupContext } from "./checkbox-group";
-import type { IconCustomProps } from "./checkbox-icon";
 
-export type CheckboxIconProps = {
+export type SwitchIconProps = {
     "data-checked": string;
     isSelected: boolean;
     isIndeterminate: boolean;
     reduceMotion: boolean;
 };
 
-interface Props extends HTMLDreamProps<"input">, IconCustomProps {
+interface Props extends HTMLDreamProps<"input"> {
     /**
      * Ref to the DOM node.
      */
     ref?: Ref<HTMLInputElement>;
     /**
-     * The label of the checkbox.
+     * The label of the Switch.
      */
     children?: ReactNode;
     /**
-     * Whether the checkbox is disabled.
+     * Whether the Switch is disabled.
      * @default false
      */
     isDisabled?: boolean;
     /**
-     * The icon to be displayed when the checkbox is checked.
+     * The icon to be displayed when the Switch is checked.
      */
-    icon?: ReactNode | ((props: CheckboxIconProps) => ReactNode);
+    icon?: ReactNode | React.ElementType;
     /**
-     * The callback function with value, instead of event, when the checkbox is changed.
+     * The callback function with value, instead of event, when the Switch is changed.
      */
     onChangeValue?: (value: boolean) => void;
 }
 
-export interface UseCheckboxProps extends Props, UserFeedbackProps {
-    isCard?: boolean;
+export interface UseSwitchProps extends Props, UserFeedbackProps {
     reduceMotion?: boolean;
     isIndeterminate?: boolean;
     isChecked?: boolean;
     defaultChecked?: boolean;
 }
 
-export function useCheckbox(props: UseCheckboxProps = {}) {
+export function useSwitch(props: UseSwitchProps = {}) {
     const reduceMotionGlobal = useReducedMotion();
-    const groupContext = useCheckboxGroupContext();
 
     const {
-        disabled: isDisabledField = groupContext?.isDisabled ?? false,
-        readOnly: isReadOnlyField = groupContext?.isReadOnly ?? false,
-        required: isRequiredField = groupContext?.isRequired ?? false,
+        disabled: isDisabledField = false,
+        readOnly: isReadOnlyField = false,
+        required: isRequiredField = false,
         id,
         onBlur,
         onFocus,
@@ -77,7 +76,7 @@ export function useCheckbox(props: UseCheckboxProps = {}) {
         name,
         autoFocus = false,
         isChecked: isCheckedProp,
-        reduceMotion = groupContext?.reduceMotion ?? reduceMotionGlobal ?? false,
+        reduceMotion = reduceMotionGlobal ?? false,
         isIndeterminate = false,
         isDisabled = isDisabledField,
         isReadOnly = isReadOnlyField,
@@ -92,20 +91,13 @@ export function useCheckbox(props: UseCheckboxProps = {}) {
         "aria-labelledby": ariaLabelledBy,
         "aria-invalid": ariaInvalid,
         "aria-describedby": ariaDescribedBy = ariaDescribedByField,
-        animationTime,
-        pathProps,
-        isCard = false,
         ...otherProps
     } = props;
 
     const [checkedState, setCheckedState] = useState(!!defaultChecked);
 
     const isControlled = isCheckedProp !== undefined;
-    const isChecked = groupContext
-        ? (groupContext.value?.includes(value as any) ?? false)
-        : isControlled
-          ? isCheckedProp
-          : checkedState;
+    const isChecked = isControlled ? isCheckedProp : checkedState;
 
     const domRef = useRef<HTMLLabelElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -122,7 +114,7 @@ export function useCheckbox(props: UseCheckboxProps = {}) {
         autoFocus
     });
 
-    const onChangeProp = useCallbackRef(callAll(onChange, groupContext?.onChange));
+    const onChangeProp = useCallbackRef(onChange);
 
     const handleChange = useCallback(
         (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -155,15 +147,8 @@ export function useCheckbox(props: UseCheckboxProps = {}) {
         ]
     );
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     const getRootProps: PropGetter = useCallback(() => {
-        const groupProps = groupContext
-            ? {
-                  variant: groupContext.variant,
-                  size: groupContext.size,
-                  scheme: groupContext.scheme
-              }
-            : {};
-
         return {
             ref: domRef,
             "data-disabled": dataAttr(isDisabled),
@@ -172,7 +157,8 @@ export function useCheckbox(props: UseCheckboxProps = {}) {
             "data-invalid": dataAttr(isInvalid),
             "data-readonly": dataAttr(isReadOnly),
             "data-indeterminate": dataAttr(isIndeterminate),
-            "data-focus-visible": isCard ? dataAttr(isFocusVisible) : undefined,
+            "data-active": dataAttr(active),
+            "aria-active": ariaAttr(active),
             onPointerDown: callAllHandlers(otherProps.onPointerDown, () => setActive(true)),
             onPointerUp: callAllHandlers(otherProps.onPointerUp, () => setActive(false)),
             onPointerLeave: callAllHandlers(otherProps.onPointerLeave, () => setActive(false)),
@@ -183,7 +169,6 @@ export function useCheckbox(props: UseCheckboxProps = {}) {
                 });
             }),
             className: cx(className, "group"),
-            ...groupProps,
             ...otherProps
         };
     }, [
@@ -193,12 +178,10 @@ export function useCheckbox(props: UseCheckboxProps = {}) {
         isInvalid,
         isReadOnly,
         className,
+        active,
         props.onClick,
-        isCard,
         isFocusVisible,
-        groupContext,
-        // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-        otherProps
+        ...objectToDeps(otherProps)
     ]);
 
     const getWrapperProps: PropGetter = useCallback(
@@ -206,11 +189,11 @@ export function useCheckbox(props: UseCheckboxProps = {}) {
             return {
                 ...props,
                 "data-part": "control",
-                "data-focus-visible": isCard ? undefined : dataAttr(isFocusVisible),
+                "data-focus-visible": dataAttr(isFocusVisible),
                 "aria-hidden": true
             };
         },
-        [isFocusVisible, isCard]
+        [isFocusVisible]
     );
 
     const onKeyDown = useCallback(
@@ -300,18 +283,17 @@ export function useCheckbox(props: UseCheckboxProps = {}) {
         [labelId]
     );
 
-    const getIconProps: PropGetter = useCallback(
-        () => ({
-            isChecked,
-            active,
-            isIndeterminate,
-            reduceMotion,
-            animationTime,
-            pathProps,
-            "data-part": "icon"
-        }),
-        [isChecked, isIndeterminate, reduceMotion, active, animationTime, pathProps]
-    );
+    const getThumbProps: PropGetter<MotionBoxProps> = useCallback(() => {
+        return {
+            "data-part": "thumb",
+            layout: "position",
+            layoutId: `switch-thumb-${id ?? labelId}`,
+            transition: {
+                duration: 0.2,
+                ease: TRANSITION_EASINGS.easeInOut
+            } satisfies Transition
+        };
+    }, [id, labelId]);
 
     useSafeLayoutEffect(() => {
         const el = inputRef.current;
@@ -333,8 +315,8 @@ export function useCheckbox(props: UseCheckboxProps = {}) {
         getWrapperProps,
         getInputProps,
         getLabelProps,
-        getIconProps
+        getThumbProps
     };
 }
 
-export type UseCheckboxReturn = ReturnType<typeof useCheckbox>;
+export type UseSwitchReturn = ReturnType<typeof useSwitch>;

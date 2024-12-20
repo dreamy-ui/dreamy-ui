@@ -12,7 +12,7 @@ export interface TextareaProps
         Omit<TextareaAutosizeProps, keyof HTMLDreamProps<"textarea">>,
         UserFeedbackProps {}
 
-const StyledTextarea = dreamy(TextareaAutosize, textarea);
+const StyledTextarea = dreamy(TextareaAutosize as any, textarea);
 
 /**
  * Textarea component.

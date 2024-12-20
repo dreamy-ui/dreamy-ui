@@ -70,6 +70,7 @@ export const Scale = forwardRef<HTMLDivElement, ScaleProps>(function Scale(props
     const custom = { initialScale, reverse, transition, transitionEnd, delay };
 
     return (
+        // @ts-expect-error
         <AnimatePresence
             {...animatePresenceProps}
             custom={custom}

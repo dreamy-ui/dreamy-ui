@@ -35,6 +35,7 @@ import {
     SliderThumb,
     SliderTrack,
     Snippet,
+    Switch,
     Tab,
     TabList,
     TabPanel,
@@ -71,9 +72,15 @@ export async function action({ request }: ActionFunctionArgs) {
     const formData = await request.formData();
     const value = formData.get("test-select");
     const sliderValue = formData.get("slider");
+    const switchValue = formData.get("switch");
+    const checkboxValue = formData.get("checkbox");
 
-    console.log("value", value);
-    console.log("sliderValue", sliderValue);
+    console.table({
+        value,
+        sliderValue,
+        switchValue: switchValue === "",
+        checkboxValue: checkboxValue === ""
+    });
 
     return {
         success: true
@@ -96,6 +103,25 @@ export default function Test() {
             col
             gap={10}
         >
+            <Switch
+                size={"sm"}
+                onChangeValue={(e) => console.log(e)}
+            >
+                Hello
+            </Switch>
+            <Switch
+                size={"md"}
+                onChangeValue={(e) => console.log(e)}
+                icon={<IoAdd />}
+            >
+                Hello
+            </Switch>
+            <Switch
+                size={"lg"}
+                onChangeValue={(e) => console.log(e)}
+            >
+                Hello
+            </Switch>
             <Checkbox onChangeValue={(e) => console.log(e)}>Hello</Checkbox>
 
             <PinInput
@@ -108,7 +134,12 @@ export default function Test() {
                 <PinInputField />
             </PinInput>
 
-            <Form method="post">
+            <Flex
+                col
+                gap={4}
+                /* @ts-ignore */
+                asComp={<Form method="post" />}
+            >
                 <Select
                     selectedItemBackgroundScheme={"none"}
                     name={"test-select"}
@@ -135,6 +166,20 @@ export default function Test() {
                         <SliderThumb />
                     </SliderTrack>
                 </Slider>
+                <Switch
+                    name={"switch"}
+                    size={"md"}
+                    onChangeValue={(e) => console.log(e)}
+                    icon={IoAdd}
+                >
+                    Hello
+                </Switch>
+                <Checkbox
+                    name={"checkbox"}
+                    onChangeValue={(e) => console.log(e)}
+                >
+                    Hello
+                </Checkbox>
                 <Button
                     type="submit"
                     color={"primary"}
@@ -142,7 +187,7 @@ export default function Test() {
                 >
                     Submit
                 </Button>
-            </Form>
+            </Flex>
 
             <RadioGroup>
                 <Radio value={"primary"}>Primary</Radio>
@@ -618,7 +663,7 @@ export default function Test() {
                 <InputLeftAddon
                     zIndex={1}
                     p={0}
-                    left={1}
+                    left={0}
                 >
                     <IconButton
                         size={"sm"}

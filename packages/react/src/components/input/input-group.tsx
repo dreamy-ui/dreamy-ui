@@ -32,16 +32,16 @@ export const InputGroup = forwardRef<HTMLDivElement, PropsWithChildren<InputGrou
         return (
             <InputGroupProvider value={context}>
                 <Box
-                    css={{
-                        width: "100%",
-                        display: "flex",
-                        position: "relative",
-                        // Parts of inputs override z-index to ensure that they stack correctly on each other
-                        // Create a new stacking context so that these overrides don't leak out and conflict with other z-indexes
-                        isolation: "isolate"
-                    }}
                     data-group
                     ref={ref}
+                    {...props.wrapperProps}
+                    style={{
+                        width: "fit-content",
+                        display: "flex",
+                        position: "relative",
+                        isolation: "isolate",
+                        ...props.wrapperProps?.style
+                    }}
                 >
                     {props.children}
                 </Box>
@@ -66,7 +66,7 @@ const InputAddon = forwardRef<HTMLDivElement, InputAddonProps>(function InputAdd
                 alignItems: "center",
                 justifyContent: "center",
                 whiteSpace: "nowrap",
-                paddingInline: "0.75rem"
+                paddingLeft: "0.25rem"
             }}
             {...props}
         />

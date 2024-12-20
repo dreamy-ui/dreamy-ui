@@ -39,6 +39,7 @@ export function Ripple(props: RippleProps) {
                 );
 
                 return (
+                    // @ts-expect-error
                     <AnimatePresence
                         mode="popLayout"
                         key={ripple.key}
@@ -74,7 +75,7 @@ export function Ripple(props: RippleProps) {
                                     onClear(ripple.key);
                                 }, duration * 1000);
                             }}
-                            {...motionProps}
+                            {...(motionProps as any)}
                             data-part="ripple"
                         />
                     </AnimatePresence>

@@ -11,6 +11,7 @@ import {
     SliderFilledTrack,
     SliderThumb,
     SliderTrack,
+    Switch,
     Textarea
 } from "@/components";
 import type { Meta } from "@storybook/react";
@@ -80,6 +81,15 @@ export function WithCheckbox() {
         <Field>
             <FieldLabel>Label</FieldLabel>
             <Checkbox>Checkbox</Checkbox>
+        </Field>
+    );
+}
+
+export function WithSwitch() {
+    return (
+        <Field>
+            <FieldLabel>Label</FieldLabel>
+            <Switch>Switch</Switch>
         </Field>
     );
 }

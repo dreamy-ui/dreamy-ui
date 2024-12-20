@@ -2,7 +2,7 @@ import { Button, Collapse } from "@dreamy-ui/react";
 import { Flex, Icon } from "@dreamy-ui/react/rsc";
 import { useLocation } from "@remix-run/react";
 import { AnimatePresence } from "motion/react";
-import { memo, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { BiChevronRight } from "react-icons/bi";
 import { useSections } from "~/routes/docs";
 import type { ISection } from "~/src/.server/docs";
@@ -12,8 +12,21 @@ import { Link } from "~/src/ui/global/Link";
 export default function SectionsNav() {
     const { sections } = useSections();
 
+    const ref = useRef<HTMLDivElement>(null);
+    useEffect(() => {
+        const currentDoc = document.getElementById("current-doc");
+        if (!currentDoc) return;
+
+        const top = currentDoc.offsetTop;
+        ref.current?.scrollTo({
+            top,
+            behavior: "smooth"
+        });
+    }, []);
+
     return (
         <Flex
+            ref={ref}
             pos={"sticky"}
             top={20}
             h={"fit-content"}
@@ -131,6 +144,7 @@ const MemoSectionButton = memo(function SectionButton({
     return (
         <Button
             key={"doc-" + file.name}
+            id={isCurrent ? "current-doc" : undefined}
             variant={isCurrent ? "primary" : "ghost"}
             wFull
             asComp={

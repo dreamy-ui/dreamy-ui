@@ -43,7 +43,7 @@ export const PopoverTransition = forwardRef(function PopoverTransition(
 
     return (
         <MotionBox
-            ref={ref}
+            ref={ref as any}
             variants={transformReducedMotion(popover.default, reduceMotion)}
             initial={false}
             animate={isOpen ? "initial" : "exit"}

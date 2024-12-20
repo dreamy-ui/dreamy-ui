@@ -29,6 +29,7 @@ export * from "./slider";
 export * from "./snippet";
 export * from "./spinner";
 export * from "./stack";
+export * from "./switch";
 export * from "./table";
 export * from "./tabs";
 export * from "./text";

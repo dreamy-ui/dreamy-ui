@@ -63,6 +63,7 @@ export function ModalRoot(props: ModalProps) {
 
     return (
         <ModalContextProvider value={context}>
+            {/* @ts-expect-error */}
             <AnimatePresence onExitComplete={onCloseComplete}>
                 {context.isOpen && <Portal {...portalProps}>{children}</Portal>}
             </AnimatePresence>

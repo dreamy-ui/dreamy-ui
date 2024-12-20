@@ -2,6 +2,40 @@ import { Checkbox, CheckboxCard, CheckboxGroup } from "@dreamy-ui/react";
 import { Text, VStack } from "@dreamy-ui/react/rsc";
 import { useState } from "react";
 
+export function ControlledCheckbox() {
+    const [isChecked, setIsChecked] = useState(false);
+
+    return (
+        <>
+            <Text>Selected: {isChecked ? "true" : "false"}</Text>
+            <Checkbox
+                isChecked={isChecked}
+                onChangeValue={setIsChecked}
+            >
+                Controlled
+            </Checkbox>
+        </>
+    );
+}
+
+export function ControlledCheckboxCard() {
+    const [isChecked, setIsChecked] = useState(false);
+
+    return (
+        <>
+            <Text>Selected: {isChecked ? "true" : "false"}</Text>
+            <VStack w="250px">
+                <CheckboxCard
+                    title="Controlled"
+                    description="Description for Controlled"
+                    isChecked={isChecked}
+                    onChangeValue={setIsChecked}
+                />
+            </VStack>
+        </>
+    );
+}
+
 export function CheckboxGroupControl() {
     const [value, setValue] = useState<Array<string | number>>(["1"]);
 

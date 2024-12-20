@@ -109,6 +109,34 @@ Change the checkbox card size.
 ))}
 ```
 
+### Controlled
+
+Use `isChecked` and `onChange`, `onChangeValue` to control the checkbox card.
+
+<Wrapper>
+	<ControlledCheckboxCard />
+</Wrapper>
+
+```tsx
+export function ControlledCheckboxCard() {
+    const [isChecked, setIsChecked] = useState(false);
+
+    return (
+        <>
+            <Text>Selected: {isChecked ? "true" : "false"}</Text>
+            <VStack w="250px">
+                <CheckboxCard
+                    title="Controlled"
+                    description="Description for Controlled"
+                    isChecked={isChecked}
+                    onChangeValue={setIsChecked}
+                />
+            </VStack>
+        </>
+    );
+}
+```
+
 ### Checkbox Group
 
 Use `CheckboxGroup` to compose multiple checkboxes or checkbox cards.

@@ -15,9 +15,6 @@ themeSource: /packages/system/src/recipes/checkbox.ts
 import { Checkbox, CheckboxGroup } from "@dreamy-ui/react";
 ```
 
-- `Checkbox` - A checkbox component.
-- `CheckboxGroup` - Group wrapper for composing multiple checkboxes.
-
 ## Usage
 
 <Wrapper>
@@ -54,7 +51,7 @@ Change the color scheme of the checkbox.
 
 ### Variant
 
-Change the apperance variant of the checkbox.
+Change the appearance variant of the checkbox.
 
 <Wrapper>
 	{["outline", "solid"].map((variant) => (
@@ -90,6 +87,32 @@ Change the checkbox size.
 		{size}
 	</Checkbox>
 ))}
+```
+
+### Controlled
+
+Use `isChecked` and `onChange`, `onChangeValue` to control the checkbox.
+
+<Wrapper>
+	<ControlledCheckbox />
+</Wrapper>
+
+```tsx
+export function ControlledCheckbox() {
+    const [isChecked, setIsChecked] = useState(false);
+
+    return (
+        <>
+            <Text>Selected: {isChecked ? "true" : "false"}</Text>
+            <Checkbox
+                isChecked={isChecked}
+                onChangeValue={setIsChecked}
+            >
+                Controlled
+            </Checkbox>
+        </>
+    );
+}
 ```
 
 ### Checkbox group

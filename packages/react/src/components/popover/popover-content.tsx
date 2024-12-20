@@ -25,7 +25,7 @@ export const PopoverContentBase = forwardRef<HTMLElement, PopoverContentProps>(
         return (
             <div {...getPopoverPositionerProps(rootProps)}>
                 <PopoverTransition
-                    {...motionProps}
+                    {...(motionProps as any)}
                     {...getPopoverProps(contentProps, ref)}
                     onAnimationComplete={callAll(
                         onAnimationComplete,

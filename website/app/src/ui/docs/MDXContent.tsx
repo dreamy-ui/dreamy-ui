@@ -41,6 +41,7 @@ import {
     SliderThumb,
     SliderTrack,
     Snippet,
+    Switch,
     Tab,
     TabList,
     TabPanel,
@@ -111,12 +112,18 @@ import {
 } from "~/src/ui/docs/components/popovers";
 import { Link } from "~/src/ui/global/Link";
 import { ControlledAccordion } from "./components/accordions";
-import { CheckboxCardGroupControl, CheckboxGroupControl } from "./components/checkboxes";
+import {
+    CheckboxCardGroupControl,
+    CheckboxGroupControl,
+    ControlledCheckbox,
+    ControlledCheckboxCard
+} from "./components/checkboxes";
 import { ControlledPinInput } from "./components/inputs";
 import { AsyncSelect, ControlledSelect } from "./components/selects";
 import { ControlledSlider, MaxMinSlider } from "./components/sliders";
 import { ControlledTabs, VariantTabs } from "./components/tabs";
 import { Collapsed, Scaled } from "./components/transitions";
+import { ControlledSwitch } from "./components/switches";
 
 interface Props {
     mdxContent: MdxContent;
@@ -247,7 +254,11 @@ const DreamComponents = {
     Collapsed,
     Scaled,
     ControlledAccordion,
-    ControlledPinInput
+    ControlledPinInput,
+    Switch,
+    ControlledCheckbox,
+    ControlledCheckboxCard,
+    ControlledSwitch
 };
 
 function Wrapper({ children }: PropsWithChildren) {
@@ -496,6 +507,7 @@ function DefaultHeading({ mt, mb, ...props }: HeadingProps) {
                 }}
             >
                 <DreamLink
+                    tabIndex={-1}
                     href={`#${hId}`}
                     cursor="pointer"
                     onClick={() => {
