@@ -90,17 +90,19 @@ import {
     VisuallyHiddenInput
 } from "@dreamy-ui/react/rsc";
 import type * as mdx from "@mdx-js/react";
-import { useLocation } from "@remix-run/react";
+import { Link as RemixLink, useLocation } from "@remix-run/react";
 import { MDXRemote } from "next-mdx-remote";
 import type React from "react";
 import { type PropsWithChildren, type ReactNode, useMemo, useState } from "react";
-import { BiSearch } from "react-icons/bi";
+import { BiHome, BiSearch } from "react-icons/bi";
 import { FiCoffee } from "react-icons/fi";
 import { HiExternalLink, HiOutlineMail } from "react-icons/hi";
-import { IoClose } from "react-icons/io5";
+import { IoAdd, IoClose } from "react-icons/io5";
+import { LuAlarmClock, LuBattery, LuTrash, LuWarehouse } from "react-icons/lu";
 import { PiConfetti } from "react-icons/pi";
 import type { MdxContent } from "~/src/.server/docs";
 import { PlatformSpecificKbd } from "~/src/ui/docs/components/kbds";
+import { ControlledMenu, InteractiveMenu } from "~/src/ui/docs/components/menus";
 import {
     BasicModal,
     PlacementModal,
@@ -266,7 +268,10 @@ const DreamComponents = {
     Menu,
     MenuTrigger,
     MenuContent,
-    MenuItem
+    MenuItem,
+    RemixLink,
+    ControlledMenu,
+    InteractiveMenu
 };
 
 function Wrapper({ children }: PropsWithChildren) {
@@ -290,7 +295,13 @@ const icons = {
     HiOutlineMail,
     FiCoffee,
     BiSearch,
-    PiConfetti
+    PiConfetti,
+    IoAdd,
+    BiHome,
+    LuAlarmClock,
+    LuBattery,
+    LuTrash,
+    LuWarehouse
 };
 
 const components = {

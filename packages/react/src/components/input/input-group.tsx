@@ -36,7 +36,6 @@ export const InputGroup = forwardRef<HTMLDivElement, PropsWithChildren<InputGrou
                     ref={ref}
                     {...props.wrapperProps}
                     style={{
-                        width: "fit-content",
                         display: "flex",
                         position: "relative",
                         isolation: "isolate",

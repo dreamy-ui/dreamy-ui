@@ -1,4 +1,5 @@
 import { dreamy } from "@/components/factory";
+import { useActionKey } from "@/hooks";
 import { runIfFn } from "@/utils/run-if-fn";
 import type React from "react";
 import { forwardRef } from "react";
@@ -23,13 +24,15 @@ export const MenuButtonBase = forwardRef<HTMLDivElement, MenuButtonProps>(
         const { icon, command, ...rest } = props;
         const buttonProps = useMenuItem(rest, ref);
 
+        const actionKey = useActionKey();
+
         return (
             <StyledButton {...(buttonProps as any)}>
                 <span>
                     {runIfFn(icon)}
                     {buttonProps.children}
                 </span>
-                {command && <Kbd size={"sm"}>{command}</Kbd>}
+                {command && <Kbd size={"sm"}>{command.replaceAll("{actionKey}", actionKey)}</Kbd>}
             </StyledButton>
         );
     }

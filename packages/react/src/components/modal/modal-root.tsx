@@ -114,11 +114,11 @@ interface ModalOptions {
     /**
      * The `ref` of element to receive focus when the modal opens.
      */
-    initialFocusRef?: React.RefObject<FocusableElement>;
+    initialFocusRef?: React.RefObject<FocusableElement | null>;
     /**
      * The `ref` of element to receive focus when the modal closes.
      */
-    finalFocusRef?: React.RefObject<FocusableElement>;
+    finalFocusRef?: React.RefObject<FocusableElement | null>;
     /**
      * If `true`, the modal will return focus to the element that triggered it when it closes.
      * @default true
@@ -154,12 +154,12 @@ export interface FocusLockProps {
     /**
      * `ref` of the element to receive focus initially
      */
-    initialFocusRef?: React.RefObject<FocusableElement>;
+    initialFocusRef?: React.RefObject<FocusableElement | null>;
     /**
      * `ref` of the element to return focus to when `FocusLock`
      * unmounts
      */
-    finalFocusRef?: React.RefObject<FocusableElement>;
+    finalFocusRef?: React.RefObject<FocusableElement | null>;
     /**
      * The `ref` of the wrapper for which the focus-lock wraps
      */

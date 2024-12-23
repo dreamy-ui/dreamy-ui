@@ -17,6 +17,7 @@ import {
     useUpdateEffect
 } from "@dreamy-ui/react";
 import { Flex, Icon, Kbd, Spinner, Text } from "@dreamy-ui/react/rsc";
+import { css } from "@dreamy-ui/system/css";
 import type { SerializeFrom } from "@remix-run/node";
 import { useNavigate } from "@remix-run/react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -198,8 +199,12 @@ export default function Search() {
                 <ModalOverlay />
                 <ModalContent>
                     <ModalBody pb={2}>
-                        <InputGroup>
-                            <InputLeftAddon>
+                        <InputGroup
+                            wrapperProps={css.raw({
+                                w: "full"
+                            })}
+                        >
+                            <InputLeftAddon pl={"0.75rem!"}>
                                 <Icon
                                     as={BiSearch}
                                     color={"alpha.900"}
