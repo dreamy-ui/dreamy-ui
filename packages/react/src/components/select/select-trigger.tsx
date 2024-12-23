@@ -8,12 +8,24 @@ import { dreamy } from "../factory";
 
 export interface SelectTriggerProps extends HTMLDreamProps<"button"> {
     placeholder?: string;
+    /**
+     * 多选时，显示的文本
+     */
+    multipleSelectedText?: (selectedKeys: string[]) => string;
 }
 
 const StyledTrigger = dreamy.button;
 
 export const SelectTriggerBase = forwardRef<HTMLButtonElement, SelectTriggerProps>(
-    function SelectTrigger({ children, placeholder, ...rest }, ref) {
+    function SelectTrigger(
+        {
+            children,
+            placeholder,
+            multipleSelectedText = (selectedKeys) => `${selectedKeys.length} Selected`,
+            ...rest
+        },
+        ref
+    ) {
         const { getTriggerProps, selectedKeys, descendants } = useSelectContext();
 
         const selectedNames = selectedKeys.map((key) => {
@@ -36,7 +48,7 @@ export const SelectTriggerBase = forwardRef<HTMLButtonElement, SelectTriggerProp
                         {selectedNames.length === 1
                             ? selectedNames[0]
                             : selectedNames.length > 1
-                              ? `${selectedNames.length} Selected`
+                              ? multipleSelectedText(selectedNames)
                               : placeholder}
                     </span>
                     <SelectIndicatorGroup>

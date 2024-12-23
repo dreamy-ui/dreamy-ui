@@ -91,6 +91,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
                 rest.onClick?.(e);
                 if (disableRipple || isDisabled || isDisabledRipple) return;
 
+                if (isLoading) return;
                 if (isMobile()) {
                     onPointerDownRipple(e);
                     nextTick(() => {
@@ -109,14 +110,16 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
                 isDisabledRipple,
                 rest.onClick,
                 onPointerDownRipple,
-                isMobile
+                isMobile,
+                isLoading
             ]
         );
 
         const onPointerDown = useCallback(
             (e: React.PointerEvent<HTMLButtonElement>) => {
                 rest.onPointerDown?.(e);
-                if (disableRipple || isDisabled || isDisabledRipple || isMobile()) return;
+                if (disableRipple || isDisabled || isDisabledRipple || isMobile() || isLoading)
+                    return;
                 onPointerDownRipple(e);
             },
             [
@@ -125,7 +128,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
                 onPointerDownRipple,
                 isDisabledRipple,
                 rest.onPointerDown,
-                isMobile
+                isMobile,
+                isLoading
             ]
         );
 
@@ -168,7 +172,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
                     <ButtonIcon data-part="icon-right">{rightIcon}</ButtonIcon>
                 )}
 
-                {!disableRipple && !isDisabled && !isLoading && (
+                {!disableRipple && !isDisabled && (
                     <div
                         style={{
                             position: "absolute",

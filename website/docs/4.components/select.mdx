@@ -260,6 +260,45 @@ export function MultipleSelect() {
 }
 ```
 
+
+### Custom Multiple Selected Text
+
+You can change the text that Select displays when multiple keys are selected by using `multipleSelectedText` prop in `SelectTrigger`.
+
+<Wrapper>
+    <Select isMultiple>
+        <SelectTrigger
+            maxW="xs"
+            placeholder="Select a favorite fruit"
+            multipleSelectedText={(selectedKeys) => `${selectedKeys.join(", ")}`}
+        />
+        <SelectContent>
+            <SelectItem value="strawberry">Strawberry</SelectItem>
+            <SelectItem value="banana">Banana</SelectItem>
+            <SelectItem value="orange">Orange</SelectItem>
+        </SelectContent>
+    </Select>
+</Wrapper>
+
+```tsx
+export function MultipleSelect() {
+    return (
+        <Select isMultiple>
+            <SelectTrigger
+                maxW="xs"
+                placeholder="Select a favorite fruit"
+                multipleSelectedText={(selectedKeys) => `${selectedKeys.join(", ")}`}
+            />
+            <SelectContent>
+                <SelectItem value="strawberry">Strawberry</SelectItem>
+                <SelectItem value="banana">Banana</SelectItem>
+                <SelectItem value="orange">Orange</SelectItem>
+            </SelectContent>
+        </Select>
+    );
+}
+```
+
 ### Async loading
 
 You can fetch data when the Select is opened.

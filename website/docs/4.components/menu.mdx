@@ -1,0 +1,118 @@
+---
+title: Menu
+description: Menu allows to create a dropdown list of options.
+isServerComponent: false
+source: /packages/react/src/components/menu/menu.tsx
+themeSource: /packages/system/src/recipes/menu.ts
+---
+
+## Import
+
+- `Menu` - The Menu component with context.
+- `MenuTrigger` - The trigger for the Menu.
+- `MenuContent` - The content for the Menu as popover.
+- `MenuItem` - The item for the Menu.
+
+
+```tsx
+import { 
+	Menu,
+    MenuItem,
+    MenuContent,
+    MenuTrigger
+ } from "@dreamy-ui/react";
+```
+
+## Usage
+
+Basic usage of Menu.
+
+<Wrapper>
+	<Menu>
+        <MenuTrigger>
+            <Button w={"fit-content"}>Open Menu</Button>
+        </MenuTrigger>
+        <MenuContent>
+            <MenuItem>Strawberry</MenuItem>
+            <MenuItem>Banana</MenuItem>
+            <MenuItem>Orange</MenuItem>
+        </MenuContent>
+    </Menu>
+</Wrapper>
+
+```tsx
+<Menu>
+    <MenuTrigger>
+        <Button>Open Menu</Button>
+    </MenuTrigger>
+    <MenuContent>
+        <MenuItem>Strawberry</MenuItem>
+        <MenuItem>Banana</MenuItem>
+        <MenuItem>Orange</MenuItem>
+    </MenuContent>
+</Menu>
+```
+
+### Placement
+
+You can change where the Menu is placed by using the `placement` prop.
+
+<Wrapper>
+    <Menu placement="bottom-start">
+        <MenuTrigger>
+            <Button w={"fit-content"}>Open Menu</Button>
+        </MenuTrigger>
+        <MenuContent>
+            <MenuItem>Strawberry</MenuItem>
+            <MenuItem>Banana</MenuItem>
+            <MenuItem>Orange</MenuItem>
+        </MenuContent>
+    </Menu>
+</Wrapper>
+
+```tsx
+<Menu placement="bottom-start">
+    <MenuTrigger>
+        <Button>Open Menu</Button>
+    </MenuTrigger>
+    <MenuContent>
+        <MenuItem>Strawberry</MenuItem>
+        <MenuItem>Banana</MenuItem>
+        <MenuItem>Orange</MenuItem>
+    </MenuContent>
+</Menu>
+```
+
+### Size
+
+Menu comes with 4 different sizes.
+
+<Wrapper>
+    {["xs", "sm", "md", "lg"].map((size) => (
+        <Menu key={size} size={size}>
+            <MenuTrigger>
+                <Button w={"fit-content"}>Open {size} Menu</Button>
+            </MenuTrigger>
+            <MenuContent>
+                <MenuItem>Strawberry</MenuItem>
+                <MenuItem>Banana</MenuItem>
+                <MenuItem>Orange</MenuItem>
+            </MenuContent>
+        </Menu>
+    ))}
+</Wrapper>
+
+```tsx
+{["xs", "sm", "md", "lg"].map((size) => (
+    <Menu key={size} size={size}>
+        <MenuTrigger>
+            <Button>Open Menu</Button>
+        </MenuTrigger>
+        <MenuContent>
+            <MenuItem>Strawberry</MenuItem>
+            <MenuItem>Banana</MenuItem>
+            <MenuItem>Orange</MenuItem>
+        </MenuContent>
+    </Menu>
+))}
+```

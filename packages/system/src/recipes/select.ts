@@ -76,15 +76,7 @@ export const select = defineSlotRecipe({
             p: "0 !important",
             gap: "0 !important",
             overflowY: "auto",
-            boxShadow: "md",
-            _open: {
-                animationStyle: "slide-fade-in",
-                animationDuration: "fast"
-            },
-            _closed: {
-                animationStyle: "slide-fade-out",
-                animationDuration: "fastest"
-            }
+            boxShadow: "md"
         },
         item: {
             position: "relative",

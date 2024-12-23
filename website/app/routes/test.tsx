@@ -14,6 +14,10 @@ import {
     InputGroup,
     InputLeftAddon,
     InputRightAddon,
+    Menu,
+    MenuContent,
+    MenuItem,
+    MenuTrigger,
     Modal,
     ModalBody,
     ModalCloseButton,
@@ -48,6 +52,7 @@ import {
     TableHeader,
     TableRow,
     Tabs,
+    useActionKey,
     useControllable
 } from "@dreamy-ui/react";
 import {
@@ -64,7 +69,7 @@ import {
     VStack
 } from "@dreamy-ui/react/rsc";
 import type { ActionFunctionArgs } from "@remix-run/node";
-import { Form, useNavigation } from "@remix-run/react";
+import { Form, Link, useNavigation } from "@remix-run/react";
 import { useEffect, useMemo, useState } from "react";
 import { IoAdd, IoRemove } from "react-icons/io5";
 
@@ -88,21 +93,48 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function Test() {
-    const [count, setCount] = useState(0);
-
-    const [checked, setChecked] = useState(false);
-
-    const { isOpen, onClose, onOpen } = useControllable();
-
     const navigation = useNavigation();
-
     const [pin, setPin] = useState("123");
+    const [count, setCount] = useState(0);
+    const [checked, setChecked] = useState(false);
+    const { isOpen, onClose, onOpen } = useControllable();
 
     return (
         <Flex
             col
             gap={10}
         >
+            {(["xs", "sm", "md", "lg"] as const).map((size) => (
+                <Menu
+                    key={size}
+                    size={size}
+                >
+                    <MenuTrigger>
+                        <Button w={"fit-content"}>Skibidi</Button>
+                    </MenuTrigger>
+                    <MenuContent>
+                        <MenuItem
+                            icon={<IoAdd />}
+                            command={`${useActionKey()} k`}
+                        >
+                            Skibidi
+                        </MenuItem>
+                        <MenuItem
+                            icon={<IoAdd />}
+                            command={`${useActionKey()} i`}
+                            asComp={<Link to="/">Skibidi</Link>}
+                        >
+                            Skibidi
+                        </MenuItem>
+                        <MenuItem
+                            icon={<IoAdd />}
+                            command={`${useActionKey()} s`}
+                        >
+                            Skibidi
+                        </MenuItem>
+                    </MenuContent>
+                </Menu>
+            ))}
             <Switch
                 size={"sm"}
                 onChangeValue={(e) => console.log(e)}

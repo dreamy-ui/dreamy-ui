@@ -2,7 +2,12 @@ import { defineRecipe } from "@pandacss/dev";
 
 export const kbd = defineRecipe({
     className: "dream-keyboard-key",
-    jsx: ["Kbd"],
+    jsx: ["Kbd", "Menu", "MenuButton"],
+    staticCss: [
+        {
+            size: true
+        }
+    ],
     base: {
         display: "inline-flex",
         gap: 0.5,
@@ -17,19 +22,19 @@ export const kbd = defineRecipe({
                 px: 1,
                 py: 0.25,
                 fontSize: "xs",
-                rounded: "l1",
+                rounded: "l1"
             },
             md: {
                 px: 1.5,
                 py: 0.5,
                 fontSize: "sm",
-                rounded: "l2",
+                rounded: "l2"
             },
             lg: {
                 px: 2,
                 py: 0.75,
                 fontSize: "md",
-                rounded: "l3",
+                rounded: "l3"
             }
         }
     },

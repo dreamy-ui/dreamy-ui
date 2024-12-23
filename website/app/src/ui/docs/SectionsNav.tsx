@@ -1,8 +1,8 @@
-import { Button, Collapse } from "@dreamy-ui/react";
+import { Button, Collapse, useSafeLayoutEffect } from "@dreamy-ui/react";
 import { Flex, Icon } from "@dreamy-ui/react/rsc";
 import { useLocation } from "@remix-run/react";
 import { AnimatePresence } from "motion/react";
-import { memo, useEffect, useRef, useState } from "react";
+import { memo, useRef, useState } from "react";
 import { BiChevronRight } from "react-icons/bi";
 import { useSections } from "~/routes/docs";
 import type { ISection } from "~/src/.server/docs";
@@ -13,14 +13,14 @@ export default function SectionsNav() {
     const { sections } = useSections();
 
     const ref = useRef<HTMLDivElement>(null);
-    useEffect(() => {
+    useSafeLayoutEffect(() => {
         const currentDoc = document.getElementById("current-doc");
         if (!currentDoc) return;
 
         const top = currentDoc.offsetTop;
         ref.current?.scrollTo({
-            top,
-            behavior: "smooth"
+            top: top - 80,
+            behavior: (window as any)?.hydrated ? "instant" : "smooth"
         });
     }, []);
 

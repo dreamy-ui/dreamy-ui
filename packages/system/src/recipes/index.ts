@@ -25,6 +25,7 @@ import { checkbox, checkboxParts } from "./checkbox";
 import { snippet, snippetParts } from "./snippet";
 import { switchRecipe } from "./switch";
 import { table } from "./table";
+import { menu } from "./menu";
 
 export const recipes = {
     button,
@@ -53,7 +54,8 @@ export const recipes = {
     skeleton,
     radio,
     select,
-    switchRecipe
+    switchRecipe,
+    menu
 };
 
 export const parts = {

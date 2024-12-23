@@ -19,6 +19,10 @@ import {
     InputGroup,
     InputLeftAddon,
     InputRightAddon,
+    Menu,
+    MenuContent,
+    MenuItem,
+    MenuTrigger,
     MotionBox,
     PinInput,
     PinInputField,
@@ -121,9 +125,9 @@ import {
 import { ControlledPinInput } from "./components/inputs";
 import { AsyncSelect, ControlledSelect } from "./components/selects";
 import { ControlledSlider, MaxMinSlider } from "./components/sliders";
+import { ControlledSwitch } from "./components/switches";
 import { ControlledTabs, VariantTabs } from "./components/tabs";
 import { Collapsed, Scaled } from "./components/transitions";
-import { ControlledSwitch } from "./components/switches";
 
 interface Props {
     mdxContent: MdxContent;
@@ -258,7 +262,11 @@ const DreamComponents = {
     Switch,
     ControlledCheckbox,
     ControlledCheckboxCard,
-    ControlledSwitch
+    ControlledSwitch,
+    Menu,
+    MenuTrigger,
+    MenuContent,
+    MenuItem
 };
 
 function Wrapper({ children }: PropsWithChildren) {
@@ -527,7 +535,6 @@ function DefaultHeading({ mt, mb, ...props }: HeadingProps) {
             <DreamLink
                 href={`#${hId}`}
                 scrollMarginTop={24}
-                role="group"
                 cursor="pointer"
                 w={"fit-content"}
             >
