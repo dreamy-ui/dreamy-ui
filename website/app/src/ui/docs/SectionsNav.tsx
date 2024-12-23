@@ -1,5 +1,5 @@
 import { Button, Collapse, useSafeLayoutEffect } from "@dreamy-ui/react";
-import { Flex, Icon } from "@dreamy-ui/react/rsc";
+import { Badge, Flex, Icon } from "@dreamy-ui/react/rsc";
 import { useLocation } from "@remix-run/react";
 import { AnimatePresence } from "motion/react";
 import { memo, useRef, useState } from "react";
@@ -8,6 +8,8 @@ import { useSections } from "~/routes/docs";
 import type { ISection } from "~/src/.server/docs";
 import { cachePageData } from "~/src/functions/clientCache";
 import { Link } from "~/src/ui/global/Link";
+
+const newComponents = ["switch", "menu"];
 
 export default function SectionsNav() {
     const { sections } = useSections();
@@ -140,6 +142,7 @@ const MemoSectionButton = memo(function SectionButton({
 }: { file: ISection["sections"][number] }) {
     const path = useLocation().pathname;
     const isCurrent = path === file.slug;
+    const isNew = newComponents.includes(file.name.toLowerCase());
 
     return (
         <Button
@@ -154,12 +157,22 @@ const MemoSectionButton = memo(function SectionButton({
                 />
             }
             size={"sm"}
-            justifyContent={"flex-start"}
+            justifyContent={"space-between"}
             onPointerEnter={() => {
                 cachePageData(file.slug);
             }}
         >
             {file.name}
+            {isNew && (
+                <Badge
+                    scheme={isCurrent ? "none" : "secondary"}
+                    css={{
+                        "--badge-color": isCurrent ? "{colors.bg.light}" : undefined
+                    }}
+                >
+                    New
+                </Badge>
+            )}
         </Button>
     );
 });
