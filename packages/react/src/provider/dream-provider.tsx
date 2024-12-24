@@ -32,8 +32,13 @@ interface DreamContext {
 
 const DreamContext = createContext<DreamContext | null>(null);
 
-interface DreamProviderProps
-    extends Partial<Omit<DreamContext, "hasHydrated" | "initialColorMode" | "toggleColorMode" | "setColorMode" | "hasHydrated">> {
+interface DreamyProviderProps
+    extends Partial<
+        Omit<
+            DreamContext,
+            "hasHydrated" | "initialColorMode" | "toggleColorMode" | "setColorMode" | "hasHydrated"
+        >
+    > {
     motionFeatures: FeatureBundle | LazyFeatureBundle;
     motionStrict?: boolean;
     children: React.ReactNode;
@@ -41,7 +46,7 @@ interface DreamProviderProps
 
 export const DreamColorModeCookieKey = "dream-ui-color-mode";
 
-export function DreamProvider({
+export function DreamyProvider({
     children,
     motionVariants = defaultMotionVariants,
     defaultTransition = defaultDefaultTransition,
@@ -52,7 +57,7 @@ export function DreamProvider({
     reduceMotion: InitialReduceMotion = false,
     motionFeatures,
     motionStrict = false
-}: DreamProviderProps) {
+}: DreamyProviderProps) {
     const [reduceMotion, setReduceMotion] = useState(InitialReduceMotion);
     const [colorMode, setResolvedColorMode] = useState<ColorMode>(
         InitialColorMode ?? defaultColorMode
@@ -165,40 +170,40 @@ export function DreamProvider({
     );
 }
 
-export function useDream() {
+export function useDreamy() {
     const context = useContext(DreamContext);
     if (!context) {
-        throw new Error("useDream must be used within a DreamProvider");
+        throw new Error("useDreamy must be used within a DreamyProvider");
     }
     return context;
 }
 
 export function useMotionVariants() {
-    const { motionVariants } = useDream();
+    const { motionVariants } = useDreamy();
 
     return motionVariants;
 }
 
 export function useDefaultTransition() {
-    const { defaultTransition } = useDream();
+    const { defaultTransition } = useDreamy();
 
     return defaultTransition;
 }
 
 export function useColorMode() {
-    const { colorMode, setColorMode, toggleColorMode } = useDream();
+    const { colorMode, setColorMode, toggleColorMode } = useDreamy();
 
     return { colorMode, setColorMode, toggleColorMode };
 }
 
 export function useDisableRipple() {
-    const { disableRipple } = useDream();
+    const { disableRipple } = useDreamy();
 
     return disableRipple;
 }
 
 export function useCanUseDOM() {
-    const { hasHydrated } = useDream();
+    const { hasHydrated } = useDreamy();
 
     return hasHydrated;
 }
@@ -208,7 +213,7 @@ export function useCanUseDOM() {
  * @default "system", it will resolve a boolean to the system preference.
  */
 export function useReducedMotion() {
-    const { reduceMotion } = useDream();
+    const { reduceMotion } = useDreamy();
 
     return typeof reduceMotion === "string" ? false : reduceMotion;
 }

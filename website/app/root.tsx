@@ -1,4 +1,4 @@
-import { DreamProvider } from "@dreamy-ui/react";
+import { DreamyProvider } from "@dreamy-ui/react";
 import { getColorModeHTMLProps, getSSRColorMode } from "@dreamy-ui/react/rsc";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import {
@@ -91,14 +91,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 <Links />
             </head>
             <body>
-                <DreamProvider
+                <DreamyProvider
                     motionFeatures={motionFeatures}
                     colorMode={colorMode}
                     useUserPreferenceColorMode
                     motionStrict
                 >
                     <AppLayout>{children}</AppLayout>
-                </DreamProvider>
+                </DreamyProvider>
                 <ScrollRestoration />
                 <Scripts />
                 <script

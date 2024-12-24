@@ -137,7 +137,6 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>((props, ref) => 
     return (
         <>
             {trigger}
-            {/* @ts-expect-error */}
             <AnimatePresence>
                 {tooltip.isOpen && !isDisabled && (
                     <PortalComponent {...(disablePortal ? {} : (portalProps as any))}>

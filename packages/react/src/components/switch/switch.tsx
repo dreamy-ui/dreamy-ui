@@ -30,7 +30,7 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>((props, ref) => 
         <StyledSwitch {...(getRootProps() as any)}>
             <VisuallyHiddenInput {...(getInputProps() as any)} />
             <span {...getWrapperProps()}>
-                <MotionBox {...(getThumbProps() as any)}>{runIfFn(icon)}</MotionBox>
+                <MotionBox {...(getThumbProps() as any)}>{runIfFn(icon as any)}</MotionBox>
             </span>
             {children && <span {...getLabelProps()}>{children}</span>}
         </StyledSwitch>

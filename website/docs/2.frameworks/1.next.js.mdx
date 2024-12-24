@@ -50,7 +50,7 @@ First create a `providers.tsx` file in `app/providers.tsx`. This is where you wi
 ```tsx
 "use client";
 
-import { type ColorMode, DreamProvider } from "@dreamy-ui/react";
+import { type ColorMode, DreamyProvider } from "@dreamy-ui/react";
 import { domMax } from "motion/react";
 import type { PropsWithChildren } from "react";
 
@@ -60,14 +60,14 @@ interface ProvidersProps extends PropsWithChildren {
 
 export function Providers({ children, colorMode }: ProvidersProps) {
     return (
-        <DreamProvider
+        <DreamyProvider
             motionFeatures={domMax}
             colorMode={colorMode}
             motionStrict
             useUserPreferenceColorMode
         >
             {children}
-        </DreamProvider>
+        </DreamyProvider>
     );
 }
 ```

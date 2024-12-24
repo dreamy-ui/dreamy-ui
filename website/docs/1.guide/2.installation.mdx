@@ -51,16 +51,16 @@ export default defineConfig({
 
 ### 3. Add Dream Provider
 
-Add `DreamProvider` to the root of your app. It is a wrapper for your app, which provides Dreamy UI with all the necessary context.
+Add `DreamyProvider` to the root of your app. It is a wrapper for your app, which provides Dreamy UI with all the necessary context.
 
 ```tsx
-import { DreamProvider } from "@dreamy-ui/react";
+import { DreamyProvider } from "@dreamy-ui/react";
 
 export default function App() {
 	return (
-		<DreamProvider>
+		<DreamyProvider>
 			<YourApp />
-		</DreamProvider>
+		</DreamyProvider>
 	);
 }
 ```

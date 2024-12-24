@@ -29,7 +29,7 @@ export const MenuButtonBase = forwardRef<HTMLDivElement, MenuButtonProps>(
         return (
             <StyledButton {...(buttonProps as any)}>
                 <span>
-                    {runIfFn(icon)}
+                    {runIfFn(icon as any)}
                     {buttonProps.children}
                 </span>
                 {command && <Kbd size={"sm"}>{command.replaceAll("{actionKey}", actionKey)}</Kbd>}

@@ -5,7 +5,7 @@ import { BiMoon, BiSun } from "react-icons/bi";
 import { IconButton } from "../src/components/button/icon-button";
 import { Icon } from "../src/components/icon/icon";
 import { VStack } from "../src/components/stack/vstack";
-import { DreamProvider, useColorMode } from "../src/provider/dream-provider";
+import { DreamyProvider, useColorMode } from "../src/provider/dream-provider";
 import "./index.css";
 
 export default {
@@ -25,7 +25,7 @@ export default {
     },
     decorators: [
         (Story) => (
-            <DreamProvider motionFeatures={domMax}>
+            <DreamyProvider motionFeatures={domMax}>
                 <VStack
                     gap={4}
                     maxW={"xs"}
@@ -33,7 +33,7 @@ export default {
                     <ToggleColorModeButton />
                     <Story />
                 </VStack>
-            </DreamProvider>
+            </DreamyProvider>
         )
     ]
 } satisfies Preview;

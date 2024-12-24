@@ -163,7 +163,7 @@ export {
 export * from "./hooks";
 export {
     DreamColorModeCookieKey,
-    DreamProvider,
+    DreamyProvider,
     useCanUseDOM,
     useColorMode,
     useDefaultTransition,

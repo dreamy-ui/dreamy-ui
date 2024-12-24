@@ -11,7 +11,6 @@ export const ModalOverlayBase = forwardRef<HTMLDivElement, ModalOverlayProps>((p
     const { overlay } = useMotionVariants();
 
     return (
-        // @ts-expect-error
         <AnimatePresence>
             {isOpen && (
                 <MotionBox

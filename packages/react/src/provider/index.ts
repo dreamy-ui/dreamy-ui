@@ -1,6 +1,6 @@
 export {
     DreamColorModeCookieKey,
-    DreamProvider,
+    DreamyProvider,
     useCanUseDOM,
     useColorMode,
     useDefaultTransition,
