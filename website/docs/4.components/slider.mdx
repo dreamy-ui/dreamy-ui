@@ -122,6 +122,23 @@ You can change the size of the Slider by using the `size` prop.
 </VStack>
 ```
 
+### Scheme
+
+You can change the scheme of the Slider by using the `scheme` prop.
+
+<Wrapper>
+	<VStack gap={10}>
+		{['primary', 'secondary', 'info', 'success', 'warning', 'error', 'none'].map((scheme) => (
+			<Slider key={scheme} scheme={scheme}>
+				<SliderTrack>
+					<SliderFilledTrack />
+					<SliderThumb />
+				</SliderTrack>
+			</Slider>
+		))}
+	</VStack>
+</Wrapper>
+
 ### Orientation
 
 You can change the orientation of the Slider by using the `orientation` prop.
