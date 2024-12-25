@@ -2,7 +2,7 @@ import { defineRecipe } from "@pandacss/dev";
 
 export const input = defineRecipe({
     className: "dream-input",
-    jsx: ["Input", "PinInput", "PinInputField", "InputGroup"],
+    jsx: ["Input", "PinInput", "PinInputField", "InputGroup", "InputLeftAddon", "InputRightAddon"],
     staticCss: ["*"],
     base: {
         appearance: "none",
@@ -19,6 +19,11 @@ export const input = defineRecipe({
         _disabled: {
             opacity: 0.4,
             cursor: "not-allowed"
+        },
+        "[data-pin-input]:has(&)": {
+            display: "flex",
+            alignItems: "center",
+            gap: 2
         }
     },
     defaultVariants: {

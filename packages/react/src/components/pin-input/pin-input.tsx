@@ -1,6 +1,7 @@
 import { Input, type InputProps } from "@/components/input";
-import { HStack, type HStackProps } from "@/components/stack";
-import { Fragment, forwardRef, useMemo } from "react";
+import { Box, type BoxProps } from "@/rsc";
+import { splitCssProps } from "@dreamy-ui/system/jsx";
+import { forwardRef } from "react";
 import {
     PinInputDescendantsProvider,
     PinInputProvider,
@@ -9,19 +10,14 @@ import {
     usePinInputField
 } from "./use-pin-input";
 
-export interface PinInputProps extends UsePinInputProps, Omit<InputProps, keyof UsePinInputProps> {
+export interface PinInputProps
+    extends UsePinInputProps,
+        Omit<InputProps, keyof UsePinInputProps | keyof BoxProps>,
+        Omit<BoxProps, keyof UsePinInputProps> {
     /**
      * The children of the pin input component
      */
     children: React.ReactNode;
-    /**
-     * If `true`, the pin inputs will be wrapped into a `HStack`
-     */
-    stacked?: boolean;
-    /**
-     * Props to be passed to the wrapper. Mainly used to customize the `HStack` component, when `stacked` is `true`
-     */
-    wrapperProps?: HStackProps;
 }
 
 /**
@@ -30,20 +26,20 @@ export interface PinInputProps extends UsePinInputProps, Omit<InputProps, keyof 
  * @see Docs https://dream-ui.com/docs/components/pin-input
  */
 export const PinInput = forwardRef<HTMLDivElement, PinInputProps>(function PinInput(props, ref) {
-    const { children, stacked, wrapperProps, ...inputRestProps } = props;
-    const { descendants, getWrapperProps, ...context } = usePinInput(inputRestProps);
-
-    const Wrapper = useMemo(() => (stacked ? HStack : Fragment), [stacked]);
+    const { children, ...rest } = props;
+    const [cssProps, otherProps] = splitCssProps(rest);
+    const { descendants, ...context } = usePinInput(otherProps);
 
     return (
-        <Wrapper
-            {...wrapperProps}
+        <Box
+            {...cssProps}
+            data-pin-input
             ref={ref}
         >
             <PinInputDescendantsProvider value={descendants}>
                 <PinInputProvider value={context}>{children}</PinInputProvider>
             </PinInputDescendantsProvider>
-        </Wrapper>
+        </Box>
     );
 });
 

@@ -2,7 +2,7 @@
 title: Pin Input
 description: Pin Input can be used to collect a pin code from authenticator app.
 isServerComponent: false
-source: /packages/react/src/components/pin-input/input.tsx  
+source: /packages/react/src/components/pin-input/pin-input.tsx  
 themeSource: /packages/system/src/recipes/input.ts
 ---
 
@@ -17,10 +17,10 @@ import { PinInput, PinInputField } from "@dreamy-ui/react";
 
 ## Usage
 
-`PinInput` does not have any wrapper by default, so you probably want to use `stacked` prop to tell Dream to wrap it into a `HStack`. Use `wrapperProps` to customize the `HStack` component.
+`PinInput` is a wrapper component for `PinInputField` that provides a context for the pin input.
 
 <Wrapper>
-	<PinInput stacked>
+	<PinInput>
 		<PinInputField />
 		<PinInputField />
 		<PinInputField />
@@ -28,7 +28,7 @@ import { PinInput, PinInputField } from "@dreamy-ui/react";
 </Wrapper>
 
 ```tsx
-<PinInput stacked>
+<PinInput>
   <PinInputField />
   <PinInputField />
   <PinInputField />
@@ -49,7 +49,6 @@ export function ControlledPinInput() {
         <PinInput
             value={pin}
             onChange={setPin}
-            stacked
         >
             <PinInputField />
             <PinInputField />
@@ -63,19 +62,19 @@ export function ControlledPinInput() {
 
 <Wrapper> 
 	<VStack w="full">
-    <PinInput stacked size="sm">
+    <PinInput size="sm">
       <PinInputField />
       <PinInputField />
       <PinInputField />
     </PinInput>
 
-    <PinInput stacked size="md">
+    <PinInput size="md">
       <PinInputField />
       <PinInputField />
       <PinInputField />
     </PinInput>
 
-    <PinInput stacked size="lg">
+    <PinInput size="lg">
       <PinInputField />
       <PinInputField />
       <PinInputField />
@@ -87,19 +86,19 @@ export function ControlledPinInput() {
 
 <Wrapper>
 	<VStack w="full">
-		<PinInput stacked variant="outline">
+		<PinInput variant="outline">
       <PinInputField />
       <PinInputField />
       <PinInputField />
    </PinInput>
 
-    <PinInput stacked variant="filled">
+    <PinInput variant="filled">
        <PinInputField />
        <PinInputField />
        <PinInputField />
     </PinInput>
  
-    <PinInput stacked variant="flushed">
+    <PinInput variant="flushed">
       <PinInputField />
 			<PinInputField />
 			<PinInputField />
@@ -109,19 +108,19 @@ export function ControlledPinInput() {
 
 ```tsx
 <VStack w="full">
-  <PinInput stacked variant="outline">
+  <PinInput variant="outline">
       <PinInputField />
       <PinInputField />
       <PinInputField />
    </PinInput>
 
-   <PinInput stacked variant="filled">
+   <PinInput variant="filled">
        <PinInputField />
        <PinInputField />
        <PinInputField />
     </PinInput>
  
-     <PinInput stacked variant="flushed">
+     <PinInput variant="flushed">
         <PinInputField />
 		<PinInputField />
 		<PinInputField />
@@ -133,14 +132,14 @@ export function ControlledPinInput() {
 Pass `isInvalid` prop to the `PinInput` to show the error state.
 
 <Wrapper>
-	<PinInput stacked isInvalid>
+	<PinInput isInvalid>
 		<PinInputField />
 		<PinInputField />
 	</PinInput>
 </Wrapper>
 
 ```tsx
-<PinInput stacked isInvalid>
+<PinInput isInvalid>
 	<PinInputField />
 	<PinInputField />
  </PinInput>
@@ -150,7 +149,7 @@ Pass `isInvalid` prop to the `PinInput` to show the error state.
 Pass `isDisabled` prop to the `PinInput` to show the disabled state.
 
 <Wrapper>
-	<PinInput stacked isDisabled>
+	<PinInput isDisabled>
 		<PinInputField />
 	  <PinInputField />
 		<PinInputField />
@@ -158,7 +157,7 @@ Pass `isDisabled` prop to the `PinInput` to show the disabled state.
 </Wrapper>
 
 ```tsx
-<PinInput stacked isDisabled>
+<PinInput isDisabled>
 	<PinInputField />
 	<PinInputField />
 	<PinInputField />
