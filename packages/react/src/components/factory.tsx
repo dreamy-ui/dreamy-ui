@@ -96,20 +96,6 @@ type JsxElements = {
 
 export type Dreamy = DreamFactory & JsxElements;
 
-export interface JsxFactory {
-    <T extends ElementType>(component: T): DreamComponent<T, {}>;
-    <T extends ElementType, P extends RecipeVariantRecord>(
-        component: T,
-        recipe: RecipeDefinition<P>,
-        options?: JsxFactoryOptions<JsxRecipeProps<T, RecipeSelection<P>>>
-    ): JsxElement<T, RecipeSelection<P>>;
-    <T extends ElementType, P extends RecipeFn>(
-        component: T,
-        recipeFn: P,
-        options?: JsxFactoryOptions<JsxRecipeProps<T, P["__type"]>>
-    ): JsxElement<T, P["__type"]>;
-}
-
 function styledWithAsProps<T extends ElementType, P extends RecipeVariantRecord>(
     Component: T,
     recipe?: RecipeDefinition<P>,
