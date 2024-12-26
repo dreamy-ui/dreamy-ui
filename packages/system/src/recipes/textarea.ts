@@ -53,7 +53,7 @@ export const textarea = defineRecipe({
                         borderColor: "{colors.primary}"
                     }
                 },
-                _invalid: {
+                "&:user-invalid, &[data-invalid]": {
                     _focusWithin: {
                         boxShadow: "0 0 0 0.5px {colors.error} !important"
                     },
@@ -74,7 +74,7 @@ export const textarea = defineRecipe({
                 _focusWithin: {
                     boxShadow: "0 0 0 1.5px {colors.primary}"
                 },
-                _invalid: {
+                "&:user-invalid, &[data-invalid]": {
                     _focusWithin: {
                         boxShadow: "0 0 0 1.5px {colors.error} !important"
                     },
@@ -97,7 +97,7 @@ export const textarea = defineRecipe({
                         borderBottomColor: "{colors.primary}"
                     }
                 },
-                _invalid: {
+                "&:user-invalid, &[data-invalid]": {
                     borderBottomColor: "{colors.error}  !important",
                     _focusWithin: {
                         boxShadow: "0 0.5px 0 0 {colors.error}  !important"

@@ -112,3 +112,31 @@ Dreamy UI provides various utilities to use, like `center`, which is a `alignIte
     <Text>Centered</Text>
 </Flex>
 ```
+
+## Making Forms
+
+The best practice is to use `<Field />` component to wrap your form elements with nice label, help text and error message.
+
+<Field name="name" isRequired>
+    <FieldLabel>Name</FieldLabel>
+    <Input />
+    <FieldHelpText>
+        <>Enter your preferred name</>
+    </FieldHelpText>
+    <FieldError>
+        <>Name cannot be empty</>
+    </FieldError>
+</Field>
+
+```tsx
+<Field name="name">
+    <FieldLabel>Name</FieldLabel>
+    <Input />
+    <FieldHelpText>
+        Enter your preferred name
+    </FieldHelpText>
+    <FieldError>
+        Name cannot be empty
+    </FieldError>
+</Field>
+```
