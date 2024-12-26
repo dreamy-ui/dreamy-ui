@@ -58,6 +58,9 @@ export const switchRecipe = defineRecipe({
             ".group:is([data-checked])&": {
                 bg: "var(--switch-bg)",
                 justifyContent: "flex-end"
+            },
+            ".group:is([data-invalid])&": {
+                boxShadow: "0 0 0 1.5px {colors.error}"
             }
         },
         thumb: {

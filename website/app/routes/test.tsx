@@ -159,7 +159,6 @@ export default function Test() {
             <PinInput
                 value={pin}
                 onChange={setPin}
-                stacked
             >
                 <PinInputField />
                 <PinInputField />
@@ -169,12 +168,17 @@ export default function Test() {
             <Flex
                 col
                 gap={4}
-                /* @ts-ignore */
-                asComp={<Form method="post" />}
+                asComp={
+                    <Form
+                        method="post"
+                        reloadDocument
+                    />
+                }
             >
                 <Select
                     selectedItemBackgroundScheme={"none"}
                     name={"test-select"}
+                    autoComplete="on"
                     // variant={"solid"}
                 >
                     <SelectTrigger placeholder={"Select type"} />
@@ -199,6 +203,7 @@ export default function Test() {
                     </SliderTrack>
                 </Slider>
                 <Switch
+                    autoComplete="on"
                     name={"switch"}
                     size={"md"}
                     onChangeValue={(e) => console.log(e)}
@@ -207,6 +212,7 @@ export default function Test() {
                     Hello
                 </Switch>
                 <Checkbox
+                    autoComplete="on"
                     name={"checkbox"}
                     onChangeValue={(e) => console.log(e)}
                 >

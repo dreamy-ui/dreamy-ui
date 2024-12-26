@@ -12,7 +12,10 @@ export const slider = defineSlotRecipe({
             alignItems: "center",
             position: "relative",
             width: "full",
-            maxW: "400px"
+            "&[aria-disabled='true']": {
+                cursor: "not-allowed",
+                opacity: 0.5
+            }
         },
         track: {
             touchAction: "none",
@@ -23,6 +26,9 @@ export const slider = defineSlotRecipe({
             height: "full",
             cursor: "pointer",
             display: "flex",
+            "[aria-disabled='true'] &": {
+                cursor: "not-allowed"
+            },
             "[data-reversed] &": {
                 flexDirection: "row-reverse"
             },
@@ -69,6 +75,9 @@ export const slider = defineSlotRecipe({
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            _invalid: {
+                boxShadow: "0 0 0 1.5px {colors.error}"
+            },
             _after: {
                 content: '""',
                 width: "70%",
@@ -80,9 +89,15 @@ export const slider = defineSlotRecipe({
             },
             _active: {
                 cursor: "grabbing",
+                "[aria-disabled='true'] &": {
+                    cursor: "not-allowed"
+                },
                 _after: {
                     scale: 0.8
                 }
+            },
+            "[aria-disabled='true'] &": {
+                cursor: "not-allowed"
             },
             "[data-orientation=horizontal] &": {
                 top: "50%",

@@ -4,7 +4,7 @@ import { useControllable, type useControllableProps, useSafeLayoutEffect } from 
 import { type ReactRef, mergeRefs } from "@/hooks/use-merge-refs";
 import { useReducedMotion } from "@/provider";
 import { type PropGetter, callAllHandlers } from "@/utils";
-import { dataAttr } from "@/utils/attr";
+import { ariaAttr, dataAttr } from "@/utils/attr";
 import { useDOMRef } from "@/utils/dom";
 import { nextTick } from "@/utils/ticks";
 import type { HTMLDreamProps } from "@/utils/types";
@@ -222,10 +222,12 @@ export function useSelect<T extends boolean>(props: UseSelectProps<T>) {
         [isOpen, selectedStrategy]
     );
 
+    const [isTriggerFocused, setIsTriggerFocused] = useState(false);
+
     const getTriggerProps: PropGetter = useCallback(
         (props, ref) => {
             const onKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
-                if (!isOpen) return;
+                if (!isOpen || !isTriggerFocused) return;
 
                 function scrollToFocusedItem(index: number) {
                     if (index === -1) return;
@@ -271,10 +273,19 @@ export function useSelect<T extends boolean>(props: UseSelectProps<T>) {
 
             return {
                 "data-slot": "trigger",
-                "aria-invalid": isInvalid,
+                "aria-invalid": ariaAttr(isInvalid),
+                "data-invalid": dataAttr(isInvalid),
                 ref: mergeRefs(triggerRef, ref),
                 "data-placeholder-shown": dataAttr(selectedKeys.length === 0),
+                disabled: isDisabled,
+                type: "button",
                 ...props,
+                onFocus: callAllHandlers(props?.onFocus, () => {
+                    setIsTriggerFocused(true);
+                }),
+                onBlur: callAllHandlers(props?.onBlur, () => {
+                    setIsTriggerFocused(false);
+                }),
                 onKeyDown: callAllHandlers(props?.onKeyDown, onKeyDown)
             };
         },
@@ -284,6 +295,8 @@ export function useSelect<T extends boolean>(props: UseSelectProps<T>) {
             focusedIndex,
             descendants,
             isOpen,
+            isDisabled,
+            isTriggerFocused,
             popoverProps,
             onClose,
             handleItemChange
@@ -315,6 +328,7 @@ export function useSelect<T extends boolean>(props: UseSelectProps<T>) {
                 ref: mergeRefs(ref),
                 "data-slot": "item",
                 ...props,
+                type: "button",
                 onClick: callAllHandlers(props?.onClick, () => {
                     const value = props!.value;
                     handleItemChange(value);

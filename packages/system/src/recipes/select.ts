@@ -38,10 +38,8 @@ export const select = defineSlotRecipe({
                 color: "fg.medium"
             },
             _disabled: {
-                layerStyle: "disabled"
-            },
-            _invalid: {
-                borderColor: "error"
+                cursor: "not-allowed",
+                opacity: 0.5
             }
         },
         indicatorGroup: {
@@ -123,10 +121,24 @@ export const select = defineSlotRecipe({
                     borderColor: "border.muted",
                     transition: "border-color {durations.normal} {easings.easeInOut}",
                     _hover: {
-                        borderColor: "border.hover"
+                        borderColor: "border.hover",
+                        _invalid: {
+                            borderColor: "error"
+                        }
                     },
                     _expanded: {
-                        borderColor: "border.hover"
+                        borderColor: "border.hover",
+                        _invalid: {
+                            borderColor: "error"
+                        }
+                    },
+                    _focusVisible: {
+                        _invalid: {
+                            boxShadow: "0 0 0 0.5px {colors.error}"
+                        }
+                    },
+                    _invalid: {
+                        borderColor: "error"
                     }
                 }
             },
@@ -141,6 +153,9 @@ export const select = defineSlotRecipe({
                     },
                     _expanded: {
                         bg: "alpha.100"
+                    },
+                    _invalid: {
+                        boxShadow: "0 0 0 1.5px {colors.error}"
                     }
                 }
             }

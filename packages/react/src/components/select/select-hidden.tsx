@@ -105,10 +105,7 @@ export function HiddenSelect(props: HiddenSelectProps) {
     const items = Array.from(descendants.values());
 
     return (
-        <VisuallyHidden
-            {...containerProps}
-            data-testid="hidden-select-container"
-        >
+        <VisuallyHidden {...containerProps}>
             <label>
                 {placeholder}
                 <select

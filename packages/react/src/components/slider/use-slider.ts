@@ -87,6 +87,11 @@ export interface UseSliderProps
      */
     isDisabled?: boolean;
     /**
+     * If `true`, the slider will be in `invalid` state
+     * @default false
+     */
+    isInvalid?: boolean;
+    /**
      * If `true`, the slider will be in `read-only` state
      * @default false
      */
@@ -131,6 +136,7 @@ export function useSlider(props: UseSliderProps) {
         min = 0,
         step = 1,
         isDisabled,
+        isInvalid,
         isReadOnly,
         isReversed,
         defaultValue,
@@ -441,6 +447,7 @@ export function useSlider(props: UseSliderProps) {
                 "aria-readonly": ariaAttr(isReadOnly),
                 "aria-label": ariaLabel,
                 "aria-labelledby": field ? field.labelId : ariaLabel ? undefined : ariaLabelledBy,
+                "data-invalid": dataAttr(isInvalid),
                 style: {
                     ...props.style,
                     ...orient({
@@ -470,6 +477,7 @@ export function useSlider(props: UseSliderProps) {
             orientation,
             isDisabled,
             isReadOnly,
+            isInvalid,
             ariaLabel,
             ariaLabelledBy,
             onKeyDown,
@@ -517,9 +525,29 @@ export function useSlider(props: UseSliderProps) {
 
     const getInputProps: PropGetter = useCallback(
         (props = {}, ref = null) => {
-            return { ...props, ref, value, name, id, type: "range" };
+            return {
+                ...props,
+                ref,
+                value,
+                name,
+                id,
+                hidden: true,
+                type: "range",
+                "aria-invalid": ariaAttr(isInvalid),
+                "data-invalid": dataAttr(isInvalid),
+                invalid: isInvalid,
+                disabled: isDisabled,
+                "data-disabled": dataAttr(isDisabled),
+                readOnly: isReadOnly,
+                "data-readonly": dataAttr(isReadOnly),
+                onChange: callAllHandlers(props.onChange, onChange, (e) => {
+                    console.log("input on change", e);
+                    const val = Number.parseFloat(e.target.value);
+                    setValue(val);
+                })
+            };
         },
-        [value, name, id]
+        [value, name, id, isInvalid, isDisabled, isReadOnly, onChange, setValue]
     );
 
     return {

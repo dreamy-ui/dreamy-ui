@@ -114,6 +114,9 @@ export const checkbox = defineRecipe({
                     ".group:is(:active)&": {
                         borderColor: "var(--checkbox-bg)"
                     },
+                    ".group:is([data-invalid])&": {
+                        borderColor: "error"
+                    },
                     color: "var(--checkbox-bg)"
                 }
             }),
@@ -127,7 +130,10 @@ export const checkbox = defineRecipe({
                         background: "var(--checkbox-bg)/50",
                         borderColor: "var(--checkbox-bg)"
                     },
-                    borderColor: "{colors.border.default}"
+                    borderColor: "{colors.border.default}",
+                    ".group:is([data-invalid])&": {
+                        borderColor: "error"
+                    }
                 }
             })
         },
