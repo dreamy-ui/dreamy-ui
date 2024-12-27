@@ -1,7 +1,7 @@
 "use client";
 
 import { SelectContentBase } from "@/components/select/select-content";
-import { SelectIndicatorBase } from "@/components/select/select-indicator";
+import { SelectClearButtonBase, SelectIndicatorBase } from "@/components/select/select-indicator";
 import { SelectItemBase } from "@/components/select/select-item";
 import { SelectItemIndicatorBase } from "@/components/select/select-item-indicator";
 import { SelectTriggerBase } from "@/components/select/select-trigger";
@@ -33,4 +33,5 @@ export const SelectItem = withContext(SelectItemBase, "item");
  */
 export const SelectIndicatorGroup = withContext(Box, "indicatorGroup");
 export const SelectIndicator = withContext(SelectIndicatorBase, "indicator");
+export const SelectClearButton = withContext(SelectClearButtonBase, "clearButton");
 export const SelectItemIndicator = withContext(SelectItemIndicatorBase, "itemIndicator");

@@ -89,6 +89,11 @@ export interface UseSelectProps<T extends boolean> extends UserFeedbackProps, us
      * @default true for non-multiple select, false for multiple select
      */
     closeOnSelect?: boolean;
+    /**
+     * Whether to show the clear button.
+     * @default false
+     */
+    isClearable?: boolean;
 }
 
 export function useSelect<T extends boolean>(props: UseSelectProps<T>) {
@@ -114,6 +119,7 @@ export function useSelect<T extends boolean>(props: UseSelectProps<T>) {
         defaultValue,
         value,
         autoComplete = "off",
+        isClearable,
         ...rest
     } = props;
 
@@ -360,33 +366,48 @@ export function useSelect<T extends boolean>(props: UseSelectProps<T>) {
         [domRef, name, isRequired, autoComplete, isDisabled, selectedKeys]
     );
 
+    const getClearButtonProps: PropGetter = useCallback((props, ref) => {
+        return {
+            ref,
+            ...props,
+            type: "button",
+            onClick: callAllHandlers(props?.onClick, (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setSelectedKeys([]);
+            })
+        };
+    }, []);
+
     return {
         name,
         triggerRef,
         reduceMotion,
         isInvalid,
+        isDisabled,
+        isRequired,
         selectedKeys,
         focusedIndex,
+        selectedStrategy,
         setSelectedKeys,
         setFocusedIndex,
         isOpen,
         onOpen,
-        selectedStrategy,
         onClose,
-        isDisabled,
-        isRequired,
-        popoverRef,
         onToggle,
         isMultiple,
-        getRootProps,
-        getTriggerProps,
-        getContentProps,
-        defaultValue,
-        id,
         onChange,
         onChangeValue,
-        getItemProps,
+        isClearable,
+        defaultValue,
+        id,
+        getRootProps,
         getHiddenSelectProps,
+        getTriggerProps,
+        getContentProps,
+        getItemProps,
+        getClearButtonProps,
+        popoverRef,
         descendants,
         rest
     };

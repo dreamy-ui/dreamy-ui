@@ -179,6 +179,7 @@ export default function Test() {
                     selectedItemBackgroundScheme={"none"}
                     name={"test-select"}
                     autoComplete="on"
+                    isClearable
                     // variant={"solid"}
                 >
                     <SelectTrigger placeholder={"Select type"} />

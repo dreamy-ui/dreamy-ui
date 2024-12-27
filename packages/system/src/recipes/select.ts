@@ -9,6 +9,7 @@ export const select = defineSlotRecipe({
         "trigger",
         "indicatorGroup",
         "indicator",
+        "clearButton",
         "content",
         "item",
         "itemIndicator",
@@ -19,7 +20,8 @@ export const select = defineSlotRecipe({
             display: "flex",
             flexDirection: "column",
             gap: "1.5",
-            width: "full"
+            width: "full",
+            position: "relative"
         },
         trigger: {
             position: "relative",
@@ -58,10 +60,26 @@ export const select = defineSlotRecipe({
             alignItems: "center",
             justifyContent: "center",
             color: { base: "fg.medium", _disabled: "fg.disabled", _invalid: "error" },
-            transition: "transform 0.2s {easings.easeInOut}",
+            transition: "transform {durations.normal} {easings.easeInOut}",
             transform: "rotate(0deg)",
             ".group[data-open] &": {
                 transform: "rotate(180deg)"
+            }
+        },
+        clearButton: {
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "fg.medium",
+            cursor: "pointer",
+            isolation: "isolate",
+            pointerEvents: "auto",
+            transition: "color {durations.normal} {easings.easeInOut}",
+            _hover: {
+                color: "fg"
+            },
+            _disabled: {
+                color: "fg.disabled"
             }
         },
         content: {
@@ -100,7 +118,7 @@ export const select = defineSlotRecipe({
                 pointerEvents: "none",
                 opacity: "0.5"
             }
-            // _icon: {
+            // "& svg": {
             //     width: "4",
             //     height: "4"
             // }
@@ -181,7 +199,12 @@ export const select = defineSlotRecipe({
                     right: "2"
                 },
                 indicator: {
-                    _icon: {
+                    width: "3.5",
+                    height: "3.5"
+                },
+                clearButton: {
+                    p: 1.5,
+                    "& svg": {
                         width: "3.5",
                         height: "3.5"
                     }
@@ -200,10 +223,8 @@ export const select = defineSlotRecipe({
                     gap: "1"
                 },
                 indicator: {
-                    _icon: {
-                        width: "4",
-                        height: "4"
-                    }
+                    width: "4",
+                    height: "4"
                 },
                 item: {
                     py: "1",
@@ -211,6 +232,13 @@ export const select = defineSlotRecipe({
                 },
                 itemIndicator: {
                     right: "1.5"
+                },
+                clearButton: {
+                    p: 1.5,
+                    "& svg": {
+                        width: "3.5",
+                        height: "3.5"
+                    }
                 }
             },
             md: {
@@ -233,7 +261,12 @@ export const select = defineSlotRecipe({
                     gap: "2"
                 },
                 indicator: {
-                    _icon: {
+                    width: "4",
+                    height: "4"
+                },
+                clearButton: {
+                    p: 2,
+                    "& svg": {
                         width: "4",
                         height: "4"
                     }
@@ -260,7 +293,12 @@ export const select = defineSlotRecipe({
                     right: "3"
                 },
                 indicator: {
-                    _icon: {
+                    width: "5",
+                    height: "5"
+                },
+                clearButton: {
+                    p: 2.5,
+                    "& svg": {
                         width: "5",
                         height: "5"
                     }

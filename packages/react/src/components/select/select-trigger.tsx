@@ -1,5 +1,9 @@
 import { PopoverTrigger } from "@/components/popover";
-import { SelectIndicator, SelectIndicatorGroup } from "@/components/select/select";
+import {
+    SelectClearButton,
+    SelectIndicator,
+    SelectIndicatorGroup
+} from "@/components/select/select";
 import { useSelectContext } from "@/components/select/select-context";
 import { useSafeLayoutEffect } from "@/hooks";
 import type { HTMLDreamProps } from "@/utils/types";
@@ -9,7 +13,7 @@ import { dreamy } from "../factory";
 export interface SelectTriggerProps extends HTMLDreamProps<"button"> {
     placeholder?: string;
     /**
-     * 多选时，显示的文本
+     * Text to show when multiple items are selected.
      */
     multipleSelectedText?: (selectedKeys: string[]) => string;
 }
@@ -26,7 +30,7 @@ export const SelectTriggerBase = forwardRef<HTMLButtonElement, SelectTriggerProp
         },
         ref
     ) {
-        const { getTriggerProps, selectedKeys, descendants } = useSelectContext();
+        const { getTriggerProps, selectedKeys, descendants, isClearable } = useSelectContext();
 
         const selectedNames = selectedKeys.map((key) => {
             const item: any = Array.from(descendants.values()).find((node: any) => {
@@ -42,20 +46,23 @@ export const SelectTriggerBase = forwardRef<HTMLButtonElement, SelectTriggerProp
         }, []);
 
         return (
-            <PopoverTrigger>
-                <StyledTrigger {...(getTriggerProps(rest, ref) as any)}>
-                    <span>
-                        {selectedNames.length === 1
-                            ? selectedNames[0]
-                            : selectedNames.length > 1
-                              ? multipleSelectedText(selectedNames)
-                              : placeholder}
-                    </span>
-                    <SelectIndicatorGroup>
-                        <SelectIndicator />
-                    </SelectIndicatorGroup>
-                </StyledTrigger>
-            </PopoverTrigger>
+            <>
+                <PopoverTrigger>
+                    <StyledTrigger {...(getTriggerProps(rest, ref) as any)}>
+                        <span>
+                            {selectedNames.length === 1
+                                ? selectedNames[0]
+                                : selectedNames.length > 1
+                                  ? multipleSelectedText(selectedNames)
+                                  : placeholder}
+                        </span>
+                        <SelectIndicatorGroup>
+                            {isClearable && selectedKeys.length > 0 && <SelectClearButton />}
+                            <SelectIndicator />
+                        </SelectIndicatorGroup>
+                    </StyledTrigger>
+                </PopoverTrigger>
+            </>
         );
     }
 );
