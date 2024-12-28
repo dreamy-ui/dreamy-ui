@@ -1,6 +1,6 @@
 {
 	"name": "@dreamy-ui/system",
-	"version": "0.2.0",
+	"version": "0.3.0",
 	"description": "A design system for Dreamy UI React component library",
 	"type": "module",
 	"keywords": [

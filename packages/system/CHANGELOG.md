@@ -1,5 +1,11 @@
 # @dreamy-ui/system
 
+## 0.3.0
+
+### Minor Changes
+
+-   4e9025f: Add Switch & Add Menu & make pin input a wrapper by default
+
 ## 0.2.0
 
 ### Minor Changes

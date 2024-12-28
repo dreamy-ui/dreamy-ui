@@ -1,5 +1,16 @@
 # @dreamy-ui/react
 
+## 0.3.0
+
+### Minor Changes
+
+-   4e9025f: Add Switch & Add Menu & make pin input a wrapper by default
+
+### Patch Changes
+
+-   Updated dependencies [4e9025f]
+    -   @dreamy-ui/system@0.3.0
+
 ## 0.2.0
 
 ### Minor Changes
