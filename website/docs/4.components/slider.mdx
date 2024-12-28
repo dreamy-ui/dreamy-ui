@@ -21,7 +21,7 @@ import { Slider, SliderTrack, SliderFilledTrack, SliderThumb } from "@dreamy-ui/
 
 <Wrapper>
 	<Slider>
-		<SliderTrack>
+		<SliderTrack maxW="xs">
 			<SliderFilledTrack />
 			<SliderThumb />
 		</SliderTrack>
@@ -30,7 +30,7 @@ import { Slider, SliderTrack, SliderFilledTrack, SliderThumb } from "@dreamy-ui/
 
 ```tsx
 <Slider>
-	<SliderTrack>
+	<SliderTrack maxW="xs">
 		<SliderFilledTrack />
 		<SliderThumb />
 	</SliderTrack>
@@ -62,7 +62,7 @@ function MaxMinSlider() {
                 value={value}
                 onChangeValue={setValue}
                 >
-                <SliderTrack>
+                <SliderTrack maxW="xs">
                     <SliderFilledTrack />
                     <SliderThumb />
                 </SliderTrack>
@@ -79,19 +79,19 @@ You can change the size of the Slider by using the `size` prop.
 <Wrapper>
 	<VStack w="full" gap={10}>
 		<Slider size='sm'>
-			<SliderTrack>
+			<SliderTrack maxW="xs">
 				<SliderFilledTrack />
 				<SliderThumb />
 			</SliderTrack>
 		</Slider>
 		<Slider size='md'>
-			<SliderTrack>
+			<SliderTrack maxW="xs">
 				<SliderFilledTrack />
 				<SliderThumb />
 			</SliderTrack>
 		</Slider>
 		<Slider size='lg'>
-			<SliderTrack>
+			<SliderTrack maxW="xs">
 				<SliderFilledTrack />
 				<SliderThumb />
 			</SliderTrack>
@@ -102,19 +102,19 @@ You can change the size of the Slider by using the `size` prop.
 ```tsx
 <VStack w="full" gap={10}>
 	<Slider size='sm'>
-		<SliderTrack>
+		<SliderTrack maxW="xs">
 			<SliderFilledTrack />
 			<SliderThumb />
 		</SliderTrack>
 	</Slider>
 	<Slider size='md'>
-		<SliderTrack>
+		<SliderTrack maxW="xs">
 			<SliderFilledTrack />
 			<SliderThumb />
 		</SliderTrack>
 	</Slider>
 	<Slider size='lg'>
-		<SliderTrack>
+		<SliderTrack maxW="xs">
 			<SliderFilledTrack />
 			<SliderThumb />
 		</SliderTrack>
@@ -128,16 +128,97 @@ You can change the scheme of the Slider by using the `scheme` prop.
 
 <Wrapper>
 	<VStack gap={10}>
-		{['primary', 'secondary', 'info', 'success', 'warning', 'error', 'none'].map((scheme) => (
-			<Slider key={scheme} scheme={scheme}>
-				<SliderTrack>
-					<SliderFilledTrack />
-					<SliderThumb />
-				</SliderTrack>
-			</Slider>
-		))}
+		<Slider scheme="primary">
+			<SliderTrack maxW="xs">
+				<SliderFilledTrack />
+				<SliderThumb />
+			</SliderTrack>
+		</Slider>
+		<Slider scheme="secondary">
+			<SliderTrack maxW="xs">
+				<SliderFilledTrack />
+				<SliderThumb />
+			</SliderTrack>
+		</Slider>
+		<Slider scheme="info">
+			<SliderTrack maxW="xs">
+				<SliderFilledTrack />
+				<SliderThumb />
+			</SliderTrack>
+		</Slider>
+		<Slider scheme="success">
+			<SliderTrack maxW="xs">
+				<SliderFilledTrack />
+				<SliderThumb />
+			</SliderTrack>
+		</Slider>
+		<Slider scheme="warning">
+			<SliderTrack maxW="xs">
+				<SliderFilledTrack />
+				<SliderThumb />
+			</SliderTrack>
+		</Slider>
+		<Slider scheme="error">
+			<SliderTrack maxW="xs">
+				<SliderFilledTrack />
+				<SliderThumb />
+			</SliderTrack>
+		</Slider>
+		<Slider scheme="none">
+			<SliderTrack maxW="xs">
+				<SliderFilledTrack />
+				<SliderThumb />
+			</SliderTrack>
+		</Slider>
 	</VStack>
 </Wrapper>
+
+```tsx
+<VStack gap={10}>
+	<Slider scheme="primary">
+		<SliderTrack maxW="xs">
+			<SliderFilledTrack />
+			<SliderThumb />
+		</SliderTrack>
+	</Slider>
+	<Slider scheme="secondary">
+		<SliderTrack maxW="xs">
+			<SliderFilledTrack />
+			<SliderThumb />
+		</SliderTrack>
+	</Slider>
+	<Slider scheme="info">
+		<SliderTrack maxW="xs">
+			<SliderFilledTrack />
+			<SliderThumb />
+		</SliderTrack>
+	</Slider>
+	<Slider scheme="success">
+		<SliderTrack maxW="xs">
+			<SliderFilledTrack />
+			<SliderThumb />
+		</SliderTrack>
+	</Slider>
+	<Slider scheme="warning">
+		<SliderTrack maxW="xs">
+			<SliderFilledTrack />
+			<SliderThumb />
+		</SliderTrack>
+	</Slider>
+	<Slider scheme="error">
+		<SliderTrack maxW="xs">
+			<SliderFilledTrack />
+			<SliderThumb />
+		</SliderTrack>
+	</Slider>
+	<Slider scheme="none">
+		<SliderTrack maxW="xs">
+			<SliderFilledTrack />
+			<SliderThumb />
+		</SliderTrack>
+	</Slider>
+</VStack>
+```
 
 ### Orientation
 
@@ -145,7 +226,7 @@ You can change the orientation of the Slider by using the `orientation` prop.
 
 <Wrapper>
 	<Slider orientation="vertical" h="200px">
-		<SliderTrack>
+		<SliderTrack maxW="xs">
 			<SliderFilledTrack />
 			<SliderThumb />
 		</SliderTrack>
@@ -154,7 +235,7 @@ You can change the orientation of the Slider by using the `orientation` prop.
 
 ```tsx
 <Slider orientation="vertical" h="200px">
-	<SliderTrack>
+	<SliderTrack maxW="xs">
 		<SliderFilledTrack />
 		<SliderThumb />
 	</SliderTrack>
@@ -167,7 +248,7 @@ You can reverse the Slider by using the `isReversed` prop.
 
 <Wrapper>	
 	<Slider isReversed>
-		<SliderTrack>
+		<SliderTrack maxW="xs">
 			<SliderFilledTrack />
 			<SliderThumb />
 		</SliderTrack>
@@ -176,7 +257,7 @@ You can reverse the Slider by using the `isReversed` prop.
 
 ```tsx
 <Slider isReversed>
-	<SliderTrack>
+	<SliderTrack maxW="xs">
 		<SliderFilledTrack />
 		<SliderThumb />
 	</SliderTrack>
@@ -203,7 +284,7 @@ function ControlledSlider() {
             </Text>
 
             <Slider value={value} onChangeValue={setValue}>
-                <SliderTrack>
+                <SliderTrack maxW="xs">
                     <SliderFilledTrack />
                     <SliderThumb />
                 </SliderTrack>

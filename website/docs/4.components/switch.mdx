@@ -33,19 +33,23 @@ import { Switch } from "@dreamy-ui/react";
 Change the color scheme of the Switch.
 
 <Wrapper>
-	{["primary", "secondary", "success", "warning", "error", "info"].map((scheme) => (
-		<Switch key={scheme} scheme={scheme} defaultChecked>
-			{scheme}
-		</Switch>
-	))}
+	<Switch scheme="primary" defaultChecked>Primary</Switch>
+	<Switch scheme="secondary" defaultChecked>Secondary</Switch>
+	<Switch scheme="success" defaultChecked>Success</Switch>
+	<Switch scheme="warning" defaultChecked>Warning</Switch>
+	<Switch scheme="error" defaultChecked>Error</Switch>
+	<Switch scheme="info" defaultChecked>Info</Switch>
+	<Switch scheme="none" defaultChecked>None</Switch>
 </Wrapper>
 
 ```tsx
-{["primary", "secondary", "success", "warning", "error", "info"].map((scheme) => (
-	<Switch key={scheme} scheme={scheme}>
-		{scheme}
-	</Switch>
-))}
+<Switch scheme="primary" defaultChecked>Primary</Switch>
+<Switch scheme="secondary" defaultChecked>Secondary</Switch>
+<Switch scheme="success" defaultChecked>Success</Switch>
+<Switch scheme="warning" defaultChecked>Warning</Switch>
+<Switch scheme="error" defaultChecked>Error</Switch>
+<Switch scheme="info" defaultChecked>Info</Switch>
+<Switch scheme="none" defaultChecked>None</Switch>
 ```
 
 ### Size
@@ -53,19 +57,15 @@ Change the color scheme of the Switch.
 Change the Switch size.
 
 <Wrapper>
-	{["sm", "md", "lg"].map((size) => (
-		<Switch key={size} size={size}>
-			{size}
-		</Switch>
-	))}
+	<Switch size="sm">Sm</Switch>
+	<Switch size="md">Md</Switch>
+	<Switch size="lg">Lg</Switch>
 </Wrapper>
 
 ```tsx
-{["sm", "md", "lg"].map((size) => (
-	<Switch key={size} size={size}>
-		{size}
-	</Switch>
-))}
+<Switch size="sm">Sm</Switch>
+<Switch size="md">Md</Switch>
+<Switch size="lg">Lg</Switch>
 ```
 
 ### Controlled

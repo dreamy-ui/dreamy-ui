@@ -53,48 +53,116 @@ Base usage of a Skeleton.
 
 <Wrapper>
     <Flex wrapped gap={6}>
-        {["pulse", "shine", "none"].map(variant => (
-            <VStack w='300px'>
-                <Text>{variant}</Text>
-                <VStack gap={4}>
-                    <HStack>
-                        <Skeleton
-                            variant={variant}
-                            boxSize="10"
-                            rounded={"full"}
-                        />
-                        <SkeletonText
-                            variant={variant}
-                            lines={2}
-                        />
-                    </HStack>
-                    <Skeleton h='150px' variant={variant} />
-                </VStack>
+        <VStack w='300px'>
+            <Text>Pulse</Text>
+            <VStack gap={4}>
+                <HStack>
+                    <Skeleton
+                        variant="pulse"
+                        boxSize="10"
+                        rounded={"full"}
+                    />
+                    <SkeletonText
+                        variant="pulse"
+                        lines={2}
+                    />
+                </HStack>
+                <Skeleton h='150px' variant="pulse" />
             </VStack>
-        ))}
+        </VStack>
+
+        <VStack w='300px'>
+            <Text>Shine</Text>
+            <VStack gap={4}>
+                <HStack>
+                    <Skeleton
+                        variant="shine"
+                        boxSize="10"
+                        rounded={"full"}
+                    />
+                    <SkeletonText
+                        variant="shine"
+                        lines={2}
+                    />
+                </HStack>
+                <Skeleton h='150px' variant="shine" />
+            </VStack>
+        </VStack>
+
+        <VStack w='300px'>
+            <Text>None</Text>
+            <VStack gap={4}>
+                <HStack>
+                    <Skeleton
+                        variant="none"
+                        boxSize="10"
+                        rounded={"full"}
+                    />
+                    <SkeletonText
+                        variant="none"
+                        lines={2}
+                    />
+                </HStack>
+                <Skeleton h='150px' variant="none" />
+            </VStack>
+        </VStack>
     </Flex>
 </Wrapper>
 
 ```tsx
 <Flex wrapped gap={6}>
-    {["pulse", "shine", "none"].map(variant => (
-        <VStack w='300px'>
-            <Text>{variant}</Text>
-            <VStack gap={4}>
-                <HStack>
-                    <Skeleton
-                        variant={variant}
-                        boxSize="10"
-                        rounded={"full"}
-                    />
-                    <SkeletonText
-                        variant={variant}
-                        lines={2}
-                    />
-                </HStack>
-                <Skeleton h='150px' variant={variant} />
-            </VStack>
+    <VStack w='300px'>
+        <Text>Pulse</Text>
+        <VStack gap={4}>
+            <HStack>
+                <Skeleton
+                    variant="pulse"
+                    boxSize="10"
+                    rounded={"full"}
+                />
+                <SkeletonText
+                    variant="pulse"
+                    lines={2}
+                />
+            </HStack>
+            <Skeleton h='150px' variant="pulse" />
         </VStack>
-    ))}
+    </VStack>
+
+    <VStack w='300px'>
+        <Text>Shine</Text>
+        <VStack gap={4}>
+            <HStack>
+                <Skeleton
+                    variant="shine"
+                    boxSize="10"
+                    rounded={"full"}
+                />
+                <SkeletonText
+                    variant="shine"
+                    lines={2}
+                />
+            </HStack>
+            <Skeleton h='150px' variant="shine" />
+        </VStack>
+    </VStack>
+
+    <VStack w='300px'>
+        <Text>None</Text>
+        <VStack gap={4}>
+            <HStack>
+                <Skeleton
+                    variant="none"
+                    boxSize="10"
+                    rounded={"full"}
+                />
+                <SkeletonText
+                    variant="none"
+                    lines={2}
+                />
+            </HStack>
+            <Skeleton h='150px' variant="none" />
+        </VStack>
+    </VStack>
 </Flex>
 ```

@@ -33,7 +33,8 @@ export const switchRecipe = defineRecipe({
             _disabled: {
                 cursor: "not-allowed",
                 opacity: 0.6
-            }
+            },
+            "--switch-thumb-bg": "white"
         },
         control: {
             position: "relative",
@@ -69,7 +70,7 @@ export const switchRecipe = defineRecipe({
             },
             transition:
                 "width {durations.fast} {easings.easeInOut}, background {durations.normal} {easings.easeInOut}",
-            bg: "white",
+            bg: "var(--switch-thumb-bg)",
             height: "var(--switch-height)",
             width: "var(--switch-height)",
             scale: 0.8,
@@ -120,6 +121,20 @@ export const switchRecipe = defineRecipe({
                 }
             })
         },
-        scheme: getColorSchemes("--switch-bg", undefined, "root")
+        scheme: getColorSchemes(
+            "--switch-bg",
+            // @ts-expect-error
+            (scheme) =>
+                scheme === "none"
+                    ? {
+                          _checked: {
+                              _dark: {
+                                  "--switch-thumb-bg": "black"
+                              }
+                          }
+                      }
+                    : {},
+            "root"
+        )
     }
 });

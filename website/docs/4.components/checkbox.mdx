@@ -34,19 +34,23 @@ import { Checkbox, CheckboxGroup } from "@dreamy-ui/react";
 Change the color scheme of the checkbox.
 
 <Wrapper>
-	{["primary", "secondary", "success", "warning", "error", "info"].map((scheme) => (
-		<Checkbox key={scheme} scheme={scheme}>
-			{scheme}
-		</Checkbox>
-	))}
+	<Checkbox scheme={"primary"} defaultChecked>Primary</Checkbox>
+	<Checkbox scheme={"secondary"} defaultChecked>Secondary</Checkbox>
+	<Checkbox scheme={"success"} defaultChecked>Success</Checkbox>
+	<Checkbox scheme={"warning"} defaultChecked>Warning</Checkbox>
+	<Checkbox scheme={"error"} defaultChecked>Error</Checkbox>
+	<Checkbox scheme={"info"} defaultChecked>Info</Checkbox>
+	<Checkbox scheme={"none"} defaultChecked>None</Checkbox>
 </Wrapper>
 
 ```tsx
-{["primary", "secondary", "success", "warning", "error", "info"].map((scheme) => (
-	<Checkbox key={scheme} scheme={scheme}>
-		{scheme}
-	</Checkbox>
-))}
+<Checkbox scheme={"primary"} defaultChecked>Primary</Checkbox>
+<Checkbox scheme={"secondary"} defaultChecked>Secondary</Checkbox>
+<Checkbox scheme={"success"} defaultChecked>Success</Checkbox>
+<Checkbox scheme={"warning"} defaultChecked>Warning</Checkbox>
+<Checkbox scheme={"error"} defaultChecked>Error</Checkbox>
+<Checkbox scheme={"info"} defaultChecked>Info</Checkbox>
+<Checkbox scheme={"none"} defaultChecked>None</Checkbox>
 ```
 
 ### Variant
@@ -54,19 +58,13 @@ Change the color scheme of the checkbox.
 Change the appearance variant of the checkbox.
 
 <Wrapper>
-	{["outline", "solid"].map((variant) => (
-		<Checkbox key={variant} variant={variant}>
-		{variant}
-		</Checkbox>
-	))}
+	<Checkbox variant={"outline"}>Outline</Checkbox>
+	<Checkbox variant={"solid"}>Solid</Checkbox>
 </Wrapper>
 
 ```tsx
-{["outline", "solid"].map((variant) => (
-	<Checkbox key={variant} variant={variant}>
-		{variant}
-	</Checkbox>
-))}
+<Checkbox variant={"outline"}>Outline</Checkbox>
+<Checkbox variant={"solid"}>Solid</Checkbox>
 ```
 
 ### Size
@@ -74,19 +72,15 @@ Change the appearance variant of the checkbox.
 Change the checkbox size.
 
 <Wrapper>
-	{["sm", "md", "lg"].map((size) => (
-		<Checkbox key={size} size={size}>
-			{size}
-		</Checkbox>
-	))}
+	<Checkbox size={"sm"}>Small</Checkbox>
+	<Checkbox size={"md"}>Medium</Checkbox>
+	<Checkbox size={"lg"}>Large</Checkbox>
 </Wrapper>
 
 ```tsx
-{["sm", "md", "lg"].map((size) => (
-	<Checkbox key={size} size={size}>
-		{size}
-	</Checkbox>
-))}
+<Checkbox size={"sm"}>Small</Checkbox>
+<Checkbox size={"md"}>Medium</Checkbox>
+<Checkbox size={"lg"}>Large</Checkbox>
 ```
 
 ### Controlled

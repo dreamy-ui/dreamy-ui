@@ -56,21 +56,25 @@ Change the color scheme of the Radio.
 
 <Wrapper>
 	<RadioGroup defaultValue="primary">
-		{["primary", "secondary", "success", "warning", "error", "info"].map((scheme) => (
-			<Radio key={scheme} scheme={scheme} value={scheme}>
-				{scheme}
-			</Radio>
-		))}
+		<Radio value="primary" scheme="primary">Primary</Radio>
+		<Radio value="secondary" scheme="secondary">Secondary</Radio>
+		<Radio value="success" scheme="success">Success</Radio>
+		<Radio value="warning" scheme="warning">Warning</Radio>
+		<Radio value="error" scheme="error">Error</Radio>
+		<Radio value="info" scheme="info">Info</Radio>
+		<Radio value="none" scheme="none">None</Radio>
 	</RadioGroup>
 </Wrapper>
 
 ```tsx
 <RadioGroup defaultValue="primary">
-	{["primary", "secondary", "success", "warning", "error", "info"].map((scheme) => (
-		<Radio key={scheme} scheme={scheme} value={scheme}>
-			{scheme}
-		</Radio>
-	))}
+	<Radio value="primary" scheme="primary">Primary</Radio>
+	<Radio value="secondary" scheme="secondary">Secondary</Radio>
+	<Radio value="success" scheme="success">Success</Radio>
+	<Radio value="warning" scheme="warning">Warning</Radio>
+	<Radio value="error" scheme="error">Error</Radio>
+	<Radio value="info" scheme="info">Info</Radio>
+	<Radio value="none" scheme="none">None</Radio>
 </RadioGroup>
 ```
 
@@ -80,20 +84,16 @@ Change the Radio size.
 
 <Wrapper>
 	<RadioGroup defaultValue="md">
-		{["sm", "md", "lg"].map((size) => (
-			<Radio key={size} size={size} value={size}>
-				{size}
-			</Radio>
-		))}
+		<Radio value="sm" size="sm">Small</Radio>
+		<Radio value="md" size="md">Medium</Radio>
+		<Radio value="lg" size="lg">Large</Radio>
 	</RadioGroup>
 </Wrapper>
 
 ```tsx
 <RadioGroup defaultValue="md">
-	{["sm", "md", "lg"].map((size) => (
-		<Radio key={size} size={size} value={size}>
-			{size}
-		</Radio>
-	))}
+	<Radio value="sm" size="sm">Small</Radio>
+	<Radio value="md" size="md">Medium</Radio>
+	<Radio value="lg" size="lg">Large</Radio>
 </RadioGroup>
 ```

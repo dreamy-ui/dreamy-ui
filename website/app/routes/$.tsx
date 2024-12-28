@@ -8,7 +8,7 @@ import {
     useRouteError
 } from "@remix-run/react";
 import { useMemo } from "react";
-import { LuAlertCircle } from "react-icons/lu";
+import { LuCircleAlert } from "react-icons/lu";
 
 export function meta({ error }: MetaArgs<typeof loader>) {
     return [
@@ -77,7 +77,7 @@ export function ErrorBoundary() {
         >
             <Icon
                 boxSize={"10"}
-                as={LuAlertCircle}
+                as={LuCircleAlert}
             />
             <Heading>
                 {data.status} {data.title}

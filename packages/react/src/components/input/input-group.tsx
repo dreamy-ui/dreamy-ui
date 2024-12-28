@@ -60,12 +60,11 @@ const InputAddon = forwardRef<HTMLDivElement, InputAddonProps>(function InputAdd
                 top: "50%",
                 transform: "translateY(-50%)",
                 flex: "0 0 auto",
-                width: "auto",
+                width: "2.5rem",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 whiteSpace: "nowrap",
-                paddingLeft: "0.25rem"
             }}
             {...props}
         />

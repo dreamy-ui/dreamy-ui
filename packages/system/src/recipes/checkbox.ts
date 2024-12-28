@@ -144,6 +144,8 @@ export const checkbox = defineRecipe({
                     color:
                         scheme === "success" || scheme === "warning" || scheme === "info"
                             ? "black/87"
+                            : scheme === "none"
+                            ? "var(--colors-bg)"
                             : "white/87"
                 } as Record<any, any>;
             },

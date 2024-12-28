@@ -28,16 +28,18 @@ Since Dream does not provide any icons, you will want to use other icon librarie
 
 **or** 
 
-with `asChild` prop Dream will merge child component with Icon.
+with `asChild` prop Dream will merge child component with Icon, or with `asComp` prop Dream will merge component with Icon.
 
 <Wrapper>
 	<Icon asChild>
 		<FiCoffee />
 	</Icon>
+	<Icon asComp={<FiCoffee />} />
 </Wrapper>
 
 ```tsx
 <Icon asChild>
   <FiCoffee />
 </Icon>
+<Icon asComp={<FiCoffee />} />
 ```

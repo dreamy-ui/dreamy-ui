@@ -16,7 +16,7 @@ export function MaxMinSlider() {
                 value={value}
                 onChangeValue={setValue}
             >
-                <SliderTrack>
+                <SliderTrack maxW="xs">
                     <SliderFilledTrack />
                     <SliderThumb />
                 </SliderTrack>
@@ -36,7 +36,7 @@ export function ControlledSlider() {
                 value={value}
                 onChangeValue={setValue}
             >
-                <SliderTrack>
+                <SliderTrack maxW="xs">
                     <SliderFilledTrack />
                     <SliderThumb />
                 </SliderTrack>

@@ -33,21 +33,16 @@ Change the variant of the checkbox card.
 
 <Wrapper>	
 	<VStack w='250px'>
-		{["outline", "subtle"].map((variant) => (
-			<CheckboxCard key={variant} variant={variant} title={variant} description={`Description for ${variant} variant`} />
-		))}
+		<CheckboxCard variant={"outline"} title={"Outline variant"} description={`Description for Outline variant`} />
+		<CheckboxCard variant={"subtle"} title={"Subtle variant"} description={`Description for Subtle variant`} />
 	</VStack>
 </Wrapper>
 
 ```tsx
-{["outline", "subtle"].map((variant) => (
-	<CheckboxCard 
-		key={variant} 
-		variant={variant} 
-		title={variant} 
-		description={`Description for ${variant} variant`} 
-	/>
-))}
+<VStack w='250px'>
+	<CheckboxCard variant={"outline"} title={"Outline variant"} description={`Description for Outline variant`} />
+	<CheckboxCard variant={"subtle"} title={"Subtle variant"} description={`Description for Subtle variant`} />
+</VStack>
 ```
 
 ### Checkbox variant
@@ -56,21 +51,16 @@ Change the checkbox variant of the checkbox card.
 	
 <Wrapper>
 	<VStack w='250px'>
-		{["solid", "outline"].map((variant) => (
-			<CheckboxCard key={variant} checkboxVariant={variant} title={variant} description={`Description for ${variant} variant`} />
-		))}
+		<CheckboxCard checkboxVariant={"solid"} title={"Solid variant"} description={`Description for Solid variant`} />
+		<CheckboxCard checkboxVariant={"outline"} title={"Outline variant"} description={`Description for Outline variant`} />
 	</VStack>
 </Wrapper>
 
 ```tsx
-{["solid", "outline"].map((variant) => (
-	<CheckboxCard 
-		key={variant} 
-		checkboxVariant={variant} 
-		title={variant} 
-		description={`Description for ${variant} variant`} 
-	/>
-))}
+<VStack w='250px'>
+	<CheckboxCard checkboxVariant={"solid"} title={"Solid variant"} description={`Description for Solid variant`} />
+	<CheckboxCard checkboxVariant={"outline"} title={"Outline variant"} description={`Description for Outline variant`} />
+</VStack>
 ```
 
 ### Scheme
@@ -79,16 +69,24 @@ Change the color scheme of the checkbox card.
 
 <Wrapper>
 	<VStack w='250px'>
-		{["primary", "secondary", "success", "warning", "error", "info"].map((scheme) => (
-			<CheckboxCard key={scheme} scheme={scheme} title={(scheme)} description={`Description for ${scheme}`} />
-		))}
+		<CheckboxCard scheme={"primary"} defaultChecked title={"Primary"} description={`Description for Primary`} />
+		<CheckboxCard scheme={"secondary"} defaultChecked title={"Secondary"} description={`Description for Secondary`} />
+		<CheckboxCard scheme={"success"} defaultChecked title={"Success"} description={`Description for Success`} />
+		<CheckboxCard scheme={"warning"} defaultChecked title={"Warning"} description={`Description for Warning`} />
+		<CheckboxCard scheme={"error"} defaultChecked title={"Error"} description={`Description for Error`} />
+		<CheckboxCard scheme={"info"} defaultChecked title={"Info"} description={`Description for Info`} />
 	</VStack>
 </Wrapper>
 
 ```tsx
-{["primary", "secondary", "success", "warning", "error", "info"].map((scheme) => (
-	<CheckboxCard key={scheme} scheme={scheme} title={(scheme)} description={`Description for ${scheme}`} />
-))}
+<VStack w='250px'>
+	<CheckboxCard scheme={"primary"} defaultChecked title={"Primary"} description={`Description for Primary`} />
+	<CheckboxCard scheme={"secondary"} defaultChecked title={"Secondary"} description={`Description for Secondary`} />
+	<CheckboxCard scheme={"success"} defaultChecked title={"Success"} description={`Description for Success`} />
+	<CheckboxCard scheme={"warning"} defaultChecked title={"Warning"} description={`Description for Warning`} />
+	<CheckboxCard scheme={"error"} defaultChecked title={"Error"} description={`Description for Error`} />
+	<CheckboxCard scheme={"info"} defaultChecked title={"Info"} description={`Description for Info`} />
+</VStack>
 ```
 
 ### Size
@@ -97,16 +95,18 @@ Change the checkbox card size.
 
 <Wrapper>
 	<VStack w='250px'>
-		{["sm", "md", "lg"].map((size) => (
-			<CheckboxCard key={size} size={size} title={`${size.toUpperCase()} Size`} description={`Description for ${size} size`} />
-		))}
+		<CheckboxCard size={"sm"} title={"Small"} description={`Description for Small`} />
+		<CheckboxCard size={"md"} title={"Medium"} description={`Description for Medium`} />
+		<CheckboxCard size={"lg"} title={"Large"} description={`Description for Large`} />
 	</VStack>
 </Wrapper>
 
 ```tsx
-{["sm", "md", "lg"].map((size) => (
-	<CheckboxCard key={size} size={size} title={`${size.toUpperCase()} Size`} description={`Description for ${size} size`} />
-))}
+<VStack w='250px'>
+	<CheckboxCard size={"sm"} title={"Small"} description={`Description for Small`} />
+	<CheckboxCard size={"md"} title={"Medium"} description={`Description for Medium`} />
+	<CheckboxCard size={"lg"} title={"Large"} description={`Description for Large`} />
+</VStack>
 ```
 
 ### Controlled

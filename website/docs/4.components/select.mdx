@@ -54,21 +54,7 @@ Basic usage of Select.
 Select comes with 4 different sizes.
 
 <Wrapper>
-    {["xs", "sm", "md", "lg"].map((size) => (
-        <Select size={size}>
-            <SelectTrigger maxW="xs" placeholder="Select a favorite fruit" />
-            <SelectContent>
-                <SelectItem value="strawberry">Strawberry</SelectItem>
-                <SelectItem value="banana">Banana</SelectItem>
-                <SelectItem value="orange">Orange</SelectItem>
-            </SelectContent>
-        </Select>
-    ))}
-</Wrapper>
-
-```tsx
-{["xs", "sm", "md", "lg"].map((size) => (
-    <Select size={size}>
+    <Select size={"xs"}>
         <SelectTrigger maxW="xs" placeholder="Select a favorite fruit" />
         <SelectContent>
             <SelectItem value="strawberry">Strawberry</SelectItem>
@@ -76,7 +62,65 @@ Select comes with 4 different sizes.
             <SelectItem value="orange">Orange</SelectItem>
         </SelectContent>
     </Select>
-))}
+    <Select size={"sm"}>
+        <SelectTrigger maxW="xs" placeholder="Select a favorite fruit" />
+        <SelectContent>
+            <SelectItem value="strawberry">Strawberry</SelectItem>
+            <SelectItem value="banana">Banana</SelectItem>
+            <SelectItem value="orange">Orange</SelectItem>
+        </SelectContent>
+    </Select>
+    <Select size={"md"}>
+        <SelectTrigger maxW="xs" placeholder="Select a favorite fruit" />
+        <SelectContent>
+            <SelectItem value="strawberry">Strawberry</SelectItem>
+            <SelectItem value="banana">Banana</SelectItem>
+            <SelectItem value="orange">Orange</SelectItem>
+        </SelectContent>
+    </Select>
+    <Select size={"lg"}>
+        <SelectTrigger maxW="xs" placeholder="Select a favorite fruit" />
+        <SelectContent>
+            <SelectItem value="strawberry">Strawberry</SelectItem>
+            <SelectItem value="banana">Banana</SelectItem>
+            <SelectItem value="orange">Orange</SelectItem>
+        </SelectContent>
+    </Select>
+</Wrapper>
+
+```tsx
+<Select size={"xs"}>
+    <SelectTrigger maxW="xs" placeholder="Select a favorite fruit" />
+    <SelectContent>
+        <SelectItem value="strawberry">Strawberry</SelectItem>
+        <SelectItem value="banana">Banana</SelectItem>
+        <SelectItem value="orange">Orange</SelectItem>
+    </SelectContent>
+</Select>
+<Select size={"sm"}>
+    <SelectTrigger maxW="xs" placeholder="Select a favorite fruit" />
+    <SelectContent>
+        <SelectItem value="strawberry">Strawberry</SelectItem>
+        <SelectItem value="banana">Banana</SelectItem>
+        <SelectItem value="orange">Orange</SelectItem>
+    </SelectContent>
+</Select>
+<Select size={"md"}>
+    <SelectTrigger maxW="xs" placeholder="Select a favorite fruit" />
+    <SelectContent>
+        <SelectItem value="strawberry">Strawberry</SelectItem>
+        <SelectItem value="banana">Banana</SelectItem>
+        <SelectItem value="orange">Orange</SelectItem>
+    </SelectContent>
+</Select>
+<Select size={"lg"}>
+    <SelectTrigger maxW="xs" placeholder="Select a favorite fruit" />
+    <SelectContent>
+        <SelectItem value="strawberry">Strawberry</SelectItem>
+        <SelectItem value="banana">Banana</SelectItem>
+        <SelectItem value="orange">Orange</SelectItem>
+    </SelectContent>
+</Select>
 ```
 
 ### Variant
@@ -84,21 +128,7 @@ Select comes with 4 different sizes.
 Select can be used in `outline` or `solid` variant.
 
 <Wrapper>
-    {["outline", "solid"].map((variant) => (
-        <Select variant={variant}>
-            <SelectTrigger maxW="xs" placeholder="Select a favorite fruit" />
-            <SelectContent>
-                <SelectItem value="strawberry">Strawberry</SelectItem>
-                <SelectItem value="banana">Banana</SelectItem>
-                <SelectItem value="orange">Orange</SelectItem>
-            </SelectContent>
-        </Select>
-    ))}
-</Wrapper>
-
-```tsx
-{["outline", "solid"].map((variant) => (
-    <Select variant={variant}>
+    <Select variant={"outline"}>
         <SelectTrigger maxW="xs" placeholder="Select a favorite fruit" />
         <SelectContent>
             <SelectItem value="strawberry">Strawberry</SelectItem>
@@ -106,7 +136,33 @@ Select can be used in `outline` or `solid` variant.
             <SelectItem value="orange">Orange</SelectItem>
         </SelectContent>
     </Select>
-))}
+    <Select variant={"solid"}>
+        <SelectTrigger maxW="xs" placeholder="Select a favorite fruit" />
+        <SelectContent>
+            <SelectItem value="strawberry">Strawberry</SelectItem>
+            <SelectItem value="banana">Banana</SelectItem>
+            <SelectItem value="orange">Orange</SelectItem>
+        </SelectContent>
+    </Select>
+</Wrapper>
+
+```tsx
+<Select variant={"outline"}>
+    <SelectTrigger maxW="xs" placeholder="Select a favorite fruit" />
+    <SelectContent>
+        <SelectItem value="strawberry">Strawberry</SelectItem>
+        <SelectItem value="banana">Banana</SelectItem>
+        <SelectItem value="orange">Orange</SelectItem>
+    </SelectContent>
+</Select>
+<Select variant={"solid"}>
+    <SelectTrigger maxW="xs" placeholder="Select a favorite fruit" />
+    <SelectContent>
+        <SelectItem value="strawberry">Strawberry</SelectItem>
+        <SelectItem value="banana">Banana</SelectItem>
+        <SelectItem value="orange">Orange</SelectItem>
+    </SelectContent>
+</Select>
 ```
 
 ### Selected Item Background Scheme
