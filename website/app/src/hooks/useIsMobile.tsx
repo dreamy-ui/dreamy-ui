@@ -6,6 +6,14 @@ export default function useIsMobile() {
 
     useSafeLayoutEffect(() => {
         setIsMobile(typeof window !== "undefined" && window.innerWidth < 768);
+
+        function listener() {
+            setIsMobile(window.innerWidth < 768);
+        }
+
+        window.addEventListener("resize", listener);
+
+        return () => window.removeEventListener("resize", listener);
     }, []);
 
     return isMobile;

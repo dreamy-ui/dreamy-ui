@@ -12,6 +12,15 @@ In this document we'll list some gotchas about how to use Dreamy UI.
 
 Use `size` or `textStyle` for typography instead of only `fontSize`. These properties will apply the correct font size, line height and font weight, including responsive sizes.
 
+<Wrapper>
+    <Text size="sm">Small text</Text>
+    <Text size="md">Medium text</Text>
+    <Text size="lg">Large text</Text>
+    <Text textStyle="sm">Small text</Text>
+    <Text textStyle="md">Medium text</Text>
+    <Text textStyle="lg">Large text</Text>
+</Wrapper>
+
 ```tsx
 <Text size="sm">Small text</Text>
 <Text size="md">Medium text</Text>
@@ -22,6 +31,13 @@ Use `size` or `textStyle` for typography instead of only `fontSize`. These prope
 ```
 
 Main colors for foreground are `fg`, `fg.max`, `fg.medium` and `fg.disabled`. Use these tokens for typography.
+
+<Wrapper>
+    <Text color="fg">Main text</Text>
+    <Text color="fg.max">Max text</Text>
+    <Text color="fg.medium">Secondary text</Text>
+    <Text color="fg.disabled">Disabled text</Text>
+</Wrapper>
 
 ```tsx
 <Text color="fg">Main text</Text>
@@ -34,6 +50,12 @@ Main colors for foreground are `fg`, `fg.max`, `fg.medium` and `fg.disabled`. Us
 
 Background colors are `bg`, which will be the current background color. `bg.light` and `bg.dark` are the light and dark background colors.
 
+<Wrapper>
+    <Box bg="bg">Current Background</Box>
+    <Box bg="bg.light">Light background</Box>
+    <Box bg="bg.dark">Dark background</Box>
+</Wrapper>
+
 ```tsx
 <Box bg="bg">Current Background</Box>
 <Box bg="bg.light">Light background</Box>
@@ -44,12 +66,24 @@ Background colors are `bg`, which will be the current background color. `bg.ligh
 
 Main action colors are `primary` and `secondary`. Use these colors for buttons, links, etc.
 
+<Wrapper>
+    <Button color="primary" w="xs">Primary</Button>
+    <Button color="secondary" w="xs">Secondary</Button>
+</Wrapper>
+
 ```tsx
 <Button color="primary">Primary</Button>
 <Button color="secondary">Secondary</Button>
 ```
 
 Dreamy exports a `success`, `warning`, `error` and `info` semantic tokens to easily signalize the status of an action.
+
+<Wrapper>
+    <Box bg="success" p={2} rounded="l1">Success</Box>
+    <Box bg="warning" p={2} rounded="l1">Warning</Box>
+    <Box bg="error" p={2} rounded="l1">Error</Box>
+    <Box bg="info" p={2} rounded="l1">Info</Box>
+</Wrapper>
 
 ```tsx
 <Box bg="success">Success</Box>
@@ -61,6 +95,30 @@ Dreamy exports a `success`, `warning`, `error` and `info` semantic tokens to eas
 ### Alphas
 
 Alphas are easy way to create a slightly transparent color. These colors will be black alphas for light color mode and white alphas for dark.
+
+<Wrapper>
+    <Flex 
+        wrapped
+        gap={2}
+        css={{
+            "& > *": {
+                p: 2
+            }
+        }}
+    >
+        <Box bg="alpha.50">Alpha 50</Box>
+        <Box bg="alpha.100">Alpha 100</Box>
+        <Box bg="alpha.150">Alpha 150</Box>
+        <Box bg="alpha.200">Alpha 200</Box>
+        <Box bg="alpha.300">Alpha 300</Box>
+        <Box bg="alpha.400">Alpha 400</Box>
+        <Box bg="alpha.500">Alpha 500</Box>
+        <Box bg="alpha.600">Alpha 600</Box>
+        <Box bg="alpha.700">Alpha 700</Box>
+        <Box bg="alpha.800">Alpha 800</Box>
+        <Box bg="alpha.900">Alpha 900</Box>
+    </Flex>
+</Wrapper>
 
 ```tsx
 <Box bg="alpha.50">Alpha 50</Box>
@@ -107,8 +165,34 @@ const domMax = () => import("motion/react").then((mod) => mod.domMax);
 
 Dreamy UI provides various utilities to use, like `center`, which is a `alignItems="center"` and `justifyContent="center"`.
 
+<Wrapper>
+    <Flex 
+        center 
+        h="100px" 
+        p={4} 
+        bg={{
+            base: "bg.dark",
+            _dark: "bg.light"
+        }}
+        color="bg"
+        rounded="l1"
+    >
+        <Text>Centered</Text>
+    </Flex>
+</Wrapper>
+
 ```tsx
-<Flex center>
+<Flex 
+    center 
+    h="100px" 
+    p={4} 
+    bg={{
+        base: "bg.dark",
+        _dark: "bg.light"
+    }}
+    color="bg"
+    rounded="l1"
+>
     <Text>Centered</Text>
 </Flex>
 ```
@@ -117,16 +201,18 @@ Dreamy UI provides various utilities to use, like `center`, which is a `alignIte
 
 The best practice is to use `<Field />` component to wrap your form elements with nice label, help text and error message.
 
-<Field name="name" isRequired>
-    <FieldLabel>Name</FieldLabel>
-    <Input />
-    <FieldHelpText>
-        <>Enter your preferred name</>
-    </FieldHelpText>
-    <FieldError>
-        <>Name cannot be empty</>
-    </FieldError>
-</Field>
+<Wrapper>
+    <Field name="name" isRequired>
+        <FieldLabel>Name</FieldLabel>
+        <Input />
+        <FieldHelpText>
+            <>Enter your preferred name</>
+        </FieldHelpText>
+        <FieldError>
+            <>Name cannot be empty</>
+        </FieldError>
+    </Field>
+</Wrapper>
 
 ```tsx
 <Field name="name" isRequired>
