@@ -4,6 +4,7 @@ import { mergeRefs } from "@/hooks/use-merge-refs";
 import { createContext } from "@/provider/create-context";
 import type { PropGetter } from "@/utils";
 import { dataAttr } from "@/utils/attr";
+import { objectToDeps } from "@/utils/object";
 import type { HTMLDreamProps } from "@/utils/types";
 import { forwardRef, useCallback, useId, useState } from "react";
 
@@ -118,7 +119,7 @@ function useFieldProvider(props: FieldContext) {
             "data-invalid": dataAttr(isInvalid),
             "data-readonly": dataAttr(isReadOnly)
         }),
-        [isDisabled, isFocused, isInvalid, isReadOnly]
+        [isDisabled, isFocused, isInvalid, isReadOnly, ...objectToDeps(htmlProps)]
     );
 
     const getRequiredIndicatorProps = useCallback<PropGetter>(
@@ -159,12 +160,15 @@ function useFieldProvider(props: FieldContext) {
 
 export interface FieldProps extends HTMLDreamProps<"div">, FieldContext {}
 
-export const FieldRoot = forwardRef<HTMLDivElement, FieldProps>(function Field(props, ref) {
+export const FieldRoot = forwardRef<HTMLDivElement, FieldProps>(function Field(
+    { children, ...props },
+    ref
+) {
     const { getRootProps, htmlProps: _, ...context } = useFieldProvider(props);
 
     return (
         <FieldProvider value={context}>
-            <Box {...getRootProps({}, ref)} />
+            <Box {...getRootProps({}, ref)}>{children}</Box>
         </FieldProvider>
     );
 });
