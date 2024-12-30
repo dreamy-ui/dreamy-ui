@@ -1,5 +1,13 @@
 # @dreamy-ui/react
 
+## 0.3.1
+
+### Patch Changes
+
+-   Hotfix for "Field" not updating properly it's children
+-   Updated dependencies
+    -   @dreamy-ui/system@0.3.1
+
 ## 0.3.0
 
 ### Minor Changes

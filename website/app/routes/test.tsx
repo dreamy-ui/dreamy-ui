@@ -9,6 +9,8 @@ import {
     Checkbox,
     CheckboxCard,
     CheckboxGroup,
+    Field,
+    FieldLabel,
     IconButton,
     Input,
     InputGroup,
@@ -92,6 +94,24 @@ export async function action({ request }: ActionFunctionArgs) {
     };
 }
 
+function ControlledField() {
+    const [field, setField] = useState("");
+
+    return (
+        <Field>
+            <FieldLabel>Name</FieldLabel>
+            <Input
+                value={field}
+                onChange={(e) => setField(e.target.value)}
+            />
+            <input
+                value={field}
+                onChange={(e) => setField(e.target.value)}
+            />
+        </Field>
+    );
+}
+
 export default function Test() {
     const navigation = useNavigation();
     const [pin, setPin] = useState("123");
@@ -104,33 +124,35 @@ export default function Test() {
             col
             gap={10}
         >
+            <ControlledField />
+
             {(["xs", "sm", "md", "lg"] as const).map((size) => (
                 <Menu
                     key={size}
                     size={size}
                 >
                     <MenuTrigger>
-                        <Button w={"fit-content"}>Skibidi</Button>
+                        <Button w={"fit-content"}>Menu</Button>
                     </MenuTrigger>
                     <MenuContent>
                         <MenuItem
                             icon={<IoAdd />}
                             command={`${useActionKey()} k`}
                         >
-                            Skibidi
+                            Menu
                         </MenuItem>
                         <MenuItem
                             icon={<IoAdd />}
                             command={`${useActionKey()} i`}
-                            asComp={<Link to="/">Skibidi</Link>}
+                            asComp={<Link to="/">Menu</Link>}
                         >
-                            Skibidi
+                            Menu
                         </MenuItem>
                         <MenuItem
                             icon={<IoAdd />}
                             command={`${useActionKey()} s`}
                         >
-                            Skibidi
+                            Menu
                         </MenuItem>
                     </MenuContent>
                 </Menu>

@@ -1,5 +1,11 @@
 # @dreamy-ui/system
 
+## 0.3.1
+
+### Patch Changes
+
+-   Hotfix for "Field" not updating properly it's children
+
 ## 0.3.0
 
 ### Minor Changes
