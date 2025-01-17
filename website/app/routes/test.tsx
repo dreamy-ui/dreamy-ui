@@ -64,6 +64,7 @@ import {
     Grid,
     GridItem,
     Heading,
+    Icon,
     Kbd,
     Skeleton,
     SkeletonText,
@@ -74,6 +75,7 @@ import type { ActionFunctionArgs } from "@remix-run/node";
 import { Form, Link, useNavigation } from "@remix-run/react";
 import { useEffect, useMemo, useState } from "react";
 import { IoAdd, IoRemove } from "react-icons/io5";
+import { PiConfetti } from "react-icons/pi";
 
 export async function action({ request }: ActionFunctionArgs) {
     const formData = await request.formData();
@@ -124,6 +126,29 @@ export default function Test() {
             col
             gap={10}
         >
+            <Flex w={"3xl"}>
+                <Select>
+                    <SelectTrigger w={"200px"} />
+                    <SelectContent>
+                        <SelectItem value={"meow"}>meow</SelectItem>
+                        <SelectItem value={"woof"}>woof</SelectItem>
+                    </SelectContent>
+                </Select>
+            </Flex>
+
+            <Button
+                size={"lg"}
+                isDisabled={false}
+                leftIcon={
+                    <Icon
+                        as={PiConfetti}
+                        boxSize={"3"}
+                    />
+                }
+            >
+                big icon test
+            </Button>
+
             <ControlledField />
 
             {(["xs", "sm", "md", "lg"] as const).map((size) => (

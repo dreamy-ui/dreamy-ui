@@ -15,7 +15,10 @@ export function ButtonIcon(props: Props) {
         : children;
 
     return (
-        <Box as={"span"} display="inline-flex" alignSelf="center" flexShrink={0} {...rest}>
+        <Box
+            as={"span"}
+            {...rest}
+        >
             {_children}
         </Box>
     );

@@ -5,7 +5,8 @@ const parts = defineParts({
     leftIcon: { selector: '& > [data-part="icon-left"]' },
     rightIcon: { selector: '& > [data-part="icon-right"]' },
     ripple: { selector: '& > [data-part="ripple"]' },
-    rippleContainer: { selector: '& > [data-part="ripple-container"]' }
+    rippleContainer: { selector: '& > [data-part="ripple-container"]' },
+    icons: { selector: '& > [data-part="icon-left"], & > [data-part="icon-right"]' }
 });
 export { parts as buttonParts };
 
@@ -38,6 +39,13 @@ export const button = defineRecipe({
                 cursor: "not-allowed",
                 opacity: 0.5
             }
+        },
+        icons: {
+            display: "inline-flex",
+            alignSelf: "center",
+            alignItems: "center",
+            justifyContent: "center",
+            flexShrink: 0
         }
     }),
     defaultVariants: {

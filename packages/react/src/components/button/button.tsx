@@ -5,6 +5,7 @@ import { ButtonSpinner, type ButtonSpinnerOptions } from "@/components/button/bu
 import { dreamy } from "@/components/factory";
 import { Ripple } from "@/components/ripple/ripple";
 import { useRipple } from "@/components/ripple/use-ripple";
+import { dataAttr } from "@/utils/attr";
 import { nextTick } from "@/utils/ticks";
 import type { HTMLDreamProps } from "@/utils/types";
 import { type ButtonVariantProps, button } from "@dreamy-ui/system/recipes";
@@ -136,8 +137,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         return (
             <StyledButton
                 ref={ref}
-                data-loading={isLoading}
-                data-disabled={isDisabled}
+                data-loading={dataAttr(isLoading)}
+                data-disabled={dataAttr(isDisabled)}
                 disabled={isDisabled || isLoading}
                 {...rest}
                 onClick={handleClick}

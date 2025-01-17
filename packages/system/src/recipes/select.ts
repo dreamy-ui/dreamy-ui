@@ -20,7 +20,7 @@ export const select = defineSlotRecipe({
             display: "flex",
             flexDirection: "column",
             gap: "1.5",
-            width: "full",
+            width: "auto",
             position: "relative"
         },
         trigger: {
