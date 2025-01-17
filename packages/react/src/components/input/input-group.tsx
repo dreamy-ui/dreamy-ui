@@ -1,12 +1,13 @@
 "use client";
 
-import { Box, type BoxProps } from "@/components/box";
+import { Box } from "@/components/box";
 import { Flex, type FlexProps } from "@/components/flex";
 import type { UserFeedbackProps } from "@/components/input/input";
 import { createContext } from "@/provider/create-context";
 import { copyObjectWithoutKeys } from "@/utils/object";
+import { splitCssProps } from "@dreamy-ui/system/jsx";
 import type { InputVariantProps } from "@dreamy-ui/system/recipes";
-import { type PropsWithChildren, forwardRef, useMemo } from "react";
+import { type PropsWithChildren, forwardRef } from "react";
 
 interface InputGroupProviderContext extends InputVariantProps, UserFeedbackProps {}
 
@@ -15,32 +16,18 @@ export const [InputGroupProvider, useInputGroup] = createContext<InputGroupProvi
     name: "InputGroupContext"
 });
 
-export interface InputGroupProps extends InputGroupProviderContext {
-    /**
-     * The props of the `Box` wrapper element.
-     */
-    wrapperProps?: BoxProps;
-}
+export interface InputGroupProps extends InputGroupProviderContext {}
 
 export const InputGroup = forwardRef<HTMLDivElement, PropsWithChildren<InputGroupProps>>(
     function InputGroup(props, ref) {
-        const context = useMemo(
-            () => copyObjectWithoutKeys(props, ["wrapperProps", "children"]),
-            [props]
-        );
+        const [cssProps, rest] = splitCssProps(props);
 
         return (
-            <InputGroupProvider value={context}>
+            <InputGroupProvider value={copyObjectWithoutKeys(rest, ["children"])}>
                 <Box
-                    data-group
+                    data-input-group={"true"}
                     ref={ref}
-                    {...props.wrapperProps}
-                    style={{
-                        display: "flex",
-                        position: "relative",
-                        isolation: "isolate",
-                        ...props.wrapperProps?.style
-                    }}
+                    {...cssProps}
                 >
                     {props.children}
                 </Box>
@@ -64,7 +51,7 @@ const InputAddon = forwardRef<HTMLDivElement, InputAddonProps>(function InputAdd
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                whiteSpace: "nowrap",
+                whiteSpace: "nowrap"
             }}
             {...props}
         />

@@ -24,6 +24,12 @@ export const input = defineRecipe({
             display: "flex",
             alignItems: "center",
             gap: 2
+        },
+        "[data-input-group]:has(&)": {
+            width: "fit-content",
+            display: "flex",
+            position: "relative",
+            isolation: "isolate"
         }
     },
     defaultVariants: {
