@@ -9,7 +9,7 @@ export interface TableProps extends HTMLDreamProps<"table"> {}
 /**
  * Table component.
  *
- * @See Docs https://dream-ui.com/docs/components/table
+ * @See Docs https://dreamy-ui.com/docs/components/table
  */
 export const TableContainer = withProvider(dreamy.div, "root");
 export const Table = withContext(dreamy.table, "table");

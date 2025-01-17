@@ -2,7 +2,7 @@ import { getColorSchemes } from "@/recipes/color-scheme";
 import { defineSlotRecipe } from "@pandacss/dev";
 
 export const select = defineSlotRecipe({
-    className: "dream-select",
+    className: "dreamy-select",
     jsx: ["Select", "SelectInput", "SelectContent", "SelectOption"],
     slots: [
         "root",

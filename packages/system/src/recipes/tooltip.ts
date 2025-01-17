@@ -13,7 +13,7 @@ const parts = defineParts({
 });
 
 export const tooltip = defineRecipe({
-    className: "dream-tooltip",
+    className: "dreamy-tooltip",
     jsx: ["Tooltip"],
     base: parts({
         root: {

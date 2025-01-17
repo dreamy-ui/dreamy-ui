@@ -36,7 +36,7 @@ export interface CheckboxGroupProps
 /**
  * CheckboxGroup component. Useful for grouping multiple checkboxes together.
  *
- * @See Docs https://dream-ui.com/docs/components/checkbox-group
+ * @See Docs https://dreamy-ui.com/docs/components/checkbox-group
  */
 export function CheckboxGroup(props: CheckboxGroupProps) {
     const {
@@ -90,7 +90,7 @@ export function CheckboxGroup(props: CheckboxGroupProps) {
         <CheckboxGroupProvider value={group}>
             <Flex
                 {...rest}
-                className={cx("dream-checkbox-group", rest.className)}
+                className={cx("dreamy-checkbox-group", rest.className)}
             >
                 {children}
             </Flex>

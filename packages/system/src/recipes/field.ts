@@ -1,7 +1,7 @@
 import { defineSlotRecipe } from "@pandacss/dev";
 
 export const field = defineSlotRecipe({
-    className: "dream-field",
+    className: "dreamy-field",
     description: "Dreamy UI Field component",
     slots: ["root", "label", "error", "helpText", "requiredIndicator", "errorIcon"],
     jsx: ["Field", "FieldLabel", "FieldError", "FieldHelpText", "FieldErrorIcon"],

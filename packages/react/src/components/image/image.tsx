@@ -34,7 +34,7 @@ const StyledImage = dreamy("img", image);
 /**
  * Native image with useful helpers.
  *
- * @See Docs https://dream-ui.com/docs/components/image
+ * @See Docs https://dreamy-ui.com/docs/components/image
  */
 export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(props, ref) {
     const {
@@ -99,7 +99,7 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(pro
                 {blurShadow &&
                     cloneElement(img, {
                         "data-part": "blurred",
-                        className: shared.className?.replace("Dream-image", ""),
+                        className: shared.className?.replace("dreamy-image", ""),
                         "aria-hidden": ariaAttr(true)
                     })}
             </Box>

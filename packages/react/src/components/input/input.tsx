@@ -11,10 +11,6 @@ import { dreamy } from "../factory";
 
 export interface UserFeedbackProps {
     /**
-     * The callback function that is called when the input value changes.
-     */
-    onChangeValue?: (value: string) => void;
-    /**
      * If `true`, the form control will be required. This has 2 side effects:
      * - The `FormLabel` will show a required indicator
      * - The form element (e.g, Input) will have `aria-required` set to `true`
@@ -46,14 +42,19 @@ export interface UserFeedbackProps {
     isReadOnly?: boolean;
 }
 
-export interface InputProps extends HTMLDreamProps<"input">, InputVariantProps, UserFeedbackProps {}
+export interface InputProps extends HTMLDreamProps<"input">, InputVariantProps, UserFeedbackProps {
+    /**
+     * The callback function that is called when the input value changes.
+     */
+    onChangeValue?: (value: string) => void;
+}
 
 const StyledInput = dreamy("input", input);
 
 /**
  * Input component
  *
- * @See Docs https://dream-ui.com/docs/components/input
+ * @See Docs https://dreamy-ui.com/docs/components/input
  */
 export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     const inputGroup = useInputGroup();

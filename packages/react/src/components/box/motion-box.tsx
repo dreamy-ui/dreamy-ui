@@ -17,7 +17,7 @@ const StyledMotionBox = styled(
 /**
  * MotionBox component. A styled wrapper around the `m.div` component from `motion/react`.
  *
- * @See Docs https://dream-ui.com/docs/components/motion-box
+ * @See Docs https://dreamy-ui.com/docs/components/motion-box
  */
 export const MotionBox = forwardRef<HTMLDivElement, MotionBoxProps>((props, ref) => {
     return (

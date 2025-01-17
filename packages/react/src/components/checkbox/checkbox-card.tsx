@@ -25,7 +25,7 @@ const StyledCheckbox = dreamy("div", checkboxCard);
 /**
  * CheckboxCard component
  *
- * @See Docs https://dream-ui.com/docs/components/checkbox-card
+ * @See Docs https://dreamy-ui.com/docs/components/checkbox-card
  */
 export const CheckboxCard = forwardRef<HTMLInputElement, CheckboxCardProps>((props, ref) => {
     const { title, description, titleTag = "p", titleProps, descriptionProps, ...rest } = props;

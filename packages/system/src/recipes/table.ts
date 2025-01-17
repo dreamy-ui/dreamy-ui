@@ -2,7 +2,7 @@ import { defineSlotRecipe } from "@pandacss/dev";
 import { getColorSchemes } from "./color-scheme";
 
 export const table = defineSlotRecipe({
-    className: "dream-table",
+    className: "dreamy-table",
     slots: ["root", "table", "body", "header", "row", "cell", "columnHeader", "caption"],
     jsx: [
         "TableContainer",

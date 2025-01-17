@@ -10,7 +10,7 @@ const StyledSkeleton = dreamy("div", skeleton);
 /**
  * Skeleton component.
  *
- * @See Docs https://dream-ui.com/docs/components/skeleton
+ * @See Docs https://dreamy-ui.com/docs/components/skeleton
  */
 export const Skeleton = forwardRef<HTMLDivElement, SkeletonProps>((props, ref) => {
     return (
@@ -32,7 +32,7 @@ export interface SkeletonTextProps extends SkeletonProps {
 /**
  * Skeleton Text component.
  *
- * @See Docs https://dream-ui.com/docs/components/skeleton
+ * @See Docs https://dreamy-ui.com/docs/components/skeleton
  */
 export const SkeletonText = forwardRef<HTMLDivElement, SkeletonTextProps>((props, ref) => {
     const { lines = 1, ...rest } = props;

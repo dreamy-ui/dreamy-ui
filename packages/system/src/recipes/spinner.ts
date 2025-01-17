@@ -9,7 +9,7 @@ const parts = defineParts({
 });
 
 export const spinner = defineRecipe({
-    className: "dream-spinner",
+    className: "dreamy-spinner",
     jsx: ["Spinner", "Button"],
     base: parts({
         root: {

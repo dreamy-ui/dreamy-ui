@@ -2,7 +2,7 @@ import { getColorSchemes } from "@/recipes/color-scheme";
 import { defineRecipe } from "@pandacss/dev";
 
 export const badge = defineRecipe({
-    className: "dream-badge",
+    className: "dreamy-badge",
     jsx: ["Badge"],
     base: {
         display: "inline-block",

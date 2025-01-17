@@ -2,7 +2,7 @@ import { getColorSchemes } from "@/recipes/color-scheme";
 import { defineSlotRecipe } from "@pandacss/dev";
 
 export const slider = defineSlotRecipe({
-    className: "dream-slider",
+    className: "dreamy-slider",
     jsx: ["Slider", "SliderTrack", "SliderTrackFilled", "SliderThumb", "SliderMark"],
     slots: ["root", "track", "trackFilled", "thumb", "marker"],
     staticCss: ["*"],

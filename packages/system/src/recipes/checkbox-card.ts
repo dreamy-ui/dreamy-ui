@@ -23,7 +23,7 @@ const parts = defineParts({
 export { parts as checkboxCardParts };
 
 export const checkboxCard = defineRecipe({
-    className: "dream-checkbox-card",
+    className: "dreamy-checkbox-card",
     jsx: ["CheckboxCard"],
     base: parts({
         root: {

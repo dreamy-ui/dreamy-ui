@@ -11,7 +11,7 @@ const StyledText = dreamy.p;
 /**
  * Text component.
  *
- * @See Docs https://dream-ui.com/docs/components/text
+ * @See Docs https://dreamy-ui.com/docs/components/text
  */
 export const Text = forwardRef<HTMLParagraphElement, TextProps>((props, ref) => {
     const [patternProps, restProps] = splitProps(props, ["variant", "size"]);

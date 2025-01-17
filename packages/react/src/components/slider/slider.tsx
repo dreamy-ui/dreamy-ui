@@ -11,7 +11,7 @@ const { withProvider, withContext } = createStyleContext(slider);
 /**
  * Slider component
  *
- * @See Docs https://dream-ui.com/docs/components/slider
+ * @See Docs https://dreamy-ui.com/docs/components/slider
  */
 export const Slider = withProvider(SliderRoot, "root");
 export const SliderTrack = withContext(SliderTrackBase, "track");

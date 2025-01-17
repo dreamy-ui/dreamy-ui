@@ -1,7 +1,7 @@
 import { defineRecipe } from "@pandacss/dev";
 
 export const input = defineRecipe({
-    className: "dream-input",
+    className: "dreamy-input",
     jsx: ["Input", "PinInput", "PinInputField", "InputGroup", "InputLeftAddon", "InputRightAddon"],
     staticCss: ["*"],
     base: {

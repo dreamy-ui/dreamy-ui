@@ -18,7 +18,7 @@ export function getSSRColorMode(
         return undefined;
     }
 
-    const colorModeCookie = getCookie("dream-ui-color-mode", cookiesOrRequest);
+    const colorModeCookie = getCookie("dreamy-ui-color-mode", cookiesOrRequest);
 
     if (!colorModeCookie) {
         return undefined;

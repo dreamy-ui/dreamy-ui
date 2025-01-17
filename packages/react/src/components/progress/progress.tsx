@@ -63,7 +63,7 @@ const StyledProgress = dreamy("div", progress);
 /**
  * Progress component
  *
- * @See Docs https://dream-ui.com/docs/components/progress
+ * @See Docs https://dreamy-ui.com/docs/components/progress
  */
 export const Progress = forwardRef<HTMLDivElement, ProgressProps>((props, ref) => {
     const {

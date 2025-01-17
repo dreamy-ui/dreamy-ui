@@ -52,7 +52,7 @@ const StyledButton = dreamy("button", button);
 /**
  * Button component
  *
- * @See Docs https://dream-ui.com/docs/components/button
+ * @See Docs https://dreamy-ui.com/docs/components/button
  */
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     (

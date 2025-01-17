@@ -11,7 +11,7 @@ const StyledRadio = dreamy("div", radio);
 /**
  * Radio component
  *
- * @See Docs https://dream-ui.com/docs/components/radio
+ * @See Docs https://dreamy-ui.com/docs/components/radio
  */
 export const Radio = forwardRef<HTMLInputElement, RadioProps>((props, ref) => {
     const {

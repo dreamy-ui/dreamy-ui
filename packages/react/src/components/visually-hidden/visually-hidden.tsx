@@ -9,7 +9,7 @@ const DreamVisuallyHidden = dreamy.span;
 /**
  * VisuallyHidden component.
  *
- * @See Docs https://dream-ui.com/docs/components/visually-hidden
+ * @See Docs https://dreamy-ui.com/docs/components/visually-hidden
  */
 export const VisuallyHidden = forwardRef<HTMLSpanElement, HTMLDreamProps<"span">>((props, ref) => {
     const [patternProps, restProps] = splitProps(props, []);
@@ -30,7 +30,7 @@ const DreamVisuallyHiddenInput = dreamy.input;
 /**
  * VisuallyHiddenInput component.
  *
- * @See Docs https://dream-ui.com/docs/components/visually-hidden
+ * @See Docs https://dreamy-ui.com/docs/components/visually-hidden
  */
 export const VisuallyHiddenInput = forwardRef<HTMLInputElement, HTMLDreamProps<"input">>(
     (props, ref) => {

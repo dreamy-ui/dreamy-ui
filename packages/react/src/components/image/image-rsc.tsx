@@ -14,7 +14,7 @@ const StyledImage = dreamy("img", image);
  * RSC compatible version of Image component.
  * It lacks of `fallbackSrc` prop and event handlers.
  *
- * @See Docs https://dream-ui.com/docs/components/image
+ * @See Docs https://dreamy-ui.com/docs/components/image
  */
 export const ImageRSC = forwardRef<HTMLImageElement, ImageRSCProps>(function ImageRSC(props, ref) {
     const { src, srcSet, loading, crossOrigin, referrerPolicy, zoomOnHover, blurShadow, ...rest } =
@@ -67,7 +67,7 @@ export const ImageRSC = forwardRef<HTMLImageElement, ImageRSCProps>(function Ima
                 {blurShadow &&
                     cloneElement(img, {
                         "data-part": "blurred",
-                        className: shared.className?.replace("dream-image", ""),
+                        className: shared.className?.replace("dreamy-image", ""),
                         "aria-hidden": ariaAttr(true)
                     })}
             </Box>

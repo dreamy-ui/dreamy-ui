@@ -29,7 +29,7 @@ const StyledAlert = dreamy("div", alert);
 /**
  * Alert component
  *
- * @See Docs https://dream-ui.com/docs/components/alert
+ * @See Docs https://dreamy-ui.com/docs/components/alert
  */
 export const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
     const { status = "info", title, description, ...rest } = props;

@@ -5,7 +5,7 @@ import { BiMoon, BiSun } from "react-icons/bi";
 import { IconButton } from "../src/components/button/icon-button";
 import { Icon } from "../src/components/icon/icon";
 import { VStack } from "../src/components/stack/vstack";
-import { DreamyProvider, useColorMode } from "../src/provider/dream-provider";
+import { DreamyProvider, useColorMode } from "../src/provider/dreamy-provider";
 import "./index.css";
 
 export default {

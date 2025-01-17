@@ -20,7 +20,7 @@ type SelectProps<T extends boolean> = UseSelectProps<T> & SelectVariantProps & P
 /**
  * Select component
  *
- * @See Docs https://dream-ui.com/docs/components/select
+ * @See Docs https://dreamy-ui.com/docs/components/select
  */
 export const Select: <T extends boolean = false>(props: SelectProps<T>) => React.JSX.Element =
     withProvider(SelectRoot, "root") as any;

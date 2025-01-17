@@ -1,7 +1,7 @@
 import { defineRecipe } from "@pandacss/dev";
 
 export const kbd = defineRecipe({
-    className: "dream-keyboard-key",
+    className: "dreamy-keyboard-key",
     jsx: ["Kbd", "Menu", "MenuButton"],
     staticCss: [
         {

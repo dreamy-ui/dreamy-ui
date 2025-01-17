@@ -10,7 +10,7 @@ const StyledIcon = dreamy("svg", icon);
 /**
  * Icon component
  *
- * @See Docs https://dream-ui.com/docs/components/icon
+ * @See Docs https://dreamy-ui.com/docs/components/icon
  */
 export const Icon = forwardRef<SVGSVGElement, IconProps>(({ ...props }, ref) => {
     return (

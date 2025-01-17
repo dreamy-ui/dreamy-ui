@@ -7,7 +7,7 @@ const parts = defineParts({
 });
 
 export const progress = defineRecipe({
-    className: "dream-progress",
+    className: "dreamy-progress",
     jsx: ["Progress", "CircularProgress"],
     base: parts({
         root: {

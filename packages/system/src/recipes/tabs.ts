@@ -1,7 +1,7 @@
 import { defineSlotRecipe } from "@pandacss/dev";
 
 export const tabs = defineSlotRecipe({
-    className: "dream-tabs",
+    className: "dreamy-tabs",
     description: "Dreamy UI Tabs component",
     jsx: ["Tabs", "TabList", "Tab", "TabPanels", "TabPanel"],
     slots: ["root", "tabList", "tab", "tabPanels", "tabPanel", "tabIndicator"],

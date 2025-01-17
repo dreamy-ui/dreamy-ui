@@ -22,11 +22,11 @@ export const meta: MetaFunction = () => {
         },
         {
             property: "image",
-            content: "/dream-ui-wallpaper.png"
+            content: "/dreamy-ui-wallpaper.png"
         },
         {
             property: "og:image",
-            content: "/dream-ui-wallpaper.png"
+            content: "/dreamy-ui-wallpaper.png"
         },
         {
             property: "og:image:width",
@@ -69,7 +69,7 @@ export const meta: MetaFunction = () => {
         },
         {
             name: "twitter:image",
-            content: "/dream-ui-wallpaper.png"
+            content: "/dreamy-ui-wallpaper.png"
         }
     ];
 };

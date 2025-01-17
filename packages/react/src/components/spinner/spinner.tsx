@@ -35,7 +35,7 @@ const StyledSpinner = dreamy("div", spinner);
 /**
  * Spinner indicates a loading state for a user.
  *
- * @See Docs https://dream-ui.com/docs/components/spinner
+ * @See Docs https://dreamy-ui.com/docs/components/spinner
  */
 export const Spinner = forwardRef<HTMLDivElement, SpinnerProps>((props, ref) => {
     const { label, labelProps, speed, style, ...rest } = props;

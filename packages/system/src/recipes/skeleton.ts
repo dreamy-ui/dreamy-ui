@@ -10,7 +10,7 @@ const parts = defineParts({
 });
 
 export const skeleton = defineRecipe({
-    className: "dream-skeleton",
+    className: "dreamy-skeleton",
     jsx: ["Skeleton", "SkeletonText"],
     base: parts({
         textWrapper: {

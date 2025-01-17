@@ -13,7 +13,7 @@ const { withProvider, withContext } = createStyleContext(accordion);
 /**
  * Accordion component
  *
- * @See Docs https://dream-ui.com/docs/components/accordion
+ * @See Docs https://dreamy-ui.com/docs/components/accordion
  */
 export const Accordion = withProvider(AccordionRoot, "root");
 export const AccordionItem = withContext(AccordionItemBase, "item");

@@ -44,7 +44,7 @@ interface DreamyProviderProps
     children: React.ReactNode;
 }
 
-export const DreamColorModeCookieKey = "dream-ui-color-mode";
+export const DreamColorModeCookieKey = "dreamy-ui-color-mode";
 
 export function DreamyProvider({
     children,

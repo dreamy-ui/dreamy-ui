@@ -295,7 +295,7 @@ export function useTooltip(props: Partial<UseTooltipProps> = {}) {
 
 export type UseTooltipReturn = ReturnType<typeof useTooltip>;
 
-const closeEventName = "dream-ui:close-tooltip";
+const closeEventName = "dreamy-ui:close-tooltip";
 
 function useCloseEvent(ref: RefObject<Element | null>, close: () => void) {
     useEffect(() => {

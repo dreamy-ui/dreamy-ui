@@ -63,7 +63,7 @@ const StyledTooltip = styled(m.div, tooltip, {
 /**
  * Tooltips display informative text when users hover, focus on, or tap an element.
  *
- * @see Docs https://dream-ui.com/docs/components/tooltip
+ * @see Docs https://dreamy-ui.com/docs/components/tooltip
  */
 export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>((props, ref) => {
     const {

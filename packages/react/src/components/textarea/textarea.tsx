@@ -23,7 +23,7 @@ const StyledTextarea = dreamy(TextareaAutosize as any, textarea);
 /**
  * Textarea component.
  *
- * @See Docs https://dream-ui.com/docs/components/textarea
+ * @See Docs https://dreamy-ui.com/docs/components/textarea
  */
 export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>((props, ref) => {
     const field = useField(props);
