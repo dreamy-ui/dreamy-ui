@@ -59,10 +59,6 @@ export const meta: MetaFunction = () => {
             content: "summary_large_image"
         },
         {
-            name: "twitter:image",
-            content: "/dream-ui-wallpaper.png"
-        },
-        {
             name: "twitter:title",
             content: "Build performant, accessible websites with Dreamy UI"
         },

@@ -78,6 +78,7 @@ export {
     TableCaption,
     TableCell,
     TableColumnHeader,
+    TableContainer,
     TableHeader,
     TableRow,
     Tabs,

@@ -54,6 +54,7 @@ import {
     TableBody,
     TableCell,
     TableColumnHeader,
+    TableContainer,
     TableHeader,
     TableRow,
     Tabs,
@@ -271,7 +272,8 @@ const DreamComponents = {
     MenuItem,
     RemixLink,
     ControlledMenu,
-    InteractiveMenu
+    InteractiveMenu,
+    TableContainer
 };
 
 function Wrapper({ children }: PropsWithChildren) {

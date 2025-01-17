@@ -1,13 +1,13 @@
 "use client";
 
-import { Box } from "@/components/box";
+import { Box, type BoxProps } from "@/components/box";
 import { Flex, type FlexProps } from "@/components/flex";
 import type { UserFeedbackProps } from "@/components/input/input";
 import { createContext } from "@/provider/create-context";
 import { copyObjectWithoutKeys } from "@/utils/object";
 import { splitCssProps } from "@dreamy-ui/system/jsx";
 import type { InputVariantProps } from "@dreamy-ui/system/recipes";
-import { type PropsWithChildren, forwardRef } from "react";
+import { forwardRef } from "react";
 
 interface InputGroupProviderContext extends InputVariantProps, UserFeedbackProps {}
 
@@ -16,9 +16,9 @@ export const [InputGroupProvider, useInputGroup] = createContext<InputGroupProvi
     name: "InputGroupContext"
 });
 
-export interface InputGroupProps extends InputGroupProviderContext {}
+export interface InputGroupProps extends InputGroupProviderContext, BoxProps {}
 
-export const InputGroup = forwardRef<HTMLDivElement, PropsWithChildren<InputGroupProps>>(
+export const InputGroup = forwardRef<HTMLDivElement, InputGroupProps>(
     function InputGroup(props, ref) {
         const [cssProps, rest] = splitCssProps(props);
 
