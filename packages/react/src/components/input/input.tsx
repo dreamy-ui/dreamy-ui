@@ -2,12 +2,18 @@
 
 import { useField } from "@/components/field/use-field";
 import { useInputGroup } from "@/components/input/input-group";
+import { callAllHandlers } from "@/utils";
 import type { HTMLDreamProps } from "@/utils/types";
 import { type InputVariantProps, input } from "@dreamy-ui/system/recipes";
+import type React from "react";
 import { forwardRef, useMemo } from "react";
 import { dreamy } from "../factory";
 
 export interface UserFeedbackProps {
+    /**
+     * The callback function that is called when the input value changes.
+     */
+    onChangeValue?: (value: string) => void;
     /**
      * If `true`, the form control will be required. This has 2 side effects:
      * - The `FormLabel` will show a required indicator
@@ -64,6 +70,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         <StyledInput
             ref={ref}
             {...field}
+            onChange={callAllHandlers(props.onChange, (e: React.ChangeEvent<HTMLInputElement>) =>
+                props.onChangeValue?.(e.target.value)
+            )}
         />
     );
 });

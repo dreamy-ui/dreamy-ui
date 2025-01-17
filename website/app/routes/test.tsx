@@ -54,6 +54,8 @@ import {
     TableHeader,
     TableRow,
     Tabs,
+    Textarea,
+    TextareaNoAutoSize,
     useActionKey,
     useControllable
 } from "@dreamy-ui/react";
@@ -126,6 +128,10 @@ export default function Test() {
             col
             gap={10}
         >
+            <Textarea onChangeValue={(v) => console.log(v)} />
+            <TextareaNoAutoSize onChangeValue={(v) => console.log(v)} />
+            <Input onChangeValue={(v) => console.log(v)} />
+
             <Flex w={"3xl"}>
                 <Select>
                     <SelectTrigger w={"200px"} />
@@ -138,7 +144,8 @@ export default function Test() {
 
             <Button
                 size={"lg"}
-                isDisabled={false}
+                isDisabled
+                onClick={() => console.log("clicked")}
                 leftIcon={
                     <Icon
                         as={PiConfetti}

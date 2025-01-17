@@ -1,6 +1,7 @@
 import { dreamy } from "@/components/factory";
 import { useField } from "@/components/field/use-field";
 import type { UserFeedbackProps } from "@/components/input";
+import { callAllHandlers } from "@/utils";
 import type { HTMLDreamProps } from "@/utils/types";
 import { type TextareaVariantProps, textarea } from "@dreamy-ui/system/recipes";
 import { type ComponentType, forwardRef } from "react";
@@ -10,7 +11,12 @@ export interface TextareaProps
     extends HTMLDreamProps<"textarea">,
         TextareaVariantProps,
         Omit<TextareaAutosizeProps, keyof HTMLDreamProps<"textarea">>,
-        UserFeedbackProps {}
+        UserFeedbackProps {
+    /**
+     * The callback function that is called when the textarea value changes.
+     */
+    onChangeValue?: (value: string) => void;
+}
 
 const StyledTextarea = dreamy(TextareaAutosize as any, textarea);
 
@@ -26,6 +32,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>((props, r
         <StyledTextarea
             ref={ref}
             {...field}
+            onChange={callAllHandlers(props.onChange, (e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                props.onChangeValue?.(e.target.value)
+            )}
         />
     );
 });
@@ -34,7 +43,12 @@ const StyledTextareaNoAutoSize = dreamy("textarea", textarea);
 
 export type TextareaNoAutoSizeProps = HTMLDreamProps<"textarea"> &
     TextareaVariantProps &
-    UserFeedbackProps;
+    UserFeedbackProps & {
+        /**
+         * The callback function that is called when the textarea value changes.
+         */
+        onChangeValue?: (value: string) => void;
+    };
 
 export const TextareaNoAutoSize: ComponentType<TextareaNoAutoSizeProps> = forwardRef<
     HTMLTextAreaElement,
@@ -46,6 +60,9 @@ export const TextareaNoAutoSize: ComponentType<TextareaNoAutoSizeProps> = forwar
         <StyledTextareaNoAutoSize
             ref={ref}
             {...field}
+            onChange={callAllHandlers(props.onChange, (e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                props.onChangeValue?.(e.target.value)
+            )}
         />
     );
 });
