@@ -1,0 +1,276 @@
+---
+title: Toast
+description: Toasts can be a nice way to signalize the user about important information from user action. 
+isServerComponent: false
+source: /packages/react/src/components/toast/toast.tsx
+themeSource: /packages/system/src/recipes/toast.ts
+---
+
+## Import
+
+```tsx
+import { useToast } from "@dreamy-ui/react";
+```
+
+## Usage
+
+<Wrapper>
+	<Button onClick={() => toast({ title: "Welcome!", description: "Make yourself at home!" })}>
+		<>Toast</>
+	</Button>
+</Wrapper>
+
+```tsx
+<Button onClick={() => toast({ title: "Welcome!", description: "Make yourself at home!" })}>
+  Toast
+</Button>
+```
+
+### Status
+
+The `status` prop changes the color of the Toast and the icon.
+
+<Wrapper>
+  <Flex wrapped gap={2}>
+    {["success", "error", "warning", "info", "loading"].map((status) => (
+      <Button 
+        key={status}
+        onClick={() => toast({ 
+          title: status + "!", 
+          description: `This is a ${status} toast!`, 
+          status 
+        })}
+      >
+        {status}
+      </Button>
+    ))}
+  </Flex>
+</Wrapper>
+
+```tsx
+<Flex wrapped gap={2}>
+  {["success", "error", "warning", "info", "loading"].map((status) => (
+    <Button 
+      key={status}
+      onClick={() => toast({ 
+        title: status + "!", 
+        description: `This is a ${status} toast!`, 
+        status
+      })}
+    >
+      {status}
+    </Button>
+  ))}
+</Flex>
+```
+
+### Position
+
+The `position` prop changes the position of the Toast.
+
+<Wrapper>
+  <Flex wrapped gap={2}>
+    {["top-left", "top", "top-right", "bottom-left", "bottom", "bottom-right"].map((position) => (
+      <Button 
+        key={position} 
+        onClick={() => toast({ 
+          title: position, 
+          description: `This toast is at ${position}!`, 
+          position 
+        })}
+      >
+        {position}
+      </Button>
+    ))}
+  </Flex>
+</Wrapper>
+
+```tsx
+<Flex wrapped gap={2}>
+  {["top-left", "top-center", "top-right", "bottom-left", "bottom-center", "bottom-right"].map((position) => (
+    <Button 
+      key={position} 
+      onClick={() => toast({ 
+        title: position, 
+        description: `This toast is at ${position}!`, 
+        position 
+      })}
+    >
+      {position}
+    </Button>
+  ))}
+</Flex>
+```
+
+### Duration
+
+The `duration` prop changes the duration of the Toast.
+
+<Wrapper>
+  <HStack>
+    <Button onClick={() => toast({ title: "This toast lasts 10 seconds!", duration: 10_000 })}>
+      <>10 seconds</>
+    </Button>
+    <Button 
+      onClick={() => toast({ 
+        title: "This toast lasts forever!", 
+        description: "To close this toast, you need to click the close button.",
+        duration: Number.POSITIVE_INFINITY, 
+        isClosable: true 
+      })}
+    >
+      <>Infinite</>
+    </Button>
+  </HStack>
+</Wrapper>
+
+```tsx
+<HStack>
+  <Button onClick={() => toast({ title: "This toast lasts!", duration: 10_000 })}>
+    10 seconds
+  </Button>
+  <Button 
+    onClick={() => toast({ 
+      title: "This toast lasts forever!", 
+      description: "To close this toast, you need to click the close button.",
+      duration: Number.POSITIVE_INFINITY, 
+      isClosable: true 
+    })}
+  >
+    Infinite
+  </Button>
+</HStack>
+```
+
+### Closable
+
+The `isClosable` prop allows you to close the toast.
+
+<Wrapper>
+  <Button onClick={() => toast({ title: "Closable", description: "This toast is closable!", isClosable: true })}>
+    <>Closable</>
+  </Button>
+</Wrapper>
+
+```tsx
+<Button onClick={() => toast({ title: "Closable", description: "This toast is closable!", isClosable: true })}>
+  Closable
+</Button>
+```
+
+### Right content
+
+The `rightContent` prop allows you to render custom content to the right of the toast.
+
+<Wrapper>
+  <Button 
+    onClick={() => toast({ 
+      title: "Right content", 
+      description: "This toast has a right content!", 
+      rightContent: <Button variant='outline' size='sm'>Okay</Button> 
+    })}
+  >
+    <>Right content</>
+  </Button>
+</Wrapper>
+
+```tsx
+<Button 
+  onClick={() => toast({ 
+    title: "Right content", 
+    description: "This toast has a right content!", 
+    rightContent: <Button variant='outline' size='sm'>Okay</Button> 
+  })}
+>
+  Right content
+</Button>
+```
+
+### Custom Render
+
+The `render` prop allows you to render custom toast.
+
+<Wrapper>
+  <Button 
+    onClick={() => toast({ 
+      title: "This toast is custom!", 
+      render: () => <Box p={4} bg="primary" rounded="l2">This is a custom toast!</Box> 
+    })}
+  >
+    <>Custom Render</>
+  </Button>
+</Wrapper>
+
+```tsx
+<Button 
+  onClick={() => toast({ 
+    title: "This toast is custom!", 
+    render: () => <Box p={4} bg="primary" rounded="l2">This is a custom toast!</Box> 
+  })}
+>
+  Custom Render
+</Button>
+```
+
+### Update toast
+
+You can use `updateToast` function to update a toast
+
+<Wrapper>
+  <UpdateToast />
+</Wrapper>
+
+```tsx
+export function UpdateToast() {
+	const { toast, updateToast } = useToast();
+	const [toastId, setToastId] = useState<string | null>(null);
+
+	return (
+		<HStack>
+			<Button
+				onClick={() => {
+					setToastId(
+						toast({
+							title: "Loading",
+							description: "Please wait till file is uploaded!",
+							status: "loading",
+							duration: Number.POSITIVE_INFINITY
+						})
+					);
+				}}
+			>
+				Send Toast
+			</Button>
+			<Button
+				onClick={() => {
+					if (toastId) {
+						updateToast(toastId, {
+							title: "Success!",
+							description: "File uploaded successfully!",
+							status: "success"
+						});
+					}
+				}}
+			>
+				Update Toast
+			</Button>
+		</HStack>
+	);
+}
+```
+
+### Default toast props
+
+Use `defaultToastProps` in the `DreamyProvider` to set default props for all toasts.
+
+```tsx
+<DreamyProvider 
+  defaultToastProps={{ 
+    position: "top-right",
+    duration: 10_000,
+    isClosable: true
+  }}
+>
+...
+</DreamyProvider>
+```

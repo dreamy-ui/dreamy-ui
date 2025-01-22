@@ -14,80 +14,83 @@ import { textStyles } from "./text-styles";
 import { utilities } from "./utils/index";
 
 export interface PresetOptions {
-    backgrounds: {
-        light: string;
-        dark: string;
-    };
-    fonts: {
-        body: string;
-        heading: string;
-        mono: string;
-    };
-    primaryColor: string;
-    secondaryColor: string;
-    rounded: BorderRadius;
-    /**
-     * Color for the primary button. It depends on the `primaryColor` option.
-     * @default Dream will automatically resolve contrast to match the `primaryColor` option.
-     */
-    buttonPrimaryTextColor: string;
-    /**
-     * Color for the secondary button. It depends on the `secondaryColor` option.
-     * @default Dream will automatically resolve contrast to match the `secondaryColor` option.
-     */
-    buttonSecondaryTextColor: string;
+	backgrounds: {
+		light: string;
+		dark: string;
+	};
+	fonts: {
+		body: string;
+		heading: string;
+		mono: string;
+	};
+	primaryColor: string;
+	secondaryColor: string;
+	rounded: BorderRadius;
+	/**
+	 * Color for the primary button. It depends on the `primaryColor` option.
+	 * @default Dream will automatically resolve contrast to match the `primaryColor` option.
+	 */
+	buttonPrimaryTextColor: string;
+	/**
+	 * Color for the secondary button. It depends on the `secondaryColor` option.
+	 * @default Dream will automatically resolve contrast to match the `secondaryColor` option.
+	 */
+	buttonSecondaryTextColor: string;
 }
 
 export const defaultPresetOptions = {
-    backgrounds: {
-        light: "#fff",
-        dark: "#0D0D0E"
-    },
-    fonts: {
-        body: "sans-serif",
-        heading: "sans-serif",
-        mono: "monospace"
-    },
-    primaryColor: "{colors.blue.500}",
-    secondaryColor: "{colors.purple.400}",
-    buttonPrimaryTextColor: "white",
-    buttonSecondaryTextColor: "white",
-    rounded: "md"
+	backgrounds: {
+		light: "#fff",
+		dark: "#0D0D0E"
+	},
+	fonts: {
+		body: "sans-serif",
+		heading: "sans-serif",
+		mono: "monospace"
+	},
+	primaryColor: "{colors.blue.500}",
+	secondaryColor: "{colors.purple.400}",
+	buttonPrimaryTextColor: "white",
+	buttonSecondaryTextColor: "white",
+	rounded: "md"
 } satisfies PresetOptions;
 
-export function createDreamPreset(
-    optionsArg: DeepPartial<PresetOptions> = defaultPresetOptions
+export function createDreamyPreset(
+	optionsArg: DeepPartial<PresetOptions> = defaultPresetOptions
 ): Preset {
-    resolveButtonColors(optionsArg);
-    if (!optionsArg.fonts?.heading && optionsArg.fonts?.body) {
-        optionsArg.fonts.heading = optionsArg.fonts.body;
-    }
-    const options = deepmerge(defaultPresetOptions, optionsArg) as PresetOptions;
+	resolveButtonColors(optionsArg);
+	if (!optionsArg.fonts?.heading && optionsArg.fonts?.body) {
+		optionsArg.fonts.heading = optionsArg.fonts.body;
+	}
+	const options = deepmerge(
+		defaultPresetOptions,
+		optionsArg
+	) as PresetOptions;
 
-    const semanticTokens = createSemanticTokens(options);
-    const tokens = createTokens(options);
+	const semanticTokens = createSemanticTokens(options);
+	const tokens = createTokens(options);
 
-    const preset = definePreset({
-        name: "dreamy-ui",
-        conditions,
-        theme: {
-            extend: {
-                recipes,
-                textStyles,
-                tokens,
-                semanticTokens,
-                keyframes
-            }
-        },
-        globalCss,
-        utilities,
-        patterns: {
-            extend: patters
-        },
-        staticCss
-    });
+	const preset = definePreset({
+		name: "dreamy-ui",
+		conditions,
+		theme: {
+			extend: {
+				recipes,
+				textStyles,
+				tokens,
+				semanticTokens,
+				keyframes
+			}
+		},
+		globalCss,
+		utilities,
+		patterns: {
+			extend: patters
+		},
+		staticCss
+	});
 
-    return preset;
+	return preset;
 }
 
 export { parts };
