@@ -2,8 +2,8 @@
 title: Button
 description: Button is a primary action element that performs an action when clicked.
 isServerComponent: false
-source: /packages/react/src/components/Button/Button.tsx
-themeSource: /packages/system/src/recipes/Button.ts
+source: /packages/react/src/components/button/button.tsx
+themeSource: /packages/system/src/recipes/button.ts
 ---
 
 ## Import
@@ -31,7 +31,7 @@ You can change the variant of the Button by using the `variant` prop.
 <Wrapper>
 	<Flex wrapped gap={2}>
 		<Button variant="primary">Primary</Button>
-    <Button variant="secondary">Secondary</Button>
+    	<Button variant="secondary">Secondary</Button>
 		<Button variant="solid">Solid</Button>
 		<Button variant="outline">Outline</Button>
 		<Button variant="ghost">Ghost</Button>
@@ -124,6 +124,18 @@ You can add icons on left or right side of the Button by using the `leftIcon` or
 </Flex>
 ``` 
 
+### Disabled
+
+You can disable the Button by using the `isDisabled` prop.
+
+<Wrapper>
+	<Button w='fit' isDisabled>Disabled</Button>
+</Wrapper>
+
+```tsx
+<Button isDisabled>Disabled</Button>
+```
+
 ### Loading State
 
 You can show the loading state of the Button by using the `isLoading` prop.
@@ -154,4 +166,16 @@ You can show the loading state of the Button by using the `isLoading` prop.
 
 ```tsx
 <Button isLoading variant="primary" loadingText="Loading" spinnerPlacement="end">Loading</Button>
+```
+
+### Disable ripple
+
+You can disable the ripple effect of the Button by using the `disableRipple` prop. This can be provided in `DreamyProvider` as a global setting.
+
+<Wrapper>
+	<Button w="fit-content" disableRipple>Disabled Ripple</Button>
+</Wrapper>
+
+```tsx
+<Button w="fit-content" disableRipple>Disabled Ripple</Button>
 ```

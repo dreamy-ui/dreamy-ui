@@ -2,8 +2,10 @@
 
 import { useField } from "@/components/field/use-field";
 import { useInputGroup } from "@/components/input/input-group";
+import { callAllHandlers } from "@/utils";
 import type { HTMLDreamProps } from "@/utils/types";
 import { type InputVariantProps, input } from "@dreamy-ui/system/recipes";
+import type React from "react";
 import { forwardRef, useMemo } from "react";
 import { dreamy } from "../factory";
 
@@ -40,14 +42,19 @@ export interface UserFeedbackProps {
     isReadOnly?: boolean;
 }
 
-export interface InputProps extends HTMLDreamProps<"input">, InputVariantProps, UserFeedbackProps {}
+export interface InputProps extends HTMLDreamProps<"input">, InputVariantProps, UserFeedbackProps {
+    /**
+     * The callback function that is called when the input value changes.
+     */
+    onChangeValue?: (value: string) => void;
+}
 
 const StyledInput = dreamy("input", input);
 
 /**
  * Input component
  *
- * @See Docs https://dream-ui.com/docs/components/input
+ * @See Docs https://dreamy-ui.com/docs/components/input
  */
 export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     const inputGroup = useInputGroup();
@@ -64,6 +71,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         <StyledInput
             ref={ref}
             {...field}
+            onChange={callAllHandlers(props.onChange, (e: React.ChangeEvent<HTMLInputElement>) =>
+                props.onChangeValue?.(e.target.value)
+            )}
         />
     );
 });

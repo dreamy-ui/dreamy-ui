@@ -17,7 +17,7 @@ const StyledLink = dreamy.a;
 /**
  * Link component
  *
- * @See Docs https://dream-ui.com/docs/components/link
+ * @See Docs https://dreamy-ui.com/docs/components/link
  */
 export const Link = forwardRef<HTMLAnchorElement, LinkProps>((props, ref) => {
     const { isExternal, ...rest } = props;

@@ -8,5 +8,5 @@ export {
     useMotionVariants,
     useReducedMotion,
     type ColorMode
-} from "./dream-provider";
+} from "./dreamy-provider";
 export * from "./ssr-color-mode";

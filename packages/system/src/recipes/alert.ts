@@ -8,7 +8,7 @@ const parts = defineParts({
 });
 
 export const alert = defineRecipe({
-    className: "dream-alert",
+    className: "dreamy-alert",
     description: "Dreamy UI Alert component",
     jsx: ["Alert"],
     base: parts({

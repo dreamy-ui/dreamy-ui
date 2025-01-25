@@ -13,7 +13,7 @@ const StyledSwitch = dreamy("div", switchRecipe);
 /**
  * Switch component
  *
- * @See Docs https://dream-ui.com/docs/components/Switch
+ * @See Docs https://dreamy-ui.com/docs/components/Switch
  */
 export const Switch = forwardRef<HTMLInputElement, SwitchProps>((props, ref) => {
     const {

@@ -15,14 +15,14 @@ const parts = defineParts({
         selector: '& [data-part="label"]'
     },
     group: {
-        selector: ".dream-checkbox-group:has(&)"
+        selector: ".dreamy-checkbox-group:has(&)"
     }
 });
 
 export { parts as checkboxParts };
 
 export const checkbox = defineRecipe({
-    className: "dream-checkbox",
+    className: "dreamy-checkbox",
     jsx: ["Checkbox", "CheckboxGroup"],
     base: parts({
         group: {
@@ -145,8 +145,8 @@ export const checkbox = defineRecipe({
                         scheme === "success" || scheme === "warning" || scheme === "info"
                             ? "black/87"
                             : scheme === "none"
-                            ? "var(--colors-bg)"
-                            : "white/87"
+                              ? "var(--colors-bg)"
+                              : "white/87"
                 } as Record<any, any>;
             },
             "root"

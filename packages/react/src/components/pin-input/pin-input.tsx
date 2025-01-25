@@ -23,7 +23,7 @@ export interface PinInputProps
 /**
  * The `PinInput` component allows to enter a sequence of digits quickly.
  *
- * @see Docs https://dream-ui.com/docs/components/pin-input
+ * @see Docs https://dreamy-ui.com/docs/components/pin-input
  */
 export const PinInput = forwardRef<HTMLDivElement, PinInputProps>(function PinInput(props, ref) {
     const { children, ...rest } = props;

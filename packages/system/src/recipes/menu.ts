@@ -1,7 +1,7 @@
 import { defineSlotRecipe } from "@pandacss/dev";
 
 export const menu = defineSlotRecipe({
-    className: "dream-menu",
+    className: "dreamy-menu",
     jsx: ["Menu", "MenuTrigger", "MenuContent", "Men"],
     slots: ["root", "content", "item", "control"],
     base: {

@@ -10,7 +10,7 @@ const DreamBadge = dreamy("div", badge);
 /**
  * Badge component
  *
- * @See Docs https://dream-ui.com/docs/components/badge
+ * @See Docs https://dreamy-ui.com/docs/components/badge
  */
 export const Badge = forwardRef<HTMLDivElement, BadgeProps>((props, ref) => {
     return (

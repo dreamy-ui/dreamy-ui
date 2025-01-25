@@ -14,7 +14,7 @@ const { withProvider, withContext } = createStyleContext(tabs, (prop) => prop ==
 /**
  * Tabs component.
  *
- * @See Docs https://dream-ui.com/docs/components/tabs
+ * @See Docs https://dreamy-ui.com/docs/components/tabs
  */
 export const Tabs = withProvider(TabsRoot, "root");
 export const TabList = withContext(TabListBase, "tabList");

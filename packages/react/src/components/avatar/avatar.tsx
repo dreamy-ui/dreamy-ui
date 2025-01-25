@@ -24,7 +24,7 @@ const StyledBase = dreamy("span", avatar);
 /**
  * Avatar component
  *
- * @See Docs https://dream-ui.com/docs/components/avatar
+ * @See Docs https://dreamy-ui.com/docs/components/avatar
  */
 export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(
     {

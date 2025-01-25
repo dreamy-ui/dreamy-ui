@@ -1,16 +1,14 @@
-import { Box } from "@/components/box";
+import { Box } from "@/components/box/box";
 import { useSliderContext } from "@/components/slider/use-slider";
 import type { HTMLDreamProps } from "@/utils/types";
 import { forwardRef } from "react";
 
-export interface SliderTrackProps extends HTMLDreamProps<"div"> { }
+export interface SliderTrackProps extends HTMLDreamProps<"div"> {}
 
 export const SliderTrackBase = forwardRef<HTMLDivElement, SliderTrackProps>(
-    (props, ref) => {
-        const { getTrackProps } = useSliderContext();
+	(props, ref) => {
+		const { getTrackProps } = useSliderContext();
 
-        return (
-            <Box {...getTrackProps(props, ref)} />
-        );
-    }
+		return <Box {...getTrackProps(props, ref)} />;
+	}
 );

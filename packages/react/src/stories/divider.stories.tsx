@@ -1,23 +1,18 @@
-import { Divider } from "@/components";
+import { Divider } from "@/rsc";
 import type { Meta } from "@storybook/react";
 
 export default {
-    title: "Divider"
+	title: "Divider"
 } satisfies Meta;
 
 export function Base() {
-    return <Divider />;
+	return <Divider />;
 }
 
 export function Vertical() {
-    return (
-        <Divider
-            orientation="vertical"
-            h={"100px"}
-        />
-    );
+	return <Divider orientation="vertical" h={"100px"} />;
 }
 
 export function CustomColor() {
-    return <Divider color={"success"} />;
+	return <Divider color={"success"} />;
 }

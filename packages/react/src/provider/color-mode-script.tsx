@@ -1,4 +1,4 @@
-import type { ColorMode } from "@/provider/dream-provider";
+import type { ColorMode } from "@/provider/dreamy-provider";
 import { useEffect, useRef } from "react";
 
 interface ColorModeScriptProps {

@@ -72,9 +72,9 @@ export function useModal(props: UseModalProps) {
 
     const [dialogId, headerId, bodyId] = useIds(
         id,
-        "Dream-modal",
-        "Dream-modal--header",
-        "Dream-modal--body"
+        "dreamy-modal",
+        "dreamy-modal--header",
+        "dreamy-modal--body"
     );
 
     /**

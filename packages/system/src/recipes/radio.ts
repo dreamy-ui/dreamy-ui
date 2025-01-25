@@ -18,14 +18,14 @@ const parts = defineParts({
         selector: '& [data-part="label"]'
     },
     group: {
-        selector: ".dream-radio-group:has(&)"
+        selector: ".dreamy-radio-group:has(&)"
     }
 });
 
 export { parts as radioParts };
 
 export const radio = defineRecipe({
-    className: "dream-radio",
+    className: "dreamy-radio",
     jsx: ["Radio", "RadioGroup"],
     base: parts({
         group: {

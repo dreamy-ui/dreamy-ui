@@ -8,7 +8,7 @@ const parts = defineParts({
 });
 
 export const image = defineRecipe({
-    className: "dream-image",
+    className: "dreamy-image",
     jsx: ["Image"],
     staticCss: ["*"],
     base: parts({

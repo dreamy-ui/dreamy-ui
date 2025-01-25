@@ -11,7 +11,7 @@ const StyledInput = dreamy("input", input);
  * RSC compatible version of Input component.
  * Lacks of field and input group context.
  *
- * @See Docs https://dream-ui.com/docs/components/input
+ * @See Docs https://dreamy-ui.com/docs/components/input
  */
 export const InputRSC = forwardRef<HTMLInputElement, InputRSCProps>((props, ref) => {
     return (

@@ -1,7 +1,7 @@
 import { defineSlotRecipe } from "@pandacss/dev";
 
 export const popover = defineSlotRecipe({
-    className: "dream-popover",
+    className: "dreamy-popover",
     description: "Dreamy UI Popover component",
     slots: ["content", "body", "header", "footer", "close"],
     jsx: [

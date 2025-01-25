@@ -1,19 +1,19 @@
 import { useEventListener } from "./use-event-listener";
 
 export interface UseFocusOnMouseDownProps {
-    enabled?: boolean;
-    ref: React.RefObject<HTMLElement | null>;
-    elements?: Array<React.RefObject<HTMLElement> | HTMLElement | null>;
+	enabled?: boolean;
+	ref: React.RefObject<HTMLElement | null>;
+	elements?: Array<React.RefObject<HTMLElement | null> | HTMLElement>;
 }
 
 function isRefObject(val: any): val is { current: any } {
-    return "current" in val;
+	return "current" in val;
 }
 
 const isDom = () => typeof window !== "undefined";
 function getPlatform() {
-    const agent = (navigator as any).userAgentData;
-    return agent?.platform ?? navigator.platform;
+	const agent = (navigator as any).userAgentData;
+	return agent?.platform ?? navigator.platform;
 }
 const vn = (v: RegExp) => isDom() && v.test(navigator.vendor);
 const pt = (v: RegExp) => isDom() && v.test(getPlatform());
@@ -30,27 +30,29 @@ const isSafari = () => isApple() && vn(/apple/i);
  * @internal
  */
 export function useFocusOnPointerDown(props: UseFocusOnMouseDownProps) {
-    const { ref, elements, enabled } = props;
+	const { ref, elements, enabled } = props;
 
-    const doc = () => ref.current?.ownerDocument ?? document;
+	const doc = () => ref.current?.ownerDocument ?? document;
 
-    useEventListener(
-        "pointerdown",
-        (event) => {
-            if (!isSafari() || !enabled) return;
-            const target = event.target as HTMLElement;
+	useEventListener(
+		"pointerdown",
+		(event) => {
+			if (!isSafari() || !enabled) return;
+			const target = event.target as HTMLElement;
 
-            const els = elements ?? [ref];
-            const isValidTarget = els.some((elementOrRef) => {
-                const el = isRefObject(elementOrRef) ? elementOrRef.current : elementOrRef;
-                return el?.contains(target) || el === target;
-            });
+			const els = elements ?? [ref];
+			const isValidTarget = els.some((elementOrRef) => {
+				const el = isRefObject(elementOrRef)
+					? elementOrRef.current
+					: elementOrRef;
+				return el?.contains(target) || el === target;
+			});
 
-            if (doc().activeElement !== target && isValidTarget) {
-                event.preventDefault();
-                target.focus();
-            }
-        },
-        doc
-    );
+			if (doc().activeElement !== target && isValidTarget) {
+				event.preventDefault();
+				target.focus();
+			}
+		},
+		doc
+	);
 }

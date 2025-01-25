@@ -10,7 +10,7 @@ const DreamKbd = dreamy("div", kbd);
 /**
  * Kbd component
  *
- * @See Docs https://dream-ui.com/docs/components/kbd
+ * @See Docs https://dreamy-ui.com/docs/components/kbd
  */
 export const Kbd = forwardRef<HTMLDivElement, KbdProps>((props, ref) => {
     return (

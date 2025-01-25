@@ -16,7 +16,7 @@ const { withProvider, withContext } = createStyleContext(modal);
 /**
  * Modal component
  *
- * @See Docs https://dream-ui.com/docs/components/modal
+ * @See Docs https://dreamy-ui.com/docs/components/modal
  */
 export const Modal = withProvider(ModalRoot);
 export const ModalOverlay = withContext(ModalOverlayBase, "overlay");

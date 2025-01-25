@@ -38,7 +38,7 @@ export interface CollapseProps extends WithTransitionConfig<MotionBoxProps>, Col
 /**
  * Collapse component.
  *
- * @See Docs https://dream-ui.com/docs/components/transitions
+ * @See Docs https://dreamy-ui.com/docs/components/transitions
  */
 export const Collapse = forwardRef<HTMLDivElement, CollapseProps>((props, ref) => {
     const {

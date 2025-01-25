@@ -11,7 +11,7 @@ const StyledHeading = dreamy.h3;
 /**
  * Heading component
  *
- * @See Docs https://dream-ui.com/docs/components/heading
+ * @See Docs https://dreamy-ui.com/docs/components/heading
  */
 export const Heading = forwardRef<HTMLParagraphElement, HeadingProps>((props, ref) => {
     const [patternProps, restProps] = splitProps(props, ["variant", "size"]);

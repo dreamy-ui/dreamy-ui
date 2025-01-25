@@ -1,4 +1,4 @@
-import { Flex, type FlexProps } from "@/components/flex";
+import { Flex, type FlexProps } from "@/components/flex/flex";
 import { forwardRef } from "react";
 import { useTabPanels } from "./use-tabs";
 
@@ -13,16 +13,11 @@ export interface TabPanelsProps extends FlexProps {}
  * It renders a `div` by default.
  */
 export const TabPanelsBase = forwardRef<HTMLDivElement, TabPanelsProps>(
-    function TabPanels(props, ref) {
-        const panelsProps = useTabPanels(props);
+	function TabPanels(props, ref) {
+		const panelsProps = useTabPanels(props);
 
-        return (
-            <Flex
-                {...panelsProps}
-                ref={ref}
-            />
-        );
-    }
+		return <Flex {...panelsProps} ref={ref} />;
+	}
 );
 
 TabPanelsBase.displayName = "TabPanels";

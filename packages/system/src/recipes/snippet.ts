@@ -14,7 +14,7 @@ const parts = defineParts({
 export { parts as snippetParts };
 
 export const snippet = defineRecipe({
-    className: "dream-snippet",
+    className: "dreamy-snippet",
     jsx: ["Snippet"],
     base: parts({
         root: {

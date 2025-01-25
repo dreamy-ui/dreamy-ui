@@ -134,14 +134,29 @@ Alphas are easy way to create a slightly transparent color. These colors will be
 <Box bg="alpha.900">Alpha 900</Box>
 ```
 
+### Radii
+
+Use `l1` for small rounded, `l2` for medium rounded and `l3` for large rounded. Those are values that are generated from radius property in `createDreamyPreset`.
+
+<Wrapper>
+    <Box rounded="l1" p={2} bg="fg" color="bg">Small rounded</Box>
+    <Box rounded="l2" p={2} bg="fg" color="bg">Medium rounded</Box>
+    <Box rounded="l3" p={2} bg="fg" color="bg">Large rounded</Box>
+</Wrapper>
+
+```tsx
+<Box rounded="l1">Small rounded</Box>
+<Box rounded="l2">Medium rounded</Box>
+<Box rounded="l3">Large rounded</Box>
+```
+
 ### Other tokens
 
-Using other radii, blur, shadows, etc.
+Using other blur, shadows, durations, etc.
 
 When building your app, use tokens for consistency.
 
 ```tsx
-<Box rounded="lg">Rounded box</Box>
 <Box blur="sm">Blurred box</Box>
 <Box shadow="lg">Shadowed box</Box>
 <Box transition="ease-in-out {durations.fast}">Fast transition</Box>
@@ -176,6 +191,7 @@ Dreamy UI provides various utilities to use, like `center`, which is a `alignIte
         }}
         color="bg"
         rounded="l1"
+        w="full"
     >
         <Text>Centered</Text>
     </Flex>
@@ -192,6 +208,7 @@ Dreamy UI provides various utilities to use, like `center`, which is a `alignIte
     }}
     color="bg"
     rounded="l1"
+    w="full"
 >
     <Text>Centered</Text>
 </Flex>

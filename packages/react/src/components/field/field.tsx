@@ -21,7 +21,7 @@ const { withProvider, withContext } = createStyleContext(field);
 /**
  * Field component
  *
- * @See Docs https://dream-ui.com/docs/components/field
+ * @See Docs https://dreamy-ui.com/docs/components/field
  */
 export const Field = withProvider(FieldRoot, "root");
 export const FieldLabel = withContext(FieldLabelBase, "label");

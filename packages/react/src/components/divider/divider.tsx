@@ -13,7 +13,7 @@ const DreamDivider = dreamy.hr;
 /**
  * Divider component
  *
- * @See Docs https://dream-ui.com/docs/components/divider
+ * @See Docs https://dreamy-ui.com/docs/components/divider
  */
 export const Divider = forwardRef<HTMLHRElement, DividerProps>((props, ref) => {
     const [patternProps, restProps] = splitProps(props, ["orientation", "thickness", "color"]);

@@ -19,7 +19,7 @@ const StyledStack = dreamy.div;
 /**
  * Stack component.
  *
- * @See Docs https://dream-ui.com/docs/components/stack
+ * @See Docs https://dreamy-ui.com/docs/components/stack
  */
 export const Stack = forwardRef<HTMLDivElement, StackProps>(
     ({ separator, direction = "row", children, className, ...props }, ref) => {

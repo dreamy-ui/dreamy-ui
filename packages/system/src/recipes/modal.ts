@@ -1,7 +1,7 @@
 import { defineSlotRecipe } from "@pandacss/dev";
 
 export const modal = defineSlotRecipe({
-    className: "dream-modal",
+    className: "dreamy-modal",
     description: "Dreamy UI Modal component",
     slots: ["overlay", "container", "content", "body", "header", "footer", "close"],
     jsx: [

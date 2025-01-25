@@ -1,7 +1,7 @@
 import { defineRecipe } from "@pandacss/dev";
 
 export const textarea = defineRecipe({
-    className: "Dream-textarea",
+    className: "dreamy-textarea",
     jsx: ["Textarea"],
     base: {
         appearance: "none",

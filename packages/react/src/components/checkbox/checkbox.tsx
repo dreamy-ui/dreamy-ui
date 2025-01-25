@@ -12,7 +12,7 @@ const StyledCheckbox = dreamy("div", checkbox);
 /**
  * Checkbox component
  *
- * @See Docs https://dream-ui.com/docs/components/checkbox
+ * @See Docs https://dreamy-ui.com/docs/components/checkbox
  */
 export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>((props, ref) => {
     const {

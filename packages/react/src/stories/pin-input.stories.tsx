@@ -7,7 +7,7 @@ export default {
 
 export function Base() {
     return (
-        <PinInput stacked>
+        <PinInput>
             <PinInputField />
             <PinInputField />
             <PinInputField />
@@ -18,26 +18,17 @@ export function Base() {
 export function Variants() {
     return (
         <>
-            <PinInput
-                stacked
-                variant={"outline"}
-            >
+            <PinInput variant={"outline"}>
                 <PinInputField />
                 <PinInputField />
                 <PinInputField />
             </PinInput>
-            <PinInput
-                stacked
-                variant={"filled"}
-            >
+            <PinInput variant={"filled"}>
                 <PinInputField />
                 <PinInputField />
                 <PinInputField />
             </PinInput>
-            <PinInput
-                stacked
-                variant={"flushed"}
-            >
+            <PinInput variant={"flushed"}>
                 <PinInputField />
                 <PinInputField />
                 <PinInputField />

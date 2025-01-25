@@ -9,7 +9,6 @@ export function ControlledPinInput() {
         <PinInput
             value={pin}
             onChange={setPin}
-            stacked
         >
             <PinInputField />
             <PinInputField />

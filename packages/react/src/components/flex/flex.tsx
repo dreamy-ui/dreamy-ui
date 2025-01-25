@@ -13,7 +13,7 @@ const DreamFlex = dreamy.div;
 /**
  * Flex component
  *
- * @See Docs https://dream-ui.com/docs/components/flex
+ * @See Docs https://dreamy-ui.com/docs/components/flex
  */
 export const Flex = forwardRef<HTMLDivElement, FlexProps>((props, ref) => {
     const [patternProps, restProps] = splitProps(props, [

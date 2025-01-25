@@ -15,7 +15,7 @@ const { withProvider, withContext } = createStyleContext(popover);
 /**
  * Popover component
  *
- * @See Docs https://dream-ui.com/docs/components/popover
+ * @See Docs https://dreamy-ui.com/docs/components/popover
  */
 export const Popover = withProvider(PopoverRoot);
 export const PopoverContent = withContext(PopoverContentBase, "content");

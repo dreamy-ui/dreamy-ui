@@ -54,7 +54,7 @@ async function getOgTemplate(title: string, description: string, origin: string)
             >
                 <p style={{ fontSize: 80, fontFamily: "GeistBold" }}>Dreamy UI</p>
                 <img
-                    src={origin + "/dream-ui-no-bg.png"}
+                    src={origin + "/dreamy-ui-no-bg.png"}
                     alt="Dreamy UI"
                     style={{ height: 120 }}
                 />

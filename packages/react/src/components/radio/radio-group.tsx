@@ -34,7 +34,7 @@ export interface RadioGroupProps
 /**
  * RadioGroup component. Useful for grouping multiple Radioes together.
  *
- * @See Docs https://dream-ui.com/docs/components/radio
+ * @See Docs https://dreamy-ui.com/docs/components/radio
  */
 export function RadioGroup(props: RadioGroupProps) {
     const {
@@ -83,7 +83,7 @@ export function RadioGroup(props: RadioGroupProps) {
         <RadioGroupProvider value={group}>
             <Flex
                 {...rest}
-                className={cx("dream-radio-group", rest.className)}
+                className={cx("dreamy-radio-group", rest.className)}
             >
                 {children}
             </Flex>

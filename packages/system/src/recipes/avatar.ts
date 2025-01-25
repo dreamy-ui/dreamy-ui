@@ -13,7 +13,7 @@ const parts = defineParts({
 export { parts as avatarParts };
 
 export const avatar = defineRecipe({
-    className: "dream-avatar",
+    className: "dreamy-avatar",
     jsx: ["Avatar", "AvatarImage", "AvatarName"],
     base: parts({
         root: {

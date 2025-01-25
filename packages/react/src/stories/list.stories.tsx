@@ -1,26 +1,26 @@
-import { List, ListItem } from "@/components";
+import { List, ListItem } from "@/rsc";
 import type { Meta } from "@storybook/react";
 
 export default {
-    title: "List"
+	title: "List"
 } satisfies Meta;
 
 export function Base() {
-    return (
-        <List>
-            <ListItem>First</ListItem>
-            <ListItem>Second</ListItem>
-            <ListItem>Third</ListItem>
-        </List>
-    );
+	return (
+		<List>
+			<ListItem>First</ListItem>
+			<ListItem>Second</ListItem>
+			<ListItem>Third</ListItem>
+		</List>
+	);
 }
 
 export function Ordered() {
-    return (
-        <List ordered>
-            <ListItem>First</ListItem>
-            <ListItem>Second</ListItem>
-            <ListItem>Third</ListItem>
-        </List>
-    );
+	return (
+		<List ordered>
+			<ListItem>First</ListItem>
+			<ListItem>Second</ListItem>
+			<ListItem>Third</ListItem>
+		</List>
+	);
 }

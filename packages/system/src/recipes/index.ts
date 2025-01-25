@@ -22,47 +22,51 @@ import { textarea } from "@/recipes/textarea";
 import { tooltip } from "@/recipes/tooltip";
 import { accordion } from "./accordion";
 import { checkbox, checkboxParts } from "./checkbox";
+import { editable } from "./editable";
+import { menu } from "./menu";
 import { snippet, snippetParts } from "./snippet";
 import { switchRecipe } from "./switch";
 import { table } from "./table";
-import { menu } from "./menu";
+import { toast } from "./toast";
 
 export const recipes = {
-    button,
-    icon,
-    modal,
-    input,
-    textarea,
-    avatar,
-    tooltip,
-    spinner,
-    field,
-    popover,
-    list,
-    alert,
-    image,
-    tabs,
-    progress,
-    badge,
-    kbd,
-    slider,
-    accordion,
-    checkbox,
-    checkboxCard,
-    snippet,
-    table,
-    skeleton,
-    radio,
-    select,
-    switchRecipe,
-    menu
+	button,
+	icon,
+	modal,
+	input,
+	textarea,
+	avatar,
+	tooltip,
+	spinner,
+	field,
+	popover,
+	list,
+	alert,
+	image,
+	tabs,
+	progress,
+	badge,
+	kbd,
+	slider,
+	accordion,
+	checkbox,
+	checkboxCard,
+	snippet,
+	table,
+	skeleton,
+	radio,
+	select,
+	switchRecipe,
+	menu,
+	toast,
+	editable
 };
 
 export const parts = {
-    button: buttonParts,
-    checkbox: checkboxParts,
-    avatar: avatarParts,
-    checkboxCard: checkboxCardParts,
-    snippet: snippetParts,
-    radio: radioParts
+	button: buttonParts,
+	checkbox: checkboxParts,
+	avatar: avatarParts,
+	checkboxCard: checkboxCardParts,
+	snippet: snippetParts,
+	radio: radioParts
 };

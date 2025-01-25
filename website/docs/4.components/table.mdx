@@ -10,7 +10,8 @@ themeSource: /packages/system/src/recipes/table.ts
 
 Dream exports a set of Table components:
 
-- `Table` - The main container for the Table.
+- `TableContainer` - The main container for the Table.
+- `Table` - The main table component.
 - `TableHeader` - The header for the Table.
 - `TableBody` - The body for the Table.
 - `TableCaption` - The caption for the Table.
@@ -20,6 +21,7 @@ Dream exports a set of Table components:
 
 ```tsx
 import {
+    TableContainer,
     Table,
     TableBody,
     TableCaption,
@@ -33,6 +35,30 @@ import {
 ## Usage
 
 <Wrapper>
+  <TableContainer w="full">
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableColumnHeader>Name</TableColumnHeader>
+          <TableColumnHeader>Age</TableColumnHeader>
+          <TableColumnHeader>Gender</TableColumnHeader>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {[20, 22, 25].map((item, index) => (
+          <TableRow key={index}>
+            <TableCell>Name {index + 1}</TableCell>
+            <TableCell>{item}</TableCell>
+            <TableCell>{item % 5 === 0 ? "Male" : "Female"}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  </TableContainer>
+</Wrapper>
+
+```tsx
+<TableContainer w="full">
   <Table>
     <TableHeader>
       <TableRow>
@@ -51,27 +77,7 @@ import {
       ))}
     </TableBody>
   </Table>
-</Wrapper>
-
-```tsx
-<Table>
-  <TableHeader>
-    <TableRow>
-      <TableColumnHeader>Name</TableColumnHeader>
-      <TableColumnHeader>Age</TableColumnHeader>
-      <TableColumnHeader>Gender</TableColumnHeader>
-    </TableRow>
-  </TableHeader>
-  <TableBody>
-    {[20, 22, 25].map((item, index) => (
-      <TableRow key={index}>
-        <TableCell>Name {index + 1}</TableCell>
-        <TableCell>{item}</TableCell>
-        <TableCell>{item % 5 === 0 ? "Male" : "Female"}</TableCell>
-      </TableRow>
-    ))}
-  </TableBody>
-</Table>
+</TableContainer>
 ```
 
 ### Variants
@@ -80,7 +86,36 @@ import {
   {["simple", "line"].map((variant) => (
     <>
       <Text size={"lg"}>{variant}</Text>
-      <Table variant={variant}>
+      <TableContainer w="full" variant={variant}>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableColumnHeader>Name</TableColumnHeader>
+              <TableColumnHeader>Age</TableColumnHeader>
+              <TableColumnHeader>Gender</TableColumnHeader>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {[20, 22, 25].map((item, index) => (
+              <TableRow key={index}>
+                <TableCell>Name {index + 1}</TableCell>
+                <TableCell>{item}</TableCell>
+                <TableCell>{item % 5 === 0 ? "Male" : "Female"}</TableCell>
+              </TableRow>
+            ))}
+            </TableBody>
+        </Table>
+      </TableContainer>
+    </>
+  ))}
+</Wrapper>
+
+```tsx
+{["simple", "line"].map((variant) => (
+  <>
+    <Text size={"lg"}>{variant}</Text>
+    <TableContainer w="full" variant={variant}>
+      <Table>
         <TableHeader>
           <TableRow>
             <TableColumnHeader>Name</TableColumnHeader>
@@ -96,17 +131,76 @@ import {
               <TableCell>{item % 5 === 0 ? "Male" : "Female"}</TableCell>
             </TableRow>
           ))}
-          </TableBody>
+        </TableBody>
       </Table>
+    </TableContainer>
+  </>
+))}
+```
+
+### With background
+
+<Wrapper>
+  {["simple", "line"].map((variant) => (
+    <>
+      <Text size={"lg"}>{variant}</Text>
+      <TableContainer w="full" variant={variant} withBackground>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableColumnHeader>Name</TableColumnHeader>
+              <TableColumnHeader>Age</TableColumnHeader>
+              <TableColumnHeader>Gender</TableColumnHeader>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {[20, 22, 25].map((item, index) => (
+              <TableRow key={index}>
+                <TableCell>Name {index + 1}</TableCell>
+                <TableCell>{item}</TableCell>
+                <TableCell>{item % 5 === 0 ? "Male" : "Female"}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </>
   ))}
 </Wrapper>
 
 ```tsx
 {["simple", "line"].map((variant) => (
-  <>
-    <Text size={"lg"}>{variant}</Text>
-    <Table variant={variant}>
+    <>
+      <Text size={"lg"}>{variant}</Text>
+      <TableContainer w="full" variant={variant} withBackground>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableColumnHeader>Name</TableColumnHeader>
+              <TableColumnHeader>Age</TableColumnHeader>
+              <TableColumnHeader>Gender</TableColumnHeader>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {[20, 22, 25].map((item, index) => (
+              <TableRow key={index}>
+                <TableCell>Name {index + 1}</TableCell>
+                <TableCell>{item}</TableCell>
+                <TableCell>{item % 5 === 0 ? "Male" : "Female"}</TableCell>
+              </TableRow>
+            ))}
+            </TableBody>
+        </Table>
+      </TableContainer>
+    </>
+  ))}
+```
+
+### Interactive
+
+<Wrapper>
+  <TableContainer w="full" interactive>
+    <Table>
       <TableHeader>
         <TableRow>
           <TableColumnHeader>Name</TableColumnHeader>
@@ -122,70 +216,14 @@ import {
             <TableCell>{item % 5 === 0 ? "Male" : "Female"}</TableCell>
           </TableRow>
         ))}
-        </TableBody>
+      </TableBody>
     </Table>
-  </>
-))}
-```
-
-### With background
-
-<Wrapper>
-  {["simple", "line"].map((variant) => (
-    <>
-      <Text size={"lg"}>{variant}</Text>
-      <Table variant={variant} withBackground>
-        <TableHeader>
-          <TableRow>
-            <TableColumnHeader>Name</TableColumnHeader>
-            <TableColumnHeader>Age</TableColumnHeader>
-            <TableColumnHeader>Gender</TableColumnHeader>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {[20, 22, 25].map((item, index) => (
-            <TableRow key={index}>
-              <TableCell>Name {index + 1}</TableCell>
-              <TableCell>{item}</TableCell>
-              <TableCell>{item % 5 === 0 ? "Male" : "Female"}</TableCell>
-            </TableRow>
-          ))}
-          </TableBody>
-      </Table>
-    </>
-  ))}
+  </TableContainer>
 </Wrapper>
 
 ```tsx
-{["simple", "line"].map((variant) => (
-    <>
-      <Text size={"lg"}>{variant}</Text>
-      <Table variant={variant} withBackground>
-        <TableHeader>
-          <TableRow>
-            <TableColumnHeader>Name</TableColumnHeader>
-            <TableColumnHeader>Age</TableColumnHeader>
-            <TableColumnHeader>Gender</TableColumnHeader>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {[20, 22, 25].map((item, index) => (
-            <TableRow key={index}>
-              <TableCell>Name {index + 1}</TableCell>
-              <TableCell>{item}</TableCell>
-              <TableCell>{item % 5 === 0 ? "Male" : "Female"}</TableCell>
-            </TableRow>
-          ))}
-          </TableBody>
-      </Table>
-    </>
-  ))}
-```
-
-### Interactive
-
-<Wrapper>
-  <Table interactive>
+<TableContainer w="full" interactive>
+  <Table>
     <TableHeader>
       <TableRow>
         <TableColumnHeader>Name</TableColumnHeader>
@@ -203,33 +241,37 @@ import {
       ))}
     </TableBody>
   </Table>
-</Wrapper>
-
-```tsx
-<Table interactive>
-  <TableHeader>
-    <TableRow>
-      <TableColumnHeader>Name</TableColumnHeader>
-      <TableColumnHeader>Age</TableColumnHeader>
-      <TableColumnHeader>Gender</TableColumnHeader>
-    </TableRow>
-  </TableHeader>
-  <TableBody>
-    {[20, 22, 25].map((item, index) => (
-      <TableRow key={index}>
-        <TableCell>Name {index + 1}</TableCell>
-        <TableCell>{item}</TableCell>
-        <TableCell>{item % 5 === 0 ? "Male" : "Female"}</TableCell>
-      </TableRow>
-    ))}
-  </TableBody>
-</Table>
+</TableContainer>
 ```
 
 ### Striped
 
 <Wrapper>
-  <Table striped>
+  <TableContainer w="full" striped>
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableColumnHeader>Name</TableColumnHeader>
+          <TableColumnHeader>Age</TableColumnHeader>
+          <TableColumnHeader>Gender</TableColumnHeader>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {[20, 22, 25, 28, 31, 35].map((item, index) => (
+          <TableRow key={index}>
+            <TableCell>Name {index + 1}</TableCell>
+            <TableCell>{item}</TableCell>
+            <TableCell>{item % 5 === 0 ? "Male" : "Female"}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  </TableContainer>
+</Wrapper>
+
+```tsx
+<TableContainer w="full" striped>
+  <Table>
     <TableHeader>
       <TableRow>
         <TableColumnHeader>Name</TableColumnHeader>
@@ -247,27 +289,7 @@ import {
       ))}
     </TableBody>
   </Table>
-</Wrapper>
-
-```tsx
-<Table striped>
-  <TableHeader>
-    <TableRow>
-      <TableColumnHeader>Name</TableColumnHeader>
-      <TableColumnHeader>Age</TableColumnHeader>
-      <TableColumnHeader>Gender</TableColumnHeader>
-    </TableRow>
-  </TableHeader>
-  <TableBody>
-    {[20, 22, 25, 28, 31, 35].map((item, index) => (
-      <TableRow key={index}>
-        <TableCell>Name {index + 1}</TableCell>
-        <TableCell>{item}</TableCell>
-        <TableCell>{item % 5 === 0 ? "Male" : "Female"}</TableCell>
-      </TableRow>
-    ))}
-  </TableBody>
-</Table>
+</TableContainer>
 ```
 
 ### Size
@@ -276,7 +298,36 @@ import {
   {["sm", "md", "lg"].map((size) => (
     <>
       <Text size={"lg"}>{size}</Text>
-      <Table size={size}>
+      <TableContainer w="full" size={size}>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableColumnHeader>Name</TableColumnHeader>
+              <TableColumnHeader>Age</TableColumnHeader>
+              <TableColumnHeader>Gender</TableColumnHeader>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {[20, 22, 25].map((item, index) => (
+              <TableRow key={index}>
+                <TableCell>Name {index + 1}</TableCell>
+                <TableCell>{item}</TableCell>
+                <TableCell>{item % 5 === 0 ? "Male" : "Female"}</TableCell>
+              </TableRow>
+            ))}
+            </TableBody>
+        </Table>
+      </TableContainer>
+    </>
+  ))}
+</Wrapper>
+
+```tsx
+{["sm", "md", "lg"].map((size) => (
+  <>
+    <Text size={"lg"}>{size}</Text>
+    <TableContainer w="full" size={size}>
+      <Table>
         <TableHeader>
           <TableRow>
             <TableColumnHeader>Name</TableColumnHeader>
@@ -294,32 +345,7 @@ import {
           ))}
           </TableBody>
       </Table>
-    </>
-  ))}
-</Wrapper>
-
-```tsx
-{["sm", "md", "lg"].map((size) => (
-  <>
-    <Text size={"lg"}>{size}</Text>
-    <Table size={size}>
-      <TableHeader>
-        <TableRow>
-          <TableColumnHeader>Name</TableColumnHeader>
-          <TableColumnHeader>Age</TableColumnHeader>
-          <TableColumnHeader>Gender</TableColumnHeader>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {[20, 22, 25].map((item, index) => (
-          <TableRow key={index}>
-            <TableCell>Name {index + 1}</TableCell>
-            <TableCell>{item}</TableCell>
-            <TableCell>{item % 5 === 0 ? "Male" : "Female"}</TableCell>
-          </TableRow>
-        ))}
-        </TableBody>
-    </Table>
+    </TableContainer>
   </>
 ))}
 ```

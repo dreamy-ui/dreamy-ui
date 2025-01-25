@@ -1,10 +1,10 @@
-import { Box } from "@/components";
+import { Box } from "@/rsc";
 import type { Meta } from "@storybook/react";
 
 export default {
-    title: "Box"
+	title: "Box"
 } satisfies Meta;
 
 export function Base() {
-    return <Box>Box</Box>;
+	return <Box>Box</Box>;
 }

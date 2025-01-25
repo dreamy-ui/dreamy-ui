@@ -10,7 +10,7 @@ const StyledTextareaNoAutoSize = dreamy("textarea", textarea);
 /**
  * TextareaRSC component.
  *
- * @See Docs https://dream-ui.com/docs/components/textarea
+ * @See Docs https://dreamy-ui.com/docs/components/textarea
  */
 export const TextareaRSC = forwardRef<HTMLTextAreaElement, TextareaRSCProps>((props, ref) => {
     return (

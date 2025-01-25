@@ -5,7 +5,7 @@ const components = [
     {
         title: "Pin Input",
         component: (
-            <PinInput stacked>
+            <PinInput>
                 <PinInputField />
                 <PinInputField />
                 <PinInputField />

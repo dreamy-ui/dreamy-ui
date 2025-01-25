@@ -1,4 +1,4 @@
-import { Box } from "@/components/box";
+import { Box } from "@/components/box/box";
 import { useFieldContext } from "@/components/field/field-root";
 import type { HTMLDreamProps } from "@/utils/types";
 import { forwardRef } from "react";
@@ -13,13 +13,13 @@ export interface FieldHelpTextProps extends HTMLDreamProps<"div"> {}
  * types in values should be provided.
  */
 export const FieldHelpTextBase = forwardRef<HTMLDivElement, FieldHelpTextProps>(
-    function FieldHelpText(props, ref) {
-        const field = useFieldContext();
+	function FieldHelpText(props, ref) {
+		const field = useFieldContext();
 
-        if (field?.isInvalid) return null;
+		if (field?.isInvalid) return null;
 
-        return <Box {...field?.getHelpTextProps(props, ref)} />;
-    }
+		return <Box {...field?.getHelpTextProps(props, ref)} />;
+	}
 );
 
 FieldHelpTextBase.displayName = "FieldHelpText";

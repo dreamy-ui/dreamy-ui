@@ -1,7 +1,7 @@
 import { defineSlotRecipe } from "@pandacss/dev";
 
 export const accordion = defineSlotRecipe({
-    className: "dream-accordion",
+    className: "dreamy-accordion",
     description: "Dreamy UI Accordion component",
     slots: ["root", "item", "trigger", "content", "icon"],
     jsx: ["Accordion", "AccordionItem", "AccordionTrigger", "AccordionContent", "AccordionIcon"],

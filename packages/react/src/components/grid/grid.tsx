@@ -18,7 +18,7 @@ const DreamGrid = dreamy.div;
 /**
  * Flex component
  *
- * @See Docs https://dream-ui.com/docs/components/grid
+ * @See Docs https://dreamy-ui.com/docs/components/grid
  */
 export const Grid = forwardRef<HTMLDivElement, GridProps>((props, ref) => {
     const [patternProps, restProps] = splitProps(props, [
@@ -49,7 +49,7 @@ export interface GridItemProps
 /**
  * GridItem component
  *
- * @See Docs https://dream-ui.com/docs/components/grid
+ * @See Docs https://dreamy-ui.com/docs/components/grid
  */
 export const GridItem = forwardRef<HTMLDivElement, GridItemProps>((props, ref) => {
     const [patternProps, restProps] = splitProps(props, [

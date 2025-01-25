@@ -14,7 +14,7 @@ const StyledList = dreamy("ol", list);
 /**
  * List component
  *
- * @See Docs https://dream-ui.com/docs/components/list
+ * @See Docs https://dreamy-ui.com/docs/components/list
  */
 export const List = forwardRef<HTMLOListElement | HTMLUListElement, ListProps>((props, ref) => {
     const { ordered, unordered, ...rest } = props;

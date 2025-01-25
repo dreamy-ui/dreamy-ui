@@ -12,7 +12,7 @@ const [PortalContextProvider, usePortalContext] = createContext<PortalContext>({
     name: "PortalContext"
 });
 
-const PORTAL_CLASSNAME = "dream-portal";
+const PORTAL_CLASSNAME = "dreamy-portal";
 const PORTAL_SELECTOR = `.${PORTAL_CLASSNAME}`;
 
 function Container(props: React.PropsWithChildren<{ zIndex: number }>) {
@@ -52,7 +52,7 @@ function DefaultPortal(props: React.PropsWithChildren<{ appendToParentPortal?: b
             if (!tempNode) return;
 
             const doc = tempNode.ownerDocument;
-            const host = appendToParentPortal ? parentPortal ?? doc.body : doc.body;
+            const host = appendToParentPortal ? (parentPortal ?? doc.body) : doc.body;
 
             if (!host) return;
 
@@ -172,7 +172,10 @@ export function Portal(props: PortalProps) {
 
     const { containerRef, ...rest } = portalProps;
     return containerRef ? (
-        <ContainerPortal containerRef={containerRef} {...rest} />
+        <ContainerPortal
+            containerRef={containerRef}
+            {...rest}
+        />
     ) : (
         <DefaultPortal {...rest} />
     );

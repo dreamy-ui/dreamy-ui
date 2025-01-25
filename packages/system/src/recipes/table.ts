@@ -2,10 +2,10 @@ import { defineSlotRecipe } from "@pandacss/dev";
 import { getColorSchemes } from "./color-scheme";
 
 export const table = defineSlotRecipe({
-    className: "dream-table",
-    slots: ["wrapper", "root", "body", "header", "row", "cell", "columnHeader", "caption"],
+    className: "dreamy-table",
+    slots: ["root", "table", "body", "header", "row", "cell", "columnHeader", "caption"],
     jsx: [
-        "Wrapper",
+        "TableContainer",
         "Table",
         "TableHeader",
         "TableBody",
@@ -15,12 +15,12 @@ export const table = defineSlotRecipe({
         "TableCaption"
     ],
     base: {
-        wrapper: {
+        root: {
             overflowX: "auto",
             width: "auto",
             maxWidth: "full"
         },
-        root: {
+        table: {
             fontVariantNumeric: "lining-nums tabular-nums",
             borderCollapse: "collapse",
             width: "full",
@@ -84,7 +84,7 @@ export const table = defineSlotRecipe({
         },
         withBackground: {
             true: {
-                wrapper: {
+                root: {
                     bg: "alpha.50"
                 }
             }
@@ -116,10 +116,10 @@ export const table = defineSlotRecipe({
         },
         size: {
             sm: {
-                wrapper: {
+                root: {
                     rounded: "l1"
                 },
-                root: {
+                table: {
                     textStyle: "sm"
                 },
                 columnHeader: {
@@ -137,10 +137,10 @@ export const table = defineSlotRecipe({
                 }
             },
             md: {
-                wrapper: {
+                root: {
                     rounded: "l2"
                 },
-                root: {
+                table: {
                     textStyle: "sm"
                 },
                 columnHeader: {
@@ -158,10 +158,10 @@ export const table = defineSlotRecipe({
                 }
             },
             lg: {
-                wrapper: {
+                root: {
                     rounded: "l3"
                 },
-                root: {
+                table: {
                     textStyle: "md"
                 },
                 columnHeader: {
@@ -190,7 +190,7 @@ export const table = defineSlotRecipe({
             withBackground: true,
             size: "sm",
             css: {
-                wrapper: {
+                root: {
                     p: 2
                 }
             }
@@ -199,14 +199,14 @@ export const table = defineSlotRecipe({
             withBackground: true,
             size: "md",
             css: {
-                wrapper: { p: 3 }
+                root: { p: 3 }
             }
         },
         {
             withBackground: true,
             size: "lg",
             css: {
-                wrapper: { p: 4 }
+                root: { p: 4 }
             }
         },
         {
