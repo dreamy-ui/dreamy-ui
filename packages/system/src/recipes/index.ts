@@ -22,6 +22,7 @@ import { textarea } from "@/recipes/textarea";
 import { tooltip } from "@/recipes/tooltip";
 import { accordion } from "./accordion";
 import { checkbox, checkboxParts } from "./checkbox";
+import { editable } from "./editable";
 import { menu } from "./menu";
 import { snippet, snippetParts } from "./snippet";
 import { switchRecipe } from "./switch";
@@ -57,7 +58,8 @@ export const recipes = {
 	select,
 	switchRecipe,
 	menu,
-	toast
+	toast,
+	editable
 };
 
 export const parts = {

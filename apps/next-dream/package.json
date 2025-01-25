@@ -13,9 +13,9 @@
 		"@dreamy-ui/react": "workspace:*",
 		"@dreamy-ui/system": "workspace:*",
 		"@pandabox/unplugin": "^0.1.3",
-		"@pandacss/dev": "^0.49.0",
-		"@pandacss/preset-panda": "^0.49.0",
-		"motion": "^11.15.0",
+		"@pandacss/dev": "^0.51.1",
+		"@pandacss/preset-panda": "^0.51.1",
+		"motion": "^12.0.5",
 		"next": "15.1.2",
 		"react": "19.0.0",
 		"react-dom": "19.0.0"

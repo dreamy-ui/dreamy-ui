@@ -1,4 +1,4 @@
-import { createDreamPreset } from "@dreamy-ui/system";
+import { createDreamyPreset } from "@dreamy-ui/system";
 import { defineConfig } from "@pandacss/dev";
 import pandaPreset from "@pandacss/preset-panda";
 
@@ -11,7 +11,7 @@ export default defineConfig({
     outExtension: "js",
     presets: [
         pandaPreset,
-        createDreamPreset({
+        createDreamyPreset({
             rounded: "sm"
         })
     ],

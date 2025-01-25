@@ -1,4 +1,4 @@
-import { Box } from "@/components/box";
+import { Box } from "@/components/box/box";
 import { Heading } from "@/components/heading";
 import { usePopoverContext } from "@/components/popover/popover-context";
 import type { HTMLDreamProps } from "@/utils/types";
@@ -11,22 +11,22 @@ export interface PopoverHeaderProps extends HTMLDreamProps<"header"> {}
  * for the popover's content, and it is first announced by screen readers.
  */
 export const PopoverHeaderBase = forwardRef<HTMLDivElement, PopoverHeaderProps>(
-    function PopoverHeader(props, ref) {
-        const { children, ...rest } = props;
-        const { getHeaderProps } = usePopoverContext();
+	function PopoverHeader(props, ref) {
+		const { children, ...rest } = props;
+		const { getHeaderProps } = usePopoverContext();
 
-        return (
-            <Box as={"header"} {...getHeaderProps(rest, ref)}>
-                {typeof children === "string" ? (
-                    <Heading variant={"heading"} size="md">
-                        {children}
-                    </Heading>
-                ) : (
-                    children
-                )}
-            </Box>
-        );
-    }
+		return (
+			<Box as={"header"} {...getHeaderProps(rest, ref)}>
+				{typeof children === "string" ? (
+					<Heading variant={"heading"} size="md">
+						{children}
+					</Heading>
+				) : (
+					children
+				)}
+			</Box>
+		);
+	}
 );
 
 PopoverHeaderBase.displayName = "PopoverHeader";

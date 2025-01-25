@@ -1,0 +1,320 @@
+---
+title: Editable
+description: Editable can be used to create editable fields, where default view should be a text.
+isServerComponent: false
+source: /packages/react/src/components/editable/editable.tsx
+themeSource: /packages/system/src/recipes/editable.ts
+---
+
+## Import
+
+- `Editable` - The context for the editable, renders a 'div' by default.
+- `EditablePreview` - The text preview for the editable.
+- `EditableInput` - The input for the editable, when in edit mode.
+- `EditableEditButton` - The button to trigger edit mode.
+- `EditableSubmitButton` - The button to submit the editing value, when in edit mode.
+- `EditableCancelButton` - The button to cancel the editing, when in edit mode.
+
+```jsx
+import { 
+	Editable, 
+	EditablePreview, 
+	EditableInput, 
+	EditableEditButton, 
+	EditableSubmitButton, 
+	EditableCancelButton
+} from "@dreamy-ui/react";
+```
+
+## Usage
+
+Basic usage of Editable. Placeholder will be shown, when the value is empty.
+
+<Wrapper>
+	<Editable defaultValue="Meow" placeholder="Enter an animal sound">
+		<EditablePreview />
+		<EditableInput />
+		<HStack>
+			<EditableEditButton />
+			<EditableSubmitButton />
+			<EditableCancelButton />
+		</HStack>
+	</Editable>
+</Wrapper>
+
+```tsx
+<Editable defaultValue="Meow" placeholder="Enter an animal sound">
+	<EditablePreview />
+	<EditableInput />
+	<HStack>
+		<EditableEditButton />
+		<EditableSubmitButton />
+		<EditableCancelButton />
+	</HStack>
+</Editable>
+```
+
+### Double Click
+
+Editable can be used to trigger edit mode on double click. Double click the preview to enter edit mode, enter to submit, esc to cancel.
+
+<Wrapper>
+	<Editable defaultValue="Meow" placeholder="Enter an animal sound" useDoubleClick>
+		<EditablePreview />
+		<EditableInput />
+	</Editable>
+</Wrapper>
+
+```tsx
+<Editable defaultValue="Meow" placeholder="Enter an animal sound" useDoubleClick>
+	<EditablePreview />
+	<EditableInput />
+</Editable>
+```
+
+### Controlled
+
+Use `value` and `onChange` to control the editable value.
+
+<Wrapper>
+	<ControlledEditable />
+</Wrapper>
+
+```tsx
+function ControlledEditable() {
+	const [value, setValue] = useState("Meow");
+
+	return (
+		<Editable value={value} onChange={setValue}>
+			<EditablePreview />
+			<EditableInput />
+			<HStack>
+				<EditableEditButton />
+				<EditableSubmitButton />
+				<EditableCancelButton />
+			</HStack>
+		</Editable>
+	);
+}
+```
+
+### Accessing internal state
+
+<Wrapper>
+	<Editable defaultValue="Meow" placeholder="Enter an animal sound" startWithEditView>
+		{({ isEditing, onSubmit, onCancel, onEdit }) => {
+			return (
+				<>
+					<Text>isEditing: {isEditing ? "true" : "false"}</Text>
+					<EditablePreview />
+					<EditableInput />
+					<HStack>
+						<EditableEditButton />
+						<EditableSubmitButton />
+						<EditableCancelButton />
+					</HStack>
+				</>
+			);
+		}}
+	</Editable>
+</Wrapper>
+
+```tsx
+<Editable defaultValue="Meow" placeholder="Enter an animal sound" startWithEditView>
+	{({ isEditing, onSubmit, onCancel, onEdit }) => {
+		return (
+			<>
+				<Text>isEditing: {isEditing ? "true" : "false"}</Text>
+				<EditablePreview />
+				<EditableInput />
+			</>
+		);
+	}}
+</Editable>
+```
+
+### Start with edit view
+
+Use `startWithEditView` to use edit state by default.
+
+<Wrapper>
+	<Editable defaultValue="Meow" placeholder="Enter an animal sound" startWithEditView>
+		<EditablePreview />
+		<EditableInput />
+		<HStack>
+			<EditableEditButton />
+			<EditableSubmitButton />
+			<EditableCancelButton />
+		</HStack>
+	</Editable>
+</Wrapper>
+
+```tsx
+<Editable defaultValue="Meow" placeholder="Enter an animal sound" startWithEditView>
+	<EditablePreview />
+	<EditableInput />
+	<HStack>
+		<EditableEditButton />
+		<EditableSubmitButton />
+		<EditableCancelButton />
+	</HStack>
+</Editable>
+```
+
+### Is preview focusable
+
+Use `isPreviewFocusable` to control whenever the preview should be focusable, that means it can be focused via keyboard or click. It is `true` by default.
+
+<Wrapper>
+	<Editable defaultValue="Meow" placeholder="Enter an animal sound" isPreviewFocusable={false}>
+		<EditablePreview />
+		<EditableInput />
+		<HStack>
+			<EditableEditButton />
+			<EditableSubmitButton />
+			<EditableCancelButton />
+		</HStack>
+	</Editable>
+</Wrapper>
+
+```tsx
+<Editable defaultValue="Meow" placeholder="Enter an animal sound" isPreviewFocusable={false}>
+	<EditablePreview />
+	<EditableInput />
+	<HStack>
+		<EditableEditButton />
+		<EditableSubmitButton />
+		<EditableCancelButton />
+	</HStack>
+</Editable>
+```
+
+### Submit on blur
+
+Use `submitOnBlur` to control when the value should be submitted on blur. Default is `true`. This example won't submit, when blur happens.
+
+<Wrapper>
+	<Editable defaultValue="Meow" placeholder="Enter an animal sound" submitOnBlur={false}>
+		<EditablePreview />
+		<EditableInput />
+		<HStack>
+			<EditableEditButton />
+			<EditableSubmitButton />
+			<EditableCancelButton />
+		</HStack>
+	</Editable>
+</Wrapper>
+
+```tsx
+<Editable defaultValue="Meow" placeholder="Enter an animal sound" submitOnBlur={false}>
+	<EditablePreview />
+	<EditableInput />
+	<HStack>
+		<EditableEditButton />
+		<EditableSubmitButton />
+		<EditableCancelButton />
+	</HStack>
+</Editable>
+```
+
+### onCancel, onSubmit, onEdit, onBlur
+
+Use `onCancel`, `onSubmit`, `onEdit`, `onBlur` to handle the editable events. Open the console
+
+<Wrapper>
+	<Editable 
+		defaultValue="Meow" 
+		placeholder="Enter an animal sound" 
+		onCancel={() => toast({ title: "onCancel" })} 
+		onSubmit={() => toast({ title: "onSubmit" })} 
+		onEdit={() => toast({ title: "onEdit" })} 
+		onBlur={() => toast({ title: "onBlur" })}
+	>
+		<EditablePreview />
+		<EditableInput />
+		<HStack>
+			<EditableEditButton />
+			<EditableSubmitButton />
+			<EditableCancelButton />
+		</HStack>
+	</Editable>
+</Wrapper>
+
+```tsx
+<Editable 
+	defaultValue="Meow" 
+	placeholder="Enter an animal sound" 
+	onCancel={() => toast({ title: "onCancel" })} 
+	onSubmit={() => toast({ title: "onSubmit" })} 
+	onEdit={() => toast({ title: "onEdit" })} 
+	onBlur={() => toast({ title: "onBlur" })}
+>
+	<EditablePreview />
+	<EditableInput />
+	<HStack>
+		<EditableEditButton />
+		<EditableSubmitButton />
+		<EditableCancelButton />
+	</HStack>
+</Editable>
+```
+
+### Select all on focus
+
+Whenever text in input should be selected when entering edit mode.
+
+<Wrapper>
+	<Editable defaultValue="Meow" placeholder="Enter an animal sound" selectAllOnFocus={false}>
+		<EditablePreview />
+		<EditableInput />
+		<HStack>
+			<EditableEditButton />
+			<EditableSubmitButton />
+			<EditableCancelButton />
+		</HStack>
+	</Editable>
+</Wrapper>
+
+```tsx
+<Editable defaultValue="Meow" placeholder="Enter an animal sound" selectAllOnFocus={false}>
+	<EditablePreview />
+	<EditableInput />
+	<HStack>
+		<EditableEditButton />
+		<EditableSubmitButton />
+		<EditableCancelButton />
+	</HStack>
+</Editable>
+```
+
+### Final Focus Ref
+
+Use `finalFocusRef` to set the ref of element to receive focus when edit mode exits.
+
+<Wrapper>
+	<FinalFocusRefEditable />
+</Wrapper>
+
+```tsx
+function FinalFocusRefEditable() {
+	const ref = useRef<HTMLButtonElement>(null);
+
+	return (
+		<>
+			<Button ref={ref}>I receive focus</Button>
+
+			<Editable defaultValue="Meow" finalFocusRef={ref}>
+				<EditablePreview />
+				<EditableInput />
+				<HStack>
+					<EditableEditButton />
+					<EditableSubmitButton />
+					<EditableCancelButton />
+				</HStack>
+			</Editable>
+		</>
+	);
+}
+
+```
+

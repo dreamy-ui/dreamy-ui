@@ -6,22 +6,24 @@ import { forwardRef } from "react";
 
 export interface ModalOverlayProps extends MotionBoxProps {}
 
-export const ModalOverlayBase = forwardRef<HTMLDivElement, ModalOverlayProps>((props, ref) => {
-    const { isOpen } = useModalContext();
-    const { overlay } = useMotionVariants();
+export const ModalOverlayBase = forwardRef<HTMLDivElement, ModalOverlayProps>(
+	(props, ref) => {
+		const { isOpen } = useModalContext();
+		const { overlay } = useMotionVariants();
 
-    return (
-        <AnimatePresence>
-            {isOpen && (
-                <MotionBox
-                    variants={overlay.default}
-                    initial="initial"
-                    animate="animate"
-                    exit="exit"
-                    ref={ref}
-                    {...props}
-                />
-            )}
-        </AnimatePresence>
-    );
-});
+		return (
+			<AnimatePresence>
+				{isOpen && (
+					<MotionBox
+						variants={overlay.default}
+						initial="initial"
+						animate="animate"
+						exit="exit"
+						ref={ref}
+						{...props}
+					/>
+				)}
+			</AnimatePresence>
+		);
+	}
+);

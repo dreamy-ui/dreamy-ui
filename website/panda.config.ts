@@ -129,7 +129,7 @@ export default defineConfig({
 						p: [3, 2],
 						justifyContent: ["between"],
 						rounded: ["md", "inherit"],
-						w: ["250px", "100px", "1/3", "auto"],
+						w: ["250px", "100px", "1/3", "auto", "xs", "sm"],
 						h: ["100px"],
 						resize: ["none", "vertical", "horizontal", "both"],
 						position: ["absolute", "relative"],

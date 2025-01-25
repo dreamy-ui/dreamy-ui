@@ -48,6 +48,16 @@ export const button = defineRecipe({
 			alignItems: "center",
 			justifyContent: "center",
 			flexShrink: 0
+		},
+		rippleContainer: {
+			position: "absolute",
+			top: 0,
+			left: 0,
+			right: 0,
+			bottom: 0,
+			overflow: "hidden",
+			pointerEvents: "none",
+			borderRadius: "inherit"
 		}
 	}),
 	defaultVariants: {

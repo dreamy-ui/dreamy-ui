@@ -35,7 +35,7 @@ import {
 ## Usage
 
 <Wrapper>
-  <TableContainer>
+  <TableContainer w="full">
     <Table>
       <TableHeader>
         <TableRow>
@@ -58,7 +58,7 @@ import {
 </Wrapper>
 
 ```tsx
-<TableContainer>
+<TableContainer w="full">
   <Table>
     <TableHeader>
       <TableRow>
@@ -86,7 +86,7 @@ import {
   {["simple", "line"].map((variant) => (
     <>
       <Text size={"lg"}>{variant}</Text>
-      <TableContainer variant={variant}>
+      <TableContainer w="full" variant={variant}>
         <Table>
           <TableHeader>
             <TableRow>
@@ -114,7 +114,7 @@ import {
 {["simple", "line"].map((variant) => (
   <>
     <Text size={"lg"}>{variant}</Text>
-    <TableContainer variant={variant}>
+    <TableContainer w="full" variant={variant}>
       <Table>
         <TableHeader>
           <TableRow>
@@ -144,7 +144,7 @@ import {
   {["simple", "line"].map((variant) => (
     <>
       <Text size={"lg"}>{variant}</Text>
-      <TableContainer variant={variant} withBackground>
+      <TableContainer w="full" variant={variant} withBackground>
         <Table>
           <TableHeader>
             <TableRow>
@@ -172,7 +172,7 @@ import {
 {["simple", "line"].map((variant) => (
     <>
       <Text size={"lg"}>{variant}</Text>
-      <TableContainer variant={variant} withBackground>
+      <TableContainer w="full" variant={variant} withBackground>
         <Table>
           <TableHeader>
             <TableRow>
@@ -199,7 +199,7 @@ import {
 ### Interactive
 
 <Wrapper>
-  <TableContainer interactive>
+  <TableContainer w="full" interactive>
     <Table>
       <TableHeader>
         <TableRow>
@@ -222,7 +222,7 @@ import {
 </Wrapper>
 
 ```tsx
-<TableContainer interactive>
+<TableContainer w="full" interactive>
   <Table>
     <TableHeader>
       <TableRow>
@@ -247,7 +247,7 @@ import {
 ### Striped
 
 <Wrapper>
-  <TableContainer striped>
+  <TableContainer w="full" striped>
     <Table>
       <TableHeader>
         <TableRow>
@@ -270,7 +270,7 @@ import {
 </Wrapper>
 
 ```tsx
-<TableContainer striped>
+<TableContainer w="full" striped>
   <Table>
     <TableHeader>
       <TableRow>
@@ -298,7 +298,7 @@ import {
   {["sm", "md", "lg"].map((size) => (
     <>
       <Text size={"lg"}>{size}</Text>
-      <TableContainer size={size}>
+      <TableContainer w="full" size={size}>
         <Table>
           <TableHeader>
             <TableRow>
@@ -326,7 +326,7 @@ import {
 {["sm", "md", "lg"].map((size) => (
   <>
     <Text size={"lg"}>{size}</Text>
-    <TableContainer size={size}>
+    <TableContainer w="full" size={size}>
       <Table>
         <TableHeader>
           <TableRow>

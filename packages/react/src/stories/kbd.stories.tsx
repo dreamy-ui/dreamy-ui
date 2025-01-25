@@ -1,27 +1,27 @@
-import { Kbd, VStack } from "@/components";
 import { useActionKey } from "@/hooks";
+import { Kbd, VStack } from "@/rsc";
 import type { Meta } from "@storybook/react";
 
 export default {
-    title: "Kbd"
+	title: "Kbd"
 } satisfies Meta;
 
 export function Base() {
-    return <Kbd>Ctrl</Kbd>;
+	return <Kbd>Ctrl</Kbd>;
 }
 
 export function Sizes() {
-    return (
-        <VStack>
-            <Kbd size="sm">Ctrl</Kbd>
-            <Kbd size="md">Ctrl</Kbd>
-            <Kbd size="lg">Ctrl</Kbd>
-        </VStack>
-    );
+	return (
+		<VStack>
+			<Kbd size="sm">Ctrl</Kbd>
+			<Kbd size="md">Ctrl</Kbd>
+			<Kbd size="lg">Ctrl</Kbd>
+		</VStack>
+	);
 }
 
 export function WithActionkeyHook() {
-    const actionKey = useActionKey();
+	const actionKey = useActionKey();
 
-    return <Kbd>{actionKey}</Kbd>;
+	return <Kbd>{actionKey}</Kbd>;
 }

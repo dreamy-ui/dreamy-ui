@@ -9,6 +9,12 @@ import {
 	Checkbox,
 	CheckboxCard,
 	CheckboxGroup,
+	Editable,
+	EditableCancelButton,
+	EditableEditButton,
+	EditableInput,
+	EditablePreview,
+	EditableSubmitButton,
 	Field,
 	FieldLabel,
 	IconButton,
@@ -68,6 +74,7 @@ import {
 	Flex,
 	Grid,
 	GridItem,
+	HStack,
 	Heading,
 	Icon,
 	Kbd,
@@ -77,7 +84,7 @@ import {
 	VStack
 } from "@dreamy-ui/react/rsc";
 import type { ActionFunctionArgs } from "@remix-run/node";
-import { Form, Link, useNavigation } from "@remix-run/react";
+import { useNavigation } from "@remix-run/react";
 import { useEffect, useMemo, useState } from "react";
 import { IoAdd, IoRemove } from "react-icons/io5";
 import { PiConfetti } from "react-icons/pi";
@@ -101,55 +108,6 @@ export async function action({ request }: ActionFunctionArgs) {
 	};
 }
 
-function ControlledField() {
-	const [field, setField] = useState("");
-
-	return (
-		<Field>
-			<FieldLabel>Name</FieldLabel>
-			<Input value={field} onChange={(e) => setField(e.target.value)} />
-			<input value={field} onChange={(e) => setField(e.target.value)} />
-		</Field>
-	);
-}
-
-function Toaster() {
-	const { toast } = useToast();
-
-	return (
-		<Flex wrapped gap={2}>
-			{positions.map((position) => (
-				<Button
-					key={`${position}-button-toast`}
-					w={"fit-content"}
-					onClick={() => {
-						toast({
-							title: "This is a nice title!",
-							// position,
-							// status: "success",
-							description: "This is a description for status"
-							// isClosable: true,
-							// rightContent: (
-							// 	<Button size={"sm"} color={"error"}>
-							// 		Hello
-							// 	</Button>
-							// ),
-							// render: (toast) => (
-							// 	<Button size={"sm"} color={"error"}>
-							// 		{toast.title}
-							// 	</Button>
-							// ),
-							// duration: 20000
-						});
-					}}
-				>
-					{position}
-				</Button>
-			))}
-		</Flex>
-	);
-}
-
 export default function Test() {
 	const navigation = useNavigation();
 	const [pin, setPin] = useState("123");
@@ -159,6 +117,20 @@ export default function Test() {
 
 	return (
 		<Flex col gap={10}>
+			<Editable
+				defaultValue="meow"
+				placeholder="Enter a word"
+				useDoubleClick
+			>
+				<EditablePreview />
+				<EditableInput />
+				<HStack>
+					<EditableEditButton />
+					<EditableSubmitButton />
+					<EditableCancelButton />
+				</HStack>
+			</Editable>
+
 			<Toaster />
 
 			<Textarea onChangeValue={(v) => console.log(v)} />
@@ -201,7 +173,7 @@ export default function Test() {
 						<MenuItem
 							icon={<IoAdd />}
 							command={`${useActionKey()} i`}
-							asComp={<Link to="/">Menu</Link>}
+							// as={<Link to="/">Menu</Link>}
 						>
 							Menu
 						</MenuItem>
@@ -235,7 +207,7 @@ export default function Test() {
 				<PinInputField />
 			</PinInput>
 
-			<Flex col gap={4} asComp={<Form method="post" reloadDocument />}>
+			{/* <Flex col gap={4} as={<Form method="post" reloadDocument />}>
 				<Select
 					selectedItemBackgroundScheme={"none"}
 					name={"test-select"}
@@ -281,7 +253,7 @@ export default function Test() {
 				>
 					Submit
 				</Button>
-			</Flex>
+			</Flex> */}
 
 			<RadioGroup>
 				<Radio value={"primary"}>Primary</Radio>
@@ -705,6 +677,55 @@ export default function Test() {
 			</Badge>
 
 			<Kbd>Ctrl + C</Kbd>
+		</Flex>
+	);
+}
+
+function ControlledField() {
+	const [field, setField] = useState("");
+
+	return (
+		<Field>
+			<FieldLabel>Name</FieldLabel>
+			<Input value={field} onChange={(e) => setField(e.target.value)} />
+			<input value={field} onChange={(e) => setField(e.target.value)} />
+		</Field>
+	);
+}
+
+function Toaster() {
+	const { toast } = useToast();
+
+	return (
+		<Flex wrapped gap={2}>
+			{positions.map((position) => (
+				<Button
+					key={`${position}-button-toast`}
+					w={"fit-content"}
+					onClick={() => {
+						toast({
+							title: "This is a nice title!",
+							position,
+							// status: "success",
+							description: "This is a description for status"
+							// isClosable: true,
+							// rightContent: (
+							// 	<Button size={"sm"} color={"error"}>
+							// 		Hello
+							// 	</Button>
+							// ),
+							// render: (toast) => (
+							// 	<Button size={"sm"} color={"error"}>
+							// 		{toast.title}
+							// 	</Button>
+							// ),
+							// duration: 20000
+						});
+					}}
+				>
+					{position}
+				</Button>
+			))}
 		</Flex>
 	);
 }

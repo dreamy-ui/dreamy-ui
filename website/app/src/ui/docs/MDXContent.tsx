@@ -9,6 +9,12 @@ import {
 	Checkbox,
 	CheckboxCard,
 	CheckboxGroup,
+	Editable,
+	EditableCancelButton,
+	EditableEditButton,
+	EditableInput,
+	EditablePreview,
+	EditableSubmitButton,
 	Field,
 	FieldError,
 	FieldErrorIcon,
@@ -135,6 +141,10 @@ import {
 	ControlledCheckbox,
 	ControlledCheckboxCard
 } from "./components/checkboxes";
+import {
+	ControlledEditable,
+	FinalFocusRefEditable
+} from "./components/editables";
 import { ControlledPinInput } from "./components/inputs";
 import { AsyncSelect, ControlledSelect } from "./components/selects";
 import { ControlledSlider, MaxMinSlider } from "./components/sliders";
@@ -288,8 +298,16 @@ const DreamComponents = {
 	RemixLink,
 	ControlledMenu,
 	InteractiveMenu,
+	ControlledEditable,
+	FinalFocusRefEditable,
 	TableContainer,
-	UpdateToast
+	UpdateToast,
+	Editable,
+	EditablePreview,
+	EditableInput,
+	EditableEditButton,
+	EditableSubmitButton,
+	EditableCancelButton
 };
 
 function Wrapper({ children }: PropsWithChildren) {

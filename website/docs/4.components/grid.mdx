@@ -20,7 +20,7 @@ import { Grid, GridItem } from "@dreamy-ui/react/rsc";
 Base usage of a grid.
 
 <Wrapper>
-	<Grid color='white' columns={3}>
+	<Grid color='white' columns={3} w='full'>
         <GridItem bg='green.400' p={2} color='black'>1</GridItem>
         <GridItem bg='blue.400' p={2}>2</GridItem>
         <GridItem bg='purple.400' p={2}>3</GridItem>
@@ -44,7 +44,7 @@ Base usage of a grid.
 ### Using columns, colSpan and rowSpan
 
 <Wrapper>
-	<Grid color='white' columns={3}>
+	<Grid color='white' columns={3} w='full'>
         <GridItem colSpan={2} bg='green.400' p={2} color='black'>1</GridItem>
         <GridItem rowSpan={2} bg='blue.400' p={2}>2</GridItem>
         <GridItem bg='purple.400' p={2}>3</GridItem>
