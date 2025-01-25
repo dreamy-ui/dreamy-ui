@@ -1,5 +1,16 @@
 # @dreamy-ui/react
 
+## 0.4.0
+
+### Minor Changes
+
+-   3a8dde7: Add Toasts and Editable
+
+### Patch Changes
+
+-   Updated dependencies [3a8dde7]
+    -   @dreamy-ui/system@0.4.0
+
 ## 0.3.1
 
 ### Patch Changes
