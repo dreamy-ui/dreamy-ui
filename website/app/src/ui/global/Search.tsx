@@ -19,6 +19,7 @@ import {
 import { Flex, Icon, Kbd, Spinner, Text } from "@dreamy-ui/react/rsc";
 import type { SerializeFrom } from "@remix-run/node";
 import { useNavigate } from "@remix-run/react";
+import { AnimatePresence } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { BiSearch } from "react-icons/bi";
 import { MdNavigateNext } from "react-icons/md";
@@ -185,6 +186,9 @@ export default function Search() {
 				}}
 			/>
 			<Modal
+				onCloseComplete={() => {
+					console.log("onCloseComplete");
+				}}
 				isOpen={isOpen}
 				onClose={onClose}
 				size={"xl"}
@@ -307,7 +311,9 @@ export default function Search() {
 										<SearchDoc
 											key={
 												"recent-search-" +
-												search.filename
+												search.filename +
+												"-" +
+												i
 											}
 											doc={search}
 											isActive={active === i}
@@ -382,21 +388,23 @@ function SearchDoc({ doc, isActive, ...rest }: SearchDocProps) {
 
 			<Icon as={MdNavigateNext} boxSize={"5"} />
 
-			{isActive && (
-				<MotionBox
-					pos={"absolute"}
-					inset={0}
-					bg={"primary"}
-					zIndex={-1}
-					rounded={"md"}
-					layout
-					layoutId="active-search-doc"
-					transition={{
-						duration: 0.15,
-						easings: TRANSITION_EASINGS.easeOut
-					}}
-				/>
-			)}
+			<AnimatePresence>
+				{isActive && (
+					<MotionBox
+						pos={"absolute"}
+						inset={0}
+						bg={"primary"}
+						zIndex={-1}
+						rounded={"md"}
+						layout
+						layoutId="active-search-doc"
+						transition={{
+							duration: 0.15,
+							easings: TRANSITION_EASINGS.easeOut
+						}}
+					/>
+				)}
+			</AnimatePresence>
 		</Link>
 	);
 }
