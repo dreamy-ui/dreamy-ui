@@ -143,7 +143,8 @@ import {
 } from "./components/checkboxes";
 import {
 	ControlledEditable,
-	FinalFocusRefEditable
+	FinalFocusRefEditable,
+	StartWithEditViewEditable
 } from "./components/editables";
 import { ControlledPinInput } from "./components/inputs";
 import { AsyncSelect, ControlledSelect } from "./components/selects";
@@ -307,7 +308,8 @@ const DreamComponents = {
 	EditableInput,
 	EditableEditButton,
 	EditableSubmitButton,
-	EditableCancelButton
+	EditableCancelButton,
+	StartWithEditViewEditable
 };
 
 function Wrapper({ children }: PropsWithChildren) {
