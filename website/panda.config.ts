@@ -61,7 +61,6 @@ export default defineConfig({
 				scrollBehavior: "smooth"
 			},
 			body: {
-				fontFamily: "body",
 				overflowY: "scroll"
 			},
 			pre: {
