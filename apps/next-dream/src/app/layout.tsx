@@ -6,39 +6,37 @@ import { cookies } from "next/headers";
 import "./globals.css";
 
 const geistSans = localFont({
-    src: "./fonts/GeistVF.woff",
-    variable: "--font-geist-sans",
-    weight: "100 900"
+	src: "./fonts/GeistVF.woff",
+	variable: "--font-geist-sans",
+	weight: "100 900"
 });
 const geistMono = localFont({
-    src: "./fonts/GeistMonoVF.woff",
-    variable: "--font-geist-mono",
-    weight: "100 900"
+	src: "./fonts/GeistMonoVF.woff",
+	variable: "--font-geist-mono",
+	weight: "100 900"
 });
 
 export const metadata: Metadata = {
-    title: "Dreamy UI with Next.js",
-    description: "Dreamy UI with Next.js"
+	title: "Dreamy UI with Next.js",
+	description: "Dreamy UI with Next.js"
 };
 
 export default async function RootLayout({
-    children
+	children
 }: Readonly<{
-    children: React.ReactNode;
+	children: React.ReactNode;
 }>) {
-    const colorMode = getSSRColorMode((await cookies()).toString());
+	const colorMode = getSSRColorMode((await cookies()).toString());
 
-    return (
-        <html
-            lang="en"
-            suppressHydrationWarning
-        >
-            <body
-                className={`${geistSans.variable} ${geistMono.variable}`}
-                {...getColorModeHTMLProps(colorMode)}
-            >
-                <Providers colorMode={colorMode}>{children}</Providers>
-            </body>
-        </html>
-    );
+	return (
+		<html
+			lang="en"
+			suppressHydrationWarning
+			{...getColorModeHTMLProps(colorMode)}
+		>
+			<body className={`${geistSans.variable} ${geistMono.variable}`}>
+				<Providers colorMode={colorMode}>{children}</Providers>
+			</body>
+		</html>
+	);
 }

@@ -1,5 +1,13 @@
 # @dreamy-ui/react
 
+## 0.4.1
+
+### Patch Changes
+
+-   fix missing Menu styles & body font not applying
+-   Updated dependencies
+    -   @dreamy-ui/system@0.4.1
+
 ## 0.4.0
 
 ### Minor Changes

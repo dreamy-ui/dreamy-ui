@@ -101,7 +101,7 @@ function ControlledEditable() {
 ### Accessing internal state
 
 <Wrapper>
-	<Editable defaultValue="Meow" placeholder="Enter an animal sound" startWithEditView>
+	<Editable defaultValue="Meow" placeholder="Enter an animal sound">
 		{({ isEditing, onSubmit, onCancel, onEdit }) => {
 			return (
 				<>
@@ -120,7 +120,7 @@ function ControlledEditable() {
 </Wrapper>
 
 ```tsx
-<Editable defaultValue="Meow" placeholder="Enter an animal sound" startWithEditView>
+<Editable defaultValue="Meow" placeholder="Enter an animal sound">
 	{({ isEditing, onSubmit, onCancel, onEdit }) => {
 		return (
 			<>
@@ -135,18 +135,10 @@ function ControlledEditable() {
 
 ### Start with edit view
 
-Use `startWithEditView` to use edit state by default.
+Use `startWithEditView` to use edit state by default. Click "Render" to render the editable.
 
 <Wrapper>
-	<Editable defaultValue="Meow" placeholder="Enter an animal sound" startWithEditView>
-		<EditablePreview />
-		<EditableInput />
-		<HStack>
-			<EditableEditButton />
-			<EditableSubmitButton />
-			<EditableCancelButton />
-		</HStack>
-	</Editable>
+	<StartWithEditViewEditable />
 </Wrapper>
 
 ```tsx

@@ -21,9 +21,15 @@ import { useToast } from "@dreamy-ui/react";
 </Wrapper>
 
 ```tsx
-<Button onClick={() => toast({ title: "Welcome!", description: "Make yourself at home!" })}>
-  Toast
-</Button>
+function Toast() {
+	const { toast } = useToast();
+
+	return (
+		<Button onClick={() => toast({ title: "Welcome!", description: "Make yourself at home!" })}>
+			Toast
+		</Button>
+	);
+}
 ```
 
 ### Status

@@ -45,3 +45,31 @@ export function FinalFocusRefEditable() {
 		</>
 	);
 }
+
+export function StartWithEditViewEditable() {
+	const [isRendered, setIsRendered] = useState(false);
+
+	return (
+		<>
+			<Button onClick={() => setIsRendered((prev) => !prev)}>
+				Toggle Editable
+			</Button>
+
+			{isRendered && (
+				<Editable
+					defaultValue="Meow"
+					placeholder="Enter an animal sound"
+					startWithEditView
+				>
+					<EditablePreview />
+					<EditableInput />
+					<HStack>
+						<EditableEditButton />
+						<EditableSubmitButton />
+						<EditableCancelButton />
+					</HStack>
+				</Editable>
+			)}
+		</>
+	);
+}
