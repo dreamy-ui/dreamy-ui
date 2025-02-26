@@ -3,11 +3,11 @@ import { defineParts, defineRecipe } from "@pandacss/dev";
 const parts = defineParts({
 	root: { selector: "&" },
 	leftIcon: { selector: '& > [data-part="icon-left"]' },
-	rightIcon: { selector: '& > [data-part="icon-right"]' },
-	ripple: { selector: '& > [data-part="ripple"]' },
+	rightIcon: { selector: '& [data-part="icon-right"]' },
+	ripple: { selector: '& [data-part="ripple"]' },
 	rippleContainer: { selector: '& > [data-part="ripple-container"]' },
 	icons: {
-		selector: '& > [data-part="icon-left"], & > [data-part="icon-right"]'
+		selector: '& [data-part="icon-left"], & [data-part="icon-right"]'
 	}
 });
 export { parts as buttonParts };
@@ -40,6 +40,11 @@ export const button = defineRecipe({
 			_disabled: {
 				cursor: "not-allowed",
 				opacity: 0.5
+			},
+			"&[data-type='icon-button']": {
+				px: "0 !important",
+				py: "0 !important",
+				aspectRatio: 1
 			}
 		},
 		icons: {
