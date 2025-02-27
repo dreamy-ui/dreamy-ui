@@ -4,7 +4,7 @@ import { SliderRoot } from "@/components/slider/slider-root";
 import { SliderThumbBase } from "@/components/slider/slider-thumb";
 import { SliderTrackBase } from "@/components/slider/slider-track";
 import { createStyleContext } from "@/components/style-context";
-import { slider } from "@dreamy-ui/system/recipes";
+import { slider } from "styled-system/recipes";
 
 const { withProvider, withContext } = createStyleContext(slider);
 

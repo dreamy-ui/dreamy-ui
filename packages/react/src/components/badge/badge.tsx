@@ -1,6 +1,6 @@
 import type { HTMLDreamProps } from "@/utils/types";
-import { type BadgeVariantProps, badge } from "@dreamy-ui/system/recipes";
 import { forwardRef } from "react";
+import { type BadgeVariantProps, badge } from "styled-system/recipes";
 import { dreamy } from "../factory";
 
 export interface BadgeProps extends HTMLDreamProps<"div">, BadgeVariantProps {}

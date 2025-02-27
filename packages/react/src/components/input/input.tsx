@@ -4,9 +4,9 @@ import { useField } from "@/components/field/use-field";
 import { useInputGroup } from "@/components/input/input-group";
 import { callAllHandlers } from "@/utils";
 import type { HTMLDreamProps } from "@/utils/types";
-import { type InputVariantProps, input } from "@dreamy-ui/system/recipes";
 import type React from "react";
 import { forwardRef, useMemo } from "react";
+import { type InputVariantProps, input } from "styled-system/recipes";
 import { dreamy } from "../factory";
 
 export interface UserFeedbackProps {

@@ -1,8 +1,8 @@
 import type { HTMLDreamProps } from "@/utils/types";
-import { cx } from "@dreamy-ui/system/css";
-import type { StackProps as JSXStackProps } from "@dreamy-ui/system/jsx";
-import { stack } from "@dreamy-ui/system/patterns";
 import React, { forwardRef } from "react";
+import { cx } from "styled-system/css";
+import type { StackProps as JSXStackProps } from "styled-system/jsx";
+import { stack } from "styled-system/patterns";
 import { dreamy } from "../factory";
 
 interface Props {

@@ -14,7 +14,7 @@ import {
 } from "@/components/field/field-label";
 import { type FieldProps, FieldRoot } from "@/components/field/field-root";
 import { createStyleContext } from "@/components/style-context";
-import { field } from "@dreamy-ui/system/recipes";
+import { field } from "styled-system/recipes";
 
 const { withProvider, withContext } = createStyleContext(field);
 

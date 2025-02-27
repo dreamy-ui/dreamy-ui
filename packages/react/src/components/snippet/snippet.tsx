@@ -1,5 +1,5 @@
-import { snippet } from "@dreamy-ui/system/recipes";
 import { type SVGProps, cloneElement, forwardRef, useMemo } from "react";
+import { snippet } from "styled-system/recipes";
 import { IconButton } from "../button";
 import { dreamy } from "../factory";
 import { Tooltip } from "../tooltip";

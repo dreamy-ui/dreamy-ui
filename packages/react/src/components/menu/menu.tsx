@@ -1,7 +1,7 @@
 "use client";
 
 import { createStyleContext } from "@/components/style-context";
-import { menu } from "@dreamy-ui/system/recipes";
+import { menu } from "styled-system/recipes";
 import { MenuButtonBase } from "./menu-button";
 import { MenuContentBase } from "./menu-content";
 import { MenuRoot } from "./menu-root";

@@ -2,8 +2,8 @@ import { AvatarName } from "@/components/avatar/avatar-name";
 import { GenericAvatarIcon } from "@/components/avatar/generic-avatar-icon";
 import { Image, type ImageProps } from "@/components/image";
 import { useImage } from "@/components/image/use-image";
-import type { SystemStyleObject } from "@dreamy-ui/system/types";
 import { cloneElement, useMemo } from "react";
+import type { SystemStyleObject } from "styled-system/types";
 
 interface AvatarImageProps extends ImageProps {
     getInitials?: (name: string) => string;

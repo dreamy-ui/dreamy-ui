@@ -1,13 +1,13 @@
 import { dreamy } from "@/components/factory";
 import { splitProps } from "@/utils";
 import type { HTMLDreamProps } from "@/utils/types";
+import { forwardRef } from "react";
 import {
     type GridItemProperties,
     type GridProperties,
     grid,
     gridItem
-} from "@dreamy-ui/system/patterns";
-import { forwardRef } from "react";
+} from "styled-system/patterns";
 
 export interface GridProps
     extends Omit<HTMLDreamProps<"div">, keyof GridProperties>,

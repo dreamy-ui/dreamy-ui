@@ -1,7 +1,7 @@
 import { Input, type InputProps } from "@/components/input";
 import { Box, type BoxProps } from "@/rsc";
-import { splitCssProps } from "@dreamy-ui/system/jsx";
 import { forwardRef } from "react";
+import { splitCssProps } from "styled-system/jsx";
 import {
     PinInputDescendantsProvider,
     PinInputProvider,

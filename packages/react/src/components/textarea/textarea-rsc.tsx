@@ -1,5 +1,5 @@
-import { textarea } from "@dreamy-ui/system/recipes";
 import { forwardRef } from "react";
+import { textarea } from "styled-system/recipes";
 import { dreamy } from "../factory";
 import type { TextareaNoAutoSizeProps } from "./textarea";
 

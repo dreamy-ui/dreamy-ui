@@ -15,7 +15,6 @@ export default defineConfig({
 		"../packages/system/styled-system/**/*.{js,jsx,ts,tsx}",
 		"../packages/system/dist/**/*.{js,jsx,ts,tsx}" // The preset location
 	],
-	importMap: "@dreamy-ui/system",
 	exclude: [],
 	presets: [
 		pandaPreset,
@@ -36,6 +35,17 @@ export default defineConfig({
 	],
 	theme: {
 		extend: {
+			recipes: {
+				button: {
+					variants: {
+						variant: {
+							tertiary: {
+								bg: "tertiary"
+							}
+						}
+					}
+				}
+			},
 			semanticTokens: {
 				colors: {
 					tertiary: {

@@ -33,7 +33,9 @@ export const SelectIndicatorBase = forwardRef<SVGSVGElement, IconProps>(
 
 const StyledButton = dreamy.button;
 
-export const SelectClearButtonBase = forwardRef<HTMLButtonElement, HTMLDreamProps<"button">>(
+export interface SelectClearButtonProps extends HTMLDreamProps<"button"> {}
+
+export const SelectClearButtonBase = forwardRef<HTMLButtonElement, SelectClearButtonProps>(
     function SelectClearButton(props, ref) {
         const { getClearButtonProps } = useSelectContext();
 

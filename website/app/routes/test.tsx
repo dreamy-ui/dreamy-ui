@@ -109,7 +109,6 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function Test() {
-    const navigation = useNavigation();
     const [pin, setPin] = useState("123");
     const [count, setCount] = useState(0);
     const [checked, setChecked] = useState(false);
@@ -121,9 +120,10 @@ export default function Test() {
             gap={10}
         >
             <Button
-                variant={"primary"}
+                variant={"tertiary"}
                 w="fit"
                 rightIcon={<IoAdd />}
+
                 // isLoading
                 // isDisabled
             >

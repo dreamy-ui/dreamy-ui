@@ -1,8 +1,8 @@
 import { dreamy } from "@/components/factory";
 import { splitProps } from "@/utils";
 import type { HTMLDreamProps } from "@/utils/types";
-import { type TextProperties, text } from "@dreamy-ui/system/patterns";
 import { forwardRef } from "react";
+import { type TextProperties, text } from "styled-system/patterns";
 
 export interface HeadingProps extends HTMLDreamProps<"h3">, TextProperties {}
 

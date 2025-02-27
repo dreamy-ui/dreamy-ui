@@ -9,8 +9,8 @@ import {
     ModalOverlay
 } from "@/components";
 import { useControllable } from "@/hooks";
-import type { ModalVariantProps } from "@dreamy-ui/system/recipes";
 import type { Meta } from "@storybook/react";
+import type { ModalVariantProps } from "styled-system/recipes";
 
 export default {
     title: "Modal"

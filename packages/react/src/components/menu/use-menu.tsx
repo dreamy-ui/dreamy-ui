@@ -6,8 +6,8 @@ import { useReducedMotion } from "@/provider";
 import { type PropGetter, callAllHandlers } from "@/utils";
 import { dataAttr } from "@/utils/attr";
 import type { HTMLDreamProps } from "@/utils/types";
-import { cx } from "@dreamy-ui/system/css";
 import { type KeyboardEvent, type ReactNode, useCallback, useId, useRef, useState } from "react";
+import { cx } from "styled-system/css";
 import type { UserFeedbackProps } from "../input/input";
 import { useMenuContext } from "./menu-context";
 

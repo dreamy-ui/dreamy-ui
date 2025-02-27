@@ -1,7 +1,7 @@
 "use client";
 
 import { createStyleContext } from "@/components/style-context";
-import { accordion } from "@dreamy-ui/system/recipes";
+import { accordion } from "styled-system/recipes";
 import { AccordionContentBase } from "./accordion-content";
 import { AccordionIconBase } from "./accordion-icon";
 import { AccordionItemBase } from "./accordion-item";

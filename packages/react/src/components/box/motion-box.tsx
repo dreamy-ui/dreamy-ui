@@ -1,9 +1,9 @@
 "use client";
 
 import type { HTMLDreamProps } from "@/utils/types";
-import { isCssProperty, styled } from "@dreamy-ui/system/jsx";
 import { type MotionProps, isValidMotionProp, m } from "motion/react";
 import { forwardRef } from "react";
+import { isCssProperty, styled } from "styled-system/jsx";
 
 const StyledMotionBox = styled(
     m.div,

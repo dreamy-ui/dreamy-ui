@@ -1,5 +1,5 @@
-import { type RadioVariantProps, radio } from "@dreamy-ui/system/recipes";
 import { forwardRef } from "react";
+import { type RadioVariantProps, radio } from "styled-system/recipes";
 import { dreamy } from "../factory";
 import { VisuallyHiddenInput } from "../visually-hidden";
 import { type UseRadioProps, useRadio } from "./use-radio";

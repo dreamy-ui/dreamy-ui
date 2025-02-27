@@ -8,8 +8,8 @@ import { useRipple } from "@/components/ripple/use-ripple";
 import { dataAttr } from "@/utils/attr";
 import { nextTick } from "@/utils/ticks";
 import type { HTMLDreamProps } from "@/utils/types";
-import { type ButtonVariantProps, button } from "@dreamy-ui/system/recipes";
 import { forwardRef, useCallback, useMemo } from "react";
+import { type ButtonVariantProps, button } from "styled-system/recipes";
 
 export interface UniversalButtonProps extends ButtonSpinnerOptions {
     /**

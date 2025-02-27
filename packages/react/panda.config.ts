@@ -8,11 +8,9 @@ export default defineConfig({
 	jsxFramework: "react",
 	jsxStyleProps: "all",
 	outExtension: "js",
-	include: [
-		"./src/stories/**/*.{js,jsx,ts,tsx}",
-		".storybook/**/*.{js,jsx,ts,tsx}"
-	],
-	importMap: "@dreamy-ui/system",
+	include: ["./src/**/*.{js,jsx,ts,tsx}", ".storybook/**/*.{js,jsx,ts,tsx}"],
 	exclude: [],
+	importMap: "styled-system",
+	outdir: "styled-system",
 	presets: [pandaPreset, createDreamyPreset()]
 });

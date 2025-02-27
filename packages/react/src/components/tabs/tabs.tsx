@@ -7,7 +7,7 @@ import { TabListBase } from "@/components/tabs/tab-list";
 import { TabPanelBase } from "@/components/tabs/tab-panel";
 import { TabPanelsBase } from "@/components/tabs/tab-panels";
 import { TabsRoot } from "@/components/tabs/tabs-root";
-import { tabs } from "@dreamy-ui/system/recipes";
+import { tabs } from "styled-system/recipes";
 
 const { withProvider, withContext } = createStyleContext(tabs, (prop) => prop === "orientation");
 

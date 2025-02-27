@@ -1,11 +1,11 @@
 import { useMotionVariants } from "@/provider";
-import { css, cx } from "@dreamy-ui/system/css";
 import {
     AnimatePresence,
     type AnimatePresenceProps,
     type Variants as _Variants
 } from "motion/react";
 import { forwardRef, useMemo } from "react";
+import { css, cx } from "styled-system/css";
 import { MotionBox, type MotionBoxProps } from "../box/motion-box";
 import type { WithTransitionConfig } from "./transition-utils";
 

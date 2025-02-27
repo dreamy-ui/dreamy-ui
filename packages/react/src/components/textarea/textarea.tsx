@@ -3,9 +3,9 @@ import { useField } from "@/components/field/use-field";
 import type { UserFeedbackProps } from "@/components/input";
 import { callAllHandlers } from "@/utils";
 import type { HTMLDreamProps } from "@/utils/types";
-import { type TextareaVariantProps, textarea } from "@dreamy-ui/system/recipes";
 import { type ComponentType, forwardRef } from "react";
 import TextareaAutosize, { type TextareaAutosizeProps } from "react-textarea-autosize";
+import { type TextareaVariantProps, textarea } from "styled-system/recipes";
 
 export interface TextareaProps
     extends HTMLDreamProps<"textarea">,

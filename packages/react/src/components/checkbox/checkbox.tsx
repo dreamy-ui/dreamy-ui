@@ -1,5 +1,5 @@
-import { type CheckboxVariantProps, checkbox } from "@dreamy-ui/system/recipes";
 import { type ReactElement, cloneElement, forwardRef, useMemo } from "react";
+import { type CheckboxVariantProps, checkbox } from "styled-system/recipes";
 import { dreamy } from "../factory";
 import { VisuallyHiddenInput } from "../visually-hidden";
 import { CheckboxIcon } from "./checkbox-icon";

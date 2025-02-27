@@ -1,6 +1,6 @@
 import type { HTMLDreamProps } from "@/utils/types";
-import { Box } from "@dreamy-ui/system/jsx";
 import { forwardRef } from "react";
+import { Box } from "styled-system/jsx";
 import { AccordionItemProvider } from "./accordion-context";
 import { type UseAccordionItemProps, useAccordionItem } from "./use-accordion";
 
