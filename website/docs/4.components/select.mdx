@@ -215,9 +215,9 @@ export function ControlledSelect() {
         <Select
             value={value}
             onChangeValue={setValue}
+            width="xs"
         >
             <SelectTrigger
-            
                 placeholder="Select a favorite fruit"
             />
             <SelectContent>
@@ -241,11 +241,9 @@ You can customize how the selected value is marked as selected.
             <Select
                 key={strategy}
                 selectedStrategy={strategy}
+                width="xs"
             >
-                <SelectTrigger
-                
-                    placeholder="Select a favorite fruit"
-                />
+                <SelectTrigger placeholder="Select a favorite fruit" />
                 <SelectContent>
                     <SelectItem value="strawberry">Strawberry</SelectItem>
                     <SelectItem value="banana">Banana</SelectItem>
@@ -264,11 +262,9 @@ You can customize how the selected value is marked as selected.
             <Select
                 key={strategy}
                 selectedStrategy={strategy}
+                width="xs"
             >
-                <SelectTrigger
-                
-                    placeholder="Select a favorite fruit"
-                />
+                <SelectTrigger placeholder="Select a favorite fruit" />
                 <SelectContent>
                     <SelectItem value="strawberry">Strawberry</SelectItem>
                     <SelectItem value="banana">Banana</SelectItem>
@@ -286,10 +282,7 @@ You can use the `isMultiple` prop to allow multiple selection. Now `onChangeValu
 
 <Wrapper>
     <Select width="xs" isMultiple>
-        <SelectTrigger
-        
-            placeholder="Select a favorite fruit"
-        />
+        <SelectTrigger placeholder="Select a favorite fruit" />
         <SelectContent>
             <SelectItem value="strawberry">Strawberry</SelectItem>
             <SelectItem value="banana">Banana</SelectItem>
@@ -302,10 +295,7 @@ You can use the `isMultiple` prop to allow multiple selection. Now `onChangeValu
 export function MultipleSelect() {
     return (
         <Select width="xs" isMultiple>
-            <SelectTrigger
-            
-                placeholder="Select a favorite fruit"
-            />
+            <SelectTrigger placeholder="Select a favorite fruit" />
             <SelectContent>
                 <SelectItem value="strawberry">Strawberry</SelectItem>
                 <SelectItem value="banana">Banana</SelectItem>
@@ -324,7 +314,6 @@ You can change the text that Select displays when multiple keys are selected by 
 <Wrapper>
     <Select width="xs" isMultiple>
         <SelectTrigger
-        
             placeholder="Select a favorite fruit"
             multipleSelectedText={(selectedKeys) => `${selectedKeys.join(", ")}`}
         />
@@ -341,7 +330,6 @@ export function MultipleSelect() {
     return (
         <Select width="xs" isMultiple>
             <SelectTrigger
-            
                 placeholder="Select a favorite fruit"
                 multipleSelectedText={(selectedKeys) => `${selectedKeys.join(", ")}`}
             />
@@ -379,10 +367,7 @@ export function AsyncSelect() {
 
     return (
         <Select width="xs" onOpen={fetchFruits}>
-            <SelectTrigger
-            
-                placeholder="Select a favorite fruit"
-            />
+            <SelectTrigger placeholder="Select a favorite fruit" />
             <SelectContent>
                 {isLoading && (
                     <Spinner

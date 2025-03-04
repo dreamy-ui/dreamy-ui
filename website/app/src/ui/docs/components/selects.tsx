@@ -16,11 +16,11 @@ export function AsyncSelect() {
     }
 
     return (
-        <Select onOpen={fetchFruits}>
-            <SelectTrigger
-                maxW="xs"
-                placeholder="Select a favorite fruit"
-            />
+        <Select
+            onOpen={fetchFruits}
+            width={"xs"}
+        >
+            <SelectTrigger placeholder="Select a favorite fruit" />
             <SelectContent>
                 {isLoading && (
                     <Spinner
@@ -48,11 +48,9 @@ export function ControlledSelect() {
         <Select
             value={value}
             onChangeValue={setValue}
+            width={"xs"}
         >
-            <SelectTrigger
-                maxW="xs"
-                placeholder="Select a favorite fruit"
-            />
+            <SelectTrigger placeholder="Select a favorite fruit" />
             <SelectContent>
                 <SelectItem value="strawberry">Strawberry</SelectItem>
                 <SelectItem value="banana">Banana</SelectItem>

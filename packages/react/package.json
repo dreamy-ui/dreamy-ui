@@ -3,12 +3,7 @@
 	"version": "0.4.1",
 	"description": "Dreamy UI library for React",
 	"type": "module",
-	"keywords": [
-		"react",
-		"ui",
-		"css-in-js",
-		"component-library"
-	],
+	"keywords": ["react", "ui", "css-in-js", "component-library"],
 	"author": "imexoodeex",
 	"license": "MIT",
 	"scripts": {
@@ -16,6 +11,7 @@
 		"dev": "tsup --watch",
 		"typecheck": "tsc --noEmit",
 		"storybook": "storybook dev -p 6006",
+		"prebuild": "panda codegen",
 		"build-storybook": "panda codegen && storybook build"
 	},
 	"repository": {
@@ -35,9 +31,7 @@
 			"require": "./dist/rsc.cjs"
 		}
 	},
-	"files": [
-		"/dist"
-	],
+	"files": ["/dist"],
 	"devDependencies": {
 		"@chromatic-com/storybook": "3.2.2",
 		"@pandacss/dev": "^0.53.0",

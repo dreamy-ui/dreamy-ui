@@ -8,14 +8,11 @@ import { SelectTriggerBase } from "@/components/select/select-trigger";
 import { createStyleContext } from "@/components/style-context";
 import { Box } from "@/rsc";
 import type React from "react";
-import type { PropsWithChildren } from "react";
-import { type SelectVariantProps, select } from "styled-system/recipes";
+import { select } from "styled-system/recipes";
+import type { SelectProps } from "./select-root";
 import { SelectRoot } from "./select-root";
-import type { UseSelectProps } from "./use-select";
 
 const { withProvider, withContext } = createStyleContext(select);
-
-type SelectProps<T extends boolean> = UseSelectProps<T> & SelectVariantProps & PropsWithChildren;
 
 /**
  * Select component

@@ -8,7 +8,7 @@
 		"build": "remix vite:build && tsup",
 		"dev": "cross-env NODE_ENV=development node --import=tsx --watch --watch-path=./server server/server.ts -",
 		"start": "cross-env NODE_ENV=production node --env-file .env build/server/server.js",
-		"prepare": "panda codegen",
+		"prebuild": "panda codegen",
 		"typecheck": "tsc"
 	},
 	"dependencies": {
