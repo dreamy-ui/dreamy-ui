@@ -18,6 +18,7 @@ import {
     Field,
     FieldLabel,
     IconButton,
+    Image,
     Input,
     InputGroup,
     InputLeftAddon,
@@ -118,13 +119,17 @@ export default function Test() {
             col
             gap={10}
         >
+            <Image src={'/sdfas'}
+                fallbackSrc="skibidi"
+            />
+
             <Button
                 variant={"tertiary"}
                 w="fit"
                 rightIcon={<IoAdd />}
 
-                // isLoading
-                // isDisabled
+            // isLoading
+            // isDisabled
             >
                 aaa
             </Button>
@@ -193,7 +198,7 @@ export default function Test() {
                         <MenuItem
                             icon={<IoAdd />}
                             command={`${useActionKey()} i`}
-                            // as={<Link to="/">Menu</Link>}
+                        // as={<Link to="/">Menu</Link>}
                         >
                             Menu
                         </MenuItem>

@@ -5,7 +5,7 @@ import { callAllHandlers, omit } from "@/utils";
 import { ariaAttr } from "@/utils/attr";
 import { objectToDeps } from "@/utils/object";
 import type { HTMLDreamProps } from "@/utils/types";
-import { cloneElement, forwardRef, useMemo } from "react";
+import { cloneElement, forwardRef, useMemo, useRef } from "react";
 import { image } from "styled-system/recipes";
 import type { SystemProperties } from "styled-system/types";
 import { dreamy } from "../factory";
@@ -49,6 +49,8 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(pro
         ...rest
     } = props;
 
+    const hasErrored = useRef(false)
+    
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     const shared = useMemo(() => {
         return {
@@ -68,7 +70,10 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(pro
                 referrerPolicy={referrerPolicy}
                 {...shared}
                 onError={callAllHandlers((e: any) => {
-                    e.target.src = fallbackSrc;
+                    if (fallbackSrc && !hasErrored.current) {
+                        hasErrored.current = true;
+                        e.target.src = fallbackSrc;
+                    }
                 }, rest.onError)}
             />
         ),
