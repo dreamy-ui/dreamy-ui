@@ -1,4 +1,5 @@
 import { TRANSITION_EASINGS } from "@/utils";
+import { dataAttr } from "@/utils/attr";
 import type { Status } from "@/utils/types";
 import { isValidMotionProp, m } from "motion/react";
 import { useCallback } from "react";
@@ -79,6 +80,7 @@ export function ToastComponent({ toast }: { toast: Toast }) {
             id={toast.id}
             data-status={toast.status}
             data-variant={"default"}
+            data-closable={dataAttr(toast.isClosable)}
             {...(toast.containerProps as any)}
         >
             <m.div

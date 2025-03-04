@@ -84,7 +84,6 @@ import {
     VStack
 } from "@dreamy-ui/react/rsc";
 import type { ActionFunctionArgs } from "@remix-run/node";
-import { useNavigation } from "@remix-run/react";
 import { useEffect, useMemo, useState } from "react";
 import { IoAdd, IoRemove } from "react-icons/io5";
 import { PiConfetti } from "react-icons/pi";
@@ -856,8 +855,9 @@ function Toaster() {
                         toast({
                             title: "This is a nice title!",
                             position,
+                            isClosable: true
                             // status: "success",
-                            description: "This is a description for status"
+                            // description: "This is a description for status"
                             // isClosable: true,
                             // rightContent: (
                             // 	<Button size={"sm"} color={"error"}>
