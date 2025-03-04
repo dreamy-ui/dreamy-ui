@@ -8,11 +8,12 @@
 		"build": "remix vite:build && tsup",
 		"dev": "cross-env NODE_ENV=development node --import=tsx --watch --watch-path=./server server/server.ts -",
 		"start": "cross-env NODE_ENV=production node --env-file .env build/server/server.js",
+		"prepare": "panda codegen",
 		"typecheck": "tsc"
 	},
 	"dependencies": {
 		"@dreamy-ui/react": "workspace:*",
-		"@dreamy-ui/system": "workspace:*",
+		"@dreamy-ui/panda-preset": "workspace:*",
 		"@epic-web/cachified": "^5.2.0",
 		"@epic-web/remember": "^1.1.0",
 		"@mdx-js/mdx": "^3.0.1",

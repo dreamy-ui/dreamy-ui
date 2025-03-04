@@ -1,4 +1,4 @@
-import { Tokens } from "@pandacss/dev";
+import type { Tokens } from "@pandacss/dev";
 
 export const letterSpacings: Tokens["letterSpacings"] = {
 	tighter: { value: "-0.05em" },

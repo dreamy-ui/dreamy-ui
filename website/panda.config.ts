@@ -1,4 +1,4 @@
-import { createDreamyPreset } from "@dreamy-ui/system";
+import createDreamyPreset from "@dreamy-ui/panda-preset";
 import { defineConfig } from "@pandacss/dev";
 import pandaPreset from "@pandacss/preset-panda";
 
@@ -12,8 +12,7 @@ export default defineConfig({
 		"./app/**/*.{js,jsx,ts,tsx}",
 		"./docs/**/*.{md,mdx}",
 		"../packages/react/dist/**/*.{js,jsx,ts,tsx}",
-		"../packages/system/styled-system/**/*.{js,jsx,ts,tsx}",
-		"../packages/system/dist/**/*.{js,jsx,ts,tsx}" // The preset location
+		"../packages/panda-preset/dist/**/*.{js,jsx,ts,tsx}" // The preset location
 	],
 	exclude: [],
 	presets: [

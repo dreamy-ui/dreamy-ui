@@ -1,0 +1,48 @@
+{
+	"name": "@dreamy-ui/panda-preset",
+	"version": "1.0.0",
+	"description": "A panda preset for Dreamy UI React component library",
+	"type": "module",
+	"keywords": [
+		"ui",
+		"panda",
+		"panda-css",
+		"panda-preset"
+	],
+	"author": "imexoodeex",
+	"license": "MIT",
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/dreamy-ui/dreamy-ui",
+		"directory": "packages/system"
+	},
+	"scripts": {
+		"build": "tsup",
+		"dev": "tsup --watch",
+		"typecheck": "tsc --noEmit"
+	},
+	"files": [
+		"/dist",
+		"/styled-system"
+	],
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js",
+			"require": "./dist/index.js"
+		}
+	},
+	"dependencies": {
+		"@pandacss/preset-panda": "^0.53.0",
+		"deepmerge": "^4.3.1",
+		"react": "^19.0.0"
+	},
+	"devDependencies": {
+		"@pandacss/dev": "^0.53.0",
+		"@types/react": "^19.0.1",
+		"tsup": "^8.3.5"
+	}
+}

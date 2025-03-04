@@ -1,4 +1,4 @@
-import { Tokens } from "@pandacss/dev";
+import type { Tokens } from "@pandacss/dev";
 
 export const lineHeights: Tokens["lineHeights"] = {
 	none: { value: "1" },

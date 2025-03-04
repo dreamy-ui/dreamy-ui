@@ -60,7 +60,7 @@
 		"vite-tsconfig-paths": "^5.1.4"
 	},
 	"dependencies": {
-		"@dreamy-ui/system": "workspace:*",
+		"@dreamy-ui/panda-preset": "workspace:*",
 		"@popperjs/core": "^2.11.8",
 		"@react-aria/focus": "^3.19.0",
 		"@zag-js/focus-visible": "^0.78.3",

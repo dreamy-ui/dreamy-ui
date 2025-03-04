@@ -1,9 +1,10 @@
-import { patters } from "@/theme/patters";
+import { patterns } from "@/theme/patterns";
 import { resolveButtonColors } from "@/theme/resolve-button-colors";
 import { createSemanticTokens } from "@/theme/semantic-tokens";
 import { createTokens } from "@/theme/tokens";
 import type { BorderRadius, DeepPartial } from "@/types";
 import { type Preset, definePreset } from "@pandacss/dev";
+import pandaPreset from "@pandacss/preset-panda";
 import deepmerge from "deepmerge";
 import { parts, recipes } from "../recipes/index";
 import { conditions } from "./conditions";
@@ -55,7 +56,7 @@ export const defaultPresetOptions = {
 	rounded: "md"
 } satisfies PresetOptions;
 
-export function createDreamyPreset(
+export default function createDreamyPreset(
 	optionsArg: DeepPartial<PresetOptions> = defaultPresetOptions
 ): Preset {
 	resolveButtonColors(optionsArg);
@@ -71,8 +72,9 @@ export function createDreamyPreset(
 	const tokens = createTokens(options);
 
 	const preset = definePreset({
-		name: "dreamy-ui",
+		name: "@dreamy-ui/panda-preset",
 		conditions,
+		presets: [pandaPreset],
 		theme: {
 			extend: {
 				recipes,
@@ -85,7 +87,7 @@ export function createDreamyPreset(
 		globalCss,
 		utilities,
 		patterns: {
-			extend: patters
+			extend: patterns
 		},
 		staticCss
 	});
