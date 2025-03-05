@@ -190,7 +190,7 @@ export function DreamyProvider({
 	return (
 		<DreamContext.Provider value={context}>
 			<MotionConfig
-				reducedMotion={reduceMotion ? "always" : "never"}
+				reducedMotion={reduceMotion && reduceMotion !== 'system' ? "always" : "never"}
 				transition={defaultTransition}
 			>
 				<LazyMotion features={motionFeatures} strict={motionStrict}>

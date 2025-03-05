@@ -146,6 +146,7 @@ import {
 	FinalFocusRefEditable,
 	StartWithEditViewEditable
 } from "./components/editables";
+import { UseColorMode, UseReducedMotion } from "./components/hooks";
 import { ControlledPinInput } from "./components/inputs";
 import { AsyncSelect, ControlledSelect } from "./components/selects";
 import { ControlledSlider, MaxMinSlider } from "./components/sliders";
@@ -309,7 +310,9 @@ const DreamComponents = {
 	EditableEditButton,
 	EditableSubmitButton,
 	EditableCancelButton,
-	StartWithEditViewEditable
+	StartWithEditViewEditable,
+	UseColorMode,
+	UseReducedMotion
 };
 
 function Wrapper({ children }: PropsWithChildren) {
@@ -430,12 +433,12 @@ const components = {
 		const status = contentChildren.startsWith("warning:")
 			? "warning"
 			: contentChildren.startsWith("error:")
-			? "error"
-			: contentChildren.startsWith("info:")
-			? "info"
-			: contentChildren.startsWith("success:")
-			? "success"
-			: "warning";
+				? "error"
+				: contentChildren.startsWith("info:")
+					? "info"
+					: contentChildren.startsWith("success:")
+						? "success"
+						: "warning";
 
 		const content = contentChildren.replace(
 			/^(warning|error|info|success):/,

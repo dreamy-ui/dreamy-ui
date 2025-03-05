@@ -1,0 +1,32 @@
+---
+title: useReducedMotion
+description: useReducedMotion returns a reduced motion state from a provider.
+isServerComponent: false
+source: /packages/react/src/provider/dreamy-provider.tsx
+---
+
+## Import
+
+```tsx
+import { useReducedMotion } from "@dreamy-ui/react";
+```
+
+## Usage
+
+`useReducedMotion` will return a value that is provided into provider before hydration.
+
+If `reduceMotion` in the provider is "system" (which is default by the way), it will resolve to a boolean value after hydration. Before hydration it will be a `false`. Else if boolean are provided, it will use them.
+
+Try toggling the reduced motion in your system to see the effect.
+
+<Wrapper>
+	<UseReducedMotion />
+</Wrapper>
+
+```tsx
+export function UseReducedMotion() {
+	const isReducedMotion = useReducedMotion();
+
+	return <Text>Is reduced motion: {isReducedMotion ? "Yes" : "No"}</Text>;
+}
+```

@@ -1,0 +1,32 @@
+---
+title: useCanUseDOM
+description: useCanUseDOM returns a boolean, which tells, if user has hydrated.
+isServerComponent: false
+source: /packages/react/src/provider/dreamy-provider.tsx
+---
+
+## Import
+
+```tsx
+import { useCanUseDOM } from "@dreamy-ui/react";
+```
+
+## Usage
+
+`useCanUseDOM` will return a value that is provided into provider before hydration.
+
+If `reduceMotion` in the provider is "system" (which is default by the way), it will resolve to a boolean value after hydration. Before hydration it will be a `false`. Else if boolean are provided, it will use them.
+
+Try toggling the reduced motion in your system to see the effect.
+
+<Wrapper>
+	<useCanUseDOM />
+</Wrapper>
+
+```tsx
+export function useCanUseDOM() {
+	const isReducedMotion = useCanUseDOM();
+
+	return <Text>Is reduced motion: {isReducedMotion ? "Yes" : "No"}</Text>;
+}
+```
