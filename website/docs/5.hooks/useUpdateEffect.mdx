@@ -1,0 +1,58 @@
+---
+title: useUpdateEffect
+description: useUpdateEffect is a hook that allows you to run an effect only when the dependencies are updated, skipping the first render.
+isServerComponent: false
+source: /packages/react/src/hooks/use-update-effect.tsx
+---
+
+## Import
+
+```tsx
+import { useUpdateEffect } from "@dreamy-ui/react";
+```
+
+## Usage
+
+`useUpdateEffect` is similar to `useEffect`, but it only runs when the dependencies are updated, skipping the initial render.
+
+Dreamy UI also exports `useUpdateLayoutEffect` which is same as `useUpdateEffect` but uses `useLayoutEffect`, instead of `useEffect`.
+
+<Wrapper>
+	<UseUpdateEffect />
+</Wrapper>
+
+```tsx
+export function UseUpdateEffect() {
+    const { toast } = useToast();
+    const [count, setCount] = useState(() =>
+        typeof window === "undefined" ? 0 : Number(localStorage.getItem("count")) || 0
+    );
+
+    useUpdateEffect(() => {
+        toast({
+            title: `Count is ${count}`,
+            status: "info"
+        });
+    }, [count]);
+
+    return (
+        <Flex
+            col
+            gap={2}
+        >
+            <Text>Count: {count}</Text>
+            <Button
+                onClick={() => {
+                    setCount((prev) => {
+                        const newCount = prev + 1;
+                        localStorage.setItem("count", newCount.toString());
+                        return newCount;
+                    });
+                }}
+            >
+                Increment
+            </Button>
+        </Flex>
+    );
+}
+```

@@ -59,7 +59,7 @@ export function shouldRevalidate(_: ShouldRevalidateFunctionArgs) {
     return false;
 }
 
-const motionFeatures = () => import("motion/react").then((mod) => mod.domMax);
+const motionFeatures = () => import("./features").then((mod) => mod.default);
 
 export function Layout({ children }: { children: React.ReactNode }) {
     const { colorMode } = useRoot() ?? {};

@@ -82,7 +82,12 @@ export function ErrorBoundary() {
             <Heading>
                 {data.status} {data.title}
             </Heading>
-            <Text textAlign={"center"}>{data.description}</Text>
+            <Text
+                color={"fg.medium"}
+                textAlign={"center"}
+            >
+                {data.description}
+            </Text>
         </Flex>
     );
 }

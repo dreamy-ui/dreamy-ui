@@ -1,0 +1,25 @@
+---
+title: useSafeLayoutEffect
+description: useSafeLayoutEffect is a `useLayoutEffect`, but uses `useEffect` during server side rendering.
+isServerComponent: true
+source: /packages/react/src/hooks/use-safe-layout-effect.tsx
+---
+
+## Import
+
+```tsx
+import { useSafeLayoutEffect } from "@dreamy-ui/react";
+```
+
+## Usage
+
+`useSafeLayoutEffect` is a `useLayoutEffect` that is safe to use during server side rendering. It uses `useEffect` during server side rendering, skipping annoying and ugly `useLayoutEffect` warnings on server.
+
+```tsx
+/**
+ * This will only run on the client, even SSR-ed.
+ */
+useSafeLayoutEffect(() => {
+    console.log("useSafeLayoutEffect");
+}, []);
+```

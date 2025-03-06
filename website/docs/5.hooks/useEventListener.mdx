@@ -1,0 +1,57 @@
+---
+title: useEventListener
+description: useEventListener is a hook that allows you to listen to events on the target.
+isServerComponent: false
+source: /packages/react/src/hooks/use-event-listener.tsx
+---
+
+## Import
+
+```tsx
+import { useEventListener } from "@dreamy-ui/react";
+```
+
+## Usage
+
+`useEventListener` is a hook that allows you to listen to events on the target.
+
+<Wrapper>
+	<UseEventListener />
+</Wrapper>
+
+```tsx
+export function UseEventListener() {
+    const [count, setCount] = useState(() =>
+        typeof window === "undefined" ? 0 : Number(localStorage.getItem("count")) || 0
+    );
+
+    useEventListener("click", () => {
+        setCount((prev) => prev + 1);
+        localStorage.setItem("count", count.toString());
+    });
+
+    return <Text>Count: {count}</Text>;
+}
+```
+
+`useEventListener` also accepts a target and an options object. Target can be a function that returns a DOM element, making it compatible with SSR.
+
+```tsx
+useEventListener("click", () => {}, () => document, { fireOnMount: true });
+```
+
+Example below will toggle color mode on `cmd + i` or `ctrl + i`.
+
+```tsx
+import { useColorMode, useEventListener, getActionKeyCode } from "@dreamy-ui/react";
+
+export function ToggleColorMode() {
+	const { toggleColorMode } = useColorMode();
+	
+	useEventListener("keydown", (event) => {
+		if (event.key === "i" && event[getActionKeyCode()] && !event.shiftKey) {
+			toggleColorMode();
+		}
+	});
+}
+```

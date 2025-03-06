@@ -1,0 +1,54 @@
+---
+title: useClipboard
+description: useClipboard is a hook that allows you to copy text to the clipboard.
+isServerComponent: false
+source: /packages/react/src/hooks/use-clipboard.tsx
+---
+
+## Import
+
+```tsx
+import { useClipboard } from "@dreamy-ui/react";
+```
+
+## Usage
+
+`useClipboard` is a hook that allows you to copy text to the clipboard. It accepts an optional `timeout` prop, which is the time in milliseconds to wait before resetting the clipboard.
+
+<Wrapper>
+    <UseClipboard />
+</Wrapper>
+
+```tsx
+export function UseClipboard() {
+    const { toast } = useToast();
+    const { copy, copied, error, reset } = useClipboard({
+        timeout: 2000
+    });
+
+    const handleCopy = useCallback(() => {
+        const value = "Hello, world!";
+        copy(value);
+        toast({
+            title: "Copied",
+            description: value,
+            status: "success"
+        });
+    }, [copy, toast]);
+
+    return (
+        <Flex
+            col
+            gap={2}
+            align={"flex-start"}
+        >
+            <Text>Copied: {copied ? "Yes" : "No"}</Text>
+            <Text>Error: {error ? "Yes" : "No"}</Text>
+            <HStack>
+                <Button onClick={handleCopy}>Copy</Button>
+                <Button onClick={reset}>Reset</Button>
+            </HStack>
+        </Flex>
+    );
+}
+```
