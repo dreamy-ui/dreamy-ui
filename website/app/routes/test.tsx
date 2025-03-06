@@ -64,6 +64,7 @@ import {
     Tabs,
     Textarea,
     TextareaNoAutoSize,
+    getActionKeyCode,
     positions,
     useActionKey,
     useControllable,
@@ -119,7 +120,10 @@ export default function Test() {
             col
             gap={10}
         >
-            <Image src={'/sdfas'}
+            <Text semibold>{getActionKeyCode()}</Text>
+
+            <Image
+                src={"/sdfas"}
                 fallbackSrc="skibidi"
             />
 
@@ -128,8 +132,8 @@ export default function Test() {
                 w="fit"
                 rightIcon={<IoAdd />}
 
-            // isLoading
-            // isDisabled
+                // isLoading
+                // isDisabled
             >
                 aaa
             </Button>
@@ -198,7 +202,7 @@ export default function Test() {
                         <MenuItem
                             icon={<IoAdd />}
                             command={`${useActionKey()} i`}
-                        // as={<Link to="/">Menu</Link>}
+                            // as={<Link to="/">Menu</Link>}
                         >
                             Menu
                         </MenuItem>

@@ -65,8 +65,11 @@ export function UseEventListener() {
     );
 
     useEventListener("click", () => {
-        setCount((prev) => prev + 1);
-        localStorage.setItem("count", count.toString());
+        setCount((prev) => {
+            const newCount = prev + 1;
+            localStorage.setItem("count", newCount.toString());
+            return newCount;
+        });
     });
 
     return <Text>Count: {count}</Text>;
