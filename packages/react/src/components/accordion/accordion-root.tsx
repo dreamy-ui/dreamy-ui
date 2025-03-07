@@ -1,8 +1,8 @@
 import { objectToDeps } from "@/utils/object";
 import type { HTMLDreamProps } from "@/utils/types";
 import { forwardRef, useMemo } from "react";
-import { Box } from "styled-system/jsx";
 import type { AccordionVariantProps } from "styled-system/recipes";
+import { Box } from "../rsc";
 import { AccordionDescendantsProvider, AccordionProvider } from "./accordion-context";
 import { type UseAccordionProps, useAccordion } from "./use-accordion";
 

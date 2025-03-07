@@ -1,4 +1,5 @@
 // export * from "./recipes";
+export * from "./plugin";
 export {
 	default,
 	defaultPresetOptions,

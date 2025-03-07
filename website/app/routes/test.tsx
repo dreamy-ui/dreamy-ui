@@ -90,6 +90,14 @@ import { useEffect, useMemo, useState } from "react";
 import { IoAdd, IoRemove } from "react-icons/io5";
 import { PiConfetti } from "react-icons/pi";
 
+export function meta() {
+    return [
+        {
+            title: "Testing - Dreamy UI"
+        }
+    ];
+}
+
 export async function action({ request }: ActionFunctionArgs) {
     const formData = await request.formData();
     const value = formData.get("test-select");
@@ -120,7 +128,17 @@ export default function Test() {
             col
             gap={10}
         >
-            <Text semibold>{getActionKeyCode()}</Text>
+            <Flex
+                boxSize={"12"}
+                h={12}
+                col
+                flexDir={"row"}
+                gap={2}
+                flexDirection={"column"}
+            >
+                <Text semibold>{getActionKeyCode()}</Text>
+                <Text fontWeight={"semibold"}>aaa</Text>
+            </Flex>
 
             <Image
                 src={"/sdfas"}

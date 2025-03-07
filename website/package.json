@@ -21,7 +21,7 @@
 		"@mdx-js/rollup": "^3.0.1",
 		"@pandabox/unplugin": "^0.1.3",
 		"@pandacss/preset-panda": "^0.53.0",
-		"@pandacss/studio": "^0.51.1",
+		"@pandacss/studio": "^0.53.0",
 		"@remix-run/css-bundle": "^2.15.0",
 		"@remix-run/express": "^2.11.2",
 		"@remix-run/node": "^2.15.0",
