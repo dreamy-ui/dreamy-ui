@@ -80,6 +80,7 @@ import {
     Heading,
     Icon,
     Kbd,
+    LightTheme,
     Skeleton,
     SkeletonText,
     Text,
@@ -128,17 +129,19 @@ export default function Test() {
             col
             gap={10}
         >
-            <Flex
-                boxSize={"12"}
-                h={12}
-                col
-                flexDir={"row"}
-                gap={2}
-                flexDirection={"column"}
-            >
-                <Text semibold>{getActionKeyCode()}</Text>
-                <Text fontWeight={"semibold"}>aaa</Text>
-            </Flex>
+            <LightTheme>
+                <Flex
+                    bg={"bg"}
+                    h={12}
+                    col
+                    flexDir={"row"}
+                    gap={2}
+                    flexDirection={"column"}
+                >
+                    <Text semibold>{getActionKeyCode()}</Text>
+                    <Text fontWeight={"semibold"}>aaa</Text>
+                </Flex>
+            </LightTheme>
 
             <Image
                 src={"/sdfas"}

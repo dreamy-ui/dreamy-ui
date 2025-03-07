@@ -73,6 +73,7 @@ import {
     Alert,
     Badge,
     Box,
+    DarkTheme,
     Divider,
     Link as DreamLink,
     Flex,
@@ -85,6 +86,7 @@ import {
     ImageRSC,
     InputRSC,
     Kbd,
+    LightTheme,
     List,
     ListItem,
     Progress,
@@ -323,7 +325,9 @@ const DreamComponents = {
     UseControllable,
     UseControllableModal,
     UseUpdateEffect,
-    UseClipboard
+    UseClipboard,
+    DarkTheme,
+    LightTheme
 };
 
 function Wrapper({ children }: PropsWithChildren) {

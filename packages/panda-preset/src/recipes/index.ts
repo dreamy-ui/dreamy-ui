@@ -27,6 +27,7 @@ import { menu } from "./menu";
 import { snippet, snippetParts } from "./snippet";
 import { switchRecipe } from "./switch";
 import { table } from "./table";
+import { theme } from "./theme";
 import { toast } from "./toast";
 
 export const recipes = {
@@ -59,7 +60,8 @@ export const recipes = {
 	switchRecipe,
 	menu,
 	toast,
-	editable
+	editable,
+	theme
 };
 
 export const parts = {
