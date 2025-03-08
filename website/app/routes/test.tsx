@@ -861,10 +861,6 @@ function ControlledField() {
                 value={field}
                 onChange={(e) => setField(e.target.value)}
             />
-            <input
-                value={field}
-                onChange={(e) => setField(e.target.value)}
-            />
         </Field>
     );
 }

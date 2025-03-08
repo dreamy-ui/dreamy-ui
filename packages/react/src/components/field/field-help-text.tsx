@@ -13,13 +13,18 @@ export interface FieldHelpTextProps extends HTMLDreamProps<"div"> {}
  * types in values should be provided.
  */
 export const FieldHelpTextBase = forwardRef<HTMLDivElement, FieldHelpTextProps>(
-	function FieldHelpText(props, ref) {
-		const field = useFieldContext();
+    function FieldHelpText(props, ref) {
+        const field = useFieldContext();
 
-		if (field?.isInvalid) return null;
+        if (field?.isInvalid) return null;
 
-		return <Box {...field?.getHelpTextProps(props, ref)} />;
-	}
+        return (
+            <Box
+                data-part="helpText"
+                {...field?.getHelpTextProps(props, ref)}
+            />
+        );
+    }
 );
 
 FieldHelpTextBase.displayName = "FieldHelpText";

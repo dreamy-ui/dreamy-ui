@@ -9,25 +9,22 @@ import { FieldHelpTextBase, type FieldHelpTextProps } from "@/components/field/f
 import {
     FieldLabelBase,
     type FieldLabelProps,
-    RequiredIndicatorBase,
     type RequiredIndicatorProps
 } from "@/components/field/field-label";
 import { type FieldProps, FieldRoot } from "@/components/field/field-root";
-import { createStyleContext } from "@/components/style-context";
-import { field } from "styled-system/recipes";
 
-const { withProvider, withContext } = createStyleContext(field);
+// const { withProvider, withContext } = createStyleContext(field);
 
 /**
  * Field component
  *
  * @See Docs https://dreamy-ui.com/docs/components/field
  */
-export const Field = withProvider(FieldRoot, "root");
-export const FieldLabel = withContext(FieldLabelBase, "label");
-export const FieldError = withContext(FieldErrorBase, "error");
-export const FieldHelpText = withContext(FieldHelpTextBase, "helpText");
-export const FieldErrorIcon = withContext(FieldErrorIconBase, "errorIcon");
+export const Field = FieldRoot;
+export const FieldLabel = FieldLabelBase;
+export const FieldError = FieldErrorBase;
+export const FieldHelpText = FieldHelpTextBase;
+export const FieldErrorIcon = FieldErrorIconBase;
 
 export type {
     FieldErrorProps,
@@ -36,8 +33,3 @@ export type {
     FieldProps,
     RequiredIndicatorProps
 };
-
-/**
- * @internal
- */
-export const RequiredIndicator = withContext(RequiredIndicatorBase, "requiredIndicator");

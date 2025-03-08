@@ -142,7 +142,43 @@ Field help text can be used to prompt the user with additional information.
 		</FieldLabel>
 		<Input placeholder="Enter your username" />
 		<FieldHelpText>
-			This is the username you will use to login
+			<>This is the username you will use to login</>
 		</FieldHelpText>
 	</Field>
 </Wrapper>
+
+```tsx
+<Field>
+	<FieldLabel>
+		Username
+	</FieldLabel>
+	<Input placeholder="Enter your username" />
+	<FieldHelpText>
+		This is the username you will use to login
+	</FieldHelpText>
+</Field>
+```
+
+### Using Field components as props
+
+You can use `label`, `helpText`, `error` as props to the `Field` component. This can be helpful when you don't need to apply any additional props or styles to the particular components.
+
+<Wrapper>
+	<Field 
+		label="Username" 
+		helpText="This is the username you will use to login" 
+		error="This username is too short!"
+	>
+		<Input placeholder="Enter your username" />
+	</Field>
+</Wrapper>
+
+```tsx
+<Field 
+	label="Username" 
+	helpText="This is the username you will use to login" 
+	error="This username is too short!"
+>
+	<Input placeholder="Enter your username" />
+</Field>
+```
