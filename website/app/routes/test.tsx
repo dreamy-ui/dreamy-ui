@@ -36,6 +36,7 @@ import {
     ModalOverlay,
     PinInput,
     PinInputField,
+    Portal,
     Radio,
     RadioGroup,
     Select,
@@ -66,7 +67,6 @@ import {
     TextareaNoAutoSize,
     getActionKeyCode,
     positions,
-    useActionKey,
     useControllable,
     useToast
 } from "@dreamy-ui/react";
@@ -87,8 +87,10 @@ import {
     VStack
 } from "@dreamy-ui/react/rsc";
 import type { ActionFunctionArgs } from "@remix-run/node";
+import { Link } from "@remix-run/react";
 import { useEffect, useMemo, useState } from "react";
 import { IoAdd, IoRemove } from "react-icons/io5";
+import { LuAlarmClock, LuBattery, LuChevronDown, LuTrash, LuWarehouse } from "react-icons/lu";
 import { PiConfetti } from "react-icons/pi";
 
 export function meta() {
@@ -129,6 +131,56 @@ export default function Test() {
             col
             gap={10}
         >
+            <Menu>
+                <MenuTrigger>
+                    <Button w={"fit-content"}>Open Menu</Button>
+                </MenuTrigger>
+                <MenuContent>
+                    <Menu placement="right-start">
+                        <MenuTrigger>
+                            <MenuItem icon={<LuChevronDown />}>
+                                <>Nested Menu</>
+                            </MenuItem>
+                        </MenuTrigger>
+                        <Portal>
+                            <MenuContent>
+                                <MenuItem
+                                    icon={<LuWarehouse />}
+                                    command="{actionKey} h"
+                                    asComp={<Link to="/" />}
+                                >
+                                    <>Homepage</>
+                                </MenuItem>
+                            </MenuContent>
+                        </Portal>
+                    </Menu>
+                    <MenuItem
+                        icon={<IoAdd />}
+                        command="{actionKey} n"
+                    >
+                        <>Add new</>
+                    </MenuItem>
+                    <MenuItem
+                        icon={<LuAlarmClock />}
+                        command="{actionKey} a"
+                    >
+                        <>Set alarm</>
+                    </MenuItem>
+                    <MenuItem
+                        icon={<LuBattery />}
+                        command="{actionKey} b"
+                    >
+                        <>Battery</>
+                    </MenuItem>
+                    <MenuItem
+                        icon={<LuTrash />}
+                        command="{actionKey} d"
+                    >
+                        <>Delete</>
+                    </MenuItem>
+                </MenuContent>
+            </Menu>
+
             <LightTheme>
                 <Flex
                     bg={"bg"}
@@ -205,10 +257,11 @@ export default function Test() {
 
             <ControlledField />
 
-            {(["xs", "sm", "md", "lg"] as const).map((size) => (
+            {/* {(["xs", "sm", "md", "lg"] as const).map((size) => (
                 <Menu
                     key={size}
                     size={size}
+                    placement="right-start"
                 >
                     <MenuTrigger>
                         <Button w={"fit-content"}>Menu</Button>
@@ -235,7 +288,7 @@ export default function Test() {
                         </MenuItem>
                     </MenuContent>
                 </Menu>
-            ))}
+            ))} */}
             <Switch
                 size={"sm"}
                 onChangeValue={(e) => console.log(e)}

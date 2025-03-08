@@ -40,6 +40,7 @@ import {
     PopoverFooter,
     PopoverHeader,
     PopoverTrigger,
+    Portal,
     Radio,
     RadioGroup,
     Select,
@@ -108,7 +109,14 @@ import { BiHome, BiSearch } from "react-icons/bi";
 import { FiCoffee } from "react-icons/fi";
 import { HiExternalLink, HiOutlineMail } from "react-icons/hi";
 import { IoAdd, IoClose } from "react-icons/io5";
-import { LuAlarmClock, LuBattery, LuTrash, LuWarehouse } from "react-icons/lu";
+import {
+    LuAlarmClock,
+    LuBattery,
+    LuChevronDown,
+    LuChevronRight,
+    LuTrash,
+    LuWarehouse
+} from "react-icons/lu";
 import { PiConfetti } from "react-icons/pi";
 import type { MdxContent } from "~/src/.server/docs";
 import { PlatformSpecificKbd } from "~/src/ui/docs/components/kbds";
@@ -306,6 +314,7 @@ const DreamComponents = {
     RemixLink,
     ControlledMenu,
     InteractiveMenu,
+    Portal,
     ControlledEditable,
     FinalFocusRefEditable,
     TableContainer,
@@ -358,7 +367,9 @@ const icons = {
     LuAlarmClock,
     LuBattery,
     LuTrash,
-    LuWarehouse
+    LuWarehouse,
+    LuChevronDown,
+    LuChevronRight
 };
 
 const components = {

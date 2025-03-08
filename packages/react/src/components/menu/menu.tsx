@@ -1,5 +1,3 @@
-"use client";
-
 import { createStyleContext } from "@/components/style-context";
 import { menu } from "styled-system/recipes";
 import { MenuButtonBase } from "./menu-button";

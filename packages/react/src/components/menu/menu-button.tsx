@@ -15,13 +15,18 @@ export interface MenuButtonProps extends UseMenuItemProps {
      * Command to display on the right side of the menu item
      */
     command?: string;
+    /**
+     * The content to display on the right side of the menu item
+     */
+    rightContent?: React.ReactNode | React.ElementType;
 }
 
 const StyledButton = dreamy.button;
 
 export const MenuButtonBase = forwardRef<HTMLDivElement, MenuButtonProps>(
     function MenuButton(props, ref) {
-        const { icon, command, ...rest } = props;
+        const { icon, command, rightContent, ...rest } = props;
+        console.log("menu button");
         const buttonProps = useMenuItem(rest, ref);
 
         const actionKey = useActionKey();
@@ -33,6 +38,7 @@ export const MenuButtonBase = forwardRef<HTMLDivElement, MenuButtonProps>(
                     {buttonProps.children}
                 </span>
                 {command && <Kbd size={"sm"}>{command.replaceAll("{actionKey}", actionKey)}</Kbd>}
+                {rightContent && runIfFn(rightContent as any)}
             </StyledButton>
         );
     }

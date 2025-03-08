@@ -133,8 +133,8 @@ You can use a custom link component with menu item but polymorphic props like `a
             <Button w={"fit-content"}>Open Menu</Button>
         </MenuTrigger>
         <MenuContent>
-            <MenuItem 
-                icon={<LuWarehouse />} 
+            <MenuItem
+                icon={<LuWarehouse />}
                 command="{actionKey} h"
                 asComp={<RemixLink to="/" />}
             >
@@ -296,3 +296,89 @@ export function InteractiveMenu() {
     );
 }
 ```
+
+### Item right content
+
+You can add right content to the item with `rightContent` prop.
+
+<Wrapper>
+    <Menu>
+        <MenuTrigger>
+            <Button w={"fit-content"}>Open Menu</Button>
+        </MenuTrigger>
+        <MenuContent>
+            <MenuItem rightContent={<LuChevronRight />}>
+                <>Select framework</>
+            </MenuItem>
+        </MenuContent>
+    </Menu>
+</Wrapper>
+
+```tsx
+<Menu>
+    <MenuTrigger>
+        <Button>Open Menu</Button>
+    </MenuTrigger>
+    <MenuContent>
+        <MenuItem rightContent={<LuChevronRight />}>
+            Select framework
+        </MenuItem>
+    </MenuContent>
+</Menu>
+```
+
+### Nested Menu
+
+You can nest menus inside each other.
+
+<Wrapper>
+    <Menu>
+        <MenuTrigger>
+            <Button w={"fit-content"}>Open Menu</Button>
+        </MenuTrigger>
+        <MenuContent>
+            <Menu placement="right-start">
+                <MenuTrigger>
+                    <MenuItem rightContent={<LuChevronRight />}>
+                        <>Nested Menu</>
+                    </MenuItem>
+                </MenuTrigger>
+                <Portal>
+                    <MenuContent>
+                        <MenuItem
+                            icon={<LuWarehouse />}
+                            command="{actionKey} h"
+                            asComp={<Link to="/" />}
+                        >
+                            <>Homepage</>
+                        </MenuItem>
+                    </MenuContent>
+                </Portal>
+            </Menu>
+            <MenuItem
+                icon={<IoAdd />}
+                command="{actionKey} n"
+            >
+                <>Add new</>
+            </MenuItem>
+            <MenuItem
+                icon={<LuAlarmClock />}
+                command="{actionKey} a"
+            >
+                <>Set alarm</>
+            </MenuItem>
+            <MenuItem
+                icon={<LuBattery />}
+                command="{actionKey} b"
+            >
+                <>Battery</>
+            </MenuItem>
+            <MenuItem
+                icon={<LuTrash />}
+                command="{actionKey} d"
+            >
+                <>Delete</>
+            </MenuItem>
+        </MenuContent>
+    </Menu>
+</Wrapper>
