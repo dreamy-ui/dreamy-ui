@@ -36,12 +36,13 @@ export const field = defineRecipe({
 			width: "100%",
 			position: "relative",
 			display: "flex",
-			flexDirection: "column",
-			alignItems: "flex-start",
 			gap: 1.5
 		},
 		label: {
-			fontSize: "md",
+			display: "flex",
+			alignItems: "center",
+			textAlign: "start",
+			textStyle: "sm",
 			fontWeight: "medium",
 			opacity: 1,
 			width: "100%",
@@ -71,5 +72,28 @@ export const field = defineRecipe({
 			color: "{colors.error}",
 			marginStart: 0.5
 		}
-	})
+	}),
+	variants: {
+		orientation: {
+			vertical: parts({
+				root: {
+					flexDirection: "column",
+					alignItems: "flex-start"
+				}
+			}),
+			horizontal: parts({
+				root: {
+					flexDirection: "row",
+					alignItems: "center",
+					justifyContent: "space-between"
+				},
+				label: {
+					flex: "0 0 var(--field-label-width, 80px)"
+				}
+			})
+		}
+	},
+	defaultVariants: {
+		orientation: "vertical"
+	}
 });
