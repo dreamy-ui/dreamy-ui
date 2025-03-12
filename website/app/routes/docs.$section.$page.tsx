@@ -1,5 +1,5 @@
 import { Button } from "@dreamy-ui/react";
-import { Flex, Heading, Text, VStack } from "@dreamy-ui/react/rsc";
+import { Box, Flex, Heading, Text, VStack } from "@dreamy-ui/react/rsc";
 import type { LoaderFunctionArgs, MetaArgs, MetaFunction } from "@remix-run/node";
 import {
     type ClientLoaderFunctionArgs,
@@ -13,11 +13,14 @@ import { BiLogoGithub } from "react-icons/bi";
 import { IoMdBrowsers } from "react-icons/io";
 import { CACHE_DURATION, CacheHeaders } from "~/src/.server/cache";
 import { Docs } from "~/src/.server/docs";
-import { cacheClientLoader, useCachedRouteLoaderData } from "~/src/functions/clientCache";
+import { cacheClientLoader } from "~/src/functions/clientCache";
+import { useDoc } from "~/src/hooks/useDoc";
 import MDXContent from "~/src/ui/docs/MDXContent";
+import NextPreviousButton from "~/src/ui/docs/NextPreviousButton";
 import { Link } from "~/src/ui/global/Link";
 import type { ComponentDocFrontmatter } from "~/types";
 import { ErrorBoundary } from "./$";
+import { useSections } from "./docs";
 
 export function meta({ data, params }: MetaArgs<typeof loader>) {
     return [
@@ -124,11 +127,8 @@ export function shouldRevalidate(args: ShouldRevalidateFunctionArgs) {
 export const clientLoader = (args: ClientLoaderFunctionArgs) => cacheClientLoader(args);
 clientLoader.hydrate = true;
 
-export function useDoc() {
-    return useCachedRouteLoaderData<typeof loader>("routes/docs.$section.$page");
-}
-
 export default function DocsSectionPage() {
+    const { sections } = useSections();
     const { mdxSource, frontmatter, mdxDescription } = useDoc();
 
     const loc = useLocation();
@@ -148,6 +148,12 @@ export default function DocsSectionPage() {
             ? (frontmatter as unknown as ComponentDocFrontmatter)
             : null;
     }, [frontmatter]);
+
+    const flatSections = sections.flatMap((s) => s.sections);
+    const indexOfCurrentDoc = flatSections.findIndex((s) => s.slug === loc.pathname);
+
+    const previousDoc = flatSections[indexOfCurrentDoc - 1];
+    const nextDoc = flatSections[indexOfCurrentDoc + 1];
 
     return (
         <Flex
@@ -238,6 +244,30 @@ export default function DocsSectionPage() {
             <VStack itemsStart>
                 <MDXContent mdxContent={mdxSource} />
             </VStack>
+
+            <Flex
+                gap={4}
+                w={"full"}
+            >
+                {previousDoc ? (
+                    <NextPreviousButton
+                        direction="previous"
+                        to={previousDoc.slug}
+                        label={previousDoc.name}
+                    />
+                ) : (
+                    <Box w={"50%"} />
+                )}
+                {nextDoc ? (
+                    <NextPreviousButton
+                        direction="next"
+                        to={nextDoc.slug}
+                        label={nextDoc.name}
+                    />
+                ) : (
+                    <Box w={"50%"} />
+                )}
+            </Flex>
         </Flex>
     );
 }

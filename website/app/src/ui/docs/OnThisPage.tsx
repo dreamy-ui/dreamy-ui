@@ -12,7 +12,7 @@ import { useLocation } from "@remix-run/react";
 import { Fragment, memo, useState } from "react";
 import { BiChevronUp, BiEdit } from "react-icons/bi";
 import { useSections } from "~/routes/docs";
-import { useDoc } from "~/routes/docs.$section.$page";
+import { useDoc } from "~/src/hooks/useDoc";
 import { Link } from "~/src/ui/global/Link";
 
 export default function OnThisPage() {
