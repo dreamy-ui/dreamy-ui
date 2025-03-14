@@ -92,17 +92,17 @@ export const containerUtilities: UtilityConfig = {
 		transform: (value) => {
 			if (!value) return {};
 			return {
-				width: "100%",
-				height: "100%"
+				width: "100%"
 			};
 		}
 	},
-	wFull: {
+	boxFull: {
 		values: { type: "boolean" },
 		transform: (value) => {
 			if (!value) return {};
 			return {
-				width: "100%"
+				width: "100%",
+				height: "100%"
 			};
 		}
 	},
