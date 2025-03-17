@@ -140,7 +140,7 @@ export const select = defineSlotRecipe({
 				trigger: {
 					bg: "transparent",
 					borderWidth: "1px",
-					borderColor: "border.muted",
+					borderColor: "border",
 					transition:
 						"border-color {durations.normal} {easings.easeInOut}",
 					_hover: {
@@ -320,8 +320,8 @@ export const select = defineSlotRecipe({
 						scheme === "info"
 							? "color-mix(in srgb, black 87%, transparent)"
 							: scheme === "none"
-							? "colors.bg"
-							: "color-mix(in srgb, white 87%, transparent)"
+								? "colors.bg"
+								: "color-mix(in srgb, white 87%, transparent)"
 				} as Record<any, any>;
 			},
 			"root"

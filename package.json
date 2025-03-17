@@ -13,6 +13,7 @@
 		"dev:website": "cd website && pnpm run dev",
 		"dev:lib": "concurrently \"pnpm run dev:system\" \"pnpm run dev:react\"",
 		"build:system": "cd packages/system && pnpm run panda:codegen && pnpm run build:fast",
+		"codegen": "concurrently \"cd packages/react && pnpm panda codegen\" \"cd website && pnpm panda codegen\"",
 		"build:react": "cd packages/react && pnpm run build:fast",
 		"build:lib": "pnpm run build:system && pnpm run build:react",
 		"typecheck": "concurrently \"cd packages/system && pnpm run typecheck\" \"cd packages/react && pnpm run typecheck\" \"cd website && pnpm run typecheck\"",

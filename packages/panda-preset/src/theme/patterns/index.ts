@@ -1,11 +1,11 @@
 import { divider } from "./divider";
-import { stack } from "./stack";
+import { flex } from "./flex";
 import { text } from "./text";
 import { visuallyHidden } from "./visually-hidden";
 
 export const patterns = {
 	divider,
-	stack,
 	text,
-	visuallyHidden
+	visuallyHidden,
+	flex
 };

@@ -1,0 +1,97 @@
+---
+title: Group
+description: Group is helpful for 
+isServerComponent: true
+source: /packages/react/src/components/group/group.tsx
+theme: /packages/panda-preset/src/recipes/group.ts
+---
+
+## Import
+
+- `Group` - The Group component.
+
+```tsx
+import { Group } from "@dreamy-ui/react/rsc";
+```
+
+## Usage
+
+Basic usage of the Group component.
+
+<Wrapper>
+	<Group>
+		<Button variant="outline">Button 1</Button>
+		<Button variant="outline">Button 2</Button>
+		<Button variant="outline">Button 3</Button>
+	</Group>
+</Wrapper>
+
+```tsx
+<Group>
+	<Button variant="outline">Button 1</Button>
+	<Button variant="outline">Button 2</Button>
+	<Button variant="outline">Button 3</Button>
+</Group>
+```
+
+### Attached
+
+The `attached` prop is used to attach the contents of the group to themselfs.
+
+<Wrapper>
+	<Group attached>
+		<Button variant="outline">Button 1</Button>
+		<Button variant="outline">Button 2</Button>
+		<Button variant="outline">Button 3</Button>
+	</Group>
+</Wrapper>
+
+```tsx
+<Group attached>
+	<Button variant="outline">Button 1</Button>
+	<Button variant="outline">Button 2</Button>
+	<Button variant="outline">Button 3</Button>
+</Group>
+```
+
+### Orientation
+
+The `orientation` prop is used to change the orientation of the group.
+
+<Wrapper>
+	<Group orientation="vertical">
+		<Button variant="outline">Button 1</Button>
+		<Button variant="outline">Button 2</Button>
+		<Button variant="outline">Button 3</Button>
+	</Group>
+</Wrapper>
+
+```tsx
+<Group orientation="vertical">
+	<Button variant="outline">Button 1</Button>
+	<Button variant="outline">Button 2</Button>
+	<Button variant="outline">Button 3</Button>
+</Group>
+```
+
+### Grow
+
+The `grow` prop is used to make the group grow to fill the container.
+
+<Wrapper>
+	<Group grow full>
+		<Button variant="outline">Button 1</Button>
+		<Button variant="outline">Button 2</Button>
+		<Button variant="outline">Button 3</Button>
+	</Group>
+</Wrapper>
+
+> info: Tip: `full` is an alias for `w="full"`.
+
+```tsx
+<Group grow full>
+	<Button variant="outline">Button 1</Button>
+	<Button variant="outline">Button 2</Button>
+	<Button variant="outline">Button 3</Button>
+</Group>
+```

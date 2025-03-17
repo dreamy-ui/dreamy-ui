@@ -32,6 +32,7 @@ export const button = defineRecipe({
 			fontWeight: "semibold",
 			cursor: "pointer",
 			borderRadius: "l2",
+			isolation: "isolate",
 			textAlign: "center",
 			userSelect: "none",
 			transition:
@@ -102,9 +103,9 @@ export const button = defineRecipe({
 					bg: "transparent",
 					borderWidth: 1,
 					borderStyle: "solid",
-					borderColor: "currentColor/32",
+					borderColor: "currentColor/16",
 					_hover: {
-						bg: "currentColor/12"
+						bg: "currentColor/08"
 					}
 				}
 			}),

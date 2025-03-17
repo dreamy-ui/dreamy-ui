@@ -35,7 +35,7 @@ export const popover = defineSlotRecipe({
 			boxShadow: "sm",
 			borderWidth: "1px",
 			borderStyle: "solid",
-			borderColor: "{colors.border.muted}",
+			borderColor: "{colors.border}",
 			gap: 2
 		},
 		header: {
@@ -47,7 +47,7 @@ export const popover = defineSlotRecipe({
 			py: 2,
 			borderBottomWidth: "1px",
 			borderBottomStyle: "solid",
-			borderBottomColor: "{colors.border.muted}"
+			borderBottomColor: "{colors.border}"
 		},
 		body: {
 			flex: 1,
@@ -67,7 +67,7 @@ export const popover = defineSlotRecipe({
 			py: 2,
 			borderTopWidth: "1px",
 			borderTopStyle: "solid",
-			borderTopColor: "{colors.border.muted}"
+			borderTopColor: "{colors.border}"
 		},
 		close: {
 			position: "absolute",

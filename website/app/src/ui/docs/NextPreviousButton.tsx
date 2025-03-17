@@ -14,7 +14,7 @@ export default function NextPreviousButton({ direction, to, label }: NextPreviou
             asComp={<Link to={to} />}
             p={"6!"}
             border={1}
-            borderColor={"border.muted"}
+            borderColor={"border"}
             rounded={"l2"}
             w={"50%"}
             className="group"

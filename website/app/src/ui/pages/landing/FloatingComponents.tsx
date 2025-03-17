@@ -39,7 +39,7 @@ const components = [
 export default function FloatingComponents() {
     return (
         <Grid
-            wFull
+            full
             columns={{
                 base: 1,
                 md: 2,
@@ -48,12 +48,12 @@ export default function FloatingComponents() {
         >
             {components.map((component, i) => (
                 <Flex
-                    wFull
+                    full
                     key={`component-${i}`}
                     p={6}
                     rounded={"md"}
                     // bg={"alpha.50"}
-                    borderColor={"border.muted"}
+                    borderColor={"border"}
                     borderWidth={1}
                     col
                     gap={2}

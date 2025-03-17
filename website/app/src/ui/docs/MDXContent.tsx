@@ -80,6 +80,7 @@ import {
     Flex,
     Grid,
     GridItem,
+    Group,
     HStack,
     Heading,
     type HeadingProps,
@@ -336,7 +337,8 @@ const DreamComponents = {
     UseUpdateEffect,
     UseClipboard,
     DarkTheme,
-    LightTheme
+    LightTheme,
+    Group
 };
 
 function Wrapper({ children }: PropsWithChildren) {
@@ -347,7 +349,7 @@ function Wrapper({ children }: PropsWithChildren) {
             p={4}
             rounded={"l2"}
             border={"1px solid"}
-            borderColor={"border.muted"}
+            borderColor={"border"}
             w={"full"}
             align={"flex-start"}
         >
@@ -490,22 +492,41 @@ const components = {
             (child) => typeof child === "object" && "props" in child
         ).props.children;
 
-        const status = contentChildren.startsWith("warning:")
+        let statusText: string;
+        if (typeof contentChildren === "string") {
+            statusText = contentChildren;
+        } else {
+            statusText = contentChildren[0];
+        }
+
+        const status = statusText.startsWith("warning:")
             ? "warning"
-            : contentChildren.startsWith("error:")
+            : statusText.startsWith("error:")
               ? "error"
-              : contentChildren.startsWith("info:")
+              : statusText.startsWith("info:")
                 ? "info"
-                : contentChildren.startsWith("success:")
+                : statusText.startsWith("success:")
                   ? "success"
                   : "warning";
 
-        const content = contentChildren.replace(/^(warning|error|info|success):/, "");
+        let content: ReactNode = [];
+
+        if (typeof contentChildren === "string") {
+            content = contentChildren.replace(/^(warning|error|info|success):/, "");
+        } else {
+            content = contentChildren.map((child: any, index: number) => {
+                if (index === 0) {
+                    return child.replace(/^(warning|error|info|success):/, "");
+                }
+
+                return child;
+            });
+        }
 
         return (
             <Alert
                 status={status}
-                my={4}
+                mt={4}
                 {...rest}
                 boxShadow={"xs"}
                 title={content}

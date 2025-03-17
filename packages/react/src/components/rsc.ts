@@ -5,6 +5,7 @@ export * from "./divider";
 export * from "./factory";
 export * from "./flex/rsc";
 export * from "./grid";
+export * from "./group";
 export * from "./heading";
 export * from "./icon";
 export * from "./image/rsc";

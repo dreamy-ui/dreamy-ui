@@ -38,7 +38,7 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: Props) {
             bg={"color-mix(in srgb, {colors.bg} 70%, transparent 10%)"}
             as={"header"}
             borderBottom={"1px solid"}
-            borderColor={hasScrolled ? "border.default" : "transparent"}
+            borderColor={hasScrolled ? "border" : "transparent"}
             contentBetween
             pos={"sticky"}
             top={0}

@@ -53,7 +53,7 @@ export const input = defineRecipe({
 			outline: {
 				borderWidth: "1px",
 				background: "none",
-				borderColor: "{colors.border.muted}",
+				borderColor: "{colors.border}",
 				_hover: {
 					borderColor: "{colors.border.hover}"
 				},
@@ -96,7 +96,7 @@ export const input = defineRecipe({
 			flushed: {
 				borderRadius: 0,
 				borderBottomWidth: "1px",
-				borderBottomColor: "{colors.border.muted}",
+				borderBottomColor: "{colors.border}",
 				_hover: {
 					borderBottomColor: "{colors.border.hover}"
 				},
@@ -109,9 +109,9 @@ export const input = defineRecipe({
 					}
 				},
 				"&:user-invalid, &[data-invalid]": {
-					borderBottomColor: "{colors.error}  !important",
+					borderBottomColor: "{colors.error} !important",
 					_focusWithin: {
-						boxShadow: "0 0.5px 0 0 {colors.error}  !important"
+						boxShadow: "0 0.5px 0 0 {colors.error} !important"
 					},
 					_hover: {
 						borderBottomColor: "{colors.error}"

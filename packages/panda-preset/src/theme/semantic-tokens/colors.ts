@@ -39,8 +39,8 @@ export function createColorTokens({
 		fg: {
 			DEFAULT: {
 				value: {
-					_light: "{colors.black/87}",
-					_dark: "{colors.white/87}"
+					_light: "{colors.gray.950}",
+					_dark: "{colors.gray.50}"
 				}
 			},
 			max: {
@@ -51,14 +51,14 @@ export function createColorTokens({
 			},
 			medium: {
 				value: {
-					_light: "{colors.fgInternal.50/60}",
-					_dark: "{colors.fgInternal.900/60}"
+					_light: "{colors.gray.600}",
+					_dark: "{colors.gray.400}"
 				}
 			},
 			disabled: {
 				value: {
-					_light: "{colors.fgInternal.50/38}",
-					_dark: "{colors.fgInternal.900/38}"
+					_light: "{colors.gray.400}",
+					_dark: "{colors.gray.500}"
 				}
 			}
 		},
@@ -87,9 +87,15 @@ export function createColorTokens({
 			}
 		},
 		border: {
-			default: { value: "{colors.alpha.300}" },
-			muted: { value: "{colors.alpha.150}" },
-			hover: { value: "{colors.alpha.200}" }
+			DEFAULT: {
+				value: "{colors.alpha.300}"
+			},
+			muted: {
+				value: "{colors.alpha.200}"
+			},
+			hover: {
+				value: "{colors.alpha.400}"
+			}
 		},
 		alpha: {
 			50: {

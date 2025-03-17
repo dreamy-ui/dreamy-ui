@@ -32,7 +32,7 @@ export const toast = defineRecipe({
 				backdropFilter: "blur({blurs.base})",
 				borderWidth: "1px",
 				borderStyle: "solid",
-				borderColor: "border.muted"
+				borderColor: "border"
 			}
 		},
 		container: {

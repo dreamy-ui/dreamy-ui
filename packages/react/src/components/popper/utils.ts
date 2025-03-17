@@ -31,7 +31,7 @@ export function getBoxShadow(placement: Placement) {
 		result = "1px -1px 0px 0";
 	}
 
-	result += ` ${token("colors.border.muted")}`;
+	result += ` ${token("colors.border")}`;
 
 	return result;
 }
