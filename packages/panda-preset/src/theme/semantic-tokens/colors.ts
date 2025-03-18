@@ -163,6 +163,12 @@ export function createColorTokens({
 					_light: "{colors.blackAlpha.900}",
 					_dark: "{colors.whiteAlpha.900}"
 				}
+			},
+			950: {
+				value: {
+					_light: "{colors.blackAlpha.950}",
+					_dark: "{colors.whiteAlpha.950}"
+				}
 			}
 		},
 		inverted: {

@@ -13,12 +13,12 @@ In this document we'll list some gotchas about how to use Dreamy UI.
 Use `size` or `textStyle` for typography instead of only `fontSize`. These properties will apply the correct font size, line height and font weight, including responsive sizes.
 
 <Wrapper>
-    <Text size="sm">Small text</Text>
-    <Text size="md">Medium text</Text>
-    <Text size="lg">Large text</Text>
-    <Text textStyle="sm">Small text</Text>
-    <Text textStyle="md">Medium text</Text>
-    <Text textStyle="lg">Large text</Text>
+	<Text size="sm">Small text</Text>
+	<Text size="md">Medium text</Text>
+	<Text size="lg">Large text</Text>
+	<Text textStyle="sm">Small text</Text>
+	<Text textStyle="md">Medium text</Text>
+	<Text textStyle="lg">Large text</Text>
 </Wrapper>
 
 ```tsx
@@ -33,15 +33,15 @@ Use `size` or `textStyle` for typography instead of only `fontSize`. These prope
 Main colors for foreground are `fg`, `fg.max`, `fg.medium` and `fg.disabled`. Use these tokens for typography.
 
 <Wrapper>
-    <Text color="fg">Main text</Text>
-    <Text color="fg.max">Max text</Text>
-    <Text color="fg.medium">Secondary text</Text>
-    <Text color="fg.disabled">Disabled text</Text>
+	<Text color="fg.max">Max text</Text>
+	<Text color="fg">Main text</Text>
+	<Text color="fg.medium">Secondary text</Text>
+	<Text color="fg.disabled">Disabled text</Text>
 </Wrapper>
 
 ```tsx
-<Text color="fg">Main text</Text>
 <Text color="fg.max">Max text</Text>
+<Text color="fg">Main text</Text>
 <Text color="fg.medium">Secondary text</Text>
 <Text color="fg.disabled">Disabled text</Text>
 ```
@@ -51,9 +51,9 @@ Main colors for foreground are `fg`, `fg.max`, `fg.medium` and `fg.disabled`. Us
 Background colors are `bg`, which will be the current background color. `bg.light` and `bg.dark` are the light and dark background colors.
 
 <Wrapper>
-    <Box bg="bg">Current Background</Box>
-    <Box bg="bg.light">Light background</Box>
-    <Box bg="bg.dark">Dark background</Box>
+	<Box bg="bg">Current Background</Box>
+	<Box bg="bg.light">Light background</Box>
+	<Box bg="bg.dark">Dark background</Box>
 </Wrapper>
 
 ```tsx
@@ -64,32 +64,44 @@ Background colors are `bg`, which will be the current background color. `bg.ligh
 
 ### Action colors
 
-Main action colors are `primary` and `secondary`. Use these colors for buttons, links, etc.
+Main action colors are `primary` and `secondary`, which you define in the dreamy preset in `panda.config.ts`. Use these colors for buttons, links, etc.
 
 <Wrapper>
-    <Button color="primary" w="xs">Primary</Button>
-    <Button color="secondary" w="xs">Secondary</Button>
+	<Text semibold color="primary">
+		<>Primary</>
+	</Text>
+	<Text semibold color="secondary">
+		<>Secondary</>
+	</Text>
 </Wrapper>
 
 ```tsx
-<Button color="primary">Primary</Button>
-<Button color="secondary">Secondary</Button>
+<Text semibold color="primary">Primary</Text>
+<Text semibold color="secondary">Secondary</Text>
 ```
 
 Dreamy exports a `success`, `warning`, `error` and `info` semantic tokens to easily signalize the status of an action.
 
 <Wrapper>
-    <Box bg="success" p={2} rounded="l1">Success</Box>
-    <Box bg="warning" p={2} rounded="l1">Warning</Box>
-    <Box bg="error" p={2} rounded="l1">Error</Box>
-    <Box bg="info" p={2} rounded="l1">Info</Box>
+	<Text color="success" semibold>
+		<>Success</>
+	</Text>
+	<Text color="warning" semibold>
+		<>Warning</>
+	</Text>
+	<Text color="error" semibold>
+		<>Error</>
+	</Text>
+	<Text color="info" semibold>
+		<>Info</>
+	</Text>
 </Wrapper>
 
 ```tsx
-<Box bg="success">Success</Box>
-<Box bg="warning">Warning</Box>
-<Box bg="error">Error</Box>
-<Box bg="info">Info</Box>
+<Text color="success" semibold>Success</Text>
+<Text color="warning" semibold>Warning</Text>
+<Text color="error" semibold>Error</Text>
+<Text color="info" semibold>Info</Text>
 ```
 
 ### Alphas
@@ -97,33 +109,32 @@ Dreamy exports a `success`, `warning`, `error` and `info` semantic tokens to eas
 Alphas are easy way to create a slightly transparent color. These colors will be black alphas for light color mode and white alphas for dark.
 
 <Wrapper>
-    <Flex 
-        wrapped
-        gap={2}
-        css={{
-            "& > *": {
-                p: 2
-            }
-        }}
-    >
-        <Box bg="alpha.50">Alpha 50</Box>
-        <Box bg="alpha.100">Alpha 100</Box>
-        <Box bg="alpha.150">Alpha 150</Box>
-        <Box bg="alpha.200">Alpha 200</Box>
-        <Box bg="alpha.300">Alpha 300</Box>
-        <Box bg="alpha.400">Alpha 400</Box>
-        <Box bg="alpha.500">Alpha 500</Box>
-        <Box bg="alpha.600">Alpha 600</Box>
-        <Box bg="alpha.700">Alpha 700</Box>
-        <Box bg="alpha.800">Alpha 800</Box>
-        <Box bg="alpha.900">Alpha 900</Box>
-    </Flex>
+	<Flex
+		wrapped
+		gap={2}
+		css={{
+			"& > *": {
+				p: 2
+			}
+		}}
+	>
+		<Box bg="alpha.50">Alpha 50</Box>
+		<Box bg="alpha.100">Alpha 100</Box>
+		<Box bg="alpha.200">Alpha 200</Box>
+		<Box bg="alpha.300">Alpha 300</Box>
+		<Box bg="alpha.400">Alpha 400</Box>
+		<Box bg="alpha.500">Alpha 500</Box>
+		<Box bg="alpha.600">Alpha 600</Box>
+		<Box bg="alpha.700">Alpha 700</Box>
+		<Box bg="alpha.800">Alpha 800</Box>
+		<Box bg="alpha.900">Alpha 900</Box>
+		<Box bg="alpha.950">Alpha 950</Box>
+	</Flex>
 </Wrapper>
 
 ```tsx
 <Box bg="alpha.50">Alpha 50</Box>
 <Box bg="alpha.100">Alpha 100</Box>
-<Box bg="alpha.150">Alpha 150</Box>
 <Box bg="alpha.200">Alpha 200</Box>
 <Box bg="alpha.300">Alpha 300</Box>
 <Box bg="alpha.400">Alpha 400</Box>
@@ -132,6 +143,7 @@ Alphas are easy way to create a slightly transparent color. These colors will be
 <Box bg="alpha.700">Alpha 700</Box>
 <Box bg="alpha.800">Alpha 800</Box>
 <Box bg="alpha.900">Alpha 900</Box>
+<Box bg="alpha.950">Alpha 950</Box>
 ```
 
 ### Radii
@@ -139,15 +151,108 @@ Alphas are easy way to create a slightly transparent color. These colors will be
 Use `l1` for small rounded, `l2` for medium rounded and `l3` for large rounded. Those are values that are generated from radius property in `createDreamyPreset`.
 
 <Wrapper>
-    <Box rounded="l1" p={2} bg="fg" color="bg">Small rounded</Box>
-    <Box rounded="l2" p={2} bg="fg" color="bg">Medium rounded</Box>
-    <Box rounded="l3" p={2} bg="fg" color="bg">Large rounded</Box>
+    <Flex col gap={2}>
+        <Text semibold>Semantic tokens</Text>
+
+        <Group>
+            <Box rounded="l1" p={2} bg="fg" color="bg">
+                <>Small rounded</>
+            </Box>
+            <Box rounded="l2" p={2} bg="fg" color="bg">
+                <>Medium rounded</>
+            </Box>
+            <Box rounded="l3" p={2} bg="fg" color="bg">
+                <>Large rounded</>
+            </Box>
+        </Group>
+    </Flex>
+
+    <Flex col gap={2} mt={4}>
+        <Text semibold>Design tokens</Text>
+
+        <Wrap>
+            <Box rounded="none" p={2} bg="fg" color="bg" nowrap>
+                <>None rounded</>
+            </Box>
+            <Box rounded="xs" p={2} bg="fg" color="bg" nowrap>
+                <>XS rounded</>
+            </Box>
+            <Box rounded="sm" p={2} bg="fg" color="bg" nowrap>
+                <>SM rounded</>
+            </Box>
+            <Box rounded="md" p={2} bg="fg" color="bg" nowrap>
+                <>MD rounded</>
+            </Box>
+            <Box rounded="lg" p={2} bg="fg" color="bg" nowrap>
+                <>LG rounded</>
+            </Box>
+            <Box rounded="xl" p={2} bg="fg" color="bg" nowrap>
+                <>XL rounded</>
+            </Box>
+            <Box rounded="2xl" p={2} bg="fg" color="bg" nowrap>
+                <>2XL rounded</>
+            </Box>
+            <Box rounded="3xl" p={2} bg="fg" color="bg" nowrap>
+                <>3XL rounded</>
+            </Box>
+            <Box rounded="full" p={2} bg="fg" color="bg" nowrap>
+                <>Full rounded</>
+            </Box>
+        </Wrap>
+    </Flex>
+
 </Wrapper>
 
 ```tsx
-<Box rounded="l1">Small rounded</Box>
-<Box rounded="l2">Medium rounded</Box>
-<Box rounded="l3">Large rounded</Box>
+<Flex col gap={2}>
+    <Text semibold>Semantic tokens</Text>
+
+    <Group>
+        <Box rounded="l1" p={2} bg="fg" color="bg">
+            <>Small rounded</>
+        </Box>
+        <Box rounded="l2" p={2} bg="fg" color="bg">
+            <>Medium rounded</>
+        </Box>
+        <Box rounded="l3" p={2} bg="fg" color="bg">
+            <>Large rounded</>
+        </Box>
+    </Group>
+</Flex>
+
+<Flex col gap={2} mt={4}>
+    <Text semibold>Design tokens</Text>
+
+    <Wrap>
+        <Box rounded="none" p={2} bg="fg" color="bg" nowrap>
+            <>None rounded</>
+        </Box>
+        <Box rounded="xs" p={2} bg="fg" color="bg" nowrap>
+            <>XS rounded</>
+        </Box>
+        <Box rounded="sm" p={2} bg="fg" color="bg" nowrap>
+            <>SM rounded</>
+        </Box>
+        <Box rounded="md" p={2} bg="fg" color="bg" nowrap>
+            <>MD rounded</>
+        </Box>
+        <Box rounded="lg" p={2} bg="fg" color="bg" nowrap>
+            <>LG rounded</>
+        </Box>
+        <Box rounded="xl" p={2} bg="fg" color="bg" nowrap>
+            <>XL rounded</>
+        </Box>
+        <Box rounded="2xl" p={2} bg="fg" color="bg" nowrap>
+            <>2XL rounded</>
+        </Box>
+        <Box rounded="3xl" p={2} bg="fg" color="bg" nowrap>
+            <>3XL rounded</>
+        </Box>
+        <Box rounded="full" p={2} bg="fg" color="bg" nowrap>
+            <>Full rounded</>
+        </Box>
+    </Wrap>
+</Flex>
 ```
 
 ### Other tokens
@@ -181,36 +286,25 @@ const domMax = () => import("motion/react").then((mod) => mod.domMax);
 Dreamy UI provides various utilities to use, like `center`, which is a `alignItems="center"` and `justifyContent="center"`.
 
 <Wrapper>
-    <Flex 
-        center 
-        h="100px" 
-        p={4} 
-        bg={{
-            base: "bg.dark",
-            _dark: "bg.light"
-        }}
-        color="bg"
-        rounded="l1"
-        w="full"
-    >
-        <Text>Centered</Text>
-    </Flex>
+	<Flex
+		center
+		h="100px"
+		p={4}
+		bg={{
+			base: "bg.dark",
+			_dark: "bg.light"
+		}}
+		color="bg"
+		rounded="l1"
+		w="full"
+	>
+		<Text>Centered</Text>
+	</Flex>
 </Wrapper>
 
-```tsx
-<Flex 
-    center 
-    h="100px" 
-    p={4} 
-    bg={{
-        base: "bg.dark",
-        _dark: "bg.light"
-    }}
-    color="bg"
-    rounded="l1"
-    w="full"
->
-    <Text>Centered</Text>
+```tsx {1}
+<Flex center>
+	<Text>Centered</Text>
 </Flex>
 ```
 
@@ -219,27 +313,81 @@ Dreamy UI provides various utilities to use, like `center`, which is a `alignIte
 The best practice is to use `<Field />` component to wrap your form elements with nice label, help text and error message.
 
 <Wrapper>
-    <Field name="name" isRequired>
-        <FieldLabel>Name</FieldLabel>
-        <Input />
-        <FieldHelpText>
-            <>Enter your preferred name</>
-        </FieldHelpText>
-        <FieldError>
-            <>Name cannot be empty</>
-        </FieldError>
-    </Field>
+	<Field name="name" isRequired>
+		<FieldLabel>Name</FieldLabel>
+		<Input />
+		<FieldHelpText>
+			<>Enter your preferred name</>
+		</FieldHelpText>
+		<FieldError>
+			<>Name cannot be empty</>
+		</FieldError>
+	</Field>
 </Wrapper>
 
 ```tsx
 <Field name="name" isRequired>
-    <FieldLabel>Name</FieldLabel>
-    <Input />
-    <FieldHelpText>
-        Enter your preferred name
-    </FieldHelpText>
-    <FieldError>
-        Name cannot be empty
-    </FieldError>
+	<FieldLabel>Name</FieldLabel>
+	<Input />
+	<FieldHelpText>Enter your preferred name</FieldHelpText>
+	<FieldError>Name cannot be empty</FieldError>
 </Field>
 ```
+
+## Boolean style props
+
+Dreamy UI adds panda `utilities` for faster writing styles. Most used CSS properties are available as boolean props.
+
+For example:
+
+```tsx
+// wrap="nowrap" -> nowrap
+// pos="relative" -> relative
+// full -> width="full"
+// semibold -> fontWeight="semibold"
+<Box full nowrap relative semibold>
+	Full rounded
+</Box>
+```
+
+## Polymorphic props
+
+Of any of the Dreamy UI components, you can pass `as` prop to change the element type.
+
+Use `asChild` prop to merge the component with the child component.
+
+Use `asComp` to pass a custom component to the component. Same as `asChild`, but allows merging without the children component.
+
+<Wrapper>
+    <Box as="section">
+        I render as section
+    </Box>
+
+    <LinkButton />
+
+    <LinkButton />
+
+</Wrapper>
+
+```tsx
+<Box as="section">
+    I render as section
+</Box>
+
+<Button asChild>
+	<a href="https://google.com">Google</a>
+</Button>
+
+<Button asComp={<a href="https://google.com" />}>
+    Google
+</Button>
+```
+
+## Customization
+
+If you dislike any of the token, component recipe or default values of the patterns like `<Flex />`, you can customize it by overriding it in the `panda.config.ts`.
+
+Please note that Dreamy UI uses user's `styled-system` as design system, so any changes you make to the `panda.config.ts`, will be applied to all Dreamy UI components.
+This means components are always in sync with variants, patterns and token types.
+
+See [Customization](/docs/theming/customization) for more information. If you struggle, please do not hesitate to ask for help on <a class="fw_semibold trs_colors hover:td_underline c_secondary" href="/discord">Discord</a>.

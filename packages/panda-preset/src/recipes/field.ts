@@ -5,19 +5,19 @@ const parts = defineParts({
 		selector: "&"
 	},
 	label: {
-		selector: "& > [data-part='label']"
+		selector: "& [data-part='label']"
 	},
 	error: {
-		selector: "& > [data-part='error']"
+		selector: "& [data-part='error']"
 	},
 	helpText: {
-		selector: "& > [data-part='helpText']"
+		selector: "& [data-part='helpText']"
 	},
 	requiredIndicator: {
-		selector: "& > [data-part='requiredIndicator']"
+		selector: "& [data-part='requiredIndicator']"
 	},
 	errorIcon: {
-		selector: "& > [data-part='errorIcon']"
+		selector: "& [data-part='errorIcon']"
 	}
 });
 
