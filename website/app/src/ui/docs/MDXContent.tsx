@@ -99,7 +99,8 @@ import {
     TextareaRSC,
     VStack,
     VisuallyHidden,
-    VisuallyHiddenInput
+    VisuallyHiddenInput,
+    Wrap
 } from "@dreamy-ui/react/rsc";
 import type * as mdx from "@mdx-js/react";
 import { Link as RemixLink, useLocation } from "@remix-run/react";
@@ -338,7 +339,8 @@ const DreamComponents = {
     UseClipboard,
     DarkTheme,
     LightTheme,
-    Group
+    Group,
+    Wrap
 };
 
 function Wrapper({ children }: PropsWithChildren) {

@@ -12,7 +12,7 @@ export default function NextPreviousButton({ direction, to, label }: NextPreviou
     return (
         <Flex
             asComp={<Link to={to} />}
-            p={"6!"}
+            p={"4!"}
             border={1}
             borderColor={"border"}
             rounded={"l2"}

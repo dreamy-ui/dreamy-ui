@@ -14,7 +14,7 @@ export default function Main() {
                 md: 16
             }}
             col
-            wFull
+            full
             pos={"relative"}
         >
             <Flex

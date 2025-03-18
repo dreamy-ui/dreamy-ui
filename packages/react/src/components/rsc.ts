@@ -21,3 +21,4 @@ export * from "./text";
 export * from "./textarea/rsc";
 export * from "./theme";
 export * from "./visually-hidden";
+export * from "./wrap";
