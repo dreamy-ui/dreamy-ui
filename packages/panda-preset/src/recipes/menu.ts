@@ -18,8 +18,7 @@ export const menu = defineSlotRecipe({
 			borderRadius: "l2",
 			outline: 0,
 			maxH: "96",
-			p: "0 !important",
-			py: "1 !important",
+
 			gap: "0 !important",
 			overflowY: "auto",
 			boxShadow: "md",
@@ -36,7 +35,6 @@ export const menu = defineSlotRecipe({
 			justifyContent: "space-between",
 			flex: "1",
 			textAlign: "start",
-			borderRadius: "0",
 			width: "full",
 			"&[data-focused]": {
 				bg: "alpha.50"
@@ -56,6 +54,25 @@ export const menu = defineSlotRecipe({
 		}
 	},
 	variants: {
+		variant: {
+			plain: {
+				content: {
+					p: "1.5!"
+				},
+				item: {
+					borderRadius: "l1"
+				}
+			},
+			stretched: {
+				content: {
+					p: "0!",
+					py: "1!"
+				},
+				item: {
+					borderRadius: "0"
+				}
+			}
+		},
 		size: {
 			xs: {
 				root: {
@@ -165,6 +182,7 @@ export const menu = defineSlotRecipe({
 		}
 	},
 	defaultVariants: {
-		size: "md"
+		size: "md",
+		variant: "plain"
 	}
 });

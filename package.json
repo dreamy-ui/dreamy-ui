@@ -5,7 +5,7 @@
 	"private": true,
 	"packageManager": "pnpm@9.1.4",
 	"workspaces": [
-		"packages/**"
+		"packages/*"
 	],
 	"scripts": {
 		"dev:system": "cd packages/system && pnpm run dev",

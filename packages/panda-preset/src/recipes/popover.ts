@@ -20,6 +20,7 @@ export const popover = defineSlotRecipe({
 	base: {
 		content: {
 			"--popper-z-index": "{zIndex.popover}",
+			maxW: "100vw",
 			"--popper-arrow-bg":
 				"color-mix(in srgb, {colors.bg} 70%, {colors.alpha.100} 10%)",
 			"& [data-popper-arrow-inner]": {
@@ -43,19 +44,14 @@ export const popover = defineSlotRecipe({
 			justifyContent: "space-between",
 			alignItems: "center",
 			width: "100%",
-			px: 3,
-			py: 2,
-			borderBottomWidth: "1px",
-			borderBottomStyle: "solid",
-			borderBottomColor: "{colors.border}"
+			p: "var(--popover-padding)",
 		},
 		body: {
 			flex: 1,
 			display: "flex",
 			flexDirection: "column",
 			gap: 2,
-			px: 3,
-			py: 2
+			px: "var(--popover-padding)",
 		},
 		footer: {
 			display: "flex",
@@ -63,11 +59,7 @@ export const popover = defineSlotRecipe({
 			alignItems: "center",
 			width: "100%",
 			gap: 2,
-			px: 3,
-			py: 2,
-			borderTopWidth: "1px",
-			borderTopStyle: "solid",
-			borderTopColor: "{colors.border}"
+			p: "var(--popover-padding)",
 		},
 		close: {
 			position: "absolute",
@@ -79,56 +71,67 @@ export const popover = defineSlotRecipe({
 		size: {
 			sm: {
 				content: {
+					"--popover-padding": "spacing.3",
 					width: "sm"
 				}
 			},
 			md: {
 				content: {
+					"--popover-padding": "spacing.4",
 					width: "md"
 				}
 			},
 			lg: {
 				content: {
+					"--popover-padding": "spacing.5",
 					width: "lg"
 				}
 			},
 			xl: {
 				content: {
+					"--popover-padding": "spacing.6",
 					width: "xl"
 				}
 			},
 			"2xl": {
 				content: {
+					"--popover-padding": "spacing.7",
 					width: "2xl"
 				}
 			},
 			"3xl": {
 				content: {
+					"--popover-padding": "spacing.8",
 					width: "3xl"
 				}
 			},
 			"4xl": {
 				content: {
+					"--popover-padding": "spacing.9",
 					width: "4xl"
 				}
 			},
 			"5xl": {
 				content: {
+					"--popover-padding": "spacing.10",
 					width: "5xl"
 				}
 			},
 			"6xl": {
 				content: {
+					"--popover-padding": "spacing.10",
 					width: "6xl"
 				}
 			},
 			"7xl": {
 				content: {
+					"--popover-padding": "spacing.10",
 					width: "7xl"
 				}
 			},
 			"8xl": {
 				content: {
+					"--popover-padding": "spacing.10",
 					width: "8xl"
 				}
 			}

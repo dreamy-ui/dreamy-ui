@@ -9,7 +9,8 @@ import type { ISection } from "~/src/.server/docs";
 import { cachePageData } from "~/src/functions/clientCache";
 import { Link } from "~/src/ui/global/Link";
 
-const newComponents = ["switch", "menu", "editable", "toast"];
+const newComponents = ["switch", "editable", "toast"];
+const updatedComponents = ["menu"];
 
 export default function SectionsNav() {
     const { sections } = useSections();
@@ -145,12 +146,16 @@ const MemoSectionButton = memo(function SectionButton({
     const path = useLocation().pathname;
     const isCurrent = path === file.slug;
     const isNew = newComponents.includes(file.name.toLowerCase());
+    const isUpdated = updatedComponents.includes(file.name.toLowerCase());
 
     return (
         <Button
             key={"doc-" + file.name}
             id={isCurrent ? "current-doc" : undefined}
             variant={isCurrent ? "primary" : "ghost"}
+            _hover={{
+                color: isCurrent ? "white" : "fg"
+            }}
             full
             asComp={
                 <Link
@@ -165,14 +170,14 @@ const MemoSectionButton = memo(function SectionButton({
             }}
         >
             {file.name}
-            {isNew && (
+            {(isNew || isUpdated) && (
                 <Badge
                     scheme={isCurrent ? "none" : "secondary"}
                     css={{
                         "--badge-color": isCurrent ? "{colors.bg.light}" : undefined
                     }}
                 >
-                    New
+                    {isNew ? "New" : "Updated"}
                 </Badge>
             )}
         </Button>

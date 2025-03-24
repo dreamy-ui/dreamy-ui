@@ -37,7 +37,28 @@ import {
 When Popover opens, focus is sent to PopoverContent. When it closes, focus is returned to the trigger.
 
 <Wrapper>
-	<BasicPopover />
+    <Popover>
+        <PopoverTrigger>
+            <Button
+                variant={"primary"}
+                w="fit-content"
+            >
+                <>Open Popover</>
+            </Button>
+        </PopoverTrigger>
+
+        <PopoverContent>
+            <PopoverArrow />
+            <PopoverCloseButton />
+            <PopoverHeader>Delete Post</PopoverHeader>
+            <PopoverBody>
+                <>Are you sure you want to delete this post? This action cannot be undone.</>
+            </PopoverBody>
+            <PopoverFooter>
+                <Button variant={"primary"}>Delete</Button>
+            </PopoverFooter>
+        </PopoverContent>
+    </Popover>
 </Wrapper>
 
 ```tsx
@@ -209,6 +230,16 @@ export function PlacementPopover({ placement }: { placement: PlacementWithLogica
     );
 }
 ```
+
+### Size
+
+Use `size` prop to set the size of the popover.
+
+<Wrapper>
+	<SizePopovers />
+</Wrapper>
+
+
 
 ### Reduce Motion
 
