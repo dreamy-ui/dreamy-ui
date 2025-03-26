@@ -110,12 +110,6 @@ export function createColorTokens({
 					_dark: "{colors.whiteAlpha.100}"
 				}
 			},
-			150: {
-				value: {
-					_light: "{colors.blackAlpha.150}",
-					_dark: "{colors.whiteAlpha.150}"
-				}
-			},
 			200: {
 				value: {
 					_light: "{colors.blackAlpha.200}",

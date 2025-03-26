@@ -54,7 +54,7 @@ export const switchRecipe = defineRecipe({
 				boxShadow: "0 0 0 1.5px {colors.primary}"
 			},
 			".group:is(:hover)&": {
-				bg: "alpha.150"
+				bg: "alpha.200"
 			},
 			".group:is([data-checked])&": {
 				bg: "var(--switch-bg)",
@@ -127,12 +127,12 @@ export const switchRecipe = defineRecipe({
 			(scheme) =>
 				scheme === "none"
 					? {
-							_checked: {
-								_dark: {
-									"--switch-thumb-bg": "black"
-								}
+						_checked: {
+							_dark: {
+								"--switch-thumb-bg": "black"
 							}
 						}
+					}
 					: {},
 			"root"
 		)
