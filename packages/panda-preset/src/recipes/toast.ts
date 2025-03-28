@@ -28,7 +28,7 @@ export const toast = defineRecipe({
 			zIndex: "toast",
 			pointerEvents: "auto",
 			"[data-variant='default']&": {
-				bg: "color-mix(in srgb, {colors.bg} 70%, {colors.alpha.100} 10%)",
+				bg: "bg.panel",
 				backdropFilter: "blur({blurs.base})",
 				borderWidth: "1px",
 				borderStyle: "solid",

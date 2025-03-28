@@ -122,7 +122,7 @@ import {
 import { PiConfetti } from "react-icons/pi";
 import type { MdxContent } from "~/src/.server/docs";
 import { PlatformSpecificKbd } from "~/src/ui/docs/components/kbds";
-import { ControlledMenu, InteractiveMenu } from "~/src/ui/docs/components/menus";
+import { ControlledMenu, InteractiveMenu, VariantMenu, VariantMenus } from "~/src/ui/docs/components/menus";
 import {
     BasicModal,
     PlacementModal,
@@ -343,7 +343,9 @@ const DreamComponents = {
     LightTheme,
     Group,
     LinkButton,
-    Wrap
+    Wrap,
+    VariantMenus,
+    VariantMenu
 };
 
 function Wrapper({ children }: PropsWithChildren) {

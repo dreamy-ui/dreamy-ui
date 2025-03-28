@@ -22,7 +22,7 @@ export const popover = defineSlotRecipe({
 			"--popper-z-index": "{zIndex.popover}",
 			maxW: "100vw",
 			"--popper-arrow-bg":
-				"color-mix(in srgb, {colors.bg} 70%, {colors.alpha.100} 10%)",
+				"{colors.bg.panel}",
 			"& [data-popper-arrow-inner]": {
 				backdropFilter: "blur({blurs.base})"
 			},
@@ -31,7 +31,7 @@ export const popover = defineSlotRecipe({
 			position: "relative",
 			borderRadius: "l2",
 			backgroundColor:
-				"color-mix(in srgb, {colors.bg} 70%, {colors.alpha.100} 10%)",
+				"bg.panel",
 			backdropFilter: "blur({blurs.base})",
 			boxShadow: "sm",
 			borderWidth: "1px",

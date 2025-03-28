@@ -46,7 +46,7 @@ export default function AppLayout({ children }: PropsWithChildren) {
 					{children}
 				</Flex>
 
-				<Box pos={"fixed"} inset={0} zIndex={-10} overflow={"hidden"}>
+				<Box pos={"absolute"} inset={0} zIndex={-10} >
 					{/* right top */}
 					<Box
 						pos={"absolute"}

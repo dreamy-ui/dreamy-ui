@@ -18,7 +18,6 @@ export const menu = defineSlotRecipe({
 			borderRadius: "l2",
 			outline: 0,
 			maxH: "96",
-
 			gap: "0 !important",
 			overflowY: "auto",
 			boxShadow: "md",
