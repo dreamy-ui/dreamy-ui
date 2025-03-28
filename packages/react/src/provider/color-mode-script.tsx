@@ -1,5 +1,6 @@
+import { useSafeLayoutEffect } from "@/hooks";
 import type { ColorMode } from "@/provider/dreamy-provider";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 
 interface ColorModeScriptProps {
     setColorMode: (colorMode: ColorMode) => void;
@@ -16,8 +17,7 @@ export function useColorModeScript({
 }: ColorModeScriptProps) {
     const initial = useRef(true);
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-    useEffect(() => {
+    useSafeLayoutEffect(() => {
         if (ssrColorMode) return;
         if (!initial.current) {
             initial.current = false;

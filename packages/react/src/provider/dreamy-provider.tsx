@@ -13,21 +13,25 @@ import {
     type Transition
 } from "motion/react";
 import type React from "react";
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import {
+    createContext,
+    startTransition,
+    useCallback,
+    useContext,
+    useEffect,
+    useMemo,
+    useState
+} from "react";
 import { type DefaultVariants, defaultDefaultTransition, defaultMotionVariants } from "./motion";
 
 export type ColorMode = "light" | "dark";
 
-interface DreamContext {
+interface IDreamContext {
     motionVariants: DefaultVariants;
     defaultTransition: Transition;
-    colorMode: ColorMode;
-    initialColorMode: ColorMode | undefined; // only for use to color mode script
     defaultColorMode: ColorMode;
     useUserPreferenceColorMode: boolean;
     disableRipple: boolean;
-    setColorMode: (colorModeCb: ColorMode | ((prevColorMode: ColorMode) => ColorMode)) => void;
-    toggleColorMode: () => void;
     hasHydrated: boolean;
     reduceMotion: boolean | "system";
     /**
@@ -36,21 +40,31 @@ interface DreamContext {
     defaultToastProps: Omit<Partial<Toast>, "id">;
 }
 
-const DreamContext = createContext<DreamContext | null>(null);
+interface IThemeContext {
+    colorMode: ColorMode;
+    setColorMode: (colorModeCb: ColorMode | ((prevColorMode: ColorMode) => ColorMode)) => void;
+    toggleColorMode: () => void;
+}
+
+const DreamContext = createContext<IDreamContext | null>(null);
+const ThemeContext = createContext<IThemeContext | null>(null);
 
 interface DreamyProviderProps
     extends Partial<
         Omit<
-            DreamContext,
+            IDreamContext,
             "hasHydrated" | "initialColorMode" | "toggleColorMode" | "setColorMode" | "hasHydrated"
         >
     > {
+    colorMode: ColorMode | undefined;
     motionFeatures: FeatureBundle | LazyFeatureBundle;
     motionStrict?: boolean;
     children: React.ReactNode;
 }
 
 export const DreamColorModeCookieKey = "dreamy-ui-color-mode";
+
+const emptyObject = {};
 
 export function DreamyProvider({
     children,
@@ -62,7 +76,7 @@ export function DreamyProvider({
     defaultColorMode = "light",
     reduceMotion: InitialReduceMotion = false,
     motionFeatures,
-    defaultToastProps = {},
+    defaultToastProps = emptyObject,
     motionStrict = false
 }: DreamyProviderProps) {
     const [reduceMotion, setReduceMotion] = useState(InitialReduceMotion);
@@ -72,27 +86,29 @@ export function DreamyProvider({
 
     const setColorMode = useCallback(
         (colorModeCb: ColorMode | ((prevColorMode: ColorMode) => ColorMode)) => {
-            const newColorMode =
-                typeof colorModeCb === "function" ? colorModeCb(colorMode) : colorModeCb;
+            startTransition(() => {
+                const newColorMode =
+                    typeof colorModeCb === "function" ? colorModeCb(colorMode) : colorModeCb;
 
-            const css = document.createElement("style");
-            css.appendChild(
-                document.createTextNode(
-                    "*{-webkit-transition:none!important;-moz-transition:none!important;-o-transition:none!important;-ms-transition:none!important;transition:none!important}"
-                )
-            );
-            document.head.appendChild(css);
-            document.documentElement.style.colorScheme = newColorMode;
-            document.documentElement.dataset.theme = newColorMode;
-            document.cookie = `${DreamColorModeCookieKey}=${newColorMode}; path=/`;
+                const css = document.createElement("style");
+                css.appendChild(
+                    document.createTextNode(
+                        "*{-webkit-transition:none!important;-moz-transition:none!important;-o-transition:none!important;-ms-transition:none!important;transition:none!important}"
+                    )
+                );
+                document.head.appendChild(css);
+                document.documentElement.style.colorScheme = newColorMode;
+                document.documentElement.dataset.theme = newColorMode;
+                document.cookie = `${DreamColorModeCookieKey}=${newColorMode}; path=/`;
 
-            setResolvedColorMode(newColorMode);
+                setResolvedColorMode(newColorMode);
 
-            (() => window.getComputedStyle(document.body))();
+                (() => window.getComputedStyle(document.body))();
 
-            // wait for next tick
-            nextTick(() => {
-                document.head.removeChild(css);
+                // wait for next tick
+                nextTick(() => {
+                    document.head.removeChild(css);
+                });
             });
         },
         [colorMode]
@@ -113,35 +129,36 @@ export function DreamyProvider({
         }
     }, []);
 
-    const context = useMemo(
+    const context = useMemo<IDreamContext>(
         () => ({
             motionVariants,
-            colorMode,
-            setColorMode,
-            toggleColorMode,
             defaultTransition,
             disableRipple,
             defaultColorMode,
             useUserPreferenceColorMode,
             hasHydrated,
             reduceMotion,
-            defaultToastProps,
-            initialColorMode: InitialColorMode
+            defaultToastProps
         }),
         [
             motionVariants,
-            colorMode,
-            setColorMode,
-            toggleColorMode,
             defaultTransition,
             disableRipple,
             defaultColorMode,
             useUserPreferenceColorMode,
             hasHydrated,
             reduceMotion,
-            defaultToastProps,
-            InitialColorMode
+            defaultToastProps
         ]
+    );
+
+    const themeContext = useMemo<IThemeContext>(
+        () => ({
+            colorMode,
+            setColorMode,
+            toggleColorMode
+        }),
+        [colorMode, setColorMode, toggleColorMode]
     );
 
     useSafeLayoutEffect(() => {
@@ -164,20 +181,22 @@ export function DreamyProvider({
 
     return (
         <DreamContext.Provider value={context}>
-            <MotionConfig
-                reducedMotion={reduceMotion && reduceMotion !== "system" ? "always" : "never"}
-                transition={defaultTransition}
-            >
-                <LazyMotion
-                    features={motionFeatures}
-                    strict={motionStrict}
+            <ThemeContext.Provider value={themeContext}>
+                <MotionConfig
+                    reducedMotion={reduceMotion && reduceMotion !== "system" ? "always" : "never"}
+                    transition={defaultTransition}
                 >
-                    <ToastProvider>
-                        <ToastManager />
-                        {children}
-                    </ToastProvider>
-                </LazyMotion>
-            </MotionConfig>
+                    <LazyMotion
+                        features={motionFeatures}
+                        strict={motionStrict}
+                    >
+                        <ToastProvider>
+                            <ToastManager />
+                            {children}
+                        </ToastProvider>
+                    </LazyMotion>
+                </MotionConfig>
+            </ThemeContext.Provider>
         </DreamContext.Provider>
     );
 }
@@ -203,9 +222,12 @@ export function useDefaultTransition() {
 }
 
 export function useColorMode() {
-    const { colorMode, setColorMode, toggleColorMode } = useDreamy();
+    const context = useContext(ThemeContext);
+    if (!context) {
+        throw new Error("useColorMode must be used within a DreamyProvider");
+    }
 
-    return { colorMode, setColorMode, toggleColorMode };
+    return context;
 }
 
 export function useDisableRipple() {
