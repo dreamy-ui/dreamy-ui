@@ -115,6 +115,8 @@ export const Section = memo(function Section({ section }: SectionProps) {
                         mb={2}
                     >
                         <Flex
+                            x={"1px"}
+                            translate={"auto"}
                             w={"1px"}
                             bg={"alpha.300"}
                         />

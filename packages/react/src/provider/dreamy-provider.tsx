@@ -13,15 +13,7 @@ import {
     type Transition
 } from "motion/react";
 import type React from "react";
-import {
-    createContext,
-    startTransition,
-    useCallback,
-    useContext,
-    useEffect,
-    useMemo,
-    useState
-} from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { type DefaultVariants, defaultDefaultTransition, defaultMotionVariants } from "./motion";
 
 export type ColorMode = "light" | "dark";
@@ -86,30 +78,30 @@ export function DreamyProvider({
 
     const setColorMode = useCallback(
         (colorModeCb: ColorMode | ((prevColorMode: ColorMode) => ColorMode)) => {
-            startTransition(() => {
-                const newColorMode =
-                    typeof colorModeCb === "function" ? colorModeCb(colorMode) : colorModeCb;
+            // startTransition(() => {
+            const newColorMode =
+                typeof colorModeCb === "function" ? colorModeCb(colorMode) : colorModeCb;
 
-                const css = document.createElement("style");
-                css.appendChild(
-                    document.createTextNode(
-                        "*{-webkit-transition:none!important;-moz-transition:none!important;-o-transition:none!important;-ms-transition:none!important;transition:none!important}"
-                    )
-                );
-                document.head.appendChild(css);
-                document.documentElement.style.colorScheme = newColorMode;
-                document.documentElement.dataset.theme = newColorMode;
-                document.cookie = `${DreamColorModeCookieKey}=${newColorMode}; path=/`;
+            const css = document.createElement("style");
+            css.appendChild(
+                document.createTextNode(
+                    "*{-webkit-transition:none!important;-moz-transition:none!important;-o-transition:none!important;-ms-transition:none!important;transition:none!important}"
+                )
+            );
+            document.head.appendChild(css);
+            document.documentElement.style.colorScheme = newColorMode;
+            document.documentElement.dataset.theme = newColorMode;
+            document.cookie = `${DreamColorModeCookieKey}=${newColorMode}; path=/`;
 
-                setResolvedColorMode(newColorMode);
+            setResolvedColorMode(newColorMode);
 
-                (() => window.getComputedStyle(document.body))();
+            (() => window.getComputedStyle(document.body))();
 
-                // wait for next tick
-                nextTick(() => {
-                    document.head.removeChild(css);
-                });
+            // wait for next tick
+            nextTick(() => {
+                document.head.removeChild(css);
             });
+            // });
         },
         [colorMode]
     );
