@@ -9,7 +9,7 @@ import type { ISection } from "~/src/.server/docs";
 import { cachePageData } from "~/src/functions/clientCache";
 import { Link } from "~/src/ui/global/Link";
 
-const newComponents = ["switch", "editable", "toast"];
+const newComponents = ["switch", "editable", "toast", "progress circular"];
 const updatedComponents = ["menu"];
 
 export default function SectionsNav() {

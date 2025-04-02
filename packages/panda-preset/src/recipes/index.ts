@@ -25,6 +25,7 @@ import { checkbox, checkboxParts } from "./checkbox";
 import { editable } from "./editable";
 import { group } from "./group";
 import { menu } from "./menu";
+import { progressCircular, progressCircularParts } from "./progress-circular";
 import { snippet, snippetParts } from "./snippet";
 import { switchRecipe } from "./switch";
 import { table } from "./table";
@@ -63,7 +64,8 @@ export const recipes = {
 	toast,
 	editable,
 	theme,
-	group
+	group,
+	progressCircular
 };
 
 export const parts = {
@@ -72,5 +74,6 @@ export const parts = {
 	avatar: avatarParts,
 	checkboxCard: checkboxCardParts,
 	snippet: snippetParts,
-	radio: radioParts
+	radio: radioParts,
+	progressCircular: progressCircularParts
 };

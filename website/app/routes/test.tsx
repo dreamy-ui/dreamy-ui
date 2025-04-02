@@ -23,10 +23,6 @@ import {
     InputGroup,
     InputLeftAddon,
     InputRightAddon,
-    Menu,
-    MenuContent,
-    MenuItem,
-    MenuTrigger,
     Modal,
     ModalBody,
     ModalCloseButton,
@@ -36,7 +32,7 @@ import {
     ModalOverlay,
     PinInput,
     PinInputField,
-    Portal,
+    ProgressCircular,
     Radio,
     RadioGroup,
     Select,
@@ -87,10 +83,8 @@ import {
     VStack
 } from "@dreamy-ui/react/rsc";
 import type { ActionFunctionArgs } from "@remix-run/node";
-import { Link } from "@remix-run/react";
 import { useEffect, useMemo, useState } from "react";
 import { IoAdd, IoRemove } from "react-icons/io5";
-import { LuAlarmClock, LuBattery, LuChevronDown, LuTrash, LuWarehouse } from "react-icons/lu";
 import { PiConfetti } from "react-icons/pi";
 
 export function meta() {
@@ -130,56 +124,15 @@ export default function Test() {
         <Flex
             col
             gap={10}
+            align={"start"}
         >
-            <Menu>
-                <MenuTrigger>
-                    <Button w={"fit-content"}>Open Menu</Button>
-                </MenuTrigger>
-                <MenuContent>
-                    <Menu placement="right-start">
-                        <MenuTrigger>
-                            <MenuItem icon={<LuChevronDown />}>
-                                <>Nested Menu</>
-                            </MenuItem>
-                        </MenuTrigger>
-                        <Portal>
-                            <MenuContent>
-                                <MenuItem
-                                    icon={<LuWarehouse />}
-                                    command="{actionKey} h"
-                                    asComp={<Link to="/" />}
-                                >
-                                    <>Homepage</>
-                                </MenuItem>
-                            </MenuContent>
-                        </Portal>
-                    </Menu>
-                    <MenuItem
-                        icon={<IoAdd />}
-                        command="{actionKey} n"
-                    >
-                        <>Add new</>
-                    </MenuItem>
-                    <MenuItem
-                        icon={<LuAlarmClock />}
-                        command="{actionKey} a"
-                    >
-                        <>Set alarm</>
-                    </MenuItem>
-                    <MenuItem
-                        icon={<LuBattery />}
-                        command="{actionKey} b"
-                    >
-                        <>Battery</>
-                    </MenuItem>
-                    <MenuItem
-                        icon={<LuTrash />}
-                        command="{actionKey} d"
-                    >
-                        <>Delete</>
-                    </MenuItem>
-                </MenuContent>
-            </Menu>
+            <ProgressCircular
+                value={100}
+                maxValue={200}
+                showValueLabel
+                // showValueLabel
+                // isIndeterminate
+            />
 
             <LightTheme>
                 <Flex

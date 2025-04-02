@@ -15,6 +15,7 @@ export * from "./pin-input";
 export * from "./popover";
 export * from "./popper";
 export * from "./portal";
+export * from "./progress-circular";
 export * from "./radio";
 export * from "./ripple";
 export * from "./select";
@@ -27,3 +28,4 @@ export * from "./textarea";
 export * from "./toast";
 export * from "./tooltip";
 export * from "./transitions";
+

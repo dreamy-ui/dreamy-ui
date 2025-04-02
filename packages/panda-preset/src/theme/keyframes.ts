@@ -7,24 +7,16 @@ export const keyframes = defineKeyframes({
     },
     "progress-spin": {
         "0%": {
-            strokeDasharray: "1, 400",
-            strokeDashoffset: "0"
+            strokeDasharray: "40px, 100px",
+            strokeDashoffset: "0px"
         },
         "50%": {
-            strokeDasharray: "400, 400",
-            strokeDashoffset: "-100"
+            strokeDasharray: "100px, 200px",
+            strokeDashoffset: "-15px"
         },
         "100%": {
-            strokeDasharray: "400, 400",
-            strokeDashoffset: "-260"
-        }
-    },
-    "progress-rotate": {
-        "0%": {
-            transform: "rotate(0deg)"
-        },
-        "100%": {
-            transform: "rotate(360deg)"
+            strokeDasharray: "40px, 100px",
+            strokeDashoffset: "-130px"
         }
     },
     progress: {

@@ -1,0 +1,132 @@
+---
+title: Progress Circular
+description: Progress Circular is used to display the progress of a task in a circular shape.
+isServerComponent: false
+source: /packages/react/src/components/progress-circular/progress-circular.tsx
+themeSource: /packages/system/src/recipes/progress-circular.ts
+---
+
+## Import
+
+- `ProgressCircular` - The Progress Circular component.
+
+```jsx
+import { ProgressCircular } from "@dreamy-ui/react";
+```
+
+## Usage
+
+Use `value` prop to set the progress value.
+
+<Wrapper>
+	<ProgressCircular value={69} />
+</Wrapper>
+
+```tsx
+<ProgressCircular value={69} />
+```
+
+### Sizes
+
+You can set the size of the progress by using the `size` prop.
+
+<Wrapper>
+	<Flex col gap={5}>
+		<ProgressCircular value={69} size="xs" />
+		<ProgressCircular value={69} size="sm" />
+    	<ProgressCircular value={69} size="md" />
+		<ProgressCircular value={69} size="lg" />
+		<ProgressCircular value={69} size="xl" />
+	</Flex>
+</Wrapper>
+
+```tsx
+<Flex col gap={5}>
+    <ProgressCircular value={69} size="xs" />
+    <ProgressCircular value={69} size="sm" />
+    <ProgressCircular value={69} size="md" />
+    <ProgressCircular value={69} size="lg" />
+    <ProgressCircular value={69} size="xl" />
+</Flex>
+``` 
+
+### Scheme
+
+You can set the color of the progress by using the `scheme` prop.
+
+<Wrapper>
+	<Flex col gap={5}>
+		<ProgressCircular scheme="primary" value={21} />
+		<ProgressCircular scheme="secondary" value={37} />
+		<ProgressCircular scheme="success" value={42} />
+		<ProgressCircular scheme="warning" value={10} />
+		<ProgressCircular scheme="error" value={100} />
+		<ProgressCircular scheme="info" value={50} />
+
+	</Flex>
+</Wrapper>
+
+```tsx
+<Flex col gap={5}>
+    <ProgressCircular scheme="primary" value={21} />
+    <ProgressCircular scheme="secondary" value={37} />
+    <ProgressCircular scheme="success" value={42} />
+    <ProgressCircular scheme="warning" value={10} />
+    <ProgressCircular scheme="error" value={100} />
+    <ProgressCircular scheme="info" value={50} />
+</Flex>
+```
+
+### Indeterminate Progress
+
+You can make the progress indeterminate by using the `isIndeterminate` prop. You can customize `speed` prop to change the speed of the indeterminate animation.
+
+<Wrapper>
+	<ProgressCircular isIndeterminate />
+</Wrapper>
+
+```tsx
+<ProgressCircular isIndeterminate />
+```
+
+### Show value label
+
+You can show the value label by using the `showValue` prop. Use `valueLabel` prop to set the value label.
+
+You can also set the `formatOptions` prop to format the value label.
+
+<Wrapper>
+	<ProgressCircular showValueLabel value={69} />
+	<ProgressCircular showValueLabel value={69} valueLabel="0" />
+	<ProgressCircular showValueLabel value={69} formatOptions={{ style: "currency", currency: "USD" }} />
+</Wrapper>
+
+```tsx
+<ProgressCircular showValueLabel value={69} />
+<ProgressCircular showValueLabel value={69} valueLabel="0" />
+<ProgressCircular showValueLabel value={69} formatOptions={{ style: "currency", currency: "USD" }} />
+```
+
+### Label
+
+You can set the label of the progress by using the `label` prop.
+
+<Wrapper>
+	<ProgressCircular label="Downloading..." value={69} />
+</Wrapper>
+
+```tsx
+<ProgressCircular label="Downloading..." value={69} />
+```
+
+### Min and Max value
+
+You can set the min and max value of the progress by using the `minValue` and `maxValue` prop.
+
+<Wrapper>
+	<ProgressCircular minValue={37} maxValue={21} value={29} />
+</Wrapper>
+
+```tsx
+<ProgressCircular minValue={37} maxValue={21} value={29} />
+```

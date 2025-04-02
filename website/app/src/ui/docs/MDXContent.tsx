@@ -41,6 +41,7 @@ import {
     PopoverHeader,
     PopoverTrigger,
     Portal,
+    ProgressCircular,
     Radio,
     RadioGroup,
     Select,
@@ -122,7 +123,12 @@ import {
 import { PiConfetti } from "react-icons/pi";
 import type { MdxContent } from "~/src/.server/docs";
 import { PlatformSpecificKbd } from "~/src/ui/docs/components/kbds";
-import { ControlledMenu, InteractiveMenu, VariantMenu, VariantMenus } from "~/src/ui/docs/components/menus";
+import {
+    ControlledMenu,
+    InteractiveMenu,
+    VariantMenu,
+    VariantMenus
+} from "~/src/ui/docs/components/menus";
 import {
     BasicModal,
     PlacementModal,
@@ -313,6 +319,7 @@ const DreamComponents = {
     ControlledSwitch,
     Menu,
     MenuTrigger,
+    ProgressCircular,
     MenuContent,
     MenuItem,
     RemixLink,
@@ -509,12 +516,12 @@ const components = {
         const status = statusText.startsWith("warning:")
             ? "warning"
             : statusText.startsWith("error:")
-                ? "error"
-                : statusText.startsWith("info:")
-                    ? "info"
-                    : statusText.startsWith("success:")
-                        ? "success"
-                        : "warning";
+              ? "error"
+              : statusText.startsWith("info:")
+                ? "info"
+                : statusText.startsWith("success:")
+                  ? "success"
+                  : "warning";
 
         let content: ReactNode = [];
 
