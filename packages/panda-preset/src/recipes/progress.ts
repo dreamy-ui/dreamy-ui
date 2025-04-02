@@ -6,6 +6,8 @@ const parts = defineParts({
     filledTrack: { selector: "& [data-part=filled-track]" }
 });
 
+export { parts as progressParts };
+
 export const progress = defineRecipe({
     className: "dreamy-progress",
     jsx: ["Progress", "CircularProgress"],

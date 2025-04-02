@@ -9,6 +9,8 @@ const parts = defineParts({
     }
 });
 
+export { parts as skeletonParts };
+
 export const skeleton = defineRecipe({
     className: "dreamy-skeleton",
     jsx: ["Skeleton", "SkeletonText"],

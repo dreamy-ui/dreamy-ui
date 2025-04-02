@@ -3,23 +3,23 @@ import { avatar, avatarParts } from "@/recipes/avatar";
 import { badge } from "@/recipes/badge";
 import { button, buttonParts } from "@/recipes/button";
 import { checkboxCard, checkboxCardParts } from "@/recipes/checkbox-card";
-import { field } from "@/recipes/field";
+import { field, fieldParts } from "@/recipes/field";
 import { icon } from "@/recipes/icon";
-import { image } from "@/recipes/image";
+import { image, imageParts } from "@/recipes/image";
 import { input } from "@/recipes/input";
 import { kbd } from "@/recipes/kbd";
 import { list } from "@/recipes/list";
 import { modal } from "@/recipes/modal";
 import { popover } from "@/recipes/popover";
-import { progress } from "@/recipes/progress";
+import { progress, progressParts } from "@/recipes/progress";
 import { radio, radioParts } from "@/recipes/radio";
 import { select } from "@/recipes/select";
-import { skeleton } from "@/recipes/skeleton";
+import { skeleton, skeletonParts } from "@/recipes/skeleton";
 import { slider } from "@/recipes/slider";
 import { spinner } from "@/recipes/spinner";
 import { tabs } from "@/recipes/tabs";
 import { textarea } from "@/recipes/textarea";
-import { tooltip } from "@/recipes/tooltip";
+import { tooltip, tooltipParts } from "@/recipes/tooltip";
 import { accordion } from "./accordion";
 import { checkbox, checkboxParts } from "./checkbox";
 import { editable } from "./editable";
@@ -27,53 +27,60 @@ import { group } from "./group";
 import { menu } from "./menu";
 import { progressCircular, progressCircularParts } from "./progress-circular";
 import { snippet, snippetParts } from "./snippet";
-import { switchRecipe } from "./switch";
+import { switchParts, switchRecipe } from "./switch";
 import { table } from "./table";
 import { theme } from "./theme";
-import { toast } from "./toast";
+import { toast, toastParts } from "./toast";
 
 export const recipes = {
-	button,
-	icon,
-	modal,
-	input,
-	textarea,
-	avatar,
-	tooltip,
-	spinner,
-	field,
-	popover,
-	list,
-	alert,
-	image,
-	tabs,
-	progress,
-	badge,
-	kbd,
-	slider,
-	accordion,
-	checkbox,
-	checkboxCard,
-	snippet,
-	table,
-	skeleton,
-	radio,
-	select,
-	switchRecipe,
-	menu,
-	toast,
-	editable,
-	theme,
-	group,
-	progressCircular
+    button,
+    icon,
+    modal,
+    input,
+    textarea,
+    avatar,
+    tooltip,
+    spinner,
+    field,
+    popover,
+    list,
+    alert,
+    image,
+    tabs,
+    progress,
+    badge,
+    kbd,
+    slider,
+    accordion,
+    checkbox,
+    checkboxCard,
+    snippet,
+    table,
+    skeleton,
+    radio,
+    select,
+    switchRecipe,
+    menu,
+    toast,
+    editable,
+    theme,
+    group,
+    progressCircular
 };
 
 export const parts = {
-	button: buttonParts,
-	checkbox: checkboxParts,
-	avatar: avatarParts,
-	checkboxCard: checkboxCardParts,
-	snippet: snippetParts,
-	radio: radioParts,
-	progressCircular: progressCircularParts
+    button: buttonParts,
+    checkbox: checkboxParts,
+    field: fieldParts,
+    image: imageParts,
+    avatar: avatarParts,
+    checkboxCard: checkboxCardParts,
+    snippet: snippetParts,
+    radio: radioParts,
+    progressCircular: progressCircularParts,
+    progress: progressParts,
+    skeleton: skeletonParts,
+    switch: switchParts,
+    toast: toastParts,
+    tooltip: tooltipParts
 };
