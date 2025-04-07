@@ -199,3 +199,58 @@ Use the `Group` component to group multiple Buttons together.
 	<Button variant="outline">Button 3</Button>
 </Group>
 ```
+
+### Custom variant
+
+Learn how to create a custom Button variant. See [Theming](/docs/theming/customization) documentation.
+
+In your `panda.config.ts`, add a new variant:
+
+```ts {1, 7-25}
+import createDreamyPreset, { dreamyPlugin, parts } from "@dreamy-ui/panda-preset";
+
+export default defineConfig({
+    ...
+    theme: {
+        extend: {
+            recipes: {
+                button: {
+                    variants: {
+                        variant: {
+                            glass: parts.button({
+                                root: {
+                                    bg: "currentColor/12",
+                                    border: "1px solid",
+                                    borderColor: "currentColor/50",
+                                    boxShadow: "inset 0 0 12px {currentColor/50}",
+                                    _hover: {
+                                        bg: "currentColor/18"
+                                    }
+                                }
+                            })
+                        }
+                    }
+                }
+            }
+        }
+    },
+});
+```
+
+Now, save the file and use the new variant:
+
+<Wrapper>
+	<Group>
+		<Button variant="glass">Glass Default</Button>
+		<Button variant="glass" color="primary">Glass Primary</Button>
+		<Button variant="glass" color="success">Glass Success</Button>
+	</Group>
+</Wrapper>
+
+```tsx
+<Group>
+	<Button variant="glass">Glass Default</Button>
+	<Button variant="glass" color="primary">Glass Primary</Button>
+	<Button variant="glass" color="success">Glass Success</Button>
+</Group>
+```

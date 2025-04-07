@@ -1,4 +1,4 @@
-import createDreamyPreset, { dreamyPlugin } from "@dreamy-ui/panda-preset";
+import createDreamyPreset, { dreamyPlugin, parts } from "@dreamy-ui/panda-preset";
 import { defineConfig } from "@pandacss/dev";
 
 export default defineConfig({
@@ -38,8 +38,20 @@ export default defineConfig({
                     variants: {
                         variant: {
                             tertiary: {
-                                bg: "tertiary"
-                            }
+                                bg: "tertiary",
+                                color: "black"
+                            },
+                            glass: parts.button({
+                                root: {
+                                    bg: "currentColor/12",
+                                    border: "1px solid",
+                                    borderColor: "currentColor/50",
+                                    boxShadow: "inset 0 0 6px {currentColor/30}",
+                                    _hover: {
+                                        bg: "currentColor/18"
+                                    }
+                                }
+                            })
                         }
                     }
                 }
