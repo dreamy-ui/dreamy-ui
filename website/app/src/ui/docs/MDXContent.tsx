@@ -439,10 +439,14 @@ const components = {
                 <Link
                     to={href || "#"}
                     target={isExternal ? "_blank" : undefined}
-                    _hover={{
-                        textDecoration: "underline"
-                    }}
-                    color={"secondary"}
+                    // _hover={{
+                    //     textDecoration: "underline"
+                    // }}
+                    color={"fg"}
+                    textDecoration={"underline"}
+                    textUnderlineOffset={"3px"}
+                    textDecorationThickness={"2px"}
+                    textDecorationColor={"alpha.500"}
                     {...props}
                 >
                     {children}{" "}
@@ -460,10 +464,11 @@ const components = {
             <DreamLink
                 href={href || "#"}
                 target={isExternal ? "_blank" : undefined}
-                _hover={{
-                    textDecoration: "underline"
-                }}
-                color={"secondary"}
+                color={"fg"}
+                textDecoration={"underline"}
+                textUnderlineOffset={"3px"}
+                textDecorationThickness={"2px"}
+                textDecorationColor={"alpha.500"}
                 {...props}
             >
                 {children}{" "}

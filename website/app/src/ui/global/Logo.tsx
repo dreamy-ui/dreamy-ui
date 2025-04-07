@@ -47,7 +47,7 @@ export function Logo() {
                         <Heading size={"xl"}>Your UI</Heading>
                     </MotionBox>
                 </Box>
-                <Badge scheme={"secondary"}>Beta</Badge>
+                <Badge scheme={"secondary"}>v1</Badge>
             </HStack>
 
             <Divider
