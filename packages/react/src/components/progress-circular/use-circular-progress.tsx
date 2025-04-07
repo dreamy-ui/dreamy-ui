@@ -52,7 +52,7 @@ export interface UseCircularProgressProps extends HTMLDreamProps<"div"> {
      * The speed of the progress circular.
      * @default "1.5s"
      */
-    speed: string;
+    speed?: string;
     /**
      * The format options of the progress circular.
      */

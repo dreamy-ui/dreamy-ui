@@ -32,6 +32,10 @@ import {
     ModalOverlay,
     PinInput,
     PinInputField,
+    Popover,
+    PopoverContent,
+    PopoverHeader,
+    PopoverTrigger,
     ProgressCircular,
     Radio,
     RadioGroup,
@@ -126,6 +130,15 @@ export default function Test() {
             gap={10}
             align={"start"}
         >
+            <Popover hasArrow>
+                <PopoverTrigger>
+                    <Button>Open Popover</Button>
+                </PopoverTrigger>
+                <PopoverContent>
+                    <PopoverHeader>Popover Header</PopoverHeader>
+                </PopoverContent>
+            </Popover>
+
             <ProgressCircular
                 value={100}
                 maxValue={200}

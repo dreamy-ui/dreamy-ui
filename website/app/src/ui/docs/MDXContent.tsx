@@ -361,7 +361,7 @@ function Wrapper({ children }: PropsWithChildren) {
             col
             gap={2}
             p={4}
-            rounded={"l4"}
+            rounded={"p-4"}
             border={"1px solid"}
             borderColor={"border"}
             w={"full"}

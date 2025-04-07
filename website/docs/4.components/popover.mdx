@@ -36,8 +36,10 @@ import {
 
 When Popover opens, focus is sent to PopoverContent. When it closes, focus is returned to the trigger.
 
+For arrow, you can use `hasArrow` prop or use `<PopoverArrow />` component inside `<PopoverContent />`.
+
 <Wrapper>
-    <Popover>
+    <Popover hasArrow>
         <PopoverTrigger>
             <Button
                 variant={"primary"}
@@ -48,7 +50,6 @@ When Popover opens, focus is sent to PopoverContent. When it closes, focus is re
         </PopoverTrigger>
 
         <PopoverContent>
-            <PopoverArrow />
             <PopoverCloseButton />
             <PopoverHeader>Delete Post</PopoverHeader>
             <PopoverBody>
@@ -64,13 +65,12 @@ When Popover opens, focus is sent to PopoverContent. When it closes, focus is re
 ```tsx
 export function BasicPopover() {
     return (
-        <Popover>
+        <Popover hasArrow>
             <PopoverTrigger>
                 <Button variant={"primary"}>Open Popover</Button>
             </PopoverTrigger>
 
             <PopoverContent>
-                <PopoverArrow />
                 <PopoverCloseButton />
                 <PopoverHeader>Delete Post</PopoverHeader>
                 <PopoverBody>
