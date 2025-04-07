@@ -4,11 +4,16 @@ title: Panda Preset
 
 # Panda Preset
 
-Dreamy UI comes with a preset for pandaCSS, which provides tokens, patterns, recipes and utilities that are required for components to be styled.
+Dreamy UI comes with a preset for pandaCSS, which provides tokens, patterns, recipes and utilities that are required for components to be styled. Color values should be only hex, rgb or hsl values.
 
 `createDreamyPreset` function accepts the object argument with following types:
 
 ```ts
+interface LightDarkColor {
+    light: string;
+    dark: string;
+}
+
 interface PresetOptions {
     /**
      * The background color for your app.
@@ -27,14 +32,14 @@ interface PresetOptions {
     };
     /**
      * Primary color for your app.
-     * @default "blue.500"
+     * @default "{ light: '#000000', dark: '#ffffff' }"
      */
-    primaryColor: string;
+    primaryColor: string | LightDarkColor;
     /**
      * Secondary color for your app.
-     * @default "purple.400"
+     * @default "{ light: '#000000', dark: '#ffffff' }"
      */
-    secondaryColor: string;
+    secondaryColor: string | LightDarkColor;
     /**
      * Border radius for your app.
      * @default "md"
@@ -44,11 +49,74 @@ interface PresetOptions {
      * Color for the primary button. It depends on the `primaryColor` option.
      * @default Dream will automatically resolve contrast to match the `primaryColor` option.
      */
-    buttonPrimaryTextColor: string;
+    buttonPrimaryTextColor: string | LightDarkColor;
     /**
      * Color for the secondary button. It depends on the `secondaryColor` option.
      * @default Dream will automatically resolve contrast to match the `secondaryColor` option.
      */
-    buttonSecondaryTextColor: string;
+    buttonSecondaryTextColor: string | LightDarkColor;
 }
+```
+
+Here's a preset configuration of Dreamy UI Docs:
+
+```ts {2, 7-22}
+// > panda.config.ts <
+import createDreamyPreset, { dreamyPlugin, parts } from "@dreamy-ui/panda-preset";
+import { defineConfig } from "@pandacss/dev";
+
+export default defineConfig({
+    ...
+    presets: [
+        createDreamyPreset({
+            backgrounds: {
+                light: "#FFF"
+                dark: "#080808",
+            },
+            fonts: {
+                body: "Geist",
+                heading: "Manrope"
+            },
+            primaryColor: "#6056aa",
+            secondaryColor: "#d193bb",
+            rounded: "md"
+        })
+    ],
+    plugins: [dreamyPlugin]
+});
+```
+
+In other words, that's how default preset args look like:
+
+```ts {2, 7-29}
+// > panda.config.ts <
+import createDreamyPreset, { dreamyPlugin, parts } from "@dreamy-ui/panda-preset";
+import { defineConfig } from "@pandacss/dev";
+
+export default defineConfig({
+    ...
+    presets: [
+        createDreamyPreset({
+            backgrounds: {
+                light: "#fff",
+                dark: "#0D0D0E"
+            },
+            fonts: {
+                body: "sans-serif",
+                heading: "sans-serif",
+                mono: "monospace"
+            },
+            primaryColor: {
+                light: "#000000",
+                dark: "#ffffff"
+            },
+            secondaryColor: {
+                light: "#000000",
+                dark: "#ffffff"
+            },
+            rounded: "md"
+        })
+    ],
+    plugins: [dreamyPlugin]
+});
 ```

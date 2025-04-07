@@ -6,14 +6,31 @@ export function resolveButtonColors(
         "primaryColor" | "secondaryColor" | "buttonPrimaryTextColor" | "buttonSecondaryTextColor"
     >
 ) {
+    console.log("options", options);
+
+    // check if primaryColor is a token, if yes, resolve it
+    // const primaryToken = token
+
     if (options.primaryColor && !options.buttonPrimaryTextColor) {
-        const contrast = getContrast(options.primaryColor);
-        options.buttonPrimaryTextColor = contrast;
+        if (typeof options.primaryColor === "string") {
+            options.buttonPrimaryTextColor = getContrast(options.primaryColor);
+        } else {
+            options.buttonPrimaryTextColor = {
+                light: getContrast(options.primaryColor.light),
+                dark: getContrast(options.primaryColor.dark)
+            };
+        }
     }
 
     if (options.secondaryColor && !options.buttonSecondaryTextColor) {
-        const contrast = getContrast(options.secondaryColor);
-        options.buttonSecondaryTextColor = contrast;
+        if (typeof options.secondaryColor === "string") {
+            options.buttonSecondaryTextColor = getContrast(options.secondaryColor);
+        } else {
+            options.buttonSecondaryTextColor = {
+                light: getContrast(options.secondaryColor.light),
+                dark: getContrast(options.secondaryColor.dark)
+            };
+        }
     }
 }
 
