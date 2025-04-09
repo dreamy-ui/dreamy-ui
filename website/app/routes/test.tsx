@@ -6,6 +6,11 @@ import {
     Avatar,
     AvatarGroup,
     Button,
+    Card,
+    CardBody,
+    CardFooter,
+    CardHeader,
+    CardTitle,
     Checkbox,
     CheckboxCard,
     CheckboxGroup,
@@ -130,6 +135,16 @@ export default function Test() {
             gap={10}
             align={"start"}
         >
+            <Card>
+                <CardHeader>
+                    <CardTitle>Sigma</CardTitle>
+                </CardHeader>
+                <CardBody>Erm what a sigma</CardBody>
+                <CardFooter>
+                    <Button>Click me</Button>
+                </CardFooter>
+            </Card>
+
             <Popover hasArrow>
                 <PopoverTrigger>
                     <Button>Open Popover</Button>

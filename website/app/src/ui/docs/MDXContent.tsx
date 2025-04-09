@@ -6,6 +6,12 @@ import {
     Avatar,
     AvatarGroup,
     Button,
+    Card,
+    CardBody,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
     Checkbox,
     CheckboxCard,
     CheckboxGroup,
@@ -79,6 +85,7 @@ import {
     Divider,
     Link as DreamLink,
     Flex,
+    type FlexProps,
     Grid,
     GridItem,
     Group,
@@ -289,9 +296,16 @@ const DreamComponents = {
     GridItem,
     Tooltip,
     VisuallyHidden,
+    HiExternalLink,
     Skeleton,
     SkeletonText,
     Radio,
+    Card,
+    CardHeader,
+    CardBody,
+    CardFooter,
+    CardTitle,
+    CardDescription,
     RadioGroup,
     Snippet,
     VisuallyHiddenInput,
@@ -355,7 +369,7 @@ const DreamComponents = {
     VariantMenu
 };
 
-function Wrapper({ children }: PropsWithChildren) {
+function Wrapper({ children, ...props }: PropsWithChildren<FlexProps>) {
     return (
         <Flex
             col
@@ -366,6 +380,7 @@ function Wrapper({ children }: PropsWithChildren) {
             borderColor={"border"}
             w={"full"}
             align={"flex-start"}
+            {...props}
         >
             {children}
         </Flex>

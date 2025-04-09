@@ -21,6 +21,7 @@ import { tabs } from "@/recipes/tabs";
 import { textarea } from "@/recipes/textarea";
 import { tooltip, tooltipParts } from "@/recipes/tooltip";
 import { accordion } from "./accordion";
+import { card } from "./card";
 import { checkbox, checkboxParts } from "./checkbox";
 import { editable } from "./editable";
 import { group } from "./group";
@@ -65,7 +66,8 @@ export const recipes = {
     editable,
     theme,
     group,
-    progressCircular
+    progressCircular,
+    card
 };
 
 export const parts = {

@@ -2,6 +2,7 @@ export * from "./accordion";
 export * from "./avatar";
 export * from "./box";
 export * from "./button";
+export * from "./card";
 export * from "./checkbox";
 export * from "./editable";
 export * from "./field";
@@ -28,4 +29,3 @@ export * from "./textarea";
 export * from "./toast";
 export * from "./tooltip";
 export * from "./transitions";
-

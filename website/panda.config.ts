@@ -145,7 +145,7 @@ export default defineConfig({
                         bg: ["secondary", "blue.400", "purple.400"],
                         color: ["white"],
                         fontWeight: [500],
-                        p: [3, 2],
+                        p: [3, 2, 10],
                         justifyContent: ["between"],
                         rounded: ["md", "inherit"],
                         w: ["250px", "100px", "1/3", "auto", "xs", "sm"],

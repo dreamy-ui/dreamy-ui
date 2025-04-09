@@ -64,7 +64,7 @@ export function createColorTokens({
                     // light background with 85% opacity
                     base: `color-mix(in srgb, ${lightBackground} 85%, transparent 15%)`,
                     // dark background with white alpha, to whiten the background and also alphied
-                    _dark: `color-mix(in srgb, ${darkBackground} 85%, {colors.whiteAlpha.200} 15%)`
+                    _dark: `color-mix(in srgb, ${darkBackground} 85%, {colors.whiteAlpha.200} 20%)`
                 }
             }
         },

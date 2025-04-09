@@ -6,11 +6,6 @@ export function resolveButtonColors(
         "primaryColor" | "secondaryColor" | "buttonPrimaryTextColor" | "buttonSecondaryTextColor"
     >
 ) {
-    console.log("options", options);
-
-    // check if primaryColor is a token, if yes, resolve it
-    // const primaryToken = token
-
     if (options.primaryColor && !options.buttonPrimaryTextColor) {
         if (typeof options.primaryColor === "string") {
             options.buttonPrimaryTextColor = getContrast(options.primaryColor);

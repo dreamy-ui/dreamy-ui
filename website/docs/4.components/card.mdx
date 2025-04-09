@@ -1,0 +1,361 @@
+---
+title: Card
+description: Card is a component that displays content in a card format.
+isServerComponent: false
+source: /packages/react/src/components/card/card.tsx
+themeSource: /packages/system/src/recipes/card.ts
+---
+
+## Import
+
+- `Card` - The main Card component.
+- `CardHeader` - The header of the card.
+- `CardBody` - The body of the card.
+- `CardFooter` - The footer of the card.
+- `CardTitle` - The title of the card.
+- `CardDescription` - The description of the card.
+
+```jsx
+import { Card, CardHeader, CardBody, CardFooter, CardTitle, CardDescription } from "@dreamy-ui/react";
+```
+
+## Usage
+
+A basic usage of the card component.
+
+<Wrapper p={10}>
+    <Card maxW="sm">
+        <CardHeader>
+            <CardTitle>Card Title</CardTitle>
+        </CardHeader>
+        <CardBody>
+            <CardDescription>
+                <>This is the card body. Lorem ipsum dolor sit amet, 
+                consectetur adipiscing elit. Curabitur nec odio vel dui euismod fermentum. 
+                Curabitur nec odio vel dui euismod fermentum.</>
+            </CardDescription>
+        </CardBody>
+    </Card>
+</Wrapper>
+
+```tsx
+<Card maxW="sm">
+    <CardHeader>
+        <CardTitle>Card Title</CardTitle>
+    </CardHeader>
+    <CardBody>
+        <CardDescription>
+            <>This is the card body. Lorem ipsum dolor sit amet, 
+            consectetur adipiscing elit. Curabitur nec odio vel dui euismod fermentum. 
+            Curabitur nec odio vel dui euismod fermentum.</>
+        </CardDescription>
+    </CardBody>
+</Card>
+```
+
+### Variants
+
+You can change the variant of the card by using the `variant` prop.
+
+<Wrapper p={10}>
+    <Card variant="elevated" maxW="sm">
+        <CardHeader>
+            <CardTitle>Elevated</CardTitle>
+        </CardHeader>
+        <CardBody>
+            <CardDescription>
+                <>This is the card body. Lorem ipsum dolor sit amet, 
+                consectetur adipiscing elit. Curabitur nec odio vel dui euismod fermentum. 
+                Curabitur nec odio vel dui euismod fermentum.</>
+            </CardDescription>
+        </CardBody>
+    </Card>
+
+    <Card variant="outline" maxW="sm">
+        <CardHeader>
+            <CardTitle>Outline</CardTitle>
+        </CardHeader>
+        <CardBody>
+            <CardDescription>
+                <>This is the card body. Lorem ipsum dolor sit amet, 
+                consectetur adipiscing elit. Curabitur nec odio vel dui euismod fermentum. 
+                Curabitur nec odio vel dui euismod fermentum.</>
+            </CardDescription>
+        </CardBody>
+    </Card>
+</Wrapper>
+
+```tsx
+<Card variant="elevated" maxW="sm">
+    <CardHeader>
+        <CardTitle>Elevated</CardTitle>
+    </CardHeader>
+    <CardBody>
+        <CardDescription>
+            This is the card body. Lorem ipsum dolor sit amet, 
+            consectetur adipiscing elit. Curabitur nec odio vel dui euismod fermentum. 
+            Curabitur nec odio vel dui euismod fermentum.
+        </CardDescription>
+    </CardBody>
+</Card>
+
+<Card variant="outline" maxW="sm">
+    <CardHeader>
+        <CardTitle>Outline</CardTitle>
+    </CardHeader>
+    <CardBody>
+        <CardDescription>
+            This is the card body. Lorem ipsum dolor sit amet, 
+            consectetur adipiscing elit. Curabitur nec odio vel dui euismod fermentum. 
+            Curabitur nec odio vel dui euismod fermentum.
+        </CardDescription>
+    </CardBody>
+</Card>
+```
+
+### With Divider
+
+Example of a card with a dividers layout.
+
+<Wrapper p={10}>
+    <Card maxW="sm">
+        <CardHeader row alignItems="center" pb={6} gap={4}>
+            <Image
+                alt="Dreamy UI logo"
+                src="https://dreamy-ui.com/dream.svg"
+                boxSize={"10"}
+            />
+            <Flex column align="start">
+                <CardTitle>Dreamy UI</CardTitle>
+                <Text color="fg.medium" size="sm">dreamy-ui.com</Text>
+            </Flex>
+        </CardHeader>
+        <Divider />
+        <CardBody>
+            <CardDescription>Create dream websites with next-gen DX and crispy UI. Powered by Panda CSS.</CardDescription>
+        </CardBody>
+        <Divider />
+        <CardFooter pt={6}>
+            <Link isExternal href="https://github.com/dreamy-ui/dreamy-ui" fontWeight={500} display={"flex"} alignItems={"center"} gap={1}>
+                <>Visit source code on GitHub <Icon h={4} asComp={<HiExternalLink />} /></>
+            </Link>
+        </CardFooter>
+    </Card>
+</Wrapper>
+
+```tsx
+<Card maxW="sm">
+    <CardHeader row alignItems="center" pb={6} gap={4}>
+        <Image
+            alt="Dreamy UI logo"
+            src="https://dreamy-ui.com/dream.svg"
+            boxSize={"10"}
+        />
+        <Flex column align="start">
+            <CardTitle>Dreamy UI</CardTitle>
+            <Text color="fg.medium" size="sm">dreamy-ui.com</Text>
+        </Flex>
+    </CardHeader>
+    <Divider />
+    <CardBody>
+        <CardDescription>Create dream websites with next-gen DX and crispy UI. Powered by Panda CSS.</CardDescription>
+    </CardBody>
+    <Divider />
+    <CardFooter pt={6}>
+        <Link isExternal href="https://github.com/dreamy-ui/dreamy-ui" fontWeight={500} display={"flex"} alignItems={"center"} gap={1}>
+            Visit source code on GitHub <Icon h={4} as={HiExternalLink} />
+        </Link>
+    </CardFooter>
+</Card>
+```
+
+### Sizes
+
+Example of a card with different sizes using the `size` prop.
+
+<Wrapper p={10}>
+    <Card size="sm" maxW="sm">
+        <CardHeader>
+            <CardTitle>Small Card</CardTitle>
+        </CardHeader>
+        <CardBody>
+            <CardDescription>
+                <>This is the small card body. Lorem ipsum dolor sit amet, 
+                consectetur adipiscing elit. Curabitur nec odio vel dui euismod fermentum. 
+                Curabitur nec odio vel dui euismod fermentum.</>
+            </CardDescription>
+        </CardBody>
+    </Card>
+
+    <Card size="md" maxW="sm">
+        <CardHeader>
+            <CardTitle>Medium Card</CardTitle>
+        </CardHeader>
+        <CardBody>
+            <CardDescription>
+                <>This is the medium card body. Lorem ipsum dolor sit amet, 
+                consectetur adipiscing elit. Curabitur nec odio vel dui euismod fermentum. 
+                Curabitur nec odio vel dui euismod fermentum.</>
+            </CardDescription>
+        </CardBody>
+    </Card>
+
+    <Card size="lg" maxW="sm">
+        <CardHeader>
+            <CardTitle>Large Card</CardTitle>
+        </CardHeader>
+        <CardBody>
+            <CardDescription>
+                <>This is the large card body. Lorem ipsum dolor sit amet, 
+                consectetur adipiscing elit. Curabitur nec odio vel dui euismod fermentum. 
+                Curabitur nec odio vel dui euismod fermentum.</>
+            </CardDescription>
+        </CardBody>
+    </Card>
+</Wrapper>
+
+```tsx
+<Card size="sm" maxW="sm">
+    <CardHeader>
+        <CardTitle>Small Card</CardTitle>
+    </CardHeader>
+    <CardBody>
+        <CardDescription>
+            This is the small card body. Lorem ipsum dolor sit amet, 
+            consectetur adipiscing elit. Curabitur nec odio vel dui euismod fermentum. 
+            Curabitur nec odio vel dui euismod fermentum.
+        </CardDescription>
+    </CardBody>
+</Card>
+
+<Card size="md" maxW="sm">
+    <CardHeader>
+        <CardTitle>Medium Card</CardTitle>
+    </CardHeader>
+    <CardBody>
+        <CardDescription>
+            This is the medium card body. Lorem ipsum dolor sit amet, 
+            consectetur adipiscing elit. Curabitur nec odio vel dui euismod fermentum. 
+            Curabitur nec odio vel dui euismod fermentum.
+        </CardDescription>
+    </CardBody>
+</Card>
+
+<Card size="lg" maxW="sm">
+    <CardHeader>
+        <CardTitle>Large Card</CardTitle>
+    </CardHeader>
+    <CardBody>
+        <CardDescription>
+            This is the large card body. Lorem ipsum dolor sit amet, 
+            consectetur adipiscing elit. Curabitur nec odio vel dui euismod fermentum. 
+            Curabitur nec odio vel dui euismod fermentum.
+        </CardDescription>
+    </CardBody>
+</Card>
+```
+
+### With form
+
+Example of a card with a multiple fields and a buttons.
+
+> info: Tip: `full` is an alias for `width="full"`.
+
+<Wrapper p={10}>
+    <Card w="md">
+        <CardHeader>
+            <CardTitle>Form Card</CardTitle>
+            <CardDescription>
+                <>Fill in the form below to create an account</>
+            </CardDescription>
+        </CardHeader>
+        <CardBody gap={4}>
+            <Field label="Email" full>
+                <Input name="email" placeholder="Email" full />
+            </Field>
+            <Field label="Password" full>
+                <Input name="password" placeholder="Password" full />
+            </Field>
+        </CardBody>
+        <CardFooter justifyContent="end">
+            <Button variant="outline">Cancel</Button>
+            <Button variant="primary">Sign in</Button>
+        </CardFooter>
+    </Card>
+</Wrapper>
+
+```tsx
+<Card w="md">
+    <CardHeader>
+        <CardTitle>Form Card</CardTitle>
+        <CardDescription>
+            <>Fill in the form below to create an account</>
+        </CardDescription>
+    </CardHeader>
+    <CardBody gap={4}>
+        <Field label="Email" full>
+            <Input name="email" placeholder="Email" full />
+        </Field>
+        <Field label="Password" full>
+            <Input name="password" placeholder="Password" full />
+        </Field>
+    </CardBody>
+    <CardFooter justifyContent="end">
+        <Button variant="outline">Cancel</Button>
+        <Button variant="primary">Sign in</Button>
+    </CardFooter>
+</Card>
+```
+
+### As Link
+
+Example of a card as a link, that navigates to a different page.
+
+<Wrapper p={10}>
+    {    /* not using anchor element, since MDX transforms it with a custom component */}
+    <Card asComp={<RemixLink target="_blank" to="https://github.com/dreamy-ui/dreamy-ui" />} maxW="sm">
+        <CardHeader row alignItems="center" gap={4}>
+            <Image
+                alt="Dreamy UI logo"
+                src="https://dreamy-ui.com/dream.svg"
+                boxSize={"10"}
+            />
+            <Flex column align="start">
+                <CardTitle>Dreamy UI</CardTitle>
+                <Text color="fg.medium" size="sm">dreamy-ui.com</Text>
+            </Flex>
+        </CardHeader>
+        <CardBody>
+            <CardDescription>Create dream websites with next-gen DX and crispy UI. Powered by Panda CSS.</CardDescription>
+        </CardBody>
+        <CardFooter>
+            <Link isExternal href="https://github.com/dreamy-ui/dreamy-ui" fontWeight={500} display={"flex"} alignItems={"center"} gap={1}>
+                <>Star on GitHub <Icon h={4} asComp={<HiExternalLink />} /></>
+            </Link>
+        </CardFooter>
+    </Card>
+</Wrapper>
+
+```tsx
+<Card asComp={<a target="_blank" to="https://github.com/dreamy-ui/dreamy-ui" />} maxW="sm">
+    <CardHeader row alignItems="center" gap={4}>
+        <Image
+            alt="Dreamy UI logo"
+            src="https://dreamy-ui.com/dream.svg"
+            boxSize={"10"}
+        />
+        <Flex column align="start">
+            <CardTitle>Dreamy UI</CardTitle>
+            <Text color="fg.medium" size="sm">dreamy-ui.com</Text>
+        </Flex>
+    </CardHeader>
+    <CardBody>
+        <CardDescription>Create dream websites with next-gen DX and crispy UI. Powered by Panda CSS.</CardDescription>
+    </CardBody>
+    <CardFooter>
+        <Link isExternal href="https://github.com/dreamy-ui/dreamy-ui" fontWeight={500} display={"flex"} alignItems={"center"} gap={1}>
+            <>Star on GitHub <Icon h={4} asComp={<HiExternalLink />} /></>
+        </Link>
+    </CardFooter>
+</Card>
+```
