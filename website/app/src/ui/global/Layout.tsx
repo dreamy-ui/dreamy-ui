@@ -54,6 +54,8 @@ export default function AppLayout({ children }: PropsWithChildren) {
                     inset={0}
                     zIndex={-10}
                     // overflow={"auto"}
+                    overflowY={"visible"}
+                    overflowX={"clip"}
                 >
                     {/* right top */}
                     <Box

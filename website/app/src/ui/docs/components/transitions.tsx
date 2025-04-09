@@ -19,8 +19,8 @@ export function Collapsed(props: CollapseProps) {
                 {...props}
             >
                 <Box
-                    bg={"primary"}
-                    color={"white"}
+                    bg={"fg"}
+                    color={"bg"}
                     p={4}
                     rounded={"md"}
                     w={"full"}
@@ -49,8 +49,8 @@ export function Scaled(props: ScaleProps) {
                 {...props}
             >
                 <Box
-                    bg={"primary"}
-                    color={"white"}
+                    bg={"fg"}
+                    color={"bg"}
                     p={4}
                     rounded={"md"}
                     w={"full"}

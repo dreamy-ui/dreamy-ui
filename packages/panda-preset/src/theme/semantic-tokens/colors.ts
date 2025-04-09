@@ -10,22 +10,44 @@ export function createColorTokens({
 }: PresetOptions) {
     return defineSemanticTokens.colors({
         primary: {
-            value:
-                typeof primaryColor === "string"
-                    ? primaryColor
-                    : {
-                          _light: primaryColor.light,
-                          _dark: primaryColor.dark
-                      }
+            DEFAULT: {
+                value:
+                    typeof primaryColor === "string"
+                        ? primaryColor
+                        : {
+                              _light: primaryColor.light,
+                              _dark: primaryColor.dark
+                          }
+            },
+            fg: {
+                value:
+                    typeof buttonPrimaryTextColor === "string"
+                        ? buttonPrimaryTextColor
+                        : {
+                              _light: buttonPrimaryTextColor.light,
+                              _dark: buttonPrimaryTextColor.dark
+                          }
+            }
         },
         secondary: {
-            value:
-                typeof secondaryColor === "string"
-                    ? secondaryColor
-                    : {
-                          _light: secondaryColor.light,
-                          _dark: secondaryColor.dark
-                      }
+            DEFAULT: {
+                value:
+                    typeof secondaryColor === "string"
+                        ? secondaryColor
+                        : {
+                              _light: secondaryColor.light,
+                              _dark: secondaryColor.dark
+                          }
+            },
+            fg: {
+                value:
+                    typeof buttonSecondaryTextColor === "string"
+                        ? buttonSecondaryTextColor
+                        : {
+                              _light: buttonSecondaryTextColor.light,
+                              _dark: buttonSecondaryTextColor.dark
+                          }
+            }
         },
         primaryButtonText: {
             value:

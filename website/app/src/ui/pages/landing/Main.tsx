@@ -9,10 +9,6 @@ export default function Main() {
     return (
         <Flex
             gap={5}
-            pt={{
-                base: 0,
-                md: 16
-            }}
             col
             full
             pos={"relative"}

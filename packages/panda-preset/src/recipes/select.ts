@@ -315,11 +315,15 @@ export const select = defineSlotRecipe({
             (scheme) => {
                 return {
                     "--selected-item-color":
-                        scheme === "success" || scheme === "warning" || scheme === "info"
-                            ? "color-mix(in srgb, black 87%, transparent)"
-                            : scheme === "none"
-                              ? "colors.bg"
-                              : "color-mix(in srgb, white 87%, transparent)"
+                        scheme === "primary"
+                            ? "{colors.primary.fg}"
+                            : scheme === "secondary"
+                              ? "{colors.secondary.fg}"
+                              : scheme === "success" || scheme === "warning" || scheme === "info"
+                                ? "color-mix(in srgb, black 87%, transparent)"
+                                : scheme === "none"
+                                  ? "colors.bg"
+                                  : "color-mix(in srgb, white 87%, transparent)"
                 } as Record<any, any>;
             },
             "root"
