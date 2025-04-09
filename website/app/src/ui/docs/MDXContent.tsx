@@ -121,9 +121,12 @@ import { HiExternalLink, HiOutlineMail } from "react-icons/hi";
 import { IoAdd, IoClose } from "react-icons/io5";
 import {
     LuAlarmClock,
+    LuBanana,
     LuBattery,
+    LuCherry,
     LuChevronDown,
     LuChevronRight,
+    LuCitrus,
     LuTrash,
     LuWarehouse
 } from "react-icons/lu";
@@ -400,7 +403,10 @@ const icons = {
     LuTrash,
     LuWarehouse,
     LuChevronDown,
-    LuChevronRight
+    LuChevronRight,
+    LuBanana,
+    LuCitrus,
+    LuCherry
 };
 
 const components = {

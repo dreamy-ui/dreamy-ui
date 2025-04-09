@@ -64,7 +64,12 @@ export function Logo() {
                     base: "none",
                     md: path.startsWith("/docs") ? "inline-flex" : "none"
                 }}
-                asComp={<Link to={"/sponsor"} />}
+                asComp={
+                    <Link
+                        isExternal
+                        to={"/sponsor"}
+                    />
+                }
                 variant={"link"}
                 size={"sm"}
                 leftIcon={
