@@ -46,7 +46,7 @@ export default defineConfig({
                                     bg: "currentColor/12",
                                     border: "1px solid",
                                     borderColor: "currentColor/50",
-                                    boxShadow: "inset 0 0 6px {currentColor/30}",
+                                    boxShadow: "inset 0 0 4px {currentColor/12}",
                                     _hover: {
                                         bg: "currentColor/18"
                                     }

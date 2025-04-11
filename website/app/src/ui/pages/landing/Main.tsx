@@ -12,6 +12,7 @@ export default function Main() {
             col
             full
             pos={"relative"}
+            // pt={10}
         >
             <Flex
                 py={2}
@@ -25,7 +26,7 @@ export default function Main() {
                 itemsCenter
             >
                 <Icon as={MdOutlineCloud} />
-                This is a dream!
+                Your Dream component library
             </Flex>
 
             <Heading
