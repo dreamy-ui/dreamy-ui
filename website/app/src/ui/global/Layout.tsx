@@ -1,9 +1,11 @@
 import { MotionFlex, TRANSITION_EASINGS } from "@dreamy-ui/react";
-import { Box, Flex } from "@dreamy-ui/react/rsc";
+import { Flex } from "@dreamy-ui/react/rsc";
 import { useLocation } from "@remix-run/react";
 import { type PropsWithChildren, useState } from "react";
 import { useIsMobile } from "~/src/hooks/useIsMobile";
 import Header from "~/src/ui/global/Header";
+import BlurryGradients from "./BlurryGradients";
+import Footer from "./Footer";
 import MobileMenu from "./mobile/MobileMenu";
 
 export default function AppLayout({ children }: PropsWithChildren) {
@@ -48,64 +50,8 @@ export default function AppLayout({ children }: PropsWithChildren) {
                 >
                     {children}
                 </Flex>
-
-                <Box
-                    pos={"absolute"}
-                    inset={0}
-                    zIndex={-10}
-                    // overflow={"auto"}
-                    overflowY={"visible"}
-                    overflowX={"clip"}
-                >
-                    {/* right top */}
-                    <Box
-                        pos={"absolute"}
-                        bottom={"auto"}
-                        left={"auto"}
-                        right={0}
-                        top={0}
-                        w={"500px"}
-                        h={"500px"}
-                        x={{
-                            base: "0%",
-                            md: "-30%"
-                        }}
-                        y={"20%"}
-                        translate={"auto"}
-                        rounded={"full"}
-                        bg={"rgb(73, 31, 171)"}
-                        opacity={{
-                            _light: 0.15,
-                            _dark: 0.1
-                        }}
-                        blur={"80px"}
-                        filter={"auto"}
-                    />
-                    {/* bottom left */}
-                    <Box
-                        pos={"absolute"}
-                        bottom={"auto"}
-                        right={"auto"}
-                        left={0}
-                        top={0}
-                        w={"750px"}
-                        h={"750px"}
-                        x={"-20%"}
-                        y={{
-                            base: "110%",
-                            md: "150%"
-                        }}
-                        translate={"auto"}
-                        rounded={"full"}
-                        bg={"rgb(205, 60, 190)"}
-                        opacity={{
-                            _light: 0.15,
-                            _dark: 0.1
-                        }}
-                        blur={"80px"}
-                        filter={"auto"}
-                    />
-                </Box>
+                <Footer />
+                <BlurryGradients />
             </MotionFlex>
 
             {isMobile && (

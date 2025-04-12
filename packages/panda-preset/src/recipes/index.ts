@@ -13,6 +13,7 @@ import { modal } from "@/recipes/modal";
 import { popover } from "@/recipes/popover";
 import { progress, progressParts } from "@/recipes/progress";
 import { radio, radioParts } from "@/recipes/radio";
+import { radioCard, radioCardParts } from "@/recipes/radio-card";
 import { select } from "@/recipes/select";
 import { skeleton, skeletonParts } from "@/recipes/skeleton";
 import { slider } from "@/recipes/slider";
@@ -55,6 +56,7 @@ export const recipes = {
     accordion,
     checkbox,
     checkboxCard,
+    radioCard,
     snippet,
     table,
     skeleton,
@@ -77,6 +79,7 @@ export const parts = {
     image: imageParts,
     avatar: avatarParts,
     checkboxCard: checkboxCardParts,
+    radioCard: radioCardParts,
     snippet: snippetParts,
     radio: radioParts,
     progressCircular: progressCircularParts,

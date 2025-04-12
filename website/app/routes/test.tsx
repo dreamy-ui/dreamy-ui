@@ -43,6 +43,7 @@ import {
     PopoverTrigger,
     ProgressCircular,
     Radio,
+    RadioCard,
     RadioGroup,
     Select,
     SelectContent,
@@ -135,6 +136,12 @@ export default function Test() {
             gap={10}
             align={"start"}
         >
+            <RadioCard
+                title={"meow"}
+                description={"sigma boy"}
+                variant={"subtle"}
+            />
+
             <Card>
                 <CardHeader>
                     <CardTitle>Sigma</CardTitle>

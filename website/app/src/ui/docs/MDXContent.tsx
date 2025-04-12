@@ -49,6 +49,7 @@ import {
     Portal,
     ProgressCircular,
     Radio,
+    RadioCard,
     RadioGroup,
     Select,
     SelectContent,
@@ -116,7 +117,8 @@ import { MDXRemote } from "next-mdx-remote";
 import type React from "react";
 import { type PropsWithChildren, type ReactNode, useEffect, useMemo, useState } from "react";
 import { BiHome, BiSearch } from "react-icons/bi";
-import { FiCoffee } from "react-icons/fi";
+import { FaPaypal, FaReact, FaVuejs } from "react-icons/fa";
+import { FiCoffee, FiCreditCard } from "react-icons/fi";
 import { HiExternalLink, HiOutlineMail } from "react-icons/hi";
 import { IoAdd, IoClose } from "react-icons/io5";
 import {
@@ -131,6 +133,8 @@ import {
     LuWarehouse
 } from "react-icons/lu";
 import { PiConfetti } from "react-icons/pi";
+import { RiNextjsLine } from "react-icons/ri";
+import { SiApple, SiReactrouter } from "react-icons/si";
 import type { MdxContent } from "~/src/.server/docs";
 import { PlatformSpecificKbd } from "~/src/ui/docs/components/kbds";
 import {
@@ -178,6 +182,7 @@ import {
 } from "./components/hooks";
 import { ControlledPinInput } from "./components/inputs";
 import { LinkButton } from "./components/others";
+import { ControlledRadioCards, ControlledRadios } from "./components/radioes";
 import { AsyncSelect, ControlledSelect } from "./components/selects";
 import { ControlledSlider, MaxMinSlider } from "./components/sliders";
 import { ControlledSwitch } from "./components/switches";
@@ -232,6 +237,8 @@ const DreamComponents = {
     HStack,
     Divider,
     Avatar,
+    ControlledRadios,
+    ControlledRadioCards,
     Progress,
     Input,
     Textarea,
@@ -241,6 +248,7 @@ const DreamComponents = {
     FieldError,
     FieldErrorIcon,
     FieldHelpText,
+    RadioCard,
     List,
     ListItem,
     BasicModal,
@@ -398,6 +406,13 @@ const icons = {
     PiConfetti,
     IoAdd,
     BiHome,
+    FaReact,
+    RiNextjsLine,
+    FaPaypal,
+    FiCreditCard,
+    SiApple,
+    FaVuejs,
+    SiReactrouter,
     LuAlarmClock,
     LuBattery,
     LuTrash,

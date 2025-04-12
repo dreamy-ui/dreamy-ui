@@ -1,7 +1,4 @@
-import { MotionFlex, TRANSITION_EASINGS } from "@dreamy-ui/react";
 import { Box, Flex, HStack, Heading, Icon, Link, Text } from "@dreamy-ui/react/rsc";
-import { AnimatePresence } from "motion/react";
-import { useState } from "react";
 import { BsGithub } from "react-icons/bs";
 import { FaDiscord } from "react-icons/fa";
 import { FiExternalLink } from "react-icons/fi";
@@ -77,8 +74,6 @@ interface CommunityProps {
 }
 
 function Community({ title, href, icon, description }: CommunityProps) {
-    const [isHovered, setIsHovered] = useState(false);
-
     return (
         <Link
             isExternal
@@ -102,10 +97,6 @@ function Community({ title, href, icon, description }: CommunityProps) {
             }}
             display={"flex"}
             gap={2}
-            pos={"relative"}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            overflow={"hidden"}
         >
             <HStack>
                 <Icon as={icon} />
@@ -122,59 +113,6 @@ function Community({ title, href, icon, description }: CommunityProps) {
             </HStack>
 
             <Text fontWeight={"400"}>{description}</Text>
-
-            <AnimatePresence>
-                {isHovered && (
-                    <MotionFlex
-                        pos={"absolute"}
-                        top={0}
-                        left={0}
-                        right={0}
-                        bottom={0}
-                        initial={{
-                            opacity: 0,
-                            scale: 0.9,
-                            transform: "translate3d(0, 0, 0)"
-                        }}
-                        animate={{
-                            opacity: 1,
-                            scale: 1,
-                            transition: {
-                                duration: 0.3,
-                                easings: TRANSITION_EASINGS.easeOut
-                            }
-                        }}
-                        exit={{
-                            opacity: 0,
-                            scale: 0.9,
-                            transition: {
-                                duration: 0.15,
-                                easings: TRANSITION_EASINGS.easeOut
-                            }
-                        }}
-                        itemsCenter
-                        justify={"center"}
-                        bg={"bg/50"}
-                        backdropBlur={"md"}
-                        backdropFilter={"auto"}
-                    >
-                        <HStack>
-                            <Icon
-                                boxSize={"6"}
-                                as={icon}
-                                color={"primary"}
-                            />
-                            <Text
-                                size={"2xl"}
-                                fontWeight={"semibold"}
-                                color={"primary"}
-                            >
-                                {title}
-                            </Text>
-                        </HStack>
-                    </MotionFlex>
-                )}
-            </AnimatePresence>
         </Link>
     );
 }

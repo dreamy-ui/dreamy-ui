@@ -26,7 +26,7 @@ export default function Main() {
                 itemsCenter
             >
                 <Icon as={MdOutlineCloud} />
-                Your Dream component library
+                V1 has been released!
             </Flex>
 
             <Heading
@@ -63,7 +63,7 @@ export default function Main() {
                 size="lg"
                 color="fg.medium"
             >
-                Build performant, accessible, websites with ease.
+                Build performant, accessible, and beautiful websites with ease.
             </Text>
 
             <HStack mt={5}>

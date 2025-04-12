@@ -11,5 +11,13 @@ export default [
     {
         path: "/sponsor",
         redirect: "https://github.com/sponsors/ImExoOdeex"
+    },
+    {
+        path: ["/source", "/github"],
+        redirect: "https://github.com/dreamy-ui/dreamy-ui"
+    },
+    {
+        path: ["/bluesky"],
+        redirect: "https://bsky.app/profile/dreamy-ui.com"
     }
 ] satisfies Redirect[];

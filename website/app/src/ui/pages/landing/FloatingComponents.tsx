@@ -5,15 +5,12 @@ import {
     FieldHelpText,
     FieldLabel,
     Input,
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
+    PinInput,
+    PinInputField,
     Switch,
     useColorMode
 } from "@dreamy-ui/react";
-import { Flex, Grid, HStack, Heading, Icon, Spinner, Text } from "@dreamy-ui/react/rsc";
-import { LuCat, LuDog, LuLeafyGreen } from "react-icons/lu";
+import { Flex, Grid, Heading, Spinner, Text } from "@dreamy-ui/react/rsc";
 import ExploreComponents from "./ExploreComponents";
 
 export default function FloatingComponents() {
@@ -81,57 +78,14 @@ export default function FloatingComponents() {
             )
         },
         {
-            title: "Select",
+            title: "Pin Input",
             component: (
-                <Field
-                    isRequired
-                    // full
-                    maxW={"270px"}
-                >
-                    <FieldLabel>Favorite animal</FieldLabel>
-                    <Select
-                        full
-                        isClearable
-                    >
-                        <SelectTrigger
-                            // icon={<Icon as={LuCat} />}
-                            placeholder="Select animal"
-                        />
-                        <SelectContent>
-                            <SelectItem value="panda">
-                                <HStack>
-                                    <Icon
-                                        as={LuLeafyGreen}
-                                        boxSize={"4"}
-                                        // color={"fg.medium"}
-                                    />
-                                    <Text>Panda</Text>
-                                </HStack>
-                            </SelectItem>
-                            <SelectItem value="cat">
-                                <HStack>
-                                    <Icon
-                                        as={LuCat}
-                                        boxSize={"4"}
-                                        // color={"fg.medium"}
-                                    />
-                                    <Text>Cat</Text>
-                                </HStack>
-                            </SelectItem>
-                            <SelectItem value="dog">
-                                <HStack>
-                                    <Icon
-                                        as={LuDog}
-                                        boxSize={"4"}
-                                        // color={"fg.medium"}
-                                    />
-                                    <Text>Dog</Text>
-                                </HStack>
-                            </SelectItem>
-                        </SelectContent>
-                    </Select>
-                    <FieldHelpText>Select your favorite animal</FieldHelpText>
-                </Field>
+                <PinInput defaultValue="2137">
+                    <PinInputField />
+                    <PinInputField />
+                    <PinInputField />
+                    <PinInputField />
+                </PinInput>
             )
         }
     ];
@@ -155,6 +109,7 @@ export default function FloatingComponents() {
                         variant={"outline"}
                         center
                         relative
+                        bg={"transparent"}
                         // full
                         // p={4}
                         // pt={14}

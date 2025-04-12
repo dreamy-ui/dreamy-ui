@@ -111,7 +111,7 @@ export function cachified<Value>(options: Omit<CachifiedOptions<Value>, "cache">
     return baseCachified({
         cache: lru,
         ttl: minToMs(15), // 15 minutes is the default TTL
-        swr: minToMs(45),
+        staleWhileRevalidate: minToMs(45),
         ...options
     });
 }
