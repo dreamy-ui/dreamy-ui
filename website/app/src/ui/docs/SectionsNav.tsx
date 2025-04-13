@@ -171,7 +171,7 @@ const MemoSectionButton = memo(function SectionButton({
                 cachePageData(file.slug);
             }}
         >
-            {file.name}
+            {file.name === "Llms" ? "LLMs" : file.name}
             {(isNew || isUpdated) && (
                 <Badge
                     scheme={isCurrent ? "none" : "secondary"}
