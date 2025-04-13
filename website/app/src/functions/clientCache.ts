@@ -48,11 +48,27 @@ export const cacheClientLoader = async <T extends unknown>(
 
 export function useCachedLoaderData<T extends any>() {
     const loaderData = useLoaderData<any>();
+
+    return useClientCache<T>(loaderData);
+}
+
+export function useCachedRouteLoaderData<T extends any>(routeKey: string) {
+    const loaderData = useRouteLoaderData<any>(routeKey);
+
+    return useClientCache<T>(loaderData);
+}
+
+function useClientCache<T extends any>(loaderData: any) {
     const navigate = useNavigate();
     const [currentData, setCurrentData] = useState<any>(loaderData);
 
     // Unpack deferred data from the server
     useSafeLayoutEffect(() => {
+        let cacheKeys = getCacheKeys();
+        cacheKeys.add(loaderData?.key);
+
+        (window as any).cacheKeys = cacheKeys;
+
         // (window as any).cacheKey = loaderData?.key;
         if (loaderData?.serverLoaderPromise) {
             loaderData.serverLoaderPromise
@@ -60,7 +76,10 @@ export function useCachedLoaderData<T extends any>() {
                     /**
                      * Checking if the page has changed, since page can be changed, before the promise resolves.
                      */
-                    // if ((window as any).cacheKey !== loaderData?.key) return;
+                    cacheKeys = getCacheKeys();
+                    if (!cacheKeys.has(loaderData?.key)) {
+                        return;
+                    }
 
                     const newDataString = JSON.stringify(newData);
                     if (newDataString !== JSON.stringify(currentData)) {
@@ -81,6 +100,12 @@ export function useCachedLoaderData<T extends any>() {
         if (JSON.stringify(loaderData) !== JSON.stringify(currentData)) {
             setCurrentData(loaderData);
         }
+
+        return () => {
+            cacheKeys = getCacheKeys();
+            cacheKeys.delete(loaderData?.key);
+            (window as any).cacheKeys = cacheKeys;
+        };
     }, [loaderData]);
 
     return {
@@ -91,46 +116,8 @@ export function useCachedLoaderData<T extends any>() {
     };
 }
 
-export function useCachedRouteLoaderData<T extends any>(routeKey: string) {
-    const loaderData = useRouteLoaderData<any>(routeKey);
-    const navigate = useNavigate();
-    const [currentData, setCurrentData] = useState<any>(loaderData);
-
-    // Unpack deferred data from the server
-    useSafeLayoutEffect(() => {
-        if (loaderData?.serverLoaderPromise) {
-            loaderData.serverLoaderPromise
-                .then((newData: any) => {
-                    // set only if the page hasn't changed
-                    // if ((window as any).cacheKey !== loaderData?.key) return;
-
-                    const newDataString = JSON.stringify(newData);
-                    if (newDataString !== JSON.stringify(currentData)) {
-                        if (loaderData?.key) clientCache.setItem(loaderData.key, newDataString);
-                        setCurrentData(newData);
-                    }
-                })
-                .catch((e: any) => {
-                    const res = e instanceof Response ? e : undefined;
-                    if (res && res.status === 302) {
-                        const to = res.headers.get("Location");
-                        to && navigate(to);
-                    } else {
-                        throw e;
-                    }
-                });
-        }
-        if (JSON.stringify(loaderData) !== JSON.stringify(currentData)) {
-            setCurrentData(loaderData);
-        }
-    }, [loaderData]);
-
-    return {
-        ...currentData,
-        cacheKey: loaderData?.key
-    } as SerializeFrom<T> & {
-        cacheKey?: string;
-    };
+function getCacheKeys() {
+    return ((window as any).cacheKeys as Set<string> | undefined) || new Set<string>();
 }
 
 function constructKey(request: Request) {
