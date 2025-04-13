@@ -97,3 +97,28 @@ Change the Radio size.
 	<Radio value="lg" size="lg">Large</Radio>
 </RadioGroup>
 ```
+
+### Controlled Radio
+
+You can control the Radio state by using `value` and `onChange` in `<RadioGroup />`.
+
+<Wrapper>
+	<ControlledRadios />
+</Wrapper>
+
+```tsx
+export function ControlledRadios() {
+    const [value, setValue] = useState<string | number>("rr");
+
+    return (
+        <RadioGroup
+            value={value}
+            onChange={setValue}
+        >
+            <Radio value="rr">React Router</Radio>
+            <Radio value="next">Next.js</Radio>
+            <Radio value="vue">Vue.js</Radio>
+        </RadioGroup>
+    );
+}
+```

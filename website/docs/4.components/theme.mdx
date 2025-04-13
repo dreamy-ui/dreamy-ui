@@ -1,0 +1,35 @@
+---
+title: Theme
+description: Theme allows to lock between dark and light mode in the children.
+isServerComponent: true
+source: /packages/react/src/components/theme/theme.tsx
+---
+
+## Import
+
+- `DarkTheme` - A simple Box with locked dark theme.
+- `LightTheme` - A simple Box with locked light theme.
+
+```jsx
+import { DarkTheme, LightTheme } from "@dreamy-ui/react/rsc";
+```
+
+## Usage
+
+<Wrapper>
+	<DarkTheme>
+		<Box p={2} rounded={"l1"} bg="bg">This is Dark Theme</Box>
+	</DarkTheme>
+	<LightTheme>
+		<Box p={2} rounded={"l1"} bg="bg">This is Light Theme</Box>
+	</LightTheme>
+</Wrapper>
+
+```tsx
+<DarkTheme>
+	<Box p={2} rounded={"l1"} bg="bg">This is Dark Theme</Box>
+</DarkTheme>
+<LightTheme>
+	<Box p={2} rounded={"l1"} bg="bg">This is Light Theme</Box>
+</LightTheme>
+```

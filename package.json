@@ -5,7 +5,7 @@
 	"private": true,
 	"packageManager": "pnpm@9.1.4",
 	"workspaces": [
-		"packages/**"
+		"packages/*"
 	],
 	"scripts": {
 		"dev:system": "cd packages/system && pnpm run dev",
@@ -13,6 +13,7 @@
 		"dev:website": "cd website && pnpm run dev",
 		"dev:lib": "concurrently \"pnpm run dev:system\" \"pnpm run dev:react\"",
 		"build:system": "cd packages/system && pnpm run panda:codegen && pnpm run build:fast",
+		"codegen": "concurrently \"cd packages/react && pnpm panda codegen\" \"cd website && pnpm panda codegen\"",
 		"build:react": "cd packages/react && pnpm run build:fast",
 		"build:lib": "pnpm run build:system && pnpm run build:react",
 		"typecheck": "concurrently \"cd packages/system && pnpm run typecheck\" \"cd packages/react && pnpm run typecheck\" \"cd website && pnpm run typecheck\"",
@@ -20,7 +21,8 @@
 		"start": "cd website && pnpm run start",
 		"build": "turbo build",
 		"publish": "changeset publish",
-		"storybook": "cd packages/react && pnpm run storybook dev"
+		"storybook": "cd packages/react && pnpm run storybook dev",
+		"sync": "git pull && pnpm i && pnpm run build"
 	},
 	"keywords": [],
 	"author": "imexoodeex",
@@ -28,6 +30,7 @@
 	"devDependencies": {
 		"@biomejs/biome": "1.9.2",
 		"concurrently": "^8.2.2",
+		"kill-port": "^2.0.1",
 		"turbo": "^2.0.14",
 		"typescript": "^5.6.3"
 	},

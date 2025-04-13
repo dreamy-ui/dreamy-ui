@@ -1,0 +1,175 @@
+---
+title: Gotchas
+---
+
+# Gotchas
+
+In this document we'll list some gotchas about how to use Dreamy UI.
+
+## Properly using tokens
+
+See [Tokens docs](/docs/theming/tokens) page to learn about how to use type-safe tokens in your app.
+
+## Lazy loading
+
+Dreamy UI can be used with a lazily loaded motion/react. If your bundler supports lazy loading, you can do it like this:
+
+#### 1. Create a `features.ts` file in your project root. Re-export there needed functions.
+
+```ts
+import { domMax } from "motion/react";
+
+export default domMax;
+```
+
+#### 2. Lazily import the features in your app root.
+
+```tsx {1, 14-18, 20}
+const motionFeatures = () => import("./features").then((mod) => mod.default);
+
+export function Layout({ children }: { children: React.ReactNode }) {
+    return (
+        <html
+            lang="en"
+            suppressHydrationWarning
+            {...getColorModeHTMLProps(colorMode)}
+        >
+            <head>
+                ...
+            </head>
+            <body>
+                <DreamyProvider
+                    motionFeatures={motionFeatures}
+                    useUserPreferenceColorMode
+                    motionStrict
+                >
+                    {children}
+                </DreamyProvider>
+            </body>
+        </html>
+    );
+}
+```
+
+## Fastest way to center a div
+
+Dreamy UI provides various utilities to use, like `center`, which is a `alignItems="center"` and `justifyContent="center"`.
+
+<Wrapper>
+	<Flex
+		center
+		h="100px"
+		p={4}
+		bg={{
+			base: "bg.dark",
+			_dark: "bg.light"
+		}}
+		color="bg"
+		rounded="l1"
+		w="full"
+	>
+		<Text>Centered</Text>
+	</Flex>
+</Wrapper>
+
+```tsx {1}
+<Flex center>
+	<Text>Centered</Text>
+</Flex>
+```
+
+## Making Forms
+
+The best practice is to use `<Field />` component to wrap your form elements with nice label, help text and error message. See [Field docs](/docs/components/field) page to learn more.
+
+<Wrapper>
+	<Field name="name" isRequired>
+		<FieldLabel>Name</FieldLabel>
+		<Input />
+		<FieldHelpText>
+			<>Enter your preferred name</>
+		</FieldHelpText>
+		<FieldError>
+			<>Name cannot be empty</>
+		</FieldError>
+	</Field>
+</Wrapper>
+
+```tsx
+<Field name="name" isRequired>
+	<FieldLabel>Name</FieldLabel>
+	<Input />
+	<FieldHelpText>Enter your preferred name</FieldHelpText>
+	<FieldError>Name cannot be empty</FieldError>
+</Field>
+```
+
+Alternatively use props in Field for label, help text and error.
+
+```tsx
+<Field 
+	isRequired 
+	name="name" 
+	label="Name" 
+	helpText="Enter your preferred name" 
+	error="Name cannot be empty"
+>
+	<Input />
+</Field>
+```
+
+## Boolean style props
+
+Dreamy UI adds panda `utilities` for faster writing styles. Most used CSS properties are available as boolean props.
+
+```tsx
+// full -> width="full"
+// nowrap -> wrap="nowrap"
+// relative -> pos="relative"
+// semibold -> fontWeight="semibold"
+<Box full nowrap relative semibold>
+	Boolean Box
+</Box>
+```
+
+## Polymorphic props
+
+Of any of the Dreamy UI components, you can pass `as` prop to change the element type.
+
+Use `asChild` prop to merge the component with the child component.
+
+Use `asComp` to pass a custom component to the component. Same as `asChild`, but allows merging without the children component.
+
+<Wrapper>
+    <Box as="section">
+        <>I render as section. Inspect to see the element type.</>
+    </Box>
+
+    <LinkButton />
+
+    <LinkButton />
+
+</Wrapper>
+
+```tsx
+<Box as="section">
+    <>I render as section. Inspect to see the element type.</>
+</Box>
+
+<Button asChild>
+	<a href="https://google.com">Google</a>
+</Button>
+
+<Button asComp={<a href="https://google.com" />}>
+    Google
+</Button>
+```
+
+## Customization
+
+If you dislike any of the token, component recipe or default values of the patterns like `<Flex />`, you can customize it by overriding it in the `panda.config.ts`.
+
+Please note that Dreamy UI uses user's `styled-system` as design system, so any changes you make to the `panda.config.ts`, will be applied to all Dreamy UI components.
+This means components are always in sync with variants, patterns and token types.
+
+See [Customization](/docs/theming/customization) for more information. If you struggle, please do not hesitate to ask for help on <a class="fw_semibold trs_colors hover:td_underline c_secondary" href="/discord">Discord</a>.

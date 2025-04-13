@@ -1,4 +1,4 @@
-import { createDreamyPreset } from "@dreamy-ui/system";
+import createDreamyPreset, { dreamyPlugin } from "@dreamy-ui/panda-preset";
 import { defineConfig } from "@pandacss/dev";
 import pandaPreset from "@pandacss/preset-panda";
 
@@ -8,11 +8,10 @@ export default defineConfig({
 	jsxFramework: "react",
 	jsxStyleProps: "all",
 	outExtension: "js",
-	include: [
-		"./src/stories/**/*.{js,jsx,ts,tsx}",
-		".storybook/**/*.{js,jsx,ts,tsx}"
-	],
-	importMap: "@dreamy-ui/system",
+	include: ["./src/**/*.{js,jsx,ts,tsx}", ".storybook/**/*.{js,jsx,ts,tsx}"],
 	exclude: [],
-	presets: [pandaPreset, createDreamyPreset()]
+	importMap: "styled-system",
+	outdir: "styled-system",
+	presets: [pandaPreset, createDreamyPreset()],
+	plugins: [dreamyPlugin]
 });

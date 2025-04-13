@@ -1,6 +1,6 @@
 import type { HTMLDreamProps } from "@/utils/types";
-import { type IconVariantProps, icon } from "@dreamy-ui/system/recipes";
 import { forwardRef } from "react";
+import { type IconVariantProps, icon } from "styled-system/recipes";
 import { dreamy } from "../factory";
 
 export interface IconProps extends HTMLDreamProps<"svg">, IconVariantProps {}

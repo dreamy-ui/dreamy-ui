@@ -1,0 +1,30 @@
+---
+title: useCanUseDOM
+description: useCanUseDOM returns a boolean, which tells, if user has hydrated.
+isServerComponent: false
+source: /packages/react/src/provider/dreamy-provider.tsx
+---
+
+## Import
+
+```tsx
+import { useCanUseDOM } from "@dreamy-ui/react";
+```
+
+## Usage
+
+`useCanUseDOM` returns a boolean value, which tells, if user has hydrated.
+
+Refresh the page to see the effect. It will be `false` initially and `true` after hydration.
+
+<Wrapper>
+	<UseCanUseDOM />
+</Wrapper>
+
+```tsx
+export function useCanUseDOM() {
+	const canUseDOM = useCanUseDOM();
+
+	return <Text>Can use DOM: {canUseDOM ? "Yes" : "No"}</Text>;
+}
+```

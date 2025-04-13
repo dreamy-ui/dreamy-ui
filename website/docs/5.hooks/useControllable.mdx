@@ -1,0 +1,94 @@
+---
+title: useControllable
+description: useControllable is a hook that allows you to control the state of a component.
+isServerComponent: false
+source: /packages/react/src/hooks/use-controllable.tsx
+---
+
+## Import
+
+```tsx
+import { useControllable } from "@dreamy-ui/react";
+```
+
+## Usage
+
+`useControllable` allows you to control the state of a component.
+
+<Wrapper>
+	<UseControllable />
+</Wrapper>
+
+```tsx
+export function UseControllable() {
+    const { toast } = useToast();
+    const { isOpen, onOpen, onClose, onToggle, isControlled } = useControllable({
+        defaultIsOpen: false,
+        onClose: () =>
+            toast({
+                title: "Close",
+                status: "error"
+            }),
+        onOpen: () =>
+            toast({
+                title: "Open",
+                status: "success"
+            })
+    });
+
+    return (
+        <Flex
+            col
+            gap={2}
+        >
+            <Flex
+                wrapped
+                gap={2}
+            >
+                <Button onClick={onOpen}>Open</Button>
+                <Button onClick={onClose}>Close</Button>
+                <Button onClick={onToggle}>Toggle</Button>
+            </Flex>
+            <Text>Is open: {isOpen ? "Yes" : "No"}</Text>
+            <Text>Is controlled: {isControlled ? "Yes" : "No"}</Text>
+        </Flex>
+    );
+}
+```
+
+### Use with components
+
+This hook should be used with the Dreamy components, like `Popover`, `Menu`, `Modal`, etc. To easily control the open/close state of the component.
+
+<Wrapper>
+	<UseControllableModal />
+</Wrapper>
+
+```tsx
+export function UseControllableModal() {
+    const { isOpen, onOpen, onClose } = useControllable();
+
+    return (
+        <>
+            <Text>Is open: {isOpen ? "Yes" : "No"}</Text>
+            <Button onClick={onOpen}>Open</Button>
+            <Modal
+                isOpen={isOpen}
+                onClose={onClose}
+            >
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalCloseButton />
+                    <ModalHeader>Hey!</ModalHeader>
+                    <ModalBody>
+                        <Text>This is a modal body</Text>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button onClick={onClose}>Close</Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+        </>
+    );
+}
+```

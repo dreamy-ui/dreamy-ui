@@ -51,25 +51,27 @@ You can set the size of the progress by using the `size` prop.
 You can set the color of the progress by using the `scheme` prop.
 
 <Wrapper>
-	<VStack gap={5}>
+	<VStack gap={5} full>
 		<Progress scheme="primary" value={50} aria-label="Progress" />
 		<Progress scheme="secondary" value={50} aria-label="Progress" />
 		<Progress scheme="success" value={50} aria-label="Progress" />
 		<Progress scheme="warning" value={50} aria-label="Progress" />
 		<Progress scheme="error" value={50} aria-label="Progress" />
 		<Progress scheme="info" value={50} aria-label="Progress" />
+		<Progress scheme="none" value={50} aria-label="Progress" />
 	</VStack>
 </Wrapper>
 
 ```tsx
-<VStack gap={5}>
+<VStack gap={5} full>
     <Progress scheme="primary" value={50} aria-label="Progress" />
     <Progress scheme="secondary" value={50} aria-label="Progress" />
     <Progress scheme="success" value={50} aria-label="Progress" />
     <Progress scheme="warning" value={50} aria-label="Progress" />
     <Progress scheme="error" value={50} aria-label="Progress" />
     <Progress scheme="info" value={50} aria-label="Progress" />
-</VStack>
+    <Progress scheme="none" value={50} aria-label="Progress" />
+</VStack>	
 ```
 
 ### Indeterminate Progress

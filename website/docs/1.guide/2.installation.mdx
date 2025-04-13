@@ -4,24 +4,30 @@ title: Installation
 
 # Install Dreamy UI
 
-To install Dreamy UI, go to your project directory and run the following command:
+If you are using one of the following frameworks, please follow the corresponding guide:
 
-```bash
-pnpm add @dreamy-ui/react @dreamy-ui/system motion @pandacss/dev @pandacss/preset-panda
-```
+- [Next.js](/docs/frameworks/next.js)
+- [React Router](/docs/frameworks/react-router)
+- [Remix](/docs/frameworks/remix)
+- [Vite](/docs/frameworks/vite)
 
 ### 1. Follow panda CSS installation steps
 
 Install panda by following the [panda CSS installation](https://panda-css.com/docs/overview/getting-started#installation) for your framework.
 
-### 2. Add Dream preset
+### 2. Install Dreamy UI
+
+```bash
+pnpm add @dreamy-ui/react @dreamy-ui/panda-preset motion
+```
+
+### 3. Add Dream preset
 
 After installing, you should configure your panda config with Dream preset. Copy and paste the following code into your `panda.config.ts` file:
 
-```ts
-import { createDreamPreset } from "@dreamy-ui/system";
+```ts {1, 10-16}
+import createDreamyPreset, { dreamyPlugin } from "@dreamy-ui/panda-preset";
 import { defineConfig } from "@pandacss/dev";
-import pandaPreset from "@pandacss/preset-panda";
 
 export default defineConfig({
 	preflight: true,
@@ -29,14 +35,13 @@ export default defineConfig({
     jsxFramework: "react",
     jsxStyleProps: "all",
     outExtension: "js",
-    importMap: "@dreamy-ui/system",
 	include: [
 		"./app/**/*.{js,jsx,ts,tsx}", // Replace with your app source directory
 	],
 	presets: [
-        pandaPreset,
-        createDreamPreset()
+        createDreamyPreset()
     ],
+    plugins: [dreamyPlugin],
 	theme: {
 		extend: {}
 	},
@@ -49,25 +54,42 @@ export default defineConfig({
 });
 ```
 
-### 3. Add Dream Provider
+### 4. Add styled-system alias to tsconfig.json and next.config.ts
+
+Add styled-system alias to your compiler config. That's how it would like using vite.
+
+```ts {2-6}
+export default defineConfig({
+	resolve: {
+		alias: {
+			"styled-system": path.resolve(__dirname, "./styled-system")
+		}
+	},
+	...
+})
+```
+
+
+### 5. Add Dream Provider
 
 Add `DreamyProvider` to the root of your app. It is a wrapper for your app, which provides Dreamy UI with all the necessary context.
 
 ```tsx
 import { DreamyProvider } from "@dreamy-ui/react";
+import domMax from "motion/react";
 
 export default function App() {
 	return (
-		<DreamyProvider>
+		<DreamyProvider motionFeatures={domMax}>
 			<YourApp />
 		</DreamyProvider>
 	);
 }
 ```
 
-### 4. Try and see Dream in action
+### 6. Try and see Dream in action
 
-Create a new component and use some Dreamy UI components.
+Create a new component and use some Dreamy UI components!
 
 ```tsx
 import { Button } from "@dreamy-ui/react";
@@ -80,10 +102,3 @@ export default function Index() {
 	);
 }
 ```
-
-## Framework guides
-
-- [Remix](/docs/frameworks/remix)
-- [Next.js](/docs/frameworks/next.js)
-- [Vite](/docs/frameworks/vite)
-

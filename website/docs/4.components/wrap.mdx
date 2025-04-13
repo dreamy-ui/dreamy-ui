@@ -1,0 +1,134 @@
+---
+title: Wrap
+description: Wrap is used to stack items with a gap and to wrap them if there is no space left.
+isServerComponent: true
+source: /packages/react/src/components/wrap/wrap.tsx
+---
+
+## Import
+
+- `Wrap` - The Wrap component.
+
+```tsx
+import { Wrap } from "@dreamy-ui/react/rsc";
+```
+
+## Usage
+
+<Wrapper>
+	<Wrap>
+		{Array.from({ length: 10 }).map((_, index) => (
+			<Flex center key={index} bg="green.400" boxSize="100px" color="black/87">
+				{index}
+			</Flex>
+		))}
+	</Wrap>
+</Wrapper>
+
+```tsx
+<Wrap>
+	{Array.from({ length: 10 }).map((_, index) => (
+		<Flex center key={index} bg="green.400" boxSize="100px" color="black/87">
+			{index}
+		</Flex>
+	))}
+</Wrap>
+```
+
+### Gap
+
+Use the `gap` prop to set the gap between items.
+
+<Wrapper>
+	<Wrap gap={10}>
+		{Array.from({ length: 10 }).map((_, index) => (
+			<Flex center key={index} bg="green.400" boxSize="100px" color="black/87">
+				{index}
+			</Flex>
+		))}
+	</Wrap>
+</Wrapper>
+
+```tsx 
+<Wrap gap={10}>
+	{Array.from({ length: 10 }).map((_, index) => (
+		<Flex center key={index} bg="green.400" boxSize="100px" color="black/87">
+			{index}
+		</Flex>
+	))}
+</Wrap>
+```
+
+### Align
+
+Use the `align` prop to set the alignment of the items.
+
+<Wrapper>
+	<Wrap align="start">
+		{Array.from({ length: 10 }).map((_, index) => (
+			<Flex center key={index} bg="green.400" boxSize={index % 2 === 0 ? "150px" : "100px"} color="black/87">
+				{index}
+			</Flex>
+		))}
+	</Wrap>
+</Wrapper>
+
+```tsx
+<Wrap align="start">
+	{Array.from({ length: 10 }).map((_, index) => (
+		<Flex center key={index} bg="green.400" boxSize={index % 2 === 0 ? "150px" : "100px"} color="black/87">
+			{index} 
+		</Flex>
+	))}
+</Wrap>
+```
+
+### Justify
+
+Use the `justify` prop to set the justification of the items.
+
+<Wrapper>
+	<Wrap justify="center">
+		{Array.from({ length: 10 }).map((_, index) => (
+			<Flex center key={index} bg="green.400" boxSize="100px" color="black/87">
+				{index}
+			</Flex>
+		))}
+	</Wrap>
+</Wrapper>
+
+```tsx
+<Wrap justify="center">  
+	{Array.from({ length: 10 }).map((_, index) => (
+		<Flex center key={index} bg="green.400" boxSize="100px" color="black/87">
+			{index}
+		</Flex>
+	))}
+</Wrap>
+```
+
+### Row and Column Gap
+
+Use the `rowGap` and `columnGap` props to set the gap between rows and columns.
+
+<Wrapper>
+	<Wrap rowGap={10} columnGap={5}>
+		{Array.from({ length: 10 }).map((_, index) => (
+			<Flex center key={index} bg="green.400" boxSize="100px" color="black/87">
+				{index}
+			</Flex>
+		))}
+	</Wrap>
+</Wrapper>
+
+```tsx
+<Wrap rowGap={10} columnGap={5}>
+	{Array.from({ length: 10 }).map((_, index) => (
+		<Flex center key={index} bg="green.400" boxSize="100px" color="black/87">
+			{index} 
+		</Flex>
+	))}
+</Wrap>
+```
+
+

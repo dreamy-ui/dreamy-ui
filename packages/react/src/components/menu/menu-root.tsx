@@ -3,7 +3,7 @@ import { Popover, type PopoverProps } from "@/components/popover";
 import { Box } from "@/rsc";
 import type { ReactNode } from "react";
 import { MenuProvider } from "./menu-context";
-import { MenuDescendantsProvider, type UseMenuProps, useMenu } from "./use-menu";
+import { type UseMenuProps, useMenu } from "./use-menu";
 
 export interface MenuProps extends UseMenuProps {
     /**
@@ -32,9 +32,7 @@ export function MenuRoot({ children, className, placement, ...props }: MenuProps
                     reduceMotion={ctx.reduceMotion}
                     {...props.popoverProps}
                 >
-                    <MenuDescendantsProvider value={ctx.descendants}>
-                        {children}
-                    </MenuDescendantsProvider>
+                    {children}
                 </Popover>
             </Box>
         </MenuProvider>

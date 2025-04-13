@@ -1,5 +1,5 @@
 {
-	"include": ["./src/**/*.ts", "./src/**/*.tsx"],
+	"include": ["./src/**/*.ts", "./src/**/*.tsx", "styled-system"],
 	"compilerOptions": {
 		"lib": ["DOM", "DOM.Iterable", "ESNext"],
 		"outDir": "dist",
@@ -16,7 +16,8 @@
 		"forceConsistentCasingInFileNames": true,
 		"rootDir": ".",
 		"paths": {
-			"@/*": ["./src/*"]
+			"@/*": ["./src/*"],
+			"styled-system/*": ["./styled-system/*"]
 		}
 	}
 }

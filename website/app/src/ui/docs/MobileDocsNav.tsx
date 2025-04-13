@@ -53,7 +53,7 @@ function DocsNav() {
         <Flex
             col
             borderBottom="1px solid"
-            borderColor="border.default"
+            borderColor="border"
         >
             <Button
                 rounded={"none"}
@@ -127,7 +127,7 @@ function OnThisPageNav() {
         <Flex
             col
             borderBottom="1px solid"
-            borderColor="border.default"
+            borderColor="border"
         >
             <Button
                 rounded={"none"}

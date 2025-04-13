@@ -1,7 +1,7 @@
 import { dreamy } from "@/components/factory";
 import type { HTMLDreamProps } from "@/utils/types";
-import { type ListVariantProps, list } from "@dreamy-ui/system/recipes";
 import { forwardRef } from "react";
+import { type ListVariantProps, list } from "styled-system/recipes";
 
 // DTS build fails if I try to use generics and HTMLDreamProps generic in HTMLDreamProps has to be constant
 export interface ListProps extends HTMLDreamProps<"ol">, ListVariantProps {

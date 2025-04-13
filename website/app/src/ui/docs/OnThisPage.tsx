@@ -12,7 +12,7 @@ import { useLocation } from "@remix-run/react";
 import { Fragment, memo, useState } from "react";
 import { BiChevronUp, BiEdit } from "react-icons/bi";
 import { useSections } from "~/routes/docs";
-import { useDoc } from "~/routes/docs.$section.$page";
+import { useDoc } from "~/src/hooks/useDoc";
 import { Link } from "~/src/ui/global/Link";
 
 export default function OnThisPage() {
@@ -86,6 +86,7 @@ export const OnThisPageHeadings = memo((props: FlexProps) => {
                             color: "fg",
                             textDecoration: "underline"
                         }}
+                        fontWeight={500}
                     >
                         {heading.text}
                     </Link>
@@ -97,7 +98,7 @@ export const OnThisPageHeadings = memo((props: FlexProps) => {
                                     to={`#${subHeading.id}`}
                                     pl={2}
                                     // size={"sm"}
-                                    fontWeight={500}
+                                    fontWeight={400}
                                     transition={"color 0.2s"}
                                     color={"fg.medium"}
                                     _hover={{
@@ -168,6 +169,7 @@ function ActionButtons() {
                     />
                 }
                 rightIcon={<Icon as={BiEdit} />}
+                fontWeight={500}
             >
                 Edit this page
             </Button>
@@ -179,6 +181,7 @@ function ActionButtons() {
                 opacity={hasScrolled ? 1 : 0}
                 transition={"opacity 0.2s"}
                 transitionTimingFunction={"ease-in-out"}
+                fontWeight={500}
             >
                 Back to top
             </Button>

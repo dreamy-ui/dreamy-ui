@@ -9,13 +9,10 @@ export default function Main() {
     return (
         <Flex
             gap={5}
-            pt={{
-                base: 0,
-                md: 16
-            }}
             col
-            wFull
+            full
             pos={"relative"}
+            // pt={10}
         >
             <Flex
                 py={2}
@@ -29,7 +26,7 @@ export default function Main() {
                 itemsCenter
             >
                 <Icon as={MdOutlineCloud} />
-                This is a dream!
+                V1 has been released!
             </Flex>
 
             <Heading
@@ -66,7 +63,7 @@ export default function Main() {
                 size="lg"
                 color="fg.medium"
             >
-                Build performant, accessible, websites with ease.
+                Build performant, accessible, and beautiful websites with ease.
             </Text>
 
             <HStack mt={5}>

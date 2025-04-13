@@ -2,9 +2,8 @@
 
 import { Button, type UniversalButtonProps } from "@/components/button/button";
 import type { HTMLDreamProps } from "@/utils/types";
-import { css, cx } from "@dreamy-ui/system/css";
-import type { ButtonVariantProps } from "@dreamy-ui/system/recipes";
 import { forwardRef } from "react";
+import type { ButtonVariantProps } from "styled-system/recipes";
 
 interface Props extends UniversalButtonProps {
     /**
@@ -23,22 +22,12 @@ export interface IconButtonProps
         Props {}
 
 export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
-    ({ isLoading, isDisabled, icon, ...props }, ref) => {
+    ({ icon, ...props }, ref) => {
         return (
             <Button
                 ref={ref}
-                data-loading={isLoading}
-                data-disabled={isDisabled}
-                disabled={isDisabled || isLoading}
                 {...props}
-                className={cx(
-                    css({
-                        px: "0 !important",
-                        py: "0 !important",
-                        aspectRatio: 1
-                    }),
-                    props.className
-                )}
+                data-type={"icon-button"}
             >
                 {icon}
             </Button>

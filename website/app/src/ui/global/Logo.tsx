@@ -47,7 +47,7 @@ export function Logo() {
                         <Heading size={"xl"}>Your UI</Heading>
                     </MotionBox>
                 </Box>
-                <Badge scheme={"secondary"}>Beta</Badge>
+                <Badge scheme={"secondary"}>v1</Badge>
             </HStack>
 
             <Divider
@@ -64,7 +64,12 @@ export function Logo() {
                     base: "none",
                     md: path.startsWith("/docs") ? "inline-flex" : "none"
                 }}
-                asComp={<Link to={"/sponsor"} />}
+                asComp={
+                    <Link
+                        isExternal
+                        to={"/sponsor"}
+                    />
+                }
                 variant={"link"}
                 size={"sm"}
                 leftIcon={

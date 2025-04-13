@@ -110,7 +110,7 @@ function Feature({ title, description, icon }: FeatureProps) {
             py={4}
             rounded={"l2"}
             border={"1px solid"}
-            borderColor={"border.muted"}
+            borderColor={"border"}
             bg={"bg/70"}
             backdropBlur={"sm"}
             backdropFilter={"auto"}

@@ -1,5 +1,5 @@
+import { Box } from "@/components/box/box";
 import type { HTMLDreamProps } from "@/utils/types";
-import { Box } from "@dreamy-ui/system/jsx";
 import { forwardRef } from "react";
 import { Collapse, type CollapseProps } from "../transitions";
 import { useAccordionContext, useAccordionItemContext } from "./accordion-context";

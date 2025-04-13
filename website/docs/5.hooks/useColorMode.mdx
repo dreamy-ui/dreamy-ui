@@ -1,0 +1,35 @@
+---
+title: useColorMode
+description: useColorMode allows to get, set or toggle the color mode of your application.
+isServerComponent: false
+source: /packages/react/src/provider/dreamy-provider.tsx
+---
+
+## Import
+
+```tsx
+import { useColorMode } from "@dreamy-ui/react";
+```
+
+## Usage
+
+<Wrapper>
+	<UseColorMode />
+</Wrapper>
+
+```tsx
+export function UseColorMode() {
+	const { colorMode, setColorMode, toggleColorMode } = useColorMode();
+
+	return (
+		<Flex col gap={2}>
+			<Text>Current color mode: {colorMode}</Text>
+			<Flex wrapped gap={2}>
+				<Button onClick={() => setColorMode("light")}>Light</Button>
+				<Button onClick={() => setColorMode("dark")}>Dark</Button>
+				<Button onClick={toggleColorMode}>Toggle</Button>
+			</Flex>
+		</Flex>
+	);
+}
+```

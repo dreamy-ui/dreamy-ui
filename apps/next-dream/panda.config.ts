@@ -1,21 +1,20 @@
-import { createDreamyPreset } from "@dreamy-ui/system";
+import createDreamyPreset, { dreamyPlugin } from "@dreamy-ui/panda-preset";
 import { defineConfig } from "@pandacss/dev";
-import pandaPreset from "@pandacss/preset-panda";
 
 export default defineConfig({
     preflight: true,
     include: ["./src/**/*.{js,jsx,ts,tsx}"],
-    importMap: "@dreamy-ui/system",
     jsxFramework: "react",
     jsxStyleProps: "all",
     outExtension: "js",
+    importMap: "styled-system",
     presets: [
-        pandaPreset,
         createDreamyPreset({
             rounded: "sm"
         })
     ],
     theme: {
         extend: {}
-    }
+    },
+    plugins: [dreamyPlugin]
 });

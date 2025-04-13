@@ -1,6 +1,6 @@
 import { runIfFn } from "@/utils/run-if-fn";
-import { type SwitchRecipeVariantProps, switchRecipe } from "@dreamy-ui/system/recipes";
 import { forwardRef } from "react";
+import { type SwitchRecipeVariantProps, switchRecipe } from "styled-system/recipes";
 import { MotionBox } from "../box";
 import { dreamy } from "../factory";
 import { VisuallyHiddenInput } from "../visually-hidden";

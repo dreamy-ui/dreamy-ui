@@ -8,19 +8,20 @@
 		"build": "remix vite:build && tsup",
 		"dev": "cross-env NODE_ENV=development node --import=tsx --watch --watch-path=./server server/server.ts -",
 		"start": "cross-env NODE_ENV=production node --env-file .env build/server/server.js",
+		"prebuild": "panda codegen",
 		"typecheck": "tsc"
 	},
 	"dependencies": {
 		"@dreamy-ui/react": "workspace:*",
-		"@dreamy-ui/system": "workspace:*",
+		"@dreamy-ui/panda-preset": "workspace:*",
 		"@epic-web/cachified": "^5.2.0",
 		"@epic-web/remember": "^1.1.0",
 		"@mdx-js/mdx": "^3.0.1",
 		"@mdx-js/react": "^3.0.1",
 		"@mdx-js/rollup": "^3.0.1",
 		"@pandabox/unplugin": "^0.1.3",
-		"@pandacss/preset-panda": "^0.51.1",
-		"@pandacss/studio": "^0.51.1",
+		"@pandacss/preset-panda": "^0.53.0",
+		"@pandacss/studio": "^0.53.0",
 		"@remix-run/css-bundle": "^2.15.0",
 		"@remix-run/express": "^2.11.2",
 		"@remix-run/node": "^2.15.0",
@@ -59,7 +60,7 @@
 		"zod": "^3.23.8"
 	},
 	"devDependencies": {
-		"@pandacss/dev": "^0.51.1",
+		"@pandacss/dev": "^0.53.0",
 		"@remix-run/dev": "^2.15.0",
 		"@remix-run/fs-routes": "^2.15.0",
 		"@remix-run/route-config": "^2.15.0",

@@ -11,10 +11,9 @@
 	},
 	"dependencies": {
 		"@dreamy-ui/react": "workspace:*",
-		"@dreamy-ui/system": "workspace:*",
+		"@dreamy-ui/panda-preset": "workspace:*",
 		"@pandabox/unplugin": "^0.1.3",
 		"@pandacss/dev": "^0.51.1",
-		"@pandacss/preset-panda": "^0.51.1",
 		"motion": "^12.0.5",
 		"next": "15.1.2",
 		"react": "19.0.0",

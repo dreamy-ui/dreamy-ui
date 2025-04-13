@@ -1,6 +1,6 @@
 import type { HTMLDreamProps } from "@/utils/types";
-import { type SkeletonVariantProps, skeleton } from "@dreamy-ui/system/recipes";
 import { forwardRef } from "react";
+import { type SkeletonVariantProps, skeleton } from "styled-system/recipes";
 import { dreamy } from "../factory";
 
 export interface SkeletonProps extends HTMLDreamProps<"div">, SkeletonVariantProps {}

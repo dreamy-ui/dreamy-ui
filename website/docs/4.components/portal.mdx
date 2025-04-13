@@ -1,0 +1,32 @@
+---
+title: Portal
+description: Portal can be used to place elements outside of the current DOM hierarchy.
+isServerComponent: true
+source: /packages/react/src/components/Portal/Portal.tsx
+---
+
+## Import
+
+-   `Portal` - The Portal component.
+
+```jsx
+import { Portal } from "@dreamy-ui/react/rsc";
+```
+
+## Usage
+
+Portal is useful when you need to render a component at the end of document for some reason.
+
+Check the end of `document.body` in the dev tools for the rendered component, in the empty wrapper below.
+
+<Wrapper>
+	<Portal>
+		<div>Hello</div>
+	</Portal>
+</Wrapper>
+
+```tsx
+<Portal>
+	<div>Hello</div>
+</Portal>
+```

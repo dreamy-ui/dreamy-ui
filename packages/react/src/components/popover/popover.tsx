@@ -5,7 +5,7 @@ import { PopoverFooterBase } from "@/components/popover/popover-footer";
 import { PopoverHeaderBase } from "@/components/popover/popover-header";
 import { PopoverRoot } from "@/components/popover/popover-root";
 import { createStyleContext } from "@/components/style-context";
-import { popover } from "@dreamy-ui/system/recipes";
+import { popover } from "styled-system/recipes";
 import { PopoverAnchor } from "./popover-anchor";
 import { PopoverArrow } from "./popover-arrow";
 import { PopoverTrigger } from "./popover-trigger";

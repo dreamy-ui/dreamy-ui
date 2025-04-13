@@ -3,7 +3,6 @@ title: Flex
 description: Flex is a `div` tag that is flexbox by default.
 isServerComponent: true
 source: /packages/react/src/components/flex/flex.tsx
-themeSource: /packages/system/styled-system/jsx/flex.js
 ---
 
 ## Import
@@ -44,70 +43,134 @@ import { Flex } from "@dreamy-ui/react/rsc";
 </Flex>
 ```
 
-### Examples
+### Direction
 
-Using **boolean props**
+Use the `direction` or `flexDir` prop to change the direction of the flex container.
 
 <Wrapper>
-	<Flex wFull contentBetween itemsCenter>
-		<Heading>Flex</Heading>
-    <Button variant="primary">
-        <>Button</>
-    </Button>
+	<Flex direction="column" gap={4} full>
+        {Array.from({length: 3}).map((_, i) => (
+            <Flex p={2} key={i} color="black/87" bg="green.400" w="full">
+                {i}
+            </Flex>
+        ))}
 	</Flex>
 </Wrapper>
 
 ```tsx
-<Flex wFull contentBetween itemsCenter>
-    <Heading>Flex</Heading>
-    <Button variant="primary">
-        Button
-    </Button>
+<Flex direction="column" gap={4} full>
+    {Array.from({length: 3}).map((_, i) => (
+        <Flex p={2} key={i} color="black/87" bg="green.400" w="full">
+            {i}
+        </Flex>
+    ))}
 </Flex>
 ```
 
-Using **props**
+### Align
+
+Use the `align` or `alignItems` prop to change the alignment of the flex items.
 
 <Wrapper>
-	<Flex w="full" justifyContent="space-between" alignItems="center">
-    <Heading>Flex</Heading>
-    <Button variant="primary">
-        <>Button</>
-    </Button>
+	<Flex align="center" gap={4} full>
+		<Flex bg="green.400" color="black/87" w="100px" h="4" center>
+			<>1</>
+		</Flex>
+		<Flex bg="green.400" color="black/87" w="100px" h="6" center>
+			<>2</>
+		</Flex>
+        <Flex bg="green.400" color="black/87" w="100px" h="8" center>
+			<>3</>
+		</Flex>
 	</Flex>
 </Wrapper>
 
 ```tsx
-<Flex w="full" justifyContent="space-between" alignItems="center">
-    <Heading>Flex</Heading>
-    <Button variant="primary">
-        Button
-    </Button>
+<Flex align="center" gap={4} full>
+    {Array.from({length: 3}).map((_, i) => (
+        <Flex p={2} key={i} color="black/87" bg="green.400" w="100px" h="4" center>
+            {i}
+        </Flex>
+    ))}
 </Flex>
 ```
 
-Using **className css**
-  
+### Justify
+
+Use the `justify` or `justifyContent` prop to change the justification of the flex items.
+
 <Wrapper>
-	<Flex w="full" justifyContent="space-between" alignItems="center">
-		<Heading>Flex</Heading>
-		<Button variant="primary">
-        <>Button</>
-		</Button>
+	<Flex justify="center" gap={4} full>
+		{Array.from({length: 3}).map((_, i) => (
+            <Flex key={i} bg="green.400" color="black/87" w="100px" p={2} center>
+                {i}
+            </Flex>
+        ))}
 	</Flex>
 </Wrapper>
 
+```tsx
+<Flex justify="center" gap={4} full>
+    {Array.from({length: 3}).map((_, i) => (
+        <Flex key={i} bg="green.400" color="black/87" w="100px" p={2} center>
+            {i}
+        </Flex>
+    ))}
+</Flex>
+```
+
+
+### gap
+
+Use the `gap` prop to change the gap between the flex items.
+
+<Wrapper>
+	<Flex gap={10} full>
+		{Array.from({length: 3}).map((_, i) => (
+            <Flex key={i} bg="green.400" color="black/87" w="100px" p={2} center>
+                {i}
+            </Flex>
+        ))}
+	</Flex>
+</Wrapper>
+
+```tsx
+<Flex gap={10} full>
+    {Array.from({length: 3}).map((_, i) => (
+        <Flex key={i} bg="green.400" color="black/87" w="100px" p={2} center>
+            {i}
+        </Flex>
+    ))}
+</Flex>
+```
+
+### Wrap
+
+Use the `wrap` prop to change the wrapping of the flex items.
+
+
+<Wrapper>
+	<Flex wrap="wrap" gap={4} full>
+		{Array.from({length: 10}).map((_, i) => (
+            <Flex key={i} bg="green.400" color="black/87" w="100px" p={2} center>
+                {i}
+            </Flex>
+        ))}
+	</Flex>
+</Wrapper>
+
+> info: Tip: You can use `<Wrap />` component or use `wrapped` utility prop to set `flexWrap` to `wrap`.
 ```tsx
 <Flex 
-    className={css({
-      w: "full",
-      justifyContent: "space-between",
-      alignItems: "center"
-    })}
+    wrap="wrap"
+    // or: wrapped
+    gap={4}
+    full
 >
-    <Heading>Flex</Heading>
-    <Button variant="primary">
-        Button
-    </Button>
+    {Array.from({length: 10}).map((_, i) => (
+        <Flex key={i} bg="green.400" color="black/87" w="100px" p={2} center>
+            {i}
+        </Flex>
+    ))}
 </Flex>
-````
+```

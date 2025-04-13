@@ -3,7 +3,6 @@ title: Grid
 description: Grid is a `div` tag that is Gridbox by default.
 isServerComponent: true
 source: /packages/react/src/components/grid/grid.tsx
-themeSource: /packages/system/styled-system/patterns/grid.js
 ---
 
 ## Import
@@ -58,3 +57,36 @@ Base usage of a grid.
     <GridItem bg='purple.400' p={2}>3</GridItem>
 </Grid>
 ```
+
+### Min child width
+
+Use the `minChildWidth` prop to set the minimum width of the child and make grid responsive.
+
+<Wrapper>
+	<Grid color='white' w='full' minChildWidth='150px'>
+        <GridItem bg='green.400' p={2} color='black'>1</GridItem>
+        <GridItem bg='blue.400' p={2}>2</GridItem>
+        <GridItem bg='purple.400' p={2}>3</GridItem>
+        <GridItem bg='green.400' p={2} color='black'>1</GridItem>
+        <GridItem bg='blue.400' p={2}>2</GridItem>
+        <GridItem bg='purple.400' p={2}>3</GridItem>
+        <GridItem bg='green.400' p={2} color='black'>1</GridItem>
+        <GridItem bg='blue.400' p={2}>2</GridItem>
+        <GridItem bg='purple.400' p={2}>3</GridItem>
+	</Grid>
+</Wrapper>
+
+```tsx
+<Grid color='white' w='full' minChildWidth='150px'>
+    <GridItem bg='green.400' p={2} color='black'>1</GridItem>
+    <GridItem bg='blue.400' p={2}>2</GridItem>
+    <GridItem bg='purple.400' p={2}>3</GridItem>
+    <GridItem bg='green.400' p={2} color='black'>1</GridItem>
+    <GridItem bg='blue.400' p={2}>2</GridItem>
+    <GridItem bg='purple.400' p={2}>3</GridItem>
+    <GridItem bg='green.400' p={2} color='black'>1</GridItem>
+    <GridItem bg='blue.400' p={2}>2</GridItem>
+    <GridItem bg='purple.400' p={2}>3</GridItem>
+</Grid>
+```
+

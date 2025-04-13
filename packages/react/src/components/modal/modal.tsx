@@ -9,7 +9,7 @@ import { ModalHeaderBase } from "@/components/modal/modal-header";
 import { ModalOverlayBase } from "@/components/modal/modal-overlay";
 import { ModalRoot } from "@/components/modal/modal-root";
 import { createStyleContext } from "@/components/style-context";
-import { modal } from "@dreamy-ui/system/recipes";
+import { modal } from "styled-system/recipes";
 
 const { withProvider, withContext } = createStyleContext(modal);
 

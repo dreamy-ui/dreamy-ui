@@ -6,9 +6,9 @@ import { callAllHandlers } from "@/utils";
 import { dataAttr } from "@/utils/attr";
 import { randomColor } from "@/utils/color";
 import type { HTMLDreamProps } from "@/utils/types";
-import { type AvatarVariantProps, avatar } from "@dreamy-ui/system/recipes";
-import { token } from "@dreamy-ui/system/tokens";
 import { forwardRef, useMemo, useState } from "react";
+import { type AvatarVariantProps, avatar } from "styled-system/recipes";
+import { token } from "styled-system/tokens";
 import { dreamy } from "../factory";
 
 export interface AvatarProps

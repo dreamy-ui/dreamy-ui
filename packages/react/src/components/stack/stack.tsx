@@ -1,18 +1,14 @@
 import type { HTMLDreamProps } from "@/utils/types";
-import { cx } from "@dreamy-ui/system/css";
-import type { StackProps as JSXStackProps } from "@dreamy-ui/system/jsx";
-import { stack } from "@dreamy-ui/system/patterns";
 import React, { forwardRef } from "react";
+import { cx } from "styled-system/css";
+import { type StackProperties, stack } from "styled-system/patterns";
 import { dreamy } from "../factory";
 
-interface Props {
+export interface StackProps
+    extends Omit<HTMLDreamProps<"div">, keyof StackProperties>,
+        StackProperties {
     separator?: React.ReactNode;
 }
-
-export interface StackProps
-    extends Omit<HTMLDreamProps<"div">, keyof JSXStackProps>,
-        JSXStackProps,
-        Props {}
 
 const StyledStack = dreamy.div;
 

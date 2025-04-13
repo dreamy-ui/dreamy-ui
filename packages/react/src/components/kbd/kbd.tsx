@@ -1,7 +1,7 @@
 import { dreamy } from "@/components/factory";
 import type { HTMLDreamProps } from "@/utils/types";
-import { type KbdVariantProps, kbd } from "@dreamy-ui/system/recipes";
 import { forwardRef } from "react";
+import { type KbdVariantProps, kbd } from "styled-system/recipes";
 
 export interface KbdProps extends HTMLDreamProps<"div">, KbdVariantProps {}
 

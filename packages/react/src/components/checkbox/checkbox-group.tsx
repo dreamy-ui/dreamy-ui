@@ -1,8 +1,8 @@
 import { createContext } from "@/provider/create-context";
 import { Flex, type FlexProps } from "@/rsc";
-import { cx } from "@dreamy-ui/system/css";
-import type { CheckboxVariantProps } from "@dreamy-ui/system/recipes";
 import { useMemo } from "react";
+import { cx } from "styled-system/css";
+import type { CheckboxVariantProps } from "styled-system/recipes";
 import {
     type UseCheckboxGroupProps,
     type UseCheckboxGroupReturn,

@@ -215,9 +215,9 @@ export function ControlledSelect() {
         <Select
             value={value}
             onChangeValue={setValue}
+            width="xs"
         >
             <SelectTrigger
-            
                 placeholder="Select a favorite fruit"
             />
             <SelectContent>
@@ -241,11 +241,9 @@ You can customize how the selected value is marked as selected.
             <Select
                 key={strategy}
                 selectedStrategy={strategy}
+                width="xs"
             >
-                <SelectTrigger
-                
-                    placeholder="Select a favorite fruit"
-                />
+                <SelectTrigger placeholder="Select a favorite fruit" />
                 <SelectContent>
                     <SelectItem value="strawberry">Strawberry</SelectItem>
                     <SelectItem value="banana">Banana</SelectItem>
@@ -264,11 +262,9 @@ You can customize how the selected value is marked as selected.
             <Select
                 key={strategy}
                 selectedStrategy={strategy}
+                width="xs"
             >
-                <SelectTrigger
-                
-                    placeholder="Select a favorite fruit"
-                />
+                <SelectTrigger placeholder="Select a favorite fruit" />
                 <SelectContent>
                     <SelectItem value="strawberry">Strawberry</SelectItem>
                     <SelectItem value="banana">Banana</SelectItem>
@@ -280,16 +276,121 @@ You can customize how the selected value is marked as selected.
 </Wrapper>
 ```
 
+### With option icons
+
+You can place icons, custom children in the `SelectItem` to indicate the type of the option.
+
+<Wrapper>
+    <Select width="xs">
+        <SelectTrigger placeholder="Select a favorite fruit" />
+        <SelectContent>
+            <SelectItem value="cherry">
+                <HStack>
+                    <LuCherry />
+                    <Text>Cherry</Text>
+                </HStack>
+            </SelectItem>
+            <SelectItem value="banana">
+                <HStack>
+                    <LuBanana />
+                    <Text>Banana</Text>
+                </HStack>
+            </SelectItem>
+            <SelectItem value="orange">
+                <HStack>
+                    <LuCitrus />
+                    <Text>Orange</Text>
+                </HStack>
+            </SelectItem>
+        </SelectContent>
+    </Select>
+</Wrapper>
+
+```tsx
+<Select width="xs">
+    <SelectTrigger placeholder="Select a favorite fruit" />
+    <SelectContent>
+        <SelectItem value="cherry">
+            <HStack>
+                <LuCherry />
+                <Text>Cherry</Text>
+            </HStack>
+        </SelectItem>
+        <SelectItem value="banana">
+            <HStack>
+                <LuBanana />
+                <Text>Banana</Text>
+            </HStack>
+        </SelectItem>
+        <SelectItem value="orange">
+            <HStack>
+                <LuCitrus />
+                <Text>Orange</Text>
+            </HStack>
+        </SelectItem>
+    </SelectContent>
+</Select>
+```
+
+### With one icon
+
+Single icon is useful if you want to have global icon for a trigger, instead of having it on each item.
+
+<Wrapper>
+    <Select width="xs">
+        <SelectTrigger placeholder="Select a favorite fruit" icon={<LuCherry />} />
+        <SelectContent>
+            <SelectItem value="cherry">Cherry</SelectItem>
+            <SelectItem value="banana">Banana</SelectItem>
+            <SelectItem value="orange">Orange</SelectItem>
+        </SelectContent>
+    </Select>
+</Wrapper>
+
+```tsx
+<Select width="xs">
+    <SelectTrigger placeholder="Select a favorite fruit" icon={<LuCherry />} />
+    <SelectContent>
+        <SelectItem value="cherry">Cherry</SelectItem>
+        <SelectItem value="banana">Banana</SelectItem>
+        <SelectItem value="orange">Orange</SelectItem>
+    </SelectContent>
+</Select>
+```
+
+### Clearable
+
+Pass `isClearable` prop to enable clear button.
+
+<Wrapper>
+    <Select width="xs" isClearable>
+        <SelectTrigger placeholder="Select a favorite fruit" />
+        <SelectContent>
+            <SelectItem value="cherry">Cherry</SelectItem>
+            <SelectItem value="banana">Banana</SelectItem>
+            <SelectItem value="orange">Orange</SelectItem>
+        </SelectContent>
+    </Select>
+</Wrapper>
+
+```tsx
+<Select width="xs" isClearable>
+    <SelectTrigger placeholder="Select a favorite fruit" />
+    <SelectContent>
+        <SelectItem value="cherry">Cherry</SelectItem>
+        <SelectItem value="banana">Banana</SelectItem>
+        <SelectItem value="orange">Orange</SelectItem>
+    </SelectContent>
+</Select>
+```
+
 ### Multiple
 
 You can use the `isMultiple` prop to allow multiple selection. Now `onChangeValue` will return an array of values, instead of a single string value.
 
 <Wrapper>
     <Select width="xs" isMultiple>
-        <SelectTrigger
-        
-            placeholder="Select a favorite fruit"
-        />
+        <SelectTrigger placeholder="Select a favorite fruit" />
         <SelectContent>
             <SelectItem value="strawberry">Strawberry</SelectItem>
             <SelectItem value="banana">Banana</SelectItem>
@@ -302,10 +403,7 @@ You can use the `isMultiple` prop to allow multiple selection. Now `onChangeValu
 export function MultipleSelect() {
     return (
         <Select width="xs" isMultiple>
-            <SelectTrigger
-            
-                placeholder="Select a favorite fruit"
-            />
+            <SelectTrigger placeholder="Select a favorite fruit" />
             <SelectContent>
                 <SelectItem value="strawberry">Strawberry</SelectItem>
                 <SelectItem value="banana">Banana</SelectItem>
@@ -324,7 +422,6 @@ You can change the text that Select displays when multiple keys are selected by 
 <Wrapper>
     <Select width="xs" isMultiple>
         <SelectTrigger
-        
             placeholder="Select a favorite fruit"
             multipleSelectedText={(selectedKeys) => `${selectedKeys.join(", ")}`}
         />
@@ -341,7 +438,6 @@ export function MultipleSelect() {
     return (
         <Select width="xs" isMultiple>
             <SelectTrigger
-            
                 placeholder="Select a favorite fruit"
                 multipleSelectedText={(selectedKeys) => `${selectedKeys.join(", ")}`}
             />
@@ -379,10 +475,7 @@ export function AsyncSelect() {
 
     return (
         <Select width="xs" onOpen={fetchFruits}>
-            <SelectTrigger
-            
-                placeholder="Select a favorite fruit"
-            />
+            <SelectTrigger placeholder="Select a favorite fruit" />
             <SelectContent>
                 {isLoading && (
                     <Spinner

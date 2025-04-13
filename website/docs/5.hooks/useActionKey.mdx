@@ -1,0 +1,58 @@
+---
+title: useActionKey
+description: useActionKey returns the action key of the current platform.
+isServerComponent: false
+source: /packages/react/src/hooks/use-action-key.tsx
+---
+
+## Import
+
+```tsx
+import { useActionKey } from "@dreamy-ui/react";
+```
+
+## Usage
+
+`useActionKey` returns the action key of the current platform. It will return `Ctrl` by default, but if the platform is Mac, it will return `⌘`.
+
+You can also pass an initial value to the hook. Since during SSR, action key cannot be determined, it will return the initial value. By default it is `Ctrl`. This is useful when you want to save the action key in the cookie, so it shows the correct action key, even before hydration.
+
+<Wrapper>
+	<UseActionKey />
+</Wrapper>
+
+```tsx
+export function UseActionKey() {
+	const actionKey = useActionKey();
+
+	return <Text>Action key: {actionKey}</Text>;
+}
+```
+
+### Get action key code
+
+You can also get the action key code using `getActionKeyCode` function.
+
+```tsx
+import { getActionKeyCode } from "@dreamy-ui/react";
+
+const actionKeyCode = getActionKeyCode();
+```
+
+This is useful when you want to integrate with keyboard events.
+
+Example below will toggle color mode on `cmd + i` or `ctrl + i`.
+
+```tsx
+import { useColorMode, useEventListener, getActionKeyCode } from "@dreamy-ui/react";
+
+export function ToggleColorMode() {
+	const { toggleColorMode } = useColorMode();
+	
+	useEventListener("keydown", (event) => {
+		if (event.key === "i" && event[getActionKeyCode()] && !event.shiftKey) {
+			toggleColorMode();
+		}
+	});
+}
+```

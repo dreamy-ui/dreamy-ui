@@ -1,16 +1,14 @@
-import pandabox from "@pandabox/unplugin";
 import type { NextConfig } from "next";
+import { resolve } from "node:path";
 
 export default {
     webpack: (config) => {
-        return {
-            ...config,
-            plugins: [
-                pandabox.webpack({
-                    optimizeJs: "macro"
-                })
-            ]
+        config.resolve.alias = {
+            ...config.resolve.alias,
+            'styled-system': resolve(__dirname, './styled-system'),
         };
+
+        return config;
     },
     experimental: {
         optimizePackageImports: ["@dreamy-ui/react"]

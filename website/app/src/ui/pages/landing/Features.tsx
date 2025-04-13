@@ -88,7 +88,7 @@ const features = [
 export default function Features() {
     return (
         <Flex
-            wFull
+            full
             col
             gap={20}
         >
@@ -114,7 +114,7 @@ function Feature({ title, description, mdx, content }: FeatureProps) {
 
     return (
         <Flex
-            wFull
+            full
             direction={{
                 base: "column",
                 xl: "row"
@@ -138,7 +138,7 @@ function Feature({ title, description, mdx, content }: FeatureProps) {
             >
                 <Flex
                     col
-                    wFull
+                    full
                     gap={4}
                 >
                     {title}
@@ -151,7 +151,7 @@ function Feature({ title, description, mdx, content }: FeatureProps) {
                 </Flex>
                 {content && (
                     <Flex
-                        wFull
+                        full
                         col
                     >
                         {content}
@@ -161,7 +161,7 @@ function Feature({ title, description, mdx, content }: FeatureProps) {
 
             {mdx && (
                 <Flex
-                    wFull
+                    full
                     col
                 >
                     <MDXRemote

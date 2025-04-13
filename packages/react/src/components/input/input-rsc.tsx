@@ -1,5 +1,5 @@
-import { input } from "@dreamy-ui/system/recipes";
 import { forwardRef } from "react";
+import { input } from "styled-system/recipes";
 import { dreamy } from "../factory";
 import type { InputProps } from "./input";
 

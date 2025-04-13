@@ -1,5 +1,5 @@
 import type { HTMLDreamProps } from "@/utils/types";
-import { table } from "@dreamy-ui/system/recipes";
+import { table } from "styled-system/recipes";
 import { dreamy } from "../factory";
 import { createStyleContext } from "../style-context";
 
