@@ -1,5 +1,11 @@
 # @dreamy-ui/system
 
+## 1.0.0
+
+### Major Changes
+
+-   V1
+
 ## 0.4.1
 
 ### Patch Changes

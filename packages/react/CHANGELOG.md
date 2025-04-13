@@ -1,5 +1,16 @@
 # @dreamy-ui/react
 
+## 1.0.0
+
+### Major Changes
+
+-   V1
+
+### Patch Changes
+
+-   Updated dependencies
+    -   @dreamy-ui/panda-preset@1.0.0
+
 ## 0.4.1
 
 ### Patch Changes
