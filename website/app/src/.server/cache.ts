@@ -110,8 +110,8 @@ export const lru: LruCache = {
 export function cachified<Value>(options: Omit<CachifiedOptions<Value>, "cache">) {
     return baseCachified({
         cache: lru,
-        ttl: minToMs(15), // 15 minutes is the default TTL
-        staleWhileRevalidate: minToMs(45),
+        ttl: env.NODE_ENV === "production" ? minToMs(15) : 0, // 15 minutes is the default TTL
+        staleWhileRevalidate: env.NODE_ENV === "production" ? minToMs(45) : 0,
         ...options
     });
 }

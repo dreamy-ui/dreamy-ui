@@ -1,13 +1,14 @@
 import { cachified } from "~/src/.server/cache";
 import { daysToMs } from "~/src/.server/docs";
+import { env } from "~/src/.server/env";
 import { getFullLLMDocs } from "~/src/.server/llms";
 
 export async function loader() {
     const docs = await cachified({
         key: "llms.txt",
         getFreshValue: getFullLLMDocs,
-        ttl: daysToMs(1),
-        swr: daysToMs(7)
+        ttl: env.NODE_ENV === "production" ? daysToMs(1) : 0,
+        swr: env.NODE_ENV === "production" ? daysToMs(7) : 0
     });
 
     return new Response(docs, {

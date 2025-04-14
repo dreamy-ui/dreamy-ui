@@ -1,3 +1,4 @@
+import { filenameToSlug } from "../functions/string";
 import { Docs } from "./docs";
 
 export async function getFullLLMDocs() {
@@ -5,17 +6,23 @@ export async function getFullLLMDocs() {
 
     console.log(JSON.stringify(sections, null, 2));
 
-    const docsContentsPromises = sections.map((section) => {
-        return Docs.getDoc(
-            section.title.toLowerCase(),
-            section.sections[0].name.toLowerCase()
-        ).catch((e) => {
-            console.error("Failed to get doc for llms.txt", e);
-            throw e;
+    const docsContentsPromises = sections.flatMap((section) => {
+        return section.sections.map((page) => {
+            return Docs.getDoc(filenameToSlug(section.title), filenameToSlug(page.name));
         });
     });
 
-    const docsContents = await Promise.all(docsContentsPromises);
+    const docsContents = await Promise.allSettled(docsContentsPromises).then((results) => {
+        return results.map((result) => {
+            if (result.status === "fulfilled") {
+                return result.value;
+            }
+
+            console.error("Failed to get doc for llms.txt", result.reason);
+
+            return null;
+        });
+    });
 
     const docsContentsString = docsContents
         .map((doc) => {
