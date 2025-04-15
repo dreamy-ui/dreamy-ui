@@ -1,5 +1,11 @@
 # @dreamy-ui/system
 
+## 1.0.2
+
+### Patch Changes
+
+-   no-externalized styled-system
+
 ## 1.0.1
 
 ### Patch Changes

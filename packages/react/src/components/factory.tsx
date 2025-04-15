@@ -1,5 +1,5 @@
 import { composeRefs, getRef } from "@/utils/refs";
-import type { DOMElements, DreamComponent } from "@/utils/types";
+import type { DOMElements, Dict, DreamComponent } from "@/utils/types";
 import type React from "react";
 import {
     Children,
@@ -12,17 +12,24 @@ import {
 } from "react";
 import { styled } from "styled-system/jsx";
 import type {
-    Dict,
     DistributiveUnion,
-    JsxFactoryOptions,
     JsxRecipeProps,
     Pretty,
     RecipeDefinition,
-    RecipeFn,
     RecipeSelection,
     RecipeVariantRecord
 } from "styled-system/types";
 type DreamPropsWithRef<E extends React.ElementType> = React.ComponentPropsWithRef<E>;
+
+interface RecipeFn {
+    __type: any;
+}
+
+interface JsxFactoryOptions<TProps extends Dict> {
+    dataAttr?: boolean;
+    defaultProps?: TProps;
+    shouldForwardProp?(prop: string, variantKeys: string[]): boolean;
+}
 
 function withAsProps(Component: React.ElementType) {
     const Comp = memo(
