@@ -11,91 +11,83 @@ import tsconfigPaths from "vite-tsconfig-paths";
 // import Inspect from "vite-plugin-inspect";
 
 declare module "@remix-run/node" {
-	interface Future {
-		v3_singleFetch: true;
-	}
+    interface Future {
+        v3_singleFetch: true;
+    }
 }
 
 sourceMapSupport.install({
-	retrieveSourceMap: (source) => {
-		const match = source.startsWith("file://");
-		if (match) {
-			const filePath = url.fileURLToPath(source);
-			const sourceMapPath = `${filePath}.map`;
-			if (fs.existsSync(sourceMapPath)) {
-				return {
-					url: source,
-					map: fs.readFileSync(sourceMapPath, "utf8")
-				};
-			}
-		}
-		return null;
-	}
+    retrieveSourceMap: (source) => {
+        const match = source.startsWith("file://");
+        if (match) {
+            const filePath = url.fileURLToPath(source);
+            const sourceMapPath = `${filePath}.map`;
+            if (fs.existsSync(sourceMapPath)) {
+                return {
+                    url: source,
+                    map: fs.readFileSync(sourceMapPath, "utf8")
+                };
+            }
+        }
+        return null;
+    }
 });
 
 const reactCompilerConfig = {
-	target: "19"
+    target: "19"
 };
 
 export default defineConfig({
-	resolve: {
-		alias: {
-			"styled-system": path.resolve(__dirname, "./styled-system")
-		}
-	},
-	build: {
-		minify: true
-	},
-	plugins: [
-		// Inspect({
-		//     build: true
-		// }),
-		// remixDevTools(),
-		mdx({
-			development: true
-		}),
-		// pandabox.vite({
-		//     optimizeJs: "macro",
-		//     exclude: [
-		//         "./styled-system",
-		//         "styled-system",
-		//         "styled-system/*",
-		//         "../packages/*",
-		//         "@dreamy-ui/system",
-		//         "@dreamy-ui/react"
-		//     ]
-		// }),
-		remix({
-			future: {
-				v3_throwAbortReason: true,
-				v3_relativeSplatPath: true,
-				v3_fetcherPersist: true,
-				v3_lazyRouteDiscovery: true,
-				v3_singleFetch: true,
-				v3_routeConfig: true
-			}
-		}),
-		babel({
-			filter: /app\/.*\.[jt]sx?$/,
-			babelConfig: {
-				presets: ["@babel/preset-typescript"],
-				plugins: [["babel-plugin-react-compiler", reactCompilerConfig]]
-			}
-		}),
-		tsconfigPaths()
-	],
-	optimizeDeps: {
-		exclude: [
-			"@dreamy-ui/panda-preset",
-			"styled-system/*",
-			"@dreamy-ui/react"
-		]
-	},
-	esbuild: {
-		exclude: [
-			"@dreamy-ui/panda-preset",
-			"styled-system/*",
-			"@dreamy-ui/react"
-		]
-	}
+    resolve: {
+        alias: {
+            "styled-system": path.resolve(__dirname, "./styled-system")
+        }
+    },
+    build: {
+        minify: true
+    },
+    plugins: [
+        // Inspect({
+        //     build: true
+        // }),
+        // remixDevTools(),
+        mdx({
+            development: true
+        }),
+        // pandabox.vite({
+        //     optimizeJs: "macro",
+        //     exclude: [
+        //         "./styled-system",
+        //         "styled-system",
+        //         "styled-system/*",
+        //         "../packages/*",
+        //         "@dreamy-ui/system",
+        //         "@dreamy-ui/react"
+        //     ]
+        // }),
+        remix({
+            future: {
+                v3_throwAbortReason: true,
+                v3_relativeSplatPath: true,
+                v3_fetcherPersist: true,
+                v3_lazyRouteDiscovery: true,
+                v3_singleFetch: true,
+                v3_routeConfig: true
+            }
+        }),
+        babel({
+            filter: /app\/.*\.[jt]sx?$/,
+            babelConfig: {
+                presets: ["@babel/preset-typescript"],
+                plugins: [["babel-plugin-react-compiler", reactCompilerConfig]]
+            }
+        }),
+        tsconfigPaths()
+    ],
+    optimizeDeps: {
+        exclude: ["@dreamy-ui/panda-preset", "styled-system/*", "@dreamy-ui/react"]
+    },
+    esbuild: {
+        exclude: ["@dreamy-ui/panda-preset", "styled-system/*", "@dreamy-ui/react"]
+    }
 });

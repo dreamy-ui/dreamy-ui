@@ -1,6 +1,6 @@
 {
 	"name": "@dreamy-ui/react",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Dreamy UI library for React",
 	"type": "module",
 	"keywords": [
@@ -41,8 +41,8 @@
 	],
 	"devDependencies": {
 		"@chromatic-com/storybook": "3.2.2",
-		"@pandacss/dev": "^0.53.0",
-		"@pandacss/preset-panda": "^0.53.0",
+		"@pandacss/dev": "^0.53.3",
+		"@pandacss/preset-panda": "^0.53.3",
 		"@pandacss/studio": "^0.53.0",
 		"@storybook/addon-a11y": "^8.4.7",
 		"@storybook/addon-essentials": "^8.4.7",
@@ -68,7 +68,7 @@
 		"@zag-js/focus-visible": "^0.78.3",
 		"aria-hidden": "^1.2.4",
 		"framesync": "^6.1.2",
-		"motion": "^12.0.5",
+		"motion": "^12.7.3",
 		"react": "^19.0.0",
 		"react-dom": "^19.0.0",
 		"react-focus-lock": "^2.13.5",

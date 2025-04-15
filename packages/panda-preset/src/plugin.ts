@@ -51,8 +51,12 @@ export const dreamyPlugin: PandaPlugin = definePlugin({
             let js: "mjs" | "js" | "both" = "js";
 
             // read the index.js and index.mjs files
-            const indexJs = await fs.readFile(path.join(jsxFolder, "index.js"), "utf-8");
-            const indexMjs = await fs.readFile(path.join(jsxFolder, "index.mjs"), "utf-8");
+            const indexJs = await fs
+                .readFile(path.join(jsxFolder, "index.js"), "utf-8")
+                .catch(() => null);
+            const indexMjs = await fs
+                .readFile(path.join(jsxFolder, "index.mjs"), "utf-8")
+                .catch(() => null);
 
             if (indexJs && indexMjs) {
                 js = "both";
@@ -62,13 +66,15 @@ export const dreamyPlugin: PandaPlugin = definePlugin({
                 js = "mjs";
             }
 
+            const indexContent = `export * from './factory.js';
+export * from './is-valid-prop.js';`;
+
             // write the index files
             await Promise.all([
-                fs.writeFile(
-                    path.join(jsxFolder, js === "both" ? "index.js" : "index.mjs"),
-                    `export * from './factory.js';
-export * from './is-valid-prop.js';`
-                ),
+                (js === "js" || js === "both") &&
+                    fs.writeFile(path.join(jsxFolder, "index.js"), indexContent),
+                (js === "mjs" || js === "both") &&
+                    fs.writeFile(path.join(jsxFolder, "index.mjs"), indexContent),
                 fs.writeFile(
                     path.join(jsxFolder, "index.d.ts"),
                     `export * from './factory';
