@@ -6,6 +6,7 @@ export default defineConfig({
     watch: true,
     jsxFramework: "react",
     jsxStyleProps: "all",
+    clean: true,
     outExtension: "js",
     include: [
         "./app/**/*.{js,jsx,ts,tsx}",
