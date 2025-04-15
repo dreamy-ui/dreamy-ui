@@ -51,7 +51,7 @@ export default defineConfig({
 });
 ```
 
-## 3. Add styled-system alias to tsconfig.json and vite.config.ts
+## 3. Add styled-system alias to tsconfig.json
 
 Add the following alias to your `tsconfig.json` file:
 
@@ -70,20 +70,20 @@ Add the following alias to your `tsconfig.json` file:
 }
 ```
 
-Add the following alias to your `vite.config.ts` file:
+{/* Add the following alias to your `vite.config.ts` file:
 
 ```ts {1, 4-8}
 import { resolve } from "node:path";
 
 export default defineConfig({
-	resolve: {
-		alias: {
-			"styled-system": resolve(__dirname, "./styled-system")
-		}
-	},
+    resolve: {
+        alias: {
+            "styled-system": resolve(__dirname, "./styled-system")
+        }
+    },
     ...
 })
-```
+``` */}
 
 ## 4. Add Dreamy Provider
 
