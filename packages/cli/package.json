@@ -1,0 +1,44 @@
+{
+	"name": "@dreamy-ui/cli",
+	"version": "1.0.0",
+	"description": "CLI for Dreamy UI",
+	"main": "src/index.ts",
+	"author": "imexoodeex",
+	"license": "MIT",
+	"scripts": {
+		"start": "bun run ./src/index.ts",
+		"lint": "biome lint ./src",
+		"build": "bun build ./src/index.ts --outdir ./dist --target node --minify",
+		"release-it": "release-it"
+	},
+	"dependencies": {
+		"@clack/prompts": "^0.10.1",
+		"@effect/platform": "0.69.28",
+		"@visulima/boxen": "^1.0.30",
+		"cli-table": "^0.3.11",
+		"commander": "^13.1.0",
+		"debug": "^4.4.0",
+		"effect": "3.10.19",
+		"fs-extra": "11.2.0",
+		"globby": "14.0.2",
+		"https-proxy-agent": "^7.0.6",
+		"look-it-up": "^2.1.0",
+		"node-fetch": "^3.3.2",
+		"package-manager-detector": "^1.2.0",
+		"picocolors": "^1.1.1",
+		"pkg-dir": "8.0.0",
+		"sucrase": "^3.35.0",
+		"yargs": "17.7.2",
+		"zod": "^3.23.8"
+	},
+	"devDependencies": {
+		"@types/fs-extra": "11.0.4",
+		"@types/node": "22.10.1",
+		"@types/yargs": "17.0.33",
+		"tsup": "^8.4.0",
+		"typescript": "5.7.2"
+	},
+	"peerDependencies": {
+		"typescript": "^5.0.0"
+	}
+}
