@@ -123,6 +123,74 @@ Menu comes with 4 different sizes.
 ))}
 ```
 
+### Variant
+
+Use `variant` prop to set the variant of the menu.
+
+<Wrapper>
+	<VariantMenus />
+</Wrapper>
+
+```tsx
+export function VariantMenus() {
+    return (
+        <Flex
+            wrapped
+            gap={5}
+        >
+            {(
+                ["plain", "stretched"]
+            ).map((variant) => (
+                <VariantMenu key={variant} variant={variant} />
+            ))}
+        </Flex>
+    );
+}
+
+export function VariantMenu({ variant }: { variant: string }) {
+    return (
+        <Menu variant={variant as any}>
+            <MenuTrigger>
+                <Button w={"fit-content"}>Open Menu</Button>
+            </MenuTrigger>
+            <MenuContent>
+                <MenuItem
+                    icon={<LuWarehouse />}
+                    command="{actionKey} h"
+                    asComp={<Link to="/" />}
+                >
+                    Homepage
+                </MenuItem>
+                <MenuItem
+                    icon={<IoAdd />}
+                    command="{actionKey} n"
+                >
+                    Add new
+                </MenuItem>
+                <MenuItem
+                    icon={<LuAlarmClock />}
+                    command="{actionKey} a"
+                >
+                    Set alarm
+                </MenuItem>
+                <MenuItem
+                    icon={<LuBattery />}
+                    command="{actionKey} b"
+                >
+                    Battery
+                </MenuItem>
+                <MenuItem
+                    icon={<LuTrash />}
+                    command="{actionKey} d"
+                >
+                    Delete
+                </MenuItem>
+            </MenuContent>
+        </Menu>
+    );
+}
+```
+
 ### Using links
 
 You can use a custom link component with menu item but polymorphic props like `as`, `asComp` and `asChild`.
@@ -326,59 +394,3 @@ You can add right content to the item with `rightContent` prop.
     </MenuContent>
 </Menu>
 ```
-
-### Nested Menu
-
-You can nest menus inside each other.
-
-<Wrapper>
-    <Menu>
-        <MenuTrigger>
-            <Button w={"fit-content"}>Open Menu</Button>
-        </MenuTrigger>
-        <MenuContent>
-            <Menu placement="right-start">
-                <MenuTrigger>
-                    <MenuItem rightContent={<LuChevronRight />}>
-                        <>Nested Menu</>
-                    </MenuItem>
-                </MenuTrigger>
-                <Portal>
-                    <MenuContent>
-                        <MenuItem
-                            icon={<LuWarehouse />}
-                            command="{actionKey} h"
-                            asComp={<Link to="/" />}
-                        >
-                            <>Homepage</>
-                        </MenuItem>
-                    </MenuContent>
-                </Portal>
-            </Menu>
-            <MenuItem
-                icon={<IoAdd />}
-                command="{actionKey} n"
-            >
-                <>Add new</>
-            </MenuItem>
-            <MenuItem
-                icon={<LuAlarmClock />}
-                command="{actionKey} a"
-            >
-                <>Set alarm</>
-            </MenuItem>
-            <MenuItem
-                icon={<LuBattery />}
-                command="{actionKey} b"
-            >
-                <>Battery</>
-            </MenuItem>
-            <MenuItem
-                icon={<LuTrash />}
-                command="{actionKey} d"
-            >
-                <>Delete</>
-            </MenuItem>
-        </MenuContent>
-    </Menu>
-</Wrapper>

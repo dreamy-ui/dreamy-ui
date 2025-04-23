@@ -1,5 +1,32 @@
 # @dreamy-ui/react
 
+## 1.0.2
+
+### Patch Changes
+
+-   no-externalized styled-system
+-   Updated dependencies
+    -   @dreamy-ui/panda-preset@1.0.2
+
+## 1.0.1
+
+### Patch Changes
+
+-   fix panda plugin
+-   Updated dependencies
+    -   @dreamy-ui/panda-preset@1.0.1
+
+## 1.0.0
+
+### Major Changes
+
+-   V1
+
+### Patch Changes
+
+-   Updated dependencies
+    -   @dreamy-ui/panda-preset@1.0.0
+
 ## 0.4.1
 
 ### Patch Changes

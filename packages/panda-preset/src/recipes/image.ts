@@ -7,6 +7,8 @@ const parts = defineParts({
     blurredImg: { selector: '[data-part="wrapper"]:has(&) [data-part="blurred"]' }
 });
 
+export { parts as imageParts };
+
 export const image = defineRecipe({
     className: "dreamy-image",
     jsx: ["Image"],

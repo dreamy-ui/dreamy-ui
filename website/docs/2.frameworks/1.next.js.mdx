@@ -15,17 +15,16 @@ Follow the [Panda CSS installation guide](https://panda-css.com/docs/installatio
 Install Dreamy UI in your project:
 
 ```bash
-pnpm install @dreamy-ui/react @dreamy-ui/system motion @pandacss/preset-panda
+pnpm add @dreamy-ui/react @dreamy-ui/panda-preset motion
 ```
 
 ## 2. Configure panda.config.ts
 
 Configure environment and panda presets in your `panda.config.ts` file:
 
-```ts {2-3, 7-15}
+```ts {1, 10-16}
+import createDreamyPreset, { dreamyPlugin } from "@dreamy-ui/panda-preset";
 import { defineConfig } from "@pandacss/dev";
-import { createDreamPreset } from "@dreamy-ui/system";
-import pandaPreset from "@pandacss/preset-panda";
 
 export default defineConfig({
 	...,
@@ -33,15 +32,69 @@ export default defineConfig({
     jsxFramework: "react",
     jsxStyleProps: "all",
     outExtension: "js",
-    importMap: "@dreamy-ui/system",
+    include: [
+        "./src/**/*.{js,jsx,ts,tsx}",
+    ],
     presets: [
-        pandaPreset,
-        createDreamPreset()
-    ]
+        createDreamyPreset()
+    ],
+    plugins: [dreamyPlugin],
+    theme: {
+		extend: {}
+	},
+	globalCss: {
+		extend: {}
+	},
+	staticCss: {
+		extend: {}
+	}
 });
 ```
 
-## 3. Add Dreamy Provider
+## 3. Add styled-system alias to tsconfig.json
+
+Add the following alias to your `tsconfig.json` file:
+
+```json {6, 13-14}
+{
+	"compilerOptions": {
+		...
+		"paths": {
+			"@/*": ["./src/*"],
+			"styled-system/*": ["./styled-system/*"]
+		}
+	},
+	"include": [
+		"next-env.d.ts",
+		"**/*.ts",
+		"**/*.tsx",
+		"styled-system/**/*.ts",
+		"styled-system/**/*.tsx",
+		".next/types/**/*.ts"
+	],
+	"exclude": ["node_modules"]
+}
+```
+
+{/* Add the following alias to your `next.config.ts` file:
+
+```ts {2,5-12}
+import type { NextConfig } from "next";
+import { resolve } from "node:path";
+
+export default {
+    webpack: (config) => {
+        config.resolve.alias = {
+            ...config.resolve.alias,
+            "styled-system": resolve(__dirname, "./styled-system"),
+        };
+
+        return config;
+    }
+} satisfies NextConfig;
+``` */}
+
+## 4. Add Dreamy Provider
 
 After configuring Panda CSS, finally we can add the main Dreamy Provider to your `app/layout.tsx`.
 
@@ -76,7 +129,7 @@ Next, add the `Providers` component to your `app/layout.tsx` file:
 
 This way we pass the color mode to the `Providers` component so initial document request will have the user color mode.
 
-```tsx {2-4, 13, 19, 21}
+```tsx {2-4, 13, 19, 22}
 ...
 import { Providers } from "./providers";
 import { getColorModeHTMLProps, getSSRColorMode } from "@dreamy-ui/react/rsc";
@@ -106,7 +159,7 @@ export default async function RootLayout({
 
 ```
 
-## 4. Start using Dreamy UI
+## 5. Start using Dreamy UI
 
 Let's write some Dreamy UI in `app/page.tsx`.
 

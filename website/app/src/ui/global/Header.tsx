@@ -1,6 +1,7 @@
 import { IconButton, useEventListener } from "@dreamy-ui/react";
-import { Flex, HStack } from "@dreamy-ui/react/rsc";
+import { Flex, HStack, Icon, Text } from "@dreamy-ui/react/rsc";
 import { memo, useState } from "react";
+import { FaDiscord } from "react-icons/fa";
 import { Link } from "~/src/ui/global/Link";
 import Search from "~/src/ui/global/Search";
 import GithubButton from "./GithubButton";
@@ -64,18 +65,46 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: Props) {
                     }}
                     itemsStart
                 >
-                    <Link
-                        to={"/discord"}
-                        isExternal
-                        mr={4}
-                        prefetch="none"
-                        display={{
-                            base: "none",
-                            md: "inline-flex"
-                        }}
+                    <HStack
+                        className="group"
+                        asComp={
+                            <Link
+                                to={"/discord"}
+                                isExternal
+                                mr={4}
+                                prefetch="none"
+                                display={{
+                                    base: "none",
+                                    md: "inline-flex"
+                                }}
+                            />
+                        }
+                        // add shadow on hover as filter
                     >
-                        Discord
-                    </Link>
+                        <Icon
+                            as={FaDiscord}
+                            h={4}
+                            transition={
+                                "filter {durations.normal} {easings.easeInOut}, color {durations.fastest} {easings.easeInOut}"
+                            }
+                            _groupHover={{
+                                filter: "drop-shadow(0 0 4px #5865F2)",
+                                color: "#5865F2"
+                            }}
+                        />
+                        <Text
+                            transition={
+                                "filter {durations.normal} {easings.easeInOut}, color {durations.fastest} {easings.easeInOut}"
+                            }
+                            _groupHover={{
+                                filter: "drop-shadow(0 0 4px #5865F2)",
+                                color: "#5865F2"
+                            }}
+                        >
+                            Discord
+                        </Text>
+                    </HStack>
+
                     <Link
                         to={"/docs"}
                         prefetch="intent"

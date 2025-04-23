@@ -38,8 +38,8 @@ export const modal = defineSlotRecipe({
             flexDirection: "column",
             position: "relative",
             width: "100%",
-            borderRadius: "l3",
-            backgroundColor: "color-mix(in srgb, {colors.bg} 70%, {colors.alpha.100} 10%)",
+            borderRadius: "p-4",
+            backgroundColor: "bg.panel",
             backdropFilter: "blur({blurs.base})",
             boxShadow: "md",
             marginTop: 16,
@@ -62,6 +62,11 @@ export const modal = defineSlotRecipe({
             gap: 4,
             paddingX: 4,
             paddingY: 2
+            // it dissapers the scrollbar
+            // "&::-webkit-scrollbar": {
+            //     backgroundColor: "bg.panel",
+            //     color: "fg"
+            // }
         },
         footer: {
             display: "flex",

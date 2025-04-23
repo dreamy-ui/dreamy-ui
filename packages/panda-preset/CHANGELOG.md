@@ -1,5 +1,23 @@
 # @dreamy-ui/system
 
+## 1.0.2
+
+### Patch Changes
+
+-   no-externalized styled-system
+
+## 1.0.1
+
+### Patch Changes
+
+-   fix panda plugin
+
+## 1.0.0
+
+### Major Changes
+
+-   V1
+
 ## 0.4.1
 
 ### Patch Changes

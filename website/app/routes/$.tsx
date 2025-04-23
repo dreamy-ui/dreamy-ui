@@ -11,18 +11,23 @@ import { useMemo } from "react";
 import { LuCircleAlert } from "react-icons/lu";
 
 export function meta({ error }: MetaArgs<typeof loader>) {
+    console.log("error", error);
+
     return [
         {
             title:
-                typeof error === "object" && error !== null && "data" in error
-                    ? error.data
+                typeof error === "object" &&
+                error !== null &&
+                "statusText" in error &&
+                error.statusText
+                    ? error.statusText
                     : "Dreamy UI"
         }
     ] satisfies ReturnType<MetaFunction>;
 }
 
 export async function loader(_: LoaderFunctionArgs) {
-    throw data("Not found", {
+    throw data(null, {
         status: 404,
         statusText: "Not found"
     });
@@ -70,9 +75,12 @@ export function ErrorBoundary() {
             center
             col
             gap={4}
+            // footer 349
+            // header 144
+            // 205
             mb={{
-                base: 10,
-                md: 36
+                base: 0,
+                md: "calc(-205px / 2)"
             }}
         >
             <Icon

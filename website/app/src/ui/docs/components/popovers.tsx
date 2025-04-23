@@ -14,33 +14,6 @@ import {
 import { Flex } from "@dreamy-ui/react/rsc";
 import { useCallback, useRef } from "react";
 
-export function BasicPopover() {
-    return (
-        <Popover>
-            <PopoverTrigger>
-                <Button
-                    variant={"primary"}
-                    w="fit-content"
-                >
-                    Open Popover
-                </Button>
-            </PopoverTrigger>
-
-            <PopoverContent>
-                <PopoverArrow />
-                <PopoverCloseButton />
-                <PopoverHeader>Delete Post</PopoverHeader>
-                <PopoverBody>
-                    Are you sure you want to delete this post? This action cannot be undone.
-                </PopoverBody>
-                <PopoverFooter>
-                    <Button variant={"primary"}>Delete</Button>
-                </PopoverFooter>
-            </PopoverContent>
-        </Popover>
-    );
-}
-
 export function ControlledPopover() {
     const { isOpen, onOpen, onClose } = useControllable();
 
@@ -189,5 +162,47 @@ export function PlacementPopover({ placement }: { placement: PlacementWithLogica
                 </PopoverFooter>
             </PopoverContent>
         </Popover>
+    );
+}
+
+export function SizePopover({ size }: { size: string }) {
+    return (
+        <Popover size={size as any}>
+            <PopoverTrigger>
+                <Button
+                    variant={"primary"}
+                    w="fit-content"
+                >
+                    {size}
+                </Button>
+            </PopoverTrigger>
+
+            <PopoverContent>
+                <PopoverArrow />
+                <PopoverCloseButton />
+                <PopoverHeader>Delete Post</PopoverHeader>
+                <PopoverBody>
+                    Are you sure you want to delete this post? This action cannot be undone.
+                </PopoverBody>
+                <PopoverFooter>
+                    <Button variant={"primary"}>Delete</Button>
+                </PopoverFooter>
+            </PopoverContent>
+        </Popover>
+    );
+}
+
+export function SizePopovers() {
+    return (
+        <Flex
+            wrapped
+            gap={5}
+        >
+            {(
+                ["sm", "md", "lg", "xl", "2xl", "3xl", "4xl", "5xl", "6xl", "7xl", "8xl"]
+            ).map((size) => (
+                <SizePopover key={size} size={size} />
+            ))}
+        </Flex>
     );
 }

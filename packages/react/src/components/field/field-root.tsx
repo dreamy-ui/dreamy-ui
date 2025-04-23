@@ -6,7 +6,7 @@ import { dataAttr } from "@/utils/attr";
 import { objectToDeps } from "@/utils/object";
 import type { HTMLDreamProps } from "@/utils/types";
 import { forwardRef, useCallback, useId, useState } from "react";
-import { field } from "styled-system/recipes";
+import { type FieldVariantProps, field } from "styled-system/recipes";
 import { dreamy } from "../factory";
 import { FieldErrorBase } from "./field-error";
 import { FieldHelpTextBase } from "./field-help-text";
@@ -162,7 +162,7 @@ function useFieldProvider(props: FieldContext) {
     };
 }
 
-export interface FieldProps extends HTMLDreamProps<"div">, FieldContext {
+export interface FieldProps extends HTMLDreamProps<"div">, FieldContext, FieldVariantProps {
     helpText?: string;
     error?: string;
 }

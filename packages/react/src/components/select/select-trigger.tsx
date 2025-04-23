@@ -11,6 +11,13 @@ import { forwardRef, useState } from "react";
 import { dreamy } from "../factory";
 
 export interface SelectTriggerProps extends HTMLDreamProps<"button"> {
+    /**
+     * Icon to show in the trigger.
+     */
+    icon?: React.ReactNode;
+    /**
+     * Placeholder text to show when no item is selected.
+     */
     placeholder?: string;
     /**
      * Text to show when multiple items are selected.
@@ -25,6 +32,7 @@ export const SelectTriggerBase = forwardRef<HTMLButtonElement, SelectTriggerProp
         {
             children,
             placeholder,
+            icon,
             multipleSelectedText = (selectedKeys) => `${selectedKeys.length} Selected`,
             ...rest
         },
@@ -49,6 +57,8 @@ export const SelectTriggerBase = forwardRef<HTMLButtonElement, SelectTriggerProp
             <>
                 <PopoverTrigger>
                     <StyledTrigger {...(getTriggerProps(rest, ref) as any)}>
+                        {icon && icon}
+
                         <span>
                             {selectedNames.length === 1
                                 ? selectedNames[0]

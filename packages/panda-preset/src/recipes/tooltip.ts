@@ -12,6 +12,8 @@ const parts = defineParts({
     }
 });
 
+export { parts as tooltipParts };
+
 export const tooltip = defineRecipe({
     className: "dreamy-tooltip",
     jsx: ["Tooltip"],

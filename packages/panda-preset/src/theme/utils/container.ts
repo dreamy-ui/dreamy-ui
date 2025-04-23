@@ -151,5 +151,43 @@ export const containerUtilities: UtilityConfig = {
 				height: "auto"
 			};
 		}
-	}
+	},
+
+	// positions
+	relative: {
+		values: { type: "boolean" },
+		transform: (value) => {
+			if (!value) return {};
+			return {
+				position: "relative"
+			};
+		}
+	},
+	absolute: {
+		values: { type: "boolean" },
+		transform: (value) => {
+			if (!value) return {};
+			return {
+				position: "absolute"
+			};
+		}
+	},
+	fixed: {
+		values: { type: "boolean" },
+		transform: (value) => {
+			if (!value) return {};
+			return {
+				position: "fixed"
+			};
+		}
+	},
+	sticky: {
+		values: { type: "boolean" },
+		transform: (value) => {
+			if (!value) return {};
+			return {
+				position: "sticky"
+			};
+		}
+	},
 };

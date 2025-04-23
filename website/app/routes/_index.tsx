@@ -95,12 +95,24 @@ export default function Index() {
             col
             gap={{
                 base: 24,
-                xl: 40
+                xl: "64"
             }}
             mb={20}
         >
-            <Main />
-            <FloatingComponents />
+            <Flex
+                col
+                full
+                justify={"center"}
+                gap={24}
+                // pt={{
+                //     base: 0,
+                //     md: 16
+                // }}
+                minH={"calc(100vh - 288px)"}
+            >
+                <Main />
+                <FloatingComponents />
+            </Flex>
             <BuiltFor />
             <Features />
             <EverythingYouNeed />

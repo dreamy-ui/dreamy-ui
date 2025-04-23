@@ -69,7 +69,7 @@ export const textarea = defineRecipe({
 				borderColor: "transparent",
 				borderWidth: "0",
 				_hover: {
-					background: "{colors.alpha.150}"
+					background: "{colors.alpha.200}"
 				},
 				_focusWithin: {
 					boxShadow: "0 0 0 1.5px {colors.primary}"

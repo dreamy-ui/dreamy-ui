@@ -239,4 +239,58 @@ You can lazy mount the panel by passing the `isLazy` prop to the `Tabs` componen
     </TabPanel>
   </TabPanels>
 </Tabs>
-````
+```
+
+### Overflow
+
+Add `overflowX="scroll"` to the `TabList` if your tabs are overflowing the container.
+
+<Wrapper>
+  <Box maxW="xs" w='xs' >
+    <Tabs>
+      <TabList overflowX="scroll">
+        <Tab>Tab 1</Tab>
+        <Tab>Tab 2</Tab>
+        <Tab>Tab 3</Tab>
+        <Tab>Tab 4</Tab>
+        <Tab>Tab 5</Tab>
+        <Tab>Tab 6</Tab>
+        <Tab>Tab 7</Tab>
+      </TabList>
+      <TabPanels>
+        <TabPanel>1</TabPanel>
+        <TabPanel>2</TabPanel>
+        <TabPanel>3</TabPanel>
+        <TabPanel>4</TabPanel>
+        <TabPanel>5</TabPanel>
+        <TabPanel>6</TabPanel>
+        <TabPanel>7</TabPanel>
+      </TabPanels>
+	  </Tabs>
+  </Box>
+</Wrapper>
+
+```tsx
+<Box maxW="xs" w='xs' >
+  <Tabs>
+    <TabList overflowX="scroll">
+      <Tab>Tab 1</Tab>
+      <Tab>Tab 2</Tab>
+      <Tab>Tab 3</Tab>
+      <Tab>Tab 4</Tab>
+      <Tab>Tab 5</Tab>
+      <Tab>Tab 6</Tab>
+      <Tab>Tab 7</Tab>
+    </TabList>
+    <TabPanels>
+      <TabPanel>1</TabPanel>
+      <TabPanel>2</TabPanel>
+      <TabPanel>3</TabPanel>
+      <TabPanel>4</TabPanel>
+      <TabPanel>5</TabPanel>
+      <TabPanel>6</TabPanel>
+      <TabPanel>7</TabPanel>
+    </TabPanels>
+  </Tabs>
+</Box>
+```

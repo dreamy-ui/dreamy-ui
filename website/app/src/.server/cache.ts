@@ -5,6 +5,7 @@ import type { HeadersFunction } from "@remix-run/node";
 import Redis from "ioredis";
 import { LRUCache } from "lru-cache";
 import { Logger } from "~/src/.server/logger";
+import { minToMs } from "./docs";
 import { env } from "./env";
 
 /**
@@ -109,7 +110,8 @@ export const lru: LruCache = {
 export function cachified<Value>(options: Omit<CachifiedOptions<Value>, "cache">) {
     return baseCachified({
         cache: lru,
-        ttl: 15 * 60, // 15 minutes is the default TTL
+        ttl: env.NODE_ENV === "production" ? minToMs(15) : 0, // 15 minutes is the default TTL
+        staleWhileRevalidate: env.NODE_ENV === "production" ? minToMs(45) : 0,
         ...options
     });
 }

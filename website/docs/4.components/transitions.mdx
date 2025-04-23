@@ -39,8 +39,8 @@ export function Collapsed() {
                 in={isOpen}
             >
                 <Box
-                    bg={"primary"}
-                    color={"white"}
+                    bg={"fg"}
+                    color={"bg"}
                     p={4}
                     rounded={"md"}
                     w={"full"}
@@ -78,8 +78,8 @@ export function Scaled() {
                 in={isOpen}
             >
                 <Box
-                    bg={"primary"}
-                    color={"white"}
+                    bg={"fg"}
+                    color={"bg"}
                     p={4}
                     rounded={"md"}
                     w={"full"}
@@ -101,7 +101,36 @@ You can set the starting and ending height of the content by setting the `starti
 </Wrapper>
 
 ```tsx
-<Collapsed startingHeight={10} endingHeight={80} />
+export function Collapsed() {
+    const [isOpen, setIsOpen] = useState(false);
+
+    return (
+        <>
+            <Button
+                w={"min-content"}
+                onClick={() => setIsOpen(!isOpen)}
+            >
+                Toggle
+            </Button>
+            <Collapse
+                w={"full"}
+                in={isOpen}
+                startingHeight={10} 
+                endingHeight={80}
+            >
+                <Box
+                    bg={"fg"}
+                    color={"bg"}
+                    p={4}
+                    rounded={"md"}
+                    w={"full"}
+                >
+                    Hello
+                </Box>
+            </Collapse>
+        </>
+    );
+}
 ```
 
 ### Animate Opacity
@@ -113,7 +142,35 @@ You can disable the opacity animation by setting the `animateOpacity` prop to `f
 </Wrapper>
 
 ```tsx
-<Collapsed animateOpacity={false} />
+export function Collapsed() {
+    const [isOpen, setIsOpen] = useState(false);
+
+    return (
+        <>
+            <Button
+                w={"min-content"}
+                onClick={() => setIsOpen(!isOpen)}
+            >
+                Toggle
+            </Button>
+            <Collapse
+                w={"full"}
+                in={isOpen}
+                animateOpacity={false}
+            >
+                <Box
+                    bg={"fg"}
+                    color={"bg"}
+                    p={4}
+                    rounded={"md"}
+                    w={"full"}
+                >
+                    Hello
+                </Box>
+            </Collapse>
+        </>
+    );
+}
 ```
 
 ### Unmount on exit
@@ -125,7 +182,35 @@ You can unmount component on exit animation by setting the `unmountOnExit` prop 
 </Wrapper>
 
 ```tsx
-<Collapsed unmountOnExit />
+export function Collapsed() {
+    const [isOpen, setIsOpen] = useState(false);
+
+    return (
+        <>
+            <Button
+                w={"min-content"}
+                onClick={() => setIsOpen(!isOpen)}
+            >
+                Toggle
+            </Button>
+            <Collapse
+                w={"full"}
+                in={isOpen}
+                unmountOnExit
+            >
+                <Box
+                    bg={"fg"}
+                    color={"bg"}
+                    p={4}
+                    rounded={"md"}
+                    w={"full"}
+                >
+                    Hello
+                </Box>
+            </Collapse>
+        </>
+    );
+}
 ```
 
 ### Initial scale
@@ -137,5 +222,33 @@ You can set the initial scale of the content by setting the `initialScale` prop.
 </Wrapper>
 
 ```tsx
-<Scaled initialScale={0} />
+export function Scaled() {
+    const [isOpen, setIsOpen] = useState(false);
+
+    return (
+        <>
+            <Button
+                w={"min-content"}
+                onClick={() => setIsOpen(!isOpen)}
+            >
+                Toggle
+            </Button>
+            <Scale
+                w={"full"}
+                in={isOpen}
+                initialScale={0}
+            >
+                <Box
+                    bg={"fg"}
+                    color={"bg"}
+                    p={4}
+                    rounded={"md"}
+                    w={"full"}
+                >
+                    Hello
+                </Box>
+            </Scale>
+        </>
+    );
+}
 ```

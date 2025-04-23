@@ -15,17 +15,16 @@ Follow the [Panda CSS installation guide](https://panda-css.com/docs/installatio
 Install Dreamy UI in your project:
 
 ```bash
-pnpm install @dreamy-ui/react @dreamy-ui/system motion @pandacss/preset-panda
+pnpm install @dreamy-ui/react @dreamy-ui/panda-preset motion
 ```
 
 ## 2. Configure panda.config.ts
 
 Configure environment and panda presets in your `panda.config.ts` file:
 
-```ts {2-3, 7-15}
+```ts {1, 10-16}
+import createDreamyPreset, { dreamyPlugin } from "@dreamy-ui/panda-preset";
 import { defineConfig } from "@pandacss/dev";
-import { createDreamPreset } from "@dreamy-ui/system";
-import pandaPreset from "@pandacss/preset-panda";
 
 export default defineConfig({
 	...,
@@ -33,29 +32,74 @@ export default defineConfig({
     jsxFramework: "react",
     jsxStyleProps: "all",
     outExtension: "js",
-    importMap: "@dreamy-ui/system",
+    include: [
+        "./src/**/*.{js,jsx,ts,tsx}",
+    ],
     presets: [
-        pandaPreset,
-        createDreamPreset()
-    ]
+        createDreamyPreset()
+    ],
+    plugins: [dreamyPlugin],
+    theme: {
+		extend: {}
+	},
+	globalCss: {
+		extend: {}
+	},
+	staticCss: {
+		extend: {}
+	}
 });
 ```
 
-## 3. Add Dreamy Provider
+## 3. Add styled-system alias to tsconfig.json
+
+Add the following alias to your `tsconfig.json` file:
+
+```json {9}
+{
+	"include": [
+		"**/*.ts",
+		"**/*.tsx",
+		"**/.server/**/*.ts",
+		"**/.server/**/*.tsx",
+		"**/.client/**/*.ts",
+		"**/.client/**/*.tsx",
+		"styled-system/*"
+	],
+	...
+}
+```
+
+{/* Add the following alias to your `vite.config.ts` file:
+
+```ts {1, 4-8}
+import { resolve } from "node:path";
+
+export default defineConfig({
+    resolve: {
+        alias: {
+            "styled-system": resolve(__dirname, "./styled-system")
+        }
+    },
+    ...
+})
+``` */}
+
+## 4. Add Dreamy Provider
 
 After configuring Panda CSS, finally we can add the main Dreamy Provider to your `app/root.tsx`.
 
 (Optional, only for Framework mode) To fix color mode flashing on document request, we need to get color mode from the loader, to render the correct color mode.
 
-```tsx {2-4, 6-10, 12, 15, 20, 29-36}
+```tsx {2-4, 8-12, 14, 17, 22, 31-38}
 ...
 import { DreamyProvider } from "@dreamy-ui/react";
 import { getColorModeHTMLProps, getSSRColorMode } from "@dreamy-ui/react/rsc";
-import type { LoaderFunctionArgs } from "@React Router-run/node";
+import type { Route } from "./+types/root";
 
 // Loaders only work for Framework mode,
 // you can skip this, if you are using React Router as library mode.
-export function loader({ request }: LoaderFunctionArgs) {
+export function loader({ request }: Route.LoaderArgs) {
     return {
         colorMode: getSSRColorMode(request)
     };
@@ -64,7 +108,7 @@ export function loader({ request }: LoaderFunctionArgs) {
 const domMax = () => import("motion/react").then((mod) => mod.domMax);
 
 export function Layout({ children }: { children: React.ReactNode }) {
-    const { colorMode } = useRouteLoaderData<typeof loader>("root") ?? {};
+    const { colorMode } = useRouteLoaderData<Route.ComponentProps["loaderData"]>("root") ?? {}; 
 
     return (
         <html
@@ -96,7 +140,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 ...
 ```
 
-## 4. Start using Dreamy UI
+## 5. Start using Dreamy UI
 
 Let's write some Dreamy UI in `app/routes/_index.tsx`.
 

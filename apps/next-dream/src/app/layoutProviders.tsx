@@ -12,10 +12,9 @@ const domMax = () => import("motion/react").then((res) => res.domMax);
 export function Providers({ children, colorMode }: ProvidersProps) {
     return (
         <DreamyProvider
-            // @ts-expect-error
             motionFeatures={domMax}
             colorMode={colorMode}
-            framerMotionStrict
+            motionStrict
             useUserPreferenceColorMode
         >
             {children}
