@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://dreamy-ui.com">
-      <img width="50%" src="https://dreamy-ui.com/dream-ui-wallpaper.png" alt="dreamy-ui" />
+      <img width="50%" src="https://dreamy-ui.com/dreamy-ui-wallpaper.png" alt="dreamy-ui" />
       <h1 align="center">Dreamy UI</h1>
   </a>
 </p>
