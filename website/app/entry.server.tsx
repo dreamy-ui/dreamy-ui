@@ -7,6 +7,7 @@ import type {
 import { createReadableStreamFromReadable } from "@remix-run/node";
 import { RemixServer } from "@remix-run/react";
 import { isbot } from "isbot";
+import cluster from "node:cluster";
 import { PassThrough } from "node:stream";
 import { renderToPipeableStream } from "react-dom/server";
 import { Docs } from "~/src/.server/docs";
@@ -42,8 +43,17 @@ export default function handleRequest(
 
                     responseHeaders.set("Content-Type", "text/html");
                     const timingValue = `${(performance.now() - loadContext.start).toFixed(2)}ms`;
-                    responseHeaders.set("X-Timing", timingValue);
+                    responseHeaders.set("X-Render-Time", timingValue);
                     Logger.debug("Rendered In: " + timingValue);
+
+                    if (Object.keys(loadContext.timings).length > 0) {
+                        responseHeaders.set(
+                            "Server-Timing",
+                            Object.entries(loadContext.timings)
+                                .map(([key, value]) => `${key};dur=${value}`)
+                                .join(", ")
+                        );
+                    }
 
                     resolve(
                         new Response(stream, {
@@ -73,12 +83,23 @@ export function handleDataRequest(
     { context }: LoaderFunctionArgs | ActionFunctionArgs
 ) {
     response.headers.set("X-Timing", (performance.now() - context.start).toFixed(2) + "ms");
+
+    if (Object.keys(context.timings).length > 0) {
+        response.headers.set(
+            "Server-Timing",
+            Object.entries(context.timings)
+                .map(([key, value]) => `${key};dur=${value.toFixed(2)}`)
+                .join(", ")
+        );
+    }
+
     return response;
 }
 
-Docs.fetchDocsOnStartup();
+if (cluster.isPrimary) {
+    Docs.fetchDocsOnStartup();
+}
 
 if (process.env.NODE_ENV === "development") {
     lru.clear();
 }
-

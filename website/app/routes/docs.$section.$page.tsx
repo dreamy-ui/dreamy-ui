@@ -88,14 +88,17 @@ export function meta({ data, params }: MetaArgs<typeof loader>) {
 
 export const headers = CacheHeaders.cache(CACHE_DURATION.DEFAULT);
 
-export async function loader({ params }: LoaderFunctionArgs) {
+export async function loader({ params, context }: LoaderFunctionArgs) {
     const section = params.section as string;
     const page = params.page as string;
 
+    const start = performance.now();
     const doc = await Docs.getDoc(section, page).catch((e) => {
         console.error(e);
         return null;
     });
+    const end = performance.now();
+    context.timings.doc = end - start;
 
     if (!doc) {
         throw data(null, {

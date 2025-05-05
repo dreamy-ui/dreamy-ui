@@ -1,4 +1,4 @@
-export type Merge<M, N> = N extends Record<string, unknown> ? M : Omit<M, keyof N> & N;
+import type { Merge } from "./types";
 
 interface DOMElement extends Element, HTMLOrSVGElement {}
 

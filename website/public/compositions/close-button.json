@@ -1,0 +1,13 @@
+{
+  "type": "composition",
+  "fileDependencies": [
+    "./button",
+    "./icon-button"
+  ],
+  "id": "close-button",
+  "file": {
+    "name": "close-button.tsx",
+    "content": "\"use client\";\r\n\r\nimport type { HTMLDreamProps } from \"@dreamy-ui/react\";\r\nimport { forwardRef } from \"react\";\r\nimport type { ButtonVariantProps } from \"styled-system/recipes\";\r\nimport type { UniversalButtonProps } from \"./button\";\r\nimport { IconButton } from \"./icon-button\";\r\n\r\ninterface Props extends UniversalButtonProps {}\r\n\r\nexport interface CloseButtonProps\r\n    extends Omit<HTMLDreamProps<\"button\">, \"aria-label\" | \"children\">,\r\n        ButtonVariantProps,\r\n        Props {}\r\n\r\nexport const CloseButton = forwardRef<HTMLButtonElement, CloseButtonProps>(\r\n    ({ isLoading, isDisabled, ...props }, ref) => {\r\n        return (\r\n            <IconButton\r\n                ref={ref}\r\n                data-loading={isLoading}\r\n                data-disabled={isDisabled}\r\n                disabled={isDisabled || isLoading}\r\n                aria-label=\"Close\"\r\n                size={\"sm\"}\r\n                variant={\"ghost\"}\r\n                icon={\r\n                    <svg\r\n                        role={\"img\"}\r\n                        aria-label=\"Close\"\r\n                        xmlns=\"http://www.w3.org/2000/svg\"\r\n                        fill=\"none\"\r\n                        viewBox=\"0 0 24 24\"\r\n                        stroke=\"currentColor\"\r\n                        style={{\r\n                            width: \"var(--icon-button-icon-size)\",\r\n                            height: \"var(--icon-button-icon-size)\"\r\n                        }}\r\n                    >\r\n                        <path\r\n                            strokeLinecap=\"round\"\r\n                            strokeLinejoin=\"round\"\r\n                            strokeWidth={2}\r\n                            d=\"M6 18L18 6M6 6l12 12\"\r\n                        />\r\n                    </svg>\r\n                }\r\n                {...props}\r\n            />\r\n        );\r\n    }\r\n);\r\n"
+  },
+  "component": "CloseButton"
+}

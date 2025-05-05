@@ -20,7 +20,8 @@
 			},
 			"suspicious": {
 				"noExplicitAny": "off",
-				"noArrayIndexKey": "off"
+				"noArrayIndexKey": "off",
+				"noConfusingVoidType": "off"
 			},
 			"complexity": {
 				"noForEach": "off",

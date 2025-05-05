@@ -1,0 +1,44 @@
+[
+  {
+    "type": "composition",
+    "id": "box",
+    "file": "box.tsx",
+    "component": "Box",
+    "fileDependencies": []
+  },
+  {
+    "type": "composition",
+    "id": "button",
+    "file": "button.tsx",
+    "component": "Button",
+    "fileDependencies": []
+  },
+  {
+    "type": "composition",
+    "id": "close-button",
+    "file": "close-button.tsx",
+    "component": "CloseButton",
+    "fileDependencies": [
+      "./button",
+      "./icon-button"
+    ]
+  },
+  {
+    "type": "composition",
+    "id": "icon-button",
+    "file": "icon-button.tsx",
+    "component": "IconButton",
+    "fileDependencies": [
+      "../button"
+    ]
+  },
+  {
+    "type": "composition",
+    "id": "spinner",
+    "file": "spinner.tsx",
+    "component": "Spinner",
+    "fileDependencies": [
+      "./box"
+    ]
+  }
+]

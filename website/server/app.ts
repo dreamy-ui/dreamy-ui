@@ -17,6 +17,7 @@ declare module "@remix-run/node" {
     export interface AppLoadContext {
         start: number;
         version: string;
+        timings: Record<string, number>;
     }
 }
 
@@ -41,7 +42,8 @@ export class ExpressApp {
         const getLoadContext: GetLoadContextFunction = () => {
             return {
                 start: performance.now(),
-                version: pack.version
+                version: pack.version,
+                timings: {}
             } satisfies AppLoadContext;
         };
 
@@ -64,7 +66,7 @@ export class ExpressApp {
         const remixHandler = createRequestHandler({
             build: viteDevServer
                 ? async () => viteDevServer.ssrLoadModule("virtual:remix/server-build")
-                : build as any,
+                : (build as any),
             mode: build.mode,
             getLoadContext
         });
