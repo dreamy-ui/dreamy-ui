@@ -1,12 +1,13 @@
 {
   "type": "composition",
   "fileDependencies": [
-    "../button"
+    "./button",
+    "./factory"
   ],
   "id": "icon-button",
   "file": {
     "name": "icon-button.tsx",
-    "content": "\"use client\";\r\n\r\nimport type { HTMLDreamProps } from \"@dreamy-ui/react\";\r\nimport { forwardRef } from \"react\";\r\nimport type { ButtonVariantProps } from \"styled-system/recipes\";\r\nimport type { UniversalButtonProps } from \"../button\";\r\nimport { Button } from \"../button\";\r\n\r\ninterface Props extends UniversalButtonProps {\r\n    /**\r\n     * aria-label is required for accessibility\r\n     */\r\n    \"aria-label\": string;\r\n    /*\r\n     * The icon to display\r\n     */\r\n    icon: React.ReactNode;\r\n}\r\n\r\nexport interface IconButtonProps\r\n    extends Omit<HTMLDreamProps<\"button\">, \"aria-label\" | \"children\">,\r\n        ButtonVariantProps,\r\n        Props {}\r\n\r\nexport const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(\r\n    ({ icon, ...props }, ref) => {\r\n        return (\r\n            <Button\r\n                ref={ref}\r\n                {...props}\r\n                data-type={\"icon-button\"}\r\n            >\r\n                {icon}\r\n            </Button>\r\n        );\r\n    }\r\n);\r\n"
+    "content": "\"use client\";\n\nimport { forwardRef } from \"react\";\nimport type { ButtonVariantProps } from \"styled-system/recipes\";\nimport { Button, UniversalButtonProps } from \"./button\";\nimport { HTMLDreamyProps } from \"./factory\";\n\ninterface Props extends UniversalButtonProps {\n\t/**\n\t * aria-label is required for accessibility\n\t */\n\t\"aria-label\": string;\n\t/*\n\t * The icon to display\n\t */\n\ticon: React.ReactNode;\n}\n\nexport interface IconButtonProps\n\textends Omit<HTMLDreamyProps<\"button\">, \"aria-label\" | \"children\">,\n\t\tButtonVariantProps,\n\t\tProps {}\n\nexport const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(\n\t({ icon, ...props }, ref) => {\n\t\treturn (\n\t\t\t<Button ref={ref} {...props} data-type={\"icon-button\"}>\n\t\t\t\t{icon}\n\t\t\t</Button>\n\t\t);\n\t}\n);\n"
   },
   "component": "IconButton"
 }

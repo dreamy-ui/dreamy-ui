@@ -1,10 +1,7 @@
-import type { HTMLDreamProps } from "@dreamy-ui/react";
-import { dreamy } from "@dreamy-ui/react/rsc";
 import { forwardRef } from "react";
+import { type HTMLDreamyProps, dreamy } from "./factory";
 
-export interface BoxProps extends HTMLDreamProps<"div"> {}
-
-const DreamBox = dreamy.div;
+export interface BoxProps extends HTMLDreamyProps<"div"> {}
 
 /**
  * Box component
@@ -12,10 +9,5 @@ const DreamBox = dreamy.div;
  * @See Docs https://dreamy-ui.com/docs/components/box
  */
 export const Box = forwardRef<HTMLDivElement, BoxProps>((props, ref) => {
-    return (
-        <DreamBox
-            ref={ref}
-            {...props}
-        />
-    );
+	return <dreamy.div ref={ref} {...props} />;
 });

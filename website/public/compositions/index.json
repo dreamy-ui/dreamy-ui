@@ -4,14 +4,18 @@
     "id": "box",
     "file": "box.tsx",
     "component": "Box",
-    "fileDependencies": []
+    "fileDependencies": [
+      "./factory"
+    ]
   },
   {
     "type": "composition",
     "id": "button",
     "file": "button.tsx",
     "component": "Button",
-    "fileDependencies": []
+    "fileDependencies": [
+      "./factory"
+    ]
   },
   {
     "type": "composition",
@@ -20,8 +24,16 @@
     "component": "CloseButton",
     "fileDependencies": [
       "./button",
+      "./factory",
       "./icon-button"
     ]
+  },
+  {
+    "type": "composition",
+    "id": "factory",
+    "file": "factory.ts",
+    "component": "Factory",
+    "fileDependencies": []
   },
   {
     "type": "composition",
@@ -29,7 +41,8 @@
     "file": "icon-button.tsx",
     "component": "IconButton",
     "fileDependencies": [
-      "../button"
+      "./button",
+      "./factory"
     ]
   },
   {
@@ -38,7 +51,8 @@
     "file": "spinner.tsx",
     "component": "Spinner",
     "fileDependencies": [
-      "./box"
+      "./box",
+      "./factory"
     ]
   }
 ]
