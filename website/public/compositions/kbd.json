@@ -1,0 +1,12 @@
+{
+  "type": "composition",
+  "fileDependencies": [
+    "./factory"
+  ],
+  "id": "kbd",
+  "file": {
+    "name": "kbd.tsx",
+    "content": "import { forwardRef } from \"react\";\nimport { kbd, KbdVariantProps } from \"styled-system/recipes\";\nimport { dreamy, HTMLDreamyProps } from \"./factory\";\n\nexport interface KbdProps extends HTMLDreamyProps<\"div\">, KbdVariantProps {}\n\nconst DreamKbd = dreamy(\"div\", kbd);\n\n/**\n * Kbd component\n *\n * @See Docs https://dreamy-ui.com/docs/components/kbd\n */\nexport const Kbd = forwardRef<HTMLDivElement, KbdProps>((props, ref) => {\n\treturn <DreamKbd ref={ref} {...props} />;\n});\n"
+  },
+  "component": "Kbd"
+}

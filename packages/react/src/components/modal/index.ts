@@ -6,4 +6,7 @@ export type { ModalContentProps } from "./modal-content";
 export type { ModalFooterProps } from "./modal-footer";
 export type { ModalHeaderProps } from "./modal-header";
 export type { ModalOverlayProps } from "./modal-overlay";
-export type { ModalProps } from "./modal-root";
+// export type { ModalProps } from "./modal-root";
+// export * from "./modal-context";
+export * from "./modal-root";
+export * from "./use-modal";

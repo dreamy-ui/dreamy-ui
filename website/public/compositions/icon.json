@@ -1,0 +1,12 @@
+{
+  "type": "composition",
+  "fileDependencies": [
+    "./factory"
+  ],
+  "id": "icon",
+  "file": {
+    "name": "icon.tsx",
+    "content": "import { forwardRef } from \"react\";\nimport { type IconVariantProps, icon } from \"styled-system/recipes\";\nimport { dreamy, HTMLDreamyProps } from \"./factory\";\n\nexport interface IconProps extends HTMLDreamyProps<\"svg\">, IconVariantProps {}\n\nconst StyledIcon = dreamy(\"svg\", icon);\n\n/**\n * Icon component\n *\n * @See Docs https://dreamy-ui.com/docs/components/icon\n */\nexport const Icon = forwardRef<SVGSVGElement, IconProps>(\n\t({ ...props }, ref) => {\n\t\treturn <StyledIcon ref={ref} {...props} />;\n\t}\n);\n"
+  },
+  "component": "Icon"
+}

@@ -1,0 +1,12 @@
+{
+  "type": "composition",
+  "fileDependencies": [
+    "./factory"
+  ],
+  "id": "group",
+  "file": {
+    "name": "group.tsx",
+    "content": "import { dataAttr, splitProps } from \"@dreamy-ui/react\";\nimport {\n\tChildren,\n\tcloneElement,\n\tforwardRef,\n\tisValidElement,\n\tuseMemo\n} from \"react\";\nimport { type FlexProperties, flex } from \"styled-system/patterns\";\nimport { type GroupVariantProps, group } from \"styled-system/recipes\";\nimport { dreamy, HTMLDreamyProps } from \"./factory\";\n\nconst StyledGroup = dreamy(\"div\", group);\n\nexport interface GroupProps\n\textends Omit<HTMLDreamyProps<\"div\">, keyof FlexProperties>,\n\t\tGroupVariantProps,\n\t\tOmit<FlexProperties, \"grow\"> {\n\t/**\n\t * A function that determines if a child should be skipped\n\t */\n\tskip?: (child: React.ReactElement) => boolean;\n}\n\nexport const Group = forwardRef<HTMLDivElement, GroupProps>(\n\t({ children, skip, ...props }, ref) => {\n\t\tconst [patternProps, restProps] = splitProps(props, [\n\t\t\t\"align\",\n\t\t\t\"justify\",\n\t\t\t\"direction\",\n\t\t\t\"wrap\",\n\t\t\t\"basis\",\n\t\t\t\"shrink\"\n\t\t]);\n\n\t\tconst styles = flex.raw(patternProps);\n\n\t\tconst _children = useMemo(() => {\n\t\t\tconst childArray =\n\t\t\t\tChildren.toArray(children).filter(isValidElement);\n\t\t\tif (childArray.length === 1) return childArray;\n\n\t\t\tconst validChildArray = childArray.filter(\n\t\t\t\t(child) => !skip?.(child)\n\t\t\t);\n\t\t\tconst validChildCount = validChildArray.length;\n\t\t\tif (validChildArray.length === 1) return childArray;\n\n\t\t\treturn childArray.map((child) => {\n\t\t\t\tconst childProps = child.props as any;\n\t\t\t\tif (skip?.(child)) return child;\n\t\t\t\tconst index = validChildArray.indexOf(child);\n\t\t\t\treturn cloneElement(child, {\n\t\t\t\t\t...childProps,\n\t\t\t\t\t\"data-group-item\": \"\",\n\t\t\t\t\t\"data-first\": dataAttr(index === 0),\n\t\t\t\t\t\"data-last\": dataAttr(index === validChildCount - 1),\n\t\t\t\t\t\"data-between\": dataAttr(\n\t\t\t\t\t\tindex > 0 && index < validChildCount - 1\n\t\t\t\t\t),\n\t\t\t\t\tstyle: {\n\t\t\t\t\t\t\"--group-count\": validChildCount,\n\t\t\t\t\t\t\"--group-index\": index,\n\t\t\t\t\t\t...(childProps?.style ?? {})\n\t\t\t\t\t}\n\t\t\t\t} as any);\n\t\t\t});\n\t\t}, [children, skip]);\n\n\t\treturn (\n\t\t\t<StyledGroup ref={ref} {...styles} {...restProps}>\n\t\t\t\t{_children}\n\t\t\t</StyledGroup>\n\t\t);\n\t}\n);\n\nGroup.displayName = \"Group\";\n"
+  },
+  "component": "Group"
+}

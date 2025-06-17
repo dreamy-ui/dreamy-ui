@@ -1,0 +1,12 @@
+{
+  "type": "composition",
+  "fileDependencies": [
+    "./factory"
+  ],
+  "id": "list",
+  "file": {
+    "name": "list.tsx",
+    "content": "import { forwardRef } from \"react\";\nimport { type ListVariantProps, list } from \"styled-system/recipes\";\nimport { dreamy, HTMLDreamyProps } from \"./factory\";\n\n// DTS build fails if I try to use generics and HTMLDreamProps generic in HTMLDreamProps has to be constant\nexport interface ListProps extends HTMLDreamyProps<\"ol\">, ListVariantProps {\n\tordered?: boolean;\n\tunordered?: boolean;\n}\n\nconst StyledList = dreamy(\"ol\", list);\n\n/**\n * List component\n *\n * @See Docs https://dreamy-ui.com/docs/components/list\n */\nexport const List = forwardRef<HTMLOListElement | HTMLUListElement, ListProps>(\n\t(props, ref) => {\n\t\tconst { ordered, unordered, ...rest } = props;\n\n\t\tif (ordered && unordered)\n\t\t\tconsole.warn(\"List cannot have both ordered and unordered props\");\n\n\t\treturn (\n\t\t\t<StyledList\n\t\t\t\tdata-type={ordered ? \"ordered\" : \"unordered\"}\n\t\t\t\tas={ordered ? \"ol\" : \"ul\"}\n\t\t\t\tref={ref}\n\t\t\t\t{...rest}\n\t\t\t/>\n\t\t);\n\t}\n);\n\nexport interface ListItemProps extends HTMLDreamyProps<\"li\"> {}\n\nconst StyledListItem = dreamy.li;\n\nexport const ListItem = forwardRef<HTMLLIElement, ListItemProps>(\n\t(props, ref) => {\n\t\treturn <StyledListItem ref={ref} {...props} />;\n\t}\n);\n"
+  },
+  "component": "List"
+}

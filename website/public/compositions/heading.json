@@ -1,0 +1,12 @@
+{
+  "type": "composition",
+  "fileDependencies": [
+    "./factory"
+  ],
+  "id": "heading",
+  "file": {
+    "name": "heading.tsx",
+    "content": "import { splitProps } from \"@dreamy-ui/react\";\nimport { forwardRef } from \"react\";\nimport { type TextProperties, text } from \"styled-system/patterns\";\nimport { dreamy, HTMLDreamyProps } from \"./factory\";\n\nexport interface HeadingProps extends HTMLDreamyProps<\"h3\">, TextProperties {}\n\n/**\n * Heading component\n *\n * @See Docs https://dreamy-ui.com/docs/components/heading\n */\nexport const Heading = forwardRef<HTMLParagraphElement, HeadingProps>(\n\t(props, ref) => {\n\t\tconst [patternProps, restProps] = splitProps(props, [\n\t\t\t\"variant\",\n\t\t\t\"size\"\n\t\t]);\n\n\t\tconst styleProps = text.raw({\n\t\t\tvariant: \"heading\",\n\t\t\t...patternProps\n\t\t});\n\n\t\treturn <dreamy.h3 ref={ref} {...styleProps} {...restProps} />;\n\t}\n);\n"
+  },
+  "component": "Heading"
+}

@@ -1,0 +1,15 @@
+{
+  "type": "composition",
+  "fileDependencies": [
+    "./box",
+    "./factory",
+    "./style-context",
+    "./visually-hidden"
+  ],
+  "id": "slider",
+  "file": {
+    "name": "slider.tsx",
+    "content": "import {\n\tSliderProvider,\n\tuseSlider,\n\tuseSliderContext,\n\tUseSliderProps\n} from \"@dreamy-ui/react\";\nimport { forwardRef } from \"react\";\nimport { slider } from \"styled-system/recipes\";\nimport { Box } from \"./box\";\nimport { HTMLDreamyProps } from \"./factory\";\nimport { createStyleContext } from \"./style-context\";\nimport { VisuallyHiddenInput } from \"./visually-hidden\";\n\nconst { withProvider, withContext } = createStyleContext(slider);\n\nexport interface SliderProps extends UseSliderProps {}\n\n/**\n * Slider component\n *\n * @See Docs https://dreamy-ui.com/docs/components/slider\n */\nexport const Slider = withProvider(\n\tforwardRef<HTMLDivElement, SliderProps>((props, ref) => {\n\t\tconst { getRootProps, getInputProps, ...rest } = useSlider(props);\n\n\t\treturn (\n\t\t\t<SliderProvider value={rest}>\n\t\t\t\t<VisuallyHiddenInput\n\t\t\t\t\t{...(getInputProps(undefined, ref) as any)}\n\t\t\t\t/>\n\t\t\t\t<Box {...(getRootProps(undefined, ref) as any)} />\n\t\t\t</SliderProvider>\n\t\t);\n\t}),\n\t\"root\"\n);\n\nexport interface SliderTrackProps extends HTMLDreamyProps<\"div\"> {}\n\nexport const SliderTrack = withContext(\n\tforwardRef<HTMLDivElement, SliderTrackProps>((props, ref) => {\n\t\tconst { getTrackProps } = useSliderContext();\n\n\t\treturn <Box {...getTrackProps(props, ref)} />;\n\t}),\n\t\"track\"\n);\n\nexport interface SliderFilledTrackProps extends HTMLDreamyProps<\"div\"> {}\n\nexport const SliderFilledTrack = withContext(\n\tforwardRef<HTMLDivElement, SliderFilledTrackProps>((props, ref) => {\n\t\tconst { getInnerTrackProps } = useSliderContext();\n\t\treturn <Box ref={ref} {...getInnerTrackProps(props, ref)} />;\n\t}),\n\t\"trackFilled\"\n);\n\nexport interface SliderThumbProps extends HTMLDreamyProps<\"div\"> {}\n\nexport const SliderThumb = withContext(\n\tforwardRef<HTMLDivElement, SliderThumbProps>((props, ref) => {\n\t\tconst { getThumbProps } = useSliderContext();\n\n\t\treturn <Box {...getThumbProps(props, ref)} />;\n\t}),\n\t\"thumb\"\n);\n\nexport interface SliderMarkProps extends HTMLDreamyProps<\"div\"> {\n\tvalue: number;\n}\n\nexport const SliderMark = withContext(\n\tforwardRef<HTMLDivElement, SliderMarkProps>((props, ref) => {\n\t\tconst { getMarkerProps } = useSliderContext();\n\n\t\treturn <Box {...getMarkerProps(props, ref)} />;\n\t}),\n\t\"marker\"\n);\n"
+  },
+  "component": "Slider"
+}

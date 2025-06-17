@@ -1,0 +1,12 @@
+{
+  "type": "composition",
+  "fileDependencies": [
+    "./factory"
+  ],
+  "id": "divider",
+  "file": {
+    "name": "divider.tsx",
+    "content": "import { splitProps } from \"@dreamy-ui/react\";\nimport { forwardRef } from \"react\";\nimport { type DividerProperties, divider } from \"styled-system/patterns\";\nimport { dreamy, HTMLDreamyProps } from \"./factory\";\n\nexport interface DividerProps\n\textends Omit<HTMLDreamyProps<\"hr\">, keyof DividerProperties>,\n\t\tDividerProperties {}\n\nconst DreamDivider = dreamy.hr;\n\n/**\n * Divider component\n *\n * @See Docs https://dreamy-ui.com/docs/components/divider\n */\nexport const Divider = forwardRef<HTMLHRElement, DividerProps>((props, ref) => {\n\tconst [patternProps, restProps] = splitProps(props, [\n\t\t\"orientation\",\n\t\t\"thickness\",\n\t\t\"color\"\n\t]);\n\n\tconst styleProps = divider.raw(patternProps);\n\n\treturn <DreamDivider ref={ref} {...styleProps} {...restProps} />;\n});\n"
+  },
+  "component": "Divider"
+}

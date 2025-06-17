@@ -1,0 +1,12 @@
+{
+  "type": "composition",
+  "fileDependencies": [
+    "./factory"
+  ],
+  "id": "theme",
+  "file": {
+    "name": "theme.tsx",
+    "content": "import { forwardRef } from \"react\";\nimport { cx } from \"styled-system/css\";\nimport { type ThemeVariantProps, theme } from \"styled-system/recipes\";\nimport { dreamy, HTMLDreamyProps } from \"./factory\";\n\nexport interface ThemeProps extends HTMLDreamyProps<\"div\">, ThemeVariantProps {}\n\nexport interface DarkThemeProps extends ThemeProps {}\n\nexport interface LightThemeProps extends ThemeProps {}\n\nconst StyledTheme = dreamy(\"div\", theme);\n\n/**\n * Dark Theme component\n *\n * @See Docs https://dreamy-ui.com/docs/components/theme\n */\nexport const DarkTheme = forwardRef<HTMLDivElement, ThemeProps>(\n\t(props, ref) => {\n\t\treturn (\n\t\t\t<StyledTheme\n\t\t\t\tref={ref}\n\t\t\t\t{...props}\n\t\t\t\tdata-theme=\"dark\"\n\t\t\t\tclassName={cx(\"dark\", props.className)}\n\t\t\t/>\n\t\t);\n\t}\n);\n\n/**\n * Light Theme component\n *\n * @See Docs https://dreamy-ui.com/docs/components/theme\n */\nexport const LightTheme = forwardRef<HTMLDivElement, ThemeProps>(\n\t(props, ref) => {\n\t\treturn (\n\t\t\t<StyledTheme\n\t\t\t\tref={ref}\n\t\t\t\t{...props}\n\t\t\t\tdata-theme=\"light\"\n\t\t\t\tclassName={cx(\"light\", props.className)}\n\t\t\t/>\n\t\t);\n\t}\n);\n"
+  },
+  "component": "Theme"
+}

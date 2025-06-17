@@ -5,6 +5,7 @@ import {
 } from "@/components/modal/use-modal";
 import { Portal, type PortalProps } from "@/components/portal";
 import { createContext } from "@/provider/create-context";
+import { FocusableElement } from "@/utils";
 import { AnimatePresence } from "motion/react";
 import { useMemo } from "react";
 
@@ -19,6 +20,8 @@ export const [ModalContextProvider, useModalContext] =
 		errorMessage:
 			"useModalContext: `context` is undefined. Seems you forgot to wrap modal components in `<Modal />`"
 	});
+
+export { RemoveScroll } from "react-remove-scroll";
 
 export function ModalRoot(props: ModalProps) {
 	const modalProps: ModalProps = {
@@ -157,49 +160,3 @@ interface ModalOptions {
 }
 
 type ScrollBehavior = "inside" | "outside";
-
-export interface FocusLockProps {
-	/**
-	 * `ref` of the element to receive focus initially
-	 */
-	initialFocusRef?: React.RefObject<FocusableElement | null>;
-	/**
-	 * `ref` of the element to return focus to when `FocusLock`
-	 * unmounts
-	 */
-	finalFocusRef?: React.RefObject<FocusableElement | null>;
-	/**
-	 * The `ref` of the wrapper for which the focus-lock wraps
-	 */
-	contentRef?: React.RefObject<HTMLElement>;
-	/**
-	 * If `true`, focus will be restored to the element that
-	 * triggered the `FocusLock` once it unmounts
-	 *
-	 * @default false
-	 */
-	restoreFocus?: boolean;
-	/**
-	 * If `true`, focus trapping will be disabled
-	 *
-	 * @default false
-	 */
-	disabled?: boolean;
-	/**
-	 * If `true`, the first focusable element within the `children`
-	 * will auto-focused once `FocusLock` mounts
-	 *
-	 * @default false
-	 */
-	autoFocus?: boolean;
-	/**
-	 * If `true`, disables text selections inside, and outside focus lock
-	 *
-	 * @default false
-	 */
-	persistentFocus?: boolean;
-}
-
-interface FocusableElement {
-	focus(options?: FocusOptions): void;
-}

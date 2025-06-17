@@ -4,6 +4,7 @@ export * from "./box";
 export * from "./button";
 export * from "./card";
 export * from "./checkbox";
+export * from "./descendant";
 export * from "./editable";
 export * from "./field";
 export * from "./flex";

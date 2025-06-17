@@ -1,0 +1,12 @@
+{
+  "type": "composition",
+  "fileDependencies": [
+    "./factory"
+  ],
+  "id": "flex",
+  "file": {
+    "name": "flex.tsx",
+    "content": "import { splitProps } from \"@dreamy-ui/react\";\nimport { forwardRef } from \"react\";\nimport { type FlexProperties, flex } from \"styled-system/patterns\";\nimport { dreamy, HTMLDreamyProps } from \"./factory\";\n\nexport interface FlexProps\n\textends Omit<HTMLDreamyProps<\"div\">, keyof FlexProperties>,\n\t\tFlexProperties {}\n\nconst DreamFlex = dreamy.div;\n\n/**\n * Flex component\n *\n * @See Docs https://dreamy-ui.com/docs/components/flex\n */\nexport const Flex = forwardRef<HTMLDivElement, FlexProps>((props, ref) => {\n\tconst [patternProps, restProps] = splitProps(props, [\n\t\t\"align\",\n\t\t\"justify\",\n\t\t\"direction\",\n\t\t\"wrap\",\n\t\t\"basis\",\n\t\t\"grow\",\n\t\t\"shrink\"\n\t]);\n\n\tconst styles = flex.raw(patternProps);\n\n\treturn <DreamFlex ref={ref} {...styles} {...restProps} />;\n});\n"
+  },
+  "component": "Flex"
+}

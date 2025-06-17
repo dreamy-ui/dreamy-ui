@@ -1,0 +1,17 @@
+{
+  "type": "composition",
+  "fileDependencies": [
+    "./alert",
+    "./close-button",
+    "./factory",
+    "./icon",
+    "./spinner",
+    "./text"
+  ],
+  "id": "toast",
+  "file": {
+    "name": "toast.tsx",
+    "content": "import {\n\tdataAttr,\n\tToast,\n\tTRANSITION_EASINGS,\n\tuseToast\n} from \"@dreamy-ui/react\";\nimport { isValidMotionProp, m } from \"motion/react\";\nimport { useCallback } from \"react\";\nimport { isCssProperty } from \"styled-system/jsx\";\nimport { toast } from \"styled-system/recipes\";\nimport { useStatusIcon } from \"./alert\";\nimport { CloseButton } from \"./close-button\";\nimport { dreamy, Status } from \"./factory\";\nimport { Icon } from \"./icon\";\nimport { Spinner } from \"./spinner\";\nimport { Text } from \"./text\";\n\nconst StyledToast = dreamy(m.div, toast, {\n\tshouldForwardProp: (prop, variantKeys) =>\n\t\tisValidMotionProp(prop) ||\n\t\t(!variantKeys.includes(prop) && !isCssProperty(prop))\n});\n\nfunction ToastIcon({ status }: { status: Status }) {\n\tconst statusIcon = useStatusIcon(status);\n\treturn (\n\t\t<Icon role=\"img\" data-part={\"icon\"} asChild>\n\t\t\t{statusIcon}\n\t\t</Icon>\n\t);\n}\n\nexport function ToastComponent({ toast }: { toast: Toast }) {\n\tconst { removeToast } = useToast();\n\n\tconst handleClose = useCallback(() => {\n\t\tremoveToast(toast.id);\n\t}, [removeToast, toast.id]);\n\n\tif (toast.render) {\n\t\treturn (\n\t\t\t<m.div\n\t\t\t\tstyle={{\n\t\t\t\t\tzIndex: \"var(--z-index-toast)\",\n\t\t\t\t\tpointerEvents: \"auto\"\n\t\t\t\t}}\n\t\t\t\t{...{\n\t\t\t\t\tlayout: \"position\",\n\t\t\t\t\tlayoutId: toast.id,\n\t\t\t\t\tinitial: { opacity: 0, scale: 0.95 },\n\t\t\t\t\tanimate: { opacity: 1, scale: 1 },\n\t\t\t\t\texit: { opacity: 0, scale: 0.95 },\n\t\t\t\t\ttransition: {\n\t\t\t\t\t\tduration: 0.3,\n\t\t\t\t\t\tease: TRANSITION_EASINGS.easeInOut\n\t\t\t\t\t}\n\t\t\t\t}}\n\t\t\t\t{...(toast.containerProps as any)}\n\t\t\t>\n\t\t\t\t{toast.render(toast)}\n\t\t\t</m.div>\n\t\t);\n\t}\n\n\treturn (\n\t\t<StyledToast\n\t\t\t{...{\n\t\t\t\tlayout: true,\n\t\t\t\tlayoutId: toast.id,\n\t\t\t\tinitial: { opacity: 0, scale: 0.95 },\n\t\t\t\tanimate: { opacity: 1, scale: 1 },\n\t\t\t\texit: { opacity: 0, scale: 0.95 },\n\t\t\t\ttransition: {\n\t\t\t\t\tduration: 0.3,\n\t\t\t\t\tease: TRANSITION_EASINGS.easeInOut\n\t\t\t\t}\n\t\t\t}}\n\t\t\tkey={`${toast.id}-toast`}\n\t\t\tid={toast.id}\n\t\t\tdata-status={toast.status}\n\t\t\tdata-variant={\"default\"}\n\t\t\tdata-closable={dataAttr(toast.isClosable)}\n\t\t\t{...(toast.containerProps as any)}\n\t\t>\n\t\t\t<m.div layout=\"position\" data-part={\"container\"}>\n\t\t\t\t<Text data-part={\"title\"} as={\"h4\"}>\n\t\t\t\t\t{toast.status === \"loading\" ? (\n\t\t\t\t\t\t<Spinner color={\"info\"} size={\"sm\"} />\n\t\t\t\t\t) : (\n\t\t\t\t\t\t<ToastIcon status={toast.status} />\n\t\t\t\t\t)}\n\t\t\t\t\t{toast.title}\n\t\t\t\t</Text>\n\t\t\t\t{toast.description && (\n\t\t\t\t\t<Text data-part={\"description\"}>{toast.description}</Text>\n\t\t\t\t)}\n\t\t\t</m.div>\n\t\t\t{toast.rightContent}\n\t\t\t{toast.isClosable && (\n\t\t\t\t<CloseButton\n\t\t\t\t\tdata-part={\"close\"}\n\t\t\t\t\tsize={\"xs\"}\n\t\t\t\t\tonClick={handleClose}\n\t\t\t\t/>\n\t\t\t)}\n\t\t</StyledToast>\n\t);\n}\n"
+  },
+  "component": "Toast"
+}

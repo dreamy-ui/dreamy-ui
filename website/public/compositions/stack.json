@@ -1,0 +1,12 @@
+{
+  "type": "composition",
+  "fileDependencies": [
+    "./factory"
+  ],
+  "id": "stack",
+  "file": {
+    "name": "stack.tsx",
+    "content": "import React, { forwardRef } from \"react\";\nimport { cx } from \"styled-system/css\";\nimport { type StackProperties, stack } from \"styled-system/patterns\";\nimport { dreamy, HTMLDreamyProps } from \"./factory\";\n\nexport interface StackProps\n\textends Omit<HTMLDreamyProps<\"div\">, keyof StackProperties>,\n\t\tStackProperties {\n\tseparator?: React.ReactNode;\n}\n\nconst StyledStack = dreamy.div;\n\n/**\n * Stack component.\n *\n * @See Docs https://dreamy-ui.com/docs/components/stack\n */\nexport const Stack = forwardRef<HTMLDivElement, StackProps>(\n\t({ separator, direction = \"row\", children, className, ...props }, ref) => {\n\t\treturn (\n\t\t\t<StyledStack\n\t\t\t\tref={ref}\n\t\t\t\tclassName={cx(\n\t\t\t\t\tstack({\n\t\t\t\t\t\tdirection,\n\t\t\t\t\t\talignItems: direction === \"row\" ? \"center\" : undefined\n\t\t\t\t\t}),\n\t\t\t\t\tclassName\n\t\t\t\t)}\n\t\t\t\t{...props}\n\t\t\t>\n\t\t\t\t{React.Children.map(children, (child, index) => (\n\t\t\t\t\t<>\n\t\t\t\t\t\t{child}\n\t\t\t\t\t\t{separator &&\n\t\t\t\t\t\t\tindex <\n\t\t\t\t\t\t\t\tReact.Children.toArray(children).length - 1 &&\n\t\t\t\t\t\t\tseparator}\n\t\t\t\t\t</>\n\t\t\t\t))}\n\t\t\t</StyledStack>\n\t\t);\n\t}\n);\n\nexport interface HStackProps extends Omit<StackProps, \"direction\"> {}\n\n/**\n * HStack component. Stack component with `direction=\"row\"`.\n *\n * @See Docs https://dreamy-ui.com/docs/components/stack\n */\nexport const HStack = forwardRef<HTMLDivElement, HStackProps>(\n\t({ children, ...props }, ref) => {\n\t\treturn (\n\t\t\t<Stack ref={ref} direction={\"row\"} {...props}>\n\t\t\t\t{children}\n\t\t\t</Stack>\n\t\t);\n\t}\n);\n\nexport interface VStackProps extends Omit<StackProps, \"direction\"> {}\n\n/**\n * VStack component. Stack component with `direction=\"column\"`.\n *\n * @See Docs https://dreamy-ui.com/docs/components/stack\n */\nexport const VStack = forwardRef<HTMLDivElement, VStackProps>(\n\t({ children, ...props }, ref) => {\n\t\treturn (\n\t\t\t<Stack ref={ref} direction={\"column\"} {...props}>\n\t\t\t\t{children}\n\t\t\t</Stack>\n\t\t);\n\t}\n);\n"
+  },
+  "component": "Stack"
+}
