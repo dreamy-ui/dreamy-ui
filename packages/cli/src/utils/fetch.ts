@@ -102,49 +102,75 @@ function checkForRecipeOrPattern(file: string, dir: string) {
 export async function getRecipeForComponent(
 	componentId: string,
 	recipesDir: string
-): Promise<{ id: string; content: string } | null> {
-	// First, fetch the component to get its recipeId
+): Promise<Array<{ id: string; content: string }>> {
+	// First, fetch the component to get its recipeIds
 	try {
 		const component = await fetchComposition(componentId);
 
-		// If component doesn't have a recipe, return null
-		if (!component.hasRecipe || !component.recipeId) {
-			return null;
+		// If component doesn't have recipes, return empty array
+		if (
+			!component.hasRecipe ||
+			!component.recipeIds ||
+			component.recipeIds.length === 0
+		) {
+			return [];
 		}
 
-		// Fetch the recipe using the actual recipeId
-		const recipe = await fetchRecipe(component.recipeId);
-		if (recipe?.file) {
-			return { id: recipe.id, content: recipe.file.content };
-		}
+		// Fetch all recipes using the recipeIds
+		const recipes = await Promise.all(
+			component.recipeIds.map(async (recipeId) => {
+				const recipe = await fetchRecipe(recipeId);
+				return recipe?.file
+					? { id: recipe.id, content: recipe.file.content }
+					: null;
+			})
+		);
+
+		return recipes.filter(Boolean) as Array<{
+			id: string;
+			content: string;
+		}>;
 	} catch (error) {
-		console.warn(`Failed to fetch recipe for component ${componentId}`);
+		console.warn(`Failed to fetch recipes for component ${componentId}`);
 	}
 
-	return null;
+	return [];
 }
 
 export async function getPatternForComponent(
 	componentId: string,
 	patternsDir: string
-): Promise<{ id: string; content: string } | null> {
-	// First, fetch the component to get its patternId
+): Promise<Array<{ id: string; content: string }>> {
+	// First, fetch the component to get its patternIds
 	try {
 		const component = await fetchComposition(componentId);
 
-		// If component doesn't have a pattern, return null
-		if (!component.hasPattern || !component.patternId) {
-			return null;
+		// If component doesn't have patterns, return empty array
+		if (
+			!component.hasPattern ||
+			!component.patternIds ||
+			component.patternIds.length === 0
+		) {
+			return [];
 		}
 
-		// Fetch the pattern using the actual patternId
-		const pattern = await fetchPattern(component.patternId);
-		if (pattern?.file) {
-			return { id: pattern.id, content: pattern.file.content };
-		}
+		// Fetch all patterns using the patternIds
+		const patterns = await Promise.all(
+			component.patternIds.map(async (patternId) => {
+				const pattern = await fetchPattern(patternId);
+				return pattern?.file
+					? { id: pattern.id, content: pattern.file.content }
+					: null;
+			})
+		);
+
+		return patterns.filter(Boolean) as Array<{
+			id: string;
+			content: string;
+		}>;
 	} catch (error) {
-		console.warn(`Failed to fetch pattern for component ${componentId}`);
+		console.warn(`Failed to fetch patterns for component ${componentId}`);
 	}
 
-	return null;
+	return [];
 }

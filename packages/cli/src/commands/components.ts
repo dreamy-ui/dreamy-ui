@@ -122,27 +122,31 @@ export const ComponentsCommand = new Command("components")
 				// Get recipes for all components (selected + dependencies)
 				const componentRecipes = await Promise.all(
 					allComponentIds.map(async (id) => {
-						const recipe = await getRecipeForComponent(
+						const recipes = await getRecipeForComponent(
 							id,
 							recipesDir
 						);
-						return recipe ? { componentId: id, recipe } : null;
+						return recipes.length > 0
+							? { componentId: id, recipes }
+							: null;
 					})
 				);
 
 				const validRecipes = componentRecipes.filter(Boolean) as Array<{
 					componentId: string;
-					recipe: { id: string; content: string };
+					recipes: Array<{ id: string; content: string }>;
 				}>;
 
 				// Get patterns for all components (selected + dependencies)
 				const componentPatterns = await Promise.all(
 					allComponentIds.map(async (id) => {
-						const pattern = await getPatternForComponent(
+						const patterns = await getPatternForComponent(
 							id,
 							patternsDir
 						);
-						return pattern ? { componentId: id, pattern } : null;
+						return patterns.length > 0
+							? { componentId: id, patterns }
+							: null;
 					})
 				);
 
@@ -150,7 +154,7 @@ export const ComponentsCommand = new Command("components")
 					Boolean
 				) as Array<{
 					componentId: string;
-					pattern: { id: string; content: string };
+					patterns: Array<{ id: string; content: string }>;
 				}>;
 
 				await tasks([
@@ -206,59 +210,67 @@ export const ComponentsCommand = new Command("components")
 						enabled: !!validRecipes.length && !dryRun,
 						task: async () => {
 							await Promise.all(
-								validRecipes.map(
-									async ({ componentId, recipe }) => {
-										let recipeFilename = `${recipe.id}.ts`;
-										if (jsx) {
-											recipeFilename =
-												recipeFilename.replace(
-													".ts",
-													".js"
+								validRecipes.flatMap(
+									async ({ componentId, recipes }) => {
+										return Promise.all(
+											recipes.map(async (recipe) => {
+												let recipeFilename = `${recipe.id}.ts`;
+												if (jsx) {
+													recipeFilename =
+														recipeFilename.replace(
+															".ts",
+															".js"
+														);
+												}
+
+												const recipeOutPath = join(
+													recipesDir,
+													recipeFilename
 												);
-										}
 
-										const recipeOutPath = join(
-											recipesDir,
-											recipeFilename
+												if (
+													existsSync(recipeOutPath) &&
+													!force
+												) {
+													skippedRecipes.push(
+														recipe.id
+													);
+													return;
+												}
+
+												let recipeContent =
+													recipe.content;
+
+												// Transform recipe imports to use local paths if needed
+												recipeContent =
+													recipeContent.replace(
+														/from "@\/recipes\//g,
+														'from "./'
+													);
+
+												// Convert to JSX if needed
+												if (jsx) {
+													recipeContent =
+														await convertTsxToJsx(
+															recipeContent
+														);
+												}
+
+												if (dryRun) {
+													printRecipeSync({
+														id: recipe.id,
+														content: recipeContent,
+														filename: recipeFilename
+													});
+												} else {
+													await writeFile(
+														recipeOutPath,
+														recipeContent,
+														"utf-8"
+													);
+												}
+											})
 										);
-
-										if (
-											existsSync(recipeOutPath) &&
-											!force
-										) {
-											skippedRecipes.push(recipe.id);
-											return;
-										}
-
-										let recipeContent = recipe.content;
-
-										// Transform recipe imports to use local paths if needed
-										recipeContent = recipeContent.replace(
-											/from "@\/recipes\//g,
-											'from "./'
-										);
-
-										// Convert to JSX if needed
-										if (jsx) {
-											recipeContent =
-												await convertTsxToJsx(
-													recipeContent
-												);
-										}
-
-										if (dryRun) {
-											printRecipeSync({
-												id: recipe.id,
-												content: recipeContent,
-												filename: recipeFilename
-											});
-										} else {
-											await writeFile(
-												recipeOutPath,
-												recipeContent,
-												"utf-8"
-											);
-										}
 									}
 								)
 							);
@@ -273,59 +285,70 @@ export const ComponentsCommand = new Command("components")
 						enabled: !!validPatterns.length && !dryRun,
 						task: async () => {
 							await Promise.all(
-								validPatterns.map(
-									async ({ componentId, pattern }) => {
-										let patternFilename = `${pattern.id}.ts`;
-										if (jsx) {
-											patternFilename =
-												patternFilename.replace(
-													".ts",
-													".js"
+								validPatterns.flatMap(
+									async ({ componentId, patterns }) => {
+										return Promise.all(
+											patterns.map(async (pattern) => {
+												let patternFilename = `${pattern.id}.ts`;
+												if (jsx) {
+													patternFilename =
+														patternFilename.replace(
+															".ts",
+															".js"
+														);
+												}
+
+												const patternOutPath = join(
+													patternsDir,
+													patternFilename
 												);
-										}
 
-										const patternOutPath = join(
-											patternsDir,
-											patternFilename
+												if (
+													existsSync(
+														patternOutPath
+													) &&
+													!force
+												) {
+													skippedPatterns.push(
+														pattern.id
+													);
+													return;
+												}
+
+												let patternContent =
+													pattern.content;
+
+												// Transform pattern imports to use local paths if needed
+												patternContent =
+													patternContent.replace(
+														/from "@\/patterns\//g,
+														'from "./'
+													);
+
+												// Convert to JSX if needed
+												if (jsx) {
+													patternContent =
+														await convertTsxToJsx(
+															patternContent
+														);
+												}
+
+												if (dryRun) {
+													printPatternSync({
+														id: pattern.id,
+														content: patternContent,
+														filename:
+															patternFilename
+													});
+												} else {
+													await writeFile(
+														patternOutPath,
+														patternContent,
+														"utf-8"
+													);
+												}
+											})
 										);
-
-										if (
-											existsSync(patternOutPath) &&
-											!force
-										) {
-											skippedPatterns.push(pattern.id);
-											return;
-										}
-
-										let patternContent = pattern.content;
-
-										// Transform pattern imports to use local paths if needed
-										patternContent = patternContent.replace(
-											/from "@\/patterns\//g,
-											'from "./'
-										);
-
-										// Convert to JSX if needed
-										if (jsx) {
-											patternContent =
-												await convertTsxToJsx(
-													patternContent
-												);
-										}
-
-										if (dryRun) {
-											printPatternSync({
-												id: pattern.id,
-												content: patternContent,
-												filename: patternFilename
-											});
-										} else {
-											await writeFile(
-												patternOutPath,
-												patternContent,
-												"utf-8"
-											);
-										}
 									}
 								)
 							);
@@ -445,8 +468,8 @@ export const ComponentsCommand = new Command("components")
 				const { default: Table } = await import("cli-table");
 
 				const table = new Table({
-					head: ["name", "dependencies", "has recipe", "has pattern"],
-					colWidths: [20, 30, 12, 12],
+					head: ["name", "dependencies", "recipes", "patterns"],
+					colWidths: [20, 30, 20, 20],
 					style: { compact: true }
 				});
 
@@ -459,13 +482,19 @@ export const ComponentsCommand = new Command("components")
 				items.forEach((item) => {
 					const deps = item.fileDependencies;
 					const depsString = deps.length ? deps.join(", ") : "-";
-					const hasRecipeString = item.hasRecipe ? "✅" : "❌";
-					const hasPatternString = item.hasPattern ? "✅" : "❌";
+					const recipesString =
+						item.recipeIds && item.recipeIds.length > 0
+							? item.recipeIds.join(", ")
+							: "-";
+					const patternsString =
+						item.patternIds && item.patternIds.length > 0
+							? item.patternIds.join(", ")
+							: "-";
 					table.push([
 						item.id,
 						depsString,
-						hasRecipeString,
-						hasPatternString
+						recipesString,
+						patternsString
 					]);
 				});
 

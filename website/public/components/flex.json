@@ -6,10 +6,12 @@
   "id": "flex",
   "file": {
     "name": "flex.tsx",
-    "content": "import { splitProps } from \"@dreamy-ui/react\";\r\nimport { forwardRef } from \"react\";\r\nimport { type FlexProperties, flex } from \"styled-system/patterns\";\r\nimport { type HTMLDreamyProps, dreamy } from \"./factory\";\r\n\r\nexport interface FlexProps\r\n    extends Omit<HTMLDreamyProps<\"div\">, keyof FlexProperties>,\r\n        FlexProperties {}\r\n\r\n/**\r\n * Flex component\r\n *\r\n * @See Docs https://dreamy-ui.com/docs/components/flex\r\n */\r\nexport const Flex = forwardRef<HTMLDivElement, FlexProps>((props, ref) => {\r\n    const [patternProps, restProps] = splitProps(props, [\r\n        \"align\",\r\n        \"justify\",\r\n        \"direction\",\r\n        \"wrap\",\r\n        \"basis\",\r\n        \"grow\",\r\n        \"shrink\"\r\n    ]);\r\n\r\n    const styles = flex.raw(patternProps);\r\n\r\n    return (\r\n        <dreamy.div\r\n            ref={ref}\r\n            {...styles}\r\n            {...restProps}\r\n        />\r\n    );\r\n});\r\n"
+    "content": "import { splitProps } from \"@dreamy-ui/react\";\nimport { forwardRef } from \"react\";\nimport { type FlexProperties, flex } from \"styled-system/patterns\";\nimport { type HTMLDreamyProps, dreamy } from \"./factory\";\n\nexport interface FlexProps\n    extends Omit<HTMLDreamyProps<\"div\">, keyof FlexProperties>,\n        FlexProperties {}\n\n/**\n * Flex component\n *\n * @See Docs https://dreamy-ui.com/docs/components/flex\n */\nexport const Flex = forwardRef<HTMLDivElement, FlexProps>((props, ref) => {\n    const [patternProps, restProps] = splitProps(props, [\n        \"align\",\n        \"justify\",\n        \"direction\",\n        \"wrap\",\n        \"basis\",\n        \"grow\",\n        \"shrink\"\n    ]);\n\n    const styles = flex.raw(patternProps);\n\n    return (\n        <dreamy.div\n            ref={ref}\n            {...styles}\n            {...restProps}\n        />\n    );\n});\n"
   },
   "component": "Flex",
   "hasRecipe": false,
   "hasPattern": true,
-  "patternId": "flex"
+  "patternIds": [
+    "flex"
+  ]
 }

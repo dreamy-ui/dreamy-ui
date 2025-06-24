@@ -12,8 +12,8 @@ export const compositionFileSchema = z.object({
 	fileDependencies: z.array(z.string()),
 	hasRecipe: z.boolean(),
 	hasPattern: z.boolean(),
-	recipeId: z.string().optional(),
-	patternId: z.string().optional()
+	recipeIds: z.array(z.string()).optional(),
+	patternIds: z.array(z.string()).optional()
 });
 
 export interface CompositionFile
@@ -29,8 +29,8 @@ export const compositionIndexSchema = z.array(
 		fileDependencies: z.array(z.string()),
 		hasRecipe: z.boolean(),
 		hasPattern: z.boolean(),
-		recipeId: z.string().optional(),
-		patternId: z.string().optional(),
+		recipeIds: z.array(z.string()).optional(),
+		patternIds: z.array(z.string()).optional()
 	})
 );
 

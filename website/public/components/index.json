@@ -13,7 +13,9 @@
     ],
     "hasRecipe": true,
     "hasPattern": false,
-    "recipeId": "accordion"
+    "recipeIds": [
+      "accordion"
+    ]
   },
   {
     "type": "component",
@@ -27,7 +29,9 @@
     ],
     "hasRecipe": true,
     "hasPattern": false,
-    "recipeId": "alert"
+    "recipeIds": [
+      "alert"
+    ]
   },
   {
     "type": "component",
@@ -39,7 +43,9 @@
     ],
     "hasRecipe": true,
     "hasPattern": false,
-    "recipeId": "badge"
+    "recipeIds": [
+      "badge"
+    ]
   },
   {
     "type": "component",
@@ -65,7 +71,9 @@
     ],
     "hasRecipe": true,
     "hasPattern": false,
-    "recipeId": "button"
+    "recipeIds": [
+      "button"
+    ]
   },
   {
     "type": "component",
@@ -78,7 +86,9 @@
     ],
     "hasRecipe": true,
     "hasPattern": false,
-    "recipeId": "card"
+    "recipeIds": [
+      "card"
+    ]
   },
   {
     "type": "component",
@@ -94,7 +104,9 @@
     ],
     "hasRecipe": true,
     "hasPattern": false,
-    "recipeId": "checkbox-card"
+    "recipeIds": [
+      "checkbox-card"
+    ]
   },
   {
     "type": "component",
@@ -108,7 +120,9 @@
     ],
     "hasRecipe": true,
     "hasPattern": false,
-    "recipeId": "checkbox"
+    "recipeIds": [
+      "checkbox"
+    ]
   },
   {
     "type": "component",
@@ -133,7 +147,9 @@
     ],
     "hasRecipe": false,
     "hasPattern": true,
-    "patternId": "divider"
+    "patternIds": [
+      "divider"
+    ]
   },
   {
     "type": "component",
@@ -147,7 +163,9 @@
     ],
     "hasRecipe": true,
     "hasPattern": false,
-    "recipeId": "editable"
+    "recipeIds": [
+      "editable"
+    ]
   },
   {
     "type": "component",
@@ -170,7 +188,9 @@
     ],
     "hasRecipe": true,
     "hasPattern": false,
-    "recipeId": "field"
+    "recipeIds": [
+      "field"
+    ]
   },
   {
     "type": "component",
@@ -182,7 +202,9 @@
     ],
     "hasRecipe": false,
     "hasPattern": true,
-    "patternId": "flex"
+    "patternIds": [
+      "flex"
+    ]
   },
   {
     "type": "component",
@@ -194,7 +216,10 @@
     ],
     "hasRecipe": false,
     "hasPattern": true,
-    "patternId": "grid"
+    "patternIds": [
+      "grid",
+      "grid-item"
+    ]
   },
   {
     "type": "component",
@@ -205,9 +230,13 @@
       "./factory"
     ],
     "hasRecipe": true,
-    "hasPattern": false,
-    "recipeId": "group",
-    "patternId": "flex"
+    "hasPattern": true,
+    "recipeIds": [
+      "group"
+    ],
+    "patternIds": [
+      "flex"
+    ]
   },
   {
     "type": "component",
@@ -219,7 +248,9 @@
     ],
     "hasRecipe": false,
     "hasPattern": false,
-    "patternId": "text"
+    "patternIds": [
+      "text"
+    ]
   },
   {
     "type": "component",
@@ -243,7 +274,9 @@
     ],
     "hasRecipe": true,
     "hasPattern": false,
-    "recipeId": "icon"
+    "recipeIds": [
+      "icon"
+    ]
   },
   {
     "type": "component",
@@ -256,7 +289,9 @@
     ],
     "hasRecipe": true,
     "hasPattern": false,
-    "recipeId": "image"
+    "recipeIds": [
+      "image"
+    ]
   },
   {
     "type": "component",
@@ -270,7 +305,9 @@
     ],
     "hasRecipe": true,
     "hasPattern": false,
-    "recipeId": "input"
+    "recipeIds": [
+      "input"
+    ]
   },
   {
     "type": "component",
@@ -282,7 +319,9 @@
     ],
     "hasRecipe": true,
     "hasPattern": false,
-    "recipeId": "kbd"
+    "recipeIds": [
+      "kbd"
+    ]
   },
   {
     "type": "component",
@@ -294,7 +333,9 @@
     ],
     "hasRecipe": false,
     "hasPattern": false,
-    "patternId": "text"
+    "patternIds": [
+      "text"
+    ]
   },
   {
     "type": "component",
@@ -306,7 +347,9 @@
     ],
     "hasRecipe": true,
     "hasPattern": false,
-    "recipeId": "list"
+    "recipeIds": [
+      "list"
+    ]
   },
   {
     "type": "component",
@@ -322,7 +365,9 @@
     ],
     "hasRecipe": true,
     "hasPattern": false,
-    "recipeId": "menu"
+    "recipeIds": [
+      "menu"
+    ]
   },
   {
     "type": "component",
@@ -339,7 +384,9 @@
     ],
     "hasRecipe": true,
     "hasPattern": false,
-    "recipeId": "modal"
+    "recipeIds": [
+      "modal"
+    ]
   },
   {
     "type": "component",
@@ -350,8 +397,10 @@
       "./factory"
     ],
     "hasRecipe": false,
-    "hasPattern": false,
-    "patternId": "flex"
+    "hasPattern": true,
+    "patternIds": [
+      "flex"
+    ]
   },
   {
     "type": "component",
@@ -380,7 +429,9 @@
     ],
     "hasRecipe": true,
     "hasPattern": false,
-    "recipeId": "popover"
+    "recipeIds": [
+      "popover"
+    ]
   },
   {
     "type": "component",
@@ -390,7 +441,9 @@
     "fileDependencies": [],
     "hasRecipe": true,
     "hasPattern": false,
-    "recipeId": "progress-circular"
+    "recipeIds": [
+      "progress-circular"
+    ]
   },
   {
     "type": "component",
@@ -403,7 +456,9 @@
     ],
     "hasRecipe": true,
     "hasPattern": false,
-    "recipeId": "progress"
+    "recipeIds": [
+      "progress"
+    ]
   },
   {
     "type": "component",
@@ -417,7 +472,9 @@
     ],
     "hasRecipe": true,
     "hasPattern": false,
-    "recipeId": "radio"
+    "recipeIds": [
+      "radio"
+    ]
   },
   {
     "type": "component",
@@ -444,7 +501,9 @@
     ],
     "hasRecipe": true,
     "hasPattern": false,
-    "recipeId": "select"
+    "recipeIds": [
+      "select"
+    ]
   },
   {
     "type": "component",
@@ -456,7 +515,9 @@
     ],
     "hasRecipe": true,
     "hasPattern": false,
-    "recipeId": "skeleton"
+    "recipeIds": [
+      "skeleton"
+    ]
   },
   {
     "type": "component",
@@ -471,7 +532,9 @@
     ],
     "hasRecipe": true,
     "hasPattern": false,
-    "recipeId": "slider"
+    "recipeIds": [
+      "slider"
+    ]
   },
   {
     "type": "component",
@@ -484,7 +547,9 @@
     ],
     "hasRecipe": true,
     "hasPattern": false,
-    "recipeId": "snippet"
+    "recipeIds": [
+      "snippet"
+    ]
   },
   {
     "type": "component",
@@ -497,7 +562,9 @@
     ],
     "hasRecipe": true,
     "hasPattern": false,
-    "recipeId": "spinner"
+    "recipeIds": [
+      "spinner"
+    ]
   },
   {
     "type": "component",
@@ -509,7 +576,11 @@
     ],
     "hasRecipe": false,
     "hasPattern": true,
-    "patternId": "stack"
+    "patternIds": [
+      "hstack",
+      "stack",
+      "vstack"
+    ]
   },
   {
     "type": "component",
@@ -530,9 +601,11 @@
       "./motion",
       "./visually-hidden"
     ],
-    "hasRecipe": false,
+    "hasRecipe": true,
     "hasPattern": false,
-    "recipeId": "swittch"
+    "recipeIds": [
+      "swittch"
+    ]
   },
   {
     "type": "component",
@@ -545,7 +618,9 @@
     ],
     "hasRecipe": true,
     "hasPattern": false,
-    "recipeId": "table"
+    "recipeIds": [
+      "table"
+    ]
   },
   {
     "type": "component",
@@ -562,7 +637,9 @@
     ],
     "hasRecipe": true,
     "hasPattern": false,
-    "recipeId": "tabs"
+    "recipeIds": [
+      "tabs"
+    ]
   },
   {
     "type": "component",
@@ -574,7 +651,9 @@
     ],
     "hasRecipe": false,
     "hasPattern": false,
-    "patternId": "text"
+    "patternIds": [
+      "text"
+    ]
   },
   {
     "type": "component",
@@ -587,7 +666,9 @@
     ],
     "hasRecipe": true,
     "hasPattern": false,
-    "recipeId": "textarea"
+    "recipeIds": [
+      "textarea"
+    ]
   },
   {
     "type": "component",
@@ -599,7 +680,9 @@
     ],
     "hasRecipe": true,
     "hasPattern": false,
-    "recipeId": "theme"
+    "recipeIds": [
+      "theme"
+    ]
   },
   {
     "type": "component",
@@ -616,7 +699,9 @@
     ],
     "hasRecipe": true,
     "hasPattern": false,
-    "recipeId": "toast"
+    "recipeIds": [
+      "toast"
+    ]
   },
   {
     "type": "component",
@@ -629,7 +714,9 @@
     ],
     "hasRecipe": true,
     "hasPattern": false,
-    "recipeId": "tooltip"
+    "recipeIds": [
+      "tooltip"
+    ]
   },
   {
     "type": "component",
@@ -652,7 +739,9 @@
     ],
     "hasRecipe": false,
     "hasPattern": true,
-    "patternId": "visually-hidden"
+    "patternIds": [
+      "visually-hidden"
+    ]
   },
   {
     "type": "component",
@@ -664,6 +753,8 @@
     ],
     "hasRecipe": false,
     "hasPattern": true,
-    "patternId": "wrap"
+    "patternIds": [
+      "wrap"
+    ]
   }
 ]

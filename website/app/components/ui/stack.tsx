@@ -1,6 +1,13 @@
+import { splitProps } from "@dreamy-ui/react";
 import React, { forwardRef } from "react";
-import { cx } from "styled-system/css";
-import { type StackProperties, stack } from "styled-system/patterns";
+import {
+    type HstackProperties,
+    type StackProperties,
+    type VstackProperties,
+    hstack,
+    stack,
+    vstack
+} from "styled-system/patterns";
 import { type HTMLDreamyProps, dreamy } from "./factory";
 
 export interface StackProps
@@ -9,26 +16,27 @@ export interface StackProps
     separator?: React.ReactNode;
 }
 
-const StyledStack = dreamy.div;
-
 /**
  * Stack component.
  *
  * @See Docs https://dreamy-ui.com/docs/components/stack
  */
 export const Stack = forwardRef<HTMLDivElement, StackProps>(
-    ({ separator, direction = "row", children, className, ...props }, ref) => {
+    ({ separator, children, ...props }, ref) => {
+        const [patternProps, restProps] = splitProps(props, [
+            "direction",
+            "gap",
+            "align",
+            "justify"
+        ]);
+
+        const styles = stack.raw(patternProps);
+
         return (
-            <StyledStack
+            <dreamy.div
                 ref={ref}
-                className={cx(
-                    stack({
-                        direction,
-                        alignItems: direction === "row" ? "center" : undefined
-                    }),
-                    className
-                )}
-                {...props}
+                {...styles}
+                {...restProps}
             >
                 {React.Children.map(children, (child, index) => (
                     <>
@@ -38,31 +46,38 @@ export const Stack = forwardRef<HTMLDivElement, StackProps>(
                             separator}
                     </>
                 ))}
-            </StyledStack>
+            </dreamy.div>
         );
     }
 );
 
-export interface HStackProps extends Omit<StackProps, "direction"> {}
-
+export interface HStackProps
+    extends Omit<HTMLDreamyProps<"div">, keyof HstackProperties>,
+        HstackProperties {}
 /**
  * HStack component. Stack component with `direction="row"`.
  *
  * @See Docs https://dreamy-ui.com/docs/components/stack
  */
 export const HStack = forwardRef<HTMLDivElement, HStackProps>(({ children, ...props }, ref) => {
+    const [patternProps, restProps] = splitProps(props, ["gap", "justify"]);
+
+    const styles = hstack.raw(patternProps);
+
     return (
-        <Stack
+        <dreamy.div
             ref={ref}
-            direction={"row"}
-            {...props}
+            {...restProps}
+            {...styles}
         >
             {children}
-        </Stack>
+        </dreamy.div>
     );
 });
 
-export interface VStackProps extends Omit<StackProps, "direction"> {}
+export interface VStackProps
+    extends Omit<HTMLDreamyProps<"div">, keyof VstackProperties>,
+        VstackProperties {}
 
 /**
  * VStack component. Stack component with `direction="column"`.
@@ -70,13 +85,17 @@ export interface VStackProps extends Omit<StackProps, "direction"> {}
  * @See Docs https://dreamy-ui.com/docs/components/stack
  */
 export const VStack = forwardRef<HTMLDivElement, VStackProps>(({ children, ...props }, ref) => {
+    const [patternProps, restProps] = splitProps(props, ["gap", "justify"]);
+
+    const styles = vstack.raw(patternProps);
+
     return (
-        <Stack
+        <dreamy.div
             ref={ref}
-            direction={"column"}
-            {...props}
+            {...restProps}
+            {...styles}
         >
             {children}
-        </Stack>
+        </dreamy.div>
     );
 });

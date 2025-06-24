@@ -1,6 +1,7 @@
 import { definePattern } from "@pandacss/dev";
 
 export const stack = definePattern({
+	jsx: ["Stack"],
 	description: "A pattern for stacking elements with consistent spacing",
 	properties: {
 		direction: {

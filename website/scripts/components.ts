@@ -79,14 +79,16 @@ function camelToKebabCase(str: string): string {
 	return str.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
 }
 
-function parseRecipeId(content: string): string | null {
+function parseRecipeId(content: string): string[] {
+	const recipeIds: string[] = [];
+
 	// Look for destructured imports from "styled-system/recipes"
 	const importMatch = content.match(
 		/import\s+\{([^}]+)\}\s+from\s+["']styled-system\/recipes["']/
 	);
 	if (importMatch) {
 		const imports = importMatch[1];
-		// Split by comma and find the non-type import
+		// Split by comma and find the non-type imports
 		const importList = imports.split(",").map((item) => item.trim());
 		for (const item of importList) {
 			// Skip type imports
@@ -96,7 +98,7 @@ function parseRecipeId(content: string): string | null {
 			// Extract the import name (handle "import as alias" cases)
 			const match = item.match(/^(\w+)/);
 			if (match) {
-				return camelToKebabCase(match[1]);
+				recipeIds.push(camelToKebabCase(match[1]));
 			}
 		}
 	}
@@ -106,20 +108,22 @@ function parseRecipeId(content: string): string | null {
 		/import\s+(\w+)\s+from\s+["']styled-system\/recipes["']/
 	);
 	if (simpleImportMatch) {
-		return camelToKebabCase(simpleImportMatch[1]);
+		recipeIds.push(camelToKebabCase(simpleImportMatch[1]));
 	}
 
-	return null;
+	return recipeIds;
 }
 
-function parsePatternId(content: string): string | null {
+function parsePatternId(content: string): string[] {
+	const patternIds: string[] = [];
+
 	// Look for destructured imports from "styled-system/patterns"
 	const importMatch = content.match(
 		/import\s+\{([^}]+)\}\s+from\s+["']styled-system\/patterns["']/
 	);
 	if (importMatch) {
 		const imports = importMatch[1];
-		// Split by comma and find the non-type import
+		// Split by comma and find the non-type imports
 		const importList = imports.split(",").map((item) => item.trim());
 		for (const item of importList) {
 			// Skip type imports
@@ -129,7 +133,7 @@ function parsePatternId(content: string): string | null {
 			// Extract the import name (handle "import as alias" cases)
 			const match = item.match(/^(\w+)/);
 			if (match) {
-				return camelToKebabCase(match[1]);
+				patternIds.push(camelToKebabCase(match[1]));
 			}
 		}
 	}
@@ -139,7 +143,7 @@ function parsePatternId(content: string): string | null {
 		/import\s+(\w+)\s+from\s+["']styled-system\/patterns["']/
 	);
 	if (simpleImportMatch) {
-		return camelToKebabCase(simpleImportMatch[1]);
+		patternIds.push(camelToKebabCase(simpleImportMatch[1]));
 	}
 
 	// Look for imports from specific pattern files like "styled-system/patterns/wrap"
@@ -155,12 +159,12 @@ function parsePatternId(content: string): string | null {
 			}
 			const match = item.match(/^(\w+)/);
 			if (match) {
-				return camelToKebabCase(match[1]);
+				patternIds.push(camelToKebabCase(match[1]));
 			}
 		}
 	}
 
-	return null;
+	return patternIds;
 }
 
 const setFileExtension = (file: string, ext: string) =>
@@ -259,9 +263,28 @@ function generatePatterns(patternsDir: string, publicDir: string) {
 	return patterns;
 }
 
-function checkForRecipeOrPattern(file: string, dir: string) {
+function checkForRecipeOrPattern(file: string, dir: string): boolean {
 	const filePath = join(dir, file.replace(".tsx", ".ts"));
 	return existsSync(filePath);
+}
+
+function checkForRecipesOrPatterns(
+	recipeIds: string[],
+	patternIds: string[],
+	recipesDir: string,
+	patternsDir: string
+) {
+	const hasRecipe = recipeIds.some((id) => {
+		const filePath = join(recipesDir, `${id}.ts`);
+		return existsSync(filePath);
+	});
+
+	const hasPattern = patternIds.some((id) => {
+		const filePath = join(patternsDir, `${id}.ts`);
+		return existsSync(filePath);
+	});
+
+	return { hasRecipe, hasPattern };
 }
 
 async function main() {
@@ -292,12 +315,18 @@ async function main() {
 		const content = readFileSync(filePath, "utf-8");
 		const { fileDependencies } = getDependencies(getImports(content));
 		const componentId = getFileName(file);
-		const hasRecipe = checkForRecipeOrPattern(file, recipesDir);
-		const hasPattern = checkForRecipeOrPattern(file, patternsDir);
 
 		// Parse actual recipe and pattern IDs from imports
-		const recipeId = parseRecipeId(content);
-		const patternId = parsePatternId(content);
+		const recipeIds = parseRecipeId(content);
+		const patternIds = parsePatternId(content);
+
+		// Check if any recipes or patterns exist
+		const { hasRecipe, hasPattern } = checkForRecipesOrPatterns(
+			recipeIds,
+			patternIds,
+			recipesDir,
+			patternsDir
+		);
 
 		return {
 			path: join(
@@ -317,8 +346,8 @@ async function main() {
 				component: getComponentName(file),
 				hasRecipe,
 				hasPattern,
-				...(recipeId && { recipeId }),
-				...(patternId && { patternId })
+				...(recipeIds.length > 0 && { recipeIds }),
+				...(patternIds.length > 0 && { patternIds })
 			}
 		};
 	});
@@ -335,8 +364,8 @@ async function main() {
 			fileDependencies: data.fileDependencies,
 			hasRecipe: data.hasRecipe,
 			hasPattern: data.hasPattern,
-			...(data.recipeId && { recipeId: data.recipeId }),
-			...(data.patternId && { patternId: data.patternId })
+			...(data.recipeIds && { recipeIds: data.recipeIds }),
+			...(data.patternIds && { patternIds: data.patternIds })
 		}))
 	});
 
