@@ -1,0 +1,8 @@
+{
+  "type": "pattern",
+  "id": "stack",
+  "file": {
+    "name": "stack.ts",
+    "content": "import { definePattern } from \"@pandacss/dev\";\r\n\r\nexport const stack = definePattern({\r\n\tjsx: [\"Stack\"],\r\n\tdescription: \"A pattern for stacking elements with consistent spacing\",\r\n\tproperties: {\r\n\t\tdirection: {\r\n\t\t\ttype: \"enum\",\r\n\t\t\tvalue: [\"horizontal\", \"vertical\"]\r\n\t\t},\r\n\t\tgap: { type: \"property\", value: \"gap\" },\r\n\t\talign: {\r\n\t\t\ttype: \"enum\",\r\n\t\t\tvalue: [\"start\", \"center\", \"end\", \"stretch\"]\r\n\t\t},\r\n\t\tjustify: {\r\n\t\t\ttype: \"enum\",\r\n\t\t\tvalue: [\"start\", \"center\", \"end\", \"between\", \"around\", \"evenly\"]\r\n\t\t}\r\n\t},\r\n\ttransform(props) {\r\n\t\tconst { direction = \"vertical\", gap, align, justify, ...rest } = props;\r\n\r\n\t\tconst alignItemsMap = {\r\n\t\t\tstart: \"flex-start\",\r\n\t\t\tcenter: \"center\",\r\n\t\t\tend: \"flex-end\",\r\n\t\t\tstretch: \"stretch\"\r\n\t\t} as const;\r\n\r\n\t\tconst justifyContentMap = {\r\n\t\t\tstart: \"flex-start\",\r\n\t\t\tcenter: \"center\",\r\n\t\t\tend: \"flex-end\",\r\n\t\t\tbetween: \"space-between\",\r\n\t\t\taround: \"space-around\",\r\n\t\t\tevenly: \"space-evenly\"\r\n\t\t} as const;\r\n\r\n\t\treturn {\r\n\t\t\tdisplay: \"flex\",\r\n\t\t\tflexDirection: direction === \"horizontal\" ? \"row\" : \"column\",\r\n\t\t\talignItems: align\r\n\t\t\t\t? alignItemsMap[align as keyof typeof alignItemsMap]\r\n\t\t\t\t: undefined,\r\n\t\t\tjustifyContent: justify\r\n\t\t\t\t? justifyContentMap[justify as keyof typeof justifyContentMap]\r\n\t\t\t\t: undefined,\r\n\t\t\tgap,\r\n\t\t\t...rest\r\n\t\t};\r\n\t}\r\n});\r\n"
+  }
+}

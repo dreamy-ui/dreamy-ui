@@ -33,7 +33,7 @@
 		"build": "tsup"
 	},
 	"dependencies": {
-		"@clack/prompts": "^0.10.1",
+		"@clack/prompts": "^0.11.0",
 		"@effect/platform": "0.69.28",
 		"@visulima/boxen": "^1.0.30",
 		"cli-table": "^0.3.11",

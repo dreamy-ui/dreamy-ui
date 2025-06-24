@@ -1,0 +1,15 @@
+{
+  "type": "component",
+  "fileDependencies": [
+    "./factory"
+  ],
+  "id": "wrap",
+  "file": {
+    "name": "wrap.tsx",
+    "content": "import { splitProps } from \"@dreamy-ui/react\";\r\nimport { forwardRef } from \"react\";\r\nimport type { WrapProperties } from \"styled-system/patterns\";\r\nimport { wrap } from \"styled-system/patterns/wrap\";\r\nimport { type HTMLDreamyProps, dreamy } from \"./factory\";\r\n\r\nexport interface WrapProps\r\n    extends Omit<HTMLDreamyProps<\"div\">, keyof WrapProperties>,\r\n        WrapProperties {}\r\n\r\n/**\r\n * Wrap component\r\n *\r\n * @See Docs https://dreamy-ui.com/docs/components/wrap\r\n */\r\nexport const Wrap = forwardRef<HTMLDivElement, WrapProps>((props, ref) => {\r\n    const [patternProps, restProps] = splitProps(props, [\r\n        \"gap\",\r\n        \"rowGap\",\r\n        \"columnGap\",\r\n        \"align\",\r\n        \"justify\"\r\n    ]);\r\n\r\n    const styles = wrap.raw(patternProps);\r\n\r\n    return (\r\n        <dreamy.div\r\n            ref={ref}\r\n            {...styles}\r\n            {...restProps}\r\n        />\r\n    );\r\n});\r\n"
+  },
+  "component": "Wrap",
+  "hasRecipe": false,
+  "hasPattern": true,
+  "patternId": "wrap"
+}

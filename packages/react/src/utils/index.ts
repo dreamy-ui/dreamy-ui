@@ -1,6 +1,7 @@
 export * from "./attr";
 export * from "./call-all";
 export * from "./ids";
+export * from "./number";
 export * from "./object";
 export * from "./props";
 export * from "./run-if-fn";

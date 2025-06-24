@@ -1,0 +1,8 @@
+{
+  "type": "recipe",
+  "id": "image",
+  "file": {
+    "name": "image.ts",
+    "content": "import { defineParts, defineRecipe } from \"@pandacss/dev\";\r\n\r\nconst parts = defineParts({\r\n\tzoomedWrapper: { selector: '[data-part=\"wrapper-zoomed\"]:has(&)' },\r\n\twrapper: { selector: '[data-part=\"wrapper\"]:has(&)' },\r\n\timage: { selector: \"&\" },\r\n\tblurredImg: {\r\n\t\tselector: '[data-part=\"wrapper\"]:has(&) [data-part=\"blurred\"]'\r\n\t}\r\n});\r\n\r\nexport { parts as imageParts };\r\n\r\nexport const image = defineRecipe({\r\n\tclassName: \"dreamy-image\",\r\n\tjsx: [\"Image\"],\r\n\tstaticCss: [\"*\"],\r\n\tbase: parts({\r\n\t\timage: {\r\n\t\t\t\"&[data-zoomed]\": {\r\n\t\t\t\ttransition:\r\n\t\t\t\t\t\"transform {durations.normal} {easings.ease-in-out}\",\r\n\t\t\t\t_hover: {\r\n\t\t\t\t\ttransform: \"scale(1.1)\"\r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t},\r\n\t\twrapper: {\r\n\t\t\tposition: \"relative\",\r\n\t\t\tmaxW: \"fit-content\",\r\n\t\t\trounded: \"inherit\"\r\n\t\t},\r\n\t\tzoomedWrapper: {\r\n\t\t\toverflow: \"hidden\",\r\n\t\t\tposition: \"relative\",\r\n\t\t\tmaxW: \"fit-content\"\r\n\t\t},\r\n\t\tblurredImg: {\r\n\t\t\tfilter: \"auto\",\r\n\t\t\tblur: \"{blurs.lg}\",\r\n\t\t\tposition: \"absolute\",\r\n\t\t\tinset: \"0\",\r\n\t\t\tzIndex: -1,\r\n\t\t\ttranslate: \"auto\",\r\n\t\t\tscale: \"1.05\",\r\n\t\t\tsaturate: \"150%\",\r\n\t\t\topacity: 0.4,\r\n\t\t\ty: \"1\"\r\n\t\t}\r\n\t})\r\n});\r\n"
+  }
+}

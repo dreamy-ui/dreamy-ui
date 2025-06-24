@@ -1,0 +1,19 @@
+{
+  "type": "component",
+  "fileDependencies": [
+    "./box",
+    "./checkbox",
+    "./factory",
+    "./text",
+    "./visually-hidden"
+  ],
+  "id": "checkbox-card",
+  "file": {
+    "name": "checkbox-card.tsx",
+    "content": "import { type UseCheckboxProps, createContext, useCheckbox } from \"@dreamy-ui/react\";\r\nimport { type ElementType, type ReactElement, cloneElement, forwardRef, useMemo } from \"react\";\r\nimport { type CheckboxCardVariantProps, checkboxCard } from \"styled-system/recipes\";\r\nimport { Box } from \"./box\";\r\nimport { CheckboxIcon } from \"./checkbox\";\r\nimport { dreamy } from \"./factory\";\r\nimport { Text, type TextProps } from \"./text\";\r\nimport { VisuallyHiddenInput } from \"./visually-hidden\";\r\n\r\nexport const [CheckboxProvider, useCheckboxCardContext] = createContext<UseCheckboxProps>({\r\n    strict: false\r\n});\r\n\r\nexport interface CheckboxCardProps extends UseCheckboxProps, CheckboxCardVariantProps {\r\n    title?: string;\r\n    description?: string;\r\n    titleTag?: ElementType;\r\n    titleProps?: TextProps;\r\n    descriptionProps?: TextProps;\r\n}\r\n\r\nconst StyledCheckbox = dreamy(\"div\", checkboxCard);\r\n\r\n/**\r\n * CheckboxCard component\r\n *\r\n * @See Docs https://dreamy-ui.com/docs/components/checkbox-card\r\n */\r\nexport const CheckboxCard = forwardRef<HTMLInputElement, CheckboxCardProps>((props, ref) => {\r\n    const { title, description, titleTag = \"p\", titleProps, descriptionProps, ...rest } = props;\r\n    const {\r\n        children,\r\n        icon = <CheckboxIcon />,\r\n        isChecked,\r\n        isDisabled,\r\n        isInvalid,\r\n        getRootProps,\r\n        getWrapperProps,\r\n        getInputProps,\r\n        getIconProps,\r\n        getLabelProps\r\n    } = useCheckbox({ ...rest, isCard: true, ref });\r\n\r\n    const clonedIcon = useMemo(() => {\r\n        return typeof icon === \"function\"\r\n            ? icon(getIconProps() as any)\r\n            : cloneElement(icon as ReactElement, getIconProps());\r\n    }, [getIconProps, icon]);\r\n\r\n    const ctx = useMemo(() => {\r\n        return {\r\n            children,\r\n            icon,\r\n            isChecked,\r\n            isDisabled,\r\n            isInvalid,\r\n            getRootProps,\r\n            getWrapperProps,\r\n            getInputProps,\r\n            getIconProps,\r\n            getLabelProps\r\n        };\r\n    }, [\r\n        children,\r\n        icon,\r\n        isChecked,\r\n        isDisabled,\r\n        isInvalid,\r\n        getRootProps,\r\n        getWrapperProps,\r\n        getInputProps,\r\n        getIconProps,\r\n        getLabelProps\r\n    ]);\r\n\r\n    return (\r\n        <CheckboxProvider value={ctx}>\r\n            <StyledCheckbox {...(getRootProps() as any)}>\r\n                <Box data-part={\"header\"}>\r\n                    <Text\r\n                        as={titleTag}\r\n                        data-part={\"title\"}\r\n                        {...titleProps}\r\n                    >\r\n                        {title}\r\n                    </Text>\r\n                    <Box data-part={\"checkbox-root\"}>\r\n                        <VisuallyHiddenInput {...(getInputProps() as any)} />\r\n                        <span {...getWrapperProps()}>{clonedIcon}</span>\r\n                    </Box>\r\n                </Box>\r\n                <Text\r\n                    data-part={\"description\"}\r\n                    {...descriptionProps}\r\n                >\r\n                    {description}\r\n                </Text>\r\n            </StyledCheckbox>\r\n        </CheckboxProvider>\r\n    );\r\n});\r\n\r\nCheckboxCard.displayName = \"Checkbox\";\r\n"
+  },
+  "component": "CheckboxCard",
+  "hasRecipe": true,
+  "hasPattern": false,
+  "recipeId": "checkbox-card"
+}

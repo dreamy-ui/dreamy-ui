@@ -1,0 +1,17 @@
+{
+  "type": "component",
+  "fileDependencies": [
+    "./factory",
+    "./motion",
+    "./visually-hidden"
+  ],
+  "id": "switch",
+  "file": {
+    "name": "switch.tsx",
+    "content": "import { type UseSwitchProps, runIfFn, useSwitch } from \"@dreamy-ui/react\";\r\nimport { forwardRef } from \"react\";\r\nimport { type SwittchVariantProps, swittch } from \"styled-system/recipes\";\r\nimport { dreamy } from \"./factory\";\r\nimport { MotionBox } from \"./motion\";\r\nimport { VisuallyHiddenInput } from \"./visually-hidden\";\r\n\r\nexport interface SwitchProps extends UseSwitchProps, SwittchVariantProps {}\r\n\r\nconst StyledSwitch = dreamy(\"div\", swittch);\r\n\r\n/**\r\n * Switch component\r\n *\r\n * @See Docs https://dreamy-ui.com/docs/components/Switch\r\n */\r\nexport const Switch = forwardRef<HTMLInputElement, SwitchProps>((props, ref) => {\r\n    const {\r\n        children,\r\n        icon,\r\n        getRootProps,\r\n        getWrapperProps,\r\n        getInputProps,\r\n        getThumbProps,\r\n        getLabelProps\r\n    } = useSwitch({ ...props, ref });\r\n\r\n    return (\r\n        <StyledSwitch {...(getRootProps() as any)}>\r\n            <VisuallyHiddenInput {...(getInputProps() as any)} />\r\n            <span {...getWrapperProps()}>\r\n                <MotionBox {...(getThumbProps() as any)}>{runIfFn(icon as any)}</MotionBox>\r\n            </span>\r\n            {children && <span {...getLabelProps()}>{children}</span>}\r\n        </StyledSwitch>\r\n    );\r\n});\r\n\r\nSwitch.displayName = \"Switch\";\r\n"
+  },
+  "component": "Switch",
+  "hasRecipe": false,
+  "hasPattern": false,
+  "recipeId": "swittch"
+}

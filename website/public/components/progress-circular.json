@@ -1,0 +1,13 @@
+{
+  "type": "component",
+  "fileDependencies": [],
+  "id": "progress-circular",
+  "file": {
+    "name": "progress-circular.tsx",
+    "content": "import { type UseCircularProgressProps, useCircularProgress } from \"@dreamy-ui/react\";\r\nimport { forwardRef } from \"react\";\r\nimport { styled } from \"styled-system/jsx\";\r\nimport { progressCircular } from \"styled-system/recipes\";\r\n\r\nexport interface ProgressCircularProps extends UseCircularProgressProps {}\r\n\r\nconst StyledProgressCircular = styled(\"div\", progressCircular);\r\n\r\nexport const ProgressCircular = forwardRef<HTMLDivElement, ProgressCircularProps>((props, ref) => {\r\n    const {\r\n        label,\r\n        showValueLabel,\r\n        getProgressBarProps,\r\n        getLabelProps,\r\n        getSvgProps,\r\n        getIndicatorProps,\r\n        getTrackProps,\r\n        valueText\r\n    } = useCircularProgress({ ref, ...props });\r\n\r\n    const progressBarProps = getProgressBarProps();\r\n\r\n    return (\r\n        <StyledProgressCircular {...progressBarProps}>\r\n            <div>\r\n                <svg {...getSvgProps()}>\r\n                    <circle {...getTrackProps()} />\r\n                    <circle {...getIndicatorProps()} />\r\n                </svg>\r\n                {showValueLabel && <span data-part=\"valueText\">{valueText}</span>}\r\n            </div>\r\n            {label && <span {...getLabelProps()}>{label}</span>}\r\n        </StyledProgressCircular>\r\n    );\r\n});\r\n\r\nProgressCircular.displayName = \"ProgressCircular\";\r\n"
+  },
+  "component": "ProgressCircular",
+  "hasRecipe": true,
+  "hasPattern": false,
+  "recipeId": "progress-circular"
+}

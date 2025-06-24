@@ -1,0 +1,8 @@
+{
+  "type": "recipe",
+  "id": "icon",
+  "file": {
+    "name": "icon.ts",
+    "content": "import { defineRecipe } from \"@pandacss/dev\";\r\n\r\nexport const icon = defineRecipe({\r\n\tclassName: \"icon\",\r\n\tbase: {\r\n\t\tcolor: \"currentcolor\",\r\n\t\tdisplay: \"inline-block\",\r\n\t\tflexShrink: \"0\",\r\n\t\tverticalAlign: \"middle\",\r\n\t\tlineHeight: \"1em\"\r\n\t},\r\n\tjsx: [\"Icon\", \"FieldErrorIcon\"],\r\n\tdefaultVariants: {\r\n\t\tsize: \"md\"\r\n\t},\r\n\tvariants: {\r\n\t\tsize: {\r\n\t\t\txs: {\r\n\t\t\t\tw: \"3\",\r\n\t\t\t\th: \"3\"\r\n\t\t\t},\r\n\t\t\tsm: {\r\n\t\t\t\tw: \"4\",\r\n\t\t\t\th: \"4\"\r\n\t\t\t},\r\n\t\t\tmd: {\r\n\t\t\t\tw: \"5\",\r\n\t\t\t\th: \"5\"\r\n\t\t\t},\r\n\t\t\tlg: {\r\n\t\t\t\tw: \"6\",\r\n\t\t\t\th: \"6\"\r\n\t\t\t},\r\n\t\t\txl: {\r\n\t\t\t\tw: \"7\",\r\n\t\t\t\th: \"7\"\r\n\t\t\t},\r\n\t\t\t\"2xl\": {\r\n\t\t\t\tw: \"8\",\r\n\t\t\t\th: \"8\"\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n});\r\n"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "type": "component",
+  "fileDependencies": [
+    "./factory"
+  ],
+  "id": "text",
+  "file": {
+    "name": "text.tsx",
+    "content": "import { splitProps } from \"@dreamy-ui/react\";\r\nimport { forwardRef } from \"react\";\r\nimport { type TextProperties, text } from \"styled-system/patterns\";\r\nimport { type HTMLDreamyProps, dreamy } from \"./factory\";\r\n\r\nexport interface TextProps extends HTMLDreamyProps<\"p\">, TextProperties {}\r\n\r\n/**\r\n * Text component.\r\n *\r\n * @See Docs https://dreamy-ui.com/docs/components/text\r\n */\r\nexport const Text = forwardRef<HTMLParagraphElement, TextProps>((props, ref) => {\r\n    const [patternProps, restProps] = splitProps(props, [\"variant\", \"size\"]);\r\n\r\n    const styleProps = text.raw(patternProps);\r\n\r\n    return (\r\n        <dreamy.p\r\n            ref={ref}\r\n            {...styleProps}\r\n            {...restProps}\r\n        />\r\n    );\r\n});\r\n"
+  },
+  "component": "Text",
+  "hasRecipe": false,
+  "hasPattern": false,
+  "patternId": "text"
+}

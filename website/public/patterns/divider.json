@@ -1,0 +1,8 @@
+{
+  "type": "pattern",
+  "id": "divider",
+  "file": {
+    "name": "divider.ts",
+    "content": "import { definePattern } from \"@pandacss/dev\";\r\n\r\nexport const divider = definePattern({\r\n\tjsx: [\"Divider\"],\r\n\tproperties: {\r\n\t\torientation: { type: \"enum\", value: [\"horizontal\", \"vertical\"] },\r\n\t\tthickness: { type: \"token\", value: \"sizes\", property: \"borderWidth\" },\r\n\t\tcolor: { type: \"token\", value: \"colors\", property: \"borderColor\" }\r\n\t},\r\n\tdefaultValues: {\r\n\t\torientation: \"horizontal\",\r\n\t\tthickness: \"1px\"\r\n\t},\r\n\ttransform(props, { map }) {\r\n\t\tconst { orientation, thickness, color, ...rest } = props;\r\n\t\treturn {\r\n\t\t\t\"--thickness\": thickness,\r\n\t\t\twidth: map(orientation, (v) =>\r\n\t\t\t\tv === \"vertical\" ? undefined : \"100%\"\r\n\t\t\t),\r\n\t\t\theight: map(orientation, (v) =>\r\n\t\t\t\tv === \"horizontal\" ? undefined : \"100%\"\r\n\t\t\t),\r\n\t\t\tborderBlockEndWidth: map(orientation, (v) =>\r\n\t\t\t\tv === \"horizontal\" ? \"var(--thickness)\" : undefined\r\n\t\t\t),\r\n\t\t\tborderInlineEndWidth: map(orientation, (v) =>\r\n\t\t\t\tv === \"vertical\" ? \"var(--thickness)\" : undefined\r\n\t\t\t),\r\n\t\t\tborderColor: color,\r\n\t\t\t...rest\r\n\t\t};\r\n\t}\r\n});\r\n"
+  }
+}

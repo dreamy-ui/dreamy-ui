@@ -1,0 +1,8 @@
+{
+  "type": "pattern",
+  "id": "hstack",
+  "file": {
+    "name": "hstack.ts",
+    "content": "import { definePattern } from \"@pandacss/dev\";\r\n\r\nexport const hstack = definePattern({\r\n\tjsx: [\"HStack\"],\r\n\tproperties: {\r\n\t\tjustify: { type: \"property\", value: \"justifyContent\" },\r\n\t\tgap: { type: \"property\", value: \"gap\" }\r\n\t},\r\n\tdefaultValues: {\r\n\t\tgap: \"10px\"\r\n\t},\r\n\ttransform(props) {\r\n\t\tconst { justify, gap, ...rest } = props;\r\n\t\treturn {\r\n\t\t\tdisplay: \"flex\",\r\n\t\t\talignItems: \"center\",\r\n\t\t\tjustifyContent: justify,\r\n\t\t\tgap,\r\n\t\t\tflexDirection: \"row\",\r\n\t\t\t...rest\r\n\t\t};\r\n\t}\r\n});\r\n"
+  }
+}

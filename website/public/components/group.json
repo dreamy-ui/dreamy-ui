@@ -1,0 +1,16 @@
+{
+  "type": "component",
+  "fileDependencies": [
+    "./factory"
+  ],
+  "id": "group",
+  "file": {
+    "name": "group.tsx",
+    "content": "import { dataAttr, splitProps } from \"@dreamy-ui/react\";\r\nimport { Children, cloneElement, forwardRef, isValidElement, useMemo } from \"react\";\r\nimport { type FlexProperties, flex } from \"styled-system/patterns\";\r\nimport { type GroupVariantProps, group } from \"styled-system/recipes\";\r\nimport { type HTMLDreamyProps, dreamy } from \"./factory\";\r\n\r\nconst StyledGroup = dreamy(\"div\", group);\r\n\r\nexport interface GroupProps\r\n    extends Omit<HTMLDreamyProps<\"div\">, keyof FlexProperties>,\r\n        GroupVariantProps,\r\n        Omit<FlexProperties, \"grow\"> {\r\n    /**\r\n     * A function that determines if a child should be skipped\r\n     */\r\n    skip?: (child: React.ReactElement) => boolean;\r\n}\r\n\r\nexport const Group = forwardRef<HTMLDivElement, GroupProps>(({ children, skip, ...props }, ref) => {\r\n    const [patternProps, restProps] = splitProps(props, [\r\n        \"align\",\r\n        \"justify\",\r\n        \"direction\",\r\n        \"wrap\",\r\n        \"basis\",\r\n        \"shrink\"\r\n    ]);\r\n\r\n    const styles = flex.raw(patternProps);\r\n\r\n    const _children = useMemo(() => {\r\n        const childArray = Children.toArray(children).filter(isValidElement);\r\n        if (childArray.length === 1) return childArray;\r\n\r\n        const validChildArray = childArray.filter((child) => !skip?.(child));\r\n        const validChildCount = validChildArray.length;\r\n        if (validChildArray.length === 1) return childArray;\r\n\r\n        return childArray.map((child) => {\r\n            const childProps = child.props as any;\r\n            if (skip?.(child)) return child;\r\n            const index = validChildArray.indexOf(child);\r\n            return cloneElement(child, {\r\n                ...childProps,\r\n                \"data-group-item\": \"\",\r\n                \"data-first\": dataAttr(index === 0),\r\n                \"data-last\": dataAttr(index === validChildCount - 1),\r\n                \"data-between\": dataAttr(index > 0 && index < validChildCount - 1),\r\n                style: {\r\n                    \"--group-count\": validChildCount,\r\n                    \"--group-index\": index,\r\n                    ...(childProps?.style ?? {})\r\n                }\r\n            } as any);\r\n        });\r\n    }, [children, skip]);\r\n\r\n    return (\r\n        <StyledGroup\r\n            ref={ref}\r\n            {...styles}\r\n            {...restProps}\r\n        >\r\n            {_children}\r\n        </StyledGroup>\r\n    );\r\n});\r\n\r\nGroup.displayName = \"Group\";\r\n"
+  },
+  "component": "Group",
+  "hasRecipe": true,
+  "hasPattern": false,
+  "recipeId": "group",
+  "patternId": "flex"
+}

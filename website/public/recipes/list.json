@@ -1,0 +1,8 @@
+{
+  "type": "recipe",
+  "id": "list",
+  "file": {
+    "name": "list.ts",
+    "content": "import { defineRecipe } from \"@pandacss/dev\";\r\n\r\nexport const list = defineRecipe({\r\n\tclassName: \"dreamy-list\",\r\n\tjsx: [\"List\", \"ListItem\"],\r\n\tbase: {\r\n\t\tlistStylePosition: \"inside\",\r\n\t\t\"&[data-type=ordered]\": {\r\n\t\t\tlistStyleType: \"decimal\"\r\n\t\t},\r\n\t\t\"&[data-type=unordered]\": {\r\n\t\t\tlistStyleType: \"disc\"\r\n\t\t}\r\n\t}\r\n});\r\n"
+  }
+}

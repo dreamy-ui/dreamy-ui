@@ -1,0 +1,15 @@
+{
+  "type": "component",
+  "fileDependencies": [
+    "./box",
+    "./input"
+  ],
+  "id": "pin-input",
+  "file": {
+    "name": "pin-input.tsx",
+    "content": "import {\r\n    PinInputDescendantsProvider,\r\n    PinInputProvider,\r\n    type UsePinInputProps,\r\n    usePinInput,\r\n    usePinInputField\r\n} from \"@dreamy-ui/react\";\r\nimport { forwardRef } from \"react\";\r\nimport { splitCssProps } from \"styled-system/jsx\";\r\nimport { Box, type BoxProps } from \"./box\";\r\nimport { Input, type InputProps } from \"./input\";\r\n\r\nexport interface PinInputProps\r\n    extends UsePinInputProps,\r\n        Omit<InputProps, keyof UsePinInputProps | keyof BoxProps>,\r\n        Omit<BoxProps, keyof UsePinInputProps> {\r\n    /**\r\n     * The children of the pin input component\r\n     */\r\n    children: React.ReactNode;\r\n}\r\n\r\n/**\r\n * The `PinInput` component allows to enter a sequence of digits quickly.\r\n *\r\n * @see Docs https://dreamy-ui.com/docs/components/pin-input\r\n */\r\nexport const PinInput = forwardRef<HTMLDivElement, PinInputProps>(function PinInput(props, ref) {\r\n    const { children, ...rest } = props;\r\n    const [cssProps, otherProps] = splitCssProps(rest);\r\n    const { descendants, ...context } = usePinInput(otherProps);\r\n\r\n    return (\r\n        <Box\r\n            {...cssProps}\r\n            data-pin-input\r\n            ref={ref}\r\n        >\r\n            <PinInputDescendantsProvider value={descendants}>\r\n                <PinInputProvider value={context}>{children}</PinInputProvider>\r\n            </PinInputDescendantsProvider>\r\n        </Box>\r\n    );\r\n});\r\n\r\nPinInput.displayName = \"PinInput\";\r\n\r\nexport interface PinInputFieldProps extends InputProps {}\r\n\r\nexport const PinInputField = forwardRef<PinInputFieldProps, InputProps>(\r\n    function PinInputField(props, ref) {\r\n        const inputProps = usePinInputField(props, ref);\r\n\r\n        return (\r\n            <Input\r\n                inputType={\"pin\"}\r\n                {...inputProps}\r\n            />\r\n        );\r\n    }\r\n);\r\n"
+  },
+  "component": "PinInput",
+  "hasRecipe": false,
+  "hasPattern": false
+}

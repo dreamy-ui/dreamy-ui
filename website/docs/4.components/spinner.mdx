@@ -1,0 +1,155 @@
+---
+title: Spinner
+description: Spinner indicates a loading state for a user.
+isServerComponent: false
+source: /packages/react/src/components/spinner/spinner.tsx
+themeSource: /packages/panda-preset/src/recipes/spinner.ts
+---
+
+## Import
+
+- `Spinner` - The main Spinner component that indicates loading state.
+
+```jsx
+import { Spinner } from "@dreamy-ui/react";
+```
+
+## Usage
+
+<Wrapper>
+	<Spinner />
+</Wrapper>
+
+```tsx
+<Spinner />
+```
+
+### Sizes
+
+You can set the size of the Spinner by using the `size` prop.
+
+<Wrapper>
+	<Flex wrapped gap={4} alignItems="center">
+		<Spinner size="sm" />
+		<Spinner size="md" />
+		<Spinner size="lg" />
+	</Flex>
+</Wrapper>
+
+```tsx
+<Flex wrapped gap={4} alignItems="center">
+  <Spinner size="sm" />
+  <Spinner size="md" />
+  <Spinner size="lg" />
+</Flex>
+```
+
+### With Label
+
+You can add a label to the Spinner by using the `label` prop.
+
+<Wrapper>
+	<Spinner label="Loading..." />
+</Wrapper>
+
+```tsx
+<Spinner label="Loading..." />
+```
+
+### Speed
+
+You can control the animation speed of the Spinner by using the `speed` prop. It accepts values in seconds (`s`) or milliseconds (`ms`).
+
+<Wrapper>
+	<Flex wrapped gap={4} alignItems="center">
+		<Spinner speed="0.5s" label="Fast" />
+		<Spinner speed="0.8s" label="Default" />
+		<Spinner speed="1.5s" label="Slow" />
+	</Flex>
+</Wrapper>
+
+```tsx
+<Flex wrapped gap={4} alignItems="center">
+  <Spinner speed="0.5s" label="Fast" />
+  <Spinner speed="0.8s" label="Default" />
+  <Spinner speed="1.5s" label="Slow" />
+</Flex>
+```
+
+### Color
+
+You can change the color of the Spinner by using the `color` prop.
+
+<Wrapper>
+	<Flex wrapped gap={4} alignItems="center">
+		<Spinner color="primary" />
+		<Spinner color="success" />
+		<Spinner color="warning" />
+		<Spinner color="error" />
+	</Flex>
+</Wrapper>
+
+```tsx
+<Flex wrapped gap={4} alignItems="center">
+  <Spinner color="primary" />
+  <Spinner color="success" />
+  <Spinner color="warning" />
+  <Spinner color="error" />
+</Flex>
+```
+
+### Label Styling
+
+You can style the label using the `labelProps` prop or by using the `css` prop to target the label part.
+
+<Wrapper>
+	<Flex wrapped gap={4} alignItems="center">
+		<Spinner 
+			label="Custom Label" 
+			labelProps={{ color: "primary", fontSize: "md" }} 
+		/>
+		<Spinner 
+			label="Styled Label" 
+			css={{
+				"& [data-part=label]": {
+					color: "success",
+					fontWeight: "bold"
+				}
+			}}
+		/>
+	</Flex>
+</Wrapper>
+
+```tsx
+<Flex wrapped gap={4} alignItems="center">
+  <Spinner 
+    label="Custom Label" 
+    labelProps={{ color: "primary", fontSize: "md" }} 
+  />
+  <Spinner 
+    label="Styled Label" 
+    css={{
+      "& [data-part=label]": {
+        color: "success",
+        fontWeight: "bold"
+      }
+    }}
+  />
+</Flex>
+```
+
+### Usage in Buttons
+
+Spinners are commonly used in buttons to indicate loading states. The Button component has built-in support for spinners.
+
+<Wrapper>
+	<Button isLoading variant="primary">
+		Loading Button
+	</Button>
+</Wrapper>
+
+```tsx
+<Button isLoading variant="primary">
+  Loading Button
+</Button>
+```
