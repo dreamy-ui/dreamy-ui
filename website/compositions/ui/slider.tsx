@@ -8,7 +8,9 @@ import { VisuallyHiddenInput } from "./visually-hidden";
 
 const { withProvider, withContext } = createStyleContext(slider);
 
-export interface SliderProps extends UseSliderProps {}
+export interface SliderProps
+    extends UseSliderProps,
+        Omit<HTMLDreamyProps<"div">, keyof UseSliderProps> {}
 
 /**
  * Slider component

@@ -4,7 +4,6 @@ import { useReducedMotion } from "@/provider";
 import { type PropGetter, callAll, callAllHandlers } from "@/utils";
 import { dataAttr } from "@/utils/attr";
 import { objectToDeps } from "@/utils/object";
-import type { HTMLDreamProps } from "@/utils/types";
 import { useFocusRing } from "@react-aria/focus";
 import { type ReactNode, type Ref, useCallback, useId, useMemo, useRef, useState } from "react";
 import { cx } from "styled-system/css";
@@ -13,7 +12,7 @@ import { useField } from "../field/use-field";
 import type { UserFeedbackProps } from "../input";
 import { useRadioGroupContext } from "./radio-group";
 
-interface Props extends HTMLDreamProps<"input"> {
+interface Props {
     /**
      * Ref to the DOM node.
      */
@@ -35,6 +34,23 @@ interface Props extends HTMLDreamProps<"input"> {
      * Description for the radio button
      */
     description?: ReactNode;
+    name?: string;
+    autoFocus?: boolean;
+    onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    tabIndex?: number;
+    "aria-label"?: string;
+    "aria-labelledby"?: string;
+    "aria-invalid"?: boolean;
+    "aria-describedby"?: string;
+    className?: string;
+    onClick?: (event: React.MouseEvent<HTMLInputElement>) => void;
+    onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
+    onFocus?: (event: React.FocusEvent<HTMLInputElement>) => void;
+    onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+    onKeyUp?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+    onPointerDown?: (event: React.PointerEvent<HTMLInputElement>) => void;
+    onPointerUp?: (event: React.PointerEvent<HTMLInputElement>) => void;
+    onPointerLeave?: (event: React.PointerEvent<HTMLInputElement>) => void;
 }
 
 export interface UseRadioProps extends Props, UserFeedbackProps {

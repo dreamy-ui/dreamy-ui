@@ -91,12 +91,12 @@ function withAsProps(Component: React.ElementType) {
 export type JsxElement<
 	T extends ElementType,
 	P extends Dict
-> = T extends DreamComponent<infer A, infer B>
-	? DreamComponent<A, Pretty<DistributiveUnion<P, B>>>
-	: DreamComponent<T, P>;
+> = T extends DreamyComponent<infer A, infer B>
+	? DreamyComponent<A, Pretty<DistributiveUnion<P, B>>>
+	: DreamyComponent<T, P>;
 
 interface DreamFactory {
-	<T extends ElementType>(component: T): DreamComponent<T, {}>;
+	<T extends ElementType>(component: T): DreamyComponent<T, {}>;
 	<T extends ElementType, P extends RecipeVariantRecord>(
 		component: T,
 		recipe: RecipeDefinition<P>,
@@ -110,7 +110,7 @@ interface DreamFactory {
 }
 
 type JsxElements = {
-	[K in keyof React.JSX.IntrinsicElements]: DreamComponent<K, {}>;
+	[K in keyof React.JSX.IntrinsicElements]: DreamyComponent<K, {}>;
 };
 
 export type Dreamy = DreamFactory & JsxElements;
@@ -122,17 +122,17 @@ function styledWithAsProps<
 	Component: T,
 	recipe?: RecipeDefinition<P>,
 	options?: JsxFactoryOptions<JsxRecipeProps<T, RecipeSelection<P>>>
-): DreamComponent<T, {}>;
+): DreamyComponent<T, {}>;
 function styledWithAsProps<T extends ElementType, P extends RecipeFn>(
 	Component: T,
 	recipe?: P,
 	options?: JsxFactoryOptions<JsxRecipeProps<T, P["__type"]>>
-): DreamComponent<T, P["__type"]> {
+): DreamyComponent<T, P["__type"]> {
 	return styled(withAsProps(Component), recipe as any, options) as any;
 }
 
 function createJsxFactory() {
-	const cache = new Map<DOMElements, DreamComponent<DOMElements>>();
+	const cache = new Map<DOMElements, DreamyComponent<DOMElements>>();
 
 	return new Proxy(styledWithAsProps, {
 		apply(
@@ -240,10 +240,10 @@ export type Dict<T = any> = Record<string, T>;
 export type DOMElements = keyof React.JSX.IntrinsicElements;
 
 export type HTMLDreamyComponents = {
-	[Tag in DOMElements]: DreamComponent<React.ComponentType<Tag>, {}>;
+	[Tag in DOMElements]: DreamyComponent<React.ComponentType<Tag>, {}>;
 };
 
-export type DreamComponent<
+export type DreamyComponent<
 	T extends ElementType,
 	P extends Dict = {}
 > = FunctionComponent<HTMLDreamyProps<T, P> & { ref?: any }>;

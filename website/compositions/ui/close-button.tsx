@@ -13,6 +13,11 @@ export interface CloseButtonProps
         ButtonVariantProps,
         Props {}
 
+/**
+ * CloseButton component
+ *
+ * @See Docs https://dreamy-ui.com/docs/components/close-button
+ */
 export const CloseButton = forwardRef<HTMLButtonElement, CloseButtonProps>(
     ({ isLoading, isDisabled, ...props }, ref) => {
         return (

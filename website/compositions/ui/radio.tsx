@@ -1,3 +1,5 @@
+"use client";
+
 import {
     type UseRadioGroupProps,
     type UseRadioGroupReturn,
@@ -9,11 +11,14 @@ import {
 import { forwardRef, useMemo } from "react";
 import { cx } from "styled-system/css";
 import { type RadioVariantProps, radio } from "styled-system/recipes";
-import { dreamy } from "./factory";
+import { type HTMLDreamyProps, dreamy } from "./factory";
 import { Flex, type FlexProps } from "./flex";
 import { VisuallyHiddenInput } from "./visually-hidden";
 
-export interface RadioProps extends UseRadioProps, RadioVariantProps {}
+export interface RadioProps
+    extends UseRadioProps,
+        RadioVariantProps,
+        Omit<HTMLDreamyProps<"input">, keyof UseRadioProps> {}
 
 const StyledRadio = dreamy("div", radio);
 

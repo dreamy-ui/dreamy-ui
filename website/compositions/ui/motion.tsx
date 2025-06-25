@@ -1,25 +1,25 @@
 "use client";
 
 import { splitProps } from "@dreamy-ui/react";
-import { type MotionProps, isValidMotionProp, m } from "motion/react";
+import { type MotionProps, motion } from "motion/react";
 import { forwardRef } from "react";
-import { isCssProperty, styled } from "styled-system/jsx";
 import { type FlexProperties, flex } from "styled-system/patterns";
-import type { HTMLDreamyProps } from "./factory";
+import { type HTMLDreamyProps, dreamy } from "./factory";
 
-const StyledMotionBox = styled(
-    m.div,
-    {},
-    {
-        shouldForwardProp: (prop, variantKeys) =>
-            isValidMotionProp(prop) || (!variantKeys.includes(prop) && !isCssProperty(prop))
-    }
-);
+const StyledMotionBox = motion.create(dreamy.div);
+// dreamy(
+//     m.div,
+//     {},
+//     {
+//         shouldForwardProp: (prop, variantKeys) =>
+//             isValidMotionProp(prop) || (!variantKeys.includes(prop) && !isCssProperty(prop))
+//     }
+// );
 
 /**
  * MotionBox component. A styled wrapper around the `m.div` component from `motion/react`.
  *
- * @See Docs https://dreamy-ui.com/docs/components/motion-box
+ * @See Docs https://dreamy-ui.com/docs/components/motion
  */
 export const MotionBox = forwardRef<HTMLDivElement, MotionBoxProps>((props, ref) => {
     return (
@@ -30,12 +30,15 @@ export const MotionBox = forwardRef<HTMLDivElement, MotionBoxProps>((props, ref)
     );
 });
 
-type BoxWithNoMotionProps = Omit<HTMLDreamyProps<"div">, keyof MotionProps>;
+export interface MotionBoxProps
+    extends Omit<HTMLDreamyProps<"div">, keyof MotionProps>,
+        MotionProps {}
 
-export interface MotionBoxProps extends BoxWithNoMotionProps, MotionProps {
-    ref?: React.Ref<HTMLDivElement>;
-}
-
+/**
+ * MotionFlex component
+ *
+ * @See Docs https://dreamy-ui.com/docs/components/motion
+ */
 export const MotionFlex = forwardRef<HTMLDivElement, MotionFlexProps>((props, ref) => {
     const [patternProps, restProps] = splitProps(props, [
         "align",
@@ -58,9 +61,4 @@ export const MotionFlex = forwardRef<HTMLDivElement, MotionFlexProps>((props, re
     );
 });
 
-MotionFlex.displayName = "MotionFlex";
-
-type MotionAndFlexProps = MotionProps & FlexProperties;
-type FlexWithNoMotionProps = Omit<HTMLDreamyProps<"div">, keyof MotionAndFlexProps>;
-
-export interface MotionFlexProps extends FlexWithNoMotionProps, FlexProperties, MotionProps {}
+export interface MotionFlexProps extends Omit<MotionBoxProps, "direction">, FlexProperties {}

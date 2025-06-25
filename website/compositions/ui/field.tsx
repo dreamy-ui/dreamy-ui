@@ -13,24 +13,10 @@ import { type HTMLDreamyProps, dreamy } from "./factory";
 import { Icon, type IconProps } from "./icon";
 
 export interface FieldLabelProps extends HTMLDreamyProps<"label"> {
-    /**
-     * @type React.ReactNode
-     */
     requiredIndicator?: React.ReactNode;
-    /**
-     * @type React.ReactNode
-     */
     optionalIndicator?: React.ReactNode;
 }
 
-/**
- * Used to enhance the usability of form controls.
- *
- * It is used to inform users as to what information
- * is requested for a form field.
- *
- * ♿️ Accessibility: Every form field should have a form label.
- */
 export const FieldLabel = forwardRef<HTMLLabelElement, FieldLabelProps>(
     function FieldLabel(props, ref) {
         const {
@@ -129,13 +115,6 @@ export const FieldErrorIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) 
 
 export interface FieldHelpTextProps extends HTMLDreamyProps<"div"> {}
 
-/**
- * FieldHelperText
- *
- * Assistive component that conveys additional guidance
- * about the field, such as how it will be used and what
- * types in values should be provided.
- */
 export const FieldHelpText = forwardRef<HTMLDivElement, FieldHelpTextProps>(
     function FieldHelpText(props, ref) {
         const field = useFieldContext();
@@ -188,11 +167,8 @@ export const Field = forwardRef<HTMLDivElement, FieldProps>(function Field(
     return (
         <FieldProvider value={context}>
             <StyledField {...getRootProps({}, ref)}>
-                ``
-                <>
-                    {label ? <FieldLabel>{label}</FieldLabel> : null}
-                    {children}
-                </>
+                {label ? <FieldLabel>{label}</FieldLabel> : null}
+                {children}
                 {helpText && <FieldHelpText>{helpText}</FieldHelpText>}
                 {error && <FieldError>{error}</FieldError>}
             </StyledField>

@@ -14,13 +14,12 @@ import {
 } from "@dreamy-ui/react";
 import type React from "react";
 import { type ReactNode, type RefObject, type SVGProps, forwardRef, useState } from "react";
+import { splitCssProps } from "styled-system/jsx";
 import { select } from "styled-system/recipes";
 import { Box } from "./box";
-import { createStyleContext } from "./style-context";
-
-import { splitCssProps } from "styled-system/jsx";
 import { type FocusableElement, type HTMLDreamyProps, dreamy } from "./factory";
 import { Popover, PopoverContent, type PopoverContentProps, PopoverTrigger } from "./popover";
+import { createStyleContext } from "./style-context";
 import { VisuallyHidden } from "./visually-hidden";
 const { withProvider, withContext } = createStyleContext(select);
 
@@ -167,7 +166,7 @@ export const SelectTrigger = withContext(
 
         useSafeLayoutEffect(() => {
             forceUpdate({});
-        }, []);
+        }, [descendants.values()]);
 
         return (
             <>

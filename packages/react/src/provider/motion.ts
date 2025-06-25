@@ -152,7 +152,7 @@ export const defaultMotionVariants: DefaultVariants = {
 
 Object.freeze(defaultMotionVariants);
 
-export const defaultDefaultTransition: Transition = {
+export const defaultDefaultTransition = {
 	type: "tween",
 	ease: TRANSITION_EASINGS.easeInOut,
 	duration: 0.2

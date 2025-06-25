@@ -1,3 +1,5 @@
+"use client";
+
 import {
     EditableProvider,
     type UseEditableProps,
@@ -29,10 +31,7 @@ export interface EditableProps extends UseEditableProps, Omit<BaseEditableProps,
 const { withProvider, withContext } = createStyleContext(editable);
 
 /**
- * Editable
- *
- * The wrapper that provides context and logic for all editable
- * components. It renders a `div`
+ * Editable component
  *
  * @see Docs https://dreamy-ui.com/docs/components/editable
  */
@@ -61,7 +60,7 @@ export const Editable = withProvider(
 export interface EditablePreviewProps extends HTMLDreamyProps<"div"> {}
 
 /**
- * EditablePreview
+ * EditablePreview component
  *
  * The `span` used to display the final value, in the `preview` mode
  */
@@ -86,7 +85,7 @@ export const EditablePreview = withContext(
 export interface EditableInputProps extends HTMLDreamyProps<"input"> {}
 
 /**
- * EditableInput
+ * EditableInput component
  *
  * The input used in the `edit` mode
  */

@@ -2,7 +2,6 @@ import { useClipboard } from "@/hooks";
 import type { PropGetter } from "@/utils";
 import { dataAttr } from "@/utils/attr";
 import { objectToDeps } from "@/utils/object";
-import type { HTMLDreamProps } from "@/utils/types";
 import { useFocusRing } from "@react-aria/focus";
 import {
 	type ForwardedRef,
@@ -11,13 +10,10 @@ import {
 	useMemo,
 	useRef
 } from "react";
-import type { SnippetVariantProps } from "styled-system/recipes";
 import type { ButtonProps, IconButtonProps } from "../button";
 import type { TooltipProps } from "../tooltip";
 
-export interface UseSnippetProps
-	extends Omit<HTMLDreamProps<"div">, "onCopy">,
-		SnippetVariantProps {
+export interface UseSnippetProps {
 	/**
 	 * Ref to the DOM node.
 	 */
@@ -87,6 +83,7 @@ export interface UseSnippetProps
 	 */
 	onCopy?: (value: string | string[]) => void;
 	reduceMotion?: boolean;
+	className?: string;
 }
 
 export function useSnippet(props: UseSnippetProps) {
@@ -166,7 +163,13 @@ export function useSnippet(props: UseSnippetProps) {
 		}
 
 		const valueToCopy =
-			codeString || stringValue || preRef.current?.textContent || "";
+			codeString ||
+			stringValue ||
+			preRef.current?.textContent?.replace(
+				symbolBefore?.toString() ?? "",
+				""
+			) ||
+			"";
 
 		copy(valueToCopy);
 		onCopyProp?.(valueToCopy);
@@ -179,7 +182,7 @@ export function useSnippet(props: UseSnippetProps) {
 				"aria-label":
 					typeof tooltipProps.content === "string" &&
 					tooltipProps.content
-						? tooltipProps.content
+						? (tooltipProps.content as string)
 						: "Copy to clipboard",
 				// @ts-expect-error
 				"data-copied": dataAttr(copied),

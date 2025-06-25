@@ -7,8 +7,6 @@ export interface DividerProps
     extends Omit<HTMLDreamyProps<"hr">, keyof DividerProperties>,
         DividerProperties {}
 
-const DreamDivider = dreamy.hr;
-
 /**
  * Divider component
  *
@@ -20,7 +18,7 @@ export const Divider = forwardRef<HTMLHRElement, DividerProps>((props, ref) => {
     const styleProps = divider.raw(patternProps);
 
     return (
-        <DreamDivider
+        <dreamy.hr
             ref={ref}
             {...styleProps}
             {...restProps}

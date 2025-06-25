@@ -3,10 +3,10 @@ import type { PropGetter } from "@/utils";
 import { dataAttr } from "@/utils/attr";
 import { useDOMRef } from "@/utils/dom";
 import { objectToDeps } from "@/utils/object";
-import type { HTMLDreamProps } from "@/utils/types";
 import { useCallback, useMemo } from "react";
 
-export interface UseCircularProgressProps extends HTMLDreamProps<"div"> {
+export interface UseCircularProgressProps {
+    id?: string;
     /**
      * Ref to the DOM node.
      */

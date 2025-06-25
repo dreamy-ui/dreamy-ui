@@ -15,7 +15,6 @@ import {
 	roundValueToStep,
 	valueToPercent
 } from "@/utils/number";
-import type { HTMLDreamProps } from "@/utils/types";
 import { useCallback, useId, useMemo, useRef, useState } from "react";
 import type { SliderVariantProps } from "styled-system/recipes";
 import { useFieldContext } from "../field/field-root";
@@ -29,9 +28,7 @@ export const [SliderProvider, useSliderContext] = createContext<SliderContext>({
 	providerName: "<Slider />"
 });
 
-export interface UseSliderProps
-	extends SliderVariantProps,
-		Omit<HTMLDreamProps<"div">, "id" | "name" | "onChange"> {
+export interface UseSliderProps extends SliderVariantProps {
 	ref?: ReactRef<HTMLDivElement>;
 	/**
 	 * The minimum allowed value of the slider. Cannot be greater than max.

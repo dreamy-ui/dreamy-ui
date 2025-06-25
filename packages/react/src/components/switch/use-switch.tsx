@@ -4,7 +4,6 @@ import { useReducedMotion } from "@/provider";
 import { type PropGetter, TRANSITION_EASINGS, callAllHandlers } from "@/utils";
 import { ariaAttr, dataAttr } from "@/utils/attr";
 import { objectToDeps } from "@/utils/object";
-import type { HTMLDreamProps } from "@/utils/types";
 import { useFocusRing } from "@react-aria/focus";
 import type { Transition } from "motion/react";
 import { type ReactNode, type Ref, useCallback, useId, useMemo, useRef, useState } from "react";
@@ -21,7 +20,7 @@ export type SwitchIconProps = {
     reduceMotion: boolean;
 };
 
-interface Props extends HTMLDreamProps<"input"> {
+interface Props {
     /**
      * Ref to the DOM node.
      */
@@ -38,11 +37,29 @@ interface Props extends HTMLDreamProps<"input"> {
     /**
      * The icon to be displayed when the Switch is checked.
      */
-    icon?: ReactNode | React.ElementType;
+    icon?: ReactNode;
     /**
      * The callback function with value, instead of event, when the Switch is changed.
      */
     onChangeValue?: (value: boolean) => void;
+    className?: string;
+    onClick?: (event: React.MouseEvent<HTMLInputElement>) => void;
+    onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
+    onFocus?: (event: React.FocusEvent<HTMLInputElement>) => void;
+    onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+    onKeyUp?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+    onPointerDown?: (event: React.PointerEvent<HTMLInputElement>) => void;
+    onPointerUp?: (event: React.PointerEvent<HTMLInputElement>) => void;
+    onPointerLeave?: (event: React.PointerEvent<HTMLInputElement>) => void;
+    value?: string;
+    name?: string;
+    autoFocus?: boolean;
+    onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    tabIndex?: number;
+    "aria-label"?: string;
+    "aria-labelledby"?: string;
+    "aria-invalid"?: boolean;
+    "aria-describedby"?: string;
 }
 
 export interface UseSwitchProps extends Props, UserFeedbackProps {

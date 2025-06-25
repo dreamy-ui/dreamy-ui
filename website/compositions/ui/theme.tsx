@@ -7,8 +7,6 @@ export interface ThemeProps extends HTMLDreamyProps<"div">, ThemeVariantProps {}
 
 export interface DarkThemeProps extends ThemeProps {}
 
-export interface LightThemeProps extends ThemeProps {}
-
 const StyledTheme = dreamy("div", theme);
 
 /**
@@ -26,6 +24,8 @@ export const DarkTheme = forwardRef<HTMLDivElement, ThemeProps>((props, ref) => 
         />
     );
 });
+
+export interface LightThemeProps extends ThemeProps {}
 
 /**
  * Light Theme component

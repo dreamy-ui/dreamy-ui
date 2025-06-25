@@ -1,3 +1,5 @@
+"use client";
+
 import { TRANSITION_EASINGS, type Toast, dataAttr, useToast } from "@dreamy-ui/react";
 import { isValidMotionProp, m } from "motion/react";
 import { useCallback } from "react";

@@ -7,7 +7,6 @@ import {
     type PortalProps,
     RemoveScroll,
     type UseModalProps,
-    type UseModalReturn,
     useDefaultTransition,
     useModal,
     useModalContext,
@@ -25,8 +24,24 @@ import { createStyleContext } from "./style-context";
 
 const { withProvider, withContext } = createStyleContext(modal);
 
-interface ModalContext extends ModalOptions, UseModalReturn {
-    scrollBehavior?: "inside" | "outside";
+export interface ModalProps extends UseModalProps, ModalOptions {
+    children: React.ReactNode;
+    /**
+     * Where scroll behavior should originate.
+     * - If set to `inside`, scroll only occurs within the `ModalBody`.
+     * - If set to `outside`, the entire `ModalContent` will scroll within the viewport.
+     *
+     * @default "outside"
+     */
+    scrollBehavior?: ScrollBehavior;
+    /**
+     * Fires when all exiting nodes have completed animating out
+     */
+    onCloseComplete?: () => void;
+    /**
+     * Props to be forwarded to the portal component
+     */
+    portalProps?: PortalProps;
 }
 
 /**
@@ -342,26 +357,6 @@ function ModalFocusScope(props: ModalFocusScopeProps) {
             </RemoveScroll>
         </FocusLock>
     );
-}
-
-export interface ModalProps extends UseModalProps, ModalOptions {
-    children: React.ReactNode;
-    /**
-     * Where scroll behavior should originate.
-     * - If set to `inside`, scroll only occurs within the `ModalBody`.
-     * - If set to `outside`, the entire `ModalContent` will scroll within the viewport.
-     *
-     * @default "outside"
-     */
-    scrollBehavior?: ScrollBehavior;
-    /**
-     * Fires when all exiting nodes have completed animating out
-     */
-    onCloseComplete?: () => void;
-    /**
-     * Props to be forwarded to the portal component
-     */
-    portalProps?: PortalProps;
 }
 
 interface ModalOptions {

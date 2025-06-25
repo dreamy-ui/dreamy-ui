@@ -1,3 +1,5 @@
+"use client";
+
 import {
     PinInputDescendantsProvider,
     PinInputProvider,
@@ -21,7 +23,7 @@ export interface PinInputProps
 }
 
 /**
- * The `PinInput` component allows to enter a sequence of digits quickly.
+ * PinInput component
  *
  * @see Docs https://dreamy-ui.com/docs/components/pin-input
  */
