@@ -1,6 +1,12 @@
-import { callAllHandlers, useField } from "@dreamy-ui/react";
+"use client";
+
+import {
+    TextareaAutosize,
+    type TextareaAutosizeProps,
+    callAllHandlers,
+    useField
+} from "@dreamy-ui/react";
 import { type ComponentType, forwardRef } from "react";
-import TextareaAutosize, { type TextareaAutosizeProps } from "react-textarea-autosize";
 import { type TextareaVariantProps, textarea } from "styled-system/recipes";
 import { type HTMLDreamyProps, dreamy } from "./factory";
 import type { UserFeedbackProps } from "./input";
@@ -48,6 +54,11 @@ export type TextareaNoAutoSizeProps = HTMLDreamyProps<"textarea"> &
         onChangeValue?: (value: string) => void;
     };
 
+/**
+ * Textarea component without autosize.
+ *
+ * @See Docs https://dreamy-ui.com/docs/components/textarea
+ */
 export const TextareaNoAutoSize: ComponentType<TextareaNoAutoSizeProps> = forwardRef<
     HTMLTextAreaElement,
     TextareaNoAutoSizeProps

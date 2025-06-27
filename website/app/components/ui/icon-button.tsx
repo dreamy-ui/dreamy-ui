@@ -21,6 +21,11 @@ export interface IconButtonProps
         ButtonVariantProps,
         Props {}
 
+/**
+ * IconButton component
+ *
+ * @See Docs https://dreamy-ui.com/docs/components/icon-button
+ */
 export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
     ({ icon, ...props }, ref) => {
         return (

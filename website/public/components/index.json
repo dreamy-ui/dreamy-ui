@@ -438,7 +438,9 @@
     "id": "progress-circular",
     "file": "progress-circular.tsx",
     "component": "ProgressCircular",
-    "fileDependencies": [],
+    "fileDependencies": [
+      "./factory"
+    ],
     "hasRecipe": true,
     "hasPattern": false,
     "recipeIds": [
@@ -494,9 +496,9 @@
     "component": "Select",
     "fileDependencies": [
       "./box",
-      "./style-context",
       "./factory",
       "./popover",
+      "./style-context",
       "./visually-hidden"
     ],
     "hasRecipe": true,
@@ -543,6 +545,7 @@
     "component": "Snippet",
     "fileDependencies": [
       "./factory",
+      "./icon-button",
       "./tooltip"
     ],
     "hasRecipe": true,

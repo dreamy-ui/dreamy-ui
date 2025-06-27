@@ -1,4 +1,4 @@
-import { type UseSwitchProps, runIfFn, useSwitch } from "@dreamy-ui/react";
+import { type UseSwitchProps, useSwitch } from "@dreamy-ui/react";
 import { forwardRef } from "react";
 import { type SwittchVariantProps, swittch } from "styled-system/recipes";
 import { dreamy } from "./factory";
@@ -12,7 +12,7 @@ const StyledSwitch = dreamy("div", swittch);
 /**
  * Switch component
  *
- * @See Docs https://dreamy-ui.com/docs/components/Switch
+ * @See Docs https://dreamy-ui.com/docs/components/switch
  */
 export const Switch = forwardRef<HTMLInputElement, SwitchProps>((props, ref) => {
     const {
@@ -26,10 +26,10 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>((props, ref) => 
     } = useSwitch({ ...props, ref });
 
     return (
-        <StyledSwitch {...(getRootProps() as any)}>
-            <VisuallyHiddenInput {...(getInputProps() as any)} />
+        <StyledSwitch {...getRootProps()}>
+            <VisuallyHiddenInput {...getInputProps()} />
             <span {...getWrapperProps()}>
-                <MotionBox {...(getThumbProps() as any)}>{runIfFn(icon as any)}</MotionBox>
+                <MotionBox {...(getThumbProps() as any)}>{icon}</MotionBox>
             </span>
             {children && <span {...getLabelProps()}>{children}</span>}
         </StyledSwitch>

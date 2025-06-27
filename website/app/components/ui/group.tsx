@@ -4,8 +4,6 @@ import { type FlexProperties, flex } from "styled-system/patterns";
 import { type GroupVariantProps, group } from "styled-system/recipes";
 import { type HTMLDreamyProps, dreamy } from "./factory";
 
-const StyledGroup = dreamy("div", group);
-
 export interface GroupProps
     extends Omit<HTMLDreamyProps<"div">, keyof FlexProperties>,
         GroupVariantProps,
@@ -16,6 +14,13 @@ export interface GroupProps
     skip?: (child: React.ReactElement) => boolean;
 }
 
+const StyledGroup = dreamy("div", group);
+
+/**
+ * Group component
+ *
+ * @See Docs https://dreamy-ui.com/docs/components/group
+ */
 export const Group = forwardRef<HTMLDivElement, GroupProps>(({ children, skip, ...props }, ref) => {
     const [patternProps, restProps] = splitProps(props, [
         "align",

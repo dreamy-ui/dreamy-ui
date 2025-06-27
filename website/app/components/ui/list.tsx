@@ -2,7 +2,6 @@ import { forwardRef } from "react";
 import { type ListVariantProps, list } from "styled-system/recipes";
 import { type HTMLDreamyProps, dreamy } from "./factory";
 
-// DTS build fails if I try to use generics and HTMLDreamProps generic in HTMLDreamProps has to be constant
 export interface ListProps extends HTMLDreamyProps<"ol">, ListVariantProps {
     ordered?: boolean;
     unordered?: boolean;
@@ -32,11 +31,14 @@ export const List = forwardRef<HTMLOListElement | HTMLUListElement, ListProps>((
 
 export interface ListItemProps extends HTMLDreamyProps<"li"> {}
 
-const StyledListItem = dreamy.li;
-
+/**
+ * ListItem component
+ *
+ * @See Docshttps://dreamy-ui.com/docs/components/list
+ */
 export const ListItem = forwardRef<HTMLLIElement, ListItemProps>((props, ref) => {
     return (
-        <StyledListItem
+        <dreamy.li
             ref={ref}
             {...props}
         />

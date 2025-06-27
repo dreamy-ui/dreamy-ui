@@ -48,7 +48,6 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(pro
 
     const hasErrored = useRef(false);
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     const shared = useMemo(() => {
         return {
             ref,

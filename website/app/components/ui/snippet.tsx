@@ -1,15 +1,21 @@
 import { type UseSnippetProps, useSnippet } from "@dreamy-ui/react";
 import { type SVGProps, cloneElement, forwardRef, useMemo } from "react";
-import { snippet } from "styled-system/recipes";
-import { dreamy } from "./factory";
+import { type SnippetVariantProps, snippet } from "styled-system/recipes";
+import { type HTMLDreamyProps, dreamy } from "./factory";
+import { IconButton } from "./icon-button";
 import { Tooltip } from "./tooltip";
 
-export interface SnippetProps extends UseSnippetProps {}
+export interface SnippetProps
+    extends UseSnippetProps,
+        Omit<HTMLDreamyProps<"div">, keyof UseSnippetProps>,
+        SnippetVariantProps {}
 
 const StyledSnippet = dreamy("div", snippet);
 
 /**
- * Snippet component. Use with `useSnippet` hook.
+ * Snippet component
+ *
+ * @See Docs https://dreamy-ui.com/docs/components/snippet
  */
 export const Snippet = forwardRef<HTMLDivElement, SnippetProps>((props, ref) => {
     const {
@@ -44,7 +50,6 @@ export const Snippet = forwardRef<HTMLDivElement, SnippetProps>((props, ref) => 
                 }
                 {...tooltipProps}
             >
-                {/* @ts-ignore - "aria-label" IS a string */}
                 <IconButton
                     icon={copied ? clonedCheckIcon : clonedCopyIcon}
                     size={"sm"}
@@ -72,7 +77,6 @@ export const Snippet = forwardRef<HTMLDivElement, SnippetProps>((props, ref) => 
                         <pre
                             key={`${index}-${t}`}
                             data-part="pre"
-                            // biome-ignore lint/a11y/noNoninteractiveTabindex: <explanation>
                             tabIndex={0}
                         >
                             {!hideSymbol && <span data-part="symbol">{symbolBefore}</span>}
@@ -87,7 +91,6 @@ export const Snippet = forwardRef<HTMLDivElement, SnippetProps>((props, ref) => 
             <pre
                 ref={preRef}
                 data-part="pre"
-                // biome-ignore lint/a11y/noNoninteractiveTabindex: <explanation>
                 tabIndex={0}
             >
                 {!hideSymbol && <span data-part="symbol">{symbolBefore}</span>}

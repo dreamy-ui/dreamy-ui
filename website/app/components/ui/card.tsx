@@ -1,3 +1,5 @@
+"use client";
+
 import { card } from "styled-system/recipes";
 import { dreamy } from "./factory";
 import { createStyleContext } from "./style-context";

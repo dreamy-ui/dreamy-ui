@@ -1,3 +1,5 @@
+"use client";
+
 import {
     type MaybeRenderProp,
     PopoverProvider,
@@ -45,9 +47,9 @@ export interface PopoverProps extends UsePopoverProps {
  * @See Docs https://dreamy-ui.com/docs/components/popover
  */
 export const Popover = withProvider(function PopoverRoot(props: PopoverProps) {
-    const { children, direction, hasArrow, ...rest } = props;
+    const { children, direction = "ltr", hasArrow, ...rest } = props;
 
-    const context = usePopover({ ...rest, direction: direction ?? "ltr" });
+    const context = usePopover({ ...rest, direction });
 
     return (
         <PopoverProvider
@@ -118,7 +120,7 @@ const PopoverTransition = forwardRef(function PopoverTransition(
 
     return (
         <MotionBox
-            ref={ref as any}
+            ref={ref}
             variants={transformReducedMotion(popover.default, reduceMotion)}
             initial={false}
             animate={isOpen ? "initial" : "exit"}

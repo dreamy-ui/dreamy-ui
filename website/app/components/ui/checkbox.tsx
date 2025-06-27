@@ -1,3 +1,5 @@
+"use client";
+
 import {
     TRANSITION_EASINGS,
     type UseCheckboxGroupProps,

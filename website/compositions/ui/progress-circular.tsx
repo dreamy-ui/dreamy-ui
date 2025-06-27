@@ -3,12 +3,13 @@
 import { type UseCircularProgressProps, useCircularProgress } from "@dreamy-ui/react";
 import { forwardRef } from "react";
 import { styled } from "styled-system/jsx";
-import { progressCircular } from "styled-system/recipes";
+import { type ProgressCircularVariantProps, progressCircular } from "styled-system/recipes";
 import type { HTMLDreamyProps } from "./factory";
 
 export interface ProgressCircularProps
     extends UseCircularProgressProps,
-        Omit<HTMLDreamyProps<"div">, keyof UseCircularProgressProps> {}
+        Omit<HTMLDreamyProps<"div">, keyof UseCircularProgressProps>,
+        ProgressCircularVariantProps {}
 
 const StyledProgressCircular = styled("div", progressCircular);
 

@@ -20,6 +20,7 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>((props, ref) => {
     const { isExternal, ...rest } = props;
 
     const [patternProps, restProps] = splitProps(rest, ["variant", "size"]);
+
     const styleProps = text.raw({
         variant: "link",
         ...patternProps

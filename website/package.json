@@ -9,7 +9,8 @@
 		"dev": "cross-env NODE_ENV=development node --import=tsx --watch --watch-path=./server server/server.ts -",
 		"start": "cross-env NODE_ENV=production node --env-file .env build/server/server.js",
 		"typecheck": "tsc",
-		"components": "tsx scripts/components.ts"
+		"components": "tsx scripts/components.ts",
+		"components:watch": "tsx scripts/components.watch.ts"
 	},
 	"dependencies": {
 		"@dreamy-ui/panda-preset": "workspace:*",

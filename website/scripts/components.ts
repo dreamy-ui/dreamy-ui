@@ -287,7 +287,7 @@ function checkForRecipesOrPatterns(
 	return { hasRecipe, hasPattern };
 }
 
-async function main() {
+export async function main() {
 	const compositionsDir = getBaseDirectory();
 	const componentsDir = getComponentsDirectory();
 	const recipesDir = getRecipesDirectory();

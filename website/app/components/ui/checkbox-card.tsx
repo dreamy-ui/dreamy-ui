@@ -1,3 +1,5 @@
+"use client";
+
 import { type UseCheckboxProps, createContext, useCheckbox } from "@dreamy-ui/react";
 import { type ElementType, type ReactElement, cloneElement, forwardRef, useMemo } from "react";
 import { type CheckboxCardVariantProps, checkboxCard } from "styled-system/recipes";
