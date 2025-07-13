@@ -1,0 +1,29 @@
+---
+title: Close Button
+description: CloseButton can be used to close a container.
+isServerComponent: false
+source: /website/compositions/ui/close-button.tsx
+themeSource: /website/compositions/recipes/close-button.ts
+---
+
+## Installation
+
+-   `CloseButton` - The true CloseButton component.
+
+```bash
+pnpm dreamy components add close-button
+```
+
+## Usage
+
+`CloseButton` is built on top of the `Button`, so all props of [Button](./button) are available.
+
+`aria-label` prop is required for accessibility.
+
+<Wrapper>
+	<CloseButton w="fit-content" aria-label="Close Modal" />
+</Wrapper>
+
+```tsx
+<CloseButton aria-label="Close Modal" />
+```
