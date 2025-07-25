@@ -1,4 +1,4 @@
-import type { LoaderFunctionArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "react-router";
 import { CACHE_DURATION, CacheHeaders } from "~/src/.server/cache";
 import { Docs } from "~/src/.server/docs";
 

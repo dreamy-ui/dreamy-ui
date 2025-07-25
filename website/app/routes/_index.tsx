@@ -1,5 +1,5 @@
 import { Flex } from "@dreamy-ui/react/rsc";
-import { type MetaFunction, data } from "@remix-run/node";
+import { type MetaFunction, data } from "react-router";
 import { CACHE_DURATION, CacheHeaders, cachified } from "~/src/.server/cache";
 import { getLandingPageCodes } from "~/src/.server/codes";
 import BuiltFor from "~/src/ui/pages/landing/BuiltFor";

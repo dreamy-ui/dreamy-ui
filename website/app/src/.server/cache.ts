@@ -1,7 +1,7 @@
 import type { Cache, CacheEntry, CachifiedOptions } from "@epic-web/cachified";
 import { cachified as baseCachified, totalTtl } from "@epic-web/cachified";
 import { remember } from "@epic-web/remember";
-import type { HeadersFunction } from "@remix-run/node";
+import type { HeadersFunction } from "react-router";
 import Redis from "ioredis";
 import { LRUCache } from "lru-cache";
 import { Logger } from "~/src/.server/logger";

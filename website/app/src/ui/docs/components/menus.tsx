@@ -9,7 +9,7 @@ import {
     useEventListener
 } from "@dreamy-ui/react";
 import { Flex, Text } from "@dreamy-ui/react/rsc";
-import { Link, useNavigate } from "@remix-run/react";
+import { Link, useNavigate } from "react-router";
 import { IoAdd } from "react-icons/io5";
 import { LuAlarmClock, LuBattery, LuTrash, LuWarehouse } from "react-icons/lu";
 

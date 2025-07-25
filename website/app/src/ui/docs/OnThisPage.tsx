@@ -8,7 +8,7 @@ import {
     Heading,
     Icon
 } from "@dreamy-ui/react/rsc";
-import { useLocation } from "@remix-run/react";
+import { useLocation } from "react-router";
 import { Fragment, memo, useState } from "react";
 import { BiChevronUp, BiEdit } from "react-icons/bi";
 import { useSections } from "~/routes/docs";

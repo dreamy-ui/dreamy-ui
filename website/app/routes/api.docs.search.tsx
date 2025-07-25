@@ -1,4 +1,4 @@
-import { type ActionFunctionArgs, data } from "@remix-run/node";
+import { type ActionFunctionArgs, data } from "react-router";
 import { cachified } from "~/src/.server/cache";
 import { Docs, filenameToTitle } from "~/src/.server/docs";
 import { invariant } from "~/src/functions/invariant";

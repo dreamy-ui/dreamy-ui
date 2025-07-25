@@ -7,7 +7,7 @@ import {
     useEventListener
 } from "@dreamy-ui/react";
 import { Icon } from "@dreamy-ui/react/rsc";
-import { useRouteLoaderData } from "@remix-run/react";
+import { useRouteLoaderData } from "react-router";
 import { BiMoon, BiSun } from "react-icons/bi";
 import type { loader } from "~/root";
 

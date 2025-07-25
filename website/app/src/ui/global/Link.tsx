@@ -1,5 +1,5 @@
 import { Link as DreamLink, type LinkProps as DreamLinkProps } from "@dreamy-ui/react/rsc";
-import { Link as RemixLink, type LinkProps as RemixLinkProps } from "@remix-run/react";
+import { Link as RemixLink, type LinkProps as RemixLinkProps } from "react-router";
 import { forwardRef } from "react";
 
 export interface LinkProps extends DreamLinkProps, Omit<RemixLinkProps, keyof DreamLinkProps> {}

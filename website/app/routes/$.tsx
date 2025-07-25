@@ -1,12 +1,12 @@
 import { Flex, Heading, Icon, Text } from "@dreamy-ui/react/rsc";
-import type { LoaderFunctionArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "react-router";
 import {
     type MetaArgs,
     type MetaFunction,
     data,
     isRouteErrorResponse,
-    useRouteError
-} from "@remix-run/react";
+    useRouteError,
+} from "react-router";
 import { useMemo } from "react";
 import { LuCircleAlert } from "react-icons/lu";
 

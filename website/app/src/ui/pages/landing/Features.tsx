@@ -1,5 +1,5 @@
 import { Box, Flex, HStack, Heading, Icon, Link, Text } from "@dreamy-ui/react/rsc";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData } from "react-router";
 import { MDXRemote, type MDXRemoteSerializeResult } from "next-mdx-remote";
 import { BiLogoTypescript } from "react-icons/bi";
 import { FaBorderStyle } from "react-icons/fa";

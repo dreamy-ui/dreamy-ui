@@ -1,4 +1,4 @@
-import type { ActionFunctionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs } from "react-router";
 
 export async function loader(_: ActionFunctionArgs) {
     await new Promise((resolve) => setTimeout(resolve, 1000));

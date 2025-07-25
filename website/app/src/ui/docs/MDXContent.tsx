@@ -113,7 +113,7 @@ import {
 	Wrap
 } from "@dreamy-ui/react/rsc";
 import type * as mdx from "@mdx-js/react";
-import { Link as RemixLink, useLocation } from "@remix-run/react";
+import { Link as RemixLink, useLocation } from "react-router";
 import { MDXRemote } from "next-mdx-remote";
 import type React from "react";
 import {

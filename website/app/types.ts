@@ -8,3 +8,5 @@ export interface ComponentDocFrontmatter {
     source: string;
     themeSource: string;
 }
+
+export type ServerLoader<T extends (args: any) => any> = Awaited<ReturnType<T>>;

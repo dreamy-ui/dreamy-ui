@@ -1,5 +1,5 @@
 import { Flex } from "@dreamy-ui/react/rsc";
-import type { ActionFunctionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs } from "react-router";
 
 export function meta() {
     return [

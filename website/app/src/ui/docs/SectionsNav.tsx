@@ -1,6 +1,6 @@
 import { Button, Collapse, useSafeLayoutEffect } from "@dreamy-ui/react";
 import { Badge, Flex, Icon } from "@dreamy-ui/react/rsc";
-import { useLocation } from "@remix-run/react";
+import { useLocation } from "react-router";
 import { AnimatePresence } from "motion/react";
 import { memo, useRef, useState } from "react";
 import { BiChevronRight } from "react-icons/bi";

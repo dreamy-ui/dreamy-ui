@@ -1,6 +1,6 @@
 import { Button, Image, MotionBox, TRANSITION_EASINGS } from "@dreamy-ui/react";
 import { Badge, Box, Divider, HStack, Heading, Icon } from "@dreamy-ui/react/rsc";
-import { useLocation } from "@remix-run/react";
+import { useLocation } from "react-router";
 import { useState } from "react";
 import { MdOutlineFavorite } from "react-icons/md";
 import { Link } from "~/src/ui/global/Link";

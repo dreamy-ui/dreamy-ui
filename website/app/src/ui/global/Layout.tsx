@@ -1,6 +1,6 @@
 import { MotionFlex, TRANSITION_EASINGS } from "@dreamy-ui/react";
 import { Flex } from "@dreamy-ui/react/rsc";
-import { useLocation } from "@remix-run/react";
+import { useLocation } from "react-router";
 import { type PropsWithChildren, useState } from "react";
 import { useIsMobile } from "~/src/hooks/useIsMobile";
 import Header from "~/src/ui/global/Header";

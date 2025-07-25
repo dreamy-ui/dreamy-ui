@@ -1,4 +1,4 @@
-import { type LoaderFunctionArgs, redirect } from "@remix-run/node";
+import { type LoaderFunctionArgs, redirect } from "react-router";
 import { Docs } from "~/src/.server/docs";
 import { filenameToSlug } from "~/src/functions/string";
 

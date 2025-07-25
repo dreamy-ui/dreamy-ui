@@ -1,6 +1,6 @@
 import { Button } from "@dreamy-ui/react";
 import { Box, Flex, HStack, Heading, Icon, Text } from "@dreamy-ui/react/rsc";
-import { Link } from "@remix-run/react";
+import { Link } from "react-router";
 import { BsDiscord } from "react-icons/bs";
 import { IoArrowForward } from "react-icons/io5";
 import { MdOutlineCloud } from "react-icons/md";

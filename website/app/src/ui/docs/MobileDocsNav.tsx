@@ -6,7 +6,7 @@ import {
     useSafeLayoutEffect
 } from "@dreamy-ui/react";
 import { Box, Flex, Icon } from "@dreamy-ui/react/rsc";
-import { useLocation } from "@remix-run/react";
+import { useLocation } from "react-router";
 import { AnimatePresence } from "motion/react";
 import { useState } from "react";
 import { BiChevronDown } from "react-icons/bi";

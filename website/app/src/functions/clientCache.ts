@@ -1,12 +1,6 @@
 import { useSafeLayoutEffect } from "@dreamy-ui/react";
-import type { SerializeFrom } from "@remix-run/node";
-import {
-    type ClientLoaderFunctionArgs,
-    useLoaderData,
-    useNavigate,
-    useRouteLoaderData
-} from "@remix-run/react";
 import { useState } from "react";
+import { useLoaderData, useNavigate, useRouteLoaderData } from "react-router";
 
 export interface CacheAdapter {
     getItem: (key: string) => any | Promise<any>;
@@ -20,15 +14,18 @@ const clientCache: CacheAdapter = {
     removeItem: async (key) => localStorage.removeItem(key)
 };
 
-export const cacheClientLoader = async <T extends unknown>(
-    { request, serverLoader }: ClientLoaderFunctionArgs,
+export const cacheClientLoader = async <
+    R extends any,
+    T extends { request: Request; serverLoader: () => Promise<R> } = any
+>(
+    { request, serverLoader }: T,
     { key = constructKey(request) }: { key?: string; adapter?: CacheAdapter } = {
         key: constructKey(request)
     }
 ): Promise<
-    SerializeFrom<T> & {
-        serverData: SerializeFrom<T>;
-        deferredServerData: Promise<SerializeFrom<T>> | undefined;
+    R & {
+        serverData: R;
+        deferredServerData: Promise<R> | undefined;
         key: string;
     }
 > => {
@@ -49,16 +46,18 @@ export const cacheClientLoader = async <T extends unknown>(
 export function useCachedLoaderData<T extends any>() {
     const loaderData = useLoaderData<any>();
 
-    return useClientCache<T>(loaderData);
+    return useClientCache(loaderData) as T;
 }
 
-export function useCachedRouteLoaderData<T extends any>(routeKey: string) {
-    const loaderData = useRouteLoaderData<any>(routeKey);
+export function useCachedRouteLoaderData<T extends any>(routeKey: string): T {
+    const loaderData = useRouteLoaderData(routeKey);
 
-    return useClientCache<T>(loaderData);
+    return useClientCache(loaderData) as T;
 }
 
-function useClientCache<T extends any>(loaderData: any) {
+function useClientCache<
+    T extends { serverLoaderPromise: Promise<any>; key: string } & Record<string, any>
+>(loaderData: T) {
     const navigate = useNavigate();
     const [currentData, setCurrentData] = useState<any>(loaderData);
 
@@ -111,7 +110,7 @@ function useClientCache<T extends any>(loaderData: any) {
     return {
         ...currentData,
         cacheKey: loaderData?.key
-    } as SerializeFrom<T> & {
+    } as T & {
         cacheKey?: string;
     };
 }

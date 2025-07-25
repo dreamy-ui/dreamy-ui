@@ -1,6 +1,8 @@
-import type { loader } from "~/routes/docs.$section.$page";
+import type { Route } from "../../routes/+types/docs.$section.$page";
 import { useCachedRouteLoaderData } from "../functions/clientCache";
 
 export function useDoc() {
-    return useCachedRouteLoaderData<typeof loader>("routes/docs.$section.$page");
+	return useCachedRouteLoaderData<Route.ComponentProps["loaderData"]>(
+		"routes/docs.$section.$page"
+	);
 }
