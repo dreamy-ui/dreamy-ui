@@ -1,4 +1,7 @@
-import { Flex, HStack, Icon, Text } from "@dreamy-ui/react/rsc";
+import { Flex } from "@/flex";
+import { Icon } from "@/icon";
+import { HStack } from "@/stack";
+import { Text } from "@/text";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import { Link } from "../global/Link";
 

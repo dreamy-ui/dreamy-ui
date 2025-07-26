@@ -1,5 +1,9 @@
-import { IconButton, Image, TRANSITION_EASINGS, useColorMode } from "@dreamy-ui/react";
-import { Flex, Icon, Text } from "@dreamy-ui/react/rsc";
+import { Flex } from "@/flex";
+import { Icon } from "@/icon";
+import { IconButton } from "@/icon-button";
+import { Image } from "@/image";
+import { Text } from "@/text";
+import { TRANSITION_EASINGS, useColorMode } from "@dreamy-ui/react";
 import { AnimatePresence, m } from "motion/react";
 import { BsArrowRight } from "react-icons/bs";
 import { Link } from "../Link";

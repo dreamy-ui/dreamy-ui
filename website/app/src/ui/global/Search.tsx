@@ -1,15 +1,15 @@
 import type { Route } from ".react-router/types/app/routes/+types/api.docs.search";
+import { Button } from "@/button";
+import { Flex } from "@/flex";
+import { Icon } from "@/icon";
+import { IconButton } from "@/icon-button";
+import { Input, InputGroup, InputLeftAddon } from "@/input";
+import { Kbd } from "@/kbd";
+import { Modal, ModalBody, ModalContent, ModalOverlay } from "@/modal";
+import { MotionBox } from "@/motion";
+import { Spinner } from "@/spinner";
+import { Text } from "@/text";
 import {
-	Button,
-	IconButton,
-	Input,
-	InputGroup,
-	InputLeftAddon,
-	Modal,
-	ModalBody,
-	ModalContent,
-	ModalOverlay,
-	MotionBox,
 	TRANSITION_EASINGS,
 	getActionKeyCode,
 	useActionKey,
@@ -17,7 +17,6 @@ import {
 	useEventListener,
 	useUpdateEffect
 } from "@dreamy-ui/react";
-import { Flex, Icon, Kbd, Spinner, Text } from "@dreamy-ui/react/rsc";
 import { AnimatePresence } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { BiSearch } from "react-icons/bi";

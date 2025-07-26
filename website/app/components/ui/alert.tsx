@@ -48,9 +48,6 @@ export const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(props
                 as={"h4"}
             >
                 <Icon
-                    fill={"currentColor"}
-                    color={"currentColor"}
-                    stroke={"currentColor"}
                     role="img"
                     data-part={"icon"}
                     asChild
@@ -59,7 +56,7 @@ export const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(props
                 </Icon>
                 {title}
             </Text>
-            <Text data-part={"description"}>{description}</Text>
+            {description && <Text data-part={"description"}>{description}</Text>}
         </StyledAlert>
     );
 });

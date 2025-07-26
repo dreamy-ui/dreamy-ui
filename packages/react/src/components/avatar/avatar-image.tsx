@@ -58,11 +58,6 @@ export function AvatarImage(props: AvatarImageProps) {
         );
     }
 
-    /**
-     * If `src` was passed and the image has loaded, we'll show it.
-     * Using the RSC version of the image component, since other
-     * features Image component provides won't be used.
-     */
     return (
         <Image
             src={src}

@@ -1,4 +1,7 @@
-import { Flex, HStack, ImageRSC, Text } from "@dreamy-ui/react/rsc";
+import { Flex } from "@/flex";
+import { Image } from "@/image";
+import { HStack } from "@/stack";
+import { Text } from "@/text";
 import { Link } from "./Link";
 
 export default function Footer() {
@@ -23,7 +26,7 @@ export default function Footer() {
                     align="center"
                     gap={3}
                 >
-                    <ImageRSC
+                    <Image
                         src="/dreamy-ui-no-bg.png"
                         alt="Dreamy UI Logo"
                         boxSize="8"

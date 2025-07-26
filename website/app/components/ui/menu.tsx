@@ -124,7 +124,7 @@ export interface MenuTriggerProps extends HTMLDreamyProps<"button"> {
     placeholder?: string;
 }
 
-export const MenuTriggerBase = forwardRef<HTMLButtonElement, MenuTriggerProps>(function MenuTrigger(
+export const MenuTrigger = forwardRef<HTMLButtonElement, MenuTriggerProps>(function MenuTrigger(
     { children, placeholder, ...rest },
     ref
 ) {

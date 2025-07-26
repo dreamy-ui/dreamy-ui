@@ -1,12 +1,16 @@
-import { Button, Collapse, useSafeLayoutEffect } from "@dreamy-ui/react";
-import { Badge, Flex, Icon } from "@dreamy-ui/react/rsc";
-import { useLocation } from "react-router";
+import { Badge } from "@/badge";
+import { Button } from "@/button";
+import { Flex } from "@/flex";
+import { Icon } from "@/icon";
+import { Collapse } from "@/transitions";
+import { useSafeLayoutEffect } from "@dreamy-ui/react";
 import { AnimatePresence } from "motion/react";
 import { memo, useRef, useState } from "react";
 import { BiChevronRight } from "react-icons/bi";
-import { useSections } from "~/routes/docs";
+import { useLocation } from "react-router";
 import type { ISection } from "~/src/.server/docs";
 import { cachePageData } from "~/src/functions/clientCache";
+import { useSections } from "~/src/hooks/useSections";
 import { Link } from "~/src/ui/global/Link";
 
 const newComponents = ["toast", "progress circular", "group", "radio card", "wrap"];

@@ -27,57 +27,65 @@ import tsconfigPaths from "vite-tsconfig-paths";
 // });
 
 const reactCompilerConfig = {
-    target: "19"
+	target: "19"
 };
 
 export default defineConfig(({ isSsrBuild }) => ({
-    resolve: {
-        alias: {
-            "styled-system": path.resolve(__dirname, "./styled-system")
-        }
-    },
-    build: {
-        minify: true,
-        target: "esnext",
-        rollupOptions: isSsrBuild
-            ? {
-                  input: "./app/server.ts"
-              }
-            : undefined
-    },
-    plugins: [
-        // Inspect({
-        //     build: true
-        // }),
-        // remixDevTools(),
-        mdx({
-            development: true
-        }) as any,
-        // pandabox.vite({
-        //     optimizeJs: "macro",
-        //     exclude: [
-        //         "./styled-system",
-        //         "styled-system",
-        //         "styled-system/*",
-        //         "../packages/*",
-        //         "@dreamy-ui/system",
-        //         "@dreamy-ui/react"
-        //     ]
-        // }),
-        reactRouter(),
-        babel({
-            filter: /app\/.*\.[jt]sx?$/,
-            babelConfig: {
-                presets: ["@babel/preset-typescript"],
-                plugins: [["babel-plugin-react-compiler", reactCompilerConfig]]
-            }
-        }),
-        tsconfigPaths()
-    ],
-    optimizeDeps: {
-        exclude: ["@dreamy-ui/panda-preset", "styled-system/*", "@dreamy-ui/react"]
-    },
-    esbuild: {
-        exclude: ["@dreamy-ui/panda-preset", "styled-system/*", "@dreamy-ui/react"]
-    }
+	resolve: {
+		alias: {
+			"styled-system": path.resolve(__dirname, "./styled-system")
+		}
+	},
+	build: {
+		minify: true,
+		target: "esnext",
+		rollupOptions: isSsrBuild
+			? {
+					input: ["./app/server.ts", "./app/cluster.ts"]
+				}
+			: undefined
+	},
+	plugins: [
+		// Inspect({
+		//     build: true
+		// }),
+		// remixDevTools(),
+		mdx({
+			development: true
+		}) as any,
+		// pandabox.vite({
+		//     optimizeJs: "macro",
+		//     exclude: [
+		//         "./styled-system",
+		//         "styled-system",
+		//         "styled-system/*",
+		//         "../packages/*",
+		//         "@dreamy-ui/system",
+		//         "@dreamy-ui/react"
+		//     ]
+		// }),
+		reactRouter(),
+		babel({
+			filter: /app\/.*\.[jt]sx?$/,
+			babelConfig: {
+				presets: ["@babel/preset-typescript"],
+				plugins: [["babel-plugin-react-compiler", reactCompilerConfig]]
+			}
+		}),
+		tsconfigPaths()
+	],
+	optimizeDeps: {
+		exclude: [
+			"@dreamy-ui/panda-preset",
+			"styled-system/*",
+			"@dreamy-ui/react"
+		]
+	},
+	esbuild: {
+		exclude: [
+			"@dreamy-ui/panda-preset",
+			"styled-system/*",
+			"@dreamy-ui/react"
+		]
+	}
 }));

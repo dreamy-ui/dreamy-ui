@@ -1,18 +1,16 @@
-import { Button, useEventListener } from "@dreamy-ui/react";
-import {
-    Box,
-    Divider,
-    Link as DreamLink,
-    Flex,
-    type FlexProps,
-    Heading,
-    Icon
-} from "@dreamy-ui/react/rsc";
-import { useLocation } from "react-router";
+import { Box } from "@/box";
+import { Button } from "@/button";
+import { Divider } from "@/divider";
+import { Flex, type FlexProps } from "@/flex";
+import { Heading } from "@/heading";
+import { Icon } from "@/icon";
+import { Link as DreamLink } from "@/link";
+import { useEventListener } from "@dreamy-ui/react";
 import { Fragment, memo, useState } from "react";
 import { BiChevronUp, BiEdit } from "react-icons/bi";
-import { useSections } from "~/routes/docs";
+import { useLocation } from "react-router";
 import { useDoc } from "~/src/hooks/useDoc";
+import { useSections } from "~/src/hooks/useSections";
 import { Link } from "~/src/ui/global/Link";
 
 export default function OnThisPage() {

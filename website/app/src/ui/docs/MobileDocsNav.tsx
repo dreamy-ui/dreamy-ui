@@ -1,16 +1,14 @@
-import {
-    Button,
-    MotionFlex,
-    TRANSITION_EASINGS,
-    useReducedMotion,
-    useSafeLayoutEffect
-} from "@dreamy-ui/react";
-import { Box, Flex, Icon } from "@dreamy-ui/react/rsc";
-import { useLocation } from "react-router";
+import { Box } from "@/box";
+import { Button } from "@/button";
+import { Flex } from "@/flex";
+import { Icon } from "@/icon";
+import { MotionFlex } from "@/motion";
+import { TRANSITION_EASINGS, useReducedMotion, useSafeLayoutEffect } from "@dreamy-ui/react";
 import { AnimatePresence } from "motion/react";
 import { useState } from "react";
 import { BiChevronDown } from "react-icons/bi";
-import { useSections } from "~/routes/docs";
+import { useLocation } from "react-router";
+import { useSections } from "~/src/hooks/useSections";
 import { OnThisPageHeadings } from "~/src/ui/docs/OnThisPage";
 import { Section } from "~/src/ui/docs/SectionsNav";
 
@@ -69,7 +67,7 @@ function DocsNav() {
                     />
                 }
                 variant="ghost"
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={() => setIsOpen((prev) => !prev)}
                 _hover={{
                     bg: "transparent"
                 }}

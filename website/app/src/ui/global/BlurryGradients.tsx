@@ -1,4 +1,4 @@
-import { Box } from "@dreamy-ui/react/rsc";
+import { Box } from "@/box";
 import useScroll from "~/src/hooks/useScroll";
 
 export default function BlurryGradients() {

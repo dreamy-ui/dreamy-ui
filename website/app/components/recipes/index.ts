@@ -1,5 +1,6 @@
 import { accordion } from "./accordion";
 import { alert } from "./alert";
+import { avatar } from "./avatar";
 import { badge } from "./badge";
 import { button } from "./button";
 import { card } from "./card";
@@ -18,6 +19,7 @@ import { modal } from "./modal";
 import { popover } from "./popover";
 import { progressCircular } from "./progress-circular";
 import { progress } from "./progress";
+import { radioCard } from "./radio-card";
 import { radio } from "./radio";
 import { select } from "./select";
 import { skeleton } from "./skeleton";
@@ -35,6 +37,7 @@ import { tooltip } from "./tooltip";
 export const recipes = {
     accordion,
     alert,
+    avatar,
     badge,
     button,
     card,
@@ -53,6 +56,7 @@ export const recipes = {
     popover,
     progressCircular,
     progress,
+    radioCard,
     radio,
     select,
     skeleton,

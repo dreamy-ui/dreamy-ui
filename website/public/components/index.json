@@ -35,6 +35,24 @@
   },
   {
     "type": "component",
+    "id": "avatar",
+    "file": "avatar.tsx",
+    "component": "Avatar",
+    "fileDependencies": [
+      "./box",
+      "./factory",
+      "./flex",
+      "./icon",
+      "./image"
+    ],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "avatar"
+    ]
+  },
+  {
+    "type": "component",
     "id": "badge",
     "file": "badge.tsx",
     "component": "Badge",
@@ -460,6 +478,23 @@
     "hasPattern": false,
     "recipeIds": [
       "progress"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "radio-card",
+    "file": "radio-card.tsx",
+    "component": "RadioCard",
+    "fileDependencies": [
+      "./box",
+      "./factory",
+      "./text",
+      "./visually-hidden"
+    ],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "radio-card"
     ]
   },
   {

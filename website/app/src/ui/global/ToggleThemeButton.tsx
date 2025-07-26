@@ -1,14 +1,9 @@
-import {
-    IconButton,
-    Tooltip,
-    getActionKeyCode,
-    useActionKey,
-    useColorMode,
-    useEventListener
-} from "@dreamy-ui/react";
-import { Icon } from "@dreamy-ui/react/rsc";
-import { useRouteLoaderData } from "react-router";
+import { Icon } from "@/icon";
+import { IconButton } from "@/icon-button";
+import { Tooltip } from "@/tooltip";
+import { getActionKeyCode, useActionKey, useColorMode, useEventListener } from "@dreamy-ui/react";
 import { BiMoon, BiSun } from "react-icons/bi";
+import { useRouteLoaderData } from "react-router";
 import type { loader } from "~/root";
 
 export function ToggleThemeButton() {

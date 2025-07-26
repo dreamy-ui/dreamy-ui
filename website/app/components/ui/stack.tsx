@@ -67,8 +67,8 @@ export const HStack = forwardRef<HTMLDivElement, HStackProps>(({ children, ...pr
     return (
         <dreamy.div
             ref={ref}
-            {...restProps}
             {...styles}
+            {...restProps}
         >
             {children}
         </dreamy.div>
@@ -92,8 +92,8 @@ export const VStack = forwardRef<HTMLDivElement, VStackProps>(({ children, ...pr
     return (
         <dreamy.div
             ref={ref}
-            {...restProps}
             {...styles}
+            {...restProps}
         >
             {children}
         </dreamy.div>

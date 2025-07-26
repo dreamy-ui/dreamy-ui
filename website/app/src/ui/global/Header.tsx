@@ -1,6 +1,10 @@
-import { IconButton, useEventListener } from "@dreamy-ui/react";
-import { Flex, HStack, Icon, Text } from "@dreamy-ui/react/rsc";
-import { memo, useState } from "react";
+import { Flex } from "@/flex";
+import { Icon } from "@/icon";
+import { IconButton } from "@/icon-button";
+import { HStack } from "@/stack";
+import { Text } from "@/text";
+import { useEventListener } from "@dreamy-ui/react";
+import { useState } from "react";
 import { FaDiscord } from "react-icons/fa";
 import { Link } from "~/src/ui/global/Link";
 import Search from "~/src/ui/global/Search";
@@ -56,7 +60,7 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: Props) {
                 contentBetween
                 px={4}
             >
-                <MemoLogo />
+                <Logo />
 
                 <HStack
                     gap={{
@@ -115,10 +119,10 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: Props) {
                     >
                         Docs
                     </Link>
-                    <MemoSearch />
+                    <Search />
 
-                    <MemoGithubButton />
-                    <MemoToggleThemeButton />
+                    <GithubButton />
+                    <ToggleThemeButton />
 
                     <IconButton
                         display={{
@@ -138,8 +142,3 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: Props) {
         </Flex>
     );
 }
-
-const MemoLogo = memo(Logo);
-const MemoSearch = memo(Search);
-const MemoToggleThemeButton = memo(ToggleThemeButton);
-const MemoGithubButton = memo(GithubButton);

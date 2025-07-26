@@ -3,6 +3,6 @@
   "id": "theme",
   "file": {
     "name": "theme.ts",
-    "content": "import { defineRecipe } from \"@pandacss/dev\";\n\nexport const theme = defineRecipe({\n\tclassName: \"dreamy-theme\",\n\tdescription: \"Dreamy UI Theme component\",\n\tjsx: [\"DarkTheme\", \"LightTheme\"],\n\tbase: {\n\t\troot: {\n\t\t\tcolor: \"fg\",\n\t\t\t\"&[data-theme='dark']\": {\n\t\t\t\tcolorScheme: \"dark\"\n\t\t\t},\n\t\t\t\"&[data-theme='light']\": {\n\t\t\t\tcolorScheme: \"light\"\n\t\t\t}\n\t\t}\n\t}\n});\n"
+    "content": "import { defineRecipe } from \"@pandacss/dev\";\r\n\r\nexport const theme = defineRecipe({\r\n\tclassName: \"dreamy-theme\",\r\n\tdescription: \"Dreamy UI Theme component\",\r\n\tjsx: [\"DarkTheme\", \"LightTheme\"],\r\n\tbase: {\r\n\t\troot: {\r\n\t\t\tcolor: \"fg\",\r\n\t\t\t\"&[data-theme='dark']\": {\r\n\t\t\t\tcolorScheme: \"dark\"\r\n\t\t\t},\r\n\t\t\t\"&[data-theme='light']\": {\r\n\t\t\t\tcolorScheme: \"light\"\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n});\r\n"
   }
 }
