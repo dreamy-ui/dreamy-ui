@@ -1,8 +1,8 @@
-import type { LoaderFunctionArgs } from "react-router";
 import { CACHE_DURATION, CacheHeaders } from "~/src/.server/cache";
 import { Docs } from "~/src/.server/docs";
+import type { Route } from "./+types/api.docs.prefetch";
 
-export async function loader({ request }: LoaderFunctionArgs) {
+export async function loader({ request }: Route.LoaderArgs) {
     const searchParams = new URL(request.url).searchParams;
 
     const splitted = searchParams.get("slug")?.split("/") ?? [];

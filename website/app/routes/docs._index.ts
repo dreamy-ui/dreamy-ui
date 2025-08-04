@@ -1,8 +1,9 @@
-import { type LoaderFunctionArgs, redirect } from "react-router";
+import { redirect } from "react-router";
 import { Docs } from "~/src/.server/docs";
 import { filenameToSlug } from "~/src/functions/string";
+import type { Route } from "./+types/docs._index";
 
-export async function loader(_: LoaderFunctionArgs) {
+export async function loader(_: Route.LoaderArgs) {
     const sections = await Docs.getSections();
 
     throw redirect(

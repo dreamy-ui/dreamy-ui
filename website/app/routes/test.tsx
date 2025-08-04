@@ -1,39 +1,75 @@
-import { Flex } from "@dreamy-ui/react/rsc";
-import type { ActionFunctionArgs } from "react-router";
+import { Box } from "@/box";
+import { Flex } from "@/flex";
+import type { Route } from "./+types/test";
 
 export function meta() {
-    return [
-        {
-            title: "Testing - Dreamy UI"
-        }
-    ];
+	return [
+		{
+			title: "Testing - Dreamy UI"
+		}
+	];
 }
 
-export async function action({ request }: ActionFunctionArgs) {
-    const formData = await request.formData();
-    const value = formData.get("test-select");
-    const sliderValue = formData.get("slider");
-    const switchValue = formData.get("switch");
-    const checkboxValue = formData.get("checkbox");
+export async function action({ request }: Route.ActionArgs) {
+	const formData = await request.formData();
+	const value = formData.get("test-select");
+	const sliderValue = formData.get("slider");
+	const switchValue = formData.get("switch");
+	const checkboxValue = formData.get("checkbox");
 
-    console.table({
-        value,
-        sliderValue,
-        switchValue: switchValue === "",
-        checkboxValue: checkboxValue === ""
-    });
+	console.table({
+		value,
+		sliderValue,
+		switchValue: switchValue === "",
+		checkboxValue: checkboxValue === ""
+	});
 
-    return {
-        success: true
-    };
+	return {
+		success: true
+	};
 }
 
 export default function Test() {
-    return (
-        <Flex
-            col
-            gap={10}
-            align={"start"}
-        />
-    );
+	return (
+		<Flex col gap={10} align={"start"}>
+			<RenderDreamy />
+			<RenderDiv />
+		</Flex>
+	);
+}
+
+function RenderDreamy() {
+	const start = performance.now();
+	const elements = Array.from({ length: 1000 }).map((_, index) => (
+		<Box
+			key={index}
+			bg={"red"}
+			w={"100px"}
+			h={"100px"}
+			m={2}
+			rounded={"md"}
+		/>
+	));
+	const end = performance.now();
+	console.log(`Time taken dreamy: ${end - start} milliseconds`);
+	return elements;
+}
+
+function RenderDiv() {
+	const start = performance.now();
+	const elements = Array.from({ length: 1000 }).map((_, index) => (
+		<div
+			key={index}
+			style={{
+				width: "100px",
+				height: "100px",
+				margin: "10px",
+				borderRadius: "10px",
+				backgroundColor: "red"
+			}}
+		/>
+	));
+	const end = performance.now();
+	console.log(`Time taken div: ${end - start} milliseconds`);
+	return elements;
 }
