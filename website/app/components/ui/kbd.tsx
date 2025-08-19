@@ -4,7 +4,7 @@ import { type HTMLDreamyProps, dreamy } from "./factory";
 
 export interface KbdProps extends HTMLDreamyProps<"div">, KbdVariantProps {}
 
-const DreamKbd = dreamy("div", kbd);
+const StyledKbd = dreamy("div", kbd);
 
 /**
  * Kbd component
@@ -13,7 +13,7 @@ const DreamKbd = dreamy("div", kbd);
  */
 export const Kbd = forwardRef<HTMLDivElement, KbdProps>((props, ref) => {
     return (
-        <DreamKbd
+        <StyledKbd
             ref={ref}
             {...props}
         />

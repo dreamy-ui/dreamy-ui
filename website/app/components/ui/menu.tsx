@@ -3,7 +3,6 @@
 import {
     MenuDescendantsProvider,
     MenuProvider,
-    PopoverContent,
     type UseMenuItemProps,
     type UseMenuProps,
     runIfFn,
@@ -13,16 +12,16 @@ import {
     useMenuItem
 } from "@dreamy-ui/react";
 import { Children, type ReactNode, cloneElement, forwardRef } from "react";
+import { createStyleContext } from "styled-system/jsx";
 import { menu } from "styled-system/recipes";
 import { Box } from "./box";
 import { type HTMLDreamyProps, dreamy } from "./factory";
 import { Kbd } from "./kbd";
-import { Popover, type PopoverContentProps, type PopoverProps, PopoverTrigger } from "./popover";
-import { createStyleContext } from "./style-context";
+import { Popover, type PopoverContentProps, type PopoverProps } from "./popover";
 
 const { withProvider, withContext } = createStyleContext(menu);
 
-export interface MenuProps extends UseMenuProps {
+export interface MenuProps extends UseMenuProps<PopoverProps> {
     /**
      * The placement of the menu.
      * @default "bottom"
@@ -37,7 +36,7 @@ export interface MenuProps extends UseMenuProps {
  *
  * @See Docs https://dreamy-ui.com/docs/components/menu
  */
-export const Menu = withProvider(function MenuRoot({
+const MenuRoot = withProvider(function MenuRoot({
     children,
     className,
     placement,
@@ -48,7 +47,7 @@ export const Menu = withProvider(function MenuRoot({
     return (
         <MenuProvider value={ctx as any}>
             <Box {...ctx.getRootProps({ className })}>
-                <Popover
+                <Popover.Root
                     placement={placement ?? "bottom"}
                     isOpen={ctx.isOpen}
                     onOpen={ctx.onOpen}
@@ -60,7 +59,7 @@ export const Menu = withProvider(function MenuRoot({
                     {...props.popoverProps}
                 >
                     {children}
-                </Popover>
+                </Popover.Root>
             </Box>
         </MenuProvider>
     );
@@ -68,16 +67,16 @@ export const Menu = withProvider(function MenuRoot({
 
 export interface MenuContentProps extends PopoverContentProps {}
 
-export const MenuContent = withContext(
+const MenuContent = withContext(
     forwardRef<HTMLDivElement, MenuContentProps>(function MenuContent(props, ref) {
         const { children, ...rest } = props;
 
         const { getContentProps, descendants } = useMenuContext();
 
         return (
-            <PopoverContent {...getContentProps(rest, ref)}>
+            <Popover.Content {...getContentProps(rest, ref)}>
                 <MenuDescendantsProvider value={descendants}>{children}</MenuDescendantsProvider>
-            </PopoverContent>
+            </Popover.Content>
         );
     }),
     "content"
@@ -98,7 +97,7 @@ export interface MenuButtonProps extends UseMenuItemProps {
     rightContent?: React.ReactNode | React.ElementType;
 }
 
-export const MenuItem = withContext(
+const MenuItem = withContext(
     forwardRef<HTMLDivElement, MenuButtonProps>(function MenuButton(props, ref) {
         const { icon, command, rightContent, ...rest } = props;
         console.log("menu button");
@@ -124,7 +123,7 @@ export interface MenuTriggerProps extends HTMLDreamyProps<"button"> {
     placeholder?: string;
 }
 
-export const MenuTrigger = forwardRef<HTMLButtonElement, MenuTriggerProps>(function MenuTrigger(
+const MenuTrigger = forwardRef<HTMLButtonElement, MenuTriggerProps>(function MenuTrigger(
     { children, placeholder, ...rest },
     ref
 ) {
@@ -133,5 +132,12 @@ export const MenuTrigger = forwardRef<HTMLButtonElement, MenuTriggerProps>(funct
     const child = Children.only(children) as any;
     const trigger = cloneElement(child, getTriggerProps(rest, ref));
 
-    return <PopoverTrigger {...rest}>{trigger}</PopoverTrigger>;
+    return <Popover.Trigger {...rest}>{trigger}</Popover.Trigger>;
 });
+
+export namespace Menu {
+    export const Root = MenuRoot;
+    export const Content = MenuContent;
+    export const Item = MenuItem;
+    export const Trigger = MenuTrigger;
+}

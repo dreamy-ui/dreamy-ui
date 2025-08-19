@@ -1,5 +1,7 @@
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@dreamy-ui/react";
-import { Flex, Text, VStack } from "@dreamy-ui/react/rsc";
+import { Flex } from "@/flex";
+import { VStack } from "@/stack";
+import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@/tabs";
+import { Text } from "@/text";
 import React, { useState } from "react";
 import { capitalize } from "~/src/functions/string";
 

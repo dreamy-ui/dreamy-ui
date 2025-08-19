@@ -1,51 +1,25 @@
 "use client";
 
 import {
+    AccordionDescendantsProvider,
+    AccordionItemProvider,
+    AccordionProvider,
     type UseAccordionItemProps,
-    type UseAccordionItemReturn,
     type UseAccordionProps,
-    type UseAccordionReturn,
-    createContext,
-    createDescendantContext,
     objectToDeps,
     useAccordion,
-    useAccordionItem
+    useAccordionContext,
+    useAccordionItem,
+    useAccordionItemContext
 } from "@dreamy-ui/react";
 import { forwardRef, useMemo } from "react";
+import { createStyleContext } from "styled-system/jsx";
 import type { AccordionVariantProps } from "styled-system/recipes";
 import { accordion } from "styled-system/recipes";
 import { Box } from "./box";
 import { type HTMLDreamyProps, dreamy } from "./factory";
 import type { IconProps } from "./icon";
-import { createStyleContext } from "./style-context";
 import { Collapse, type CollapseProps } from "./transitions";
-
-interface AccordionContext extends Omit<UseAccordionReturn, "htmlProps" | "descendants"> {
-    reduceMotion: boolean;
-}
-
-export const [AccordionProvider, useAccordionContext] = createContext<AccordionContext>({
-    name: "AccordionContext",
-    hookName: "useAccordionContext",
-    providerName: "Accordion"
-});
-
-type AccordionItemContext = Omit<UseAccordionItemReturn, "htmlProps">;
-
-export const [AccordionItemProvider, useAccordionItemContext] = createContext<AccordionItemContext>(
-    {
-        name: "AccordionItemContext",
-        hookName: "useAccordionItemContext",
-        providerName: "<AccordionItem />"
-    }
-);
-
-export const [
-    AccordionDescendantsProvider,
-    useAccordionDescendantsContext,
-    useAccordionDescendants,
-    useAccordionDescendant
-] = createDescendantContext<HTMLButtonElement>();
 
 const { withProvider, withContext } = createStyleContext(accordion);
 
@@ -66,11 +40,10 @@ export interface AccordionProps
  *
  * @See Docs https://dreamy-ui.com/docs/components/accordion
  */
-export const Accordion = withProvider(
+const AccordionRoot = withProvider(
     forwardRef<HTMLDivElement, AccordionProps>(function AccordionRoot(ownProps, ref) {
         const { htmlProps, descendants, ...context } = useAccordion(ownProps);
 
-        // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
         const ctx = useMemo(
             () => ({ ...context, reduceMotion: !!ownProps.reduceMotion }),
             [...objectToDeps(context), ownProps.reduceMotion]
@@ -101,7 +74,7 @@ export interface AccordionItemProps
           }) => React.ReactNode);
 }
 
-export const AccordionItem = withContext(
+const AccordionItem = withContext(
     forwardRef<HTMLDivElement, AccordionItemProps>(function AccordionItem(props, ref) {
         const { children } = props;
         const { htmlProps, ...ctx } = useAccordionItem(props);
@@ -132,7 +105,7 @@ export interface AccordionContentProps extends HTMLDreamyProps<"div"> {
     collapseProps?: CollapseProps;
 }
 
-export const AccordionContent = withContext(
+const AccordionContent = withContext(
     forwardRef<HTMLDivElement, AccordionContentProps>(function AccordionContent(props, ref) {
         const { collapseProps, ...rest } = props;
 
@@ -179,7 +152,7 @@ export interface AccordionTriggerProps extends HTMLDreamyProps<"button"> {
     iconProps?: IconProps;
 }
 
-export const AccordionTrigger = withContext(
+const AccordionTrigger = withContext(
     forwardRef<HTMLButtonElement, AccordionTriggerProps>(function AccordionTrigger(
         { headingTag: HeadingTag = "h2", children, icon, iconProps, ...props },
         ref
@@ -229,3 +202,10 @@ const AccordionIcon = withContext(
     }),
     "icon"
 );
+
+export namespace Accordion {
+    export const Root = AccordionRoot;
+    export const Item = AccordionItem;
+    export const Content = AccordionContent;
+    export const Trigger = AccordionTrigger;
+}

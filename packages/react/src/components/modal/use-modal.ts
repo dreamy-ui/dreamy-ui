@@ -1,12 +1,11 @@
-import {
-	modalManager,
-	useModalManager
-} from "@/components/modal/modal-manager";
 import { mergeRefs } from "@/hooks/use-merge-refs";
+import { createContext } from "@/provider";
 import { callAllHandlers } from "@/utils/call-all";
 import type { PropGetter } from "@/utils/props";
 import { hideOthers } from "aria-hidden";
 import {
+	type ForwardedRef,
+	type RefObject,
 	useCallback,
 	useEffect,
 	useId,
@@ -14,6 +13,80 @@ import {
 	useRef,
 	useState
 } from "react";
+
+export { RemoveScroll } from "react-remove-scroll";
+
+export interface FocusableElement {
+	focus(options?: FocusOptions): void;
+}
+
+export interface ModalOptions {
+	/**
+	 * If `false`, focus lock will be disabled completely.
+	 *
+	 * This is useful in situations where you still need to interact with
+	 * other surrounding elements.
+	 *
+	 * 🚨Warning: We don't recommend doing this because it hurts the
+	 * accessibility of the modal, based on WAI-ARIA specifications.
+	 *
+	 * @default true
+	 */
+	trapFocus?: boolean;
+	/**
+	 * If `true`, the modal will autofocus the first enabled and interactive
+	 * element within the `ModalContent`
+	 *
+	 * @default true
+	 */
+	autoFocus?: boolean;
+	/**
+	 * The `ref` of element to receive focus when the modal opens.
+	 */
+	initialFocusRef?: React.RefObject<FocusableElement | null>;
+	/**
+	 * The `ref` of element to receive focus when the modal closes.
+	 */
+	finalFocusRef?: React.RefObject<FocusableElement | null>;
+	/**
+	 * If `true`, the modal will return focus to the element that triggered it when it closes.
+	 * @default true
+	 */
+	returnFocusOnClose?: boolean;
+	/**
+	 * If `true`, scrolling will be disabled on the `body` when the modal opens.
+	 * @default true
+	 */
+	blockScrollOnMount?: boolean;
+	/**
+	 * Handle zoom/pinch gestures on iOS devices when scroll locking is enabled.
+	 * @default false.
+	 */
+	allowPinchZoom?: boolean;
+	/**
+	 * If `true`, a `padding-right` will be applied to the body element
+	 * that's equal to the width of the scrollbar.
+	 *
+	 * This can help prevent some unpleasant flickering effect
+	 * and content adjustment when the modal opens
+	 *
+	 * @default true
+	 */
+	preserveScrollBarGap?: boolean;
+
+	lockFocusAcrossFrames?: boolean;
+}
+
+interface ModalContext extends ModalOptions, UseModalReturn {
+	scrollBehavior?: "inside" | "outside";
+}
+
+export const [ModalContextProvider, useModalContext] = createContext<ModalContext>({
+	strict: true,
+	name: "ModalContext",
+	errorMessage:
+		"useModalContext: `context` is undefined. Seems you forgot to wrap modal components in `<Modal />`"
+});
 
 export interface UseModalProps {
 	/**
@@ -124,21 +197,21 @@ export function useModal(props: UseModalProps) {
 	const [headerMounted, setHeaderMounted] = useState(false);
 	const [bodyMounted, setBodyMounted] = useState(false);
 
-	const getDialogProps: PropGetter = useCallback(
-		(props: Record<string, any> = {}, ref = null): any => ({
-			role: "dialog",
-			...props,
-			ref: mergeRefs(ref, dialogRef),
-			id: dialogId,
-			tabIndex: -1,
-			"aria-modal": true,
-			"aria-labelledby": headerMounted ? headerId : undefined,
-			"aria-describedby": bodyMounted ? bodyId : undefined,
-			onClick: callAllHandlers(
-				props?.onClick,
-				(event: React.MouseEvent) => event.stopPropagation()
-			)
-		}),
+	const getDialogProps = useCallback(
+		(props: Record<string, any> = {}, ref: ForwardedRef<HTMLDivElement> | null = null): any =>
+			({
+				role: "dialog",
+				...props,
+				ref: mergeRefs(ref, dialogRef),
+				id: dialogId,
+				tabIndex: -1,
+				"aria-modal": true,
+				"aria-labelledby": headerMounted ? headerId : undefined,
+				"aria-describedby": bodyMounted ? bodyId : undefined,
+				onClick: callAllHandlers(props?.onClick, (event: React.MouseEvent) =>
+					event.stopPropagation()
+				)
+			}) as const,
 		[bodyId, bodyMounted, dialogId, headerId, headerMounted]
 	);
 
@@ -222,10 +295,7 @@ function useIds(idProp?: string, ...prefixes: string[]) {
  * @param ref React ref of the node
  * @param shouldHide whether `aria-hidden` should be applied
  */
-export function useAriaHidden(
-	ref: React.RefObject<HTMLElement>,
-	shouldHide: boolean
-) {
+export function useAriaHidden(ref: React.RefObject<HTMLElement>, shouldHide: boolean) {
 	// save current ref in a local var to trigger the effect on identity change
 	const currentElement = ref.current;
 
@@ -237,4 +307,49 @@ export function useAriaHidden(
 
 		return hideOthers(ref.current);
 	}, [shouldHide, ref, currentElement]);
+}
+
+class ModalManager {
+	modals: Map<HTMLElement, number>;
+	constructor() {
+		this.modals = new Map();
+	}
+
+	add(modal: HTMLElement) {
+		this.modals.set(modal, this.modals.size + 1);
+		return this.modals.size;
+	}
+
+	remove(modal: HTMLElement) {
+		this.modals.delete(modal);
+	}
+
+	isTopModal(modal: HTMLElement | null) {
+		if (!modal) return false;
+		return this.modals.get(modal) === this.modals.size;
+	}
+}
+
+export const modalManager = new ModalManager();
+
+export function useModalManager(ref: RefObject<HTMLElement | null>, isOpen?: boolean) {
+	const [index, setIndex] = useState(0);
+
+	useEffect(() => {
+		const node = ref.current;
+
+		if (!node) return;
+
+		if (isOpen) {
+			const index = modalManager.add(node);
+			setIndex(index);
+		}
+
+		return () => {
+			modalManager.remove(node);
+			setIndex(0);
+		};
+	}, [isOpen, ref]);
+
+	return index;
 }

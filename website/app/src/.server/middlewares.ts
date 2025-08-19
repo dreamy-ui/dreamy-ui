@@ -69,7 +69,9 @@ export const timingsMiddleware: unstable_MiddlewareFunction = async (
 	timings.forEach((value, key) => {
 		serverTiming += `${key};dur=${value.toFixed(2)};`;
 	});
-	response.headers.append("Server-Timing", serverTiming);
+	if (serverTiming) {
+		response.headers.append("Server-Timing", serverTiming);
+	}
 
 	return response;
 };

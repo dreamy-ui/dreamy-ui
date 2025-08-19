@@ -1,7 +1,6 @@
 "use client";
 
 import {
-    type HTMLDreamProps,
     SelectDescendantsProvider,
     SelectProvider,
     type UseSelectItemProps,
@@ -18,7 +17,13 @@ import { splitCssProps } from "styled-system/jsx";
 import { select } from "styled-system/recipes";
 import { Box } from "./box";
 import { type FocusableElement, type HTMLDreamyProps, dreamy } from "./factory";
-import { Popover, PopoverContent, type PopoverContentProps, PopoverTrigger } from "./popover";
+import {
+    Popover,
+    PopoverContent,
+    type PopoverContentProps,
+    type PopoverProps,
+    PopoverTrigger
+} from "./popover";
 import { createStyleContext } from "./style-context";
 import { VisuallyHidden } from "./visually-hidden";
 const { withProvider, withContext } = createStyleContext(select);
@@ -80,8 +85,8 @@ function HiddenSelect(props: HiddenSelectProps) {
 }
 
 export interface SelectProps<T extends boolean>
-    extends UseSelectProps<T>,
-        Omit<HTMLDreamProps<"div">, keyof UseSelectProps<T>> {
+    extends UseSelectProps<T, PopoverProps>,
+        Omit<HTMLDreamyProps<"div">, keyof UseSelectProps<T, PopoverProps>> {
     children?: ReactNode;
 }
 
@@ -90,13 +95,13 @@ export interface SelectProps<T extends boolean>
  *
  * @See Docs https://dreamy-ui.com/docs/components/select
  */
-export const Select: <T extends boolean = false>(props: SelectProps<T>) => React.JSX.Element =
+const SelectRoot: <T extends boolean = false>(props: SelectProps<T>) => React.JSX.Element =
     withProvider(function SelectRoot<T extends boolean = false>({
         children,
         ...props
     }: SelectProps<T>) {
         const [cssProps, restProps] = splitCssProps(props);
-        const ctx = useSelect<T>(restProps);
+        const ctx = useSelect<T, PopoverProps>(restProps);
 
         return (
             <SelectProvider value={ctx as any}>
@@ -142,7 +147,7 @@ export interface SelectTriggerProps extends HTMLDreamyProps<"button"> {
     multipleSelectedText?: (selectedKeys: string[]) => string;
 }
 
-export const SelectTrigger = withContext(
+const SelectTrigger = withContext(
     forwardRef<HTMLButtonElement, SelectTriggerProps>(function SelectTrigger(
         {
             children,
@@ -195,7 +200,7 @@ export const SelectTrigger = withContext(
 
 export interface SelectContentProps extends PopoverContentProps {}
 
-export const SelectContent = withContext(
+const SelectContent = withContext(
     forwardRef<HTMLDivElement, SelectContentProps>(function SelectContent(props, ref) {
         const { children, ...rest } = props;
 
@@ -208,7 +213,7 @@ export const SelectContent = withContext(
 
 export interface SelectItemProps extends UseSelectItemProps {}
 
-export const SelectItem = withContext(
+const SelectItem = withContext(
     forwardRef<HTMLDivElement, SelectItemProps>(function SelectItem(props, ref) {
         const { selectedStrategy, selectedKeys } = useSelectContext();
         const itemProps = useSelectItem(props, ref);
@@ -283,3 +288,12 @@ const SelectClearButton = withContext(
     "clearButton"
 );
 const SelectItemIndicator = withContext(CheckIcon, "itemIndicator");
+
+export namespace Select {
+    export const Root = SelectRoot;
+    export const Trigger = SelectTrigger;
+    export const Content = SelectContent;
+    export const Item = SelectItem;
+}
+
+export const Select = SelectRoot;

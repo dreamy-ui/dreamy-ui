@@ -1,12 +1,18 @@
+import { Button } from "@/button";
+import { Flex } from "@/flex";
 import {
-    Button,
     Modal,
     ModalBody,
     ModalCloseButton,
     ModalContent,
     ModalFooter,
     ModalHeader,
-    ModalOverlay,
+    ModalOverlay
+} from "@/modal";
+import { HStack } from "@/stack";
+import { Text } from "@/text";
+import { useToast } from "@/toast-provider";
+import {
     useActionKey,
     useCanUseDOM,
     useClipboard,
@@ -14,10 +20,8 @@ import {
     useControllable,
     useEventListener,
     useReducedMotion,
-    useToast,
     useUpdateEffect
 } from "@dreamy-ui/react";
-import { Flex, HStack, Text } from "@dreamy-ui/react/rsc";
 import { useCallback, useState } from "react";
 
 export function UseColorMode() {

@@ -6,7 +6,7 @@ import { type HTMLDreamyProps, dreamy } from "./factory";
 export interface VisuallyHiddenProps extends HTMLDreamyProps<"span"> {}
 
 /**
- * VisuallyHidden component.
+ * VisuallyHidden component
  *
  * @See Docs https://dreamy-ui.com/docs/components/visually-hidden
  */
@@ -27,7 +27,7 @@ export const VisuallyHidden = forwardRef<HTMLSpanElement, VisuallyHiddenProps>((
 export interface VisuallyHiddenInputProps extends HTMLDreamyProps<"input"> {}
 
 /**
- * VisuallyHiddenInput component.
+ * VisuallyHiddenInput component
  *
  * @See Docs https://dreamy-ui.com/docs/components/visually-hidden
  */

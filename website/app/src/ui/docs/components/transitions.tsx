@@ -1,5 +1,6 @@
-import { Button, Collapse, type CollapseProps, Scale, type ScaleProps } from "@dreamy-ui/react";
-import { Box } from "@dreamy-ui/react/rsc";
+import { Box } from "@/box";
+import { Button } from "@/button";
+import { Collapse, type CollapseProps, Scale, type ScaleProps } from "@/transitions";
 import { useState } from "react";
 
 export function Collapsed(props: CollapseProps) {

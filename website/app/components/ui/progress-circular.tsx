@@ -48,5 +48,3 @@ export const ProgressCircular = forwardRef<HTMLDivElement, ProgressCircularProps
         </StyledProgressCircular>
     );
 });
-
-ProgressCircular.displayName = "ProgressCircular";

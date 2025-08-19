@@ -4,58 +4,54 @@ import { splitProps } from "@dreamy-ui/react";
 import { type MotionProps, m } from "motion/react";
 import { forwardRef } from "react";
 import { type FlexProperties, flex } from "styled-system/patterns";
+import type { SystemStyleObject } from "styled-system/types";
 import { type HTMLDreamyProps, dreamy } from "./factory";
 
-const StyledMotionBox = m.create(dreamy.div);
-// dreamy(
-//     m.div,
-//     {},
-//     {
-//         shouldForwardProp: (prop, variantKeys) =>
-//             isValidMotionProp(prop) || (!variantKeys.includes(prop) && !isCssProperty(prop))
-//     }
-// );
+const StyledMotionBox = m.create(dreamy.div, { forwardMotionProps: true });
+
+export interface MotionBoxProps
+    extends Omit<HTMLDreamyProps<"div">, keyof MotionProps>,
+        MotionProps {}
 
 /**
  * MotionBox component. A styled wrapper around the `m.div` component from `motion/react`.
  *
  * @See Docs https://dreamy-ui.com/docs/components/motion
  */
-export const MotionBox = forwardRef<HTMLDivElement, MotionBoxProps>(
-	(props, ref) => {
-		return <StyledMotionBox ref={ref} {...(props as any)} />;
-	}
-);
+export const MotionBox = forwardRef<HTMLDivElement, MotionBoxProps>((props, ref) => {
+    return (
+        <StyledMotionBox
+            ref={ref}
+            {...props}
+        />
+    );
+});
 
-export interface MotionBoxProps
-	extends Omit<HTMLDreamyProps<"div">, keyof MotionProps>,
-		MotionProps {}
+export interface MotionFlexProps extends Omit<MotionBoxProps, "direction">, FlexProperties {}
 
 /**
  * MotionFlex component
  *
  * @See Docs https://dreamy-ui.com/docs/components/motion
  */
-export const MotionFlex = forwardRef<HTMLDivElement, MotionFlexProps>(
-	(props, ref) => {
-		const [patternProps, restProps] = splitProps(props, [
-			"align",
-			"justify",
-			"direction",
-			"wrap",
-			"basis",
-			"grow",
-			"shrink"
-		]);
+export const MotionFlex = forwardRef<HTMLDivElement, MotionFlexProps>((props, ref) => {
+    const [patternProps, restProps] = splitProps(props, [
+        "align",
+        "justify",
+        "direction",
+        "wrap",
+        "basis",
+        "grow",
+        "shrink"
+    ]);
 
-		const styles = flex.raw(patternProps);
+    const styles = flex.raw(patternProps) as Omit<SystemStyleObject, "transition">;
 
-		return (
-			<StyledMotionBox ref={ref} {...(styles as any)} {...restProps} />
-		);
-	}
-);
-
-export interface MotionFlexProps
-	extends Omit<MotionBoxProps, "direction">,
-		FlexProperties {}
+    return (
+        <StyledMotionBox
+            ref={ref}
+            {...styles}
+            {...restProps}
+        />
+    );
+});

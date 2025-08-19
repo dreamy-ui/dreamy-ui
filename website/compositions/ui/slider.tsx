@@ -1,9 +1,11 @@
+"use client";
+
 import { SliderProvider, type UseSliderProps, useSlider, useSliderContext } from "@dreamy-ui/react";
 import { forwardRef } from "react";
+import { createStyleContext } from "styled-system/jsx";
 import { slider } from "styled-system/recipes";
 import { Box } from "./box";
 import type { HTMLDreamyProps } from "./factory";
-import { createStyleContext } from "./style-context";
 import { VisuallyHiddenInput } from "./visually-hidden";
 
 const { withProvider, withContext } = createStyleContext(slider);
@@ -17,7 +19,7 @@ export interface SliderProps
  *
  * @See Docs https://dreamy-ui.com/docs/components/slider
  */
-export const Slider = withProvider(
+const SliderRoot = withProvider(
     forwardRef<HTMLDivElement, SliderProps>((props, ref) => {
         const { getRootProps, getInputProps, ...rest } = useSlider(props);
 
@@ -33,7 +35,7 @@ export const Slider = withProvider(
 
 export interface SliderTrackProps extends HTMLDreamyProps<"div"> {}
 
-export const SliderTrack = withContext(
+const SliderTrack = withContext(
     forwardRef<HTMLDivElement, SliderTrackProps>((props, ref) => {
         const { getTrackProps } = useSliderContext();
 
@@ -44,7 +46,7 @@ export const SliderTrack = withContext(
 
 export interface SliderFilledTrackProps extends HTMLDreamyProps<"div"> {}
 
-export const SliderFilledTrack = withContext(
+const SliderFilledTrack = withContext(
     forwardRef<HTMLDivElement, SliderFilledTrackProps>((props, ref) => {
         const { getInnerTrackProps } = useSliderContext();
         return (
@@ -59,7 +61,7 @@ export const SliderFilledTrack = withContext(
 
 export interface SliderThumbProps extends HTMLDreamyProps<"div"> {}
 
-export const SliderThumb = withContext(
+const SliderThumb = withContext(
     forwardRef<HTMLDivElement, SliderThumbProps>((props, ref) => {
         const { getThumbProps } = useSliderContext();
 
@@ -72,7 +74,7 @@ export interface SliderMarkProps extends HTMLDreamyProps<"div"> {
     value: number;
 }
 
-export const SliderMark = withContext(
+const SliderMark = withContext(
     forwardRef<HTMLDivElement, SliderMarkProps>((props, ref) => {
         const { getMarkerProps } = useSliderContext();
 
@@ -80,3 +82,11 @@ export const SliderMark = withContext(
     }),
     "marker"
 );
+
+export namespace Slider {
+    export const Root = SliderRoot;
+    export const Track = SliderTrack;
+    export const FilledTrack = SliderFilledTrack;
+    export const Thumb = SliderThumb;
+    export const Mark = SliderMark;
+}

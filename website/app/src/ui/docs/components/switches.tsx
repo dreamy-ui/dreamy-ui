@@ -1,5 +1,5 @@
-import { Switch } from "@dreamy-ui/react";
-import { Text } from "@dreamy-ui/react/rsc";
+import { Switch } from "@/switch";
+import { Text } from "@/text";
 import { useState } from "react";
 
 export function ControlledSwitch() {

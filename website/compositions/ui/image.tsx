@@ -4,7 +4,7 @@ import { ariaAttr, callAllHandlers, objectToDeps, omit } from "@dreamy-ui/react"
 import { cloneElement, forwardRef, useMemo, useRef } from "react";
 import { image } from "styled-system/recipes";
 import type { SystemProperties } from "styled-system/types";
-import { Box } from "./box";
+import { Box, type BoxProps } from "./box";
 import { type HTMLDreamyProps, dreamy } from "./factory";
 
 export interface ImageProps extends HTMLDreamyProps<"img">, SystemProperties {
@@ -24,6 +24,25 @@ export interface ImageProps extends HTMLDreamyProps<"img">, SystemProperties {
      * @default false
      */
     blurShadow?: boolean;
+    /**
+     * The props of the wrapper
+     */
+    wrapperProps?: BoxProps;
+    /**
+     * The options of the hover on zoom
+     */
+    zoomOptions?: {
+        scale?: number;
+        duration?: string;
+    };
+    /**
+     * The options of the blur shadow
+     */
+    blurOptions?: {
+        scale?: number;
+        radius?: string;
+        opacity?: number;
+    };
 }
 
 const StyledImage = dreamy("img", image);
@@ -43,6 +62,9 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(pro
         referrerPolicy,
         zoomOnHover,
         blurShadow,
+        wrapperProps,
+        zoomOptions,
+        blurOptions,
         ...rest
     } = props;
 
@@ -95,6 +117,15 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(pro
             <Box
                 as={"div"}
                 data-part={"wrapper"}
+                {...wrapperProps}
+                style={{
+                    // @ts-expect-error
+                    "--hover-zoom-scale": zoomOptions?.scale,
+                    "--blurred-zoom-scale": blurOptions?.scale,
+                    "--blur-radius": blurOptions?.radius,
+                    "--blurred-opacity": blurOptions?.opacity,
+                    ...wrapperProps?.style
+                }}
             >
                 {zoomOnHover ? zoomed : img}
                 {blurShadow &&

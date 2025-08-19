@@ -5,7 +5,9 @@ import { dreamy } from "./factory";
 import { MotionBox } from "./motion";
 import { VisuallyHiddenInput } from "./visually-hidden";
 
-export interface SwitchProps extends UseSwitchProps, SwittchVariantProps {}
+export interface SwitchProps
+    extends Omit<UseSwitchProps, keyof SwittchVariantProps>,
+        SwittchVariantProps {}
 
 const StyledSwitch = dreamy("div", swittch);
 

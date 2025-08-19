@@ -2,12 +2,12 @@ import { type UseSnippetProps, useSnippet } from "@dreamy-ui/react";
 import { type SVGProps, cloneElement, forwardRef, useMemo } from "react";
 import { type SnippetVariantProps, snippet } from "styled-system/recipes";
 import { type HTMLDreamyProps, dreamy } from "./factory";
-import { IconButton } from "./icon-button";
-import { Tooltip } from "./tooltip";
+import { IconButton, type IconButtonProps } from "./icon-button";
+import { Tooltip, type TooltipProps } from "./tooltip";
 
 export interface SnippetProps
-    extends UseSnippetProps,
-        Omit<HTMLDreamyProps<"div">, keyof UseSnippetProps>,
+    extends UseSnippetProps<TooltipProps, IconButtonProps>,
+        Omit<HTMLDreamyProps<"div">, keyof UseSnippetProps<TooltipProps, IconButtonProps>>,
         SnippetVariantProps {}
 
 const StyledSnippet = dreamy("div", snippet);
@@ -32,7 +32,7 @@ export const Snippet = forwardRef<HTMLDivElement, SnippetProps>((props, ref) => 
         isMultiLine,
         getSnippetProps,
         getCopyButtonProps
-    } = useSnippet({ ...props, ref });
+    } = useSnippet<TooltipProps, IconButtonProps>({ ...props, ref });
 
     const contents = useMemo(() => {
         const clonedCheckIcon = checkIcon && cloneElement(checkIcon, { "data-part": "check-icon" });

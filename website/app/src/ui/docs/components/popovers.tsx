@@ -1,6 +1,6 @@
+import { Button } from "@/button";
+import { Flex } from "@/flex";
 import {
-    Button,
-    type PlacementWithLogical,
     Popover,
     PopoverArrow,
     PopoverBody,
@@ -8,10 +8,9 @@ import {
     PopoverContent,
     PopoverFooter,
     PopoverHeader,
-    PopoverTrigger,
-    useControllable
-} from "@dreamy-ui/react";
-import { Flex } from "@dreamy-ui/react/rsc";
+    PopoverTrigger
+} from "@/popover";
+import { type PlacementWithLogical, useControllable } from "@dreamy-ui/react";
 import { useCallback, useRef } from "react";
 
 export function ControlledPopover() {
@@ -198,11 +197,14 @@ export function SizePopovers() {
             wrapped
             gap={5}
         >
-            {(
-                ["sm", "md", "lg", "xl", "2xl", "3xl", "4xl", "5xl", "6xl", "7xl", "8xl"]
-            ).map((size) => (
-                <SizePopover key={size} size={size} />
-            ))}
+            {["sm", "md", "lg", "xl", "2xl", "3xl", "4xl", "5xl", "6xl", "7xl", "8xl"].map(
+                (size) => (
+                    <SizePopover
+                        key={size}
+                        size={size}
+                    />
+                )
+            )}
         </Flex>
     );
 }

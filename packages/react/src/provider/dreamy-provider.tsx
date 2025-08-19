@@ -1,16 +1,13 @@
 "use client";
 
 import { useSafeLayoutEffect } from "@/components/descendant/utils";
-import { ToastManager } from "@/components/toast/toast-manager";
-import { type Toast, ToastProvider } from "@/components/toast/toast-provider";
 import { useColorModeScript } from "@/provider/color-mode-script";
 import { nextTick } from "@/utils/ticks";
 import {
 	type FeatureBundle,
 	type LazyFeatureBundle,
 	LazyMotion,
-	MotionConfig,
-	type Transition
+	type Transition,
 } from "motion/react";
 import type React from "react";
 import {
@@ -19,12 +16,12 @@ import {
 	useContext,
 	useEffect,
 	useMemo,
-	useState
+	useState,
 } from "react";
 import {
 	type DefaultVariants,
 	defaultDefaultTransition,
-	defaultMotionVariants
+	defaultMotionVariants,
 } from "./motion";
 
 export type ColorMode = "light" | "dark";
@@ -52,16 +49,12 @@ interface IDreamContext {
 	disableRipple: boolean;
 	hasHydrated: boolean;
 	reduceMotion: boolean | "system";
-	/**
-	 * The default props for the new toasts.
-	 */
-	defaultToastProps: Omit<Partial<Toast>, "id">;
 }
 
 interface IThemeContext {
 	colorMode: ColorMode;
 	setColorMode: (
-		colorModeCb: ColorMode | ((prevColorMode: ColorMode) => ColorMode)
+		colorModeCb: ColorMode | ((prevColorMode: ColorMode) => ColorMode),
 	) => void;
 	toggleColorMode: () => void;
 }
@@ -88,8 +81,6 @@ interface DreamyProviderProps
 
 export const DreamColorModeCookieKey = "dreamy-ui-color-mode";
 
-const emptyObject = {};
-
 export function DreamyProvider({
 	children,
 	motionVariants = defaultMotionVariants,
@@ -100,18 +91,16 @@ export function DreamyProvider({
 	defaultColorMode = "light",
 	reduceMotion: InitialReduceMotion = false,
 	motionFeatures,
-	defaultToastProps = emptyObject,
-	motionStrict = false
+	// defaultToastProps = emptyObject,
+	motionStrict = false,
 }: DreamyProviderProps) {
 	const [reduceMotion, setReduceMotion] = useState(InitialReduceMotion);
 	const [colorMode, setResolvedColorMode] = useState<ColorMode>(
-		InitialColorMode ?? defaultColorMode
+		InitialColorMode ?? defaultColorMode,
 	);
 
 	const setColorMode = useCallback(
-		(
-			colorModeCb: ColorMode | ((prevColorMode: ColorMode) => ColorMode)
-		) => {
+		(colorModeCb: ColorMode | ((prevColorMode: ColorMode) => ColorMode)) => {
 			const newColorMode =
 				typeof colorModeCb === "function"
 					? colorModeCb(colorMode)
@@ -120,8 +109,8 @@ export function DreamyProvider({
 			const css = document.createElement("style");
 			css.appendChild(
 				document.createTextNode(
-					"*{-webkit-transition:none!important;-moz-transition:none!important;-o-transition:none!important;-ms-transition:none!important;transition:none!important}"
-				)
+					"*{-webkit-transition:none!important;-moz-transition:none!important;-o-transition:none!important;-ms-transition:none!important;transition:none!important}",
+				),
 			);
 			document.head.appendChild(css);
 			document.documentElement.style.colorScheme = newColorMode;
@@ -136,12 +125,12 @@ export function DreamyProvider({
 				document.head.removeChild(css);
 			});
 		},
-		[colorMode]
+		[colorMode],
 	);
 
 	const toggleColorMode = useCallback(() => {
 		setColorMode((prevColorMode) =>
-			prevColorMode === "light" ? "dark" : "light"
+			prevColorMode === "light" ? "dark" : "light",
 		);
 	}, [setColorMode]);
 
@@ -165,7 +154,7 @@ export function DreamyProvider({
 			useUserPreferenceColorMode,
 			hasHydrated,
 			reduceMotion,
-			defaultToastProps
+			// defaultToastProps,
 		}),
 		[
 			motionVariants,
@@ -175,24 +164,22 @@ export function DreamyProvider({
 			useUserPreferenceColorMode,
 			hasHydrated,
 			reduceMotion,
-			defaultToastProps
-		]
+			// defaultToastProps,
+		],
 	);
 
 	const themeContext = useMemo<IThemeContext>(
 		() => ({
 			colorMode,
 			setColorMode,
-			toggleColorMode
+			toggleColorMode,
 		}),
-		[colorMode, setColorMode, toggleColorMode]
+		[colorMode, setColorMode, toggleColorMode],
 	);
 
 	useSafeLayoutEffect(() => {
 		if (InitialReduceMotion === "system") {
-			const mediaQuery = window.matchMedia(
-				"(prefers-reduced-motion: reduce)"
-			);
+			const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 			function listener(e: MediaQueryListEvent) {
 				setReduceMotion(e.matches);
 			}
@@ -205,27 +192,24 @@ export function DreamyProvider({
 		setColorMode,
 		defaultColorMode,
 		useUserPreferenceColorMode,
-		initialColorMode: InitialColorMode
+		initialColorMode: InitialColorMode,
 	});
 
 	return (
 		<DreamContext.Provider value={context}>
 			<ThemeContext.Provider value={themeContext}>
-				<MotionConfig
+				{/* <MotionConfig
 					reducedMotion={
 						reduceMotion && reduceMotion !== "system"
 							? "always"
 							: "never"
 					}
 					transition={defaultTransition}
-				>
-					<LazyMotion features={motionFeatures} strict={motionStrict}>
-						<ToastProvider>
-							<ToastManager />
-							{children}
-						</ToastProvider>
-					</LazyMotion>
-				</MotionConfig>
+				> */}
+				<LazyMotion features={motionFeatures} strict={motionStrict}>
+					{children}
+				</LazyMotion>
+				{/* </MotionConfig> */}
 			</ThemeContext.Provider>
 		</DreamContext.Provider>
 	);
@@ -272,11 +256,11 @@ export function useCanUseDOM() {
 	return hasHydrated;
 }
 
-export function useDefaultToastProps() {
-	const { defaultToastProps } = useDreamy();
+// export function useDefaultToastProps() {
+// 	const { defaultToastProps } = useDreamy();
 
-	return defaultToastProps;
-}
+// 	return defaultToastProps;
+// }
 
 /**
  * Returns a boolean indicating whether the global reduce motion setting is enabled.

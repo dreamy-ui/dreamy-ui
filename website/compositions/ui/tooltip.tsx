@@ -1,3 +1,5 @@
+"use client";
+
 import {
     Portal,
     type PortalProps,
@@ -7,12 +9,11 @@ import {
     useMotionVariants,
     useTooltip
 } from "@dreamy-ui/react";
-import { AnimatePresence, type HTMLMotionProps, isValidMotionProp, m } from "motion/react";
+import { AnimatePresence, type HTMLMotionProps, m } from "motion/react";
 import { Children, Fragment, cloneElement, forwardRef, useMemo } from "react";
-import { isCssProperty, styled } from "styled-system/jsx";
 import { tooltip } from "styled-system/recipes";
 import { Box } from "./box";
-import type { HTMLDreamyProps } from "./factory";
+import { type HTMLDreamyProps, dreamy } from "./factory";
 
 export interface TooltipProps
     extends Omit<HTMLDreamyProps<"div">, "direction" | "offset" | "content">,
@@ -60,10 +61,7 @@ export interface TooltipProps
     motionProps?: HTMLMotionProps<"div">;
 }
 
-const StyledTooltip = styled(m.div, tooltip, {
-    shouldForwardProp: (prop, variantKeys) =>
-        isValidMotionProp(prop) || (!variantKeys.includes(prop) && !isCssProperty(prop))
-});
+const StyledTooltip = m.create(dreamy("div", tooltip), { forwardMotionProps: true });
 
 /**
  * Tooltips display informative text when users hover, focus on, or tap an element.
@@ -144,7 +142,7 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>((props, ref) => 
             {trigger}
             <AnimatePresence>
                 {tooltip.isOpen && !isDisabled && (
-                    <PortalComponent {...(disablePortal ? {} : (portalProps as any))}>
+                    <PortalComponent {...(disablePortal ? {} : portalProps)}>
                         <Box {...tooltip.getTooltipPositionerProps()}>
                             <StyledTooltip
                                 variants={variants}
@@ -152,7 +150,7 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>((props, ref) => 
                                 animate="initial"
                                 exit="exit"
                                 {...motionProps}
-                                {...(tooltipProps as any)}
+                                {...tooltipProps}
                             >
                                 {content}
                                 {hasAriaLabel && (
@@ -177,5 +175,3 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>((props, ref) => 
         </>
     );
 });
-
-Tooltip.displayName = "Tooltip";

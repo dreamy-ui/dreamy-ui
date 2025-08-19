@@ -18,10 +18,9 @@ export const image = defineRecipe({
 	base: parts({
 		image: {
 			"&[data-zoomed]": {
-				transition:
-					"transform {durations.normal} {easings.ease-in-out}",
+				transition: "transform {durations.normal} {easings.ease-in-out}",
 				_hover: {
-					transform: "scale(1.1)"
+					transform: "scale(var(--hover-zoom-scale, 1.1))"
 				}
 			}
 		},
@@ -37,14 +36,14 @@ export const image = defineRecipe({
 		},
 		blurredImg: {
 			filter: "auto",
-			blur: "{blurs.lg}",
+			blur: "var(--blur-radius, {blurs.lg})",
 			position: "absolute",
 			inset: "0",
 			zIndex: -1,
 			translate: "auto",
-			scale: "1.05",
+			scale: "var(--blurred-zoom-scale, 1.05)",
 			saturate: "150%",
-			opacity: 0.4,
+			opacity: "var(--blurred-opacity, 0.4)",
 			y: "1"
 		}
 	})

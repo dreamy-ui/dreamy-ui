@@ -9,11 +9,9 @@ themeSource: /packages/system/src/recipes/input.ts
 ## Import
 
 - `Input` - The Input component.
-- `InputRSC` - The Input component for RSC usage without client handlers.
 
 ```tsx
 import { Input } from "@dreamy-ui/react";
-import { InputRSC } from "@dreamy-ui/react/rsc";
 ```
 
 ## Usage
@@ -123,16 +121,4 @@ Combine `Input` with `Field` to create a nice looking form element.
 	<Input placeholder="Enter your username" />
 	<FieldHelpText>Username should not contain special characters.</FieldHelpText>
 </Field>	
-```
-
-### RSC Usage
-
-InputRSC is a RSC compatible component that does not use client handlers.
-
-<Wrapper>
-	<InputRSC placeholder="Enter your username" />
-</Wrapper>
-
-```tsx
-<InputRSC placeholder="Enter your username" />
 ```

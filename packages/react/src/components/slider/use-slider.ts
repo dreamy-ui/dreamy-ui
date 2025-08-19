@@ -4,23 +4,20 @@ import { useLatestRef } from "@/hooks/use-latest-ref";
 import { type ReactRef, mergeRefs } from "@/hooks/use-merge-refs";
 import { usePanEvent } from "@/hooks/use-pan-event";
 import { createContext } from "@/provider/create-context";
-import {
-	type PropGetter,
-	type RequiredPropGetter,
-	callAllHandlers
-} from "@/utils";
+import { type PropGetter, type RequiredPropGetter, callAllHandlers } from "@/utils";
 import { ariaAttr, dataAttr } from "@/utils/attr";
+import { percentToValue, roundValueToStep, valueToPercent } from "@/utils/number";
 import {
-	percentToValue,
-	roundValueToStep,
-	valueToPercent
-} from "@/utils/number";
-import { useCallback, useId, useMemo, useRef, useState } from "react";
-import type { SliderVariantProps } from "styled-system/recipes";
-import { useFieldContext } from "../field/field-root";
+	type ComponentPropsWithoutRef,
+	useCallback,
+	useId,
+	useMemo,
+	useRef,
+	useState
+} from "react";
+import { useFieldContext } from "../field";
 
-interface SliderContext
-	extends Omit<UseSliderReturn, "getRootProps" | "getInputProps"> {}
+interface SliderContext extends Omit<UseSliderReturn, "getRootProps" | "getInputProps"> {}
 
 export const [SliderProvider, useSliderContext] = createContext<SliderContext>({
 	name: "SliderContext",
@@ -28,7 +25,8 @@ export const [SliderProvider, useSliderContext] = createContext<SliderContext>({
 	providerName: "<Slider />"
 });
 
-export interface UseSliderProps extends SliderVariantProps {
+export interface UseSliderProps
+	extends Omit<ComponentPropsWithoutRef<"div">, "id" | "name" | "onChange"> {
 	ref?: ReactRef<HTMLDivElement>;
 	/**
 	 * The minimum allowed value of the slider. Cannot be greater than max.
@@ -175,10 +173,7 @@ export function useSlider(props: UseSliderProps) {
 
 	const [isDragging, setDragging] = useState(false);
 	const [isFocused, setFocused] = useState(false);
-	const isInteractive = useMemo(
-		() => !(isDisabled || isReadOnly),
-		[isDisabled, isReadOnly]
-	);
+	const isInteractive = useMemo(() => !(isDisabled || isReadOnly), [isDisabled, isReadOnly]);
 
 	const clampValue = useCallback(
 		(valueToClamp: number) => Math.min(Math.max(valueToClamp, min), max),
@@ -189,10 +184,7 @@ export function useSlider(props: UseSliderProps) {
 	 * Constrain the value because it can't be less than min
 	 * or greater than max
 	 */
-	const value = useMemo(
-		() => clampValue(computedValue),
-		[clampValue, computedValue]
-	);
+	const value = useMemo(() => clampValue(computedValue), [clampValue, computedValue]);
 	const reversedValue = useMemo(() => max - value + min, [max, min, value]);
 	const trackValue = useMemo(
 		() => (isReversed ? reversedValue : value),
@@ -265,9 +257,7 @@ export function useSlider(props: UseSliderProps) {
 			let nextValue = percentToValue(percent, state.min, state.max);
 
 			if (state.step) {
-				nextValue = Number.parseFloat(
-					roundValueToStep(nextValue, state.min, state.step)
-				);
+				nextValue = Number.parseFloat(roundValueToStep(nextValue, state.min, state.step));
 			}
 
 			nextValue = clampValue(nextValue);
@@ -281,9 +271,7 @@ export function useSlider(props: UseSliderProps) {
 		(value: number) => {
 			const state = stateRef.current;
 			if (!state.isInteractive) return;
-			value = Number.parseFloat(
-				roundValueToStep(value, state.min, oneStep)
-			);
+			value = Number.parseFloat(roundValueToStep(value, state.min, oneStep));
 			value = clampValue(value);
 			setValue(value);
 		},
@@ -429,15 +417,11 @@ export function useSlider(props: UseSliderProps) {
 					...orient({
 						orientation,
 						vertical: {
-							height: isReversed
-								? `${100 - thumbPercent}%`
-								: `${thumbPercent}%`,
+							height: isReversed ? `${100 - thumbPercent}%` : `${thumbPercent}%`,
 							transform: isReversed ? "scaleY(-1)" : undefined
 						},
 						horizontal: {
-							width: isReversed
-								? `${100 - thumbPercent}%`
-								: `${thumbPercent}%`,
+							width: isReversed ? `${100 - thumbPercent}%` : `${thumbPercent}%`,
 							transform: isReversed ? "scaleX(-1)" : undefined
 						}
 					})
@@ -466,11 +450,7 @@ export function useSlider(props: UseSliderProps) {
 				"aria-disabled": ariaAttr(isDisabled),
 				"aria-readonly": ariaAttr(isReadOnly),
 				"aria-label": ariaLabel,
-				"aria-labelledby": field
-					? field.labelId
-					: ariaLabel
-					? undefined
-					: ariaLabelledBy,
+				"aria-labelledby": field ? field.labelId : ariaLabel ? undefined : ariaLabelledBy,
 				"data-invalid": dataAttr(isInvalid),
 				style: {
 					...props.style,
@@ -521,15 +501,11 @@ export function useSlider(props: UseSliderProps) {
 					orientation,
 					vertical: {
 						right: -48,
-						bottom: isReversed
-							? `${100 - markerPercent}%`
-							: `${markerPercent}%`
+						bottom: isReversed ? `${100 - markerPercent}%` : `${markerPercent}%`
 					},
 					horizontal: {
 						bottom: -32,
-						left: isReversed
-							? `${100 - markerPercent}%`
-							: `${markerPercent}%`
+						left: isReversed ? `${100 - markerPercent}%` : `${markerPercent}%`
 					}
 				})
 			};

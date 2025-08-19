@@ -3,6 +3,7 @@
 import {
     FocusLock,
     ModalContextProvider,
+    type ModalOptions,
     Portal,
     type PortalProps,
     RemoveScroll,
@@ -10,19 +11,20 @@ import {
     useDefaultTransition,
     useModal,
     useModalContext,
+    useModalManager,
     useMotionVariants
 } from "@dreamy-ui/react";
 import { AnimatePresence, usePresence } from "motion/react";
-import { type RefObject, forwardRef, useEffect, useMemo, useState } from "react";
+import { forwardRef, useEffect, useMemo } from "react";
+import { createStyleContext } from "styled-system/jsx";
 import { modal } from "styled-system/recipes";
 import { Box, type BoxProps } from "./box";
 import { CloseButton, type CloseButtonProps } from "./close-button";
 import { Flex, type FlexProps } from "./flex";
 import { Heading } from "./heading";
 import { MotionBox, type MotionBoxProps, MotionFlex, type MotionFlexProps } from "./motion";
-import { createStyleContext } from "./style-context";
 
-const { withProvider, withContext } = createStyleContext(modal);
+const { withContext, withRootProvider } = createStyleContext(modal);
 
 export interface ModalProps extends UseModalProps, ModalOptions {
     children: React.ReactNode;
@@ -49,7 +51,7 @@ export interface ModalProps extends UseModalProps, ModalOptions {
  *
  * @See Docs https://dreamy-ui.com/docs/components/modal
  */
-export const Modal = withProvider(function ModalRoot(props: ModalProps) {
+const ModalRoot = withRootProvider(function ModalRoot(props: ModalProps) {
     const modalProps: ModalProps = {
         scrollBehavior: "inside",
         autoFocus: true,
@@ -113,7 +115,7 @@ export const Modal = withProvider(function ModalRoot(props: ModalProps) {
 
 export interface ModalOverlayProps extends MotionBoxProps {}
 
-export const ModalOverlay = withContext(
+const ModalOverlay = withContext(
     forwardRef<HTMLDivElement, ModalOverlayProps>((props, ref) => {
         const { isOpen } = useModalContext();
         const { overlay } = useMotionVariants();
@@ -138,7 +140,7 @@ export const ModalOverlay = withContext(
 
 export interface ModalContainerProps extends MotionFlexProps {}
 
-export const ModalContainer = withContext(
+const ModalContainer = withContext(
     forwardRef<HTMLDivElement, BoxProps>(({ children, ...props }, ref) => {
         const { getDialogContainerProps } = useModalContext();
 
@@ -149,7 +151,7 @@ export const ModalContainer = withContext(
 
 export interface ModalContentProps extends MotionFlexProps {}
 
-export const ModalContent = withContext(
+const ModalContent = withContext(
     forwardRef<HTMLDivElement, MotionFlexProps>(({ children, ...props }, ref) => {
         const { getDialogProps } = useModalContext();
         const { modal } = useMotionVariants();
@@ -165,7 +167,7 @@ export const ModalContent = withContext(
                             animate="animate"
                             exit="exit"
                             transition={transition}
-                            {...(getDialogProps(props as any, ref) as any)}
+                            {...getDialogProps(props, ref)}
                         >
                             {children}
                         </MotionFlex>
@@ -179,7 +181,7 @@ export const ModalContent = withContext(
 
 export interface ModalHeaderProps extends FlexProps {}
 
-export const ModalHeader = withContext(
+const ModalHeader = withContext(
     forwardRef<HTMLDivElement, ModalHeaderProps>(({ children, ...props }, ref) => {
         return (
             <Flex
@@ -205,7 +207,7 @@ export const ModalHeader = withContext(
 
 export interface ModalBodyProps extends FlexProps {}
 
-export const ModalBody = withContext(
+const ModalBody = withContext(
     forwardRef<HTMLDivElement, ModalBodyProps>(({ children, style, ...props }, ref) => {
         const { scrollBehavior } = useModalContext();
 
@@ -228,7 +230,7 @@ export const ModalBody = withContext(
 
 export interface ModalFooterProps extends FlexProps {}
 
-export const ModalFooter = withContext(
+const ModalFooter = withContext(
     forwardRef<HTMLDivElement, ModalFooterProps>(({ children, ...props }, ref) => {
         return (
             <Flex
@@ -245,7 +247,7 @@ export const ModalFooter = withContext(
 
 export interface ModalCloseButtonProps extends CloseButtonProps {}
 
-export const ModalCloseButton = withContext(
+const ModalCloseButton = withContext(
     forwardRef<HTMLButtonElement, ModalCloseButtonProps>(({ ...props }, ref) => {
         const { onClose } = useModalContext();
 
@@ -262,51 +264,6 @@ export const ModalCloseButton = withContext(
 
 interface ModalFocusScopeProps {
     children: React.ReactElement;
-}
-
-class ModalManager {
-    modals: Map<HTMLElement, number>;
-    constructor() {
-        this.modals = new Map();
-    }
-
-    add(modal: HTMLElement) {
-        this.modals.set(modal, this.modals.size + 1);
-        return this.modals.size;
-    }
-
-    remove(modal: HTMLElement) {
-        this.modals.delete(modal);
-    }
-
-    isTopModal(modal: HTMLElement | null) {
-        if (!modal) return false;
-        return this.modals.get(modal) === this.modals.size;
-    }
-}
-
-export const modalManager = new ModalManager();
-
-export function useModalManager(ref: RefObject<HTMLElement | null>, isOpen?: boolean) {
-    const [index, setIndex] = useState(0);
-
-    useEffect(() => {
-        const node = ref.current;
-
-        if (!node) return;
-
-        if (isOpen) {
-            const index = modalManager.add(node);
-            setIndex(index);
-        }
-
-        return () => {
-            modalManager.remove(node);
-            setIndex(0);
-        };
-    }, [isOpen, ref]);
-
-    return index;
 }
 
 function ModalFocusScope(props: ModalFocusScopeProps) {
@@ -359,107 +316,15 @@ function ModalFocusScope(props: ModalFocusScopeProps) {
     );
 }
 
-interface ModalOptions {
-    /**
-     * If `false`, focus lock will be disabled completely.
-     *
-     * This is useful in situations where you still need to interact with
-     * other surrounding elements.
-     *
-     * 🚨Warning: We don't recommend doing this because it hurts the
-     * accessibility of the modal, based on WAI-ARIA specifications.
-     *
-     * @default true
-     */
-    trapFocus?: boolean;
-    /**
-     * If `true`, the modal will autofocus the first enabled and interactive
-     * element within the `ModalContent`
-     *
-     * @default true
-     */
-    autoFocus?: boolean;
-    /**
-     * The `ref` of element to receive focus when the modal opens.
-     */
-    initialFocusRef?: React.RefObject<FocusableElement | null>;
-    /**
-     * The `ref` of element to receive focus when the modal closes.
-     */
-    finalFocusRef?: React.RefObject<FocusableElement | null>;
-    /**
-     * If `true`, the modal will return focus to the element that triggered it when it closes.
-     * @default true
-     */
-    returnFocusOnClose?: boolean;
-    /**
-     * If `true`, scrolling will be disabled on the `body` when the modal opens.
-     * @default true
-     */
-    blockScrollOnMount?: boolean;
-    /**
-     * Handle zoom/pinch gestures on iOS devices when scroll locking is enabled.
-     * @default false.
-     */
-    allowPinchZoom?: boolean;
-    /**
-     * If `true`, a `padding-right` will be applied to the body element
-     * that's equal to the width of the scrollbar.
-     *
-     * This can help prevent some unpleasant flickering effect
-     * and content adjustment when the modal opens
-     *
-     * @default true
-     */
-    preserveScrollBarGap?: boolean;
-
-    lockFocusAcrossFrames?: boolean;
-}
-
 type ScrollBehavior = "inside" | "outside";
 
-export interface FocusLockProps {
-    /**
-     * `ref` of the element to receive focus initially
-     */
-    initialFocusRef?: React.RefObject<FocusableElement | null>;
-    /**
-     * `ref` of the element to return focus to when `FocusLock`
-     * unmounts
-     */
-    finalFocusRef?: React.RefObject<FocusableElement | null>;
-    /**
-     * The `ref` of the wrapper for which the focus-lock wraps
-     */
-    contentRef?: React.RefObject<HTMLElement>;
-    /**
-     * If `true`, focus will be restored to the element that
-     * triggered the `FocusLock` once it unmounts
-     *
-     * @default false
-     */
-    restoreFocus?: boolean;
-    /**
-     * If `true`, focus trapping will be disabled
-     *
-     * @default false
-     */
-    disabled?: boolean;
-    /**
-     * If `true`, the first focusable element within the `children`
-     * will auto-focused once `FocusLock` mounts
-     *
-     * @default false
-     */
-    autoFocus?: boolean;
-    /**
-     * If `true`, disables text selections inside, and outside focus lock
-     *
-     * @default false
-     */
-    persistentFocus?: boolean;
-}
-
-interface FocusableElement {
-    focus(options?: FocusOptions): void;
+export namespace Modal {
+    export const Root = ModalRoot;
+    export const Overlay = ModalOverlay;
+    export const Container = ModalContainer;
+    export const Content = ModalContent;
+    export const Header = ModalHeader;
+    export const Body = ModalBody;
+    export const Footer = ModalFooter;
+    export const CloseButton = ModalCloseButton;
 }

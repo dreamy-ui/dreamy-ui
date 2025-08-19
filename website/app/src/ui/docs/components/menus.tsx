@@ -1,17 +1,11 @@
-import {
-    Button,
-    Menu,
-    MenuContent,
-    MenuItem,
-    MenuTrigger,
-    getActionKeyCode,
-    useControllable,
-    useEventListener
-} from "@dreamy-ui/react";
-import { Flex, Text } from "@dreamy-ui/react/rsc";
-import { Link, useNavigate } from "react-router";
+import { Button } from "@/button";
+import { Flex } from "@/flex";
+import { Menu, MenuContent, MenuItem, MenuTrigger } from "@/menu";
+import { Text } from "@/text";
+import { getActionKeyCode, useControllable, useEventListener } from "@dreamy-ui/react";
 import { IoAdd } from "react-icons/io5";
 import { LuAlarmClock, LuBattery, LuTrash, LuWarehouse } from "react-icons/lu";
+import { Link, useNavigate } from "react-router";
 
 export function ControlledMenu() {
     const { isOpen, onClose, onOpen } = useControllable();
@@ -147,10 +141,11 @@ export function VariantMenus() {
             wrapped
             gap={5}
         >
-            {(
-                ["plain", "stretched"]
-            ).map((variant) => (
-                <VariantMenu key={variant} variant={variant} />
+            {["plain", "stretched"].map((variant) => (
+                <VariantMenu
+                    key={variant}
+                    variant={variant}
+                />
             ))}
         </Flex>
     );

@@ -1,13 +1,12 @@
 {
   "type": "component",
   "fileDependencies": [
-    "./factory",
-    "./style-context"
+    "./factory"
   ],
   "id": "table",
   "file": {
     "name": "table.tsx",
-    "content": "import { table } from \"styled-system/recipes\";\nimport { type HTMLDreamyProps, dreamy } from \"./factory\";\nimport { createStyleContext } from \"./style-context\";\n\nconst { withContext, withProvider } = createStyleContext(table);\n\nexport interface TableProps extends HTMLDreamyProps<\"table\"> {}\n/**\n * Table component.\n *\n * @See Docs https://dreamy-ui.com/docs/components/table\n */\nexport const TableContainer = withProvider(dreamy.div, \"root\");\nexport const Table = withContext(dreamy.table, \"table\");\nexport const TableHeader = withContext(dreamy.thead, \"header\");\nexport const TableBody = withContext(dreamy.tbody, \"body\");\nexport const TableRow = withContext(dreamy.tr, \"row\");\nexport const TableCell = withContext(dreamy.td, \"cell\");\nexport const TableColumnHeader = withContext(dreamy.th, \"columnHeader\");\nexport const TableCaption = withContext(dreamy.caption, \"caption\");\n"
+    "content": "\"use client\";\r\n\r\nimport { createStyleContext } from \"styled-system/jsx\";\r\nimport { table } from \"styled-system/recipes\";\r\nimport { type HTMLDreamyProps, dreamy } from \"./factory\";\r\n\r\nconst { withContext, withProvider } = createStyleContext(table);\r\n\r\nexport interface TableProps extends HTMLDreamyProps<\"table\"> {}\r\n\r\n/**\r\n * Table component.\r\n *\r\n * @See Docs https://dreamy-ui.com/docs/components/table\r\n */\r\nconst TableRoot = withProvider(dreamy.div, \"root\");\r\nconst TableTable = withContext(dreamy.table, \"table\");\r\nconst TableHeader = withContext(dreamy.thead, \"header\");\r\nconst TableBody = withContext(dreamy.tbody, \"body\");\r\nconst TableRow = withContext(dreamy.tr, \"row\");\r\nconst TableCell = withContext(dreamy.td, \"cell\");\r\nconst TableColumnHeader = withContext(dreamy.th, \"columnHeader\");\r\nconst TableCaption = withContext(dreamy.caption, \"caption\");\r\n\r\nexport namespace Table {\r\n    export const Root = TableRoot;\r\n    export const Table = TableTable;\r\n    export const Header = TableHeader;\r\n    export const Body = TableBody;\r\n    export const Row = TableRow;\r\n    export const Cell = TableCell;\r\n    export const ColumnHeader = TableColumnHeader;\r\n    export const Caption = TableCaption;\r\n}\r\n"
   },
   "component": "Table",
   "hasRecipe": true,

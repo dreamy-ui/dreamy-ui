@@ -11,6 +11,7 @@ import { forwardRef } from "react";
 import { splitCssProps } from "styled-system/jsx";
 import { Box, type BoxProps } from "./box";
 import { Input, type InputProps } from "./input";
+import type { HStackProps } from "./stack";
 
 export interface PinInputProps
     extends UsePinInputProps,
@@ -27,10 +28,10 @@ export interface PinInputProps
  *
  * @see Docs https://dreamy-ui.com/docs/components/pin-input
  */
-export const PinInput = forwardRef<HTMLDivElement, PinInputProps>(function PinInput(props, ref) {
+const PinInputRoot = forwardRef<HTMLDivElement, PinInputProps>(function PinInput(props, ref) {
     const { children, ...rest } = props;
     const [cssProps, otherProps] = splitCssProps(rest);
-    const { descendants, ...context } = usePinInput(otherProps);
+    const { descendants, ...context } = usePinInput<InputProps, HStackProps>(otherProps);
 
     return (
         <Box
@@ -45,13 +46,11 @@ export const PinInput = forwardRef<HTMLDivElement, PinInputProps>(function PinIn
     );
 });
 
-PinInput.displayName = "PinInput";
-
 export interface PinInputFieldProps extends InputProps {}
 
-export const PinInputField = forwardRef<PinInputFieldProps, InputProps>(
+const PinInputField = forwardRef<PinInputFieldProps, InputProps>(
     function PinInputField(props, ref) {
-        const inputProps = usePinInputField(props, ref);
+        const inputProps = usePinInputField<InputProps>(props, ref);
 
         return (
             <Input
@@ -61,3 +60,8 @@ export const PinInputField = forwardRef<PinInputFieldProps, InputProps>(
         );
     }
 );
+
+export namespace PinInput {
+    export const Root = PinInputRoot;
+    export const Field = PinInputField;
+}

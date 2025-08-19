@@ -3,13 +3,13 @@
 import {
     TextareaAutosize,
     type TextareaAutosizeProps,
+    type UserFeedbackProps,
     callAllHandlers,
     useField
 } from "@dreamy-ui/react";
 import { type ComponentType, forwardRef } from "react";
 import { type TextareaVariantProps, textarea } from "styled-system/recipes";
 import { type HTMLDreamyProps, dreamy } from "./factory";
-import type { UserFeedbackProps } from "./input";
 
 export interface TextareaProps
     extends HTMLDreamyProps<"textarea">,
@@ -22,10 +22,10 @@ export interface TextareaProps
     onChangeValue?: (value: string) => void;
 }
 
-const StyledTextarea = dreamy(TextareaAutosize as any, textarea);
+const StyledTextarea = dreamy(TextareaAutosize, textarea);
 
 /**
- * Textarea component.
+ * Textarea component
  *
  * @See Docs https://dreamy-ui.com/docs/components/textarea
  */
@@ -55,7 +55,7 @@ export type TextareaNoAutoSizeProps = HTMLDreamyProps<"textarea"> &
     };
 
 /**
- * Textarea component without autosize.
+ * Textarea component without autosize
  *
  * @See Docs https://dreamy-ui.com/docs/components/textarea
  */

@@ -1,17 +1,6 @@
 import type { UtilityConfig } from "@pandacss/types";
 
 export const containerUtilities: UtilityConfig = {
-	// values
-	boxSize: {
-		values: "sizes",
-		transform: (value) => {
-			return {
-				width: value,
-				height: value
-			};
-		}
-	},
-
 	// booleans
 	block: {
 		values: { type: "boolean" },
@@ -189,5 +178,5 @@ export const containerUtilities: UtilityConfig = {
 				position: "sticky"
 			};
 		}
-	},
+	}
 };

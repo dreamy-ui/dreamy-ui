@@ -54,8 +54,6 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>((props, ref)
     );
 });
 
-Checkbox.displayName = "Checkbox";
-
 export interface IconCustomProps {
     /**
      * Animation time in milliseconds.
@@ -141,10 +139,6 @@ function IndeterminateIcon(props: CheckboxIconProps) {
     );
 }
 
-/**
- * CheckboxIcon is used to visually indicate the checked or indeterminate
- * state of a checkbox.
- */
 export function CheckboxIcon(props: CheckboxIconProps) {
     const { isIndeterminate, ...otherProps } = props;
     const BaseIcon = useMemo(
@@ -161,9 +155,6 @@ export interface CheckboxGroupContext
             "onChange" | "value" | "isDisabled" | "isInvalid" | "isRequired" | "isReadOnly"
         >,
         CheckboxVariantProps {
-    /**
-     * Should reduce motion
-     */
     reduceMotion?: boolean;
 }
 
@@ -182,7 +173,7 @@ export interface CheckboxGroupProps
 /**
  * CheckboxGroup component. Useful for grouping multiple checkboxes together.
  *
- * @See Docs https://dreamy-ui.com/docs/components/checkbox-group
+ * @See Docs https://dreamy-ui.com/docs/components/checkbox
  */
 export function CheckboxGroup(props: CheckboxGroupProps) {
     const {
@@ -243,5 +234,3 @@ export function CheckboxGroup(props: CheckboxGroupProps) {
         </CheckboxGroupProvider>
     );
 }
-
-CheckboxGroup.displayName = "CheckboxGroup";

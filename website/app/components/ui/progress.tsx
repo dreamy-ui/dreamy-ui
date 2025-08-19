@@ -1,3 +1,4 @@
+import { valueToPercent } from "@dreamy-ui/react";
 import { forwardRef, useMemo } from "react";
 import { type ProgressVariantProps, progress } from "styled-system/recipes";
 import { Box } from "./box";
@@ -101,12 +102,6 @@ export const Progress = forwardRef<HTMLDivElement, ProgressProps>((props, ref) =
         </StyledProgress>
     );
 });
-
-Progress.displayName = "Progress";
-
-function valueToPercent(value: number, min: number, max: number) {
-    return ((value - min) * 100) / (max - min);
-}
 
 interface GetProgressPropsOptions {
     value?: number;

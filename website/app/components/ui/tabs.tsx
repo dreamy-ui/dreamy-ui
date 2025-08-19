@@ -1,7 +1,6 @@
 "use client";
 
 import {
-    type ButtonProps,
     TabsDescendantsProvider,
     TabsProvider,
     type UseTabListProps,
@@ -19,13 +18,13 @@ import {
 import { forwardRef } from "react";
 import { tabs } from "styled-system/recipes";
 import { Box } from "./box";
-import { Button } from "./button";
+import { Button, type ButtonProps } from "./button";
 import type { HTMLDreamyProps } from "./factory";
 import { Flex, type FlexProps } from "./flex";
 import { MotionFlex, type MotionFlexProps } from "./motion";
 import { createStyleContext } from "./style-context";
 
-const { withProvider, withContext } = createStyleContext(tabs, (prop) => prop === "orientation");
+const { withProvider, withContext } = createStyleContext(tabs);
 
 export interface TabsProps
     extends UseTabsProps,
@@ -38,7 +37,7 @@ export interface TabsProps
  *
  * @See Docs https://dreamy-ui.com/docs/components/tabs
  */
-export const Tabs = withProvider(
+const TabsRoot = withProvider(
     forwardRef<HTMLDivElement, TabsProps>(function Tabs(props, ref) {
         const { children, ...rest } = props;
 
@@ -62,7 +61,7 @@ export const Tabs = withProvider(
 
 export interface TabListProps extends UseTabListProps, Omit<FlexProps, "onKeyDown" | "ref"> {}
 
-export const TabList = withContext(
+const TabList = withContext(
     forwardRef<HTMLDivElement, TabListProps>(function TabList(props, ref) {
         const tablistProps = useTabList({ ...props, ref });
 
@@ -73,7 +72,7 @@ export const TabList = withContext(
 
 export interface TabProps extends UseTabOptions, ButtonProps {}
 
-export const Tab = withContext(
+const TabTab = withContext(
     forwardRef<HTMLButtonElement, TabProps>(function Tab(props, ref) {
         const { children, ...rest } = props;
 
@@ -96,7 +95,7 @@ export const Tab = withContext(
 
 export interface TabPanelsProps extends FlexProps {}
 
-export const TabPanels = withContext(
+const TabPanels = withContext(
     forwardRef<HTMLDivElement, TabPanelsProps>(function TabPanels(props, ref) {
         const panelsProps = useTabPanels(props);
 
@@ -112,7 +111,7 @@ export const TabPanels = withContext(
 
 export interface TabPanelProps extends HTMLDreamyProps<"div"> {}
 
-export const TabPanel = withContext(
+const TabPanel = withContext(
     forwardRef<HTMLDivElement, TabPanelProps>(function TabPanel(props, ref) {
         const panelProps = useTabPanel({ ...props, ref });
 
@@ -157,3 +156,11 @@ const TabIndicator = withContext(
     }),
     "tabIndicator"
 );
+
+export namespace Tabs {
+    export const Root = TabsRoot;
+    export const List = TabList;
+    export const Tab = TabTab;
+    export const Panels = TabPanels;
+    export const Panel = TabPanel;
+}

@@ -8,7 +8,6 @@
       "./box",
       "./factory",
       "./icon",
-      "./style-context",
       "./transitions"
     ],
     "hasRecipe": true,
@@ -99,8 +98,7 @@
     "file": "card.tsx",
     "component": "Card",
     "fileDependencies": [
-      "./factory",
-      "./style-context"
+      "./factory"
     ],
     "hasRecipe": true,
     "hasPattern": false,
@@ -176,8 +174,7 @@
     "component": "Editable",
     "fileDependencies": [
       "./box",
-      "./factory",
-      "./style-context"
+      "./factory"
     ],
     "hasRecipe": true,
     "hasPattern": false,
@@ -378,8 +375,7 @@
       "./box",
       "./factory",
       "./kbd",
-      "./popover",
-      "./style-context"
+      "./popover"
     ],
     "hasRecipe": true,
     "hasPattern": false,
@@ -397,8 +393,7 @@
       "./close-button",
       "./flex",
       "./heading",
-      "./motion",
-      "./style-context"
+      "./motion"
     ],
     "hasRecipe": true,
     "hasPattern": false,
@@ -427,7 +422,8 @@
     "component": "PinInput",
     "fileDependencies": [
       "./box",
-      "./input"
+      "./input",
+      "./stack"
     ],
     "hasRecipe": false,
     "hasPattern": false
@@ -442,8 +438,7 @@
       "./close-button",
       "./factory",
       "./heading",
-      "./motion",
-      "./style-context"
+      "./motion"
     ],
     "hasRecipe": true,
     "hasPattern": false,
@@ -622,15 +617,6 @@
   },
   {
     "type": "component",
-    "id": "style-context",
-    "file": "style-context.tsx",
-    "component": "StyleContext",
-    "fileDependencies": [],
-    "hasRecipe": false,
-    "hasPattern": false
-  },
-  {
-    "type": "component",
     "id": "switch",
     "file": "switch.tsx",
     "component": "Switch",
@@ -651,8 +637,7 @@
     "file": "table.tsx",
     "component": "Table",
     "fileDependencies": [
-      "./factory",
-      "./style-context"
+      "./factory"
     ],
     "hasRecipe": true,
     "hasPattern": false,
@@ -699,8 +684,7 @@
     "file": "textarea.tsx",
     "component": "Textarea",
     "fileDependencies": [
-      "./factory",
-      "./input"
+      "./factory"
     ],
     "hasRecipe": true,
     "hasPattern": false,
@@ -724,6 +708,18 @@
   },
   {
     "type": "component",
+    "id": "toast-provider",
+    "file": "toast-provider.tsx",
+    "component": "ToastProvider",
+    "fileDependencies": [
+      "./motion",
+      "./toast"
+    ],
+    "hasRecipe": false,
+    "hasPattern": false
+  },
+  {
+    "type": "component",
     "id": "toast",
     "file": "toast.tsx",
     "component": "Toast",
@@ -733,7 +729,8 @@
       "./factory",
       "./icon",
       "./spinner",
-      "./text"
+      "./text",
+      "./toast-provider"
     ],
     "hasRecipe": true,
     "hasPattern": false,

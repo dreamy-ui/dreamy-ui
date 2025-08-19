@@ -1,6 +1,7 @@
+"use client";
+
 import {
     TRANSITION_DEFAULTS,
-    type Variants,
     type WithTransitionConfig,
     useMotionVariants
 } from "@dreamy-ui/react";
@@ -8,7 +9,7 @@ import {
     AnimatePresence,
     type AnimatePresenceProps,
     type HTMLMotionProps,
-    type Variants as _Variants
+    type Variants
 } from "motion/react";
 import { forwardRef, useMemo } from "react";
 import { css, cx } from "styled-system/css";
@@ -36,8 +37,6 @@ export interface CollapseOptions {
     animatePresenceProps?: AnimatePresenceProps;
 }
 
-export type ICollapse = CollapseProps;
-
 export interface CollapseProps extends WithTransitionConfig<MotionBoxProps>, CollapseOptions {}
 
 /**
@@ -47,7 +46,7 @@ export interface CollapseProps extends WithTransitionConfig<MotionBoxProps>, Col
  */
 export const Collapse = forwardRef<HTMLDivElement, CollapseProps>((props, ref) => {
     const {
-        in: isOpen,
+        isOpen,
         unmountOnExit,
         animateOpacity = true,
         startingHeight = 0,
@@ -94,7 +93,7 @@ export const Collapse = forwardRef<HTMLDivElement, CollapseProps>((props, ref) =
                 <MotionBox
                     ref={ref}
                     custom={custom}
-                    variants={variants as _Variants}
+                    variants={variants}
                     initial={unmountOnExit ? "exit" : false}
                     animate={animate}
                     exit="exit"
@@ -111,8 +110,6 @@ export const Collapse = forwardRef<HTMLDivElement, CollapseProps>((props, ref) =
         </AnimatePresence>
     );
 });
-
-Collapse.displayName = "Collapse";
 
 interface ScaleOptions {
     /**
@@ -131,7 +128,7 @@ interface ScaleOptions {
     animatePresenceProps?: AnimatePresenceProps;
 }
 
-const variants: Variants<ScaleOptions> = {
+const variants: Variants = {
     exit: ({ reverse, initialScale, transition, transitionEnd }) => ({
         opacity: 0,
         ...(reverse
@@ -143,7 +140,9 @@ const variants: Variants<ScaleOptions> = {
         opacity: 1,
         scale: 1,
         transition: transition?.enter ?? TRANSITION_DEFAULTS.enter,
-        transitionEnd: transitionEnd?.enter
+        transitionEnd: {
+            ...transitionEnd?.enter
+        }
     })
 };
 
@@ -151,7 +150,7 @@ export const ScaleConfig: HTMLMotionProps<"div"> = {
     initial: "exit",
     animate: "enter",
     exit: "exit",
-    variants: variants as _Variants
+    variants: variants
 };
 
 export interface ScaleProps extends ScaleOptions, WithTransitionConfig<MotionBoxProps> {}
@@ -159,7 +158,7 @@ export interface ScaleProps extends ScaleOptions, WithTransitionConfig<MotionBox
 export const Scale = forwardRef<HTMLDivElement, ScaleProps>(function Scale(props, ref) {
     const {
         unmountOnExit,
-        in: isOpen,
+        isOpen,
         reverse = true,
         initialScale = 0.95,
         transition,
@@ -191,5 +190,3 @@ export const Scale = forwardRef<HTMLDivElement, ScaleProps>(function Scale(props
         </AnimatePresence>
     );
 });
-
-Scale.displayName = "Scale";

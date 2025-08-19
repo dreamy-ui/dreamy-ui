@@ -2,13 +2,7 @@ import { TRANSITION_DEFAULTS, TRANSITION_EASINGS } from "@/utils";
 import { isNumeric } from "@/utils/number";
 import type { Transition, Variants } from "motion/react";
 
-type VariantKeys =
-	| "modal"
-	| "overlay"
-	| "tooltip"
-	| "popover"
-	| "collapse"
-	| "checkboxCheckIcon";
+type VariantKeys = "modal" | "overlay" | "tooltip" | "popover" | "collapse" | "checkboxCheckIcon";
 export type DefaultVariants = Record<VariantKeys, { default: Variants }>;
 
 export const defaultMotionVariants: DefaultVariants = {
@@ -47,7 +41,7 @@ export const defaultMotionVariants: DefaultVariants = {
 				opacity: 1,
 				transition: {
 					opacity: {
-						easings: TRANSITION_EASINGS.easeOut,
+						ease: TRANSITION_EASINGS.easeOut,
 						duration: 0.2
 					},
 					scale: { duration: 0.2, ease: [0.175, 0.885, 0.4, 1.1] }
@@ -59,11 +53,11 @@ export const defaultMotionVariants: DefaultVariants = {
 				transition: {
 					opacity: {
 						duration: 0.15,
-						easings: TRANSITION_EASINGS.easeInOut
+						ease: TRANSITION_EASINGS.easeInOut
 					},
 					scale: {
 						duration: 0.2,
-						easings: TRANSITION_EASINGS.easeInOut
+						ease: TRANSITION_EASINGS.easeInOut
 					}
 				}
 			}
@@ -85,13 +79,7 @@ export const defaultMotionVariants: DefaultVariants = {
 	},
 	collapse: {
 		default: {
-			initial: ({
-				animateOpacity,
-				endingHeight,
-				transition,
-				transitionEnd,
-				delay
-			}) => ({
+			initial: ({ animateOpacity, endingHeight, transition, transitionEnd, delay }) => ({
 				...(animateOpacity && { opacity: 1 }),
 				height: endingHeight,
 				transitionEnd: transitionEnd?.enter,
@@ -107,13 +95,7 @@ export const defaultMotionVariants: DefaultVariants = {
 					delay: typeof delay === "number" ? delay : delay?.enter
 				}
 			}),
-			exit: ({
-				animateOpacity,
-				startingHeight,
-				transition,
-				transitionEnd,
-				delay
-			}) => ({
+			exit: ({ animateOpacity, startingHeight, transition, transitionEnd, delay }) => ({
 				...(animateOpacity && {
 					opacity: isNumeric(startingHeight) ? 1 : 0
 				}),

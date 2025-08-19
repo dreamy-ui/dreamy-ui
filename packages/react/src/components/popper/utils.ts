@@ -1,5 +1,4 @@
 import type { Placement } from "@popperjs/core";
-import { token } from "styled-system/tokens";
 
 const toVar = (value: string, fallback?: string) => ({
 	var: value,
@@ -31,7 +30,7 @@ export function getBoxShadow(placement: Placement) {
 		result = "1px -1px 0px 0";
 	}
 
-	result += ` ${token("colors.border")}`;
+	result += ` var(--colors-border)`;
 
 	return result;
 }
@@ -54,17 +53,14 @@ const transforms: Record<string, string> = {
 	"right-end": "left bottom"
 };
 
-export const toTransformOrigin = (placement: Placement) =>
-	transforms[placement];
+export const toTransformOrigin = (placement: Placement) => transforms[placement];
 
 const defaultEventListeners = {
 	scroll: true,
 	resize: true
 };
 
-export function getEventListenerOptions(
-	value?: boolean | Partial<typeof defaultEventListeners>
-) {
+export function getEventListenerOptions(value?: boolean | Partial<typeof defaultEventListeners>) {
 	let eventListeners: {
 		enabled?: boolean;
 		options?: typeof defaultEventListeners;

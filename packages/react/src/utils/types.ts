@@ -1,74 +1,69 @@
-import type React from "react";
-import type {
-	ComponentPropsWithoutRef,
-	ElementType,
-	FunctionComponent
-} from "react";
-import type {
-	Assign,
-	DistributiveOmit,
-	JsxStyleProps
-} from "styled-system/types";
+// export type HtmlProp =
+// 	| "color"
+// 	| "size"
+// 	| "translate"
+// 	| "transition"
+// 	| "width"
+// 	| "height"
+// 	| "content";
 
-interface HtmlProps {
-	htmlSize?: number;
-	htmlWidth?: string | number;
-	htmlHeight?: string | number;
-	htmlTranslate?: "yes" | "no" | undefined;
-	htmlContent?: string;
-}
+import type { Target, TargetAndTransition, Transition } from "motion";
 
-export type HtmlProp =
-	| "color"
-	| "size"
-	| "translate"
-	| "transition"
-	| "width"
-	| "height"
-	| "content";
+// export type AnyFunction<T = any> = (...args: T[]) => any;
 
-export interface PolymorphicProps {
-	as?: ElementType;
-	asChild?: boolean;
-	asComp?: React.ReactNode;
-}
+export type Merge<M, N> = N extends Record<string, unknown> ? M : Omit<M, keyof N> & N;
 
-type PatchHtmlProps<T> = DistributiveOmit<T, HtmlProp> & HtmlProps;
+export type Status = "success" | "info" | "warning" | "error";
 
-type AssignHtmlProps<T extends Dict, P extends Dict = {}> = Assign<
-	PatchHtmlProps<T>,
-	P
->;
+// export interface FocusableElement {
+// 	focus(options?: FocusOptions): void;
+// }
 
-export type HTMLDreamProps<
-	T extends ElementType,
-	P extends Dict = {}
-> = AssignHtmlProps<
-	ComponentPropsWithoutRef<T>,
-	Assign<JsxStyleProps, P> & PolymorphicProps
->;
+// export type Dict<T = any> = Record<string, T>;
 
-export type AnyFunction<T = any> = (...args: T[]) => any;
+// export type DOMElements = keyof React.JSX.IntrinsicElements;
 
-export type Merge<M, N> = N extends Record<string, unknown>
-	? M
-	: Omit<M, keyof N> & N;
+type TargetResolver<P = {}> = (props: P & TransitionProperties) => TargetAndTransition;
 
-export interface FocusableElement {
-	focus(options?: FocusOptions): void;
-}
+type Variant<P = {}> = TargetAndTransition | TargetResolver<P>;
 
-export type Dict<T = any> = Record<string, T>;
-
-export type DOMElements = keyof React.JSX.IntrinsicElements;
-
-export type HTMLDreamComponents = {
-	[Tag in DOMElements]: DreamComponent<React.ComponentType<Tag>, {}>;
+export type Variants<P = {}> = {
+	enter: Variant<P>;
+	exit: Variant<P>;
+	initial?: Variant<P>;
 };
 
-export type DreamComponent<
-	T extends ElementType,
-	P extends Dict = {}
-> = FunctionComponent<HTMLDreamProps<T, P> & { ref?: any }>;
+type WithMotionState<P> = Partial<Record<"enter" | "exit", P>>;
 
-export type Status = "info" | "warning" | "error" | "success";
+export type TransitionConfig = WithMotionState<Transition>;
+
+export type TransitionEndConfig = WithMotionState<Target>;
+
+export type DelayConfig = WithMotionState<number>;
+
+export type TransitionProperties = {
+	/**
+	 * Custom `transition` definition for `enter` and `exit`
+	 */
+	transition?: TransitionConfig;
+	/**
+	 * Custom `transitionEnd` definition for `enter` and `exit`
+	 */
+	transitionEnd?: TransitionEndConfig;
+	/**
+	 * Custom `delay` definition for `enter` and `exit`
+	 */
+	delay?: number | DelayConfig;
+};
+
+export type WithTransitionConfig<P extends object> = Omit<P, "transition"> &
+	TransitionProperties & {
+		/**
+		 * If `true`, the element will unmount when `in={false}` and animation is done
+		 */
+		unmountOnExit?: boolean;
+		/**
+		 * Show the component; triggers when enter or exit states
+		 */
+		isOpen?: boolean;
+	};

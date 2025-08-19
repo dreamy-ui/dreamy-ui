@@ -1,5 +1,5 @@
-import { Slider, SliderFilledTrack, SliderThumb, SliderTrack } from "@dreamy-ui/react";
-import { Text } from "@dreamy-ui/react/rsc";
+import { Slider, SliderFilledTrack, SliderThumb, SliderTrack } from "@/slider";
+import { Text } from "@/text";
 import { useState } from "react";
 
 export function MaxMinSlider() {

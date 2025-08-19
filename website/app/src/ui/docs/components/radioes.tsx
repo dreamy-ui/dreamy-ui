@@ -1,5 +1,6 @@
-import { Radio, RadioCard, RadioGroup } from "@dreamy-ui/react";
-import { Group } from "@dreamy-ui/react/rsc";
+import { Group } from "@/group";
+import { Radio, RadioGroup } from "@/radio";
+import { RadioCard } from "@/radio-card";
 import { useState } from "react";
 
 export function ControlledRadios() {

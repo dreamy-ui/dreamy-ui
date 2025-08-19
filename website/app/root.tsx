@@ -1,3 +1,4 @@
+import { ToastProvider } from "@/toast-provider";
 import { DreamyProvider } from "@dreamy-ui/react";
 import { getColorModeHTMLProps, getSSRColorMode } from "@dreamy-ui/react/rsc";
 import { useEffect } from "react";
@@ -12,6 +13,7 @@ import {
 import AppLayout from "~/src/ui/global/Layout";
 import type { Route } from "./+types/root";
 import styles from "./index.css?url";
+import { clientTimingMiddleware } from "./src/.client/middlewares";
 import {
     prefetchCacheControlHeaderMiddleware,
     requestMiddleware,
@@ -19,6 +21,8 @@ import {
 } from "./src/.server/middlewares";
 import { getServerCookie } from "./src/functions/cookies";
 import { useRoot } from "./src/hooks/useRoot";
+
+export const unstable_clientMiddleware = [clientTimingMiddleware];
 
 export const unstable_middleware = [
     requestMiddleware,
@@ -110,7 +114,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
                     useUserPreferenceColorMode
                     motionStrict
                 >
-                    <AppLayout>{children}</AppLayout>
+                    <ToastProvider>
+                        <AppLayout>{children}</AppLayout>
+                    </ToastProvider>
                 </DreamyProvider>
                 <ScrollRestoration />
                 <Scripts />

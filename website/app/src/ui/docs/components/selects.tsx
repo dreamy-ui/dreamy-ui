@@ -1,5 +1,5 @@
-import { Select, SelectContent, SelectItem, SelectTrigger } from "@dreamy-ui/react";
-import { Spinner } from "@dreamy-ui/react/rsc";
+import { Select, SelectContent, SelectItem, SelectTrigger } from "@/select";
+import { Spinner } from "@/spinner";
 import { useState } from "react";
 
 export function AsyncSelect() {

@@ -70,5 +70,3 @@ export const Group = forwardRef<HTMLDivElement, GroupProps>(({ children, skip, .
         </StyledGroup>
     );
 });
-
-Group.displayName = "Group";

@@ -2,6 +2,7 @@ export * from "./attr";
 export * from "./call-all";
 export * from "./children";
 export * from "./compact";
+export * from "./event";
 export * from "./ids";
 export * from "./number";
 export * from "./object";

@@ -10,8 +10,8 @@ const parts = defineParts({
 	error: {
 		selector: "& [data-part='error']"
 	},
-	helpText: {
-		selector: "& [data-part='helpText']"
+	hint: {
+		selector: "& [data-part='hint']"
 	},
 	requiredIndicator: {
 		selector: "& [data-part='requiredIndicator']"
@@ -26,13 +26,7 @@ export { parts as fieldParts };
 export const field = defineRecipe({
 	className: "dreamy-field",
 	description: "Dreamy UI Field component",
-	jsx: [
-		"Field",
-		"FieldLabel",
-		"FieldError",
-		"FieldHelpText",
-		"FieldErrorIcon"
-	],
+	jsx: ["Field", "FieldLabel", "FieldError", "FieldHint", "FieldErrorIcon"],
 	base: parts({
 		root: {
 			width: "100%",
@@ -66,7 +60,7 @@ export const field = defineRecipe({
 			height: "4",
 			flexShrink: 0
 		},
-		helpText: {
+		hint: {
 			fontSize: "sm",
 			color: "{colors.fg.medium}"
 		},

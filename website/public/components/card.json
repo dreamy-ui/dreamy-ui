@@ -1,13 +1,12 @@
 {
   "type": "component",
   "fileDependencies": [
-    "./factory",
-    "./style-context"
+    "./factory"
   ],
   "id": "card",
   "file": {
     "name": "card.tsx",
-    "content": "\"use client\";\n\nimport { card } from \"styled-system/recipes\";\nimport { dreamy } from \"./factory\";\nimport { createStyleContext } from \"./style-context\";\n\nconst { withProvider, withContext } = createStyleContext(card);\n\n/**\n * Card component\n *\n * @See Docs https://dreamy-ui.com/docs/components/card\n */\nexport const Card = withProvider(dreamy.div, \"root\");\nexport const CardHeader = withContext(dreamy.div, \"header\");\nexport const CardBody = withContext(dreamy.div, \"body\");\nexport const CardFooter = withContext(dreamy.div, \"footer\");\nexport const CardTitle = withContext(dreamy.h3, \"title\");\nexport const CardDescription = withContext(dreamy.p, \"description\");\n"
+    "content": "\"use client\";\r\n\r\nimport { createStyleContext } from \"styled-system/jsx\";\r\nimport { card } from \"styled-system/recipes\";\r\nimport { dreamy } from \"./factory\";\r\n\r\nconst { withProvider, withContext } = createStyleContext(card);\r\n\r\n/**\r\n * Card component\r\n *\r\n * @See Docs https://dreamy-ui.com/docs/components/card\r\n */\r\nconst CardRoot = withProvider(dreamy.div, \"root\");\r\nconst CardHeader = withContext(dreamy.div, \"header\");\r\nconst CardBody = withContext(dreamy.div, \"body\");\r\nconst CardFooter = withContext(dreamy.div, \"footer\");\r\nconst CardTitle = withContext(dreamy.h3, \"title\");\r\nconst CardDescription = withContext(dreamy.p, \"description\");\r\n\r\nexport namespace Card {\r\n    export const Root = CardRoot;\r\n    export const Header = CardHeader;\r\n    export const Body = CardBody;\r\n    export const Footer = CardFooter;\r\n    export const Title = CardTitle;\r\n    export const Description = CardDescription;\r\n}\r\n"
   },
   "component": "Card",
   "hasRecipe": true,

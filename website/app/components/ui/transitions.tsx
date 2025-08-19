@@ -1,6 +1,6 @@
 import {
     TRANSITION_DEFAULTS,
-    type Variants,
+    // type Variants,
     type WithTransitionConfig,
     useMotionVariants
 } from "@dreamy-ui/react";
@@ -8,7 +8,7 @@ import {
     AnimatePresence,
     type AnimatePresenceProps,
     type HTMLMotionProps,
-    type Variants as _Variants
+    type Variants
 } from "motion/react";
 import { forwardRef, useMemo } from "react";
 import { css, cx } from "styled-system/css";
@@ -94,7 +94,7 @@ export const Collapse = forwardRef<HTMLDivElement, CollapseProps>((props, ref) =
                 <MotionBox
                     ref={ref}
                     custom={custom}
-                    variants={variants as _Variants}
+                    variants={variants}
                     initial={unmountOnExit ? "exit" : false}
                     animate={animate}
                     exit="exit"
@@ -131,7 +131,7 @@ interface ScaleOptions {
     animatePresenceProps?: AnimatePresenceProps;
 }
 
-const variants: Variants<ScaleOptions> = {
+const variants: Variants = {
     exit: ({ reverse, initialScale, transition, transitionEnd }) => ({
         opacity: 0,
         ...(reverse
@@ -143,7 +143,9 @@ const variants: Variants<ScaleOptions> = {
         opacity: 1,
         scale: 1,
         transition: transition?.enter ?? TRANSITION_DEFAULTS.enter,
-        transitionEnd: transitionEnd?.enter
+        transitionEnd: {
+            ...transitionEnd?.enter
+        }
     })
 };
 
@@ -151,7 +153,7 @@ export const ScaleConfig: HTMLMotionProps<"div"> = {
     initial: "exit",
     animate: "enter",
     exit: "exit",
-    variants: variants as _Variants
+    variants: variants
 };
 
 export interface ScaleProps extends ScaleOptions, WithTransitionConfig<MotionBoxProps> {}

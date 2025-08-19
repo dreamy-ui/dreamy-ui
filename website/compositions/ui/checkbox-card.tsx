@@ -1,6 +1,6 @@
 "use client";
 
-import { type UseCheckboxProps, createContext, useCheckbox } from "@dreamy-ui/react";
+import { CheckboxProvider, type UseCheckboxProps, useCheckbox } from "@dreamy-ui/react";
 import { type ElementType, type ReactElement, cloneElement, forwardRef, useMemo } from "react";
 import { type CheckboxCardVariantProps, checkboxCard } from "styled-system/recipes";
 import { Box } from "./box";
@@ -9,15 +9,26 @@ import { dreamy } from "./factory";
 import { Text, type TextProps } from "./text";
 import { VisuallyHiddenInput } from "./visually-hidden";
 
-export const [CheckboxProvider, useCheckboxCardContext] = createContext<UseCheckboxProps>({
-    strict: false
-});
-
 export interface CheckboxCardProps extends UseCheckboxProps, CheckboxCardVariantProps {
+    /**
+     * The title of the checkbox card
+     */
     title?: string;
+    /**
+     * The description of the checkbox card
+     */
     description?: string;
+    /**
+     * The tag of the title
+     */
     titleTag?: ElementType;
+    /**
+     * The props of the title
+     */
     titleProps?: TextProps;
+    /**
+     * The props of the description
+     */
     descriptionProps?: TextProps;
 }
 
@@ -101,5 +112,3 @@ export const CheckboxCard = forwardRef<HTMLInputElement, CheckboxCardProps>((pro
         </CheckboxProvider>
     );
 });
-
-CheckboxCard.displayName = "Checkbox";

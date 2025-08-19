@@ -1,11 +1,11 @@
 "use client";
 
 import {
-    InputGroupProvider,
+    type UserFeedbackProps,
     callAllHandlers,
     copyObjectWithoutKeys,
-    useField,
-    useInputGroup
+    createContext,
+    useField
 } from "@dreamy-ui/react";
 import type React from "react";
 import { forwardRef, useMemo } from "react";
@@ -15,39 +15,6 @@ import { Box, type BoxProps } from "./box";
 import { type HTMLDreamyProps, dreamy } from "./factory";
 import { Flex, type FlexProps } from "./flex";
 
-export interface UserFeedbackProps {
-    /**
-     * If `true`, the form control will be required. This has 2 side effects:
-     * - The `FormLabel` will show a required indicator
-     * - The form element (e.g, Input) will have `aria-required` set to `true`
-     *
-     * @default false
-     */
-    isRequired?: boolean;
-    /**
-     * If `true`, the form control will be disabled. This has 2 side effects:
-     * - The `FormLabel` will have `data-disabled` attribute
-     * - The form element (e.g, Input) will be disabled
-     *
-     * @default false
-     */
-    isDisabled?: boolean;
-    /**
-     * If `true`, the form control will be invalid. This has 2 side effects:
-     * - The `FormLabel` and `FormErrorIcon` will have `data-invalid` set to `true`
-     * - The form element (e.g, Input) will have `aria-invalid` set to `true`
-     *
-     * @default false
-     */
-    isInvalid?: boolean;
-    /**
-     * If `true`, the form control will be readonly
-     *
-     * @default false
-     */
-    isReadOnly?: boolean;
-}
-
 export interface InputProps extends HTMLDreamyProps<"input">, InputVariantProps, UserFeedbackProps {
     /**
      * The callback function that is called when the input value changes.
@@ -56,6 +23,11 @@ export interface InputProps extends HTMLDreamyProps<"input">, InputVariantProps,
 }
 
 const StyledInput = dreamy("input", input);
+
+export const [InputGroupProvider, useInputGroup] = createContext<InputGroupProviderContext>({
+    strict: false,
+    name: "InputGroupContext"
+});
 
 /**
  * Input component

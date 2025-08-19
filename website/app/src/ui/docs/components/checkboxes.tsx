@@ -1,5 +1,7 @@
-import { Checkbox, CheckboxCard, CheckboxGroup } from "@dreamy-ui/react";
-import { Text, VStack } from "@dreamy-ui/react/rsc";
+import { Checkbox, CheckboxGroup } from "@/checkbox";
+import { CheckboxCard } from "@/checkbox-card";
+import { VStack } from "@/stack";
+import { Text } from "@/text";
 import { useState } from "react";
 
 export function ControlledCheckbox() {

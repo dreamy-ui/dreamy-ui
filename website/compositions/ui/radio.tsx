@@ -38,8 +38,8 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>((props, ref) => {
     } = useRadio({ ...props, ref });
 
     return (
-        <StyledRadio {...(getRootProps() as any)}>
-            <VisuallyHiddenInput {...(getInputProps() as any)} />
+        <StyledRadio {...getRootProps()}>
+            <VisuallyHiddenInput {...getInputProps()} />
             <span {...getWrapperProps()}>
                 <span {...getControlProps()} />
             </span>
@@ -47,8 +47,6 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>((props, ref) => {
         </StyledRadio>
     );
 });
-
-Radio.displayName = "Radio";
 
 export interface RadioGroupContext
     extends Pick<
@@ -73,7 +71,7 @@ export interface RadioGroupProps
         Omit<FlexProps, "defaultValue" | "onChange"> {}
 
 /**
- * RadioGroup component. Useful for grouping multiple Radioes together.
+ * RadioGroup component. Useful for grouping multiple Radios together.
  *
  * @See Docs https://dreamy-ui.com/docs/components/radio
  */
@@ -131,5 +129,3 @@ export function RadioGroup(props: RadioGroupProps) {
         </RadioGroupProvider>
     );
 }
-
-RadioGroup.displayName = "RadioGroup";

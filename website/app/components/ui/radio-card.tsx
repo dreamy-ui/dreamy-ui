@@ -1,3 +1,5 @@
+"use client";
+
 import { type UseRadioProps, createContext, dataAttr, useRadio } from "@dreamy-ui/react";
 import { type ElementType, forwardRef, useMemo } from "react";
 import { type RadioCardVariantProps, radioCard } from "styled-system/recipes";
@@ -95,7 +97,7 @@ export const RadioCard = forwardRef<HTMLInputElement, RadioCardProps>((props, re
     return (
         <RadioProvider value={ctx}>
             <StyledRadio
-                {...(getRootProps() as any)}
+                {...getRootProps()}
                 data-center={dataAttr(!description)}
             >
                 <Box data-part={"header"}>
@@ -106,7 +108,7 @@ export const RadioCard = forwardRef<HTMLInputElement, RadioCardProps>((props, re
                     >
                         {title}
                     </Text>
-                    <VisuallyHiddenInput {...(getInputProps() as any)} />
+                    <VisuallyHiddenInput {...getInputProps()} />
                     {!hideRadio && (
                         <Box data-part={"radio-root"}>
                             <span {...getWrapperProps()}>
@@ -127,5 +129,3 @@ export const RadioCard = forwardRef<HTMLInputElement, RadioCardProps>((props, re
         </RadioProvider>
     );
 });
-
-RadioCard.displayName = "RadioCard";
