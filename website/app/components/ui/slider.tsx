@@ -1,9 +1,11 @@
+"use client";
+
 import { SliderProvider, type UseSliderProps, useSlider, useSliderContext } from "@dreamy-ui/react";
 import { forwardRef } from "react";
+import { createStyleContext } from "styled-system/jsx";
 import { slider } from "styled-system/recipes";
 import { Box } from "./box";
 import type { HTMLDreamyProps } from "./factory";
-import { createStyleContext } from "./style-context";
 import { VisuallyHiddenInput } from "./visually-hidden";
 
 const { withProvider, withContext } = createStyleContext(slider);
@@ -88,6 +90,3 @@ export namespace Slider {
     export const Thumb = SliderThumb;
     export const Mark = SliderMark;
 }
-
-export const Slider = SliderRoot;
-export { SliderFilledTrack, SliderMark, SliderThumb, SliderTrack };

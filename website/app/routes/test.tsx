@@ -1,6 +1,8 @@
-import { Editable } from "@/editable";
+import { Button } from "@/button";
 import { Flex } from "@/flex";
-import { HStack } from "@/stack";
+import { MotionFlex } from "@/motion";
+import { useControllable } from "@dreamy-ui/react";
+import { AnimatePresence, m } from "motion/react";
 import type { Route } from "./+types/test";
 
 export function meta() {
@@ -30,22 +32,52 @@ export async function action({ request }: Route.ActionArgs) {
     };
 }
 
+const MotionButton = m.create(Button);
+
 export default function Test() {
+    const { isOpen, onOpen, onClose } = useControllable();
+
     return (
         <Flex
             col
             gap={10}
             align={"start"}
         >
-            <Editable.Root defaultValue="Hello">
-                <Editable.Preview />
-                <Editable.Input />
-                <HStack>
-                    <Editable.EditButton />
-                    <Editable.SubmitButton />
-                    <Editable.CancelButton />
-                </HStack>
-            </Editable.Root>
+            <MotionButton
+                initial
+                layout
+                layoutId="modal"
+                transition={{
+                    duration: 0.2,
+                    ease: "easeInOut"
+                }}
+                onClick={onOpen}
+            >
+                Open
+            </MotionButton>
+
+            <AnimatePresence>
+                {isOpen && (
+                    <Flex
+                        fixed
+                        top={0}
+                        left={0}
+                        right={0}
+                        bottom={0}
+                        onClick={onClose}
+                        center
+                    >
+                        <MotionFlex
+                            initial
+                            layout
+                            layoutId="modal"
+                            h={20}
+                            w={40}
+                            bg={"red"}
+                        />
+                    </Flex>
+                )}
+            </AnimatePresence>
         </Flex>
     );
 }

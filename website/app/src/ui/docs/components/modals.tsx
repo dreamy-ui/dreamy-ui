@@ -1,14 +1,6 @@
 import { Button } from "@/button";
 import { Flex } from "@/flex";
-import {
-    Modal,
-    ModalBody,
-    ModalCloseButton,
-    ModalContent,
-    ModalFooter,
-    ModalHeader,
-    ModalOverlay
-} from "@/modal";
+import { Modal } from "@/modal";
 import { Text } from "@/text";
 import { useControllable } from "@dreamy-ui/react";
 import { useCallback } from "react";
@@ -33,20 +25,20 @@ export function BasicModal() {
                 Open Modal
             </Button>
 
-            <Modal
+            <Modal.Root
                 isOpen={isOpen}
                 onClose={onClose}
             >
-                <ModalOverlay />
-                <ModalContent>
-                    <ModalHeader>Modal Header</ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>Modal Body</ModalBody>
-                    <ModalFooter>
+                <Modal.Overlay />
+                <Modal.Content>
+                    <Modal.Header>Modal Header</Modal.Header>
+                    <Modal.CloseButton />
+                    <Modal.Body>Modal Body</Modal.Body>
+                    <Modal.Footer>
                         <Button onClick={onClose}>Close</Button>
-                    </ModalFooter>
-                </ModalContent>
-            </Modal>
+                    </Modal.Footer>
+                </Modal.Content>
+            </Modal.Root>
         </>
     );
 }
@@ -79,21 +71,21 @@ export function SizeModals() {
                     Open {size} Modal
                 </Button>
 
-                <Modal
+                <Modal.Root
                     isOpen={isOpen}
                     onClose={onClose}
                     size={size}
                 >
-                    <ModalOverlay />
-                    <ModalContent>
-                        <ModalHeader>{size} Modal</ModalHeader>
-                        <ModalCloseButton />
-                        <ModalBody>This is a {size} modal!</ModalBody>
-                        <ModalFooter>
+                    <Modal.Overlay />
+                    <Modal.Content>
+                        <Modal.Header>{size} Modal</Modal.Header>
+                        <Modal.CloseButton />
+                        <Modal.Body>This is a {size} modal!</Modal.Body>
+                        <Modal.Footer>
                             <Button onClick={onClose}>Close</Button>
-                        </ModalFooter>
-                    </ModalContent>
-                </Modal>
+                        </Modal.Footer>
+                    </Modal.Content>
+                </Modal.Root>
             </>
         );
     }, []);
@@ -126,29 +118,29 @@ export function ScrollableInsideModal() {
                 Open Modal
             </Button>
 
-            <Modal
+            <Modal.Root
                 isOpen={isOpen}
                 onClose={onClose}
                 scrollBehavior="inside"
                 size={"lg"}
             >
-                <ModalOverlay />
-                <ModalContent>
-                    <ModalHeader>Modal Header</ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>
+                <Modal.Overlay />
+                <Modal.Content>
+                    <Modal.Header>Modal Header</Modal.Header>
+                    <Modal.CloseButton />
+                    <Modal.Body>
                         {[...Array(10)].map((_, i) => (
                             <LoremIpsum
                                 key={`ipsum-inside-${i}`}
                                 p={1}
                             />
                         ))}
-                    </ModalBody>
-                    <ModalFooter>
+                    </Modal.Body>
+                    <Modal.Footer>
                         <Button onClick={onClose}>Close</Button>
-                    </ModalFooter>
-                </ModalContent>
-            </Modal>
+                    </Modal.Footer>
+                </Modal.Content>
+            </Modal.Root>
         </>
     );
 }
@@ -166,30 +158,30 @@ export function ScrollableOutsideModal() {
                 Open Modal
             </Button>
 
-            <Modal
+            <Modal.Root
                 isOpen={isOpen}
                 onClose={onClose}
                 scrollBehavior="outside"
                 size={"lg"}
                 placement="top"
             >
-                <ModalOverlay />
-                <ModalContent>
-                    <ModalHeader>Modal Header</ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>
+                <Modal.Overlay />
+                <Modal.Content>
+                    <Modal.Header>Modal Header</Modal.Header>
+                    <Modal.CloseButton />
+                    <Modal.Body>
                         {[...Array(10)].map((_, i) => (
                             <LoremIpsum
                                 key={`ipsum-outside-${i}`}
                                 p={1}
                             />
                         ))}
-                    </ModalBody>
-                    <ModalFooter>
+                    </Modal.Body>
+                    <Modal.Footer>
                         <Button onClick={onClose}>Close</Button>
-                    </ModalFooter>
-                </ModalContent>
-            </Modal>
+                    </Modal.Footer>
+                </Modal.Content>
+            </Modal.Root>
         </>
     );
 }
@@ -207,21 +199,21 @@ export function PlacementModal() {
                 Open Modal
             </Button>
 
-            <Modal
+            <Modal.Root
                 isOpen={isOpen}
                 onClose={onClose}
                 placement={"top"}
             >
-                <ModalOverlay />
-                <ModalContent>
-                    <ModalHeader>Modal Header</ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>Modal Body</ModalBody>
-                    <ModalFooter>
+                <Modal.Overlay />
+                <Modal.Content>
+                    <Modal.Header>Modal Header</Modal.Header>
+                    <Modal.CloseButton />
+                    <Modal.Body>Modal Body</Modal.Body>
+                    <Modal.Footer>
                         <Button onClick={onClose}>Close</Button>
-                    </ModalFooter>
-                </ModalContent>
-            </Modal>
+                    </Modal.Footer>
+                </Modal.Content>
+            </Modal.Root>
         </>
     );
 }

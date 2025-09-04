@@ -166,7 +166,7 @@ const SelectTrigger = withContext(
 
         useSafeLayoutEffect(() => {
             forceUpdate({});
-        }, [descendants.values()]);
+        }, [JSON.stringify(Array.from(descendants.values()).map((node: any) => node.node.value))]);
 
         return (
             <>
@@ -229,7 +229,7 @@ const CheckIcon = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
                 {...props}
                 ref={ref}
             >
-                <path d="M20 6 9 17l-5-5" />
+                <path d="m6 9 6 6 6-6" />
             </svg>
         );
     }

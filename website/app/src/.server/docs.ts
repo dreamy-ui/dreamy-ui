@@ -12,6 +12,8 @@ import { octokit } from "~/src/.server/github";
 import { Logger } from "~/src/.server/logger";
 import { capitalize, filenameToSlug } from "~/src/functions/string";
 import { createHId } from "~/src/ui/docs/MDXContent";
+import { remarkDreamyPMTabs } from "./remark-tabs";
+import { cursorDarkTheme } from "./theme";
 
 export class Docs {
     private static shouldFetchGithubDocs = false; // make it `true` to fetch github docs instead from disk in development mode
@@ -441,12 +443,13 @@ export class Docs {
                 headings
             },
             mdxOptions: {
+                remarkPlugins: [remarkDreamyPMTabs],
                 rehypePlugins: [
                     [
                         rehypePrettyCode,
                         {
                             defaultLang: "tsx",
-                            theme: "houston"
+                            theme: cursorDarkTheme as any
                         } satisfies Options
                     ]
                 ]

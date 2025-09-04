@@ -1,4 +1,4 @@
-import { Select, SelectContent, SelectItem, SelectTrigger } from "@/select";
+import { Select } from "@/select";
 import { Spinner } from "@/spinner";
 import { useState } from "react";
 
@@ -16,12 +16,12 @@ export function AsyncSelect() {
     }
 
     return (
-        <Select
+        <Select.Root
             onOpen={fetchFruits}
             width={"xs"}
         >
-            <SelectTrigger placeholder="Select a favorite fruit" />
-            <SelectContent>
+            <Select.Trigger placeholder="Select a favorite fruit" />
+            <Select.Content>
                 {isLoading && (
                     <Spinner
                         color="primary"
@@ -29,15 +29,15 @@ export function AsyncSelect() {
                     />
                 )}
                 {fruits.map((fruit) => (
-                    <SelectItem
+                    <Select.Item
                         key={fruit}
                         value={fruit}
                     >
                         {fruit}
-                    </SelectItem>
+                    </Select.Item>
                 ))}
-            </SelectContent>
-        </Select>
+            </Select.Content>
+        </Select.Root>
     );
 }
 
@@ -45,17 +45,17 @@ export function ControlledSelect() {
     const [value, setValue] = useState<string>("strawberry");
 
     return (
-        <Select
+        <Select.Root
             value={value}
             onChangeValue={setValue}
             width={"xs"}
         >
-            <SelectTrigger placeholder="Select a favorite fruit" />
-            <SelectContent>
-                <SelectItem value="strawberry">Strawberry</SelectItem>
-                <SelectItem value="banana">Banana</SelectItem>
-                <SelectItem value="orange">Orange</SelectItem>
-            </SelectContent>
-        </Select>
+            <Select.Trigger placeholder="Select a favorite fruit" />
+            <Select.Content>
+                <Select.Item value="strawberry">Strawberry</Select.Item>
+                <Select.Item value="banana">Banana</Select.Item>
+                <Select.Item value="orange">Orange</Select.Item>
+            </Select.Content>
+        </Select.Root>
     );
 }

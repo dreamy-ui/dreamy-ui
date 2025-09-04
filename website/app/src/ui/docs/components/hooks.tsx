@@ -1,14 +1,6 @@
 import { Button } from "@/button";
 import { Flex } from "@/flex";
-import {
-    Modal,
-    ModalBody,
-    ModalCloseButton,
-    ModalContent,
-    ModalFooter,
-    ModalHeader,
-    ModalOverlay
-} from "@/modal";
+import { Modal } from "@/modal";
 import { HStack } from "@/stack";
 import { Text } from "@/text";
 import { useToast } from "@/toast-provider";
@@ -121,22 +113,22 @@ export function UseControllableModal() {
         <>
             <Text>Is open: {isOpen ? "Yes" : "No"}</Text>
             <Button onClick={onOpen}>Open</Button>
-            <Modal
+            <Modal.Root
                 isOpen={isOpen}
                 onClose={onClose}
             >
-                <ModalOverlay />
-                <ModalContent>
-                    <ModalCloseButton />
-                    <ModalHeader>Hey!</ModalHeader>
-                    <ModalBody>
+                <Modal.Overlay />
+                <Modal.Content>
+                    <Modal.CloseButton />
+                    <Modal.Header>Hey!</Modal.Header>
+                    <Modal.Body>
                         <Text>This is a modal body</Text>
-                    </ModalBody>
-                    <ModalFooter>
+                    </Modal.Body>
+                    <Modal.Footer>
                         <Button onClick={onClose}>Close</Button>
-                    </ModalFooter>
-                </ModalContent>
-            </Modal>
+                    </Modal.Footer>
+                </Modal.Content>
+            </Modal.Root>
         </>
     );
 }

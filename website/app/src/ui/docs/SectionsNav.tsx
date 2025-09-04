@@ -109,7 +109,7 @@ export const Section = memo(function Section({ section }: SectionProps) {
 
             <AnimatePresence initial={false}>
                 <Collapse
-                    in={isOpen}
+                    isOpen={isOpen}
                     animateOpacity={false}
                 >
                     <Flex

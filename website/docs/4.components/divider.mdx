@@ -6,15 +6,15 @@ source: /packages/react/src/components/divider/divider.tsx
 themeSource: /packages/system/src/recipes/divider.ts
 ---
 
-## Import
+## Installation
 
-- `Divider` - The Divider component.
-
-```jsx
-import { Divider } from "@dreamy-ui/react/rsc";
+```bash
+pnpm dreamy components add divider
 ```
 
 ## Usage
+
+Divider creates a visual separation between sections of content. It can be horizontal or vertical and helps organize your layout.
 
 <Wrapper>
 	<Divider />
@@ -29,17 +29,17 @@ import { Divider } from "@dreamy-ui/react/rsc";
 You can change the orientation of the Divider by using the `orientation` prop.
 
 <Wrapper>
-	**Horizontal**
+	<Text semibold>Horizontal</Text>
 	<Divider orientation="horizontal" />
 
-	**Vertical**
+	<Text semibold mt={4}>Vertical</Text>
 	<Divider orientation="vertical" h="100px" />
 </Wrapper>
 
 ```tsx
-**Horizontal**
+<Text semibold>Horizontal</Text>
 <Divider orientation="horizontal" />
 
-**Vertical**
+<Text semibold mt={4}>Vertical</Text>
 <Divider orientation="vertical" h="100px" />
 ```

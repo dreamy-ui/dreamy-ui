@@ -22,10 +22,10 @@ export interface TextareaProps
     onChangeValue?: (value: string) => void;
 }
 
-const StyledTextarea = dreamy(TextareaAutosize as any, textarea);
+const StyledTextarea = dreamy(TextareaAutosize, textarea);
 
 /**
- * Textarea component.
+ * Textarea component
  *
  * @See Docs https://dreamy-ui.com/docs/components/textarea
  */
@@ -55,7 +55,7 @@ export type TextareaNoAutoSizeProps = HTMLDreamyProps<"textarea"> &
     };
 
 /**
- * Textarea component without autosize.
+ * Textarea component without autosize
  *
  * @See Docs https://dreamy-ui.com/docs/components/textarea
  */

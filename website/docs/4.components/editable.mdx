@@ -6,52 +6,40 @@ source: /packages/react/src/components/editable/editable.tsx
 themeSource: /packages/system/src/recipes/editable.ts
 ---
 
-## Import
+## Installation
 
-- `Editable` - The context for the editable, renders a 'div' by default.
-- `EditablePreview` - The text preview for the editable.
-- `EditableInput` - The input for the editable, when in edit mode.
-- `EditableEditButton` - The button to trigger edit mode.
-- `EditableSubmitButton` - The button to submit the editing value, when in edit mode.
-- `EditableCancelButton` - The button to cancel the editing, when in edit mode.
-
-```jsx
-import { 
-	Editable, 
-	EditablePreview, 
-	EditableInput, 
-	EditableEditButton, 
-	EditableSubmitButton, 
-	EditableCancelButton
-} from "@dreamy-ui/react";
+```bash
+pnpm dreamy components add editable
 ```
 
 ## Usage
 
-Basic usage of Editable. Placeholder will be shown, when the value is empty.
+Editable is a component that allows you to edit text, in a compact way.
+
+The placeholder will be shown in the preview, when the value is empty.
 
 <Wrapper>
-	<Editable defaultValue="Meow" placeholder="Enter an animal sound">
-		<EditablePreview />
-		<EditableInput />
+	<Editable.Root defaultValue="Meow" placeholder="Enter an animal sound">
+		<Editable.Preview />
+		<Editable.Input />
 		<HStack>
-			<EditableEditButton />
-			<EditableSubmitButton />
-			<EditableCancelButton />
+			<Editable.EditButton />
+			<Editable.SubmitButton />
+			<Editable.CancelButton />
 		</HStack>
-	</Editable>
+	</Editable.Root>
 </Wrapper>
 
 ```tsx
-<Editable defaultValue="Meow" placeholder="Enter an animal sound">
-	<EditablePreview />
-	<EditableInput />
+<Editable.Root defaultValue="Meow" placeholder="Enter an animal sound">
+	<Editable.Preview />
+	<Editable.Input />
 	<HStack>
-		<EditableEditButton />
-		<EditableSubmitButton />
-		<EditableCancelButton />
+		<Editable.EditButton />
+		<Editable.SubmitButton />
+		<Editable.CancelButton />
 	</HStack>
-</Editable>
+</Editable.Root>
 ```
 
 ### Double Click
@@ -59,17 +47,17 @@ Basic usage of Editable. Placeholder will be shown, when the value is empty.
 Editable can be used to trigger edit mode on double click. Double click the preview to enter edit mode, enter to submit, esc to cancel.
 
 <Wrapper>
-	<Editable defaultValue="Meow" placeholder="Enter an animal sound" useDoubleClick>
-		<EditablePreview />
-		<EditableInput />
-	</Editable>
+	<Editable.Root defaultValue="Meow" placeholder="Enter an animal sound" useDoubleClick>
+		<Editable.Preview />
+		<Editable.Input />
+	</Editable.Root>
 </Wrapper>
 
 ```tsx
-<Editable defaultValue="Meow" placeholder="Enter an animal sound" useDoubleClick>
-	<EditablePreview />
-	<EditableInput />
-</Editable>
+<Editable.Root defaultValue="Meow" placeholder="Enter an animal sound" useDoubleClick>
+	<Editable.Preview />
+	<Editable.Input />
+</Editable.Root>
 ```
 
 ### Controlled
@@ -85,15 +73,15 @@ function ControlledEditable() {
 	const [value, setValue] = useState("Meow");
 
 	return (
-		<Editable value={value} onChange={setValue}>
-			<EditablePreview />
-			<EditableInput />
+		<Editable.Root value={value} onChange={setValue}>
+			<Editable.Preview />
+			<Editable.Input />
 			<HStack>
-				<EditableEditButton />
-				<EditableSubmitButton />
-				<EditableCancelButton />
+				<Editable.EditButton />
+				<Editable.SubmitButton />
+				<Editable.CancelButton />
 			</HStack>
-		</Editable>
+		</Editable.Root>
 	);
 }
 ```
@@ -101,36 +89,36 @@ function ControlledEditable() {
 ### Accessing internal state
 
 <Wrapper>
-	<Editable defaultValue="Meow" placeholder="Enter an animal sound">
+	<Editable.Root defaultValue="Meow" placeholder="Enter an animal sound">
 		{({ isEditing, onSubmit, onCancel, onEdit }) => {
 			return (
 				<>
 					<Text>isEditing: {isEditing ? "true" : "false"}</Text>
-					<EditablePreview />
-					<EditableInput />
+					<Editable.Preview />
+					<Editable.Input />
 					<HStack>
-						<EditableEditButton />
-						<EditableSubmitButton />
-						<EditableCancelButton />
+						<Editable.EditButton />
+						<Editable.SubmitButton />
+						<Editable.CancelButton />
 					</HStack>
 				</>
 			);
 		}}
-	</Editable>
+	</Editable.Root>
 </Wrapper>
 
 ```tsx
-<Editable defaultValue="Meow" placeholder="Enter an animal sound">
+<Editable.Root defaultValue="Meow" placeholder="Enter an animal sound">
 	{({ isEditing, onSubmit, onCancel, onEdit }) => {
 		return (
 			<>
 				<Text>isEditing: {isEditing ? "true" : "false"}</Text>
-				<EditablePreview />
-				<EditableInput />
+				<Editable.Preview />
+				<Editable.Input />
 			</>
 		);
 	}}
-</Editable>
+</Editable.Root>
 ```
 
 ### Start with edit view
@@ -142,15 +130,15 @@ Use `startWithEditView` to use edit state by default. Click "Render" to render t
 </Wrapper>
 
 ```tsx
-<Editable defaultValue="Meow" placeholder="Enter an animal sound" startWithEditView>
-	<EditablePreview />
-	<EditableInput />
+<Editable.Root defaultValue="Meow" placeholder="Enter an animal sound" startWithEditView>
+	<Editable.Preview />
+	<Editable.Input />
 	<HStack>
-		<EditableEditButton />
-		<EditableSubmitButton />
-		<EditableCancelButton />
+		<Editable.EditButton />
+		<Editable.SubmitButton />
+		<Editable.CancelButton />
 	</HStack>
-</Editable>
+</Editable.Root>
 ```
 
 ### Is preview focusable
@@ -158,27 +146,27 @@ Use `startWithEditView` to use edit state by default. Click "Render" to render t
 Use `isPreviewFocusable` to control whenever the preview should be focusable, that means it can be focused via keyboard or click. It is `true` by default.
 
 <Wrapper>
-	<Editable defaultValue="Meow" placeholder="Enter an animal sound" isPreviewFocusable={false}>
-		<EditablePreview />
-		<EditableInput />
+	<Editable.Root defaultValue="Meow" placeholder="Enter an animal sound" isPreviewFocusable={false}>
+		<Editable.Preview />
+		<Editable.Input />
 		<HStack>
-			<EditableEditButton />
-			<EditableSubmitButton />
-			<EditableCancelButton />
+			<Editable.EditButton />
+			<Editable.SubmitButton />
+			<Editable.CancelButton />
 		</HStack>
-	</Editable>
+	</Editable.Root>
 </Wrapper>
 
 ```tsx
-<Editable defaultValue="Meow" placeholder="Enter an animal sound" isPreviewFocusable={false}>
-	<EditablePreview />
-	<EditableInput />
+<Editable.Root defaultValue="Meow" placeholder="Enter an animal sound" isPreviewFocusable={false}>
+	<Editable.Preview />
+	<Editable.Input />
 	<HStack>
-		<EditableEditButton />
-		<EditableSubmitButton />
-		<EditableCancelButton />
+		<Editable.EditButton />
+		<Editable.SubmitButton />
+		<Editable.CancelButton />
 	</HStack>
-</Editable>
+</Editable.Root>
 ```
 
 ### Submit on blur
@@ -186,27 +174,27 @@ Use `isPreviewFocusable` to control whenever the preview should be focusable, th
 Use `submitOnBlur` to control when the value should be submitted on blur. Default is `true`. This example won't submit, when blur happens.
 
 <Wrapper>
-	<Editable defaultValue="Meow" placeholder="Enter an animal sound" submitOnBlur={false}>
-		<EditablePreview />
-		<EditableInput />
+	<Editable.Root defaultValue="Meow" placeholder="Enter an animal sound" submitOnBlur={false}>
+		<Editable.Preview />
+		<Editable.Input />
 		<HStack>
-			<EditableEditButton />
-			<EditableSubmitButton />
-			<EditableCancelButton />
+			<Editable.EditButton />
+			<Editable.SubmitButton />
+			<Editable.CancelButton />
 		</HStack>
-	</Editable>
+	</Editable.Root>
 </Wrapper>
 
 ```tsx
-<Editable defaultValue="Meow" placeholder="Enter an animal sound" submitOnBlur={false}>
-	<EditablePreview />
-	<EditableInput />
+<Editable.Root defaultValue="Meow" placeholder="Enter an animal sound" submitOnBlur={false}>
+	<Editable.Preview />
+	<Editable.Input />
 	<HStack>
-		<EditableEditButton />
-		<EditableSubmitButton />
-		<EditableCancelButton />
+		<Editable.EditButton />
+		<Editable.SubmitButton />
+		<Editable.CancelButton />
 	</HStack>
-</Editable>
+</Editable.Root>
 ```
 
 ### onCancel, onSubmit, onEdit, onBlur
@@ -214,7 +202,7 @@ Use `submitOnBlur` to control when the value should be submitted on blur. Defaul
 Use `onCancel`, `onSubmit`, `onEdit`, `onBlur` to handle the editable events. Open the console
 
 <Wrapper>
-	<Editable 
+	<Editable.Root 
 		defaultValue="Meow" 
 		placeholder="Enter an animal sound" 
 		onCancel={() => toast({ title: "onCancel" })} 
@@ -222,18 +210,18 @@ Use `onCancel`, `onSubmit`, `onEdit`, `onBlur` to handle the editable events. Op
 		onEdit={() => toast({ title: "onEdit" })} 
 		onBlur={() => toast({ title: "onBlur" })}
 	>
-		<EditablePreview />
-		<EditableInput />
+		<Editable.Preview />
+		<Editable.Input />
 		<HStack>
-			<EditableEditButton />
-			<EditableSubmitButton />
-			<EditableCancelButton />
+			<Editable.EditButton />
+			<Editable.SubmitButton />
+			<Editable.CancelButton />
 		</HStack>
-	</Editable>
+	</Editable.Root>
 </Wrapper>
 
 ```tsx
-<Editable 
+<Editable.Root 
 	defaultValue="Meow" 
 	placeholder="Enter an animal sound" 
 	onCancel={() => toast({ title: "onCancel" })} 
@@ -241,14 +229,14 @@ Use `onCancel`, `onSubmit`, `onEdit`, `onBlur` to handle the editable events. Op
 	onEdit={() => toast({ title: "onEdit" })} 
 	onBlur={() => toast({ title: "onBlur" })}
 >
-	<EditablePreview />
-	<EditableInput />
+	<Editable.Preview />
+	<Editable.Input />
 	<HStack>
-		<EditableEditButton />
-		<EditableSubmitButton />
-		<EditableCancelButton />
+		<Editable.EditButton />
+		<Editable.SubmitButton />
+		<Editable.CancelButton />
 	</HStack>
-</Editable>
+</Editable.Root>
 ```
 
 ### Select all on focus
@@ -256,27 +244,27 @@ Use `onCancel`, `onSubmit`, `onEdit`, `onBlur` to handle the editable events. Op
 Whenever text in input should be selected when entering edit mode.
 
 <Wrapper>
-	<Editable defaultValue="Meow" placeholder="Enter an animal sound" selectAllOnFocus={false}>
-		<EditablePreview />
-		<EditableInput />
+	<Editable.Root defaultValue="Meow" placeholder="Enter an animal sound" selectAllOnFocus={false}>
+		<Editable.Preview />
+		<Editable.Input />
 		<HStack>
-			<EditableEditButton />
-			<EditableSubmitButton />
-			<EditableCancelButton />
+			<Editable.EditButton />
+			<Editable.SubmitButton />
+			<Editable.CancelButton />
 		</HStack>
-	</Editable>
+	</Editable.Root>
 </Wrapper>
 
 ```tsx
-<Editable defaultValue="Meow" placeholder="Enter an animal sound" selectAllOnFocus={false}>
-	<EditablePreview />
-	<EditableInput />
+<Editable.Root defaultValue="Meow" placeholder="Enter an animal sound" selectAllOnFocus={false}>
+	<Editable.Preview />
+	<Editable.Input />
 	<HStack>
-		<EditableEditButton />
-		<EditableSubmitButton />
-		<EditableCancelButton />
+		<Editable.EditButton />
+		<Editable.SubmitButton />
+		<Editable.CancelButton />
 	</HStack>
-</Editable>
+</Editable.Root>
 ```
 
 ### Final Focus Ref
@@ -295,18 +283,17 @@ function FinalFocusRefEditable() {
 		<>
 			<Button ref={ref}>I receive focus</Button>
 
-			<Editable defaultValue="Meow" finalFocusRef={ref}>
-				<EditablePreview />
-				<EditableInput />
+			<Editable.Root defaultValue="Meow" finalFocusRef={ref}>
+				<Editable.Preview />
+				<Editable.Input />
 				<HStack>
-					<EditableEditButton />
-					<EditableSubmitButton />
-					<EditableCancelButton />
+					<Editable.EditButton />
+					<Editable.SubmitButton />
+					<Editable.CancelButton />
 				</HStack>
-			</Editable>
+			</Editable.Root>
 		</>
 	);
 }
-
 ```
 

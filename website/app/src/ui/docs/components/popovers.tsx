@@ -1,15 +1,6 @@
 import { Button } from "@/button";
 import { Flex } from "@/flex";
-import {
-    Popover,
-    PopoverArrow,
-    PopoverBody,
-    PopoverCloseButton,
-    PopoverContent,
-    PopoverFooter,
-    PopoverHeader,
-    PopoverTrigger
-} from "@/popover";
+import { Popover } from "@/popover";
 import { type PlacementWithLogical, useControllable } from "@dreamy-ui/react";
 import { useCallback, useRef } from "react";
 
@@ -24,28 +15,28 @@ export function ControlledPopover() {
     }, [onClose]);
 
     return (
-        <Popover
+        <Popover.Root
+            hasArrow
             isOpen={isOpen}
             onOpen={onOpen}
             onClose={onClose}
         >
-            <PopoverTrigger>
+            <Popover.Trigger>
                 <Button
                     variant={"primary"}
                     w="fit-content"
                 >
                     Open Popover
                 </Button>
-            </PopoverTrigger>
+            </Popover.Trigger>
 
-            <PopoverContent>
-                <PopoverArrow />
-                <PopoverCloseButton />
-                <PopoverHeader>Delete Post</PopoverHeader>
-                <PopoverBody>
+            <Popover.Content>
+                <Popover.CloseButton />
+                <Popover.Header>Delete Post</Popover.Header>
+                <Popover.Body>
                     Are you sure you want to delete this post? This action cannot be undone.
-                </PopoverBody>
-                <PopoverFooter>
+                </Popover.Body>
+                <Popover.Footer>
                     <Button
                         variant={"solid"}
                         onClick={onClose}
@@ -58,9 +49,9 @@ export function ControlledPopover() {
                     >
                         Delete
                     </Button>
-                </PopoverFooter>
-            </PopoverContent>
-        </Popover>
+                </Popover.Footer>
+            </Popover.Content>
+        </Popover.Root>
     );
 }
 
@@ -69,29 +60,29 @@ export function FocusPopover() {
     const initialFocusRef = useRef<HTMLButtonElement>(null);
 
     return (
-        <Popover
+        <Popover.Root
+            hasArrow
             isOpen={isOpen}
             onOpen={onOpen}
             onClose={onClose}
             initialFocusRef={initialFocusRef}
         >
-            <PopoverTrigger>
+            <Popover.Trigger>
                 <Button
                     variant={"primary"}
                     w="fit-content"
                 >
                     Open Popover
                 </Button>
-            </PopoverTrigger>
+            </Popover.Trigger>
 
-            <PopoverContent>
-                <PopoverArrow />
-                <PopoverCloseButton />
-                <PopoverHeader>Delete Post</PopoverHeader>
-                <PopoverBody>
+            <Popover.Content>
+                <Popover.CloseButton />
+                <Popover.Header>Delete Post</Popover.Header>
+                <Popover.Body>
                     Are you sure you want to delete this post? This action cannot be undone.
-                </PopoverBody>
-                <PopoverFooter>
+                </Popover.Body>
+                <Popover.Footer>
                     <Button
                         variant={"solid"}
                         onClick={onClose}
@@ -100,9 +91,9 @@ export function FocusPopover() {
                         Cancel
                     </Button>
                     <Button variant={"primary"}>Delete</Button>
-                </PopoverFooter>
-            </PopoverContent>
-        </Popover>
+                </Popover.Footer>
+            </Popover.Content>
+        </Popover.Root>
     );
 }
 
@@ -139,55 +130,59 @@ export function PlacementPopovers() {
 
 export function PlacementPopover({ placement }: { placement: PlacementWithLogical }) {
     return (
-        <Popover placement={placement}>
-            <PopoverTrigger>
+        <Popover.Root
+            hasArrow
+            placement={placement}
+        >
+            <Popover.Trigger>
                 <Button
                     variant={"primary"}
                     w="fit-content"
                 >
                     {placement}
                 </Button>
-            </PopoverTrigger>
+            </Popover.Trigger>
 
-            <PopoverContent>
-                <PopoverArrow />
-                <PopoverCloseButton />
-                <PopoverHeader>Delete Post</PopoverHeader>
-                <PopoverBody>
+            <Popover.Content>
+                <Popover.CloseButton />
+                <Popover.Header>Delete Post</Popover.Header>
+                <Popover.Body>
                     Are you sure you want to delete this post? This action cannot be undone.
-                </PopoverBody>
-                <PopoverFooter>
+                </Popover.Body>
+                <Popover.Footer>
                     <Button variant={"primary"}>Delete</Button>
-                </PopoverFooter>
-            </PopoverContent>
-        </Popover>
+                </Popover.Footer>
+            </Popover.Content>
+        </Popover.Root>
     );
 }
 
 export function SizePopover({ size }: { size: string }) {
     return (
-        <Popover size={size as any}>
-            <PopoverTrigger>
+        <Popover.Root
+            hasArrow
+            size={size as any}
+        >
+            <Popover.Trigger>
                 <Button
                     variant={"primary"}
                     w="fit-content"
                 >
                     {size}
                 </Button>
-            </PopoverTrigger>
+            </Popover.Trigger>
 
-            <PopoverContent>
-                <PopoverArrow />
-                <PopoverCloseButton />
-                <PopoverHeader>Delete Post</PopoverHeader>
-                <PopoverBody>
+            <Popover.Content>
+                <Popover.CloseButton />
+                <Popover.Header>Delete Post</Popover.Header>
+                <Popover.Body>
                     Are you sure you want to delete this post? This action cannot be undone.
-                </PopoverBody>
-                <PopoverFooter>
+                </Popover.Body>
+                <Popover.Footer>
                     <Button variant={"primary"}>Delete</Button>
-                </PopoverFooter>
-            </PopoverContent>
-        </Popover>
+                </Popover.Footer>
+            </Popover.Content>
+        </Popover.Root>
     );
 }
 

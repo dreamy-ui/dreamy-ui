@@ -18,7 +18,7 @@ import { useDoc } from "~/src/hooks/useDoc";
 import { useSections } from "~/src/hooks/useSections";
 import MDXContent from "~/src/ui/docs/MDXContent";
 import NextPreviousButton from "~/src/ui/docs/NextPreviousButton";
-import { Link } from "~/src/ui/global/Link";
+import { ReactRouterLink } from "~/src/ui/global/Link";
 import type { ComponentDocFrontmatter, ServerLoader } from "~/types";
 import { ErrorBoundary } from "./$";
 import type { Route } from "./+types/docs.$section.$page";
@@ -207,8 +207,8 @@ export default function DocsSectionPage() {
                                 <Button
                                     key={`source-${s}-${i}`}
                                     asComp={
-                                        <Link
-                                            isExternal
+                                        <ReactRouterLink
+                                            target="_blank"
                                             to={`https://github.com/${
                                                 import.meta.env.VITE_SOURCE_REPO
                                             }/tree/main/${s}`}
@@ -220,8 +220,9 @@ export default function DocsSectionPage() {
                                     _hover={{
                                         y: "-1"
                                     }}
-                                    transition={`translate {durations.fast} {easings.ease-in-out},
-                                        background-color {durations.normal} {easings.ease-in-out}`}
+                                    transition={
+                                        "translate {durations.fast} {easings.ease-in-out}, background-color {durations.normal} {easings.ease-in-out}"
+                                    }
                                 >
                                     {i === 0 ? "Source" : "Theme Source"}
                                 </Button>
@@ -240,8 +241,9 @@ export default function DocsSectionPage() {
                             _hover={{
                                 y: "-1"
                             }}
-                            transition={`translate {durations.fast} {easings.ease-in-out},
-                                        background-color {durations.normal} {easings.ease-in-out}`}
+                            transition={
+                                "translate {durations.fast} {easings.ease-in-out}, background-color {durations.normal} {easings.ease-in-out}"
+                            }
                         >
                             {frontmatter.isServerComponent ? "Server" : "Client"} Component
                         </Button>

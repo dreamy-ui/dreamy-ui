@@ -1,10 +1,10 @@
 "use client";
 
 import {
+    RadioGroupProvider,
     type UseRadioGroupProps,
     type UseRadioGroupReturn,
     type UseRadioProps,
-    createContext,
     useRadio,
     useRadioGroup
 } from "@dreamy-ui/react";
@@ -60,11 +60,6 @@ export interface RadioGroupContext
     reduceMotion?: boolean;
 }
 
-export const [RadioGroupProvider, useRadioGroupContext] = createContext<RadioGroupContext>({
-    name: "RadioGroupContext",
-    strict: false
-});
-
 export interface RadioGroupProps
     extends UseRadioGroupProps,
         RadioVariantProps,
@@ -87,9 +82,15 @@ export function RadioGroup(props: RadioGroupProps) {
         isInvalid,
         reduceMotion,
         onChange: onChangeProp,
+        value: valueProp,
         ...rest
     } = props;
-    const { value, onChange } = useRadioGroup({ onChange: onChangeProp, ...props });
+
+    const { value, onChange } = useRadioGroup({
+        onChange: onChangeProp,
+        value: valueProp,
+        ...props
+    });
 
     const group = useMemo(
         () => ({

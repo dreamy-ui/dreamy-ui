@@ -1,17 +1,18 @@
-import { PinInput, PinInputField } from "@/pin-input";
+import { PinInput } from "@/pin-input";
 import { useState } from "react";
 
 export function ControlledPinInput() {
-    const [pin, setPin] = useState("69");
+    const [pin, setPin] = useState("2137");
 
     return (
-        <PinInput
+        <PinInput.Root
             value={pin}
             onChange={setPin}
         >
-            <PinInputField />
-            <PinInputField />
-            <PinInputField />
-        </PinInput>
+            <PinInput.Field />
+            <PinInput.Field />
+            <PinInput.Field />
+            <PinInput.Field />
+        </PinInput.Root>
     );
 }

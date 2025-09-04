@@ -7,7 +7,7 @@ import { type FlexProperties, flex } from "styled-system/patterns";
 import type { SystemStyleObject } from "styled-system/types";
 import { type HTMLDreamyProps, dreamy } from "./factory";
 
-const StyledMotionBox = m.create(dreamy.div, { forwardMotionProps: true });
+const StyledMotionBox = m.create(dreamy.div);
 
 export interface MotionBoxProps
     extends Omit<HTMLDreamyProps<"div">, keyof MotionProps>,

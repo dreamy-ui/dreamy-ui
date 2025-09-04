@@ -1,20 +1,20 @@
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/accordion";
+import { Accordion } from "@/accordion";
 import { useState } from "react";
 
 export function ControlledAccordion() {
     const [value, setValue] = useState<number | number[]>(0);
 
     return (
-        <Accordion
+        <Accordion.Root
             index={value}
             onChange={(i) => setValue(i)}
         >
             {Array.from({ length: 3 }).map((_, index) => (
-                <AccordionItem key={index}>
-                    <AccordionTrigger>Item {index + 1}</AccordionTrigger>
-                    <AccordionContent>Hi!</AccordionContent>
-                </AccordionItem>
+                <Accordion.Item key={index}>
+                    <Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
+                    <Accordion.Content>Hi!</Accordion.Content>
+                </Accordion.Item>
             ))}
-        </Accordion>
+        </Accordion.Root>
     );
 }

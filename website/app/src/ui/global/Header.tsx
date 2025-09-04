@@ -14,124 +14,130 @@ import { ToggleThemeButton } from "./ToggleThemeButton";
 import HamburgerMenu from "./mobile/HamburgerMenu";
 
 interface Props {
-	isMenuOpen: boolean;
-	setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    isMenuOpen: boolean;
+    setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function Header({ isMenuOpen, setIsMenuOpen }: Props) {
-	const [hasScrolled, setHasScrolled] = useState(false);
+    const [hasScrolled, setHasScrolled] = useState(false);
 
-	useEventListener(
-		"scroll",
-		() => {
-			if (window.scrollY > 0 && !hasScrolled) {
-				setHasScrolled(true);
-			} else if (window.scrollY === 0 && hasScrolled) {
-				setHasScrolled(false);
-			}
-		},
-		null,
-		{ fireOnMount: true }
-	);
+    useEventListener(
+        "scroll",
+        () => {
+            if (window.scrollY > 0 && !hasScrolled) {
+                setHasScrolled(true);
+            } else if (window.scrollY === 0 && hasScrolled) {
+                setHasScrolled(false);
+            }
+        },
+        null,
+        { fireOnMount: true }
+    );
 
-	return (
-		<Flex
-			full
-			h={16}
-			itemsCenter
-			row
-			bg={"color-mix(in srgb, {colors.bg} 70%, transparent 10%)"}
-			as={"header"}
-			borderBottomWidth={"1px"}
-			borderColor={hasScrolled ? "border" : "transparent"}
-			contentBetween
-			pos={"sticky"}
-			top={0}
-			backdropBlur={"sm"}
-			backdropFilter={"auto"}
-			zIndex={"sticky"}
-			transition={"all 0.15s"}
-			transitionTimingFunction={"ease-out"}
-		>
-			<Flex mx={"auto"} full maxW={"7xl"} contentBetween px={4}>
-				<Logo />
+    return (
+        <Flex
+            full
+            h={16}
+            itemsCenter
+            row
+            bg={"color-mix(in srgb, {colors.bg} 70%, transparent 10%)"}
+            as={"header"}
+            borderBottomWidth={"1px"}
+            borderColor={hasScrolled ? "border" : "transparent"}
+            contentBetween
+            pos={"sticky"}
+            top={0}
+            backdropBlur={"sm"}
+            backdropFilter={"auto"}
+            zIndex={"sticky"}
+            transition={"all 0.15s"}
+            transitionTimingFunction={"ease-out"}
+        >
+            <Flex
+                mx={"auto"}
+                full
+                maxW={"7xl"}
+                contentBetween
+                px={4}
+            >
+                <Logo />
 
-				<HStack
-					gap={{
-						base: 2,
-						md: 4
-					}}
-				>
-					<HStack
-						className="group"
-						asComp={
-							<Link
-								to={"/discord"}
-								isExternal
-								mr={4}
-								prefetch="none"
-								display={{
-									base: "none",
-									md: "inline-flex"
-								}}
-							/>
-						}
-						// add shadow on hover as filter
-					>
-						<Icon
-							as={FaDiscord}
-							h={4}
-							transition={
-								"filter {durations.normal} {easings.easeInOut}, color {durations.fastest} {easings.easeInOut}"
-							}
-							_groupHover={{
-								filter: "drop-shadow(0 0 4px #5865F2)",
-								color: "#5865F2"
-							}}
-						/>
-						<Text
-							transition={
-								"filter {durations.normal} {easings.easeInOut}, color {durations.fastest} {easings.easeInOut}"
-							}
-							_groupHover={{
-								filter: "drop-shadow(0 0 4px #5865F2)",
-								color: "#5865F2"
-							}}
-						>
-							Discord
-						</Text>
-					</HStack>
+                <HStack
+                    gap={{
+                        base: 2,
+                        md: 4
+                    }}
+                >
+                    <HStack
+                        className="group"
+                        asComp={
+                            <Link
+                                to={"/discord"}
+                                isExternal
+                                mr={4}
+                                prefetch="none"
+                                display={{
+                                    base: "none",
+                                    md: "inline-flex"
+                                }}
+                            />
+                        }
+                        // add shadow on hover as filter
+                    >
+                        <Icon
+                            as={FaDiscord}
+                            h={4}
+                            transition={
+                                "filter {durations.normal} {easings.easeInOut}, color {durations.fastest} {easings.easeInOut}"
+                            }
+                            _groupHover={{
+                                filter: "drop-shadow(0 0 4px #5865F2)",
+                                color: "#5865F2"
+                            }}
+                        />
+                        <Text
+                            transition={
+                                "filter {durations.normal} {easings.easeInOut}, color {durations.fastest} {easings.easeInOut}"
+                            }
+                            _groupHover={{
+                                filter: "drop-shadow(0 0 4px #5865F2)",
+                                color: "#5865F2"
+                            }}
+                        >
+                            Discord
+                        </Text>
+                    </HStack>
 
-					<Link
-						to={"/docs"}
-						prefetch="intent"
-						display={{
-							base: "none",
-							md: "inline-flex"
-						}}
-					>
-						Docs
-					</Link>
+                    <Link
+                        to={"/docs"}
+                        prefetch="intent"
+                        display={{
+                            base: "none",
+                            md: "inline-flex"
+                        }}
+                    >
+                        Docs
+                    </Link>
 
-					<Search />
-					<GithubButton />
-					<ToggleThemeButton />
+                    <Search />
+                    <GithubButton />
+                    <ToggleThemeButton />
 
-					<IconButton
-						display={{
-							base: "inline-flex",
-							md: "none"
-						}}
-						_hover={{
-							bg: "transparent"
-						}}
-						variant={"ghost"}
-						icon={<HamburgerMenu isOpen={isMenuOpen} />}
-						aria-label={`${isMenuOpen ? "Close" : "Open"} Menu`}
-						onClick={() => setIsMenuOpen(!isMenuOpen)}
-					/>
-				</HStack>
-			</Flex>
-		</Flex>
-	);
+                    <IconButton
+                        display={{
+                            base: "inline-flex",
+                            md: "none"
+                        }}
+                        _hover={{
+                            bg: "transparent"
+                        }}
+                        variant={"ghost"}
+                        icon={<HamburgerMenu isOpen={isMenuOpen} />}
+                        aria-label={`${isMenuOpen ? "Close" : "Open"} Menu`}
+                        onClick={() => setIsMenuOpen(!isMenuOpen)}
+                    />
+                </HStack>
+            </Flex>
+        </Flex>
+    );
 }

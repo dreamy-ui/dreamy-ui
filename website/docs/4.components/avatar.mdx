@@ -6,30 +6,27 @@ source: /packages/react/src/components/Avatar/Avatar.tsx
 themeSource: /packages/system/src/recipes/avatar.ts
 ---
 
-## Import
+## Installation
 
-- `Avatar` - The main component that wraps the avatar.
-- `AvatarGroup` - The wrapper component for stacking multiple avatars.
-
-```jsx
-import { Avatar, AvatarGroup } from "@dreamy-ui/react";
+```bash
+pnpm dreamy components add avatar
 ```
 
 ## Usage
 
-Photo by <a href="https://www.pexels.com/photo/woman-wearing-gray-sweater-holding-clear-umbrella-891458/">Quang Anh Ha Nguyen</a>
+Avatar is a component that displays a user's profile picture without blocking navigation to load the image.
 
 <Wrapper>
   <Avatar
-    src="/asian-woman.webp"
-    name="Woman"
+    src="/olcia.webp"
+    name="Girlfriend"
   />
 </Wrapper>
 
 ```tsx
 <Avatar
-  src="/asian-woman.webp"
-  name="Woman"
+  src="/olcia.webp"
+  name="Girlfriend"
 />
 ```
 
@@ -41,18 +38,18 @@ You can set the size of the avatar by using the `size` prop.
   <HStack>
     <Avatar
       size="sm"
-      src="/asian-woman.webp"
-      name="Woman"
+      src="/olcia.webp"
+      name="Girlfriend"
     />
     <Avatar
       size="md"
-      src="/asian-woman.webp"
-      name="Woman"
+      src="/olcia.webp"
+      name="Girlfriend"
     />
     <Avatar
       size="lg"
-      src="/asian-woman.webp"
-      name="Woman"
+      src="/olcia.webp"
+      name="Girlfriend"
     />
 	</HStack>
 </Wrapper>
@@ -61,18 +58,18 @@ You can set the size of the avatar by using the `size` prop.
 <HStack>
   <Avatar
     size="sm"
-    src="/asian-woman.webp"
-    name="Woman"
+    src="/olcia.webp"
+    name="Girlfriend"
   />
   <Avatar
     size="md"
-    src="/asian-woman.webp"
-    name="Woman"
+    src="/olcia.webp"
+    name="Girlfriend"
   />
   <Avatar
     size="lg"
-    src="/asian-woman.webp"
-    name="Woman"
+    src="/olcia.webp"
+    name="Girlfriend"
   />
 </HStack>
 ``` 

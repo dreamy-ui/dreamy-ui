@@ -1,6 +1,6 @@
 import { Button } from "@/button";
 import { Flex } from "@/flex";
-import { Menu, MenuContent, MenuItem, MenuTrigger } from "@/menu";
+import { Menu } from "@/menu";
 import { Text } from "@/text";
 import { getActionKeyCode, useControllable, useEventListener } from "@dreamy-ui/react";
 import { IoAdd } from "react-icons/io5";
@@ -11,49 +11,49 @@ export function ControlledMenu() {
     const { isOpen, onClose, onOpen } = useControllable();
 
     return (
-        <Menu
+        <Menu.Root
             isOpen={isOpen}
             onOpen={onOpen}
             onClose={onClose}
         >
             <Text>{isOpen ? "Open" : "Closed"}</Text>
-            <MenuTrigger>
+            <Menu.Trigger>
                 <Button w={"fit-content"}>Open Menu</Button>
-            </MenuTrigger>
-            <MenuContent>
-                <MenuItem
+            </Menu.Trigger>
+            <Menu.Content>
+                <Menu.Item
                     icon={<LuWarehouse />}
                     command="{actionKey} h"
                     asComp={<Link to="/" />}
                 >
                     Homepage
-                </MenuItem>
-                <MenuItem
+                </Menu.Item>
+                <Menu.Item
                     icon={<IoAdd />}
                     command="{actionKey} n"
                 >
                     Add new
-                </MenuItem>
-                <MenuItem
+                </Menu.Item>
+                <Menu.Item
                     icon={<LuAlarmClock />}
                     command="{actionKey} a"
                 >
                     Set alarm
-                </MenuItem>
-                <MenuItem
+                </Menu.Item>
+                <Menu.Item
                     icon={<LuBattery />}
                     command="{actionKey} b"
                 >
                     Battery
-                </MenuItem>
-                <MenuItem
+                </Menu.Item>
+                <Menu.Item
                     icon={<LuTrash />}
                     command="{actionKey} d"
                 >
                     Delete
-                </MenuItem>
-            </MenuContent>
-        </Menu>
+                </Menu.Item>
+            </Menu.Content>
+        </Menu.Root>
     );
 }
 
@@ -94,44 +94,44 @@ export function InteractiveMenu() {
     });
 
     return (
-        <Menu>
-            <MenuTrigger>
+        <Menu.Root>
+            <Menu.Trigger>
                 <Button w={"fit-content"}>Open Menu</Button>
-            </MenuTrigger>
-            <MenuContent>
-                <MenuItem
+            </Menu.Trigger>
+            <Menu.Content>
+                <Menu.Item
                     icon={<LuWarehouse />}
                     command="{actionKey} h"
                     asComp={<Link to="/" />}
                 >
                     Homepage
-                </MenuItem>
-                <MenuItem
+                </Menu.Item>
+                <Menu.Item
                     icon={<IoAdd />}
                     command="{actionKey} n"
                 >
                     Add new
-                </MenuItem>
-                <MenuItem
+                </Menu.Item>
+                <Menu.Item
                     icon={<LuAlarmClock />}
                     command="{actionKey} a"
                 >
                     Set alarm
-                </MenuItem>
-                <MenuItem
+                </Menu.Item>
+                <Menu.Item
                     icon={<LuBattery />}
                     command="{actionKey} b"
                 >
                     Battery
-                </MenuItem>
-                <MenuItem
+                </Menu.Item>
+                <Menu.Item
                     icon={<LuTrash />}
                     command="{actionKey} d"
                 >
                     Delete
-                </MenuItem>
-            </MenuContent>
-        </Menu>
+                </Menu.Item>
+            </Menu.Content>
+        </Menu.Root>
     );
 }
 
@@ -153,43 +153,43 @@ export function VariantMenus() {
 
 export function VariantMenu({ variant }: { variant: string }) {
     return (
-        <Menu variant={variant as any}>
-            <MenuTrigger>
+        <Menu.Root variant={variant as any}>
+            <Menu.Trigger>
                 <Button w={"fit-content"}>Open Menu</Button>
-            </MenuTrigger>
-            <MenuContent>
-                <MenuItem
+            </Menu.Trigger>
+            <Menu.Content>
+                <Menu.Item
                     icon={<LuWarehouse />}
                     command="{actionKey} h"
                     asComp={<Link to="/" />}
                 >
                     Homepage
-                </MenuItem>
-                <MenuItem
+                </Menu.Item>
+                <Menu.Item
                     icon={<IoAdd />}
                     command="{actionKey} n"
                 >
                     Add new
-                </MenuItem>
-                <MenuItem
+                </Menu.Item>
+                <Menu.Item
                     icon={<LuAlarmClock />}
                     command="{actionKey} a"
                 >
                     Set alarm
-                </MenuItem>
-                <MenuItem
+                </Menu.Item>
+                <Menu.Item
                     icon={<LuBattery />}
                     command="{actionKey} b"
                 >
                     Battery
-                </MenuItem>
-                <MenuItem
+                </Menu.Item>
+                <Menu.Item
                     icon={<LuTrash />}
                     command="{actionKey} d"
                 >
                     Delete
-                </MenuItem>
-            </MenuContent>
-        </Menu>
+                </Menu.Item>
+            </Menu.Content>
+        </Menu.Root>
     );
 }

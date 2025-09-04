@@ -6,12 +6,10 @@ source: /packages/react/src/components/kbd/kbd.tsx
 themeSource: /packages/system/src/recipes/kbd.ts
 ---
 
-## Import
+## Installation
 
-- `Kbd` - The Keyboard key component.
-
-```tsx
-import { Kbd } from "@dreamy-ui/react/rsc";
+```bash
+pnpm dreamy components add kbd
 ```
 
 ## Usage
@@ -53,7 +51,9 @@ You can utilize `useActionKey` hook to get the platform specific action key. Ret
 ```tsx
 import { useActionKey } from "@dreamy-ui/react";
 
-const actionKey = useActionKey();
-
-<Kbd>{actionKey} + K</Kbd>
+export function PlatformSpecificKbd() {
+	const actionKey = useActionKey();
+	
+	return <Kbd>{actionKey} + K</Kbd>;
+}
 ```

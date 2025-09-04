@@ -1,12 +1,5 @@
 import { Button } from "@/button";
-import {
-    Editable,
-    EditableCancelButton,
-    EditableEditButton,
-    EditableInput,
-    EditablePreview,
-    EditableSubmitButton
-} from "@/editable";
+import { Editable } from "@/editable";
 import { HStack } from "@/stack";
 import { useRef, useState } from "react";
 
@@ -14,18 +7,18 @@ export function ControlledEditable() {
     const [value, setValue] = useState("Meow");
 
     return (
-        <Editable
+        <Editable.Root
             value={value}
             onChange={setValue}
         >
-            <EditablePreview />
-            <EditableInput />
+            <Editable.Preview />
+            <Editable.Input />
             <HStack>
-                <EditableEditButton />
-                <EditableSubmitButton />
-                <EditableCancelButton />
+                <Editable.EditButton />
+                <Editable.SubmitButton />
+                <Editable.CancelButton />
             </HStack>
-        </Editable>
+        </Editable.Root>
     );
 }
 
@@ -36,18 +29,18 @@ export function FinalFocusRefEditable() {
         <>
             <Button ref={ref}>I receive focus</Button>
 
-            <Editable
+            <Editable.Root
                 defaultValue="Meow"
                 finalFocusRef={ref}
             >
-                <EditablePreview />
-                <EditableInput />
+                <Editable.Preview />
+                <Editable.Input />
                 <HStack>
-                    <EditableEditButton />
-                    <EditableSubmitButton />
-                    <EditableCancelButton />
+                    <Editable.EditButton />
+                    <Editable.SubmitButton />
+                    <Editable.CancelButton />
                 </HStack>
-            </Editable>
+            </Editable.Root>
         </>
     );
 }
@@ -60,19 +53,19 @@ export function StartWithEditViewEditable() {
             <Button onClick={() => setIsRendered((prev) => !prev)}>Toggle Editable</Button>
 
             {isRendered && (
-                <Editable
+                <Editable.Root
                     defaultValue="Meow"
                     placeholder="Enter an animal sound"
                     startWithEditView
                 >
-                    <EditablePreview />
-                    <EditableInput />
+                    <Editable.Preview />
+                    <Editable.Input />
                     <HStack>
-                        <EditableEditButton />
-                        <EditableSubmitButton />
-                        <EditableCancelButton />
+                        <Editable.EditButton />
+                        <Editable.SubmitButton />
+                        <Editable.CancelButton />
                     </HStack>
-                </Editable>
+                </Editable.Root>
             )}
         </>
     );

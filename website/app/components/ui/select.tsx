@@ -1,6 +1,7 @@
 "use client";
 
 import {
+    type FocusableElement,
     SelectDescendantsProvider,
     SelectProvider,
     type UseSelectItemProps,
@@ -13,29 +14,23 @@ import {
 } from "@dreamy-ui/react";
 import type React from "react";
 import { type ReactNode, type RefObject, type SVGProps, forwardRef, useState } from "react";
-import { splitCssProps } from "styled-system/jsx";
+import { createStyleContext, splitCssProps } from "styled-system/jsx";
 import { select } from "styled-system/recipes";
 import { Box } from "./box";
-import { type FocusableElement, type HTMLDreamyProps, dreamy } from "./factory";
-import {
-    Popover,
-    PopoverContent,
-    type PopoverContentProps,
-    type PopoverProps,
-    PopoverTrigger
-} from "./popover";
-import { createStyleContext } from "./style-context";
+import { type HTMLDreamyProps, dreamy } from "./factory";
+import { Popover, type PopoverContentProps, type PopoverProps } from "./popover";
 import { VisuallyHidden } from "./visually-hidden";
+
 const { withProvider, withContext } = createStyleContext(select);
 
 export interface HiddenSelectProps {
     placeholder: string;
     multiple: boolean;
     autoComplete: string;
-    triggerRef: RefObject<FocusableElement>;
-    domRef: RefObject<HTMLSelectElement>;
-    onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-    onChangeValue: (value: string | string[]) => void;
+    triggerRef: RefObject<FocusableElement | null>;
+    domRef: RefObject<HTMLSelectElement | null>;
+    onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+    onChangeValue?: (value: string | string[]) => void;
 }
 
 function HiddenSelect(props: HiddenSelectProps) {
@@ -111,8 +106,8 @@ const SelectRoot: <T extends boolean = false>(props: SelectProps<T>) => React.JS
                         className: restProps.className
                     })}
                 >
-                    <HiddenSelect {...(ctx.getHiddenSelectProps() as any)} />
-                    <Popover
+                    <HiddenSelect {...ctx.getHiddenSelectProps()} />
+                    <Popover.Root
                         placement="bottom"
                         isOpen={ctx.isOpen}
                         onOpen={ctx.onOpen}
@@ -126,7 +121,7 @@ const SelectRoot: <T extends boolean = false>(props: SelectProps<T>) => React.JS
                         <SelectDescendantsProvider value={ctx.descendants}>
                             {children}
                         </SelectDescendantsProvider>
-                    </Popover>
+                    </Popover.Root>
                 </Box>
             </SelectProvider>
         );
@@ -171,11 +166,11 @@ const SelectTrigger = withContext(
 
         useSafeLayoutEffect(() => {
             forceUpdate({});
-        }, [descendants.values()]);
+        }, [JSON.stringify(Array.from(descendants.values()).map((node: any) => node.node.value))]);
 
         return (
             <>
-                <PopoverTrigger>
+                <Popover.Trigger>
                     <dreamy.button {...(getTriggerProps(rest, ref) as any)}>
                         {icon && icon}
 
@@ -191,7 +186,7 @@ const SelectTrigger = withContext(
                             <SelectIndicator />
                         </SelectIndicatorGroup>
                     </dreamy.button>
-                </PopoverTrigger>
+                </Popover.Trigger>
             </>
         );
     }),
@@ -206,29 +201,12 @@ const SelectContent = withContext(
 
         const { getContentProps } = useSelectContext();
 
-        return <PopoverContent {...getContentProps(rest, ref)}>{children}</PopoverContent>;
+        return <Popover.Content {...getContentProps(rest, ref)}>{children}</Popover.Content>;
     }),
     "content"
 );
 
 export interface SelectItemProps extends UseSelectItemProps {}
-
-const SelectItem = withContext(
-    forwardRef<HTMLDivElement, SelectItemProps>(function SelectItem(props, ref) {
-        const { selectedStrategy, selectedKeys } = useSelectContext();
-        const itemProps = useSelectItem(props, ref);
-
-        return (
-            <dreamy.button {...(itemProps as any)}>
-                {itemProps.children}
-
-                {(selectedStrategy === "checkmark" || selectedStrategy === "both") &&
-                    selectedKeys.includes(itemProps.value) && <SelectItemIndicator />}
-            </dreamy.button>
-        );
-    }),
-    "item"
-);
 
 /**
  * @internal
@@ -251,10 +229,28 @@ const CheckIcon = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
                 {...props}
                 ref={ref}
             >
-                <path d="M20 6 9 17l-5-5" />
+                <path d="m6 9 6 6 6-6" />
             </svg>
         );
     }
+);
+
+const SelectItemIndicator = withContext(CheckIcon, "itemIndicator");
+const SelectItem = withContext(
+    forwardRef<HTMLDivElement, SelectItemProps>(function SelectItem(props, ref) {
+        const { selectedStrategy, selectedKeys } = useSelectContext();
+        const itemProps = useSelectItem(props, ref);
+
+        return (
+            <dreamy.button {...(itemProps as any)}>
+                {itemProps.children}
+
+                {(selectedStrategy === "checkmark" || selectedStrategy === "both") &&
+                    selectedKeys.includes(itemProps.value) && <SelectItemIndicator />}
+            </dreamy.button>
+        );
+    }),
+    "item"
 );
 
 const SelectIndicator = withContext(CheckIcon, "indicator");
@@ -287,7 +283,6 @@ const SelectClearButton = withContext(
     }),
     "clearButton"
 );
-const SelectItemIndicator = withContext(CheckIcon, "itemIndicator");
 
 export namespace Select {
     export const Root = SelectRoot;
@@ -295,5 +290,3 @@ export namespace Select {
     export const Content = SelectContent;
     export const Item = SelectItem;
 }
-
-export const Select = SelectRoot;

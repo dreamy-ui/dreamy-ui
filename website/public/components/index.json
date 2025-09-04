@@ -528,7 +528,6 @@
       "./box",
       "./factory",
       "./popover",
-      "./style-context",
       "./visually-hidden"
     ],
     "hasRecipe": true,
@@ -559,7 +558,6 @@
     "fileDependencies": [
       "./box",
       "./factory",
-      "./style-context",
       "./visually-hidden"
     ],
     "hasRecipe": true,
@@ -655,8 +653,7 @@
       "./button",
       "./factory",
       "./flex",
-      "./motion",
-      "./style-context"
+      "./motion"
     ],
     "hasRecipe": true,
     "hasPattern": false,

@@ -9,7 +9,7 @@ const { withContext, withProvider } = createStyleContext(table);
 export interface TableProps extends HTMLDreamyProps<"table"> {}
 
 /**
- * Table component.
+ * Table component
  *
  * @See Docs https://dreamy-ui.com/docs/components/table
  */

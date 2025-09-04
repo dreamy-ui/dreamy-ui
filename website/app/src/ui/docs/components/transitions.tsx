@@ -16,7 +16,7 @@ export function Collapsed(props: CollapseProps) {
             </Button>
             <Collapse
                 w={"full"}
-                in={isOpen}
+                isOpen={isOpen}
                 {...props}
             >
                 <Box
@@ -46,7 +46,7 @@ export function Scaled(props: ScaleProps) {
             </Button>
             <Scale
                 w={"full"}
-                in={isOpen}
+                isOpen={isOpen}
                 {...props}
             >
                 <Box

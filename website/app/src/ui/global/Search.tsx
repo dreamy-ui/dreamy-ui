@@ -5,7 +5,7 @@ import { Icon } from "@/icon";
 import { IconButton } from "@/icon-button";
 import { Input, InputGroup, InputLeftAddon } from "@/input";
 import { Kbd } from "@/kbd";
-import { Modal, ModalBody, ModalContent, ModalOverlay } from "@/modal";
+import { Modal } from "@/modal";
 import { MotionBox } from "@/motion";
 import { Spinner } from "@/spinner";
 import { Text } from "@/text";
@@ -187,16 +187,16 @@ export default function Search() {
                     md: "none"
                 }}
             />
-            <Modal
+            <Modal.Root
                 isOpen={isOpen}
                 onClose={onClose}
                 size={"xl"}
                 initialFocusRef={inputRef}
                 placement={"top"}
             >
-                <ModalOverlay />
-                <ModalContent>
-                    <ModalBody pb={2}>
+                <Modal.Overlay />
+                <Modal.Content>
+                    <Modal.Body pb={2}>
                         <InputGroup w={"full"}>
                             <InputLeftAddon pl={"0.75rem!"}>
                                 <Icon
@@ -321,9 +321,9 @@ export default function Search() {
                                 })}
                             </Flex>
                         )}
-                    </ModalBody>
-                </ModalContent>
-            </Modal>
+                    </Modal.Body>
+                </Modal.Content>
+            </Modal.Root>
         </>
     );
 }

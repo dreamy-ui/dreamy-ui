@@ -6,7 +6,7 @@ import { type HTMLDreamyProps, dreamy } from "./factory";
 export interface TextProps extends HTMLDreamyProps<"p">, TextProperties {}
 
 /**
- * Text component.
+ * Text component
  *
  * @See Docs https://dreamy-ui.com/docs/components/text
  */

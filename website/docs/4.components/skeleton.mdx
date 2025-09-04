@@ -6,13 +6,10 @@ source: /packages/react/src/components/skeleton/skeleton.tsx
 themeSource: /packages/system/styled-system/patterns/skeleton.js
 ---
 
-## Import
+## Installation
 
-- `Skeleton` - The Skeleton component.
-- `SkeletonText` - The Skeleton for text content.
-
-```tsx
-import { Skeleton, SkeletonText } from "@dreamy-ui/react/rsc";
+```bash
+pnpm dreamy components add skeleton
 ```
 
 ## Usage
@@ -21,7 +18,7 @@ Base usage of a Skeleton.
 
 <Wrapper>
     <VStack w='full' maxW='300px' gap={4}>
-        <HStack>
+        <HStack full>
             <Skeleton
                 boxSize="10"
                 rounded={"full"}
@@ -30,22 +27,24 @@ Base usage of a Skeleton.
                 lines={2}
             />
         </HStack>
-        <Skeleton h='150px' />
+        <Skeleton h='150px' full />
     </VStack>
 </Wrapper>
 
+> info: Tip: `full` is a shortcut for `width="full"`.
+
 ```tsx
 <VStack maxW='300px' gap={4}>
-    <HStack>
+    <HStack full>
         <Skeleton
             boxSize="10"
-            rounded={"full"}
+            rounded="full"
         />
         <SkeletonText
             lines={2}
         />
     </HStack>
-    <Skeleton h='150px' />
+    <Skeleton h="150px" full />
 </VStack>
 ```
 
@@ -53,10 +52,10 @@ Base usage of a Skeleton.
 
 <Wrapper>
     <Flex wrapped gap={6}>
-        <VStack w='300px'>
+        <Flex col gap={4} w='300px'>
             <Text>Pulse</Text>
-            <VStack gap={4}>
-                <HStack>
+            <Flex col gap={4}>
+                <HStack full>
                     <Skeleton
                         variant="pulse"
                         boxSize="10"
@@ -68,13 +67,13 @@ Base usage of a Skeleton.
                     />
                 </HStack>
                 <Skeleton h='150px' variant="pulse" />
-            </VStack>
-        </VStack>
+            </Flex>
+        </Flex>
 
-        <VStack w='300px'>
+        <Flex col gap={4} w='300px'>
             <Text>Shine</Text>
-            <VStack gap={4}>
-                <HStack>
+            <Flex col gap={4}>
+                <HStack full>
                     <Skeleton
                         variant="shine"
                         boxSize="10"
@@ -86,13 +85,13 @@ Base usage of a Skeleton.
                     />
                 </HStack>
                 <Skeleton h='150px' variant="shine" />
-            </VStack>
-        </VStack>
+            </Flex>
+        </Flex>
 
-        <VStack w='300px'>
+        <Flex col gap={4} w='300px'>
             <Text>None</Text>
-            <VStack gap={4}>
-                <HStack>
+            <Flex col gap={4}>
+                <HStack full>
                     <Skeleton
                         variant="none"
                         boxSize="10"
@@ -104,17 +103,17 @@ Base usage of a Skeleton.
                     />
                 </HStack>
                 <Skeleton h='150px' variant="none" />
-            </VStack>
-        </VStack>
+            </Flex>
+        </Flex>
     </Flex>
 </Wrapper>
 
 ```tsx
 <Flex wrapped gap={6}>
-    <VStack w='300px'>
+    <Flex col gap={4} w='300px'>
         <Text>Pulse</Text>
-        <VStack gap={4}>
-            <HStack>
+        <Flex col gap={4}>
+            <HStack full>
                 <Skeleton
                     variant="pulse"
                     boxSize="10"
@@ -126,13 +125,13 @@ Base usage of a Skeleton.
                 />
             </HStack>
             <Skeleton h='150px' variant="pulse" />
-        </VStack>
-    </VStack>
+        </Flex>
+    </Flex>
 
-    <VStack w='300px'>
+    <Flex col gap={4} w='300px'>
         <Text>Shine</Text>
-        <VStack gap={4}>
-            <HStack>
+        <Flex col gap={4}>
+            <HStack full>
                 <Skeleton
                     variant="shine"
                     boxSize="10"
@@ -144,13 +143,13 @@ Base usage of a Skeleton.
                 />
             </HStack>
             <Skeleton h='150px' variant="shine" />
-        </VStack>
-    </VStack>
+        </Flex>
+    </Flex>
 
-    <VStack w='300px'>
+    <Flex col gap={4} w='300px'>
         <Text>None</Text>
-        <VStack gap={4}>
-            <HStack>
+        <Flex col gap={4}>
+            <HStack full>
                 <Skeleton
                     variant="none"
                     boxSize="10"
@@ -162,7 +161,7 @@ Base usage of a Skeleton.
                 />
             </HStack>
             <Skeleton h='150px' variant="none" />
-        </VStack>
-    </VStack>
+        </Flex>
+    </Flex>
 </Flex>
 ```

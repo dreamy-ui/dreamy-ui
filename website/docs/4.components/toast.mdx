@@ -6,10 +6,26 @@ source: /packages/react/src/components/toast/toast.tsx
 themeSource: /packages/system/src/recipes/toast.ts
 ---
 
-## Import
+## Installation
 
-```tsx
-import { useToast } from "@dreamy-ui/react";
+```bash
+pnpm dreamy components add toast
+```
+
+### Add ToastProvider
+
+You need to wrap your app with `ToastProvider` to use the toasts.
+
+```tsx {4,6}
+export function App() {
+	return (
+		<Providers>
+			<ToastProvider>
+				<App />
+			</ToastProvider>
+		</Providers>
+	);
+}
 ```
 
 ## Usage

@@ -1,15 +1,18 @@
 import { defineRecipe } from "@pandacss/dev";
 
 export const list = defineRecipe({
-	className: "dreamy-list",
-	jsx: ["List", "ListItem"],
-	base: {
-		listStylePosition: "inside",
-		"&[data-type=ordered]": {
-			listStyleType: "decimal"
-		},
-		"&[data-type=unordered]": {
-			listStyleType: "disc"
-		}
-	}
+    className: "dreamy-list",
+    jsx: ["List", "ListItem"],
+    base: {
+        listStylePosition: "inside",
+        "&[data-type=ordered]": {
+            listStyleType: "decimal"
+        },
+        "&[data-type=unordered]": {
+            listStyleType: "disc"
+        },
+        "& li::marker": {
+            color: "fg.medium"
+        }
+    }
 });

@@ -6,21 +6,10 @@ source: /packages/react/src/components/menu/menu.tsx
 themeSource: /packages/system/src/recipes/menu.ts
 ---
 
-## Import
+## Installation
 
-- `Menu` - The Menu component with context.
-- `MenuTrigger` - The trigger for the Menu.
-- `MenuContent` - The content for the Menu as popover.
-- `MenuItem` - The item for the Menu.
-
-
-```tsx
-import { 
-	Menu,
-    MenuItem,
-    MenuContent,
-    MenuTrigger
- } from "@dreamy-ui/react";
+```bash
+pnpm dreamy components add menu
 ```
 
 ## Usage
@@ -28,31 +17,31 @@ import {
 Basic usage of Menu.
 
 <Wrapper>
-	<Menu>
-        <MenuTrigger>
+	<Menu.Root>
+        <Menu.Trigger>
             <Button w={"fit-content"}>Open Menu</Button>
-        </MenuTrigger>
-        <MenuContent>
-            <MenuItem icon={<IoAdd />} command="{actionKey} n">Add new</MenuItem>
-            <MenuItem icon={<LuAlarmClock />} command="{actionKey} a">Set alarm</MenuItem>
-            <MenuItem icon={<LuBattery />} command="{actionKey} b">Battery</MenuItem>
-            <MenuItem icon={<LuTrash />} command="{actionKey} d">Delete</MenuItem>
-        </MenuContent>
-    </Menu>
+        </Menu.Trigger>
+        <Menu.Content>
+            <Menu.Item icon={<IoAdd />} command="{actionKey} n">Add new</Menu.Item>
+            <Menu.Item icon={<LuAlarmClock />} command="{actionKey} a">Set alarm</Menu.Item>
+            <Menu.Item icon={<LuBattery />} command="{actionKey} b">Battery</Menu.Item>
+            <Menu.Item icon={<LuTrash />} command="{actionKey} d">Delete</Menu.Item>
+        </Menu.Content>
+    </Menu.Root>
 </Wrapper>
 
 ```tsx
-<Menu>
-    <MenuTrigger>
+<Menu.Root placement="bottom-start">
+    <Menu.Trigger>
         <Button>Open Menu</Button>
-    </MenuTrigger>
-    <MenuContent>
-        <MenuItem icon={<IoAdd />} command="{actionKey} n">Add new</MenuItem>
-        <MenuItem icon={<LuAlarmClock />} command="{actionKey} a">Set alarm</MenuItem>
-        <MenuItem icon={<LuBattery />} command="{actionKey} b">Battery</MenuItem>
-        <MenuItem icon={<LuTrash />} command="{actionKey} d">Delete</MenuItem>
-    </MenuContent>
-</Menu>
+    </Menu.Trigger>
+    <Menu.Content>
+        <Menu.Item icon={<IoAdd />} command="{actionKey} n">Add new</Menu.Item>
+        <Menu.Item icon={<LuAlarmClock />} command="{actionKey} a">Set alarm</Menu.Item>
+        <Menu.Item icon={<LuBattery />} command="{actionKey} b">Battery</Menu.Item>
+        <Menu.Item icon={<LuTrash />} command="{actionKey} d">Delete</Menu.Item>
+    </Menu.Content>
+</Menu.Root>
 ```
 
 ### Placement
@@ -60,31 +49,31 @@ Basic usage of Menu.
 You can change where the Menu is placed by using the `placement` prop. Use `icon` prop to place an icon on the beginning or the item and `comamnd` to show keybinding to the item. Using `{actionKey}` in command will automatically replace it with the action key of the user's operating system.
 
 <Wrapper>
-    <Menu placement="bottom-start">
-        <MenuTrigger>
+    <Menu.Root placement="bottom-start">
+        <Menu.Trigger>
             <Button w={"fit-content"}>Open Menu</Button>
-        </MenuTrigger>
-        <MenuContent>
-            <MenuItem icon={<IoAdd />} command="{actionKey} n">Add new</MenuItem>
-            <MenuItem icon={<LuAlarmClock />} command="{actionKey} a">Set alarm</MenuItem>
-            <MenuItem icon={<LuBattery />} command="{actionKey} b">Battery</MenuItem>
-            <MenuItem icon={<LuTrash />} command="{actionKey} d">Delete</MenuItem>
-        </MenuContent>
-    </Menu>
+        </Menu.Trigger>
+        <Menu.Content>
+            <Menu.Item icon={<IoAdd />} command="{actionKey} n">Add new</Menu.Item>
+            <Menu.Item icon={<LuAlarmClock />} command="{actionKey} a">Set alarm</Menu.Item>
+            <Menu.Item icon={<LuBattery />} command="{actionKey} b">Battery</Menu.Item>
+            <Menu.Item icon={<LuTrash />} command="{actionKey} d">Delete</Menu.Item>
+        </Menu.Content>
+    </Menu.Root>
 </Wrapper>
 
 ```tsx
-<Menu placement="bottom-start">
-    <MenuTrigger>
+<Menu.Root placement="bottom-start">
+    <Menu.Trigger>
         <Button>Open Menu</Button>
-    </MenuTrigger>
-    <MenuContent>
-        <MenuItem icon={<IoAdd />} command="{actionKey} n">Add new</MenuItem>
-        <MenuItem icon={<LuAlarmClock />} command="{actionKey} a">Set alarm</MenuItem>
-        <MenuItem icon={<LuBattery />} command="{actionKey} b">Battery</MenuItem>
-        <MenuItem icon={<LuTrash />} command="{actionKey} d">Delete</MenuItem>
-    </MenuContent>
-</Menu>
+    </Menu.Trigger>
+    <Menu.Content>
+        <Menu.Item icon={<IoAdd />} command="{actionKey} n">Add new</Menu.Item>
+        <Menu.Item icon={<LuAlarmClock />} command="{actionKey} a">Set alarm</Menu.Item>
+        <Menu.Item icon={<LuBattery />} command="{actionKey} b">Battery</Menu.Item>
+        <Menu.Item icon={<LuTrash />} command="{actionKey} d">Delete</Menu.Item>
+    </Menu.Content>
+</Menu.Root>
 ```
 
 ### Size
@@ -93,33 +82,33 @@ Menu comes with 4 different sizes.
 
 <Wrapper>
     {["xs", "sm", "md", "lg"].map((size) => (
-        <Menu key={size} size={size}>
-            <MenuTrigger>
+        <Menu.Root key={size} size={size}>
+            <Menu.Trigger>
                 <Button w={"fit-content"}>Open {size} Menu</Button>
-            </MenuTrigger>
-            <MenuContent>
-                <MenuItem icon={<IoAdd />} command="{actionKey} n">Add new</MenuItem>
-                <MenuItem icon={<LuAlarmClock />} command="{actionKey} a">Set alarm</MenuItem>
-                <MenuItem icon={<LuBattery />} command="{actionKey} b">Battery</MenuItem>
-                <MenuItem icon={<LuTrash />} command="{actionKey} d">Delete</MenuItem>
-            </MenuContent>
-        </Menu>
+            </Menu.Trigger>
+            <Menu.Content>
+                <Menu.Item icon={<IoAdd />} command="{actionKey} n">Add new</Menu.Item>
+                <Menu.Item icon={<LuAlarmClock />} command="{actionKey} a">Set alarm</Menu.Item>
+                <Menu.Item icon={<LuBattery />} command="{actionKey} b">Battery</Menu.Item>
+                <Menu.Item icon={<LuTrash />} command="{actionKey} d">Delete</Menu.Item>
+            </Menu.Content>
+        </Menu.Root>
     ))}
 </Wrapper>
 
 ```tsx
 {["xs", "sm", "md", "lg"].map((size) => (
-    <Menu key={size} size={size}>
-        <MenuTrigger>
+    <Menu.Root key={size} size={size}>
+        <Menu.Trigger>
             <Button>Open Menu</Button>
-        </MenuTrigger>
-        <MenuContent>
-            <MenuItem icon={<IoAdd />} command="{actionKey} n">Add new</MenuItem>
-            <MenuItem icon={<LuAlarmClock />} command="{actionKey} a">Set alarm</MenuItem>
-            <MenuItem icon={<LuBattery />} command="{actionKey} b">Battery</MenuItem>
-            <MenuItem icon={<LuTrash />} command="{actionKey} d">Delete</MenuItem>
-        </MenuContent>
-    </Menu>
+        </Menu.Trigger>
+        <Menu.Content>
+            <Menu.Item icon={<IoAdd />} command="{actionKey} n">Add new</Menu.Item>
+            <Menu.Item icon={<LuAlarmClock />} command="{actionKey} a">Set alarm</Menu.Item>
+            <Menu.Item icon={<LuBattery />} command="{actionKey} b">Battery</Menu.Item>
+            <Menu.Item icon={<LuTrash />} command="{actionKey} d">Delete</Menu.Item>
+        </Menu.Content>
+    </Menu.Root>
 ))}
 ```
 
@@ -149,44 +138,44 @@ export function VariantMenus() {
 
 export function VariantMenu({ variant }: { variant: string }) {
     return (
-        <Menu variant={variant as any}>
-            <MenuTrigger>
+        <Menu.Root variant={variant as any}>
+            <Menu.Trigger>
                 <Button w={"fit-content"}>Open Menu</Button>
-            </MenuTrigger>
-            <MenuContent>
-                <MenuItem
+            </Menu.Trigger>
+            <Menu.Content>
+                <Menu.Item
                     icon={<LuWarehouse />}
                     command="{actionKey} h"
                     asComp={<Link to="/" />}
                 >
                     Homepage
-                </MenuItem>
-                <MenuItem
+                </Menu.Item>
+                <Menu.Item
                     icon={<IoAdd />}
                     command="{actionKey} n"
                 >
                     Add new
-                </MenuItem>
-                <MenuItem
+                </Menu.Item>
+                <Menu.Item
                     icon={<LuAlarmClock />}
                     command="{actionKey} a"
                 >
                     Set alarm
-                </MenuItem>
-                <MenuItem
+                </Menu.Item>
+                <Menu.Item
                     icon={<LuBattery />}
                     command="{actionKey} b"
                 >
                     Battery
-                </MenuItem>
-                <MenuItem
+                </Menu.Item>
+                <Menu.Item
                     icon={<LuTrash />}
                     command="{actionKey} d"
                 >
                     Delete
-                </MenuItem>
-            </MenuContent>
-        </Menu>
+                </Menu.Item>
+            </Menu.Content>
+        </Menu.Root>
     );
 }
 ```
@@ -196,45 +185,45 @@ export function VariantMenu({ variant }: { variant: string }) {
 You can use a custom link component with menu item but polymorphic props like `as`, `asComp` and `asChild`.
 
 <Wrapper>
-    <Menu placement="bottom-start">
-        <MenuTrigger>
+    <Menu.Root placement="bottom-start">
+        <Menu.Trigger>
             <Button w={"fit-content"}>Open Menu</Button>
-        </MenuTrigger>
-        <MenuContent>
-            <MenuItem
+        </Menu.Trigger>
+        <Menu.Content>
+            <Menu.Item
                 icon={<LuWarehouse />}
                 command="{actionKey} h"
                 asComp={<RemixLink to="/" />}
             >
                 <>Homepage</>
-            </MenuItem>
-            <MenuItem icon={<IoAdd />} command="{actionKey} n">Add new</MenuItem>
-            <MenuItem icon={<LuAlarmClock />} command="{actionKey} a">Set alarm</MenuItem>
-            <MenuItem icon={<LuBattery />} command="{actionKey} b">Battery</MenuItem>
-            <MenuItem icon={<LuTrash />} command="{actionKey} d">Delete</MenuItem>
-        </MenuContent>
-    </Menu>
+            </Menu.Item>
+            <Menu.Item icon={<IoAdd />} command="{actionKey} n">Add new</Menu.Item>
+            <Menu.Item icon={<LuAlarmClock />} command="{actionKey} a">Set alarm</Menu.Item>
+            <Menu.Item icon={<LuBattery />} command="{actionKey} b">Battery</Menu.Item>
+            <Menu.Item icon={<LuTrash />} command="{actionKey} d">Delete</Menu.Item>
+        </Menu.Content>
+    </Menu.Root>
 </Wrapper>
 
 ```tsx
-<Menu placement="bottom-start">
-    <MenuTrigger>
+<Menu.Root placement="bottom-start">
+    <Menu.Trigger>
         <Button w={"fit-content"}>Open Menu</Button>
-    </MenuTrigger>
-    <MenuContent>
-        <MenuItem 
+    </Menu.Trigger>
+    <Menu.Content>
+        <Menu.Item 
             icon={<LuWarehouse />} 
             command="{actionKey} h"
             asComp={<Link to="/" />}
         >
             Homepage
-        </MenuItem>
-        <MenuItem icon={<IoAdd />} command="{actionKey} n">Add new</MenuItem>
-        <MenuItem icon={<LuAlarmClock />} command="{actionKey} a">Set alarm</MenuItem>
-        <MenuItem icon={<LuBattery />} command="{actionKey} b">Battery</MenuItem>
-        <MenuItem icon={<LuTrash />} command="{actionKey} d">Delete</MenuItem>
-    </MenuContent>
-</Menu>
+        </Menu.Item>
+        <Menu.Item icon={<IoAdd />} command="{actionKey} n">Add new</Menu.Item>
+        <Menu.Item icon={<LuAlarmClock />} command="{actionKey} a">Set alarm</Menu.Item>
+        <Menu.Item icon={<LuBattery />} command="{actionKey} b">Battery</Menu.Item>
+        <Menu.Item icon={<LuTrash />} command="{actionKey} d">Delete</Menu.Item>
+    </Menu.Content>
+</Menu.Root>
 ```
 
 ### Controlled
@@ -250,29 +239,29 @@ export function ControlledMenu() {
     const { isOpen, onClose, onOpen } = useControllable();
 
     return (
-        <Menu
+        <Menu.Root
             isOpen={isOpen}
             onOpen={onOpen}
             onClose={onClose}
         >
             <Text>{isOpen ? "Open" : "Closed"}</Text>
-            <MenuTrigger>
+            <Menu.Trigger>
                 <Button>Open Menu</Button>
-            </MenuTrigger>
-            <MenuContent>
-                <MenuItem
+            </Menu.Trigger>
+            <Menu.Content>
+                <Menu.Item
                     icon={<LuWarehouse />} 
                     command="{actionKey} h"
                     asComp={<Link to="/" />}
                 >
                     Homepage
-                </MenuItem>
-                <MenuItem icon={<IoAdd />} command="{actionKey} n">Add new</MenuItem>
-                <MenuItem icon={<LuAlarmClock />} command="{actionKey} a">Set alarm</MenuItem>
-                <MenuItem icon={<LuBattery />} command="{actionKey} b">Battery</MenuItem>
-                <MenuItem icon={<LuTrash />} command="{actionKey} d">Delete</MenuItem>
-            </MenuContent>
-        </Menu>
+                </Menu.Item>
+                <Menu.Item icon={<IoAdd />} command="{actionKey} n">Add new</Menu.Item>
+                <Menu.Item icon={<LuAlarmClock />} command="{actionKey} a">Set alarm</Menu.Item>
+                <Menu.Item icon={<LuBattery />} command="{actionKey} b">Battery</Menu.Item>
+                <Menu.Item icon={<LuTrash />} command="{actionKey} d">Delete</Menu.Item>
+            </Menu.Content>
+        </Menu.Root>
     );
 }
 ```
@@ -323,44 +312,44 @@ export function InteractiveMenu() {
     });
 
     return (
-        <Menu>
-            <MenuTrigger>
-                <Button w={"fit-content"}>Open Menu</Button>
-            </MenuTrigger>
-            <MenuContent>
-                <MenuItem
+        <Menu.Root>
+            <Menu.Trigger>
+                <Button>Open Menu</Button>
+            </Menu.Trigger>
+            <Menu.Content>
+                <Menu.Item
                     icon={<LuWarehouse />}
                     command="{actionKey} h"
                     asComp={<Link to="/" />}
                 >
                     Homepage
-                </MenuItem>
-                <MenuItem
+                </Menu.Item>
+                <Menu.Item
                     icon={<IoAdd />}
                     command="{actionKey} n"
                 >
                     Add new
-                </MenuItem>
-                <MenuItem
+                </Menu.Item>
+                <Menu.Item
                     icon={<LuAlarmClock />}
                     command="{actionKey} a"
                 >
                     Set alarm
-                </MenuItem>
-                <MenuItem
+                </Menu.Item>
+                <Menu.Item
                     icon={<LuBattery />}
                     command="{actionKey} b"
                 >
                     Battery
-                </MenuItem>
-                <MenuItem
+                </Menu.Item>
+                <Menu.Item
                     icon={<LuTrash />}
                     command="{actionKey} d"
                 >
                     Delete
-                </MenuItem>
-            </MenuContent>
-        </Menu>
+                </Menu.Item>
+            </Menu.Content>
+        </Menu.Root>
     );
 }
 ```
@@ -370,27 +359,27 @@ export function InteractiveMenu() {
 You can add right content to the item with `rightContent` prop.
 
 <Wrapper>
-    <Menu>
-        <MenuTrigger>
+    <Menu.Root>
+        <Menu.Trigger>
             <Button w={"fit-content"}>Open Menu</Button>
-        </MenuTrigger>
-        <MenuContent>
-            <MenuItem rightContent={<LuChevronRight />}>
-                <>Select framework</>
-            </MenuItem>
-        </MenuContent>
-    </Menu>
+        </Menu.Trigger>
+        <Menu.Content>
+            <Menu.Item rightContent={<Icon asComp={<LuFileWarning />} color="warning" boxSize={4} />}>
+                <>Select File</>
+            </Menu.Item>
+        </Menu.Content>
+    </Menu.Root>
 </Wrapper>
 
 ```tsx
-<Menu>
-    <MenuTrigger>
+<Menu.Root>
+    <Menu.Trigger>
         <Button>Open Menu</Button>
-    </MenuTrigger>
-    <MenuContent>
-        <MenuItem rightContent={<LuChevronRight />}>
-            Select framework
-        </MenuItem>
-    </MenuContent>
-</Menu>
+    </Menu.Trigger>
+    <Menu.Content>
+        <Menu.Item rightContent={<Icon as={LuFileWarning} color="warning" boxSize={4} />}>
+            Select File
+        </Menu.Item>
+    </Menu.Content>
+</Menu.Root>
 ```

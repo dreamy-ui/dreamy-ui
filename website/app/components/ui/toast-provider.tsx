@@ -1,3 +1,5 @@
+"use client";
+
 import { AnimatePresence, type MotionProps, m } from "motion/react";
 import {
     Fragment,
@@ -207,8 +209,8 @@ export function ToastProvider({ children, defaultToastProps = emptyObject }: Toa
 
     return (
         <ToastContext.Provider value={contextValue}>
-            <ToastManager />
             {children}
+            <ToastManager />
         </ToastContext.Provider>
     );
 }

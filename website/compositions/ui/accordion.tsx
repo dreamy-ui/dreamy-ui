@@ -123,7 +123,7 @@ const AccordionContent = withContext(
         if (!reduceMotion) {
             return (
                 <Collapse
-                    in={isOpen}
+                    isOpen={isOpen}
                     {...collapseProps}
                 >
                     {child}

@@ -1,17 +1,21 @@
-import { Link as DreamLink, type LinkProps as DreamLinkProps } from "@/link";
+import { Link as DreamyLink, type LinkProps as DreamyLinkProps } from "@/link";
 import { forwardRef } from "react";
-import { Link as RemixLink, type LinkProps as RemixLinkProps } from "react-router";
+import { Link as ReactRouterLink, type LinkProps as ReactRouterLinkProps } from "react-router";
 
-export interface LinkProps extends DreamLinkProps, Omit<RemixLinkProps, keyof DreamLinkProps> {}
+export interface LinkProps
+    extends DreamyLinkProps,
+        Omit<ReactRouterLinkProps, keyof DreamyLinkProps> {}
 
 export const Link = forwardRef<HTMLAnchorElement, LinkProps>((props, ref) => {
     return (
-        <DreamLink
+        <DreamyLink
             ref={ref}
-            as={RemixLink}
+            as={ReactRouterLink}
             {...props}
         />
     );
 });
 
 Link.displayName = "Link";
+
+export { DreamyLink, ReactRouterLink };

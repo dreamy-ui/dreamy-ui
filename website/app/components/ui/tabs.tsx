@@ -16,13 +16,13 @@ import {
     useTabsContext
 } from "@dreamy-ui/react";
 import { forwardRef } from "react";
+import { createStyleContext } from "styled-system/jsx";
 import { tabs } from "styled-system/recipes";
 import { Box } from "./box";
 import { Button, type ButtonProps } from "./button";
 import type { HTMLDreamyProps } from "./factory";
 import { Flex, type FlexProps } from "./flex";
 import { MotionFlex, type MotionFlexProps } from "./motion";
-import { createStyleContext } from "./style-context";
 
 const { withProvider, withContext } = createStyleContext(tabs);
 
@@ -33,7 +33,7 @@ export interface TabsProps
 }
 
 /**
- * Tabs component.
+ * Tabs component
  *
  * @See Docs https://dreamy-ui.com/docs/components/tabs
  */
@@ -146,7 +146,7 @@ const TabIndicator = withContext(
                 layoutDependency={false}
                 transition={{
                     ...transition,
-                    duration: ((transition as any)?.duration ?? 0.2) * 1.5
+                    duration: (transition?.duration ?? 0.2) * 1.5
                 }}
                 initial={!domAvailable ? { opacity: 0, scale: 0.95 } : undefined}
                 animate={{ opacity: 1, scale: 1 }}

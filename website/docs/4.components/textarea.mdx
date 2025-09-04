@@ -6,14 +6,10 @@ source: /packages/react/src/components/textarea/textarea.tsx
 themeSource: /packages/system/src/recipes/textarea.ts
 ---
 
-## Import
+## Installation
 
-- `Textarea` - The Textarea component.
-- `TextareaRSC` - The Textarea component with context.
-
-```tsx
-import { Textarea } from "@dreamy-ui/react";
-import { TextareaRSC } from "@dreamy-ui/react/rsc";
+```bash
+pnpm dreamy components add textarea
 ```
 
 ## Usage
@@ -119,19 +115,19 @@ Pass `isInvalid` prop to the `Textarea` to show the error state.
 Combine `Textarea` with `Field` to create a nice looking form element.
 
 <Wrapper>
-	<Field>
-		<FieldLabel>Biography</FieldLabel>
+	<Field.Root>
+		<Field.Label>Biography</Field.Label>
 		<Textarea placeholder="Enter your bio" />
-		<FieldHelpText>Biography should not contain any bad words.</FieldHelpText>
-	</Field>	
+		<Field.Hint>Biography should not contain any bad words.</Field.Hint>
+	</Field.Root>	
 </Wrapper>
 
 ```tsx
-<Field>
-	<FieldLabel>Biography</FieldLabel>
+<Field.Root>
+	<Field.Label>Biography</Field.Label>
 	<Textarea placeholder="Enter your bio" />
-	<FieldHelpText>Your biography should not contain any bad words.</FieldHelpText>
-</Field>	
+	<Field.Hint>Your biography should not contain any bad words.</Field.Hint>
+</Field.Root>	
 ```
 
 ### No auto resize
@@ -144,16 +140,4 @@ If you want to disable the auto resize of the textarea, simply use `TextareaNoAu
 
 ```tsx
 <TextareaNoAutoSize placeholder="Enter your bio" />
-```
-
-### RSC usage
-
-TextareaRSC is a RSC compatible component that does not use client handlers.
-
-<Wrapper>
-	<TextareaRSC placeholder="Enter your bio" />
-</Wrapper>
-
-```tsx
-<TextareaRSC placeholder="Enter your bio" />
 ```

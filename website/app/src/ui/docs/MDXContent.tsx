@@ -1,22 +1,15 @@
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/accordion";
+import { Accordion } from "@/accordion";
 import { Alert } from "@/alert";
 import { Avatar, AvatarGroup } from "@/avatar";
 import { Badge } from "@/badge";
 import { Box } from "@/box";
 import { Button } from "@/button";
-import { Card, CardBody, CardDescription, CardFooter, CardHeader, CardTitle } from "@/card";
+import { Card } from "@/card";
 import { Checkbox, CheckboxGroup } from "@/checkbox";
 import { CheckboxCard } from "@/checkbox-card";
 import { Divider } from "@/divider";
-import {
-    Editable,
-    EditableCancelButton,
-    EditableEditButton,
-    EditableInput,
-    EditablePreview,
-    EditableSubmitButton
-} from "@/editable";
-import { Field, FieldError, FieldErrorIcon, FieldHelpText, FieldLabel } from "@/field";
+import { Editable } from "@/editable";
+import { Field } from "@/field";
 import { Flex, type FlexProps } from "@/flex";
 import { Grid, GridItem } from "@/grid";
 import { Group } from "@/group";
@@ -27,40 +20,23 @@ import { Input, InputGroup, InputLeftAddon, InputRightAddon } from "@/input";
 import { Kbd } from "@/kbd";
 import { Link as DreamLink } from "@/link";
 import { List, ListItem } from "@/list";
-import { Menu, MenuContent, MenuItem, MenuTrigger } from "@/menu";
+import { Menu } from "@/menu";
 import { MotionBox } from "@/motion";
-import { PinInput, PinInputField } from "@/pin-input";
-import {
-    Popover,
-    PopoverArrow,
-    PopoverBody,
-    PopoverCloseButton,
-    PopoverContent,
-    PopoverFooter,
-    PopoverHeader,
-    PopoverTrigger
-} from "@/popover";
+import { PinInput } from "@/pin-input";
+import { Popover } from "@/popover";
 import { Progress } from "@/progress";
 import { ProgressCircular } from "@/progress-circular";
 import { Radio, RadioGroup } from "@/radio";
 import { RadioCard } from "@/radio-card";
-import { Select, SelectContent, SelectItem, SelectTrigger } from "@/select";
+import { Select } from "@/select";
 import { Skeleton, SkeletonText } from "@/skeleton";
-import { Slider, SliderFilledTrack, SliderThumb, SliderTrack } from "@/slider";
+import { Slider } from "@/slider";
 import { Snippet } from "@/snippet";
 import { Spinner } from "@/spinner";
 import { HStack, Stack, VStack } from "@/stack";
 import { Switch } from "@/switch";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableColumnHeader,
-    TableContainer,
-    TableHeader,
-    TableRow
-} from "@/table";
-import { Tab, TabList, TabPanels, Tabs } from "@/tabs";
+import { Table } from "@/table";
+import { Tabs } from "@/tabs";
 import { Text } from "@/text";
 import { Textarea, TextareaNoAutoSize } from "@/textarea";
 import { DarkTheme, LightTheme } from "@/theme";
@@ -69,9 +45,7 @@ import { Tooltip } from "@/tooltip";
 import { VisuallyHidden, VisuallyHiddenInput } from "@/visually-hidden";
 import { Wrap } from "@/wrap";
 import { Portal } from "@dreamy-ui/react";
-import type * as mdx from "@mdx-js/react";
 import { MDXRemote } from "next-mdx-remote";
-import type React from "react";
 import { type PropsWithChildren, type ReactNode, useEffect, useMemo, useState } from "react";
 import { BiHome, BiSearch } from "react-icons/bi";
 import { FaPaypal, FaReact, FaVuejs } from "react-icons/fa";
@@ -86,6 +60,7 @@ import {
     LuChevronDown,
     LuChevronRight,
     LuCitrus,
+    LuFileWarning,
     LuTrash,
     LuWarehouse
 } from "react-icons/lu";
@@ -141,6 +116,7 @@ import {
 } from "./components/hooks";
 import { ControlledPinInput } from "./components/inputs";
 import { LinkButton } from "./components/others";
+import { PMTabs } from "./components/pm-tabs";
 import { ControlledRadioCards, ControlledRadios } from "./components/radioes";
 import { AsyncSelect, ControlledSelect } from "./components/selects";
 import { ControlledSlider, MaxMinSlider } from "./components/sliders";
@@ -194,6 +170,7 @@ const DreamComponents = {
     Icon,
     Heading,
     Link: DreamLink,
+    Accordion,
     Text,
     Stack,
     VStack,
@@ -208,10 +185,6 @@ const DreamComponents = {
     Image,
     CloseButton,
     Field,
-    FieldLabel,
-    FieldError,
-    FieldErrorIcon,
-    FieldHelpText,
     RadioCard,
     List,
     ListItem,
@@ -222,12 +195,12 @@ const DreamComponents = {
     SizeModals,
     PlacementModal,
     PinInput,
-    PinInputField,
     InputGroup,
     InputLeftAddon,
     InputRightAddon,
     AvatarGroup,
     Badge,
+    PMTabs,
     // BasicPopover,
     SizePopovers,
     ControlledPopover,
@@ -238,17 +211,7 @@ const DreamComponents = {
     ControlledSlider,
     MaxMinSlider,
     Slider,
-    SliderFilledTrack,
-    SliderThumb,
-    SliderTrack,
-    Accordion,
-    AccordionItem,
-    AccordionTrigger,
-    AccordionContent,
     Tabs,
-    TabList,
-    Tab,
-    TabPanels,
     VariantTabs,
     ControlledTabs,
     Checkbox,
@@ -258,14 +221,6 @@ const DreamComponents = {
     CheckboxCardGroupControl,
     Wrapper,
     Table,
-    TableHeader,
-    TableBody,
-    TableRow,
-    TableCell,
-    TableColumnHeader,
-    // ImageRSC,
-    // InputRSC,
-    // TextareaRSC,
     TextareaNoAutoSize,
     Grid,
     GridItem,
@@ -276,28 +231,13 @@ const DreamComponents = {
     SkeletonText,
     Radio,
     Card,
-    CardHeader,
-    CardBody,
-    CardFooter,
-    CardTitle,
-    CardDescription,
     RadioGroup,
     Snippet,
     VisuallyHiddenInput,
     Select,
-    SelectItem,
-    SelectTrigger,
-    SelectContent,
     AsyncSelect,
     ControlledSelect,
     Popover,
-    PopoverTrigger,
-    PopoverContent,
-    PopoverArrow,
-    PopoverCloseButton,
-    PopoverHeader,
-    PopoverBody,
-    PopoverFooter,
     Collapsed,
     Scaled,
     ControlledAccordion,
@@ -307,24 +247,15 @@ const DreamComponents = {
     ControlledCheckboxCard,
     ControlledSwitch,
     Menu,
-    MenuTrigger,
     ProgressCircular,
-    MenuContent,
-    MenuItem,
     RemixLink,
     ControlledMenu,
     InteractiveMenu,
     Portal,
     ControlledEditable,
     FinalFocusRefEditable,
-    TableContainer,
     UpdateToast,
     Editable,
-    EditablePreview,
-    EditableInput,
-    EditableEditButton,
-    EditableSubmitButton,
-    EditableCancelButton,
     StartWithEditViewEditable,
     UseColorMode,
     UseReducedMotion,
@@ -385,11 +316,12 @@ const icons = {
     LuChevronRight,
     LuBanana,
     LuCitrus,
-    LuCherry
+    LuCherry,
+    LuFileWarning
 };
 
-const components = {
-    p: (props) => (
+const components: any = {
+    p: (props: any) => (
         <Text
             mb={2}
             color={"fg.medium"}
@@ -397,7 +329,7 @@ const components = {
             {...props}
         />
     ),
-    h1: (props) => (
+    h1: (props: any) => (
         <DefaultHeading
             as="h2"
             size={"3xl"}
@@ -406,7 +338,7 @@ const components = {
             {...props}
         />
     ),
-    h2: (props) => (
+    h2: (props: any) => (
         <DefaultHeading
             as="h3"
             size={"2xl"}
@@ -415,7 +347,7 @@ const components = {
             {...props}
         />
     ),
-    h3: (props) => (
+    h3: (props: any) => (
         <DefaultHeading
             as="h4"
             size={"lg"}
@@ -425,13 +357,13 @@ const components = {
             {...props}
         />
     ),
-    hr: (props) => (
+    hr: (props: any) => (
         <Divider
             my={4}
             {...props}
         />
     ),
-    a: ({ href, children, ...props }) => {
+    a: ({ href, children, ...props }: any) => {
         const isExternal = href?.startsWith("http");
 
         if (href?.startsWith("/")) {
@@ -488,7 +420,7 @@ const components = {
             {...props}
         />
     ),
-    blockquote: (props) => {
+    blockquote: (props: any) => {
         const { children, ...rest } = props as {
             children: any[];
             [key: string]: any;
@@ -585,19 +517,19 @@ const components = {
             </Flex>
         );
     },
-    ul: (props) => (
+    ul: (props: any) => (
         <List
             unordered
             {...props}
         />
     ),
-    ol: (props) => (
+    ol: (props: any) => (
         <List
             ordered
             {...props}
         />
     ),
-    li: (props) => <ListItem {...props} />,
+    li: (props: any) => <ListItem {...props} />,
     strong: (props: any) => (
         <Text
             as="strong"
@@ -608,7 +540,7 @@ const components = {
     ),
     ...DreamComponents,
     ...icons
-} satisfies React.ComponentProps<typeof mdx.MDXProvider>["components"];
+};
 
 function DefaultHeading({ mt, mb, ...props }: HeadingProps) {
     const [isHovered, setIsHovered] = useState(false);

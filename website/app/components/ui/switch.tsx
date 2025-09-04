@@ -1,3 +1,5 @@
+"use client";
+
 import { type UseSwitchProps, useSwitch } from "@dreamy-ui/react";
 import { forwardRef } from "react";
 import { type SwittchVariantProps, swittch } from "styled-system/recipes";
@@ -31,11 +33,9 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>((props, ref) => 
         <StyledSwitch {...getRootProps()}>
             <VisuallyHiddenInput {...getInputProps()} />
             <span {...getWrapperProps()}>
-                <MotionBox {...(getThumbProps() as any)}>{icon}</MotionBox>
+                <MotionBox {...getThumbProps()}>{icon}</MotionBox>
             </span>
             {children && <span {...getLabelProps()}>{children}</span>}
         </StyledSwitch>
     );
 });
-
-Switch.displayName = "Switch";

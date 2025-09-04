@@ -6,13 +6,10 @@ source: /packages/react/src/components/pin-input/pin-input.tsx
 themeSource: /packages/system/src/recipes/input.ts
 ---
 
-## Import
+## Installation
 
-- `PinInput` - The Pin Input component with context.
-- `PinInputField` - The field for the pin input.
-
-```tsx
-import { PinInput, PinInputField } from "@dreamy-ui/react";
+```bash
+pnpm dreamy components add pin-input
 ```
 
 ## Usage
@@ -20,19 +17,19 @@ import { PinInput, PinInputField } from "@dreamy-ui/react";
 `PinInput` is a wrapper component for `PinInputField` that provides a context for the pin input.
 
 <Wrapper>
-	<PinInput>
-		<PinInputField />
-		<PinInputField />
-		<PinInputField />
-	</PinInput>
+	<PinInput.Root>
+		<PinInput.Field />
+		<PinInput.Field />
+		<PinInput.Field />
+	</PinInput.Root>
 </Wrapper>
 
 ```tsx
-<PinInput>
-  <PinInputField />
-  <PinInputField />
-  <PinInputField />
-</PinInput>
+<PinInput.Root>
+  <PinInput.Field />
+  <PinInput.Field />
+  <PinInput.Field />
+</PinInput.Root>
 ```
 
 ### Controlled
@@ -43,17 +40,18 @@ import { PinInput, PinInputField } from "@dreamy-ui/react";
 
 ```tsx
 export function ControlledPinInput() {
-    const [pin, setPin] = useState("69");
+    const [pin, setPin] = useState("2137");
 
     return (
-        <PinInput
+        <PinInput.Root
             value={pin}
             onChange={setPin}
         >
-            <PinInputField />
-            <PinInputField />
-            <PinInputField />
-        </PinInput>
+            <PinInput.Field />
+            <PinInput.Field />
+            <PinInput.Field />
+            <PinInput.Field />
+        </PinInput.Root>
     );
 }
 ```
@@ -62,23 +60,23 @@ export function ControlledPinInput() {
 
 <Wrapper> 
 	<VStack w="full">
-    <PinInput size="sm">
-      <PinInputField />
-      <PinInputField />
-      <PinInputField />
-    </PinInput>
+    <PinInput.Root size="sm">
+      <PinInput.Field />
+      <PinInput.Field />
+      <PinInput.Field />
+    </PinInput.Root>
 
-    <PinInput size="md">
-      <PinInputField />
-      <PinInputField />
-      <PinInputField />
-    </PinInput>
+    <PinInput.Root size="md">
+      <PinInput.Field />
+      <PinInput.Field />
+      <PinInput.Field />
+    </PinInput.Root>
 
-    <PinInput size="lg">
-      <PinInputField />
-      <PinInputField />
-      <PinInputField />
-    </PinInput>
+    <PinInput.Root size="lg">
+      <PinInput.Field />
+      <PinInput.Field />
+      <PinInput.Field />
+    </PinInput.Root>
   </VStack>
 </Wrapper>
 
@@ -86,80 +84,258 @@ export function ControlledPinInput() {
 
 <Wrapper>
 	<VStack w="full">
-		<PinInput variant="outline">
-      <PinInputField />
-      <PinInputField />
-      <PinInputField />
-   </PinInput>
+		<PinInput.Root variant="outline">
+      <PinInput.Field />
+      <PinInput.Field />
+      <PinInput.Field />
+   </PinInput.Root>
 
-    <PinInput variant="filled">
-       <PinInputField />
-       <PinInputField />
-       <PinInputField />
-    </PinInput>
+    <PinInput.Root variant="filled">
+      <PinInput.Field />
+      <PinInput.Field />
+      <PinInput.Field />
+    </PinInput.Root>
  
-    <PinInput variant="flushed">
-      <PinInputField />
-			<PinInputField />
-			<PinInputField />
-		</PinInput>
+    <PinInput.Root variant="flushed">
+      <PinInput.Field />
+			<PinInput.Field />
+			<PinInput.Field />
+		</PinInput.Root>
 	</VStack>
 </Wrapper>
 
 ```tsx
 <VStack w="full">
-  <PinInput variant="outline">
-      <PinInputField />
-      <PinInputField />
-      <PinInputField />
-   </PinInput>
+  <PinInput.Root variant="outline">
+    <PinInput.Field />
+    <PinInput.Field />
+    <PinInput.Field />
+  </PinInput.Root>
 
-   <PinInput variant="filled">
-       <PinInputField />
-       <PinInputField />
-       <PinInputField />
-    </PinInput>
- 
-     <PinInput variant="flushed">
-        <PinInputField />
-		<PinInputField />
-		<PinInputField />
-	 </PinInput>
+  <PinInput.Root variant="filled">
+    <PinInput.Field />
+    <PinInput.Field />
+    <PinInput.Field />
+  </PinInput.Root>
+
+  <PinInput.Root variant="flushed">
+    <PinInput.Field />
+    <PinInput.Field />
+    <PinInput.Field />
+  </PinInput.Root>
 </VStack>
 ```
 
 ### Invalid
+
 Pass `isInvalid` prop to the `PinInput` to show the error state.
 
 <Wrapper>
-	<PinInput isInvalid>
-		<PinInputField />
-		<PinInputField />
-	</PinInput>
+	<PinInput.Root isInvalid>
+		<PinInput.Field />
+		<PinInput.Field />
+		<PinInput.Field />
+	</PinInput.Root>
 </Wrapper>
 
 ```tsx
-<PinInput isInvalid>
-	<PinInputField />
-	<PinInputField />
- </PinInput>
+<PinInput.Root isInvalid>
+	<PinInput.Field />
+	<PinInput.Field />
+	<PinInput.Field />
+</PinInput.Root>
 ```
 
 ### Disabled
+
 Pass `isDisabled` prop to the `PinInput` to show the disabled state.
 
 <Wrapper>
-	<PinInput isDisabled>
-		<PinInputField />
-	  <PinInputField />
-		<PinInputField />
-	</PinInput>
+	<PinInput.Root isDisabled>
+		<PinInput.Field />
+	  <PinInput.Field />
+		<PinInput.Field />
+	</PinInput.Root>
 </Wrapper>
 
 ```tsx
-<PinInput isDisabled>
-	<PinInputField />
-	<PinInputField />
-	<PinInputField />
-</PinInput>
+<PinInput.Root isDisabled>
+	<PinInput.Field />
+	<PinInput.Field />
+	<PinInput.Field />
+</PinInput.Root>
+```
+
+### On change
+
+Pass `onChange` prop to the `PinInput` to get the value when the pin input is changed.
+
+<Wrapper>
+	<PinInput.Root onChange={(pin) => toast({ title: `Pin: ${pin}` })}>
+		<PinInput.Field />
+		<PinInput.Field />
+		<PinInput.Field />
+	</PinInput.Root>
+</Wrapper>
+
+```tsx
+<PinInput.Root onChange={(pin) => toast({ title: `Pin: ${pin}` })}>
+	<PinInput.Field />
+	<PinInput.Field />
+	<PinInput.Field />
+</PinInput.Root>
+```
+
+### On Complete
+
+Pass `onComplete` prop to the `PinInput` to get the complete value when the pin input is filled.
+
+<Wrapper>
+	<PinInput.Root onComplete={(pin) => toast({ title: `Pin: ${pin}` })}>
+		<PinInput.Field />
+		<PinInput.Field />
+		<PinInput.Field />
+		<PinInput.Field />
+	</PinInput.Root>
+</Wrapper>
+
+```tsx
+<PinInput.Root onComplete={(pin) => toast({ title: `Pin: ${pin}` })}>
+	<PinInput.Field />
+	<PinInput.Field />
+	<PinInput.Field />
+	<PinInput.Field />
+</PinInput.Root>
+```
+
+### OTP
+
+Pass `otp` prop to the `PinInput` to make the pin input an One Time Password input.
+
+<Wrapper>
+	<PinInput.Root otp>
+		<PinInput.Field />
+		<PinInput.Field />
+		<PinInput.Field />
+	</PinInput.Root>
+</Wrapper>
+
+```tsx
+<PinInput.Root otp>
+	<PinInput.Field />
+	<PinInput.Field />
+	<PinInput.Field />
+</PinInput.Root>
+```
+
+### Mask
+
+Pass `mask` prop to the `PinInput` to mask the input.
+
+<Wrapper>
+	<PinInput.Root mask>
+		<PinInput.Field />
+		<PinInput.Field />
+		<PinInput.Field />
+	</PinInput.Root>
+</Wrapper>
+
+```tsx
+<PinInput.Root mask>
+	<PinInput.Field />
+	<PinInput.Field />
+	<PinInput.Field />
+</PinInput.Root>
+```
+
+### Type
+
+The type of the pin inputs value. `"alphanumeric" | "number"`.
+
+<Wrapper>
+	<PinInput.Root type="alphanumeric">
+		<PinInput.Field />
+		<PinInput.Field />
+		<PinInput.Field />
+	</PinInput.Root>
+</Wrapper>
+
+```tsx
+<PinInput.Root type="alphanumeric">
+  <PinInput.Field />
+  <PinInput.Field />
+  <PinInput.Field />
+</PinInput.Root>
+```
+
+### Manage Focus
+
+Set `manageFocus` to `false` to disable the moving focus to the next input when the current input is filled.
+
+<Wrapper>
+	<PinInput.Root manageFocus={false}>
+		<PinInput.Field />
+		<PinInput.Field />
+		<PinInput.Field />
+	</PinInput.Root>
+</Wrapper>
+
+```tsx
+<PinInput.Root manageFocus={false}>
+	<PinInput.Field />
+	<PinInput.Field />
+	<PinInput.Field />
+</PinInput.Root>
+```
+
+### Auto Focus
+
+Use `autoFocus` to focus the first input when the pin input is mounted. Refresh the page to see the effect.
+
+<Wrapper>
+	<PinInput.Root autoFocus>
+		<PinInput.Field />
+		<PinInput.Field />
+		<PinInput.Field />
+	</PinInput.Root>
+</Wrapper>
+
+```tsx
+<PinInput.Root autoFocus>
+	<PinInput.Field />
+	<PinInput.Field />
+	<PinInput.Field />
+</PinInput.Root>
+```
+
+### Split fields
+
+You can enter custom content between the fields to split them.
+
+<Wrapper>
+	<PinInput.Root>
+		<PinInput.Field />
+		<PinInput.Field />
+		<PinInput.Field />
+
+    <Divider orientation="vertical" mx={2} h={8} />
+
+    <PinInput.Field />
+		<PinInput.Field />
+		<PinInput.Field />
+	</PinInput.Root>
+</Wrapper>
+
+```tsx
+<PinInput.Root>
+	<PinInput.Field />
+	<PinInput.Field />
+	<PinInput.Field />
+  
+    <Divider orientation="vertical" mx={2} h={8} />
+
+	<PinInput.Field />
+	<PinInput.Field />  
+	<PinInput.Field />  
+</PinInput.Root>
 ```

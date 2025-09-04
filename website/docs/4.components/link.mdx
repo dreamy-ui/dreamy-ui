@@ -6,15 +6,15 @@ source: /packages/react/src/components/link/link.tsx
 themeSource: /packages/system/src/recipes/link.ts
 ---
 
-## Import
+## Installation
 
-- `Link` - The Link component.
-
-```tsx
-import { Link } from "@dreamy-ui/react/rsc";
+```bash
+pnpm dreamy components add link
 ```
 
 ## Usage
+
+Link provides navigation between pages or sections with proper accessibility support. It can be used for both internal and external links.
 
 <Wrapper>
 	<Link href="/">
@@ -43,18 +43,16 @@ You can use the `isExternal` prop to open the link in a new tab.
 
 ### Using Dream Link with other frameworks
 
-In this example we'll combine Remix (`react-router`) Link component with Dream Link component.
+In this example we'll combine React Router Link component with Dream Link component.
 
 ```tsx
-import { Link as DreamLink, type LinkProps as DreamLinkProps } from "@dreamy-ui/react";
-import { Link as RemixLink, type LinkProps as RemixLinkProps } from "@remix-run/react";
+import { Link as DreamyLink, type LinkProps as DreamyLinkProps } from "@dreamy-ui/react";
+import { Link as ReactRouterLink, type LinkProps as ReactRouterLinkProps } from "react-router";
 import { forwardRef } from "react";
 
-export interface LinkProps extends DreamLinkProps, Omit<RemixLinkProps, keyof DreamLinkProps> {}
+export interface LinkProps extends DreamyLinkProps, Omit<ReactRouterLinkProps, keyof DreamyLinkProps> {}
 
 export const Link = forwardRef<HTMLAnchorElement, LinkProps>((props, ref) => {
-    return <DreamLink ref={ref} as={RemixLink} {...props} />;
+    return <DreamyLink ref={ref} as={ReactRouterLink} {...props} />;
 });
-
-Link.displayName = "Link";
 ```

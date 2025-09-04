@@ -6,12 +6,10 @@ source: /packages/react/src/components/input/input.tsx
 themeSource: /packages/system/src/recipes/input.ts
 ---
 
-## Import
+## Installation
 
-- `Input` - The Input component.
-
-```tsx
-import { Input } from "@dreamy-ui/react";
+```bash
+pnpm dreamy components add input
 ```
 
 ## Usage
@@ -88,7 +86,7 @@ Due to specificity of the `Input` component, space for addons won't be added aut
 <Wrapper>
 	<InputGroup variant="filled">
 		<InputLeftAddon>
-			<Icon asComp={<BiSearch />} boxSize="5" />
+			<Icon asComp={<BiSearch />} boxSize="5" color="fg.medium" />
 		</InputLeftAddon>
 		<Input pl="10" placeholder="Search for..." />
 	</InputGroup>	
@@ -97,7 +95,7 @@ Due to specificity of the `Input` component, space for addons won't be added aut
 ```tsx
 <InputGroup variant="filled">
 	<InputLeftAddon>
-		<Icon as={BiSearch} boxSize="5" />
+		<Icon as={BiSearch} boxSize="5" color="fg.medium" />
 	</InputLeftAddon>
 	<Input pl="10" placeholder="Search for..." />
 </InputGroup>	
@@ -108,17 +106,17 @@ Due to specificity of the `Input` component, space for addons won't be added aut
 Combine `Input` with `Field` to create a nice looking form element.
 
 <Wrapper>
-	<Field>
-		<FieldLabel>Username</FieldLabel>
+	<Field.Root>
+		<Field.Label>Username</Field.Label>
 		<Input placeholder="Enter your username" />
-		<FieldHelpText>Username should not contain special characters.</FieldHelpText>
-	</Field>
+		<Field.Hint>Username should not contain special characters.</Field.Hint>
+	</Field.Root>
 </Wrapper>
 
 ```tsx
-<Field>
-	<FieldLabel>Username</FieldLabel>
+<Field.Root>
+	<Field.Label>Username</Field.Label>
 	<Input placeholder="Enter your username" />
-	<FieldHelpText>Username should not contain special characters.</FieldHelpText>
-</Field>	
+	<Field.Hint>Username should not contain special characters.</Field.Hint>
+</Field.Root>	
 ```

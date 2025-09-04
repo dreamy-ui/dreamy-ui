@@ -21,6 +21,7 @@ import {
 } from "./src/.server/middlewares";
 import { getServerCookie } from "./src/functions/cookies";
 import { useRoot } from "./src/hooks/useRoot";
+import GlobalContextProvider from "./src/ui/global/GlobalContext";
 
 export const unstable_clientMiddleware = [clientTimingMiddleware];
 
@@ -66,7 +67,8 @@ export function links() {
 export function loader({ request }: Route.LoaderArgs) {
     return {
         colorMode: getSSRColorMode(request),
-        isMac: getServerCookie("isMac", request) === "true"
+        isMac: getServerCookie("isMac", request) === "true",
+        pm: getServerCookie("pm", request)
     };
 }
 
@@ -115,7 +117,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
                     motionStrict
                 >
                     <ToastProvider>
-                        <AppLayout>{children}</AppLayout>
+                        <GlobalContextProvider>
+                            <AppLayout>{children}</AppLayout>
+                        </GlobalContextProvider>
                     </ToastProvider>
                 </DreamyProvider>
                 <ScrollRestoration />

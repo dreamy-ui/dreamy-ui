@@ -12,7 +12,6 @@ import {
     usePopover,
     usePopoverContext
 } from "@dreamy-ui/react";
-import type { HTMLMotionProps } from "motion/react";
 import { Children, cloneElement, forwardRef } from "react";
 import { createStyleContext } from "styled-system/jsx";
 import { popover } from "styled-system/recipes";
@@ -84,23 +83,6 @@ function PopoverArrow(props: PopoverArrowProps) {
         </Box>
     );
 }
-
-type HTMLMotionDreamProps<T extends keyof HTMLElementTagNameMap> = Omit<
-    HTMLDreamyProps<T>,
-    keyof HTMLMotionProps<T>
-> & {
-    children?: React.ReactNode;
-} & Omit<
-        HTMLMotionProps<T>,
-        | "style"
-        | "onDrag"
-        | "onDragEnd"
-        | "onDragStart"
-        | "onAnimationStart"
-        | "variants"
-        | "transition"
-        | "children"
-    >;
 
 export interface PopoverTransitionProps extends Omit<MotionBoxProps, "children"> {
     children?: React.ReactNode;

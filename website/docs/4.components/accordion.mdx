@@ -6,39 +6,36 @@ source: /packages/react/src/components/accordion/accordion.tsx
 themeSource: /packages/system/src/recipes/accordion.ts
 ---
 
-## Import
+## Installation
 
-- `Accordion` - The main component that wraps the accordion items with context.
-- `AccordionItem` - The single item component that wraps the trigger and content.
-- `AccordionTrigger` - The trigger component that opens the item.
-- `AccordionContent` - The content component that is shown when the trigger is clicked.
-
-```jsx
-import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@dreamy-ui/react";
+```bash	
+pnpm dreamy components add accordion
 ```
 
 ## Usage
 
+Accordion is a component that allows you to toggle the visibility of content.
+
 <Wrapper>
-  	<Accordion>
+  	<Accordion.Root>
 		{Array.from({ length: 3 }).map((_, index) => (
-			<AccordionItem key={index}>
-				<AccordionTrigger>Item {index + 1}</AccordionTrigger>
-				<AccordionContent>Hi!</AccordionContent>
-			</AccordionItem>
+			<Accordion.Item key={index}>
+				<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
+				<Accordion.Content>Hi!</Accordion.Content>
+			</Accordion.Item>
 		))}
-	</Accordion>
+	</Accordion.Root>
 </Wrapper>
 
 ```tsx
-<Accordion>
+<Accordion.Root>
 	{Array.from({ length: 3 }).map((_, index) => (
-		<AccordionItem key={index}>
-			<AccordionTrigger>Item {index + 1}</AccordionTrigger>
-			<AccordionContent>Hi!</AccordionContent>
-		</AccordionItem>
+		<Accordion.Item key={index}>
+			<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
+			<Accordion.Content>Hi!</Accordion.Content>
+		</Accordion.Item>
 	))}
-</Accordion>
+</Accordion.Root>
 ```
 
 ### Allow Multiple Open
@@ -46,24 +43,24 @@ import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@d
 You can allow multiple open items by using the `allowMultiple` prop.
 
 <Wrapper>
-	<Accordion allowMultiple>
+	<Accordion.Root allowMultiple>
 		{Array.from({ length: 3 }).map((_, index) => (
-			<AccordionItem key={index}>
-				<AccordionTrigger>Item {index + 1}</AccordionTrigger>
-				<AccordionContent>Hi!</AccordionContent>
-			</AccordionItem>
+			<Accordion.Item key={index}>
+				<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
+				<Accordion.Content>Hi!</Accordion.Content>
+			</Accordion.Item>
 		))}
-	</Accordion>
+	</Accordion.Root>
 </Wrapper>
 ```tsx
-<Accordion allowMultiple>
+<Accordion.Root	 allowMultiple>
 	{Array.from({ length: 3 }).map((_, index) => (
-		<AccordionItem key={index}>
-			<AccordionTrigger>Item {index + 1}</AccordionTrigger>
-			<AccordionContent>Hi!</AccordionContent>
-		</AccordionItem>
+		<Accordion.Item key={index}>
+			<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
+			<Accordion.Content>Hi!</Accordion.Content>
+		</Accordion.Item>
 	))}
-</Accordion>
+</Accordion.Root>
 ```
 
 ### Allow Toggle
@@ -71,25 +68,25 @@ You can allow multiple open items by using the `allowMultiple` prop.
 You can allow toggle single item by using the `allowToggle` prop. With `allowMultiple` prop, it will be always possible to toggle them.
 
 <Wrapper>
-	<Accordion allowToggle>
+	<Accordion.Root allowToggle>
 		{Array.from({ length: 3 }).map((_, index) => (
-			<AccordionItem key={index}>
-				<AccordionTrigger>Item {index + 1}</AccordionTrigger>
-				<AccordionContent>Hi!</AccordionContent>
-			</AccordionItem>
+			<Accordion.Item key={index}>
+				<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
+				<Accordion.Content>Hi!</Accordion.Content>
+			</Accordion.Item>
 		))}
-	</Accordion>
+	</Accordion.Root>
 </Wrapper>
 
 ```tsx
-<Accordion allowToggle>
+<Accordion.Root allowToggle>
 	{Array.from({ length: 3 }).map((_, index) => (
-		<AccordionItem key={index}>
-			<AccordionTrigger>Item {index + 1}</AccordionTrigger>
-			<AccordionContent>Hi!</AccordionContent>
-		</AccordionItem>
+		<Accordion.Item key={index}>
+			<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
+			<Accordion.Content>Hi!</Accordion.Content>
+		</Accordion.Item>
 	))}
-</Accordion>
+</Accordion.Root>
 ```
 
 ### Controlled
@@ -105,17 +102,17 @@ export function ControlledAccordion() {
     const [value, setValue] = useState<number | number[]>(0);
 
     return (
-        <Accordion
+        <Accordion.Root
             index={value}
             onChange={(i) => setValue(i)}
         >
             {Array.from({ length: 3 }).map((_, index) => (
-                <AccordionItem key={index}>
-                    <AccordionTrigger>Item {index + 1}</AccordionTrigger>
-                    <AccordionContent>Hi!</AccordionContent>
-                </AccordionItem>
+                <Accordion.Item key={index}>
+                    <Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
+                    <Accordion.Content>Hi!</Accordion.Content>
+                </Accordion.Item>
             ))}
-        </Accordion>
+        </Accordion.Root>
     );
 }
 ```
@@ -123,35 +120,35 @@ export function ControlledAccordion() {
 ### With icon
 
 <Wrapper>
-	<Accordion>
+	<Accordion.Root>
 		{Array.from({ length: 3 }).map((_, index) => (
-			<AccordionItem key={index}>
-				<AccordionTrigger>
+			<Accordion.Item key={index}>
+				<Accordion.Trigger>
 					<HStack>
 						<Icon asComp={<PiConfetti />} color="fg.medium" />
 						<Text>Item {index + 1}</Text>
 					</HStack>
-				</AccordionTrigger>
-				<AccordionContent>Hi!</AccordionContent>
-			</AccordionItem>
+				</Accordion.Trigger>
+				<Accordion.Content>Hi!</Accordion.Content>
+			</Accordion.Item>
 		))}
-	</Accordion>
+	</Accordion.Root>
 </Wrapper>
 
 ```tsx
-<Accordion>
+<Accordion.Root>
 	{Array.from({ length: 3 }).map((_, index) => (
-		<AccordionItem key={index}>
-			<AccordionTrigger>
+		<Accordion.Item key={index}>
+			<Accordion.Trigger>
 				<HStack>
 					<Icon as={PiConfetti} color="fg.medium" />
 					<Text>Item {index + 1}</Text>
 				</HStack>
-			</AccordionTrigger>
-			<AccordionContent>Hi!</AccordionContent>
-		</AccordionItem>
+			</Accordion.Trigger>
+			<Accordion.Content>Hi!</Accordion.Content>
+		</Accordion.Item>
 	))}
-</Accordion>
+</Accordion.Root>
 	```
 
 ### Variants
@@ -160,40 +157,40 @@ You can change the variant of the Accordion by using the `variant` prop.
 
 <Wrapper>
 	<VStack w="full" gap={6}>
-		<Flex col gap={2}>
+		<Flex col gap={2} full>
 			<Text bold>Outline</Text>
-			<Accordion variant="outline">
+			<Accordion.Root variant="outline">
 				{Array.from({ length: 3 }).map((_, index) => (
-					<AccordionItem key={index}>
-						<AccordionTrigger>Item {index + 1}</AccordionTrigger>
-						<AccordionContent>Hi!</AccordionContent>
-					</AccordionItem>
+					<Accordion.Item key={index}>
+						<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
+						<Accordion.Content>Hi!</Accordion.Content>
+					</Accordion.Item>
 				))}
-			</Accordion>
+			</Accordion.Root>
 		</Flex>
 
-		<Flex col gap={2}>
+		<Flex col gap={2} full>
 			<Text bold>Solid</Text>
-			<Accordion variant="solid">
+			<Accordion.Root variant="solid">
 			{Array.from({ length: 3 }).map((_, index) => (
-				<AccordionItem key={index}>
-					<AccordionTrigger>Item {index + 1}</AccordionTrigger>
-					<AccordionContent>Hi!</AccordionContent>
-				</AccordionItem>
+				<Accordion.Item key={index}>
+					<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
+					<Accordion.Content>Hi!</Accordion.Content>
+				</Accordion.Item>
 			))}
-			</Accordion>
+			</Accordion.Root>
 		</Flex>	
 
-		<Flex col gap={2}>
+		<Flex col gap={2} full>
 			<Text bold>Subtle</Text>
-			<Accordion variant="subtle">
+			<Accordion.Root variant="subtle">
 				{Array.from({ length: 3 }).map((_, index) => (
-					<AccordionItem key={index}>
-						<AccordionTrigger>Item {index + 1}</AccordionTrigger>
-						<AccordionContent>Hi!</AccordionContent>
-					</AccordionItem>
+					<Accordion.Item key={index}>
+						<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
+						<Accordion.Content>Hi!</Accordion.Content>
+					</Accordion.Item>
 				))}
-			</Accordion>
+			</Accordion.Root>
 		</Flex>
 	</VStack>
 </Wrapper>
@@ -201,38 +198,38 @@ You can change the variant of the Accordion by using the `variant` prop.
 <VStack w="full" gap={6}>
 	<Flex col gap={2}>
 		<Text bold>Outline</Text>
-		<Accordion variant="outline">
+		<Accordion.Root variant="outline">
 			{Array.from({ length: 3 }).map((_, index) => (
-				<AccordionItem key={index}>
-					<AccordionTrigger>Item {index + 1}</AccordionTrigger>
-					<AccordionContent>Hi!</AccordionContent>
-				</AccordionItem>
+				<Accordion.Item key={index}>
+					<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
+					<Accordion.Content>Hi!</Accordion.Content>
+				</Accordion.Item>
 			))}
-		</Accordion>
+		</Accordion.Root>
 	</Flex>
 
 	<Flex col gap={2}>
 		<Text bold>Solid</Text>
-		<Accordion variant="solid">
+		<Accordion.Root variant="solid">
 		{Array.from({ length: 3 }).map((_, index) => (
-			<AccordionItem key={index}>
-				<AccordionTrigger>Item {index + 1}</AccordionTrigger>
-				<AccordionContent>Hi!</AccordionContent>
-			</AccordionItem>
+			<Accordion.Item key={index}>
+				<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
+				<Accordion.Content>Hi!</Accordion.Content>
+			</Accordion.Item>
 		))}
-		</Accordion>
+		</Accordion.Root>
 	</Flex>	
 
 	<Flex col gap={2}>
 		<Text bold>Subtle</Text>
-		<Accordion variant="subtle">
+		<Accordion.Root variant="subtle">
 			{Array.from({ length: 3 }).map((_, index) => (
-				<AccordionItem key={index}>
-					<AccordionTrigger>Item {index + 1}</AccordionTrigger>
-					<AccordionContent>Hi!</AccordionContent>
-				</AccordionItem>
+				<Accordion.Item key={index}>
+					<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
+					<Accordion.Content>Hi!</Accordion.Content>
+				</Accordion.Item>
 			))}
-		</Accordion>
+		</Accordion.Root>
 	</Flex>
 </VStack>
 ```
@@ -243,64 +240,64 @@ You can change the size of the Accordion by using the `size` prop.
 
 <Wrapper>
 	<Text bold mt={4}>Small</Text>
-	<Accordion size="sm">
+	<Accordion.Root size="sm">
 		{Array.from({ length: 3 }).map((_, index) => (
-			<AccordionItem key={index}>
-				<AccordionTrigger>Item {index + 1}</AccordionTrigger>
-				<AccordionContent>Hi!</AccordionContent>
-			</AccordionItem>
+			<Accordion.Item key={index}>
+				<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
+				<Accordion.Content>Hi!</Accordion.Content>
+			</Accordion.Item>
 		))}
-	</Accordion>
+	</Accordion.Root>
 
 	<Text bold mt={4}>Medium</Text>
-	<Accordion size="md">
+	<Accordion.Root size="md">
 		{Array.from({ length: 3 }).map((_, index) => (
-			<AccordionItem key={index}>
-				<AccordionTrigger>Item {index + 1}</AccordionTrigger>
-				<AccordionContent>Hi!</AccordionContent>
-			</AccordionItem>
+			<Accordion.Item key={index}>
+				<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
+				<Accordion.Content>Hi!</Accordion.Content>
+			</Accordion.Item>
 		))}
-	</Accordion>
+	</Accordion.Root>
 
 	<Text bold mt={4}>Large</Text>
-	<Accordion size="lg">
+	<Accordion.Root size="lg">
 		{Array.from({ length: 3 }).map((_, index) => (
-			<AccordionItem key={index}>
-				<AccordionTrigger>Item {index + 1}</AccordionTrigger>
-				<AccordionContent>Hi!</AccordionContent>
-			</AccordionItem>
+			<Accordion.Item key={index}>
+				<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
+				<Accordion.Content>Hi!</Accordion.Content>
+			</Accordion.Item>
 		))}
-	</Accordion>
+	</Accordion.Root>
 </Wrapper>
 
 ```tsx
 <Text bold>Small</Text>
-<Accordion size="sm">
+<Accordion.Root size="sm">
 	{Array.from({ length: 3 }).map((_, index) => (
-		<AccordionItem key={index}>
-			<AccordionTrigger>Item {index + 1}</AccordionTrigger>
-			<AccordionContent>Hi!</AccordionContent>
-		</AccordionItem>
+		<Accordion.Item key={index}>
+			<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
+			<Accordion.Content>Hi!</Accordion.Content>
+		</Accordion.Item>
 	))}
-</Accordion>
+</Accordion.Root>
 
 <Text bold>Medium</Text>
-<Accordion size="md">
+<Accordion.Root size="md">
 	{Array.from({ length: 3 }).map((_, index) => (
-		<AccordionItem key={index}>
-			<AccordionTrigger>Item {index + 1}</AccordionTrigger>
-			<AccordionContent>Hi!</AccordionContent>
-		</AccordionItem>
+		<Accordion.Item key={index}>
+			<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
+			<Accordion.Content>Hi!</Accordion.Content>
+		</Accordion.Item>
 	))}
-</Accordion>
+</Accordion.Root>
 
 <Text bold>Large</Text>
-<Accordion size="lg">
+<Accordion.Root size="lg">
 	{Array.from({ length: 3 }).map((_, index) => (
-		<AccordionItem key={index}>
-			<AccordionTrigger>Item {index + 1}</AccordionTrigger>
-			<AccordionContent>Hi!</AccordionContent>
-		</AccordionItem>
+		<Accordion.Item key={index}>
+			<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
+			<Accordion.Content>Hi!</Accordion.Content>
+		</Accordion.Item>
 	))}
-</Accordion>
+</Accordion.Root>
 ```

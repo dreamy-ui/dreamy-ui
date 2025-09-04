@@ -1,6 +1,6 @@
 import { Flex } from "@/flex";
 import { VStack } from "@/stack";
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@/tabs";
+import { Tabs } from "@/tabs";
 import { Text } from "@/text";
 import React, { useState } from "react";
 import { capitalize } from "~/src/functions/string";
@@ -15,24 +15,24 @@ export function VariantTabs() {
                 {(["filled", "underline", "filled-simple"] as const).map((variant) => (
                     <React.Fragment key={variant}>
                         <Text bold>{capitalize(variant)} Variant</Text>
-                        <Tabs variant={variant}>
-                            <TabList>
-                                <Tab>Tab 1</Tab>
-                                <Tab>Tab 2</Tab>
-                                <Tab>Tab 3</Tab>
-                            </TabList>
-                            <TabPanels>
-                                <TabPanel>
+                        <Tabs.Root variant={variant}>
+                            <Tabs.List>
+                                <Tabs.Tab>Tab 1</Tabs.Tab>
+                                <Tabs.Tab>Tab 2</Tabs.Tab>
+                                <Tabs.Tab>Tab 3</Tabs.Tab>
+                            </Tabs.List>
+                            <Tabs.Panels>
+                                <Tabs.Panel>
                                     <p>Tab 1 content</p>
-                                </TabPanel>
-                                <TabPanel>
+                                </Tabs.Panel>
+                                <Tabs.Panel>
                                     <p>Tab 2 content</p>
-                                </TabPanel>
-                                <TabPanel>
+                                </Tabs.Panel>
+                                <Tabs.Panel>
                                     <p>Tab 3 content</p>
-                                </TabPanel>
-                            </TabPanels>
-                        </Tabs>
+                                </Tabs.Panel>
+                            </Tabs.Panels>
+                        </Tabs.Root>
                     </React.Fragment>
                 ))}
             </Flex>
@@ -47,27 +47,27 @@ export function ControlledTabs() {
         <>
             <Text bold>Current Tab: {index + 1}</Text>
 
-            <Tabs
+            <Tabs.Root
                 index={index}
                 onChange={setIndex}
             >
-                <TabList>
-                    <Tab>Tab 1</Tab>
-                    <Tab>Tab 2</Tab>
-                    <Tab>Tab 3</Tab>
-                </TabList>
-                <TabPanels>
-                    <TabPanel>
+                <Tabs.List>
+                    <Tabs.Tab>Tab 1</Tabs.Tab>
+                    <Tabs.Tab>Tab 2</Tabs.Tab>
+                    <Tabs.Tab>Tab 3</Tabs.Tab>
+                </Tabs.List>
+                <Tabs.Panels>
+                    <Tabs.Panel>
                         <p>Tab 1 content</p>
-                    </TabPanel>
-                    <TabPanel>
+                    </Tabs.Panel>
+                    <Tabs.Panel>
                         <p>Tab 2 content</p>
-                    </TabPanel>
-                    <TabPanel>
+                    </Tabs.Panel>
+                    <Tabs.Panel>
                         <p>Tab 3 content</p>
-                    </TabPanel>
-                </TabPanels>
-            </Tabs>
+                    </Tabs.Panel>
+                </Tabs.Panels>
+            </Tabs.Root>
         </>
     );
 }

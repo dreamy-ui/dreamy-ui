@@ -1,3 +1,5 @@
+"use client";
+
 import { type UseSnippetProps, useSnippet } from "@dreamy-ui/react";
 import { type SVGProps, cloneElement, forwardRef, useMemo } from "react";
 import { type SnippetVariantProps, snippet } from "styled-system/recipes";
@@ -100,14 +102,12 @@ export const Snippet = forwardRef<HTMLDivElement, SnippetProps>((props, ref) => 
     }, [children, hideSymbol, isMultiLine, symbolBefore, preRef]);
 
     return (
-        <StyledSnippet {...(getSnippetProps() as any)}>
+        <StyledSnippet {...getSnippetProps()}>
             {preContent}
             {contents}
         </StyledSnippet>
     );
 });
-
-Snippet.displayName = "Snippet";
 
 export function CheckIcon(props: SVGProps<SVGSVGElement>) {
     return (

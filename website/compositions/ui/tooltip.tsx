@@ -61,7 +61,7 @@ export interface TooltipProps
     motionProps?: HTMLMotionProps<"div">;
 }
 
-const StyledTooltip = m.create(dreamy("div", tooltip), { forwardMotionProps: true });
+const StyledTooltip = m.create(dreamy("div", tooltip));
 
 /**
  * Tooltips display informative text when users hover, focus on, or tap an element.

@@ -1,6 +1,7 @@
+"use client";
+
 import {
     TRANSITION_DEFAULTS,
-    // type Variants,
     type WithTransitionConfig,
     useMotionVariants
 } from "@dreamy-ui/react";
@@ -36,8 +37,6 @@ export interface CollapseOptions {
     animatePresenceProps?: AnimatePresenceProps;
 }
 
-export type ICollapse = CollapseProps;
-
 export interface CollapseProps extends WithTransitionConfig<MotionBoxProps>, CollapseOptions {}
 
 /**
@@ -47,7 +46,7 @@ export interface CollapseProps extends WithTransitionConfig<MotionBoxProps>, Col
  */
 export const Collapse = forwardRef<HTMLDivElement, CollapseProps>((props, ref) => {
     const {
-        in: isOpen,
+        isOpen,
         unmountOnExit,
         animateOpacity = true,
         startingHeight = 0,
@@ -112,8 +111,6 @@ export const Collapse = forwardRef<HTMLDivElement, CollapseProps>((props, ref) =
     );
 });
 
-Collapse.displayName = "Collapse";
-
 interface ScaleOptions {
     /**
      * The initial scale of the element
@@ -161,7 +158,7 @@ export interface ScaleProps extends ScaleOptions, WithTransitionConfig<MotionBox
 export const Scale = forwardRef<HTMLDivElement, ScaleProps>(function Scale(props, ref) {
     const {
         unmountOnExit,
-        in: isOpen,
+        isOpen,
         reverse = true,
         initialScale = 0.95,
         transition,
@@ -193,5 +190,3 @@ export const Scale = forwardRef<HTMLDivElement, ScaleProps>(function Scale(props
         </AnimatePresence>
     );
 });
-
-Scale.displayName = "Scale";

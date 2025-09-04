@@ -6,26 +6,10 @@ source: /packages/react/src/components/modal/modal.tsx
 themeSource: /packages/system/src/recipes/modal.ts
 ---
 
-## Import
+## Installation
 
-- `Modal` - The Modal component.
-- `ModalBody` - The body for the modal.
-- `ModalCloseButton` - The close button for the modal.
-- `ModalContent` - The content for the modal.
-- `ModalFooter` - The footer for the modal.
-- `ModalHeader` - The header for the modal.
-- `ModalOverlay` - The background overlay for the modal.
-
-```tsx
-import { 
-	Modal,
-	ModalBody,
-	ModalCloseButton,
-	ModalContent,
-	ModalFooter,
-	ModalHeader,
-	ModalOverlay
- } from "@dreamy-ui/react";
+```bash
+pnpm dreamy components add modal
 ```
 
 ## Usage
@@ -44,17 +28,17 @@ export default function BasicModal() {
                 Open Modal
             </Button>
 
-            <Modal isOpen={isOpen} onClose={onClose}>
-                <ModalOverlay />
-                <ModalContent>
-                    <ModalHeader>Modal Header</ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>Modal Body</ModalBody>
-                    <ModalFooter>
+            <Modal.Root isOpen={isOpen} onClose={onClose}>
+                <Modal.Overlay />
+                <Modal.Content>
+                    <Modal.Header>Modal Header</Modal.Header>
+                    <Modal.CloseButton />
+                    <Modal.Body>Modal Body</Modal.Body>
+                    <Modal.Footer>
                         <Button onClick={onClose}>Close</Button>
-                    </ModalFooter>
-                </ModalContent>
-            </Modal>
+                    </Modal.Footer>
+                </Modal.Content>
+            </Modal.Root>
         </>
     );
 }
@@ -91,17 +75,17 @@ export function SizeModals() {
                     Open {size} Modal
                 </Button>
 
-                <Modal isOpen={isOpen} onClose={onClose} size={size}>
-                    <ModalOverlay />
-                    <ModalContent>
-                        <ModalHeader>{size} Modal</ModalHeader>
-                        <ModalCloseButton />
-                        <ModalBody>This is a {size} modal!</ModalBody>
-                        <ModalFooter>
+                <Modal.Root isOpen={isOpen} onClose={onClose} size={size}>
+                    <Modal.Overlay />
+                    <Modal.Content>
+                        <Modal.Header>{size} Modal</Modal.Header>
+                        <Modal.CloseButton />
+                        <Modal.Body>This is a {size} modal!</Modal.Body>
+                        <Modal.Footer>
                             <Button onClick={onClose}>Close</Button>
-                        </ModalFooter>
-                    </ModalContent>
-                </Modal>
+                        </Modal.Footer>
+                    </Modal.Content>
+                </Modal.Root>
             </>
         );
     }, []);
@@ -134,17 +118,17 @@ export default function ScrollBehaviorModal() {
 				Open Modal
 			</Button>
 
-			<Modal isOpen={isOpen} onClose={onClose} scrollBehavior={"inside"}>
-				<ModalOverlay />
-				<ModalContent>
-					<ModalHeader>Modal Header</ModalHeader>
-					<ModalCloseButton />
-					<ModalBody>Modal Body</ModalBody>
-					<ModalFooter>
+			<Modal.Root isOpen={isOpen} onClose={onClose} scrollBehavior={"inside"}>
+				<Modal.Overlay />
+				<Modal.Content>
+					<Modal.Header>Modal Header</Modal.Header>
+					<Modal.CloseButton />
+					<Modal.Body>Modal Body</Modal.Body>
+					<Modal.Footer>
 						<Button onClick={onClose}>Close</Button>
-					</ModalFooter>
-				</ModalContent>
-			</Modal>
+					</Modal.Footer>
+				</Modal.Content>
+			</Modal.Root>
 		</>
 	);
 }
@@ -166,27 +150,27 @@ export function ScrollableOutsideModal() {
                 Open Modal
             </Button>
 
-            <Modal
+            <Modal.Root
                 isOpen={isOpen}
                 onClose={onClose}
                 scrollBehavior="outside"
                 placement="top"
                 size={"lg"}
             >
-                <ModalOverlay />
-                <ModalContent>
-                    <ModalHeader>Modal Header</ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>
+                <Modal.Overlay />
+                <Modal.Content>
+                    <Modal.Header>Modal Header</Modal.Header>
+                    <Modal.CloseButton />
+                    <Modal.Body>
                         {[...Array(10)].map((_, i) => (
                             <LoremIpsum key={`ipsum-${i}`} p={1} />
                         ))}
-                    </ModalBody>
-                    <ModalFooter>
+                    </Modal.Body>
+                    <Modal.Footer>
                         <Button onClick={onClose}>Close</Button>
-                    </ModalFooter>
-                </ModalContent>
-            </Modal>
+                    </Modal.Footer>
+                </Modal.Content>
+            </Modal.Root>
         </>
     );
 }
@@ -210,17 +194,17 @@ export function PlacementModal() {
                 Open Modal
             </Button>
 
-            <Modal isOpen={isOpen} onClose={onClose} placement={"top"}>
-                <ModalOverlay />
-                <ModalContent>
-                    <ModalHeader>Modal Header</ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>Modal Body</ModalBody>
-                    <ModalFooter>
+            <Modal.Root isOpen={isOpen} onClose={onClose} placement={"top"}>
+                <Modal.Overlay />
+                <Modal.Content>
+                    <Modal.Header>Modal Header</Modal.Header>
+                    <Modal.CloseButton />
+                    <Modal.Body>Modal Body</Modal.Body>
+                    <Modal.Footer>
                         <Button onClick={onClose}>Close</Button>
-                    </ModalFooter>
-                </ModalContent>
-            </Modal>
+                    </Modal.Footer>
+                </Modal.Content>
+            </Modal.Root>
         </>
     );
 }

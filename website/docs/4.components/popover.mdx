@@ -6,81 +6,61 @@ source: /packages/react/src/components/popover/popover.tsx
 themeSource: /packages/system/src/recipes/popover.ts
 ---
 
-## Import
+## Installation
 
-- `Popover` - The Popover component with context.
-- `PopoverContent` - The content for the popover.
-- `PopoverHeader` - The header for the popover.
-- `PopoverBody` - The body for the popover.
-- `PopoverFooter` - The footer for the popover.
-- `PopoverCloseButton` - The close button for the popover.
-- `PopoverAnchor` - The anchor for the popover.
-- `PopoverArrow` - The arrow for the popover.
-- `PopoverTrigger` - The trigger for the popover.
-
-```tsx
-import { 
-	Popover,
-    PopoverContent,
-    PopoverHeader,
-    PopoverBody,
-    PopoverFooter,
-    PopoverCloseButton,
-    PopoverAnchor,
-    PopoverArrow,
-    PopoverTrigger
- } from "@dreamy-ui/react";
+```bash
+pnpm dreamy components add popover
 ```
 
 ## Usage
 
 When Popover opens, focus is sent to PopoverContent. When it closes, focus is returned to the trigger.
 
-For arrow, you can use `hasArrow` prop or use `<PopoverArrow />` component inside `<PopoverContent />`.
+If you want to show arrow, you can use `hasArrow` prop.
 
 <Wrapper>
-    <Popover hasArrow>
-        <PopoverTrigger>
+    <Popover.Root hasArrow>
+        <Popover.Trigger>
             <Button
                 variant={"primary"}
                 w="fit-content"
             >
                 <>Open Popover</>
             </Button>
-        </PopoverTrigger>
+        </Popover.Trigger>
 
-        <PopoverContent>
-            <PopoverCloseButton />
-            <PopoverHeader>Delete Post</PopoverHeader>
-            <PopoverBody>
+        <Popover.Content>
+            <Popover.CloseButton />
+            <Popover.Header>Delete Post</Popover.Header>
+            <Popover.Body>
                 <>Are you sure you want to delete this post? This action cannot be undone.</>
-            </PopoverBody>
-            <PopoverFooter>
+            </Popover.Body>
+            <Popover.Footer>
                 <Button variant={"primary"}>Delete</Button>
-            </PopoverFooter>
-        </PopoverContent>
-    </Popover>
+            </Popover.Footer>
+        </Popover.Content>
+    </Popover.Root>
 </Wrapper>
 
 ```tsx
 export function BasicPopover() {
     return (
-        <Popover hasArrow>
-            <PopoverTrigger>
+        <Popover.Root hasArrow>
+            <Popover.Trigger>
                 <Button variant={"primary"}>Open Popover</Button>
-            </PopoverTrigger>
+            </Popover.Trigger>
 
-            <PopoverContent>
-                <PopoverCloseButton />
-                <PopoverHeader>Delete Post</PopoverHeader>
-                <PopoverBody>
+            <Popover.Content>
+                <Popover.CloseButton />
+                <Popover.Header>Delete Post</Popover.Header>
+                <Popover.Body>
                     Are you sure you want to delete this post? This action cannot be undone.
-                </PopoverBody>
-                <PopoverFooter>
+                </Popover.Body>
+                <Popover.Footer>
                     <Button variant={"primary"}>Delete</Button>
-                </PopoverFooter>
-            </PopoverContent>
-        </Popover>
+                </Popover.Footer>
+            </Popover.Content>
+        </Popover.Root>
     );
 }
 ```
@@ -105,28 +85,27 @@ export function ControlledPopover() {
     }, [onClose]);
 
     return (
-        <Popover isOpen={isOpen} onOpen={onOpen} onClose={onClose}>
-            <PopoverTrigger>
+        <Popover.Root hasArrow isOpen={isOpen} onOpen={onOpen} onClose={onClose}>
+            <Popover.Trigger>
                 <Button variant={"primary"}>Open Popover</Button>
-            </PopoverTrigger>
+            </Popover.Trigger>
 
-            <PopoverContent>
-                <PopoverArrow />
-                <PopoverCloseButton />
-                <PopoverHeader>Delete Post</PopoverHeader>
-                <PopoverBody>
+            <Popover.Content>
+                <Popover.CloseButton />
+                <Popover.Header>Delete Post</Popover.Header>
+                <Popover.Body>
                     Are you sure you want to delete this post? This action cannot be undone.
-                </PopoverBody>
-                <PopoverFooter>
+                </Popover.Body>
+                <Popover.Footer>
                     <Button variant={"solid"} onClick={onClose}>
                         Cancel
                     </Button>
                     <Button variant={"primary"} onClick={handleDelete}>
                         Delete
                     </Button>
-                </PopoverFooter>
-            </PopoverContent>
-        </Popover>
+                </Popover.Footer>
+            </Popover.Content>
+        </Popover.Root>
     );
 }
 ```
@@ -145,31 +124,31 @@ export function FocusPopover() {
     const initialFocusRef = useRef<HTMLButtonElement>(null);
 
     return (
-        <Popover
+        <Popover.Root
+            hasArrow
             isOpen={isOpen}
             onOpen={onOpen}
             onClose={onClose}
             initialFocusRef={initialFocusRef}
         >
-            <PopoverTrigger>
+            <Popover.Trigger>
                 <Button variant={"primary"}>Open Popover</Button>
-            </PopoverTrigger>
+            </Popover.Trigger>
 
-            <PopoverContent>
-                <PopoverArrow />
-                <PopoverCloseButton />
-                <PopoverHeader>Delete Post</PopoverHeader>
-                <PopoverBody>
+            <Popover.Content>
+                <Popover.CloseButton />
+                <Popover.Header>Delete Post</Popover.Header>
+                <Popover.Body>
                     Are you sure you want to delete this post? This action cannot be undone.
-                </PopoverBody>
-                <PopoverFooter>
+                </Popover.Body>
+                <Popover.Footer>
                     <Button variant={"solid"} onClick={onClose} ref={initialFocusRef}>
                         Cancel
                     </Button>
                     <Button variant={"primary"}>Delete</Button>
-                </PopoverFooter>
-            </PopoverContent>
-        </Popover>
+                </Popover.Footer>
+            </Popover.Content>
+        </Popover.Root>
     );
 }
 ```
@@ -210,23 +189,22 @@ export function PlacementPopovers() {
 
 export function PlacementPopover({ placement }: { placement: PlacementWithLogical }) {
     return (
-        <Popover placement={placement}>
-            <PopoverTrigger>
+        <Popover.Root hasArrow placement={placement}>
+            <Popover.Trigger>
                 <Button variant={"primary"}>{placement}</Button>
-            </PopoverTrigger>
+            </Popover.Trigger>
 
-            <PopoverContent>
-                <PopoverArrow />
-                <PopoverCloseButton />
-                <PopoverHeader>Delete Post</PopoverHeader>
-                <PopoverBody>
+            <Popover.Content>
+                <Popover.CloseButton />
+                <Popover.Header>Delete Post</Popover.Header>
+                <Popover.Body>
                     Are you sure you want to delete this post? This action cannot be undone.
-                </PopoverBody>
-                <PopoverFooter>
+                </Popover.Body>
+                <Popover.Footer>
                     <Button variant={"primary"}>Delete</Button>
-                </PopoverFooter>
-            </PopoverContent>
-        </Popover>
+                </Popover.Footer>
+            </Popover.Content>
+        </Popover.Root>
     );
 }
 ```
@@ -257,28 +235,27 @@ export function SizePopovers() {
 
 export function SizePopover({ size }: { size: string }) {
     return (
-        <Popover size={size as any}>
-            <PopoverTrigger>
+        <Popover.Root hasArrow size={size as any}>
+            <Popover.Trigger>
                 <Button
                     variant={"primary"}
                     w="fit-content"
                 >
                     {size}
                 </Button>
-            </PopoverTrigger>
+            </Popover.Trigger>
 
-            <PopoverContent>
-                <PopoverArrow />
-                <PopoverCloseButton />
-                <PopoverHeader>Delete Post</PopoverHeader>
-                <PopoverBody>
+            <Popover.Content>
+                <Popover.CloseButton />
+                <Popover.Header>Delete Post</Popover.Header>
+                <Popover.Body>
                     Are you sure you want to delete this post? This action cannot be undone.
-                </PopoverBody>
-                <PopoverFooter>
+                </Popover.Body>
+                <Popover.Footer>
                     <Button variant={"primary"}>Delete</Button>
-                </PopoverFooter>
-            </PopoverContent>
-        </Popover>
+                </Popover.Footer>
+            </Popover.Content>
+        </Popover.Root>
     );
 }
 ```
@@ -288,41 +265,39 @@ export function SizePopover({ size }: { size: string }) {
 You can customize the reduce motion behavior of the popover using the `reduceMotion` prop.
 
 <Wrapper>
-    <Popover reduceMotion>
-        <PopoverTrigger>
+    <Popover.Root reduceMotion hasArrow>
+        <Popover.Trigger>
             <Button variant={"primary"} w='fit-content'>Reduced Motion</Button>
-        </PopoverTrigger>
+        </Popover.Trigger>
 
-        <PopoverContent>
-            <PopoverArrow />
-            <PopoverCloseButton />
-            <PopoverHeader>Delete Post</PopoverHeader>
-            <PopoverBody>
+        <Popover.Content>
+            <Popover.CloseButton />
+            <Popover.Header>Delete Post</Popover.Header>
+            <Popover.Body>
                 <>Are you sure you want to delete this post? This action cannot be undone.</>
-            </PopoverBody>
-            <PopoverFooter>
+            </Popover.Body>
+            <Popover.Footer>
                 <Button variant={"primary"}>Delete</Button>
-            </PopoverFooter>
-        </PopoverContent>
-    </Popover>
+            </Popover.Footer>
+        </Popover.Content>
+    </Popover.Root>
 </Wrapper>
 
 ```tsx
-<Popover reduceMotion>
-    <PopoverTrigger>
+<Popover.Root reduceMotion hasArrow>
+    <Popover.Trigger>
         <Button variant={"primary"}>Reduced Motion</Button>
-    </PopoverTrigger>
+    </Popover.Trigger>
 
-    <PopoverContent>
-        <PopoverArrow />
-        <PopoverCloseButton />
-        <PopoverHeader>Delete Post</PopoverHeader>
-        <PopoverBody>
+    <Popover.Content>
+        <Popover.CloseButton />
+        <Popover.Header>Delete Post</Popover.Header>
+        <Popover.Body>
             Are you sure you want to delete this post? This action cannot be undone.
-        </PopoverBody>
-        <PopoverFooter>
+        </Popover.Body>
+        <Popover.Footer>
             <Button variant={"primary"}>Delete</Button>
-        </PopoverFooter>
-    </PopoverContent>
-</Popover>
+        </Popover.Footer>
+    </Popover.Content>
+</Popover.Root>
 ```

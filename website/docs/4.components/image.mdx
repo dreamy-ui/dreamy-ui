@@ -6,14 +6,10 @@ source: /packages/react/src/components/image/image.tsx
 themeSource: /packages/system/recipes/image.ts
 ---
 
-## Import
+## Installation
 
-- `Image` - The Image component.
-- `ImageRSC` - The Image component for RSC usage without client handlers.
-
-```tsx
-import { Image } from "@dreamy-ui/react";
-import { ImageRSC } from "@dreamy-ui/react/rsc";
+```bash
+pnpm dreamy components add image
 ```
 
 ## Usage
@@ -95,24 +91,48 @@ Use `blurShadow` to add a blurred shadow to the image.
 />
 ```
 
-### RSC Usage
+### Modify zoom and blur options
 
-ImageRSC is a server-side compatible component that does not use client handlers.
+You can use `zoomOptions` and `blurOptions` to modify the zoom and blur options.
 
 <Wrapper>
-  <ImageRSC 
+  <Image 
     src="/outdoor-cat.webp"
     alt="Outdoor cat" 
+    fallbackSrc="https://via.placeholder.com/250x164" 
     w="250px"
     rounded="lg"
+    blurShadow
+    blurOptions={{
+      scale: 1.1,
+      radius: "15px",
+      opacity: 0.5
+    }}
+    zoomOnHover
+    zoomOptions={{
+      scale: 1.2,
+      duration: "0.5s"
+    }}
   />
 </Wrapper>
 
 ```tsx
-<ImageRSC 
-  src="/outdoor-cat.webp"
+<Image 
+  src="https://dreamy-ui.com/outdoor-cat.webp" 
   alt="Outdoor cat" 
+  fallbackSrc="https://via.placeholder.com/250x164" 
   w="250px"
   rounded="lg"
+  blurShadow
+  blurOptions={{
+    scale: 1.1,
+    radius: "15px",
+    opacity: 0.5
+  }}
+  zoomOnHover
+  zoomOptions={{
+    scale: 1.2,
+    duration: "0.5s"
+  }}
 />
 ```
