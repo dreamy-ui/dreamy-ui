@@ -37,7 +37,7 @@
 		"isbot": "^4.4.0",
 		"lru-cache": "^10.3.1",
 		"morgan": "^1.10.0",
-		"motion": "^12.7.3",
+		"motion": "^12.23.12",
 		"next-mdx-remote": "^5.0.0",
 		"octokit": "^4.0.2",
 		"outdent": "^0.8.0",
