@@ -20,18 +20,28 @@ function transformTree(parent: any) {
 
         // Detect commands that start with `pnpm dreamy`
         const lines = node.value.split("\n").map((l: string) => l.trim());
-        const firstDreamyLine = lines.find((l: string) => /^pnpm\s+dreamy\b/.test(l));
+
+        const firstDreamyLine = lines.find((l: string) => /^pnpm\s+/.test(l));
         if (!firstDreamyLine) continue;
 
         // Extract the sub-command after `pnpm `
         const sub = firstDreamyLine.replace(/^pnpm\s+/, "").trim(); // e.g. "dreamy components add card"
 
-        const commands = {
-            npm: `npx ${sub}`,
-            pnpm: `pnpm ${sub}`,
-            yarn: `yarn dlx ${sub}`,
-            bun: `bunx ${sub}`
-        };
+        const isDreamy = !!lines.find((l: string) => /^pnpm\s+dreamy\b/.test(l));
+
+        const commands = isDreamy
+            ? {
+                  npm: `npx ${sub}`,
+                  pnpm: `pnpm ${sub}`,
+                  yarn: `yarn dlx ${sub}`,
+                  bun: `bunx ${sub}`
+              }
+            : {
+                  npm: `npm ${sub}`,
+                  pnpm: `pnpm ${sub}`,
+                  yarn: `yarn ${sub}`,
+                  bun: `bun ${sub}`
+              };
 
         // <PMTabs>
         //   <PMTabs.Option name="npm">npx dreamy ...</PMTabs.Option>
