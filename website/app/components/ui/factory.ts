@@ -20,7 +20,8 @@ import type {
     Pretty,
     RecipeDefinition,
     RecipeSelection,
-    RecipeVariantRecord
+    RecipeVariantRecord,
+    UnstyledProps
 } from "styled-system/types";
 
 type DreamPropsWithRef<E extends React.ElementType> = React.ComponentPropsWithRef<E>;
@@ -199,7 +200,7 @@ type AssignHtmlProps<T extends Dict, P extends Dict = {}> = Assign<PatchHtmlProp
 
 export type HTMLDreamyProps<T extends ElementType, P extends Dict = {}> = AssignHtmlProps<
     ComponentPropsWithoutRef<T>,
-    Assign<JsxStyleProps, P> & PolymorphicProps
+    Assign<JsxStyleProps, P> & PolymorphicProps & UnstyledProps
 >;
 
 export type AnyFunction<T = any> = (...args: T[]) => any;
