@@ -27,6 +27,15 @@ export function createColorTokens({
                               _light: buttonPrimaryTextColor.light,
                               _dark: buttonPrimaryTextColor.dark
                           }
+            },
+            hover: {
+                value:
+                    typeof buttonPrimaryTextColor === "string"
+                        ? `color-mix(in srgb, ${buttonPrimaryTextColor}, currentColor 10%)`
+                        : {
+                              _light: `color-mix(in srgb, ${buttonPrimaryTextColor.light}, currentColor 10%)`,
+                              _dark: `color-mix(in srgb, ${buttonPrimaryTextColor.dark}, currentColor 10%)`
+                          }
             }
         },
         secondary: {
@@ -46,6 +55,15 @@ export function createColorTokens({
                         : {
                               _light: buttonSecondaryTextColor.light,
                               _dark: buttonSecondaryTextColor.dark
+                          }
+            },
+            hover: {
+                value:
+                    typeof buttonSecondaryTextColor === "string"
+                        ? `color-mix(in srgb, ${buttonSecondaryTextColor}, currentColor 10%)`
+                        : {
+                              _light: `color-mix(in srgb, ${buttonSecondaryTextColor.light}, currentColor 10%)`,
+                              _dark: `color-mix(in srgb, ${buttonSecondaryTextColor.dark}, currentColor 10%)`
                           }
             }
         },
