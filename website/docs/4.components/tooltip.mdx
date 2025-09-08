@@ -17,14 +17,14 @@ pnpm dreamy components add tooltip
 Base usage of a Tooltip.
 
 <Wrapper>
-    <Tooltip content="I am visible on hover">
-        <Text w='fit-content'>Hover me</Text>
-    </Tooltip>
+	<Tooltip content="I am visible on hover">
+		<Text w="fit-content">Hover me</Text>
+	</Tooltip>
 </Wrapper>
 
 ```tsx
 <Tooltip content="I am visible on hover">
-    <Text>Hover me</Text>
+	<Text>Hover me</Text>
 </Tooltip>
 ```
 
@@ -33,12 +33,12 @@ Base usage of a Tooltip.
 You can control the open and close delay of the tooltip by using the `openDelay` and `closeDelay` props.
 
 <Wrapper>
-    <Tooltip content="I am visible on hover after 1000 miliseconds" openDelay={1000}>
-        <Text w='fit-content'>Hover me (1s open)</Text>
-    </Tooltip>
-        <Tooltip content="I am closed after 1000 miliseconds" closeDelay={1000}>
-        <Text w='fit-content'>Hover me (1s close)</Text>
-    </Tooltip>
+	<Tooltip content="I am visible on hover after 1000 miliseconds" openDelay={1000}>
+		<Text w="fit-content">Hover me (1s open)</Text>
+	</Tooltip>
+	<Tooltip content="I am closed after 1000 miliseconds" closeDelay={1000}>
+		<Text w="fit-content">Hover me (1s close)</Text>
+	</Tooltip>
 </Wrapper>
 
 ```tsx
@@ -57,18 +57,18 @@ You can control the close behavior of the tooltip by using the `closeOnClick`, `
 By default, the tooltip will close on click, pointer down, esc key, but not on scroll.
 
 <Wrapper>
-    <Tooltip content="I am not closed on click" closeOnClick={false}>
-        <Text w='fit-content'>Close on click false</Text>
-    </Tooltip>
-    <Tooltip content="I am not closed on pointer down" closeOnPointerDown={false}>
-        <Text w='fit-content'>Close on pointer down false</Text>
-    </Tooltip>
-    <Tooltip content="I am not closed on esc key" closeOnEsc={false}>
-        <Text w='fit-content'>Close on esc key false</Text>
-    </Tooltip>
-    <Tooltip content="I am closed on scroll" closeOnScroll>
-        <Text w='fit-content'>Close on scroll</Text>
-    </Tooltip>
+	<Tooltip content="I am not closed on click" closeOnClick={false}>
+		<Text w="fit-content">Close on click false</Text>
+	</Tooltip>
+	<Tooltip content="I am not closed on pointer down" closeOnPointerDown={false}>
+		<Text w="fit-content">Close on pointer down false</Text>
+	</Tooltip>
+	<Tooltip content="I am not closed on esc key" closeOnEsc={false}>
+		<Text w="fit-content">Close on esc key false</Text>
+	</Tooltip>
+	<Tooltip content="I am closed on scroll" closeOnScroll>
+		<Text w="fit-content">Close on scroll</Text>
+	</Tooltip>
 </Wrapper>
 
 ```tsx
@@ -86,17 +86,17 @@ By default, the tooltip will close on click, pointer down, esc key, but not on s
 </Tooltip>
 ```
 
-### Arrow 
+### Arrow
 
 You can control the arrow of the tooltip by using the `hasArrow` and `arrowSize` props.
 
 <Wrapper>
-    <Tooltip content="I have no arrow" hasArrow={false}>
-        <Text w='fit-content'>No arrow</Text>
-    </Tooltip>
-    <Tooltip content="I have an arrow" arrowSize={15}>
-        <Text w='fit-content'>Arrow size 15</Text>
-    </Tooltip>
+	<Tooltip content="I have no arrow" hasArrow={false}>
+		<Text w="fit-content">No arrow</Text>
+	</Tooltip>
+	<Tooltip content="I have an arrow" arrowSize={15}>
+		<Text w="fit-content">Arrow size 15</Text>
+	</Tooltip>
 </Wrapper>
 
 ```tsx
@@ -105,5 +105,23 @@ You can control the arrow of the tooltip by using the `hasArrow` and `arrowSize`
 </Tooltip>
 <Tooltip content="I have an arrow" arrowSize={15}>
     <Text>Arrow size 15</Text>
+</Tooltip>
+```
+
+### Disable Portal
+
+In some cases you might want to disable the portal and render the tooltip directly in the parent component.
+
+You may use it in a sticky header for example, as with portal, the tooltip will look weird.
+
+<Wrapper>
+	<Tooltip content="I am rendered directly in the parent component" disablePortal>
+		<Text w="fit-content">Disable portal</Text>
+	</Tooltip>
+</Wrapper>
+
+```tsx
+<Tooltip content="I am rendered directly in the parent component" disablePortal>
+	<Text>Disable portal</Text>
 </Tooltip>
 ```

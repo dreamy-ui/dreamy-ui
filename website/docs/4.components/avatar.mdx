@@ -17,17 +17,11 @@ pnpm dreamy components add avatar
 Avatar is a component that displays a user's profile picture without blocking navigation to load the image.
 
 <Wrapper>
-  <Avatar
-    src="/olcia.webp"
-    name="Girlfriend"
-  />
+	<Avatar src="/olcia.webp" name="Girlfriend" />
 </Wrapper>
 
 ```tsx
-<Avatar
-  src="/olcia.webp"
-  name="Girlfriend"
-/>
+<Avatar src="/olcia.webp" name="Girlfriend" />
 ```
 
 ### Sizes
@@ -35,44 +29,20 @@ Avatar is a component that displays a user's profile picture without blocking na
 You can set the size of the avatar by using the `size` prop.
 
 <Wrapper>
-  <HStack>
-    <Avatar
-      size="sm"
-      src="/olcia.webp"
-      name="Girlfriend"
-    />
-    <Avatar
-      size="md"
-      src="/olcia.webp"
-      name="Girlfriend"
-    />
-    <Avatar
-      size="lg"
-      src="/olcia.webp"
-      name="Girlfriend"
-    />
+	<HStack>
+		<Avatar size="sm" src="/olcia.webp" name="Girlfriend" />
+		<Avatar size="md" src="/olcia.webp" name="Girlfriend" />
+		<Avatar size="lg" src="/olcia.webp" name="Girlfriend" />
 	</HStack>
 </Wrapper>
 
 ```tsx
 <HStack>
-  <Avatar
-    size="sm"
-    src="/olcia.webp"
-    name="Girlfriend"
-  />
-  <Avatar
-    size="md"
-    src="/olcia.webp"
-    name="Girlfriend"
-  />
-  <Avatar
-    size="lg"
-    src="/olcia.webp"
-    name="Girlfriend"
-  />
+	<Avatar size="sm" src="/olcia.webp" name="Girlfriend" />
+	<Avatar size="md" src="/olcia.webp" name="Girlfriend" />
+	<Avatar size="lg" src="/olcia.webp" name="Girlfriend" />
 </HStack>
-``` 
+```
 
 ### Avatar Group
 
@@ -80,27 +50,59 @@ AvatarGroup is a wrapper around Avatars that displays a number of avatars groupe
 Use `maxAvatars` prop to limit the number of avatars displayed.
 
 <Wrapper>
-  <AvatarGroup arGroup maxAvatars={4}>
-    <Avatar name="Dream" />
-    <Avatar name="Dream" />
-    <Avatar name="Dream" />
-    <Avatar name="Dream" />
-    <Avatar name="Dream" />
-    <Avatar name="Dream" />
-    <Avatar name="Dream" />
-    <Avatar name="Dream" />
-  </AvatarGroup>
+	<AvatarGroup arGroup maxAvatars={4}>
+		<Avatar name="Dream" />
+		<Avatar name="Dream" />
+		<Avatar name="Dream" />
+		<Avatar name="Dream" />
+		<Avatar name="Dream" />
+		<Avatar name="Dream" />
+		<Avatar name="Dream" />
+		<Avatar name="Dream" />
+	</AvatarGroup>
 </Wrapper>
 
 ```tsx
 <AvatarGroup maxAvatars={4}>
-  <Avatar name="Dream" />
-  <Avatar name="Dream" />
-  <Avatar name="Dream" />
-  <Avatar name="Dream" />
-  <Avatar name="Dream" />
-  <Avatar name="Dream" />
-  <Avatar name="Dream" />
-  <Avatar name="Dream" />
+	<Avatar name="Dream" />
+	<Avatar name="Dream" />
+	<Avatar name="Dream" />
+	<Avatar name="Dream" />
+	<Avatar name="Dream" />
+	<Avatar name="Dream" />
+	<Avatar name="Dream" />
+	<Avatar name="Dream" />
 </AvatarGroup>
+```
+
+### Persona
+
+Using more Dreamy UI components, you can create a nice looking persona component.
+
+<Wrapper>
+	<HStack>
+		<Avatar src="/olcia.webp" size="md" name="Alexandra" />
+		<Flex col>
+			<Text size="sm" fontWeight="medium">
+				<>Alexandra</>
+			</Text>
+			<Text size="sm" color="fg.medium">
+				<>Dream</>
+			</Text>
+		</Flex>
+	</HStack>
+</Wrapper>
+
+```tsx
+<HStack>
+	<Avatar src="/olcia.webp" size="md" name="Alexandra" />
+	<Flex col>
+		<Text size="sm" fontWeight="medium">
+			Alexandra
+		</Text>
+		<Text size="sm" color="fg.medium">
+			Dream
+		</Text>
+	</Flex>
+</HStack>
 ```
