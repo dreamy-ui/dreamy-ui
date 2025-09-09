@@ -8,8 +8,8 @@ export default defineConfig((options) => ({
     treeshake: true,
     external: [],
     outDir: "dist",
-    banner: {
-        js: "import { createRequire } from 'module'; const require = createRequire(import.meta.url);"
-    },
+    // banner: {
+    //     js: "import { createRequire } from 'module'; const require = createRequire(import.meta.url);"
+    // },
     ...options
 }));

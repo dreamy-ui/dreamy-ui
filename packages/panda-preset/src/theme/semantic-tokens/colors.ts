@@ -30,11 +30,11 @@ export function createColorTokens({
             },
             hover: {
                 value:
-                    typeof buttonPrimaryTextColor === "string"
-                        ? `color-mix(in srgb, ${buttonPrimaryTextColor}, currentColor 10%)`
+                    typeof primaryColor === "string"
+                        ? `color-mix(in srgb, ${primaryColor}, currentColor 10%)`
                         : {
-                              _light: `color-mix(in srgb, ${buttonPrimaryTextColor.light}, currentColor 10%)`,
-                              _dark: `color-mix(in srgb, ${buttonPrimaryTextColor.dark}, currentColor 10%)`
+                              _light: `color-mix(in srgb, ${primaryColor.light}, currentColor 10%)`,
+                              _dark: `color-mix(in srgb, ${primaryColor.dark}, currentColor 10%)`
                           }
             }
         },
@@ -59,11 +59,11 @@ export function createColorTokens({
             },
             hover: {
                 value:
-                    typeof buttonSecondaryTextColor === "string"
-                        ? `color-mix(in srgb, ${buttonSecondaryTextColor}, currentColor 10%)`
+                    typeof secondaryColor === "string"
+                        ? `color-mix(in srgb, ${secondaryColor}, currentColor 10%)`
                         : {
-                              _light: `color-mix(in srgb, ${buttonSecondaryTextColor.light}, currentColor 10%)`,
-                              _dark: `color-mix(in srgb, ${buttonSecondaryTextColor.dark}, currentColor 10%)`
+                              _light: `color-mix(in srgb, ${secondaryColor.light}, currentColor 10%)`,
+                              _dark: `color-mix(in srgb, ${secondaryColor.dark}, currentColor 10%)`
                           }
             }
         },
