@@ -43,6 +43,13 @@ export default function Test() {
             gap={10}
             align={"start"}
         >
+            <Button
+                size={"lg"}
+                variant={"primary"}
+            >
+                Primary
+            </Button>
+
             <MotionButton
                 initial
                 layout

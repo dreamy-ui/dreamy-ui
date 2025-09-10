@@ -8,7 +8,7 @@ import { useCallback, useState } from "react";
 import { MotionBox } from "./motion";
 
 export interface RippleProps {
-    ripples: RippleType[];
+    ripples: IRipple[];
     currentRipple: string | null;
     color?: string;
     motionProps?: HTMLMotionProps<"div">;
@@ -68,7 +68,11 @@ export function Ripple(props: RippleProps) {
                         willChange: "transform, opacity",
                         ...style
                     }}
-                    transition={{ duration }}
+                    transition={{
+                        type: "spring",
+                        stiffness: isEdgingThisRipple ? 20 : 80,
+                        damping: isEdgingThisRipple ? 25 : 20
+                    }}
                     onAnimationComplete={() => {
                         setTimeout(() => {
                             onClear(ripple.key);
@@ -82,18 +86,18 @@ export function Ripple(props: RippleProps) {
     });
 }
 
-export type RippleType = {
+export interface IRipple {
     key: React.Key;
     x: number;
     y: number;
     size: number;
-};
+}
 
 export type UseRippleProps = {};
 
 export function useRipple(props: UseRippleProps = {}) {
     const isGloballyDisabled = useDisableRipple();
-    const [ripples, setRipples] = useState<RippleType[]>([]);
+    const [ripples, setRipples] = useState<IRipple[]>([]);
 
     const [currentRipple, setCurrentRipple] = useState<string | null>(null);
 
