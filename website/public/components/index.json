@@ -615,6 +615,20 @@
   },
   {
     "type": "component",
+    "id": "stat",
+    "file": "stat.tsx",
+    "component": "Stat",
+    "fileDependencies": [
+      "./factory"
+    ],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "stat"
+    ]
+  },
+  {
+    "type": "component",
     "id": "switch",
     "file": "switch.tsx",
     "component": "Switch",

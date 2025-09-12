@@ -26,6 +26,7 @@ import { skeleton } from "./skeleton";
 import { slider } from "./slider";
 import { snippet } from "./snippet";
 import { spinner } from "./spinner";
+import { stat } from "./stat";
 import { swittch } from "./swittch";
 import { table } from "./table";
 import { tabs } from "./tabs";
@@ -63,6 +64,7 @@ export const recipes = {
     slider,
     snippet,
     spinner,
+    stat,
     swittch,
     table,
     tabs,
