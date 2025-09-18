@@ -20,8 +20,8 @@
 		"directory": "packages/panda-preset"
 	},
 	"scripts": {
-		"build": "tsdown",
-		"dev": "tsdown --watch",
+		"build": "tsup",
+		"dev": "tsup --watch",
 		"typecheck": "tsc --noEmit"
 	},
 	"files": [
@@ -45,6 +45,6 @@
 		"@types/node": "^22.13.9",
 		"@types/react": "^19.0.1",
 		"chalk": "^5.4.1",
-		"tsdown": "^0.15.0"
+		"tsup": "^8.3.5"
 	}
 }

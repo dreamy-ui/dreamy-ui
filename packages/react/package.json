@@ -12,8 +12,8 @@
 	"author": "imexoodeex",
 	"license": "MIT",
 	"scripts": {
-		"build": "tsdown",
-		"dev": "tsdown --watch",
+		"build": "tsup",
+		"dev": "tsup --watch",
 		"typecheck": "tsc --noEmit",
 		"storybook": "storybook dev -p 6006"
 	},
@@ -51,7 +51,7 @@
 		"@types/react": "^19.0.1",
 		"@types/react-dom": "^19.0.2",
 		"storybook": "^8.4.7",
-		"tsdown": "^0.15.0",
+		"tsup": "^8.3.5",
 		"typescript": "^5.7.2",
 		"vite": "^6.0.3",
 		"vite-tsconfig-paths": "^5.1.4"
