@@ -23,9 +23,9 @@ import { getServerCookie } from "./src/functions/cookies";
 import { useRoot } from "./src/hooks/useRoot";
 import GlobalContextProvider from "./src/ui/global/GlobalContext";
 
-export const unstable_clientMiddleware = [clientTimingMiddleware];
+export const clientMiddleware = [clientTimingMiddleware];
 
-export const unstable_middleware = [
+export const middleware = [
     requestMiddleware,
     timingsMiddleware,
     prefetchCacheControlHeaderMiddleware
