@@ -198,9 +198,17 @@ type PatchHtmlProps<T> = DistributiveOmit<T, HtmlProp> & HtmlProps;
 
 type AssignHtmlProps<T extends Dict, P extends Dict = {}> = Assign<PatchHtmlProps<T>, P>;
 
+type DataAttrProps = {
+    [K in `data-${string}`]?: string;
+};
+
+type AriaAttrProps = {
+    [K in `aria-${string}`]?: string;
+};
+
 export type HTMLDreamyProps<T extends ElementType, P extends Dict = {}> = AssignHtmlProps<
     ComponentPropsWithoutRef<T>,
-    Assign<JsxStyleProps, P> & PolymorphicProps & UnstyledProps
+    Assign<JsxStyleProps, P> & PolymorphicProps & UnstyledProps & DataAttrProps & AriaAttrProps
 >;
 
 export type AnyFunction<T = any> = (...args: T[]) => any;

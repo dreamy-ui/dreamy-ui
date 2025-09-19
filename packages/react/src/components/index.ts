@@ -16,6 +16,7 @@ export * from "./radio";
 export * from "./select";
 export * from "./slider";
 export * from "./snippet";
+export * from "./stat";
 export * from "./switch";
 export * from "./tabs";
 export * from "./textarea";

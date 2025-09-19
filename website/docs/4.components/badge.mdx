@@ -17,7 +17,7 @@ pnpm dreamy components add badge
 Badge is a component that can be used to highlight important information.
 
 <Wrapper>
-    <Badge>Prime</Badge>
+	<Badge>Prime</Badge>
 </Wrapper>
 
 ```tsx
@@ -28,17 +28,19 @@ Badge is a component that can be used to highlight important information.
 
 You can change the variant of the Badge by using the `variant` prop.
 
-<Wrapper> 
-<HStack>
-  <Badge variant="outline">Outline</Badge>
-    <Badge variant="subtle">Subtle</Badge>
-  </HStack>
+<Wrapper>
+	<HStack>
+		<Badge variant="outline">Outline</Badge>
+		<Badge variant="subtle">Subtle</Badge>
+		<Badge variant="plain">Plain</Badge>
+	</HStack>
 </Wrapper>
 
 ```tsx
 <HStack>
-  <Badge variant="outline">Outline</Badge>
-  <Badge variant="subtle">Subtle</Badge>
+	<Badge variant="outline">Outline</Badge>
+	<Badge variant="subtle">Subtle</Badge>
+	<Badge variant="plain">Plain</Badge>
 </HStack>
 ```
 
@@ -47,27 +49,27 @@ You can change the variant of the Badge by using the `variant` prop.
 You can change the color scheme of the Badge by using the `scheme` prop. Don't mistake this with the css `colorScheme` property.
 
 <Wrapper>
-  <HStack>
-    <Badge scheme="primary">Primary</Badge>
-    <Badge scheme="secondary">Secondary</Badge>
-    <Badge scheme="success">Success</Badge>
-    <Badge scheme="warning">Warning</Badge>
-    <Badge scheme="error">Error</Badge>
-    <Badge scheme="info">Info</Badge>
-    <Badge scheme="none">None</Badge>
-  </HStack>
+	<Wrap>
+		<Badge scheme="primary">Primary</Badge>
+		<Badge scheme="secondary">Secondary</Badge>
+		<Badge scheme="success">Success</Badge>
+		<Badge scheme="warning">Warning</Badge>
+		<Badge scheme="error">Error</Badge>
+		<Badge scheme="info">Info</Badge>
+		<Badge scheme="none">None</Badge>
+	</Wrap>
 </Wrapper>
 
 ```tsx
-<HStack>
-  <Badge scheme="primary">Primary</Badge>
-  <Badge scheme="secondary">Secondary</Badge>
-  <Badge scheme="success">Success</Badge>
-  <Badge scheme="warning">Warning</Badge>
-  <Badge scheme="error">Error</Badge>
-  <Badge scheme="info">Info</Badge>
-  <Badge scheme="none">None</Badge>
-</HStack>
+<Wrap>
+	<Badge scheme="primary">Primary</Badge>
+	<Badge scheme="secondary">Secondary</Badge>
+	<Badge scheme="success">Success</Badge>
+	<Badge scheme="warning">Warning</Badge>
+	<Badge scheme="error">Error</Badge>
+	<Badge scheme="info">Info</Badge>
+	<Badge scheme="none">None</Badge>
+</Wrap>
 ```
 
 ### Schemes with variants
@@ -75,53 +77,53 @@ You can change the color scheme of the Badge by using the `scheme` prop. Don't m
 You can combine the `variant` and `scheme` props to create a badge with different variants and colors.
 
 <Wrapper>
-  <HStack>
-    <Badge variant="outline" scheme="primary">
-      <>Primary</>
-    </Badge>
-    <Badge variant="outline" scheme="secondary">
-      <>Secondary</>
-    </Badge>
-    <Badge variant="outline" scheme="success">
-      <>Success</>
-    </Badge>
-    <Badge variant="outline" scheme="warning">
-      <>Warning</>
-    </Badge>
-    <Badge variant="outline" scheme="error">
-      <>Error</>
-    </Badge>
-    <Badge variant="outline" scheme="info">
-      <>Info</>
-    </Badge>
-    <Badge variant="outline" scheme="none">
-      <>None</>
-    </Badge>
-  </HStack>
+	<Wrap>
+		<Badge variant="outline" scheme="primary">
+			<>Primary</>
+		</Badge>
+		<Badge variant="outline" scheme="secondary">
+			<>Secondary</>
+		</Badge>
+		<Badge variant="outline" scheme="success">
+			<>Success</>
+		</Badge>
+		<Badge variant="outline" scheme="warning">
+			<>Warning</>
+		</Badge>
+		<Badge variant="outline" scheme="error">
+			<>Error</>
+		</Badge>
+		<Badge variant="outline" scheme="info">
+			<>Info</>
+		</Badge>
+		<Badge variant="outline" scheme="none">
+			<>None</>
+		</Badge>
+	</Wrap>
 </Wrapper>
 
 ```tsx
-<HStack>
-  <Badge variant="outline" scheme="primary">
-    Primary
-  </Badge>
-  <Badge variant="outline" scheme="secondary">
-    Secondary
-  </Badge>
-  <Badge variant="outline" scheme="success">
-    Success
-  </Badge>
-  <Badge variant="outline" scheme="warning">
-    Warning
-  </Badge>
-  <Badge variant="outline" scheme="error">
-    Error
-  </Badge>
-  <Badge variant="outline" scheme="info">
-    Info
-  </Badge>
-  <Badge variant="outline" scheme="none">
-    None
-  </Badge>
-</HStack>
+<Wrap>
+	<Badge variant="outline" scheme="primary">
+		Primary
+	</Badge>
+	<Badge variant="outline" scheme="secondary">
+		Secondary
+	</Badge>
+	<Badge variant="outline" scheme="success">
+		Success
+	</Badge>
+	<Badge variant="outline" scheme="warning">
+		Warning
+	</Badge>
+	<Badge variant="outline" scheme="error">
+		Error
+	</Badge>
+	<Badge variant="outline" scheme="info">
+		Info
+	</Badge>
+	<Badge variant="outline" scheme="none">
+		None
+	</Badge>
+</Wrap>
 ```

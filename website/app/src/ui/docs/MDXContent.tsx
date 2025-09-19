@@ -34,6 +34,7 @@ import { Slider } from "@/slider";
 import { Snippet } from "@/snippet";
 import { Spinner } from "@/spinner";
 import { HStack, Stack, VStack } from "@/stack";
+import { Stat } from "@/stat";
 import { Switch } from "@/switch";
 import { Table } from "@/table";
 import { Tabs } from "@/tabs";
@@ -60,6 +61,7 @@ import {
     LuChevronDown,
     LuChevronRight,
     LuCitrus,
+    LuDollarSign,
     LuFileWarning,
     LuTrash,
     LuWarehouse
@@ -194,6 +196,7 @@ const DreamComponents = {
     Spinner,
     SizeModals,
     PlacementModal,
+    Stat,
     PinInput,
     InputGroup,
     InputLeftAddon,
@@ -317,7 +320,8 @@ const icons = {
     LuBanana,
     LuCitrus,
     LuCherry,
-    LuFileWarning
+    LuFileWarning,
+    LuDollarSign
 };
 
 const components: any = {

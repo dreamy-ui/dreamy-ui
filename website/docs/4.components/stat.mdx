@@ -1,0 +1,307 @@
+---
+title: Stat
+description: Stat is used to display a statistic with a title and value.
+isServerComponent: false
+source: /packages/react/src/components/stat/stat.tsx
+themeSource: /packages/panda-preset/src/recipes/stat.ts
+---
+
+## Installation
+
+```bash
+pnpm dreamy components add stat
+```
+
+## Usage
+
+Stat is a component used to display statistics with a title and value. It follows a semantic structure using description list (`dl`, `dt`, `dd`) elements.
+
+<Wrapper>
+	<Stat.Root>
+		<Stat.Label>Unique visitors</Stat.Label>
+		<Stat.ValueText>192.1k</Stat.ValueText>
+	</Stat.Root>
+</Wrapper>
+
+```tsx
+<Stat.Root>
+	<Stat.Label>Unique visitors</Stat.Label>
+	<Stat.ValueText>192.1k</Stat.ValueText>
+</Stat.Root>
+```
+
+### With Hint
+
+You can add additional context using the `Stat.Hint` component.
+
+<Wrapper>
+	<Stat.Root>
+		<Stat.Label>Revenue</Stat.Label>
+		<Stat.ValueText>$935.40</Stat.ValueText>
+		<Stat.Hint>+12% from last month</Stat.Hint>
+	</Stat.Root>
+</Wrapper>
+
+```tsx
+<Stat.Root>
+	<Stat.Label>Revenue</Stat.Label>
+	<Stat.ValueText>$935.40</Stat.ValueText>
+	<Stat.Hint>+12% from last month</Stat.Hint>
+</Stat.Root>
+```
+
+### With Indicators
+
+Display trend indicators using `Stat.UpIndicator` and `Stat.DownIndicator` components.
+
+<Wrapper>
+	<HStack gap={8}>
+		<Stat.Root>
+			<Stat.Label>Sales</Stat.Label>
+			<Stat.ValueText>$4,200</Stat.ValueText>
+			<Badge scheme="success" variant="plain" px={0}>
+				<Stat.UpIndicator />
+				<>12%</>
+			</Badge>
+		</Stat.Root>
+		<Stat.Root>
+			<Stat.Label>Conversions</Stat.Label>
+			<Stat.ValueText>2.4%</Stat.ValueText>
+			<Badge scheme="error" variant="plain" px={0}>
+				<Stat.DownIndicator />
+				<>1.2%</>
+			</Badge>
+		</Stat.Root>
+	</HStack>
+</Wrapper>
+
+```tsx
+<HStack gap={8}>
+	<Stat.Root>
+		<Stat.Label>Sales</Stat.Label>
+		<Stat.ValueText>$4,200</Stat.ValueText>
+		<Badge scheme="success" variant="plain" px={0}>
+			<Stat.UpIndicator />
+			12%
+		</Badge>
+	</Stat.Root>
+	<Stat.Root>
+		<Stat.Label>Conversions</Stat.Label>
+		<Stat.ValueText>2.4%</Stat.ValueText>
+		<Badge scheme="error" variant="plain" px={0}>
+			<Stat.DownIndicator />
+			1.2%
+		</Badge>
+	</Stat.Root>
+</HStack>
+```
+
+### With Badge Indicators
+
+Display badge indicators using `Stat.UpIndicator` and `Stat.DownIndicator` components.
+
+<Wrapper>
+	<HStack gap={8}>
+		<Stat.Root>
+			<Stat.Label>Sales</Stat.Label>
+			<HStack>
+				<Stat.ValueText>$4,200</Stat.ValueText>
+				<Badge scheme="success" variant="subtle">
+					<Stat.UpIndicator />
+					<>12%</>
+				</Badge>
+			</HStack>
+		</Stat.Root>
+		<Stat.Root>
+			<Stat.Label>Conversions</Stat.Label>
+			<HStack>
+				<Stat.ValueText>2.4%</Stat.ValueText>
+				<Badge scheme="error" variant="subtle">
+					<Stat.DownIndicator />
+					<>1.2%</>
+				</Badge>
+			</HStack>
+		</Stat.Root>
+	</HStack>
+</Wrapper>
+
+```tsx
+<HStack gap={8}>
+	<Stat.Root>
+		<Stat.Label>Sales</Stat.Label>
+		<HStack>
+			<Stat.ValueText>$4,200</Stat.ValueText>
+			<Badge scheme="success" variant="subtle">
+				<Stat.UpIndicator />
+				12%
+			</Badge>
+		</HStack>
+	</Stat.Root>
+	<Stat.Root>
+		<Stat.Label>Conversions</Stat.Label>
+		<HStack>
+			<Stat.ValueText>2.4%</Stat.ValueText>
+			<Badge scheme="error" variant="subtle">
+				<Stat.DownIndicator />
+				1.2%
+			</Badge>
+		</HStack>
+	</Stat.Root>
+</HStack>
+```
+
+### With Value Units
+
+Use `Stat.ValueUnit` to display units alongside values.
+
+<Wrapper>
+	<Stat.Root>
+		<Stat.Label>Time to complete</Stat.Label>
+		<Stat.ValueText>
+			<>3</> <Stat.ValueUnit>hr</Stat.ValueUnit>
+			<>20</> <Stat.ValueUnit>min</Stat.ValueUnit>
+		</Stat.ValueText>
+	</Stat.Root>
+</Wrapper>
+
+```tsx
+<Stat.Root>
+	<Stat.Label>Time to complete</Stat.Label>
+	<Stat.ValueText>
+		3 <Stat.ValueUnit>hr</Stat.ValueUnit>
+		20 <Stat.ValueUnit>min</Stat.ValueUnit>
+	</Stat.ValueText>
+</Stat.Root>
+```
+
+### Sizes
+
+You can change the size of the stat using the `size` prop.
+
+<Wrapper>
+	<VStack align="start" gap={6}>
+		<Stat.Root size="sm">
+			<Stat.Label>Small</Stat.Label>
+			<Stat.ValueText>1,234</Stat.ValueText>
+		</Stat.Root>
+		<Stat.Root size="md">
+			<Stat.Label>Medium</Stat.Label>
+			<Stat.ValueText>1,234</Stat.ValueText>
+		</Stat.Root>
+		<Stat.Root size="lg">
+			<Stat.Label>Large</Stat.Label>
+			<Stat.ValueText>1,234</Stat.ValueText>
+		</Stat.Root>
+	</VStack>
+</Wrapper>
+
+```tsx
+<VStack align="start" gap={6}>
+	<Stat.Root size="sm">
+		<Stat.Label>Small</Stat.Label>
+		<Stat.ValueText>1,234</Stat.ValueText>
+	</Stat.Root>
+	<Stat.Root size="md">
+		<Stat.Label>Medium</Stat.Label>
+		<Stat.ValueText>1,234</Stat.ValueText>
+	</Stat.Root>
+	<Stat.Root size="lg">
+		<Stat.Label>Large</Stat.Label>
+		<Stat.ValueText>1,234</Stat.ValueText>
+	</Stat.Root>
+</VStack>
+```
+
+### With Icon
+
+Combine stats with icons for better visual representation.
+
+<Wrapper>
+	<Stat.Root p={4} border="1px solid" borderColor="border" rounded="md" full maxW="240px">
+		<HStack justify="space-between">
+			<Stat.Label>Sales</Stat.Label>
+			<Icon asChild color="fg.medium">
+				<LuDollarSign />
+			</Icon>
+		</HStack>
+		<Stat.ValueText>$4.24k</Stat.ValueText>
+	</Stat.Root>
+</Wrapper>
+
+```tsx
+<Stat.Root p={4} border="1px solid" borderColor="border" rounded="md" full maxW="240px">
+	<HStack justify="space-between">
+		<Stat.Label>Sales</Stat.Label>
+		<Icon asChild color="fg.medium">
+			<LuDollarSign />
+		</Icon>
+	</HStack>
+	<Stat.ValueText>$4.24k</Stat.ValueText>
+</Stat.Root>
+```
+
+### With Progress
+
+Combine stats with progress bars to show completion status.
+
+<Wrapper>
+	<Stat.Root maxW="240px" full>
+		<Stat.Label>This week</Stat.Label>
+		<Stat.ValueText>$1,340</Stat.ValueText>
+		<Stat.Hint mb={2}>+12% from last week</Stat.Hint>
+		<Progress value={75} scheme="success" />
+	</Stat.Root>
+</Wrapper>
+
+```tsx
+<Stat.Root maxW="240px" full>
+	<Stat.Label>This week</Stat.Label>
+	<Stat.ValueText>$1,340</Stat.ValueText>
+	<Stat.Hint mb={2}>+12% from last week</Stat.Hint>
+	<Progress value={75} scheme="success" />
+</Stat.Root>
+```
+
+### Multiple Stats
+
+Display multiple stats in a grid layout.
+
+<Wrapper>
+	<Grid columns={3} gap={8}>
+		<Stat.Root>
+			<Stat.Label>Total Users</Stat.Label>
+			<Stat.ValueText>8,456</Stat.ValueText>
+			<Stat.Hint>+12% from last month</Stat.Hint>
+		</Stat.Root>
+		<Stat.Root>
+			<Stat.Label>Revenue</Stat.Label>
+			<Stat.ValueText>$23,456</Stat.ValueText>
+			<Stat.Hint>+5% from last month</Stat.Hint>
+		</Stat.Root>
+		<Stat.Root>
+			<Stat.Label>Conversion Rate</Stat.Label>
+			<Stat.ValueText>3.2%</Stat.ValueText>
+			<Stat.Hint>-2% from last month</Stat.Hint>
+		</Stat.Root>
+	</Grid>
+</Wrapper>
+
+```tsx
+<Grid columns={3} gap={8}>
+	<Stat.Root>
+		<Stat.Label>Total Users</Stat.Label>
+		<Stat.ValueText>8,456</Stat.ValueText>
+		<Stat.Hint>+12% from last month</Stat.Hint>
+	</Stat.Root>
+	<Stat.Root>
+		<Stat.Label>Revenue</Stat.Label>
+		<Stat.ValueText>$23,456</Stat.ValueText>
+		<Stat.Hint>+5% from last month</Stat.Hint>
+	</Stat.Root>
+	<Stat.Root>
+		<Stat.Label>Conversion Rate</Stat.Label>
+		<Stat.ValueText>3.2%</Stat.ValueText>
+		<Stat.Hint>-2% from last month</Stat.Hint>
+	</Stat.Root>
+</Grid>
+```

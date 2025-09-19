@@ -16,20 +16,21 @@ export const stat = defineSlotRecipe({
             display: "inline-flex",
             gap: "1.5",
             alignItems: "center",
-            color: "fg.muted",
+            color: "fg.medium",
             textStyle: "sm"
         },
         hint: {
-            color: "fg.muted",
+            color: "fg.medium",
             textStyle: "xs"
         },
         valueUnit: {
-            color: "fg.muted",
+            color: "fg.medium",
             textStyle: "xs",
             fontWeight: "initial",
             letterSpacing: "initial"
         },
         valueText: {
+            alignItems: "baseline",
             verticalAlign: "baseline",
             fontWeight: "semibold",
             letterSpacing: "tight",
