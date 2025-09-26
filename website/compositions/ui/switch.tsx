@@ -6,7 +6,6 @@ import { type SwittchVariantProps, swittch } from "styled-system/recipes";
 import { dreamy } from "./factory";
 import { MotionBox } from "./motion";
 import { VisuallyHiddenInput } from "./visually-hidden";
-
 export interface SwitchProps
     extends Omit<UseSwitchProps, keyof SwittchVariantProps>,
         SwittchVariantProps {}

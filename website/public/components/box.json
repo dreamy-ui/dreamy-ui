@@ -6,7 +6,7 @@
   "id": "box",
   "file": {
     "name": "box.tsx",
-    "content": "import { forwardRef } from \"react\";\nimport { type HTMLDreamyProps, dreamy } from \"./factory\";\n\nexport interface BoxProps extends HTMLDreamyProps<\"div\"> {}\n\n/**\n * Box component\n *\n * @See Docs https://dreamy-ui.com/docs/components/box\n */\nexport const Box = forwardRef<HTMLDivElement, BoxProps>((props, ref) => {\n    return (\n        <dreamy.div\n            ref={ref}\n            {...props}\n        />\n    );\n});\n"
+    "content": "import { forwardRef } from \"react\";\r\nimport { type HTMLDreamyProps, dreamy } from \"./factory\";\r\n\r\nexport interface BoxProps extends HTMLDreamyProps<\"div\"> {}\r\n\r\n/**\r\n * Box component\r\n *\r\n * @See Docs https://dreamy-ui.com/docs/components/box\r\n */\r\nexport const Box = forwardRef<HTMLDivElement, BoxProps>((props, ref) => {\r\n    return (\r\n        <dreamy.div\r\n            ref={ref}\r\n            {...props}\r\n        />\r\n    );\r\n});\r\n"
   },
   "component": "Box",
   "hasRecipe": false,

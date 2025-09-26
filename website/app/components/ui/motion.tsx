@@ -1,7 +1,8 @@
 "use client";
 
 import { splitProps } from "@dreamy-ui/react";
-import { type MotionProps, m } from "motion/react";
+import type { MotionProps } from "motion/react";
+import * as m from "motion/react-m";
 import { forwardRef } from "react";
 import { type FlexProperties, flex } from "styled-system/patterns";
 import type { SystemStyleObject } from "styled-system/types";

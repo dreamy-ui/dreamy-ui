@@ -62,7 +62,7 @@
 		"@zag-js/focus-visible": "^0.78.3",
 		"aria-hidden": "^1.2.4",
 		"framesync": "^6.1.2",
-		"motion": "^12.23.12",
+		"motion": "^12.23.22",
 		"react": "^19.0.0",
 		"react-dom": "^19.0.0",
 		"react-focus-lock": "^2.13.5",

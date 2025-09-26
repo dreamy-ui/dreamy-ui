@@ -5,7 +5,7 @@ import { type PropGetter, TRANSITION_EASINGS, callAllHandlers, cx } from "@/util
 import { ariaAttr, dataAttr } from "@/utils/attr";
 import { objectToDeps } from "@/utils/object";
 import { useFocusRing } from "@react-aria/focus";
-import type { Transition } from "motion/react";
+import type { Transition } from "motion";
 import { type ReactNode, type Ref, useCallback, useId, useMemo, useRef, useState } from "react";
 import { useSafeLayoutEffect } from "../descendant/utils";
 import { type UserFeedbackProps, useField } from "../field/use-field";
@@ -236,9 +236,9 @@ export function useSwitch(props: UseSwitchProps = {}) {
             id: id ?? labelId,
             "aria-label": ariaLabel,
             "aria-labelledby": ariaLabelledBy ?? labelId,
-            "aria-invalid": ariaInvalid ? Boolean(ariaInvalid) : isInvalid,
+            "aria-invalid": ariaAttr(ariaInvalid ? Boolean(ariaInvalid) : isInvalid),
             "aria-describedby": ariaDescribedBy,
-            "aria-disabled": isDisabled,
+            "aria-disabled": ariaAttr(isDisabled),
             className: "peer",
             ...(focusProps as any)
         };
@@ -302,6 +302,7 @@ export function useSwitch(props: UseSwitchProps = {}) {
     }, []);
 
     return {
+        id: id ?? labelId,
         icon,
         children,
         isChecked,

@@ -1,8 +1,11 @@
 import { Button } from "@/button";
 import { Flex } from "@/flex";
 import { MotionFlex } from "@/motion";
-import { useControllable } from "@dreamy-ui/react";
+import { Switch } from "@/switch";
+import { Text } from "@/text";
+import { useColorMode, useControllable, useUpdateLayoutEffect } from "@dreamy-ui/react";
 import { AnimatePresence, m } from "motion/react";
+import { useState } from "react";
 import type { Route } from "./+types/test";
 
 export function meta() {
@@ -36,6 +39,14 @@ const MotionButton = m.create(Button);
 
 export default function Test() {
     const { isOpen, onOpen, onClose } = useControllable();
+    const [plainSwitch, setPlainSwitch] = useState(false);
+    const [controlledSwitch, setControlledSwitch] = useState(false);
+
+    const { colorMode, toggleColorMode } = useColorMode();
+
+    useUpdateLayoutEffect(() => {
+        setPlainSwitch(colorMode === "dark");
+    }, [colorMode]);
 
     return (
         <Flex
@@ -85,6 +96,52 @@ export default function Test() {
                     </Flex>
                 )}
             </AnimatePresence>
+
+            {/* Test cases for switch animation */}
+            <Flex
+                col
+                gap={4}
+            >
+                <Text
+                    fontSize="lg"
+                    fontWeight="bold"
+                >
+                    Switch Animation Tests
+                </Text>
+
+                <Flex
+                    col
+                    gap={2}
+                >
+                    <Text>1. Color Mode Switch (animates):</Text>
+                    <Switch
+                        isChecked={colorMode === "dark"}
+                        onChangeValue={toggleColorMode}
+                    />
+                </Flex>
+
+                <Flex
+                    col
+                    gap={2}
+                >
+                    <Text>2. Plain Switch (no animation):</Text>
+                    <Switch
+                        isChecked={plainSwitch}
+                        onChangeValue={setPlainSwitch}
+                    />
+                </Flex>
+
+                <Flex
+                    col
+                    gap={2}
+                >
+                    <Text>3. Controlled Switch (no animation):</Text>
+                    <Switch
+                        isChecked={controlledSwitch}
+                        onChangeValue={setControlledSwitch}
+                    />
+                </Flex>
+            </Flex>
         </Flex>
     );
 }
