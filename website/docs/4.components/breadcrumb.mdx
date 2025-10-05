@@ -1,0 +1,447 @@
+---
+title: Breadcrumb
+description: Breadcrumb is used to display a page's location within a site's hierarchical structure.
+isServerComponent: false
+source: /packages/react/src/components/breadcrumb/use-breadcrumb.ts
+themeSource: /website/compositions/recipes/breadcrumb.ts
+---
+
+## Installation
+
+```bash	
+pnpm dreamy components add breadcrumb
+```
+
+## Usage
+
+Breadcrumb is a component that displays the current page location within a navigational hierarchy.
+
+<Wrapper>
+    <Breadcrumb.Root>
+        <Breadcrumb.List>
+            <Breadcrumb.Item>
+                <Breadcrumb.Link href="#">Docs</Breadcrumb.Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Separator />
+            <Breadcrumb.Item>
+                <Breadcrumb.Link href="#">Components</Breadcrumb.Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Separator />
+            <Breadcrumb.Item>
+                <Breadcrumb.CurrentLink>Breadcrumb</Breadcrumb.CurrentLink>
+            </Breadcrumb.Item>
+        </Breadcrumb.List>
+    </Breadcrumb.Root>
+</Wrapper>
+
+```tsx
+<Breadcrumb.Root>
+    <Breadcrumb.List>
+        <Breadcrumb.Item>
+            <Breadcrumb.Link href="#">Docs</Breadcrumb.Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Separator />
+        <Breadcrumb.Item>
+            <Breadcrumb.Link href="#">Components</Breadcrumb.Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Separator />
+        <Breadcrumb.Item>
+            <Breadcrumb.CurrentLink>Breadcrumb</Breadcrumb.CurrentLink>
+        </Breadcrumb.Item>
+    </Breadcrumb.List>
+</Breadcrumb.Root>
+```
+
+### Custom Separator
+
+You can customize the separator between breadcrumb items by passing children to `Breadcrumb.Separator`.
+
+<Wrapper>
+    <Breadcrumb.Root>
+        <Breadcrumb.List>
+            <Breadcrumb.Item>
+                <Breadcrumb.Link href="#">Home</Breadcrumb.Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Separator>
+                <LuChevronRight />
+            </Breadcrumb.Separator>
+            <Breadcrumb.Item>
+                <Breadcrumb.Link href="#">Category</Breadcrumb.Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Separator>
+                <LuChevronRight />
+            </Breadcrumb.Separator>
+            <Breadcrumb.Item>
+                <Breadcrumb.CurrentLink>Product</Breadcrumb.CurrentLink>
+            </Breadcrumb.Item>
+        </Breadcrumb.List>
+    </Breadcrumb.Root>
+</Wrapper>
+
+```tsx
+<Breadcrumb.Root>
+    <Breadcrumb.List>
+        <Breadcrumb.Item>
+            <Breadcrumb.Link href="#">Home</Breadcrumb.Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Separator>
+            <LuChevronRight />
+        </Breadcrumb.Separator>
+        <Breadcrumb.Item>
+            <Breadcrumb.Link href="#">Category</Breadcrumb.Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Separator>
+            <LuChevronRight />
+        </Breadcrumb.Separator>
+        <Breadcrumb.Item>
+            <Breadcrumb.CurrentLink>Product</Breadcrumb.CurrentLink>
+        </Breadcrumb.Item>
+    </Breadcrumb.List>
+</Breadcrumb.Root>
+```
+
+### With Icons
+
+Add icons to breadcrumb links by including them as children alongside the text.
+
+<Wrapper>
+    <Breadcrumb.Root>
+        <Breadcrumb.List>
+            <Breadcrumb.Item>
+                <Breadcrumb.Link href="#">
+                    <LuHouse />
+                    <>Home</>
+                </Breadcrumb.Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Separator />
+            <Breadcrumb.Item>
+                <Breadcrumb.Link href="#">
+                    <LuLamp />
+                    <>Products</>
+                </Breadcrumb.Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Separator />
+            <Breadcrumb.Item>
+                <Breadcrumb.CurrentLink>Laptop</Breadcrumb.CurrentLink>
+            </Breadcrumb.Item>
+        </Breadcrumb.List>
+    </Breadcrumb.Root>
+</Wrapper>
+
+```tsx
+<Breadcrumb.Root>
+    <Breadcrumb.List>
+        <Breadcrumb.Item>
+            <Breadcrumb.Link href="#">
+                <LuHouse />
+                Home
+            </Breadcrumb.Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Separator />
+        <Breadcrumb.Item>
+            <Breadcrumb.Link href="#">
+                <LuLamp />
+                Products
+            </Breadcrumb.Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Separator />
+        <Breadcrumb.Item>
+            <Breadcrumb.CurrentLink>Laptop</Breadcrumb.CurrentLink>
+        </Breadcrumb.Item>
+    </Breadcrumb.List>
+</Breadcrumb.Root>
+```
+
+### With Ellipsis
+
+Use `Breadcrumb.Ellipsis` to indicate collapsed breadcrumb items.
+
+<Wrapper>
+    <Breadcrumb.Root>
+        <Breadcrumb.List>
+            <Breadcrumb.Item>
+                <Breadcrumb.Link href="#">Home</Breadcrumb.Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Separator />
+            <Breadcrumb.Item>
+                <Breadcrumb.Link href="#">Category</Breadcrumb.Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Separator />
+            <Breadcrumb.Ellipsis />
+            <Breadcrumb.Separator />
+            <Breadcrumb.Item>
+                <Breadcrumb.Link href="#">Subcategory</Breadcrumb.Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Separator />
+            <Breadcrumb.Item>
+                <Breadcrumb.CurrentLink>Current Page</Breadcrumb.CurrentLink>
+            </Breadcrumb.Item>
+        </Breadcrumb.List>
+    </Breadcrumb.Root>
+</Wrapper>
+
+```tsx
+<Breadcrumb.Root>
+    <Breadcrumb.List>
+        <Breadcrumb.Item>
+            <Breadcrumb.Link href="#">Home</Breadcrumb.Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Separator />
+        <Breadcrumb.Item>
+            <Breadcrumb.Link href="#">Category</Breadcrumb.Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Separator />
+        <Breadcrumb.Ellipsis />
+        <Breadcrumb.Separator />
+        <Breadcrumb.Item>
+            <Breadcrumb.Link href="#">Subcategory</Breadcrumb.Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Separator />
+        <Breadcrumb.Item>
+            <Breadcrumb.CurrentLink>Current Page</Breadcrumb.CurrentLink>
+        </Breadcrumb.Item>
+    </Breadcrumb.List>
+</Breadcrumb.Root>
+```
+
+### Sizes
+
+You can change the size of the breadcrumb by using the `size` prop.
+
+<Wrapper>
+    <VStack w="full" gap={6}>
+        <Flex col gap={2} full>
+            <Text bold>Small</Text>
+            <Breadcrumb.Root size="sm">
+                <Breadcrumb.List>
+                    <Breadcrumb.Item>
+                        <Breadcrumb.Link href="#">Home</Breadcrumb.Link>
+                    </Breadcrumb.Item>
+                    <Breadcrumb.Separator />
+                    <Breadcrumb.Item>
+                        <Breadcrumb.Link href="#">Category</Breadcrumb.Link>
+                    </Breadcrumb.Item>
+                    <Breadcrumb.Separator />
+                    <Breadcrumb.Item>
+                        <Breadcrumb.CurrentLink>Current</Breadcrumb.CurrentLink>
+                    </Breadcrumb.Item>
+                </Breadcrumb.List>
+            </Breadcrumb.Root>
+        </Flex>
+
+        <Flex col gap={2} full>
+            <Text bold>Medium</Text>
+            <Breadcrumb.Root size="md">
+                <Breadcrumb.List>
+                    <Breadcrumb.Item>
+                        <Breadcrumb.Link href="#">Home</Breadcrumb.Link>
+                    </Breadcrumb.Item>
+                    <Breadcrumb.Separator />
+                    <Breadcrumb.Item>
+                        <Breadcrumb.Link href="#">Category</Breadcrumb.Link>
+                    </Breadcrumb.Item>
+                    <Breadcrumb.Separator />
+                    <Breadcrumb.Item>
+                        <Breadcrumb.CurrentLink>Current</Breadcrumb.CurrentLink>
+                    </Breadcrumb.Item>
+                </Breadcrumb.List>
+            </Breadcrumb.Root>
+        </Flex>
+
+        <Flex col gap={2} full>
+            <Text bold>Large</Text>
+            <Breadcrumb.Root size="lg">
+                <Breadcrumb.List>
+                    <Breadcrumb.Item>
+                        <Breadcrumb.Link href="#">Home</Breadcrumb.Link>
+                    </Breadcrumb.Item>
+                    <Breadcrumb.Separator />
+                    <Breadcrumb.Item>
+                        <Breadcrumb.Link href="#">Category</Breadcrumb.Link>
+                    </Breadcrumb.Item>
+                    <Breadcrumb.Separator />
+                    <Breadcrumb.Item>
+                        <Breadcrumb.CurrentLink>Current</Breadcrumb.CurrentLink>
+                    </Breadcrumb.Item>
+                </Breadcrumb.List>
+            </Breadcrumb.Root>
+        </Flex>
+    </VStack>
+</Wrapper>
+
+```tsx
+<VStack w="full" gap={6}>
+    <Flex col gap={2}>
+        <Text bold>Small</Text>
+        <Breadcrumb.Root size="sm">
+            <Breadcrumb.List>
+                <Breadcrumb.Item>
+                    <Breadcrumb.Link href="#">Home</Breadcrumb.Link>
+                </Breadcrumb.Item>
+                <Breadcrumb.Separator />
+                <Breadcrumb.Item>
+                    <Breadcrumb.Link href="#">Category</Breadcrumb.Link>
+                </Breadcrumb.Item>
+                <Breadcrumb.Separator />
+                <Breadcrumb.Item>
+                    <Breadcrumb.CurrentLink>Current</Breadcrumb.CurrentLink>
+                </Breadcrumb.Item>
+            </Breadcrumb.List>
+        </Breadcrumb.Root>
+    </Flex>
+
+    <Flex col gap={2}>
+        <Text bold>Medium</Text>
+        <Breadcrumb.Root size="md">
+            <Breadcrumb.List>
+                <Breadcrumb.Item>
+                    <Breadcrumb.Link href="#">Home</Breadcrumb.Link>
+                </Breadcrumb.Item>
+                <Breadcrumb.Separator />
+                <Breadcrumb.Item>
+                    <Breadcrumb.Link href="#">Category</Breadcrumb.Link>
+                </Breadcrumb.Item>
+                <Breadcrumb.Separator />
+                <Breadcrumb.Item>
+                    <Breadcrumb.CurrentLink>Current</Breadcrumb.CurrentLink>
+                </Breadcrumb.Item>
+            </Breadcrumb.List>
+        </Breadcrumb.Root>
+    </Flex>
+
+    <Flex col gap={2}>
+        <Text bold>Large</Text>
+        <Breadcrumb.Root size="lg">
+            <Breadcrumb.List>
+                <Breadcrumb.Item>
+                    <Breadcrumb.Link href="#">Home</Breadcrumb.Link>
+                </Breadcrumb.Item>
+                <Breadcrumb.Separator />
+                <Breadcrumb.Item>
+                    <Breadcrumb.Link href="#">Category</Breadcrumb.Link>
+                </Breadcrumb.Item>
+                <Breadcrumb.Separator />
+                <Breadcrumb.Item>
+                    <Breadcrumb.CurrentLink>Current</Breadcrumb.CurrentLink>
+                </Breadcrumb.Item>
+            </Breadcrumb.List>
+        </Breadcrumb.Root>
+    </Flex>
+</VStack>
+```
+
+### Variants
+
+You can change the variant of the breadcrumb by using the `variant` prop.
+
+<Wrapper>
+    <VStack w="full" gap={6}>
+        <Flex col gap={2} full>
+            <Text bold>Plain</Text>
+            <Breadcrumb.Root variant="plain">
+                <Breadcrumb.List>
+                    <Breadcrumb.Item>
+                        <Breadcrumb.Link href="#">Home</Breadcrumb.Link>
+                    </Breadcrumb.Item>
+                    <Breadcrumb.Separator />
+                    <Breadcrumb.Item>
+                        <Breadcrumb.Link href="#">Category</Breadcrumb.Link>
+                    </Breadcrumb.Item>
+                    <Breadcrumb.Separator />
+                    <Breadcrumb.Item>
+                        <Breadcrumb.CurrentLink>Current</Breadcrumb.CurrentLink>
+                    </Breadcrumb.Item>
+                </Breadcrumb.List>
+            </Breadcrumb.Root>
+        </Flex>
+
+        <Flex col gap={2} full>
+            <Text bold>Underline</Text>
+            <Breadcrumb.Root variant="underline">
+                <Breadcrumb.List>
+                    <Breadcrumb.Item>
+                        <Breadcrumb.Link href="#">Home</Breadcrumb.Link>
+                    </Breadcrumb.Item>
+                    <Breadcrumb.Separator />
+                    <Breadcrumb.Item>
+                        <Breadcrumb.Link href="#">Category</Breadcrumb.Link>
+                    </Breadcrumb.Item>
+                    <Breadcrumb.Separator />
+                    <Breadcrumb.Item>
+                        <Breadcrumb.CurrentLink>Current</Breadcrumb.CurrentLink>
+                    </Breadcrumb.Item>
+                </Breadcrumb.List>
+            </Breadcrumb.Root>
+        </Flex>
+    </VStack>
+</Wrapper>
+
+```tsx
+<VStack w="full" gap={6}>
+    <Flex col gap={2}>
+        <Text bold>Plain</Text>
+        <Breadcrumb.Root variant="plain">
+            <Breadcrumb.List>
+                <Breadcrumb.Item>
+                    <Breadcrumb.Link href="#">Home</Breadcrumb.Link>
+                </Breadcrumb.Item>
+                <Breadcrumb.Separator />
+                <Breadcrumb.Item>
+                    <Breadcrumb.Link href="#">Category</Breadcrumb.Link>
+                </Breadcrumb.Item>
+                <Breadcrumb.Separator />
+                <Breadcrumb.Item>
+                    <Breadcrumb.CurrentLink>Current</Breadcrumb.CurrentLink>
+                </Breadcrumb.Item>
+            </Breadcrumb.List>
+        </Breadcrumb.Root>
+    </Flex>
+
+    <Flex col gap={2}>
+        <Text bold>Underline</Text>
+        <Breadcrumb.Root variant="underline">
+            <Breadcrumb.List>
+                <Breadcrumb.Item>
+                    <Breadcrumb.Link href="#">Home</Breadcrumb.Link>
+                </Breadcrumb.Item>
+                <Breadcrumb.Separator />
+                <Breadcrumb.Item>
+                    <Breadcrumb.Link href="#">Category</Breadcrumb.Link>
+                </Breadcrumb.Item>
+                <Breadcrumb.Separator />
+                <Breadcrumb.Item>
+                    <Breadcrumb.CurrentLink>Current</Breadcrumb.CurrentLink>
+                </Breadcrumb.Item>
+            </Breadcrumb.List>
+        </Breadcrumb.Root>
+    </Flex>
+</VStack>
+```
+
+### With Router Integration
+
+You can use breadcrumb with routing libraries by using the `asChild` prop or replacing the `href` with appropriate routing props.
+
+```tsx
+import { Link } from "react-router";
+
+<Breadcrumb.Root>
+    <Breadcrumb.List>
+        <Breadcrumb.Item>
+            <Breadcrumb.Link asChild>
+                <Link to="/">Home</Link>
+            </Breadcrumb.Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Separator />
+        <Breadcrumb.Item>
+            <Breadcrumb.Link asChild>
+                <Link to="/products">Products</Link>
+            </Breadcrumb.Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Separator />
+        <Breadcrumb.Item>
+            <Breadcrumb.CurrentLink>Laptop</Breadcrumb.CurrentLink>
+        </Breadcrumb.Item>
+    </Breadcrumb.List>
+</Breadcrumb.Root>
+```

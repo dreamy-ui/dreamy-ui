@@ -2,6 +2,7 @@ import { accordion } from "./accordion";
 import { alert } from "./alert";
 import { avatar } from "./avatar";
 import { badge } from "./badge";
+import { breadcrumb } from "./breadcrumb";
 import { button } from "./button";
 import { card } from "./card";
 import { checkboxCard } from "./checkbox-card";
@@ -40,6 +41,7 @@ export const recipes = {
     alert,
     avatar,
     badge,
+    breadcrumb,
     button,
     card,
     checkboxCard,

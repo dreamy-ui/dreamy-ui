@@ -4,14 +4,13 @@
 	"description": "",
 	"private": true,
 	"packageManager": "pnpm@9.1.4",
-	"workspaces": [
-		"packages/*"
-	],
+	"workspaces": ["packages/*"],
 	"scripts": {
 		"dev:panda-preset": "cd packages/panda-preset && pnpm run dev",
 		"dev:react": "cd packages/react && pnpm run dev",
+		"dev:cli": "cd packages/cli && pnpm run dev",
 		"dev:website": "cd website && pnpm run dev",
-		"dev:lib": "concurrently \"pnpm run dev:panda-preset\" \"pnpm run dev:react\"",
+		"dev:lib": "concurrently \"pnpm run dev:panda-preset\" \"pnpm run dev:react\" \"pnpm run dev:cli\"",
 		"codegen": "concurrently \"cd packages/react && pnpm panda codegen\" \"cd website && pnpm panda codegen\"",
 		"build:panda-preset": "cd packages/panda-preset && pnpm run build",
 		"build:react": "cd packages/react && pnpm run build",

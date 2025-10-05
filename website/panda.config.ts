@@ -23,7 +23,7 @@ export default defineConfig({
             backgrounds: {
                 // dark: "#000",
                 dark: "#080808",
-                // dark: "#151922",
+                // dark: "#261620",
                 light: "#FFF"
                 // light: "#e8d4f7"
             },

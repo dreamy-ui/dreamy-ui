@@ -77,6 +77,20 @@
   },
   {
     "type": "component",
+    "id": "breadcrumb",
+    "file": "breadcrumb.tsx",
+    "component": "Breadcrumb",
+    "fileDependencies": [
+      "./factory"
+    ],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "breadcrumb"
+    ]
+  },
+  {
+    "type": "component",
     "id": "button",
     "file": "button.tsx",
     "component": "Button",

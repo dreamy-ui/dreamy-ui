@@ -3,6 +3,7 @@ import { Alert } from "@/alert";
 import { Avatar, AvatarGroup } from "@/avatar";
 import { Badge } from "@/badge";
 import { Box } from "@/box";
+import { Breadcrumb } from "@/breadcrumb";
 import { Button } from "@/button";
 import { Card } from "@/card";
 import { Checkbox, CheckboxGroup } from "@/checkbox";
@@ -63,6 +64,8 @@ import {
     LuCitrus,
     LuDollarSign,
     LuFileWarning,
+    LuHouse,
+    LuLamp,
     LuTrash,
     LuWarehouse
 } from "react-icons/lu";
@@ -173,6 +176,7 @@ const DreamComponents = {
     Heading,
     Link: DreamLink,
     Accordion,
+    Breadcrumb,
     Text,
     Stack,
     VStack,
@@ -312,11 +316,13 @@ const icons = {
     FaVuejs,
     SiReactrouter,
     LuAlarmClock,
+    LuLamp,
     LuBattery,
     LuTrash,
     LuWarehouse,
     LuChevronDown,
     LuChevronRight,
+    LuHouse,
     LuBanana,
     LuCitrus,
     LuCherry,

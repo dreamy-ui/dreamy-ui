@@ -21,6 +21,11 @@
   },
   {
     "type": "recipe",
+    "id": "breadcrumb",
+    "file": "breadcrumb.ts"
+  },
+  {
+    "type": "recipe",
     "id": "button",
     "file": "button.ts"
   },
