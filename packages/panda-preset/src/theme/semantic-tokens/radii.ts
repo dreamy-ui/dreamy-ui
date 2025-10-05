@@ -1,7 +1,11 @@
-import type { BorderRadius } from "@/types";
+import { getPresetOptions } from "@/theme/preset";
 import { defineSemanticTokens } from "@pandacss/dev";
 
-export default function createRadiiTokens(borderRadius: BorderRadius) {
+export default function createRadiiTokens() {
+    const options = getPresetOptions();
+
+    const borderRadius = options.rounded;
+
     return defineSemanticTokens.radii(
         (() => {
             switch (borderRadius) {

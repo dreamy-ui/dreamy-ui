@@ -1,13 +1,19 @@
-import type { PresetOptions } from "@/theme/preset";
+import { getPresetOptions } from "@/theme/preset";
 import { defineSemanticTokens } from "@pandacss/dev";
+import { genForegroundTokens } from "../colors";
 
-export function createColorTokens({
-    backgrounds: { light: lightBackground, dark: darkBackground },
-    primaryColor,
-    secondaryColor,
-    buttonPrimaryTextColor,
-    buttonSecondaryTextColor
-}: PresetOptions) {
+export function createColorTokens() {
+    const {
+        backgrounds: { light: lightBackground, dark: darkBackground },
+        primaryColor,
+        secondaryColor,
+        buttonPrimaryTextColor,
+        buttonSecondaryTextColor
+    } = getPresetOptions();
+
+    const fgLight = genForegroundTokens(lightBackground);
+    const fgDark = genForegroundTokens(darkBackground);
+
     return defineSemanticTokens.colors({
         primary: {
             DEFAULT: {
@@ -111,26 +117,26 @@ export function createColorTokens({
         fg: {
             DEFAULT: {
                 value: {
-                    _light: "{colors.gray.950}",
-                    _dark: "{colors.gray.50}"
+                    _light: fgLight.normal,
+                    _dark: fgDark.normal
                 }
             },
             max: {
                 value: {
-                    _light: "{colors.black}",
-                    _dark: "{colors.white}"
+                    _light: fgLight.max,
+                    _dark: fgDark.max
                 }
             },
             medium: {
                 value: {
-                    _light: "{colors.gray.600}",
-                    _dark: "{colors.gray.400}"
+                    _light: fgLight.medium,
+                    _dark: fgDark.medium
                 }
             },
             disabled: {
                 value: {
-                    _light: "{colors.gray.400}",
-                    _dark: "{colors.gray.500}"
+                    _light: fgLight.disabled,
+                    _dark: fgDark.disabled
                 }
             }
         },

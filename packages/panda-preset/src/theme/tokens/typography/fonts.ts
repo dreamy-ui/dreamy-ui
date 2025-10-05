@@ -1,7 +1,11 @@
-import type { PresetOptions } from "@/theme/preset";
+import { getPresetOptions } from "@/theme/preset";
 import type { Tokens } from "@pandacss/dev";
 
-export function createFonts({ body, heading, mono }: PresetOptions["fonts"]): Tokens["fonts"] {
+export function createFonts(): Tokens["fonts"] {
+    const {
+        fonts: { body, heading, mono }
+    } = getPresetOptions();
+
     return {
         body: {
             value: [body, "sans"]

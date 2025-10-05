@@ -37,6 +37,7 @@
 	"dependencies": {
 		"@pandacss/preset-panda": "^0.53.3",
 		"@pandacss/types": "^0.53.1",
+		"colorjs.io": "^0.5.2",
 		"deepmerge": "^4.3.1",
 		"react": "^19.0.0"
 	},

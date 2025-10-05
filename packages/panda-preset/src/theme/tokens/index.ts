@@ -1,4 +1,3 @@
-import type { PresetOptions } from "@/theme/preset";
 import { assets } from "@/theme/tokens/assets";
 import { defineColorTokens } from "@/theme/tokens/colors";
 import { createFonts } from "@/theme/tokens/typography/fonts";
@@ -16,8 +15,8 @@ import { letterSpacings } from "./typography/letter-spacings";
 import { lineHeights } from "./typography/line-heights";
 import { zIndex } from "./z-index";
 
-export function createTokens(options: PresetOptions): Required<ReturnType<typeof defineTokens>> {
-    const fonts = createFonts(options.fonts);
+export function createTokens(): Required<ReturnType<typeof defineTokens>> {
+    const fonts = createFonts();
 
     return defineTokens({
         blurs,

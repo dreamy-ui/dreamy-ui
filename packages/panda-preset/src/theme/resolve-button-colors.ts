@@ -1,11 +1,8 @@
-import type { PresetOptions } from "@/theme/preset";
+import { getPresetOptions } from "@/theme/preset";
 
-export function resolveButtonColors(
-    options: Pick<
-        Partial<PresetOptions>,
-        "primaryColor" | "secondaryColor" | "buttonPrimaryTextColor" | "buttonSecondaryTextColor"
-    >
-) {
+export function resolveButtonColors() {
+    const options = getPresetOptions();
+
     if (options.primaryColor && !options.buttonPrimaryTextColor) {
         if (typeof options.primaryColor === "string") {
             options.buttonPrimaryTextColor = getContrast(options.primaryColor);

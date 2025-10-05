@@ -9,7 +9,7 @@ export default defineConfig({
     jsxFramework: "react",
     jsxStyleProps: "all",
     jsxFactory: "dreamy",
-    clean: true,
+    // clean: true,
     outExtension: "js",
     include: [
         "./app/**/*.{js,jsx,ts,tsx}",
@@ -23,8 +23,9 @@ export default defineConfig({
             backgrounds: {
                 // dark: "#000",
                 dark: "#080808",
-                // light: "#FCF9FD"
+                // dark: "#151922",
                 light: "#FFF"
+                // light: "#e8d4f7"
             },
             fonts: {
                 body: "Geist",
