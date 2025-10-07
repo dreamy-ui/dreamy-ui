@@ -1,7 +1,7 @@
 import { defineRecipe } from "@pandacss/dev";
 
 export const list = defineRecipe({
-    className: "dreamy-list",
+    className: "list",
     jsx: ["List", "ListItem"],
     base: {
         listStylePosition: "inside",

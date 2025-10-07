@@ -3,6 +3,6 @@
   "id": "list",
   "file": {
     "name": "list.ts",
-    "content": "import { defineRecipe } from \"@pandacss/dev\";\r\n\r\nexport const list = defineRecipe({\r\n    className: \"dreamy-list\",\r\n    jsx: [\"List\", \"ListItem\"],\r\n    base: {\r\n        listStylePosition: \"inside\",\r\n        \"&[data-type=ordered]\": {\r\n            listStyleType: \"decimal\"\r\n        },\r\n        \"&[data-type=unordered]\": {\r\n            listStyleType: \"disc\"\r\n        },\r\n        \"& li::marker\": {\r\n            color: \"fg.medium\"\r\n        }\r\n    }\r\n});\r\n"
+    "content": "import { defineRecipe } from \"@pandacss/dev\";\r\n\r\nexport const list = defineRecipe({\r\n    className: \"list\",\r\n    jsx: [\"List\", \"ListItem\"],\r\n    base: {\r\n        listStylePosition: \"inside\",\r\n        \"&[data-type=ordered]\": {\r\n            listStyleType: \"decimal\"\r\n        },\r\n        \"&[data-type=unordered]\": {\r\n            listStyleType: \"disc\"\r\n        },\r\n        \"& li::marker\": {\r\n            color: \"fg.medium\"\r\n        }\r\n    }\r\n});\r\n"
   }
 }

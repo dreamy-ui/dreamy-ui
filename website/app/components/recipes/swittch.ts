@@ -19,7 +19,7 @@ const parts = defineParts({
 export { parts as switchParts };
 
 export const swittch = defineRecipe({
-    className: "dreamy-switch",
+    className: "switch",
     jsx: ["Switch"],
     base: parts({
         root: {

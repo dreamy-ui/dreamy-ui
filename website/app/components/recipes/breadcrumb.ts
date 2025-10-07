@@ -1,17 +1,17 @@
 import { defineSlotRecipe } from "@pandacss/dev";
 
 export const breadcrumb = defineSlotRecipe({
-    className: "dreamy-breadcrumb",
+    className: "breadcrumb",
     description: "Dreamy UI Breadcrumb component",
     slots: ["root", "list", "item", "link", "currentLink", "separator", "ellipsis"],
     jsx: [
-        "Breadcrumb",
-        "BreadcrumbList",
-        "BreadcrumbItem",
-        "BreadcrumbLink",
-        "BreadcrumbCurrentLink",
-        "BreadcrumbSeparator",
-        "BreadcrumbEllipsis"
+        "Breadcrumb.Root",
+        "Breadcrumb.List",
+        "Breadcrumb.Item",
+        "Breadcrumb.Link",
+        "Breadcrumb.CurrentLink",
+        "Breadcrumb.Separator",
+        "Breadcrumb.Ellipsis"
     ],
     base: {
         root: {
@@ -37,7 +37,7 @@ export const breadcrumb = defineSlotRecipe({
         },
         link: {
             textDecoration: "none",
-            color: "{colors.fg.medium}",
+            color: "fg.medium",
             fontWeight: "medium",
             fontSize: "var(--breadcrumb-font-size)",
             transition: "color 0.2s {easings.default}",
@@ -45,24 +45,24 @@ export const breadcrumb = defineSlotRecipe({
             alignItems: "center",
             gap: "var(--breadcrumb-separator-gap)",
             _hover: {
-                color: "{colors.fg}",
+                color: "fg",
                 textDecoration: "underline"
             },
             _focusVisible: {
-                color: "{colors.fg}",
+                color: "fg",
                 textDecoration: "underline",
                 outline: "2px solid {colors.ring}",
                 outlineOffset: "2px"
             }
         },
         currentLink: {
-            color: "{colors.fg}",
+            color: "fg",
             fontWeight: "semibold",
             fontSize: "var(--breadcrumb-font-size)",
             cursor: "default"
         },
         separator: {
-            color: "{colors.fg.disabled}",
+            color: "fg.disabled",
             fontSize: "var(--breadcrumb-font-size)",
             userSelect: "none",
             "& > svg": {
@@ -71,12 +71,12 @@ export const breadcrumb = defineSlotRecipe({
             }
         },
         ellipsis: {
-            color: "{colors.fg.disabled}",
+            color: "fg.disabled",
             fontSize: "var(--breadcrumb-font-size)",
             userSelect: "none",
             cursor: "default",
             _hover: {
-                color: "{colors.fg.medium}"
+                color: "fg.medium"
             }
         }
     },

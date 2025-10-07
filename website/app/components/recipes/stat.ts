@@ -1,9 +1,16 @@
 import { defineSlotRecipe } from "@pandacss/dev";
 
 export const stat = defineSlotRecipe({
-    className: "dreamy-stat",
+    className: "stat",
     slots: ["root", "label", "hint", "valueUnit", "valueText", "indicator"],
-    jsx: ["Stat"],
+    jsx: [
+        "Stat.Root",
+        "Stat.Label",
+        "Stat.Hint",
+        "Stat.ValueUnit",
+        "Stat.ValueText",
+        "Stat.Indicator"
+    ],
     base: {
         root: {
             display: "flex",

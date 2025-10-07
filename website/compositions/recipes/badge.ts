@@ -2,7 +2,7 @@ import { getColorSchemes } from "@dreamy-ui/panda-preset";
 import { defineRecipe } from "@pandacss/dev";
 
 export const badge = defineRecipe({
-    className: "dreamy-badge",
+    className: "badge",
     jsx: ["Badge"],
     base: {
         display: "flex",

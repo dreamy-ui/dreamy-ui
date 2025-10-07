@@ -14,7 +14,7 @@ const parts = defineParts({
 export { parts as buttonParts };
 
 export const button = defineRecipe({
-    className: "dreamy-button",
+    className: "button",
     staticCss: ["*"],
     jsx: [
         "Button",
