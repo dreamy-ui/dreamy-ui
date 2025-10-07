@@ -35,15 +35,6 @@ export function genForegroundTokens(bgHex: string): ForegroundTokens {
     let fgHue: number;
     let fgChroma: number;
 
-    console.log({
-        isDark,
-        l: bg.oklch.l,
-        c: bg.oklch.c,
-        h: bg.oklch.h,
-        isNearlyBlack,
-        isStronglySaturated
-    });
-
     if (isNearlyBlack || !isStronglySaturated) {
         // For nearly black or low saturation backgrounds, use blue hue
         fgHue = 245; // Blue hue in OKLCH
@@ -52,8 +43,6 @@ export function genForegroundTokens(bgHex: string): ForegroundTokens {
         // For strongly saturated backgrounds, use the background's hue with minimal chroma
         fgHue = bg.oklch.h || 0;
         const cap = 0.02;
-        console.log("fgChroma", bg.oklch.c);
-        console.log("chroma", Math.min(bg.oklch.c * 0.2, cap));
         fgChroma = Math.min(bg.oklch.c * 0.2, cap); // 10% of background chroma, capped at 0.02
     }
 

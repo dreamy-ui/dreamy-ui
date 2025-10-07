@@ -50,9 +50,7 @@ export const breadcrumb = defineSlotRecipe({
             },
             _focusVisible: {
                 color: "fg",
-                textDecoration: "underline",
-                outline: "2px solid {colors.ring}",
-                outlineOffset: "2px"
+                textDecoration: "underline"
             }
         },
         currentLink: {
