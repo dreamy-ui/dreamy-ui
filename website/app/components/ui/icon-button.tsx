@@ -17,7 +17,7 @@ interface Props extends UniversalButtonProps {
 }
 
 export interface IconButtonProps
-    extends Omit<HTMLDreamyProps<"button">, "aria-label" | "children">,
+    extends Omit<HTMLDreamyProps<"button">, "aria-label">,
         ButtonVariantProps,
         Props {}
 
@@ -27,14 +27,14 @@ export interface IconButtonProps
  * @See Docs https://dreamy-ui.com/docs/components/icon-button
  */
 export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
-    ({ icon, ...props }, ref) => {
+    ({ icon, children, ...props }, ref) => {
         return (
             <Button
                 ref={ref}
                 {...props}
                 data-type={"icon-button"}
             >
-                {icon}
+                {icon ?? children}
             </Button>
         );
     }

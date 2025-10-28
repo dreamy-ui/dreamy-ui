@@ -1,4 +1,5 @@
 import { accordion } from "./accordion";
+import { actionBar } from "./action-bar";
 import { alert } from "./alert";
 import { avatar } from "./avatar";
 import { badge } from "./badge";
@@ -38,6 +39,7 @@ import { tooltip } from "./tooltip";
 
 export const recipes = {
     accordion,
+    actionBar,
     alert,
     avatar,
     badge,

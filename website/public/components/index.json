@@ -18,6 +18,23 @@
   },
   {
     "type": "component",
+    "id": "action-bar",
+    "file": "action-bar.tsx",
+    "component": "ActionBar",
+    "fileDependencies": [
+      "./box",
+      "./close-button",
+      "./factory",
+      "./motion"
+    ],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "action-bar"
+    ]
+  },
+  {
+    "type": "component",
     "id": "alert",
     "file": "alert.tsx",
     "component": "Alert",
@@ -160,8 +177,6 @@
     "file": "close-button.tsx",
     "component": "CloseButton",
     "fileDependencies": [
-      "./button",
-      "./factory",
       "./icon-button"
     ],
     "hasRecipe": false,

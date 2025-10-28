@@ -10,14 +10,17 @@
 		"lint": "next lint"
 	},
 	"dependencies": {
-		"@dreamy-ui/react": "workspace:*",
+		"@chakra-ui/react": "^3.28.0",
 		"@dreamy-ui/panda-preset": "workspace:*",
+		"@dreamy-ui/react": "workspace:*",
 		"@pandabox/unplugin": "^0.1.3",
 		"@pandacss/dev": "^0.51.1",
+		"@saas-ui/cli": "^0.0.2",
 		"motion": "^12.0.5",
 		"next": "15.1.2",
 		"react": "19.0.0",
-		"react-dom": "19.0.0"
+		"react-dom": "19.0.0",
+		"react-icons": "^5.5.0"
 	},
 	"devDependencies": {
 		"@types/node": "^22.10.2",

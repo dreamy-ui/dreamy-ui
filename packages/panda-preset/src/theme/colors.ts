@@ -29,27 +29,81 @@ export function genForegroundTokens(bgHex: string): ForegroundTokens {
     // Decide if background is "dark" or "light" from OKLCH lightness
     const isDark = bg.oklch.l < 0.5;
 
-    const isNearlyBlack = bg.oklch.l < 0.1;
-    const isStronglySaturated = bg.oklch.c > 0.015;
+    // More nuanced saturation thresholds
+    const isVeryLowSaturation = bg.oklch.c < 0.01; // Nearly grayscale
+    const isLowSaturation = bg.oklch.c < 0.04; // Subtle color
+    const isModerateSaturation = bg.oklch.c < 0.12; // Moderate color
+    // > 0.12 is considered high saturation
+
+    // Lightness categories
+    const isVeryDark = bg.oklch.l < 0.15; // Nearly black
+    const isVeryLight = bg.oklch.l > 0.85; // Nearly white
+    const isExtremeLightness = isVeryDark || isVeryLight;
+
+    console.table({
+        lightness: bg.oklch.l,
+        chroma: bg.oklch.c,
+        hue: bg.oklch.h,
+        isDark,
+        saturationCategory: isVeryLowSaturation
+            ? "very-low"
+            : isLowSaturation
+              ? "low"
+              : isModerateSaturation
+                ? "moderate"
+                : "high",
+        isExtremeLightness
+    });
 
     let fgHue: number;
     let fgChroma: number;
 
-    if (isNearlyBlack || !isStronglySaturated) {
-        // For nearly black or low saturation backgrounds, use blue hue
-        fgHue = 245; // Blue hue in OKLCH
-        fgChroma = 0.005; // Very minimal blue tint
+    // Decision tree for hue and chroma
+    if (isVeryLowSaturation) {
+        // For grayscale or near-grayscale backgrounds, use a neutral blue-gray
+        fgHue = 245; // Cool neutral
+        fgChroma = 0.005; // Barely perceptible tint
+    } else if (isExtremeLightness && isLowSaturation) {
+        // Very dark/light + low saturation: use subtle blue
+        fgHue = 245;
+        fgChroma = 0.008; // Slightly more noticeable than grayscale
     } else {
-        // For strongly saturated backgrounds, use the background's hue with minimal chroma
+        // Use the background's hue for foreground
         fgHue = bg.oklch.h || 0;
-        const cap = 0.02;
-        fgChroma = Math.min(bg.oklch.c * 0.2, cap); // 10% of background chroma, capped at 0.02
+
+        // Calculate chroma percentage based on background saturation
+        // Higher background saturation = lower foreground chroma percentage
+        let chromaPercentage: number;
+
+        if (bg.oklch.c < 0.04) {
+            // Low saturation (0.01-0.04): use 40-25% of background chroma
+            chromaPercentage = 0.4 - ((bg.oklch.c - 0.01) / 0.03) * 0.15;
+        } else if (bg.oklch.c < 0.12) {
+            // Moderate saturation (0.04-0.12): use 25-12% of background chroma
+            chromaPercentage = 0.25 - ((bg.oklch.c - 0.04) / 0.08) * 0.13;
+        } else {
+            // High saturation (>0.12): use 12-6% of background chroma
+            chromaPercentage = Math.max(0.06, 0.12 - ((bg.oklch.c - 0.12) / 0.2) * 0.06);
+        }
+
+        fgChroma = bg.oklch.c * chromaPercentage;
+
+        // Apply minimum and maximum bounds for readability
+        fgChroma = Math.max(0.003, Math.min(fgChroma, 0.03));
     }
 
-    const max = new Color("oklch", [isDark ? 1 : 0, fgChroma, fgHue]);
-    const normal = new Color("oklch", [isDark ? 0.95 : 0.2, fgChroma, fgHue]);
-    const medium = new Color("oklch", [isDark ? 0.7 : 0.35, fgChroma, fgHue]);
-    const disabled = new Color("oklch", [isDark ? 0.6 : 0.4, fgChroma, fgHue]);
+    // Base chroma for normal text (looks great as-is)
+    const normalChroma = fgChroma;
+
+    // Medium and disabled need more chroma since lower lightness = less color perception
+    // Apply progressive multipliers to maintain visible color at lower lightness
+    const mediumChroma = Math.min(fgChroma * 1.5, 0.05); // 50% more chroma, capped at 0.05
+    const disabledChroma = Math.min(fgChroma * 1.3, 0.045); // 30% more chroma, capped at 0.045
+
+    const max = new Color("oklch", [isDark ? 1 : 0, normalChroma, fgHue]);
+    const normal = new Color("oklch", [isDark ? 0.95 : 0.2, normalChroma, fgHue]);
+    const medium = new Color("oklch", [isDark ? 0.7 : 0.35, mediumChroma, fgHue]);
+    const disabled = new Color("oklch", [isDark ? 0.6 : 0.4, disabledChroma, fgHue]);
 
     adjustContrastIfNeeded(max, bg, 7, isDark);
     adjustContrastIfNeeded(normal, bg, 4.5, isDark);

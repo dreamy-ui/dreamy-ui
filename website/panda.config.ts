@@ -21,11 +21,12 @@ export default defineConfig({
     presets: [
         createDreamyPreset({
             backgrounds: {
-                // dark: "#000",
-                dark: "#080808",
+                dark: "#080808", // main
+                // dark: "#06050a",
+                // dark: "#161216",
                 // dark: "#261620",
-                light: "#FFF"
-                // light: "#e8d4f7"
+                light: "#FFF" // main
+                // light: "#f8f0ff"
             },
             fonts: {
                 body: "Geist",

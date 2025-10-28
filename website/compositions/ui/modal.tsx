@@ -138,10 +138,10 @@ const ModalOverlay = withContext(
     "overlay"
 );
 
-export interface ModalContainerProps extends MotionFlexProps {}
+export interface ModalContainerProps extends BoxProps {}
 
 const ModalContainer = withContext(
-    forwardRef<HTMLDivElement, BoxProps>(({ children, ...props }, ref) => {
+    forwardRef<HTMLDivElement, ModalContainerProps>(({ children, ...props }, ref) => {
         const { getDialogContainerProps } = useModalContext();
 
         return <Box {...getDialogContainerProps(props, ref)}>{children}</Box>;
@@ -152,7 +152,7 @@ const ModalContainer = withContext(
 export interface ModalContentProps extends MotionFlexProps {}
 
 const ModalContent = withContext(
-    forwardRef<HTMLDivElement, MotionFlexProps>(({ children, ...props }, ref) => {
+    forwardRef<HTMLDivElement, ModalContentProps>(({ children, ...props }, ref) => {
         const { getDialogProps } = useModalContext();
         const { modal } = useMotionVariants();
         const transition = useDefaultTransition();

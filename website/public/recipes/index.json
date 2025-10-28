@@ -6,6 +6,11 @@
   },
   {
     "type": "recipe",
+    "id": "action-bar",
+    "file": "action-bar.ts"
+  },
+  {
+    "type": "recipe",
     "id": "alert",
     "file": "alert.ts"
   },

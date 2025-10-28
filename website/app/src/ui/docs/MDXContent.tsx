@@ -1,4 +1,5 @@
 import { Accordion } from "@/accordion";
+import { ActionBar } from "@/action-bar";
 import { Alert } from "@/alert";
 import { Avatar, AvatarGroup } from "@/avatar";
 import { Badge } from "@/badge";
@@ -98,6 +99,14 @@ import {
 import { Link } from "~/src/ui/global/Link";
 import { ControlledAccordion } from "./components/accordions";
 import {
+    ActionBarMultiple,
+    ActionBarSizes,
+    ActionBarTable,
+    ActionBarWithClose,
+    BasicActionBar,
+    ControlledActionBar
+} from "./components/action-bars";
+import {
     CheckboxCardGroupControl,
     CheckboxGroupControl,
     ControlledCheckbox,
@@ -176,6 +185,7 @@ const DreamComponents = {
     Heading,
     Link: DreamLink,
     Accordion,
+    ActionBar,
     Breadcrumb,
     Text,
     Stack,
@@ -279,7 +289,13 @@ const DreamComponents = {
     LinkButton,
     Wrap,
     VariantMenus,
-    VariantMenu
+    VariantMenu,
+    BasicActionBar,
+    ActionBarMultiple,
+    ActionBarSizes,
+    ActionBarTable,
+    ActionBarWithClose,
+    ControlledActionBar
 };
 
 function Wrapper({ children, ...props }: PropsWithChildren<FlexProps>) {

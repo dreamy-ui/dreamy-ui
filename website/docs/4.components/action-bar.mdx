@@ -1,0 +1,337 @@
+---
+title: Action Bar
+description: Action Bar is used to display a bottom action bar with a set of actions for selected items.
+isServerComponent: false
+source: /packages/react/src/components/action-bar/use-action-bar.ts
+themeSource: /website/compositions/recipes/action-bar.ts
+---
+
+## Installation
+
+```bash	
+pnpm dreamy components add action-bar
+```
+
+## Usage
+
+Action Bar is a component that displays a set of actions at the bottom of the screen, typically used for bulk operations on selected items.
+
+<Wrapper>
+  <ControlledActionBar />
+</Wrapper>
+
+```tsx
+function ControlledActionBar() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      <Button onClick={() => setIsOpen(!isOpen)}>
+        {isOpen ? 'Hide' : 'Show'} Action Bar
+      </Button>
+      
+      <ActionBar.Root isOpen={isOpen} onClose={() => setIsOpen(false)}>
+        <ActionBar.Positioner>
+          <ActionBar.Content>
+            <ActionBar.SelectionTrigger>
+              2 items selected
+            </ActionBar.SelectionTrigger>
+            <ActionBar.Separator />
+            <Button size="sm" variant="outline">
+              <LuTrash />
+              Delete
+            </Button>
+            <Button size="sm" variant="outline">
+              <LuShare />
+              Share
+            </Button>
+          </ActionBar.Content>
+        </ActionBar.Positioner>
+      </ActionBar.Root>
+    </>
+  );
+}
+```
+
+### Basic Usage
+
+The simplest way to use the Action Bar is with controlled state.
+
+<Wrapper>
+  <BasicActionBar />
+</Wrapper>
+
+```tsx
+function BasicActionBar() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      <Button onClick={() => setIsOpen(true)}>
+        Show Action Bar
+      </Button>
+      
+      <ActionBar.Root isOpen={isOpen} onClose={() => setIsOpen(false)}>
+        <ActionBar.Positioner>
+          <ActionBar.Content>
+            <ActionBar.SelectionTrigger>
+              3 selected
+            </ActionBar.SelectionTrigger>
+            <ActionBar.Separator />
+            <Button size="sm" variant="outline">
+              Delete
+            </Button>
+            <ActionBar.CloseTrigger>
+              <CloseButton size="sm" />
+            </ActionBar.CloseTrigger>
+          </ActionBar.Content>
+        </ActionBar.Positioner>
+      </ActionBar.Root>
+    </>
+  );
+}
+```
+
+### With Close Trigger
+
+Add a close button to allow users to dismiss the action bar manually.
+
+<Wrapper>
+  <ActionBarWithClose />
+</Wrapper>
+
+```tsx
+function ActionBarWithClose() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      <Button onClick={() => setIsOpen(true)}>
+        Show Action Bar
+      </Button>
+      
+      <ActionBar.Root 
+        isOpen={isOpen} 
+        onClose={() => setIsOpen(false)}
+      >
+        <ActionBar.Positioner>
+          <ActionBar.Content>
+            <ActionBar.SelectionTrigger>
+              5 items selected
+            </ActionBar.SelectionTrigger>
+            <ActionBar.Separator />
+            <Button size="sm" variant="outline">
+              <LuSquarePlus />
+              Add to collection
+            </Button>
+            <Button size="sm" variant="surface" colorScheme="red">
+              <LuTrash />
+              Delete items
+            </Button>
+            <ActionBar.CloseTrigger>
+              <CloseButton size="sm" />
+            </ActionBar.CloseTrigger>
+          </ActionBar.Content>
+        </ActionBar.Positioner>
+      </ActionBar.Root>
+    </>
+  );
+}
+```
+
+### Multiple Actions
+
+You can include multiple action buttons to provide various operations.
+
+<Wrapper>
+  <ActionBarMultiple />
+</Wrapper>
+
+```tsx
+function ActionBarMultiple() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      <Button onClick={() => setIsOpen(true)}>
+        Show Action Bar
+      </Button>
+      
+      <ActionBar.Root isOpen={isOpen} onClose={() => setIsOpen(false)}>
+        <ActionBar.Positioner>
+          <ActionBar.Content>
+            <ActionBar.SelectionTrigger>
+              12 files selected
+            </ActionBar.SelectionTrigger>
+            <ActionBar.Separator />
+            <Button size="sm" variant="outline">
+              <LuDownload />
+              Download
+            </Button>
+            <Button size="sm" variant="outline">
+              <LuShare />
+              Share
+            </Button>
+            <Button size="sm" variant="outline">
+              <LuFolderPlus />
+              Move to folder
+            </Button>
+            <ActionBar.Separator />
+            <Button size="sm" variant="surface" colorScheme="red">
+              <LuTrash />
+              Delete
+            </Button>
+          </ActionBar.Content>
+        </ActionBar.Positioner>
+      </ActionBar.Root>
+    </>
+  );
+}
+```
+
+### Sizes
+
+You can change the size of the action bar using the `size` prop.
+
+<Wrapper>
+  <VStack w="full" gap={6}>
+    <Flex col gap={2} full>
+      <Text bold>Small</Text>
+      <ActionBarSizes size="sm" />
+    </Flex>
+
+    <Flex col gap={2} full>
+      <Text bold>Medium</Text>
+      <ActionBarSizes size="md" />
+    </Flex>
+
+    <Flex col gap={2} full>
+      <Text bold>Large</Text>
+      <ActionBarSizes size="lg" />
+    </Flex>
+  </VStack>
+</Wrapper>
+
+```tsx
+function ActionBarSizes({ size }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      <Button onClick={() => setIsOpen(true)} size={size}>
+        Show {size} Action Bar
+      </Button>
+      
+      <ActionBar.Root isOpen={isOpen} onClose={() => setIsOpen(false)} size={size}>
+        <ActionBar.Positioner>
+          <ActionBar.Content>
+            <ActionBar.SelectionTrigger>
+              2 selected
+            </ActionBar.SelectionTrigger>
+            <ActionBar.Separator />
+            <Button size={size} variant="outline">
+              Delete
+            </Button>
+            <ActionBar.CloseTrigger>
+              <CloseButton size={size} />
+            </ActionBar.CloseTrigger>
+          </ActionBar.Content>
+        </ActionBar.Positioner>
+      </ActionBar.Root>
+    </>
+  );
+}
+```
+
+### With Table Integration
+
+A common use case is integrating the action bar with table selections.
+
+<Wrapper>
+  <ActionBarTable />
+</Wrapper>
+
+```tsx
+function ActionBarTable() {
+  const [selectedItems, setSelectedItems] = useState([]);
+  
+  const items = [
+    { id: 1, name: "Project A", type: "Folder" },
+    { id: 2, name: "Document.pdf", type: "File" },
+    { id: 3, name: "Image.jpg", type: "File" },
+  ];
+
+  const toggleSelection = (id) => {
+    setSelectedItems(prev => 
+      prev.includes(id) 
+        ? prev.filter(item => item !== id)
+        : [...prev, id]
+    );
+  };
+
+  return (
+    <>
+      <VStack gap={2}>
+        {items.map(item => (
+          <HStack key={item.id} gap={3} p={2} border="1px solid" borderColor="border" rounded="md">
+            <Checkbox 
+              checked={selectedItems.includes(item.id)}
+              onChange={() => toggleSelection(item.id)}
+            />
+            <Text>{item.name}</Text>
+            <Badge>{item.type}</Badge>
+          </HStack>
+        ))}
+      </VStack>
+      
+      <ActionBar.Root 
+        isOpen={selectedItems.length > 0} 
+        onClose={() => setSelectedItems([])}
+      >
+        <ActionBar.Positioner>
+          <ActionBar.Content>
+            <ActionBar.SelectionTrigger>
+              {selectedItems.length} selected
+            </ActionBar.SelectionTrigger>
+            <ActionBar.Separator />
+            <Button size="sm" variant="outline">
+              Download
+            </Button>
+            <Button 
+              size="sm" 
+              variant="surface" 
+              colorScheme="red"
+              onClick={() => setSelectedItems([])}
+            >
+              Delete
+            </Button>
+          </ActionBar.Content>
+        </ActionBar.Positioner>
+      </ActionBar.Root>
+    </>
+  );
+}
+```
+
+### Uncontrolled Usage
+
+You can use the action bar in an uncontrolled mode with `defaultIsOpen`.
+
+```tsx
+<ActionBar.Root defaultIsOpen onClose={() => console.log('closed')}>
+  <ActionBar.Positioner>
+    <ActionBar.Content>
+      <ActionBar.SelectionTrigger>
+        1 selected
+      </ActionBar.SelectionTrigger>
+      <ActionBar.Separator />
+      <Button size="sm" variant="outline">
+        Action
+      </Button>
+      <ActionBar.CloseTrigger>
+        <CloseButton size="sm" />
+      </ActionBar.CloseTrigger>
+    </ActionBar.Content>
+  </ActionBar.Positioner>
+</ActionBar.Root>
+```
