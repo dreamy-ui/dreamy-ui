@@ -9,7 +9,7 @@ export default defineConfig((options) => ({
     external: ["node:*", "path", "fs", "fs/promises", "os", "url", "util"],
     outDir: "dist",
     banner: {
-        js: "import { createRequire } from 'module'; const require = createRequire(import.meta.url);"
+        js: "import { createRequire as topLevelCreateRequire } from 'module';\n const require = topLevelCreateRequire(import.meta.url);"
     },
     ...options
 }));

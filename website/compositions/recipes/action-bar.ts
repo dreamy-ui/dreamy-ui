@@ -35,7 +35,7 @@ export const actionBar = defineSlotRecipe({
             paddingX: 4,
             paddingY: 3,
             maxWidth: "2xl",
-            width: "100%",
+            // width: "100%",
             "& > button": {
                 flexShrink: 0
             }

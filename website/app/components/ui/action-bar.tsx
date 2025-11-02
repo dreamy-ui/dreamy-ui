@@ -1,6 +1,10 @@
 "use client";
 
-import { type UseActionBarProps, type UseActionBarReturn, useActionBar } from "@dreamy-ui/react";
+import {
+    type UseControllableReturn,
+    useControllable,
+    type useControllableProps
+} from "@dreamy-ui/react";
 import { AnimatePresence } from "motion/react";
 import { createContext, forwardRef, useCallback, useContext } from "react";
 import { createStyleContext } from "styled-system/jsx";
@@ -13,7 +17,7 @@ import { MotionBox, type MotionBoxProps } from "./motion";
 
 const { withProvider, withContext } = createStyleContext(actionBar);
 
-const ActionBarContext = createContext<UseActionBarReturn | null>(null);
+const ActionBarContext = createContext<UseControllableReturn | null>(null);
 
 function useActionBarContext() {
     const context = useContext(ActionBarContext);
@@ -23,12 +27,12 @@ function useActionBarContext() {
     return context;
 }
 
-export interface ActionBarRootProps extends BoxProps, ActionBarVariantProps, UseActionBarProps {}
+export interface ActionBarRootProps extends BoxProps, ActionBarVariantProps, useControllableProps {}
 
 const ActionBarRoot = withProvider(
     forwardRef<HTMLDivElement, ActionBarRootProps>(function ActionBarRoot(props, ref) {
         const { children, isOpen, defaultIsOpen, onOpen, onClose, ...rest } = props;
-        const actionBarProps = useActionBar({
+        const actionBarProps = useControllable({
             isOpen,
             defaultIsOpen,
             onOpen,

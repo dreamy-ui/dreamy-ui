@@ -1,27 +1,26 @@
 "use client";
 
 import { ActionBar } from "@/action-bar";
-import { Badge } from "@/badge";
 import { Button } from "@/button";
-import { Checkbox } from "@/checkbox";
+import { CheckboxCard } from "@/checkbox-card";
 import { CloseButton } from "@/close-button";
-import { HStack, VStack } from "@/stack";
-import { Text } from "@/text";
+import { Wrap } from "@/wrap";
+import { useControllable } from "@dreamy-ui/react";
 import { useState } from "react";
 import { LuDownload, LuFolderPlus, LuShare, LuSquarePlus, LuTrash } from "react-icons/lu";
 
 export function ControlledActionBar() {
-    const [isOpen, setIsOpen] = useState(false);
+    const { isOpen, onToggle, onClose } = useControllable({
+        defaultIsOpen: false
+    });
 
     return (
         <>
-            <Button onClick={() => setIsOpen(!isOpen)}>
-                {isOpen ? "Hide" : "Show"} Action Bar
-            </Button>
+            <Button onClick={onToggle}>{isOpen ? "Hide" : "Show"} Action Bar</Button>
 
             <ActionBar.Root
                 isOpen={isOpen}
-                onClose={() => setIsOpen(false)}
+                onClose={onClose}
             >
                 <ActionBar.Content>
                     <ActionBar.SelectionTrigger>2 items selected</ActionBar.SelectionTrigger>
@@ -47,15 +46,17 @@ export function ControlledActionBar() {
 }
 
 export function BasicActionBar() {
-    const [isOpen, setIsOpen] = useState(false);
+    const { isOpen, onOpen, onClose } = useControllable({
+        defaultIsOpen: false
+    });
 
     return (
         <>
-            <Button onClick={() => setIsOpen(true)}>Show Action Bar</Button>
+            <Button onClick={onOpen}>Show Action Bar</Button>
 
             <ActionBar.Root
                 isOpen={isOpen}
-                onClose={() => setIsOpen(false)}
+                onClose={onClose}
             >
                 <ActionBar.Content>
                     <ActionBar.SelectionTrigger>3 selected</ActionBar.SelectionTrigger>
@@ -75,15 +76,17 @@ export function BasicActionBar() {
 }
 
 export function ActionBarWithClose() {
-    const [isOpen, setIsOpen] = useState(false);
+    const { isOpen, onOpen, onClose } = useControllable({
+        defaultIsOpen: false
+    });
 
     return (
         <>
-            <Button onClick={() => setIsOpen(true)}>Show Action Bar</Button>
+            <Button onClick={onOpen}>Show Action Bar</Button>
 
             <ActionBar.Root
                 isOpen={isOpen}
-                onClose={() => setIsOpen(false)}
+                onClose={onClose}
             >
                 <ActionBar.Content>
                     <ActionBar.SelectionTrigger>5 items selected</ActionBar.SelectionTrigger>
@@ -110,15 +113,17 @@ export function ActionBarWithClose() {
 }
 
 export function ActionBarMultiple() {
-    const [isOpen, setIsOpen] = useState(false);
+    const { isOpen, onOpen, onClose } = useControllable({
+        defaultIsOpen: false
+    });
 
     return (
         <>
-            <Button onClick={() => setIsOpen(true)}>Show Action Bar</Button>
+            <Button onClick={onOpen}>Show Action Bar</Button>
 
             <ActionBar.Root
                 isOpen={isOpen}
-                onClose={() => setIsOpen(false)}
+                onClose={onClose}
             >
                 <ActionBar.Content>
                     <ActionBar.SelectionTrigger>12 files selected</ActionBar.SelectionTrigger>
@@ -159,12 +164,14 @@ export function ActionBarMultiple() {
 }
 
 export function ActionBarSizes({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
-    const [isOpen, setIsOpen] = useState(false);
+    const { isOpen, onOpen, onClose } = useControllable({
+        defaultIsOpen: false
+    });
 
     return (
         <>
             <Button
-                onClick={() => setIsOpen(true)}
+                onClick={onOpen}
                 size={size}
             >
                 Show {size} Action Bar
@@ -172,7 +179,7 @@ export function ActionBarSizes({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
 
             <ActionBar.Root
                 isOpen={isOpen}
-                onClose={() => setIsOpen(false)}
+                onClose={onClose}
                 size={size}
             >
                 <ActionBar.Content>
@@ -195,6 +202,10 @@ export function ActionBarSizes({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
 
 export function ActionBarTable() {
     const [selectedItems, setSelectedItems] = useState<number[]>([]);
+    const { isOpen, onClose } = useControllable({
+        isOpen: selectedItems.length > 0,
+        onClose: () => setSelectedItems([])
+    });
 
     const items = [
         { id: 1, name: "Project A", type: "Folder" },
@@ -210,29 +221,21 @@ export function ActionBarTable() {
 
     return (
         <>
-            <VStack gap={2}>
+            <Wrap full>
                 {items.map((item) => (
-                    <HStack
+                    <CheckboxCard
                         key={item.id}
-                        gap={3}
-                        p={2}
-                        border="1px solid"
-                        borderColor="border"
-                        rounded="md"
-                    >
-                        <Checkbox
-                            checked={selectedItems.includes(item.id)}
-                            onChange={() => toggleSelection(item.id)}
-                        />
-                        <Text>{item.name}</Text>
-                        <Badge>{item.type}</Badge>
-                    </HStack>
+                        checked={selectedItems.includes(item.id)}
+                        onChange={() => toggleSelection(item.id)}
+                        title={item.name}
+                        description={item.type}
+                    />
                 ))}
-            </VStack>
+            </Wrap>
 
             <ActionBar.Root
-                isOpen={selectedItems.length > 0}
-                onClose={() => setSelectedItems([])}
+                isOpen={isOpen}
+                onClose={onClose}
             >
                 <ActionBar.Content>
                     <ActionBar.SelectionTrigger>

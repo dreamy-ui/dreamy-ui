@@ -22,15 +22,15 @@ Action Bar is a component that displays a set of actions at the bottom of the sc
 
 ```tsx
 function ControlledActionBar() {
-  const [isOpen, setIsOpen] = useState(false);
+  const { isOpen, onClose, onToggle } = useControllable();
 
   return (
     <>
-      <Button onClick={() => setIsOpen(!isOpen)}>
+      <Button onClick={onToggle}>
         {isOpen ? 'Hide' : 'Show'} Action Bar
       </Button>
       
-      <ActionBar.Root isOpen={isOpen} onClose={() => setIsOpen(false)}>
+      <ActionBar.Root isOpen={isOpen} onClose={onClose}>
         <ActionBar.Positioner>
           <ActionBar.Content>
             <ActionBar.SelectionTrigger>
@@ -55,7 +55,7 @@ function ControlledActionBar() {
 
 ### Basic Usage
 
-The simplest way to use the Action Bar is with controlled state.
+The simplest way to use the Action Bar is with the `useControllable` hook.
 
 <Wrapper>
   <BasicActionBar />
@@ -63,15 +63,15 @@ The simplest way to use the Action Bar is with controlled state.
 
 ```tsx
 function BasicActionBar() {
-  const [isOpen, setIsOpen] = useState(false);
+  const { isOpen, onClose, onOpen } = useControllable();
 
   return (
     <>
-      <Button onClick={() => setIsOpen(true)}>
+      <Button onClick={onOpen}>
         Show Action Bar
       </Button>
       
-      <ActionBar.Root isOpen={isOpen} onClose={() => setIsOpen(false)}>
+      <ActionBar.Root isOpen={isOpen} onClose={onClose}>
         <ActionBar.Positioner>
           <ActionBar.Content>
             <ActionBar.SelectionTrigger>
@@ -102,17 +102,17 @@ Add a close button to allow users to dismiss the action bar manually.
 
 ```tsx
 function ActionBarWithClose() {
-  const [isOpen, setIsOpen] = useState(false);
+  const { isOpen, onClose, onOpen } = useControllable();
 
   return (
     <>
-      <Button onClick={() => setIsOpen(true)}>
+      <Button onClick={onOpen}>
         Show Action Bar
       </Button>
       
       <ActionBar.Root 
         isOpen={isOpen} 
-        onClose={() => setIsOpen(false)}
+        onClose={onClose}
       >
         <ActionBar.Positioner>
           <ActionBar.Content>
@@ -149,15 +149,15 @@ You can include multiple action buttons to provide various operations.
 
 ```tsx
 function ActionBarMultiple() {
-  const [isOpen, setIsOpen] = useState(false);
+  const { isOpen, onClose, onOpen } = useControllable();
 
   return (
     <>
-      <Button onClick={() => setIsOpen(true)}>
+      <Button onClick={onOpen}>
         Show Action Bar
       </Button>
       
-      <ActionBar.Root isOpen={isOpen} onClose={() => setIsOpen(false)}>
+      <ActionBar.Root isOpen={isOpen} onClose={onClose}>
         <ActionBar.Positioner>
           <ActionBar.Content>
             <ActionBar.SelectionTrigger>
@@ -214,15 +214,15 @@ You can change the size of the action bar using the `size` prop.
 
 ```tsx
 function ActionBarSizes({ size }) {
-  const [isOpen, setIsOpen] = useState(false);
+  const { isOpen, onClose, onOpen } = useControllable();
 
   return (
     <>
-      <Button onClick={() => setIsOpen(true)} size={size}>
+      <Button onClick={onOpen} size={size}>
         Show {size} Action Bar
       </Button>
       
-      <ActionBar.Root isOpen={isOpen} onClose={() => setIsOpen(false)} size={size}>
+      <ActionBar.Root isOpen={isOpen} onClose={onClose} size={size}>
         <ActionBar.Positioner>
           <ActionBar.Content>
             <ActionBar.SelectionTrigger>
