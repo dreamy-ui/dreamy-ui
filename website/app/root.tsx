@@ -1,7 +1,6 @@
 import { ToastProvider } from "@/toast-provider";
 import { DreamyProvider } from "@dreamy-ui/react";
 import { getColorModeHTMLProps, getSSRColorMode } from "@dreamy-ui/react/rsc";
-import { useEffect } from "react";
 import {
     Links,
     Meta,
@@ -86,12 +85,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
         console.error(error);
     }
     const { colorMode } = root ?? {};
-
-    useEffect(() => {
-        setTimeout(() => {
-            (window as any).hydrated = true;
-        }, 1000);
-    }, []);
 
     return (
         <html

@@ -6,7 +6,6 @@ declare module "react-router" {
   interface Register {
     pages: Pages
     routeFiles: RouteFiles
-    routeModules: RouteModules
   }
 }
 
@@ -100,19 +99,4 @@ type RouteFiles = {
     id: "routes/$";
     page: "/*";
   };
-};
-
-type RouteModules = {
-  "root": typeof import("./app/root.tsx");
-  "routes/api.fake-select-data": typeof import("./app/routes/api.fake-select-data.tsx");
-  "routes/api.docs.prefetch": typeof import("./app/routes/api.docs.prefetch.ts");
-  "routes/api.docs.search": typeof import("./app/routes/api.docs.search.tsx");
-  "routes/llms[.txt]": typeof import("./app/routes/llms[.txt].ts");
-  "routes/_index": typeof import("./app/routes/_index.tsx");
-  "routes/docs": typeof import("./app/routes/docs.tsx");
-  "routes/docs.$section.$page": typeof import("./app/routes/docs.$section.$page.tsx");
-  "routes/docs.$section.$page.og-image": typeof import("./app/routes/docs.$section.$page.og-image.tsx");
-  "routes/docs._index": typeof import("./app/routes/docs._index.ts");
-  "routes/test": typeof import("./app/routes/test.tsx");
-  "routes/$": typeof import("./app/routes/$.tsx");
 };

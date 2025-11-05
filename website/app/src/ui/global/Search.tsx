@@ -1,4 +1,3 @@
-import type { Route } from ".react-router/types/app/routes/+types/api.docs.search";
 import { Button } from "@/button";
 import { Flex } from "@/flex";
 import { Icon } from "@/icon";
@@ -18,16 +17,16 @@ import {
     useUpdateEffect
 } from "@dreamy-ui/react";
 import { AnimatePresence } from "motion/react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { BiSearch } from "react-icons/bi";
 import { MdNavigateNext } from "react-icons/md";
 import { useNavigate } from "react-router";
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
-import { cachePageData } from "~/src/functions/clientCache";
 import { capitalize } from "~/src/functions/string";
 import useDebounce from "~/src/hooks/useDebounce";
 import { useRoot } from "~/src/hooks/useRoot";
 import { Link, type LinkProps } from "~/src/ui/global/Link";
+import type { Route } from ".react-router/types/app/routes/+types/api.docs.search";
 
 interface RecentSearch {
     filename: string;
@@ -337,11 +336,6 @@ interface SearchDocProps extends Partial<LinkProps> {
 }
 
 function SearchDoc({ doc, isActive, ...rest }: SearchDocProps) {
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-    useEffect(() => {
-        if (isActive) cachePageData(doc.path);
-    }, [isActive]);
-
     return (
         <Link
             flexbox

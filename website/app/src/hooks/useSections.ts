@@ -1,8 +1,10 @@
+import { useRouteLoaderData } from "react-router";
 import type { Route } from "../../routes/+types/docs";
-import { useCachedRouteLoaderData } from "../functions/clientCache";
 
 export function useSections() {
-	return useCachedRouteLoaderData<Route.ComponentProps["loaderData"]>(
-		"routes/docs"
-	);
+    const sections = useRouteLoaderData<Route.ComponentProps["loaderData"]>("routes/docs");
+    if (!sections) {
+        throw new Error("Sections not found");
+    }
+    return sections;
 }

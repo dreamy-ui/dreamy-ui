@@ -1,4 +1,11 @@
-import { type PropsWithChildren, createContext, useContext, useMemo, useState } from "react";
+import {
+    type PropsWithChildren,
+    createContext,
+    useCallback,
+    useContext,
+    useMemo,
+    useState
+} from "react";
 import { useRoot } from "~/src/hooks/useRoot";
 
 export type PM = "npm" | "pnpm" | "yarn" | "bun";
@@ -31,10 +38,15 @@ export default function GlobalContextProvider({ children }: PropsWithChildren) {
         return pm ?? validPms[1];
     });
 
-    function updatePm(pm: PM) {
-        document.cookie = `pm=${pm}; path=/; max-age=31536000;`;
+    const updatePm = useCallback((pm: PM) => {
+        cookieStore.set({
+            name: "pm",
+            value: pm,
+            path: "/",
+            expires: Date.now() + 31536000000
+        });
         setPm(pm);
-    }
+    }, []);
 
     const memoizedValue = useMemo<GlobalContextType>(() => ({ pm, updatePm }), [pm, updatePm]);
 

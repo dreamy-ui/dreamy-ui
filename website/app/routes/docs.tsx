@@ -2,11 +2,9 @@ import { Flex } from "@/flex";
 import { Outlet } from "react-router";
 import { Docs } from "~/src/.server/docs";
 import { getTimings } from "~/src/.server/middlewares";
-import { cacheClientLoader } from "~/src/functions/clientCache";
 import MobileDocsNav from "~/src/ui/docs/MobileDocsNav";
 import OnThisPage from "~/src/ui/docs/OnThisPage";
 import SectionsNav from "~/src/ui/docs/SectionsNav";
-import type { ServerLoader } from "~/types";
 import type { Route } from "./+types/docs";
 
 export async function loader(_: Route.LoaderArgs) {
@@ -19,12 +17,6 @@ export async function loader(_: Route.LoaderArgs) {
         sections
     };
 }
-
-export const clientLoader = (args: Route.ClientLoaderArgs) =>
-    cacheClientLoader<ServerLoader<typeof loader>>(args, {
-        key: "/docs"
-    });
-clientLoader.hydrate = true;
 
 export function shouldRevalidate() {
     return false;

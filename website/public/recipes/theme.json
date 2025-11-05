@@ -3,6 +3,6 @@
   "id": "theme",
   "file": {
     "name": "theme.ts",
-    "content": "import { defineRecipe } from \"@pandacss/dev\";\n\nexport const theme = defineRecipe({\n    className: \"theme\",\n    description: \"Dreamy UI Theme component\",\n    jsx: [\"DarkTheme\", \"LightTheme\"],\n    base: {\n        root: {\n            color: \"fg\",\n            \"&[data-theme='dark']\": {\n                colorScheme: \"dark\"\n            },\n            \"&[data-theme='light']\": {\n                colorScheme: \"light\"\n            }\n        }\n    }\n});\n"
+    "content": "import { defineRecipe } from \"@pandacss/dev\";\r\n\r\nexport const theme = defineRecipe({\r\n    className: \"theme\",\r\n    description: \"Dreamy UI Theme component\",\r\n    jsx: [\"DarkTheme\", \"LightTheme\"],\r\n    base: {\r\n        root: {\r\n            color: \"fg\",\r\n            \"&[data-theme='dark']\": {\r\n                colorScheme: \"dark\"\r\n            },\r\n            \"&[data-theme='light']\": {\r\n                colorScheme: \"light\"\r\n            }\r\n        }\r\n    }\r\n});\r\n"
   }
 }

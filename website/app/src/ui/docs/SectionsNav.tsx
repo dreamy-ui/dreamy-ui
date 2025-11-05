@@ -9,11 +9,10 @@ import { memo, useRef, useState } from "react";
 import { BiChevronRight } from "react-icons/bi";
 import { useLocation } from "react-router";
 import type { ISection } from "~/src/.server/docs";
-import { cachePageData } from "~/src/functions/clientCache";
 import { useSections } from "~/src/hooks/useSections";
 import { Link } from "~/src/ui/global/Link";
 
-const newComponents = ["toast", "progress circular", "group", "radio card", "wrap"];
+const newComponents = ["toast", "progress circular", "group", "radio card", "wrap", "action bar"];
 const updatedComponents = ["menu"];
 
 export default function SectionsNav() {
@@ -171,9 +170,6 @@ const MemoSectionButton = memo(function SectionButton({
             }
             size={"sm"}
             justifyContent={"space-between"}
-            onPointerEnter={() => {
-                cachePageData(file.slug);
-            }}
         >
             {file.name === "Llms" ? "LLMs" : file.name}
             {(isNew || isUpdated) && (

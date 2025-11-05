@@ -1,8 +1,12 @@
+import { useRouteLoaderData } from "react-router";
 import type { Route } from "../../routes/+types/docs.$section.$page";
-import { useCachedRouteLoaderData } from "../functions/clientCache";
 
 export function useDoc() {
-	return useCachedRouteLoaderData<Route.ComponentProps["loaderData"]>(
-		"routes/docs.$section.$page"
-	);
+    const doc = useRouteLoaderData<Route.ComponentProps["loaderData"]>(
+        "routes/docs.$section.$page"
+    );
+    if (!doc) {
+        throw new Error("Doc not found");
+    }
+    return doc;
 }

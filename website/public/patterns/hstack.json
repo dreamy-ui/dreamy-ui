@@ -3,6 +3,6 @@
   "id": "hstack",
   "file": {
     "name": "hstack.ts",
-    "content": "import { definePattern } from \"@pandacss/dev\";\n\nexport const hstack = definePattern({\n\tjsx: [\"HStack\"],\n\tproperties: {\n\t\tjustify: { type: \"property\", value: \"justifyContent\" },\n\t\tgap: { type: \"property\", value: \"gap\" },\n\t\talign: { type: \"property\", value: \"alignItems\" }\n\t},\n\tdefaultValues: {\n\t\tgap: \"10px\",\n\t\talign: \"center\"\n\t},\n\ttransform(props) {\n\t\tconst { justify, gap, align, ...rest } = props;\n\t\treturn {\n\t\t\tdisplay: \"flex\",\n\t\t\tflexDirection: \"row\",\n\t\t\talignItems: align,\n\t\t\tjustifyContent: justify,\n\t\t\tgap,\n\t\t\t...rest\n\t\t};\n\t}\n});\n"
+    "content": "import { definePattern } from \"@pandacss/dev\";\r\n\r\nexport const hstack = definePattern({\r\n\tjsx: [\"HStack\"],\r\n\tproperties: {\r\n\t\tjustify: { type: \"property\", value: \"justifyContent\" },\r\n\t\tgap: { type: \"property\", value: \"gap\" },\r\n\t\talign: { type: \"property\", value: \"alignItems\" }\r\n\t},\r\n\tdefaultValues: {\r\n\t\tgap: \"10px\",\r\n\t\talign: \"center\"\r\n\t},\r\n\ttransform(props) {\r\n\t\tconst { justify, gap, align, ...rest } = props;\r\n\t\treturn {\r\n\t\t\tdisplay: \"flex\",\r\n\t\t\tflexDirection: \"row\",\r\n\t\t\talignItems: align,\r\n\t\t\tjustifyContent: justify,\r\n\t\t\tgap,\r\n\t\t\t...rest\r\n\t\t};\r\n\t}\r\n});\r\n"
   }
 }

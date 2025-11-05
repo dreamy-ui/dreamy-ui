@@ -13,23 +13,24 @@ import { type ShouldRevalidateFunctionArgs, data, useLocation } from "react-rout
 import { CACHE_DURATION, CacheHeaders } from "~/src/.server/cache";
 import { Docs } from "~/src/.server/docs";
 import { getTimings } from "~/src/.server/middlewares";
-import { cacheClientLoader } from "~/src/functions/clientCache";
 import { useDoc } from "~/src/hooks/useDoc";
 import { useSections } from "~/src/hooks/useSections";
 import MDXContent from "~/src/ui/docs/MDXContent";
 import NextPreviousButton from "~/src/ui/docs/NextPreviousButton";
 import { ReactRouterLink } from "~/src/ui/global/Link";
-import type { ComponentDocFrontmatter, ServerLoader } from "~/types";
+import type { ComponentDocFrontmatter } from "~/types";
 import { ErrorBoundary } from "./$";
 import type { Route } from "./+types/docs.$section.$page";
 
-export function meta({ data, params }: Route.MetaArgs) {
+export function meta({ loaderData, params }: Route.MetaArgs) {
     return [
         {
-            title: data ? `${data.frontmatter.title} - Dreamy UI` : "Doc not found - Dreamy UI"
+            title: loaderData
+                ? `${loaderData.frontmatter.title} - Dreamy UI`
+                : "Doc not found - Dreamy UI"
         },
         {
-            description: data?.frontmatter?.description ?? undefined
+            description: loaderData?.frontmatter?.description ?? undefined
         },
         {
             property: "og:image",
@@ -49,11 +50,13 @@ export function meta({ data, params }: Route.MetaArgs) {
         },
         {
             property: "og:title",
-            content: data?.frontmatter.title ? `${data.frontmatter.title} - Dreamy UI` : "Dreamy UI"
+            content: loaderData?.frontmatter.title
+                ? `${loaderData.frontmatter.title} - Dreamy UI`
+                : "Dreamy UI"
         },
         {
             property: "og:description",
-            content: data?.frontmatter.description ?? undefined
+            content: loaderData?.frontmatter.description ?? undefined
         },
         // twitter
         {
@@ -66,15 +69,17 @@ export function meta({ data, params }: Route.MetaArgs) {
         },
         {
             name: "twitter:title",
-            content: data?.frontmatter.title ? `${data.frontmatter.title} - Dreamy UI` : "Dreamy UI"
+            content: loaderData?.frontmatter.title
+                ? `${loaderData.frontmatter.title} - Dreamy UI`
+                : "Dreamy UI"
         },
         {
             name: "twitter:description",
-            content: data?.frontmatter.description ?? undefined
+            content: loaderData?.frontmatter.description ?? undefined
         },
         {
             name: "twitter:image:alt",
-            content: data?.frontmatter.title ?? "Dreamy UI"
+            content: loaderData?.frontmatter.title ?? "Dreamy UI"
         },
         {
             name: "twitter:image:width",
@@ -128,10 +133,6 @@ export function shouldRevalidate(args: ShouldRevalidateFunctionArgs) {
 
     return false;
 }
-
-export const clientLoader = (args: Route.ClientLoaderArgs) =>
-    cacheClientLoader<ServerLoader<typeof loader>>(args);
-clientLoader.hydrate = true;
 
 export default function DocsSectionPage() {
     const { sections } = useSections();
