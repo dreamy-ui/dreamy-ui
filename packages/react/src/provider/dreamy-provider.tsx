@@ -2,6 +2,7 @@
 
 import { useSafeLayoutEffect } from "@/components/descendant/utils";
 import { useColorModeScript } from "@/provider/color-mode-script";
+import { objectToDeps } from "@/utils";
 import { nextTick } from "@/utils/ticks";
 import {
     type FeatureBundle,
@@ -63,6 +64,14 @@ interface DreamyProviderProps extends Partial<Omit<IDreamContext, "hasHydrated">
      * Whether to use the strict mode for motion.
      */
     motionStrict?: boolean;
+    /**
+     * The options to add to the color mode cookie.
+     * @default { path: "/", expires: Date.now() + 31536000000 (1 year) }
+     */
+    colorModeCookieOptions?: Partial<CookieInit>;
+    /**
+     * Rest of the app.
+     */
     children: React.ReactNode;
 }
 
@@ -79,12 +88,24 @@ export function DreamyProvider({
     reduceMotion: InitialReduceMotion = false,
     motionFeatures,
     // defaultToastProps = emptyObject,
-    motionStrict = false
+    motionStrict = false,
+    colorModeCookieOptions = {}
 }: DreamyProviderProps) {
     const [reduceMotion, setReduceMotion] = useState(InitialReduceMotion);
     const [colorMode, setResolvedColorMode] = useState<ColorMode>(
         InitialColorMode ?? defaultColorMode
     );
+
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+    const setColorModeCookie = useCallback((newColorMode: ColorMode) => {
+        cookieStore.set({
+            name: DreamColorModeCookieKey,
+            value: newColorMode,
+            path: "/",
+            expires: Date.now() + 31536000000,
+            ...colorModeCookieOptions
+        });
+    }, objectToDeps(colorModeCookieOptions));
 
     const setColorMode = useCallback(
         (colorModeCb: ColorMode | ((prevColorMode: ColorMode) => ColorMode)) => {
@@ -100,8 +121,8 @@ export function DreamyProvider({
             document.head.appendChild(css);
             document.documentElement.style.colorScheme = newColorMode;
             document.documentElement.dataset.theme = newColorMode;
-            document.cookie = `${DreamColorModeCookieKey}=${newColorMode}; path=/`;
 
+            setColorModeCookie(newColorMode);
             setResolvedColorMode(newColorMode);
 
             (() => window.getComputedStyle(document.body))();
@@ -110,7 +131,7 @@ export function DreamyProvider({
                 document.head.removeChild(css);
             });
         },
-        [colorMode]
+        [colorMode, setColorModeCookie]
     );
 
     const toggleColorMode = useCallback(() => {
@@ -173,6 +194,7 @@ export function DreamyProvider({
 
     useColorModeScript({
         setColorMode,
+        setColorModeCookie,
         defaultColorMode,
         useUserPreferenceColorMode,
         initialColorMode: InitialColorMode

@@ -4,6 +4,7 @@ import { useRef } from "react";
 
 interface ColorModeScriptProps {
     setColorMode: (colorMode: ColorMode) => void;
+    setColorModeCookie: (colorMode: ColorMode) => void;
     defaultColorMode: ColorMode;
     useUserPreferenceColorMode: boolean;
     initialColorMode: ColorMode | undefined;
@@ -11,6 +12,7 @@ interface ColorModeScriptProps {
 
 export function useColorModeScript({
     setColorMode,
+    setColorModeCookie,
     defaultColorMode,
     useUserPreferenceColorMode,
     initialColorMode: ssrColorMode
@@ -29,6 +31,14 @@ export function useColorModeScript({
             : "light";
         const initialColorMode = useUserPreferenceColorMode ? userPreference : defaultColorMode;
 
-        if (initialColorMode) setColorMode(initialColorMode);
+        if (initialColorMode) {
+            // Use SSR-data attribute to determine current mode
+            const current = ssrColorMode ?? defaultColorMode;
+            if (current === initialColorMode) {
+                setColorModeCookie(initialColorMode);
+            } else {
+                setColorMode(initialColorMode);
+            }
+        }
     }, []);
 }
