@@ -1,8 +1,12 @@
 "use client";
 
-import { createStyleContext } from "styled-system/jsx";
+import {
+    type DreamyComponent,
+    type HTMLDreamyProps,
+    createStyleContext,
+    dreamy
+} from "styled-system/jsx";
 import { type TableVariantProps, table } from "styled-system/recipes";
-import { type DreamyComponent, type HTMLDreamyProps, dreamy } from "./factory";
 
 const { withContext, withProvider } = createStyleContext(table);
 

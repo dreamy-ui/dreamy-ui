@@ -162,7 +162,7 @@ const MemoSectionButton = memo(function SectionButton({
                 color: isCurrent ? "white" : "fg"
             }}
             full
-            asComp={
+            as={
                 <Link
                     to={file.slug}
                     prefetch="intent"

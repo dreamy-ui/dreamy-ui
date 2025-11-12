@@ -1,6 +1,6 @@
 import { forwardRef } from "react";
+import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type KbdVariantProps, kbd } from "styled-system/recipes";
-import { type HTMLDreamyProps, dreamy } from "./factory";
 
 export interface KbdProps extends HTMLDreamyProps<"div">, KbdVariantProps {}
 

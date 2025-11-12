@@ -1,41 +1,17 @@
 import mdx from "@mdx-js/rollup";
 import { reactRouter } from "@react-router/dev/vite";
-import path from "node:path";
 import { defineConfig } from "vite";
-import babel from "vite-plugin-babel";
 import tsconfigPaths from "vite-tsconfig-paths";
 // import pandabox from "@pandabox/unplugin";
 // import Inspect from "vite-plugin-inspect";
-
-// declare module "@react-router/node" {}
-
-// sourceMapSupport.install({
-// 	retrieveSourceMap: (source) => {
-// 		const match = source.startsWith("file://");
-// 		if (match) {
-// 			const filePath = url.fileURLToPath(source);
-// 			const sourceMapPath = `${filePath}.map`;
-// 			if (fs.existsSync(sourceMapPath)) {
-// 				return {
-// 					url: source,
-// 					map: fs.readFileSync(sourceMapPath, "utf8")
-// 				};
-// 			}
-// 		}
-// 		return null;
-// 	}
-// });
-
-const reactCompilerConfig = {
-    target: "19"
-};
+import babel from "vite-plugin-babel";
 
 export default defineConfig(({ isSsrBuild }) => ({
-    resolve: {
-        alias: {
-            "styled-system": path.resolve(__dirname, "./styled-system")
-        }
-    },
+    // resolve: {
+    //     alias: {
+    //         "styled-system": path.resolve(__dirname, "./styled-system")
+    //     }
+    // },
     build: {
         minify: true,
         target: "esnext",
@@ -69,7 +45,7 @@ export default defineConfig(({ isSsrBuild }) => ({
             filter: /app\/.*\.[jt]sx?$/,
             babelConfig: {
                 presets: ["@babel/preset-typescript"],
-                plugins: [["babel-plugin-react-compiler", reactCompilerConfig]]
+                plugins: ["babel-plugin-react-compiler"]
             }
         }),
         tsconfigPaths()
@@ -84,20 +60,21 @@ export default defineConfig(({ isSsrBuild }) => ({
             "styled-system/recipes",
             "styled-system/token",
             "styled-system/types",
-            "styled-system"
+            "styled-system",
+            "@resvg/resvg-js"
         ]
     },
-    esbuild: {
-        exclude: [
-            "@dreamy-ui/panda-preset",
-            "@dreamy-ui/react",
-            "styled-system/css",
-            "styled-system/jsx",
-            "styled-system/patterns",
-            "styled-system/recipes",
-            "styled-system/token",
-            "styled-system/types",
-            "styled-system"
-        ]
-    }
+    // esbuild: {
+    //     exclude: [
+    //         "@dreamy-ui/panda-preset",
+    //         "@dreamy-ui/react",
+    //         "styled-system/css",
+    //         "styled-system/jsx",
+    //         "styled-system/patterns",
+    //         "styled-system/recipes",
+    //         "styled-system/token",
+    //         "styled-system/types",
+    //         "styled-system"
+    //     ]
+    // }
 }));

@@ -1,16 +1,16 @@
+import { objectToDeps } from "@dreamy-ui/react";
 import type React from "react";
 import {
-    Children,
     type ComponentPropsWithoutRef,
     type ElementType,
     type FunctionComponent,
-    cloneElement,
     createElement,
     forwardRef,
-    isValidElement,
-    memo
+    useMemo
 } from "react";
-import { dreamy as styled } from "styled-system/jsx";
+import { css, cva, cx } from "styled-system/css";
+import { splitProps } from "styled-system/helpers";
+import { isCssProperty } from "styled-system/jsx";
 import type {
     Assign,
     DistributiveOmit,
@@ -36,50 +36,217 @@ interface JsxFactoryOptions<TProps extends Dict> {
     shouldForwardProp?(prop: string, variantKeys: string[]): boolean;
 }
 
-function withAsProps(Component: React.ElementType) {
-    const Comp = memo(
-        forwardRef<unknown, DreamPropsWithRef<typeof Component>>(
-            (props: DreamPropsWithRef<typeof Component>, ref) => {
-                const { asChild, asComp, children, ...restProps } = props;
+// function withAsProps(Component: React.ElementType) {
+//     const Comp = memo(
+//         forwardRef<unknown, DreamPropsWithRef<typeof Component>>(
+//             (props: DreamPropsWithRef<typeof Component>, ref) => {
+//                 const { asChild, asComp, children, ...restProps } = props;
 
-                if (asComp) {
-                    return createElement(
-                        asComp.type,
-                        {
-                            ...restProps,
-                            ...asComp.props,
-                            ref: "ref" in asComp ? composeRefs(ref, asComp.ref) : ref
-                        },
-                        children
-                    );
-                }
+//                 if (asComp) {
+//                     return createElement(
+//                         asComp.type,
+//                         {
+//                             ...restProps,
+//                             ...asComp.props,
+//                             ref: "ref" in asComp ? composeRefs(ref, asComp.ref) : ref
+//                         },
+//                         children
+//                     );
+//                 }
 
-                if (!asChild) {
-                    return createElement(Component, { ...restProps, ref }, children);
-                }
+//                 if (!asChild) {
+//                     return createElement(Component, { ...restProps, ref }, children);
+//                 }
 
-                const onlyChild = Children.only(children) as React.ReactElement;
+//                 const onlyChild = Children.only(children) as React.ReactElement;
 
-                if (!isValidElement(onlyChild)) {
-                    return null;
-                }
+//                 if (!isValidElement(onlyChild)) {
+//                     return null;
+//                 }
 
-                const childRef = getRef(onlyChild);
+//                 const childRef = getRef(onlyChild);
 
-                return cloneElement(onlyChild, {
-                    ...restProps,
-                    ...(onlyChild.props as object),
-                    ref: ref ? composeRefs(ref, childRef) : childRef
-                });
-            }
-        )
+//                 return cloneElement(onlyChild, {
+//                     ...restProps,
+//                     ...(onlyChild.props as object),
+//                     ref: ref ? composeRefs(ref, childRef) : childRef
+//                 });
+//             }
+//         )
+//     );
+
+//     // @ts-expect-error - it exists
+//     Comp.displayName = Component.displayName || Component.name;
+
+//     return Comp;
+// }
+
+const htmlProps = ["htmlSize", "htmlTranslate", "htmlWidth", "htmlHeight"];
+function convert(key: string) {
+    return htmlProps.includes(key) ? key.replace("html", "").toLowerCase() : key;
+}
+function normalizeHTMLProps(props: any) {
+    return Object.fromEntries(Object.entries(props).map(([key, value]) => [convert(key), value]));
+}
+normalizeHTMLProps.keys = htmlProps;
+
+export const defaultShouldForwardProp = (prop: string, variantKeys: string[]) =>
+    !variantKeys.includes(prop) && !isCssProperty(prop);
+
+const composeShouldForwardProps = (tag: any, shouldForwardProp: any) =>
+    tag.__shouldForwardProps__ && shouldForwardProp
+        ? (propName: string) => tag.__shouldForwardProps__(propName) && shouldForwardProp(propName)
+        : shouldForwardProp;
+
+const composeCvaFn = (cvaA: any, cvaB: any) => {
+    if (cvaA && !cvaB) return cvaA;
+    if (!cvaA && cvaB) return cvaB;
+    if ((cvaA.__cva__ && cvaB.__cva__) || (cvaA.__recipe__ && cvaB.__recipe__))
+        return cvaA.merge(cvaB);
+    const error = new TypeError("Cannot merge cva with recipe. Please use either cva or recipe.");
+    TypeError.captureStackTrace?.(error);
+    throw error;
+};
+
+const getDisplayName = (Component: any) => {
+    if (typeof Component === "string") return Component;
+    return Component?.displayName || Component?.name || "Component";
+};
+
+function styledFn(Dynamic: any, configOrCva: any = {}, options: any = {}) {
+    const cvaFn = configOrCva.__cva__ || configOrCva.__recipe__ ? configOrCva : cva(configOrCva);
+
+    const forwardFn = options.shouldForwardProp || defaultShouldForwardProp;
+    const shouldForwardProp = (prop: string) => {
+        if (options.forwardProps?.includes(prop)) return true;
+        return forwardFn(prop, cvaFn.variantKeys);
+    };
+
+    const defaultProps = Object.assign(
+        options.dataAttr && configOrCva.__name__ ? { "data-recipe": configOrCva.__name__ } : {},
+        options.defaultProps
     );
 
-    // @ts-expect-error - it exists
-    Comp.displayName = Component.displayName || Component.name;
+    const __cvaFn__ = composeCvaFn(Dynamic?.__cva__, cvaFn);
+    const __shouldForwardProps__ = composeShouldForwardProps(Dynamic, shouldForwardProp);
+    const __base__ = Dynamic?.__base__ || Dynamic || "div";
 
-    return Comp;
+    const DreamyComponent = /* @__PURE__ */ forwardRef<any, any>(
+        function DreamyComponent(props, ref) {
+            const { as: Element = __base__, unstyled, children, ...restProps } = props;
+
+            // Ensure Element is always valid
+            const ValidElement = Element || __base__ || "div";
+
+            // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+            const combinedProps = useMemo(
+                () => Object.assign({}, defaultProps, restProps),
+                [...objectToDeps(restProps)]
+            );
+
+            const [htmlProps, forwardedProps, variantProps, styleProps, elementProps] =
+                useMemo(() => {
+                    return splitProps(
+                        combinedProps,
+                        normalizeHTMLProps.keys,
+                        __shouldForwardProps__,
+                        __cvaFn__.variantKeys,
+                        isCssProperty
+                    );
+                }, [combinedProps]);
+
+            function recipeClass() {
+                const { css: cssStyles, ...propStyles } = styleProps as any;
+                const compoundVariantStyles = __cvaFn__.__getCompoundVariantCss__?.(variantProps);
+                return cx(
+                    __cvaFn__(variantProps, false),
+                    css(compoundVariantStyles, propStyles, cssStyles),
+                    combinedProps.className
+                );
+            }
+
+            function cvaClass() {
+                const { css: cssStyles, ...propStyles } = styleProps as any;
+                const cvaStyles = __cvaFn__.raw(variantProps);
+                return cx(css(cvaStyles, propStyles, cssStyles), combinedProps.className);
+            }
+
+            const classes = () => {
+                if (unstyled) {
+                    const { css: cssStyles, ...propStyles } = styleProps as any;
+                    return cx(css(propStyles, cssStyles), combinedProps.className);
+                }
+                return configOrCva.__recipe__ ? recipeClass() : cvaClass();
+            };
+
+            return createElement(
+                ValidElement,
+                {
+                    ref,
+                    ...forwardedProps,
+                    ...elementProps,
+                    ...normalizeHTMLProps(htmlProps),
+                    className: classes()
+                },
+                children ?? combinedProps.children
+            );
+        }
+    );
+
+    const name = getDisplayName(__base__);
+
+    DreamyComponent.displayName = `dreamy.${name}`;
+    (DreamyComponent as any).__cva__ = __cvaFn__;
+    (DreamyComponent as any).__base__ = __base__;
+    (DreamyComponent as any).__shouldForwardProps__ = shouldForwardProp;
+
+    return DreamyComponent;
 }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 export type JsxElement<T extends ElementType, P extends Dict> = T extends DreamyComponent<
     infer A,
@@ -108,23 +275,23 @@ type JsxElements = {
 
 export type Dreamy = DreamFactory & JsxElements;
 
-function styledWithAsProps<T extends ElementType, P extends RecipeVariantRecord>(
-    Component: T,
-    recipe?: RecipeDefinition<P>,
-    options?: JsxFactoryOptions<JsxRecipeProps<T, RecipeSelection<P>>>
-): DreamyComponent<T, {}>;
-function styledWithAsProps<T extends ElementType, P extends RecipeFn>(
-    Component: T,
-    recipe?: P,
-    options?: JsxFactoryOptions<JsxRecipeProps<T, P["__type"]>>
-): DreamyComponent<T, P["__type"]> {
-    return styled(withAsProps(Component), recipe as any, options) as any;
-}
+// function styledWithAsProps<T extends ElementType, P extends RecipeVariantRecord>(
+//     Component: T,
+//     recipe?: RecipeDefinition<P>,
+//     options?: JsxFactoryOptions<JsxRecipeProps<T, RecipeSelection<P>>>
+// ): DreamyComponent<T, {}>;
+// function styledWithAsProps<T extends ElementType, P extends RecipeFn>(
+//     Component: T,
+//     recipe?: P,
+//     options?: JsxFactoryOptions<JsxRecipeProps<T, P["__type"]>>
+// ): DreamyComponent<T, P["__type"]> {
+//     return styledFn(Component, recipe as any, options) as any;
+// }
 
 function createJsxFactory() {
     const cache = new Map<DOMElements, DreamyComponent<DOMElements>>();
 
-    return new Proxy(styledWithAsProps, {
+    return new Proxy(styledFn, {
         apply(
             _,
             __,
@@ -134,13 +301,18 @@ function createJsxFactory() {
                 JsxFactoryOptions<JsxRecipeProps<DOMElements, RecipeSelection<RecipeVariantRecord>>>
             ]
         ) {
-            return styledWithAsProps(...args);
+            return styledFn(...args);
         },
         get(_, el: DOMElements) {
-            if (!cache.has(el)) {
-                cache.set(el, styledWithAsProps(el, undefined, undefined));
+            if (!el) {
+                return undefined;
             }
-            return cache.get(el);
+            if (!cache.has(el)) {
+                const comp = styledFn(el, undefined, undefined);
+                cache.set(el, comp);
+                return comp;
+            }
+            return cache.get(el)!;
         }
     }) as unknown as Dreamy;
 }

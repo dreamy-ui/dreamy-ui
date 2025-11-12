@@ -2,10 +2,10 @@
 
 import { ariaAttr, callAllHandlers, objectToDeps, omit } from "@dreamy-ui/react";
 import { cloneElement, forwardRef, useMemo, useRef } from "react";
+import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { image } from "styled-system/recipes";
 import type { SystemProperties } from "styled-system/types";
 import { Box, type BoxProps } from "./box";
-import { type HTMLDreamyProps, dreamy } from "./factory";
 
 export interface ImageProps extends HTMLDreamyProps<"img">, SystemProperties {
     /**

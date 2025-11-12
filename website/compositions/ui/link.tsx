@@ -1,7 +1,7 @@
 import { splitProps } from "@dreamy-ui/react";
 import { forwardRef } from "react";
+import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type TextProperties, text } from "styled-system/patterns";
-import { type HTMLDreamyProps, dreamy } from "./factory";
 
 export interface LinkProps extends HTMLDreamyProps<"a">, TextProperties {
     /**

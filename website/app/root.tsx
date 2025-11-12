@@ -12,7 +12,6 @@ import {
 import AppLayout from "~/src/ui/global/Layout";
 import type { Route } from "./+types/root";
 import styles from "./index.css?url";
-import { clientTimingMiddleware } from "./src/.client/middlewares";
 import {
     prefetchCacheControlHeaderMiddleware,
     requestMiddleware,
@@ -22,7 +21,7 @@ import { getServerCookie } from "./src/functions/cookies";
 import { useRoot } from "./src/hooks/useRoot";
 import GlobalContextProvider from "./src/ui/global/GlobalContext";
 
-export const clientMiddleware = [clientTimingMiddleware];
+// export const clientMiddleware = [clientTimingMiddleware];
 
 export const middleware = [
     requestMiddleware,

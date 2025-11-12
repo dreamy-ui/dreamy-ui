@@ -16,11 +16,10 @@ import {
     useTabsContext
 } from "@dreamy-ui/react";
 import { forwardRef } from "react";
-import { createStyleContext } from "styled-system/jsx";
+import { type HTMLDreamyProps, createStyleContext } from "styled-system/jsx";
 import { tabs } from "styled-system/recipes";
 import { Box } from "./box";
 import { Button, type ButtonProps } from "./button";
-import type { HTMLDreamyProps } from "./factory";
 import { Flex, type FlexProps } from "./flex";
 import { MotionFlex, type MotionFlexProps } from "./motion";
 
@@ -80,9 +79,9 @@ const TabTab = withContext(
 
         return (
             <Button
+                disableRipple
                 size={"sm"}
                 variant={"ghost"}
-                disableRipple
                 {...tabProps}
             >
                 {children}
@@ -141,16 +140,16 @@ const TabIndicator = withContext(
             <MotionFlex
                 ref={ref}
                 {...props}
+                animate={{ opacity: 1, scale: 1 }}
+                initial={!domAvailable ? { opacity: 0, scale: 0.95 } : undefined}
                 layout
-                layoutId={`${id}-indicator`}
                 layoutDependency={false}
+                layoutId={`${id}-indicator`}
+                rounded={"inherit"}
                 transition={{
                     ...transition,
                     duration: (transition?.duration ?? 0.2) * 1.5
                 }}
-                initial={!domAvailable ? { opacity: 0, scale: 0.95 } : undefined}
-                animate={{ opacity: 1, scale: 1 }}
-                rounded={"inherit"}
             />
         );
     }),

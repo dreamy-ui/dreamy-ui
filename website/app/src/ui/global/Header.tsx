@@ -70,7 +70,7 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: Props) {
                 >
                     <HStack
                         className="group"
-                        asComp={
+                        as={
                             <Link
                                 to={"/discord"}
                                 isExternal

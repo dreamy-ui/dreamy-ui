@@ -1,6 +1,6 @@
 import { forwardRef } from "react";
+import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type ListVariantProps, list } from "styled-system/recipes";
-import { type HTMLDreamyProps, dreamy } from "./factory";
 
 export interface ListProps extends HTMLDreamyProps<"ol">, ListVariantProps {
     ordered?: boolean;

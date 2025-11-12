@@ -1,9 +1,8 @@
 "use client";
 
 import { forwardRef } from "react";
-import { createStyleContext } from "styled-system/jsx";
+import { createStyleContext, dreamy, type HTMLDreamyProps } from "styled-system/jsx";
 import { type BreadcrumbVariantProps, breadcrumb } from "styled-system/recipes";
-import { type HTMLDreamyProps, dreamy } from "./factory";
 
 const { withProvider, withContext } = createStyleContext(breadcrumb);
 

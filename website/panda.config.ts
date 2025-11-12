@@ -1,4 +1,4 @@
-import createDreamyPreset from "@dreamy-ui/panda-preset";
+import createDreamyPreset, { dreamyPlugin } from "@dreamy-ui/panda-preset";
 import { defineConfig } from "@pandacss/dev";
 import { patterns } from "./app/components/patterns";
 import { recipes } from "./app/components/recipes";
@@ -181,6 +181,6 @@ export default defineConfig({
                 }
             ]
         }
-    }
-    // plugins: [dreamyPlugin]
+    },
+    plugins: [dreamyPlugin()]
 });

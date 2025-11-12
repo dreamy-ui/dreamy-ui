@@ -1,7 +1,7 @@
 import { splitProps } from "@dreamy-ui/react";
 import { forwardRef } from "react";
+import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type DividerProperties, divider } from "styled-system/patterns";
-import { type HTMLDreamyProps, dreamy } from "./factory";
 
 export interface DividerProps
     extends Omit<HTMLDreamyProps<"hr">, keyof DividerProperties>,

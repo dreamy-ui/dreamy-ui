@@ -2,8 +2,8 @@
 
 import { type UseSnippetProps, useSnippet } from "@dreamy-ui/react";
 import { type SVGProps, cloneElement, forwardRef, useMemo } from "react";
+import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type SnippetVariantProps, snippet } from "styled-system/recipes";
-import { type HTMLDreamyProps, dreamy } from "./factory";
 import { IconButton, type IconButtonProps } from "./icon-button";
 import { Tooltip, type TooltipProps } from "./tooltip";
 

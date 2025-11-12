@@ -7,12 +7,11 @@ import {
 } from "@dreamy-ui/react";
 import { AnimatePresence } from "motion/react";
 import { createContext, forwardRef, useCallback, useContext } from "react";
-import { createStyleContext } from "styled-system/jsx";
+import { createStyleContext, dreamy, type HTMLDreamyProps } from "styled-system/jsx";
 import type { ActionBarVariantProps } from "styled-system/recipes";
 import { actionBar } from "styled-system/recipes";
 import { Box, type BoxProps } from "./box";
 import { CloseButton, type CloseButtonProps } from "./close-button";
-import { type HTMLDreamyProps, dreamy } from "./factory";
 import { MotionBox, type MotionBoxProps } from "./motion";
 
 const { withProvider, withContext } = createStyleContext(actionBar);

@@ -9,13 +9,15 @@ import {
 } from "@dreamy-ui/react";
 import type React from "react";
 import { forwardRef, useMemo } from "react";
-import { splitCssProps } from "styled-system/jsx";
+import { type HTMLDreamyProps, dreamy, splitCssProps } from "styled-system/jsx";
 import { type InputVariantProps, input } from "styled-system/recipes";
 import { Box, type BoxProps } from "./box";
-import { type HTMLDreamyProps, dreamy } from "./factory";
 import { Flex, type FlexProps } from "./flex";
 
-export interface InputProps extends HTMLDreamyProps<"input">, InputVariantProps, UserFeedbackProps {
+export interface InputProps
+    extends Omit<HTMLDreamyProps<"input">, "size">,
+        InputVariantProps,
+        UserFeedbackProps {
     /**
      * The callback function that is called when the input value changes.
      */
@@ -104,8 +106,8 @@ export const InputLeftAddon = forwardRef<HTMLDivElement, InputAddonProps>(
     function InputLeftAddon(props, ref) {
         return (
             <InputAddon
-                ref={ref}
                 left={0}
+                ref={ref}
                 {...props}
             />
         );

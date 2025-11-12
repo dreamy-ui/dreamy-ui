@@ -2,8 +2,8 @@
 
 import { type UseSwitchProps, useSwitch } from "@dreamy-ui/react";
 import { forwardRef } from "react";
+import { dreamy } from "styled-system/jsx";
 import { type SwittchVariantProps, swittch } from "styled-system/recipes";
-import { dreamy } from "./factory";
 import { MotionBox } from "./motion";
 import { VisuallyHiddenInput } from "./visually-hidden";
 export interface SwitchProps

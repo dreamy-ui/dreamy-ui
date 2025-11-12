@@ -6,7 +6,6 @@
     "component": "Accordion",
     "fileDependencies": [
       "./box",
-      "./factory",
       "./icon",
       "./transitions"
     ],

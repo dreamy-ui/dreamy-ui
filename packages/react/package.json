@@ -3,12 +3,7 @@
 	"version": "1.0.2",
 	"description": "Dreamy UI library for React",
 	"type": "module",
-	"keywords": [
-		"react",
-		"ui",
-		"css-in-js",
-		"component-library"
-	],
+	"keywords": ["react", "ui", "css-in-js", "component-library"],
 	"author": "imexoodeex",
 	"license": "MIT",
 	"scripts": {
@@ -34,9 +29,7 @@
 			"require": "./dist/rsc.cjs"
 		}
 	},
-	"files": [
-		"/dist"
-	],
+	"files": ["/dist"],
 	"devDependencies": {
 		"@chromatic-com/storybook": "3.2.2",
 		"@storybook/addon-a11y": "^8.4.7",
@@ -48,8 +41,8 @@
 		"@storybook/react": "^8.4.7",
 		"@storybook/react-vite": "^8.4.7",
 		"@storybook/test": "8.4.7",
-		"@types/react": "^19.0.1",
-		"@types/react-dom": "^19.0.2",
+		"@types/react": "^19.2.2",
+		"@types/react-dom": "^19.2.2",
 		"storybook": "^8.4.7",
 		"tsup": "^8.3.5",
 		"typescript": "^5.7.2",
@@ -63,8 +56,8 @@
 		"aria-hidden": "^1.2.4",
 		"framesync": "^6.1.2",
 		"motion": "^12.23.22",
-		"react": "^19.0.0",
-		"react-dom": "^19.0.0",
+		"react": "^19.2.0",
+		"react-dom": "^19.2.0",
 		"react-focus-lock": "^2.13.5",
 		"react-icons": "^5.4.0",
 		"react-remove-scroll": "^2.6.2",

@@ -1,5 +1,5 @@
 import { forwardRef } from "react";
-import { type HTMLDreamyProps, dreamy } from "./factory";
+import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 
 export interface BoxProps extends HTMLDreamyProps<"div"> {}
 

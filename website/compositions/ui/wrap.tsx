@@ -1,8 +1,8 @@
 import { splitProps } from "@dreamy-ui/react";
 import { forwardRef } from "react";
+import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import type { WrapProperties } from "styled-system/patterns";
 import { wrap } from "styled-system/patterns/wrap";
-import { type HTMLDreamyProps, dreamy } from "./factory";
 
 export interface WrapProps
     extends Omit<HTMLDreamyProps<"div">, keyof WrapProperties>,

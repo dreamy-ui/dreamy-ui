@@ -40,20 +40,20 @@ export function genForegroundTokens(bgHex: string): ForegroundTokens {
     const isVeryLight = bg.oklch.l > 0.85; // Nearly white
     const isExtremeLightness = isVeryDark || isVeryLight;
 
-    console.table({
-        lightness: bg.oklch.l,
-        chroma: bg.oklch.c,
-        hue: bg.oklch.h,
-        isDark,
-        saturationCategory: isVeryLowSaturation
-            ? "very-low"
-            : isLowSaturation
-              ? "low"
-              : isModerateSaturation
-                ? "moderate"
-                : "high",
-        isExtremeLightness
-    });
+    // console.table({
+    //     lightness: bg.oklch.l,
+    //     chroma: bg.oklch.c,
+    //     hue: bg.oklch.h,
+    //     isDark,
+    //     saturationCategory: isVeryLowSaturation
+    //         ? "very-low"
+    //         : isLowSaturation
+    //           ? "low"
+    //           : isModerateSaturation
+    //             ? "moderate"
+    //             : "high",
+    //     isExtremeLightness
+    // });
 
     let fgHue: number;
     let fgChroma: number;

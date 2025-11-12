@@ -1,9 +1,9 @@
 "use client";
 
 import { forwardRef } from "react";
+import type { HTMLDreamyProps } from "styled-system/jsx";
 import type { ButtonVariantProps } from "styled-system/recipes";
 import { Button, type UniversalButtonProps } from "./button";
-import type { HTMLDreamyProps } from "./factory";
 
 interface Props extends UniversalButtonProps {
     /**

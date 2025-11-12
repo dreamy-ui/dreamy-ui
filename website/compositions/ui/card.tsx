@@ -1,8 +1,7 @@
 "use client";
 
-import { createStyleContext } from "styled-system/jsx";
+import { createStyleContext, dreamy } from "styled-system/jsx";
 import { card } from "styled-system/recipes";
-import { dreamy } from "./factory";
 
 const { withProvider, withContext } = createStyleContext(card);
 

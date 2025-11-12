@@ -4,9 +4,9 @@ import { splitProps } from "@dreamy-ui/react";
 import type { MotionProps } from "motion/react";
 import * as m from "motion/react-m";
 import { forwardRef } from "react";
+import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type FlexProperties, flex } from "styled-system/patterns";
 import type { SystemStyleObject } from "styled-system/types";
-import { type HTMLDreamyProps, dreamy } from "./factory";
 
 const StyledMotionBox = m.create(dreamy.div);
 

@@ -6,6 +6,7 @@ declare module "react-router" {
   interface Register {
     pages: Pages
     routeFiles: RouteFiles
+    routeModules: RouteModules
   }
 }
 
@@ -25,6 +26,9 @@ type Pages = {
   "/llms.txt": {
     params: {};
   };
+  "/testing": {
+    params: {};
+  };
   "/docs": {
     params: {};
   };
@@ -40,9 +44,6 @@ type Pages = {
       "page": string;
     };
   };
-  "/test": {
-    params: {};
-  };
   "/*": {
     params: {
       "*": string;
@@ -53,7 +54,7 @@ type Pages = {
 type RouteFiles = {
   "root.tsx": {
     id: "root";
-    page: "/" | "/api/fake-select-data" | "/api/docs/prefetch" | "/api/docs/search" | "/llms.txt" | "/docs" | "/docs/:section/:page" | "/docs/:section/:page/og-image" | "/test" | "/*";
+    page: "/" | "/api/fake-select-data" | "/api/docs/prefetch" | "/api/docs/search" | "/llms.txt" | "/testing" | "/docs" | "/docs/:section/:page" | "/docs/:section/:page/og-image" | "/*";
   };
   "routes/api.fake-select-data.tsx": {
     id: "routes/api.fake-select-data";
@@ -70,6 +71,10 @@ type RouteFiles = {
   "routes/llms[.txt].ts": {
     id: "routes/llms[.txt]";
     page: "/llms.txt";
+  };
+  "routes/testing.tsx": {
+    id: "routes/testing";
+    page: "/testing";
   };
   "routes/_index.tsx": {
     id: "routes/_index";
@@ -91,12 +96,23 @@ type RouteFiles = {
     id: "routes/docs._index";
     page: "/docs";
   };
-  "routes/test.tsx": {
-    id: "routes/test";
-    page: "/test";
-  };
   "routes/$.tsx": {
     id: "routes/$";
     page: "/*";
   };
+};
+
+type RouteModules = {
+  "root": typeof import("./app/root.tsx");
+  "routes/api.fake-select-data": typeof import("./app/routes/api.fake-select-data.tsx");
+  "routes/api.docs.prefetch": typeof import("./app/routes/api.docs.prefetch.ts");
+  "routes/api.docs.search": typeof import("./app/routes/api.docs.search.tsx");
+  "routes/llms[.txt]": typeof import("./app/routes/llms[.txt].ts");
+  "routes/testing": typeof import("./app/routes/testing.tsx");
+  "routes/_index": typeof import("./app/routes/_index.tsx");
+  "routes/docs": typeof import("./app/routes/docs.tsx");
+  "routes/docs.$section.$page": typeof import("./app/routes/docs.$section.$page.tsx");
+  "routes/docs.$section.$page.og-image": typeof import("./app/routes/docs.$section.$page.og-image.tsx");
+  "routes/docs._index": typeof import("./app/routes/docs._index.ts");
+  "routes/$": typeof import("./app/routes/$.tsx");
 };

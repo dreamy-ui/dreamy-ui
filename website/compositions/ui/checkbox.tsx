@@ -14,8 +14,8 @@ import {
 import { type SVGMotionProps, m } from "motion/react";
 import { type ReactElement, cloneElement, forwardRef, useMemo } from "react";
 import { cx } from "styled-system/css";
+import { dreamy } from "styled-system/jsx";
 import { type CheckboxVariantProps, checkbox } from "styled-system/recipes";
-import { dreamy } from "./factory";
 import { Flex, type FlexProps } from "./flex";
 import { VisuallyHiddenInput } from "./visually-hidden";
 

@@ -10,11 +10,11 @@ import {
     useAvatarImage
 } from "@dreamy-ui/react";
 import { cloneElement, forwardRef, useMemo, useState } from "react";
+import { dreamy, type HTMLDreamyProps } from "styled-system/jsx";
 import { type AvatarVariantProps, avatar } from "styled-system/recipes";
 import { token } from "styled-system/tokens";
 import type { SystemProperties, SystemStyleObject } from "styled-system/types";
 import { Box } from "./box";
-import { type HTMLDreamyProps, dreamy } from "./factory";
 import { Flex, type FlexProps } from "./flex";
 import { Icon } from "./icon";
 import { Image, type ImageProps } from "./image";

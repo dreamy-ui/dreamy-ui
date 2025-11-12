@@ -1,7 +1,7 @@
 import type { Status } from "@dreamy-ui/react";
 import { forwardRef, useMemo } from "react";
 import { type AlertVariantProps, alert } from "styled-system/recipes";
-import { type HTMLDreamyProps, dreamy } from "./factory";
+import { dreamy, type HTMLDreamyProps } from "styled-system/jsx";
 import { Icon } from "./icon";
 import { Text } from "./text";
 

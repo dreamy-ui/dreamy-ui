@@ -14,10 +14,9 @@ import {
 } from "@dreamy-ui/react";
 import type React from "react";
 import { type ReactNode, type RefObject, type SVGProps, forwardRef, useState } from "react";
-import { createStyleContext, splitCssProps } from "styled-system/jsx";
+import { type HTMLDreamyProps, createStyleContext, dreamy, splitCssProps } from "styled-system/jsx";
 import { select } from "styled-system/recipes";
 import { Box } from "./box";
-import { type HTMLDreamyProps, dreamy } from "./factory";
 import { Popover, type PopoverContentProps, type PopoverProps } from "./popover";
 import { VisuallyHidden } from "./visually-hidden";
 
@@ -66,8 +65,8 @@ function HiddenSelect(props: HiddenSelectProps) {
                         return (
                             <option
                                 key={`${id}-${item.node.value}`}
-                                value={item.node.value}
                                 selected={isSelected}
+                                value={item.node.value}
                             >
                                 {item.textValue}
                             </option>
@@ -108,13 +107,13 @@ const SelectRoot: <T extends boolean = false>(props: SelectProps<T>) => React.JS
                 >
                     <HiddenSelect {...ctx.getHiddenSelectProps()} />
                     <Popover.Root
-                        placement="bottom"
-                        isOpen={ctx.isOpen}
-                        onOpen={ctx.onOpen}
-                        onClose={ctx.onClose}
                         hasArrow={false}
                         initialFocusRef={ctx.triggerRef}
+                        isOpen={ctx.isOpen}
                         lazyBehavior="keepMounted"
+                        onClose={ctx.onClose}
+                        onOpen={ctx.onOpen}
+                        placement="bottom"
                         reduceMotion={ctx.reduceMotion}
                         {...props.popoverProps}
                     >
@@ -218,14 +217,14 @@ const CheckIcon = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
         return (
             <svg
                 aria-hidden="true"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
                 fill="none"
+                height="16"
                 stroke="currentColor"
-                strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+                width="16"
                 {...props}
                 ref={ref}
             >
@@ -266,13 +265,13 @@ const SelectClearButton = withContext(
                 <dreamy.svg asChild>
                     <svg
                         aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"
-                        strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
                     >
                         <path d="M18 6 6 18" />
                         <path d="m6 6 12 12" />

@@ -1,5 +1,5 @@
 {
-	"$schema": "https://biomejs.dev/schemas/1.7.1/schema.json",
+	"$schema": "https://biomejs.dev/schemas/1.9.2/schema.json",
 	"formatter": {
 		"enabled": true,
 		"formatWithErrors": true,
@@ -60,5 +60,11 @@
 			"attributePosition": "multiline"
 		}
 	},
-	"overrides": [{ "include": ["@remix-run/eslint-config"] }]
+	"assists": {
+		"actions": {
+			"source": {
+				"sortJsxProps": "on"
+			}
+		}
+	}
 }
