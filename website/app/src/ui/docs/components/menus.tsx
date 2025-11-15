@@ -13,8 +13,8 @@ export function ControlledMenu() {
     return (
         <Menu.Root
             isOpen={isOpen}
-            onOpen={onOpen}
             onClose={onClose}
+            onOpen={onOpen}
         >
             <Text>{isOpen ? "Open" : "Closed"}</Text>
             <Menu.Trigger>
@@ -22,33 +22,33 @@ export function ControlledMenu() {
             </Menu.Trigger>
             <Menu.Content>
                 <Menu.Item
-                    icon={<LuWarehouse />}
+                    as={<Link to="/" />}
                     command="{actionKey} h"
-                    asComp={<Link to="/" />}
+                    icon={<LuWarehouse />}
                 >
                     Homepage
                 </Menu.Item>
                 <Menu.Item
-                    icon={<IoAdd />}
                     command="{actionKey} n"
+                    icon={<IoAdd />}
                 >
                     Add new
                 </Menu.Item>
                 <Menu.Item
-                    icon={<LuAlarmClock />}
                     command="{actionKey} a"
+                    icon={<LuAlarmClock />}
                 >
                     Set alarm
                 </Menu.Item>
                 <Menu.Item
-                    icon={<LuBattery />}
                     command="{actionKey} b"
+                    icon={<LuBattery />}
                 >
                     Battery
                 </Menu.Item>
                 <Menu.Item
-                    icon={<LuTrash />}
                     command="{actionKey} d"
+                    icon={<LuTrash />}
                 >
                     Delete
                 </Menu.Item>
@@ -100,33 +100,33 @@ export function InteractiveMenu() {
             </Menu.Trigger>
             <Menu.Content>
                 <Menu.Item
-                    icon={<LuWarehouse />}
+                    as={<Link to="/" />}
                     command="{actionKey} h"
-                    asComp={<Link to="/" />}
+                    icon={<LuWarehouse />}
                 >
                     Homepage
                 </Menu.Item>
                 <Menu.Item
-                    icon={<IoAdd />}
                     command="{actionKey} n"
+                    icon={<IoAdd />}
                 >
                     Add new
                 </Menu.Item>
                 <Menu.Item
-                    icon={<LuAlarmClock />}
                     command="{actionKey} a"
+                    icon={<LuAlarmClock />}
                 >
                     Set alarm
                 </Menu.Item>
                 <Menu.Item
-                    icon={<LuBattery />}
                     command="{actionKey} b"
+                    icon={<LuBattery />}
                 >
                     Battery
                 </Menu.Item>
                 <Menu.Item
-                    icon={<LuTrash />}
                     command="{actionKey} d"
+                    icon={<LuTrash />}
                 >
                     Delete
                 </Menu.Item>
@@ -138,8 +138,8 @@ export function InteractiveMenu() {
 export function VariantMenus() {
     return (
         <Flex
-            wrapped
             gap={5}
+            wrapped
         >
             {["plain", "stretched"].map((variant) => (
                 <VariantMenu
@@ -159,33 +159,33 @@ export function VariantMenu({ variant }: { variant: string }) {
             </Menu.Trigger>
             <Menu.Content>
                 <Menu.Item
-                    icon={<LuWarehouse />}
+                    as={<Link to="/" />}
                     command="{actionKey} h"
-                    asComp={<Link to="/" />}
+                    icon={<LuWarehouse />}
                 >
                     Homepage
                 </Menu.Item>
                 <Menu.Item
-                    icon={<IoAdd />}
                     command="{actionKey} n"
+                    icon={<IoAdd />}
                 >
                     Add new
                 </Menu.Item>
                 <Menu.Item
-                    icon={<LuAlarmClock />}
                     command="{actionKey} a"
+                    icon={<LuAlarmClock />}
                 >
                     Set alarm
                 </Menu.Item>
                 <Menu.Item
-                    icon={<LuBattery />}
                     command="{actionKey} b"
+                    icon={<LuBattery />}
                 >
                     Battery
                 </Menu.Item>
                 <Menu.Item
-                    icon={<LuTrash />}
                     command="{actionKey} d"
+                    icon={<LuTrash />}
                 >
                     Delete
                 </Menu.Item>

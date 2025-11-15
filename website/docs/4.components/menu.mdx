@@ -146,7 +146,7 @@ export function VariantMenu({ variant }: { variant: string }) {
                 <Menu.Item
                     icon={<LuWarehouse />}
                     command="{actionKey} h"
-                    asComp={<Link to="/" />}
+                    as={<Link to="/" />}
                 >
                     Homepage
                 </Menu.Item>
@@ -193,7 +193,7 @@ You can use a custom link component with menu item but polymorphic props like `a
             <Menu.Item
                 icon={<LuWarehouse />}
                 command="{actionKey} h"
-                asComp={<RemixLink to="/" />}
+                as={<RemixLink to="/" />}
             >
                 <>Homepage</>
             </Menu.Item>
@@ -214,7 +214,7 @@ You can use a custom link component with menu item but polymorphic props like `a
         <Menu.Item 
             icon={<LuWarehouse />} 
             command="{actionKey} h"
-            asComp={<Link to="/" />}
+            as={<Link to="/" />}
         >
             Homepage
         </Menu.Item>
@@ -252,7 +252,7 @@ export function ControlledMenu() {
                 <Menu.Item
                     icon={<LuWarehouse />} 
                     command="{actionKey} h"
-                    asComp={<Link to="/" />}
+                    as={<Link to="/" />}
                 >
                     Homepage
                 </Menu.Item>
@@ -320,7 +320,7 @@ export function InteractiveMenu() {
                 <Menu.Item
                     icon={<LuWarehouse />}
                     command="{actionKey} h"
-                    asComp={<Link to="/" />}
+                    as={<Link to="/" />}
                 >
                     Homepage
                 </Menu.Item>
@@ -364,7 +364,7 @@ You can add right content to the item with `rightContent` prop.
             <Button w={"fit-content"}>Open Menu</Button>
         </Menu.Trigger>
         <Menu.Content>
-            <Menu.Item rightContent={<Icon asComp={<LuFileWarning />} color="warning" boxSize={4} />}>
+            <Menu.Item rightContent={<Icon as={<LuFileWarning />} color="warning" boxSize={4} />}>
                 <>Select File</>
             </Menu.Item>
         </Menu.Content>

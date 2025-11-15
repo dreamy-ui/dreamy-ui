@@ -9,10 +9,9 @@ import {
     useEditableContext
 } from "@dreamy-ui/react";
 import { forwardRef } from "react";
-import { createStyleContext } from "styled-system/jsx";
+import { type HTMLDreamyProps, createStyleContext, dreamy } from "styled-system/jsx";
 import { editable } from "styled-system/recipes";
 import { Box } from "./box";
-import { type HTMLDreamyProps, dreamy } from "./factory";
 
 type RenderProps = Pick<UseEditableReturn, "isEditing" | "onSubmit" | "onCancel" | "onEdit">;
 

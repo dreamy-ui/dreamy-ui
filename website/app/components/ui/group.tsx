@@ -1,8 +1,8 @@
 import { dataAttr, splitProps } from "@dreamy-ui/react";
 import { Children, cloneElement, forwardRef, isValidElement, useMemo } from "react";
+import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type FlexProperties, flex } from "styled-system/patterns";
 import { type GroupVariantProps, group } from "styled-system/recipes";
-import { type HTMLDreamyProps, dreamy } from "./factory";
 
 export interface GroupProps
     extends Omit<HTMLDreamyProps<"div">, keyof FlexProperties>,

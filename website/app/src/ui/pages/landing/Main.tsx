@@ -13,51 +13,51 @@ import { Link } from "react-router";
 export default function Main() {
     return (
         <Flex
-            gap={5}
             col
             full
+            gap={5}
             pos={"relative"}
             // pt={10}
         >
             <Flex
-                py={2}
-                px={4}
-                rounded={"lg"}
                 bg={"secondary/18"}
-                w={"fit-content"}
                 color={"secondary"}
                 fontWeight={"semibold"}
                 gap={3}
                 itemsCenter
+                px={4}
+                py={2}
+                rounded={"lg"}
+                w={"fit-content"}
             >
                 <Icon as={MdOutlineCloud} />
                 V2 has been released!
             </Flex>
 
             <Heading
+                fontWeight={"bold"}
                 size={{
                     base: "4xl",
                     md: "6xl"
                 }}
-                fontWeight={"bold"}
             >
                 Create{" "}
                 <Box
                     as={"span"}
-                    textGradient={"to-r"}
                     gradientFrom={"primary"}
-                    gradientVia={"secondary"}
                     gradientTo={"tertiary"}
+                    gradientVia={"secondary"}
+                    textGradient={"to-r"}
                 >
                     dream
                 </Box>{" "}
                 websites with <br /> <Box as={"span"}>next-gen DX</Box> and{" "}
                 <Box
                     as={"span"}
-                    textGradient={"to-r"}
                     gradientFrom={"tertiary"}
-                    gradientVia={"secondary"}
                     gradientTo={"primary"}
+                    gradientVia={"secondary"}
+                    textGradient={"to-r"}
                 >
                     crispy
                 </Box>{" "}
@@ -65,38 +65,38 @@ export default function Main() {
             </Heading>
 
             <Text
-                size="lg"
                 color="fg.medium"
+                size="lg"
             >
                 Build performant, accessible, and beautiful websites with ease.
             </Text>
 
             <HStack mt={5}>
                 <Button
-                    variant={"primary"}
-                    size={"lg"}
-                    asComp={
+                    as={
                         <Link
+                            prefetch="intent"
                             to="/docs/guide/introduction"
-                            prefetch="render"
                         />
                     }
-                    rightIcon={<IoArrowForward />}
                     px={6}
+                    rightIcon={<IoArrowForward />}
+                    size={"lg"}
+                    variant={"primary"}
                 >
                     Get Started
                 </Button>
                 <Button
-                    px={6}
-                    variant={"solid"}
-                    size={"lg"}
-                    asComp={
+                    as={
                         <Link
-                            to="/discord"
                             target="_blank"
+                            to="/discord"
                         />
                     }
+                    px={6}
                     rightIcon={<BsDiscord />}
+                    size={"lg"}
+                    variant={"solid"}
                 >
                     Discord
                 </Button>

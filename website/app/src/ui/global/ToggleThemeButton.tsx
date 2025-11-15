@@ -28,16 +28,11 @@ export function ToggleThemeButton() {
             openDelay={500}
         >
             <IconButton
-                variant={"ghost"}
                 aria-label="Toggle color mode"
                 data-umami-event="Toggle Theme"
-                icon={
-                    <Icon
-                        as={colorMode === "light" ? BiMoon : BiSun}
-                        boxSize={"spacing"}
-                    />
-                }
+                icon={<Icon as={colorMode === "light" ? BiMoon : BiSun} />}
                 onClick={toggleColorMode}
+                variant={"ghost"}
             />
         </Tooltip>
     );

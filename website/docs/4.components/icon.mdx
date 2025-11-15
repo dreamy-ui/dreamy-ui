@@ -17,7 +17,7 @@ pnpm dreamy components add icon
 Since Dream does not provide any icons, you will want to use other icon libraries like `react-icons`, `lucide-react` or `@heroicons/react`.
 
 <Wrapper>
-	<Icon asComp={<FiCoffee />} />
+	<Icon as={<FiCoffee />} />
 </Wrapper>
 
 ```tsx
@@ -44,12 +44,12 @@ with `asChild` prop Dream will merge child component with Icon, or with `asComp`
 	<Icon asChild>
 		<FiCoffee />
 	</Icon>
-	<Icon asComp={<FiCoffee />} />
+	<Icon as={<FiCoffee />} />
 </Wrapper>
 
 ```tsx
 <Icon asChild>
   <FiCoffee />
 </Icon>
-<Icon asComp={<FiCoffee />} />
+<Icon as={<FiCoffee />} />
 ```

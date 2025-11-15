@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
 import { cx } from "styled-system/css";
+import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type ThemeVariantProps, theme } from "styled-system/recipes";
-import { type HTMLDreamyProps, dreamy } from "./factory";
 
 export interface ThemeProps extends HTMLDreamyProps<"div">, ThemeVariantProps {}
 

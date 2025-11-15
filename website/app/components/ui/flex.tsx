@@ -1,7 +1,7 @@
 import { splitProps } from "@dreamy-ui/react";
 import { forwardRef } from "react";
+import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type FlexProperties, flex } from "styled-system/patterns";
-import { type HTMLDreamyProps, dreamy } from "./factory";
 
 export interface FlexProps
     extends Omit<HTMLDreamyProps<"div">, keyof FlexProperties>,

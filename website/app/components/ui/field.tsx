@@ -7,9 +7,9 @@ import {
     useFieldProvider
 } from "@dreamy-ui/react";
 import { forwardRef } from "react";
+import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type FieldVariantProps, field } from "styled-system/recipes";
 import { Box } from "./box";
-import { type HTMLDreamyProps, dreamy } from "./factory";
 import { Icon, type IconProps } from "./icon";
 
 export interface FieldLabelProps extends HTMLDreamyProps<"label"> {

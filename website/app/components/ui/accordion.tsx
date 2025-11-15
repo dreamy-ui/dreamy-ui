@@ -13,11 +13,10 @@ import {
     useAccordionItemContext
 } from "@dreamy-ui/react";
 import { forwardRef, useMemo } from "react";
-import { createStyleContext } from "styled-system/jsx";
+import { createStyleContext, type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import type { AccordionVariantProps } from "styled-system/recipes";
 import { accordion } from "styled-system/recipes";
 import { Box } from "./box";
-import { type HTMLDreamyProps, dreamy } from "./factory";
 import type { IconProps } from "./icon";
 import { Collapse, type CollapseProps } from "./transitions";
 

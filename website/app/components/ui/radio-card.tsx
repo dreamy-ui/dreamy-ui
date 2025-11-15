@@ -2,9 +2,9 @@
 
 import { type UseRadioProps, createContext, dataAttr, useRadio } from "@dreamy-ui/react";
 import { type ElementType, forwardRef, useMemo } from "react";
+import { dreamy } from "styled-system/jsx";
 import { type RadioCardVariantProps, radioCard } from "styled-system/recipes";
 import { Box } from "./box";
-import { dreamy } from "./factory";
 import { Text, type TextProps } from "./text";
 import { VisuallyHiddenInput } from "./visually-hidden";
 

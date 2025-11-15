@@ -7,12 +7,11 @@ import {
 } from "@dreamy-ui/react";
 import { AnimatePresence } from "motion/react";
 import { createContext, forwardRef, useCallback, useContext } from "react";
-import { createStyleContext } from "styled-system/jsx";
+import { type HTMLDreamyProps, createStyleContext, dreamy } from "styled-system/jsx";
 import type { ActionBarVariantProps } from "styled-system/recipes";
 import { actionBar } from "styled-system/recipes";
 import { Box, type BoxProps } from "./box";
 import { CloseButton, type CloseButtonProps } from "./close-button";
-import { type HTMLDreamyProps, dreamy } from "./factory";
 import { MotionBox, type MotionBoxProps } from "./motion";
 
 const { withProvider, withContext } = createStyleContext(actionBar);
@@ -44,8 +43,8 @@ const ActionBarRoot = withProvider(
                 <AnimatePresence>
                     {isOpen && (
                         <Box
-                            ref={ref}
                             data-state={actionBarProps.isOpen ? "open" : "closed"}
+                            ref={ref}
                             {...rest}
                         >
                             {children}
@@ -69,13 +68,13 @@ const ActionBarContent = withContext(
             <AnimatePresence propagate>
                 {isOpen && (
                     <MotionBox
-                        ref={ref}
-                        role="dialog"
+                        animate={{ y: 0, opacity: 1 }}
                         aria-label="Action bar"
                         data-state={isOpen ? "open" : "closed"}
-                        initial={{ y: 100, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
                         exit={{ y: 100, opacity: 0 }}
+                        initial={{ y: 100, opacity: 0 }}
+                        ref={ref}
+                        role="dialog"
                         {...rest}
                     >
                         {children}
@@ -97,8 +96,8 @@ const ActionBarSelectionTrigger = withContext(
 
             return (
                 <dreamy.span
-                    ref={ref}
                     data-state={isOpen ? "open" : "closed"}
+                    ref={ref}
                     {...rest}
                 >
                     {children}
@@ -115,9 +114,9 @@ const ActionBarSeparator = withContext(
     forwardRef<HTMLDivElement, ActionBarSeparatorProps>(function ActionBarSeparator(props, ref) {
         return (
             <Box
+                aria-orientation="vertical"
                 ref={ref}
                 role="separator"
-                aria-orientation="vertical"
                 {...props}
             />
         );
@@ -143,9 +142,9 @@ const ActionBarCloseTrigger = withContext(
 
             return (
                 <CloseButton
-                    ref={ref}
                     aria-label="Close action bar"
                     onClick={handleClick}
+                    ref={ref}
                     {...rest}
                 />
             );

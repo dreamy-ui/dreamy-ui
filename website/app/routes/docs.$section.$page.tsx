@@ -164,17 +164,17 @@ export default function DocsSectionPage() {
 
     return (
         <Flex
-            col
-            gap={10}
             as={"main"}
-            w={"full"}
-            pb={20}
-            overflowX={"auto"}
+            col
             flexGrow={0}
+            gap={10}
+            overflowX={"auto"}
+            pb={20}
             pt={{
                 base: 28,
                 md: 0
             }}
+            w={"full"}
         >
             {meta && (
                 <Flex
@@ -190,9 +190,6 @@ export default function DocsSectionPage() {
                     )}
 
                     <Flex
-                        wrapped
-                        gap={2}
-                        itemsStretch={"stretch"}
                         css={{
                             "& > *": {
                                 mdDown: {
@@ -200,14 +197,19 @@ export default function DocsSectionPage() {
                                 }
                             }
                         }}
+                        gap={2}
+                        itemsStretch={"stretch"}
+                        wrapped
                     >
                         {[meta.source, meta.themeSource].map((s, i) => {
                             if (!s) return null;
 
                             return (
                                 <Button
-                                    key={`source-${s}-${i}`}
-                                    asComp={
+                                    _hover={{
+                                        y: "-1"
+                                    }}
+                                    as={
                                         <ReactRouterLink
                                             target="_blank"
                                             to={`https://github.com/${
@@ -215,22 +217,22 @@ export default function DocsSectionPage() {
                                             }/tree/main/${s}`}
                                         />
                                     }
-                                    size={"sm"}
+                                    key={`source-${s}-${i}`}
                                     leftIcon={<BiLogoGithub />}
-                                    translate={"auto"}
-                                    _hover={{
-                                        y: "-1"
-                                    }}
+                                    size={"sm"}
                                     transition={
                                         "translate {durations.fast} {easings.ease-in-out}, background-color {durations.normal} {easings.ease-in-out}"
                                     }
+                                    translate={"auto"}
                                 >
                                     {i === 0 ? "Source" : "Theme Source"}
                                 </Button>
                             );
                         })}
                         <Button
-                            size={"sm"}
+                            _hover={{
+                                y: "-1"
+                            }}
                             leftIcon={
                                 frontmatter.isServerComponent ? (
                                     <AiFillThunderbolt />
@@ -238,13 +240,11 @@ export default function DocsSectionPage() {
                                     <IoMdBrowsers />
                                 )
                             }
-                            translate={"auto"}
-                            _hover={{
-                                y: "-1"
-                            }}
+                            size={"sm"}
                             transition={
                                 "translate {durations.fast} {easings.ease-in-out}, background-color {durations.normal} {easings.ease-in-out}"
                             }
+                            translate={"auto"}
                         >
                             {frontmatter.isServerComponent ? "Server" : "Client"} Component
                         </Button>
@@ -263,8 +263,8 @@ export default function DocsSectionPage() {
                 {previousDoc ? (
                     <NextPreviousButton
                         direction="previous"
-                        to={previousDoc.slug}
                         label={previousDoc.name}
+                        to={previousDoc.slug}
                     />
                 ) : (
                     <Box w={"50%"} />
@@ -272,8 +272,8 @@ export default function DocsSectionPage() {
                 {nextDoc ? (
                     <NextPreviousButton
                         direction="next"
-                        to={nextDoc.slug}
                         label={nextDoc.name}
+                        to={nextDoc.slug}
                     />
                 ) : (
                     <Box w={"50%"} />

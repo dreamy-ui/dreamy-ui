@@ -19,36 +19,36 @@ export default function OnThisPage() {
     if (!doc.headings?.length) {
         return (
             <Box
-                w={"200px"}
                 flexShrink={0}
-                minW={200}
                 mdDown={{
                     display: "none"
                 }}
+                minW={200}
+                w={"200px"}
             />
         );
     }
 
     return (
         <Flex
-            minW={200}
-            flexShrink={0}
-            flexGrow={0}
-            col
-            gap={4}
-            w={"200px"}
-            mdDown={{
-                display: "none"
-            }}
-            pos={"sticky"}
-            top={20}
-            h={"fit-content"}
             as={"aside"}
-            p={2}
+            col
             display={{
                 base: "none",
                 md: "flex"
             }}
+            flexGrow={0}
+            flexShrink={0}
+            gap={4}
+            h={"fit-content"}
+            mdDown={{
+                display: "none"
+            }}
+            minW={200}
+            p={2}
+            pos={"sticky"}
+            top={20}
+            w={"200px"}
         >
             <Heading size={"md"}>On this page</Heading>
             <Flex
@@ -77,14 +77,14 @@ export const OnThisPageHeadings = memo((props: FlexProps) => {
             {doc.headings?.map((heading) => (
                 <Fragment key={heading.id}>
                     <Link
-                        to={`#${heading.id}`}
-                        transition={"color 0.2s"}
-                        color={"fg.medium"}
                         _hover={{
                             color: "fg",
                             textDecoration: "underline"
                         }}
+                        color={"fg.medium"}
                         fontWeight={500}
+                        to={`#${heading.id}`}
+                        transition={"color 0.2s"}
                     >
                         {heading.text}
                     </Link>
@@ -92,17 +92,17 @@ export const OnThisPageHeadings = memo((props: FlexProps) => {
                         heading.headings.map((subHeading) => {
                             return (
                                 <Link
-                                    key={subHeading.id}
-                                    to={`#${subHeading.id}`}
-                                    pl={2}
-                                    // size={"sm"}
-                                    fontWeight={400}
-                                    transition={"color 0.2s"}
-                                    color={"fg.medium"}
                                     _hover={{
                                         color: "fg",
                                         textDecoration: "underline"
                                     }}
+                                    color={"fg.medium"}
+                                    fontWeight={400}
+                                    // size={"sm"}
+                                    key={subHeading.id}
+                                    pl={2}
+                                    to={`#${subHeading.id}`}
+                                    transition={"color 0.2s"}
                                 >
                                     {subHeading.text}
                                 </Link>
@@ -153,33 +153,33 @@ function ActionButtons() {
     return (
         <Flex
             col
+            color={"fg.medium"}
             gap={2}
             pl={2}
-            color={"fg.medium"}
         >
             <Button
-                variant={"link"}
-                justifyContent={"space-between"}
-                asComp={
+                as={
                     <DreamLink
                         href={githubDocUrl}
                         isExternal
                     />
                 }
-                rightIcon={<Icon as={BiEdit} />}
                 fontWeight={500}
+                justifyContent={"space-between"}
+                rightIcon={<Icon as={BiEdit} />}
+                variant={"link"}
             >
                 Edit this page
             </Button>
             <Button
-                variant={"link"}
-                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-                rightIcon={<Icon as={BiChevronUp} />}
+                fontWeight={500}
                 justifyContent={"space-between"}
+                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
                 opacity={hasScrolled ? 1 : 0}
+                rightIcon={<Icon as={BiChevronUp} />}
                 transition={"opacity 0.2s"}
                 transitionTimingFunction={"ease-in-out"}
-                fontWeight={500}
+                variant={"link"}
             >
                 Back to top
             </Button>

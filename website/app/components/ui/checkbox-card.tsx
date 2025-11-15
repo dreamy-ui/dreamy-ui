@@ -2,10 +2,10 @@
 
 import { CheckboxProvider, type UseCheckboxProps, useCheckbox } from "@dreamy-ui/react";
 import { type ElementType, type ReactElement, cloneElement, forwardRef, useMemo } from "react";
+import { dreamy } from "styled-system/jsx";
 import { type CheckboxCardVariantProps, checkboxCard } from "styled-system/recipes";
 import { Box } from "./box";
 import { CheckboxIcon } from "./checkbox";
-import { dreamy } from "./factory";
 import { Text, type TextProps } from "./text";
 import { VisuallyHiddenInput } from "./visually-hidden";
 

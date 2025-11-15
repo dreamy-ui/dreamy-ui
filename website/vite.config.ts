@@ -1,10 +1,10 @@
 import mdx from "@mdx-js/rollup";
 import { reactRouter } from "@react-router/dev/vite";
 import { defineConfig } from "vite";
-import tsconfigPaths from "vite-tsconfig-paths";
 // import pandabox from "@pandabox/unplugin";
 // import Inspect from "vite-plugin-inspect";
 import babel from "vite-plugin-babel";
+import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig(({ isSsrBuild }) => ({
     // resolve: {
@@ -63,7 +63,7 @@ export default defineConfig(({ isSsrBuild }) => ({
             "styled-system",
             "@resvg/resvg-js"
         ]
-    },
+    }
     // esbuild: {
     //     exclude: [
     //         "@dreamy-ui/panda-preset",

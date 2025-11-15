@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
+import { dreamy } from "styled-system/jsx";
 import { type SpinnerVariantProps, spinner } from "styled-system/recipes";
 import { Box, type BoxProps } from "./box";
-import { dreamy } from "./factory";
 
 export interface SpinnerProps extends BoxProps, SpinnerVariantProps {
     /**

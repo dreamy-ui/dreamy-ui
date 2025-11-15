@@ -13,11 +13,10 @@ import {
     usePopoverContext
 } from "@dreamy-ui/react";
 import { Children, cloneElement, forwardRef } from "react";
-import { createStyleContext } from "styled-system/jsx";
+import { type HTMLDreamyProps, createStyleContext } from "styled-system/jsx";
 import { popover } from "styled-system/recipes";
 import { Box, type BoxProps } from "./box";
 import { CloseButton, type CloseButtonProps } from "./close-button";
-import type { HTMLDreamyProps } from "./factory";
 import { Heading } from "./heading";
 import { MotionBox, type MotionBoxProps } from "./motion";
 
@@ -103,10 +102,10 @@ const PopoverTransition = forwardRef(function PopoverTransition(
 
     return (
         <MotionBox
+            animate={isOpen ? "initial" : "exit"}
+            initial={false}
             ref={ref}
             variants={transformReducedMotion(popover.default, reduceMotion)}
-            initial={false}
-            animate={isOpen ? "initial" : "exit"}
             {...rest}
         >
             {hasArrow && <PopoverArrow {...arrowProps} />}
@@ -159,8 +158,8 @@ const PopoverHeader = withContext(
             >
                 {typeof children === "string" ? (
                     <Heading
-                        variant={"heading"}
                         size="md"
+                        variant={"heading"}
                     >
                         {children}
                     </Heading>
@@ -208,9 +207,9 @@ const PopoverCloseButton = withContext(
         return (
             <CloseButton
                 {...props}
-                size={"sm"}
                 onClick={callAllHandlers(props.onClick, onClose)}
                 ref={ref}
+                size={"sm"}
             />
         );
     }),

@@ -11,9 +11,9 @@ import {
 } from "@dreamy-ui/react";
 import { AnimatePresence, type HTMLMotionProps, m } from "motion/react";
 import { Children, Fragment, cloneElement, forwardRef, useMemo } from "react";
+import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { tooltip } from "styled-system/recipes";
 import { Box } from "./box";
-import { type HTMLDreamyProps, dreamy } from "./factory";
 
 export interface TooltipProps
     extends Omit<HTMLDreamyProps<"div">, "direction" | "offset" | "content">,

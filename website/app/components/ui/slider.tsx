@@ -2,10 +2,9 @@
 
 import { SliderProvider, type UseSliderProps, useSlider, useSliderContext } from "@dreamy-ui/react";
 import { forwardRef } from "react";
-import { createStyleContext } from "styled-system/jsx";
+import { type HTMLDreamyProps, createStyleContext } from "styled-system/jsx";
 import { slider } from "styled-system/recipes";
 import { Box } from "./box";
-import type { HTMLDreamyProps } from "./factory";
 import { VisuallyHiddenInput } from "./visually-hidden";
 
 const { withProvider, withContext } = createStyleContext(slider);

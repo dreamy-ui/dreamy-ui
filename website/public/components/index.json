@@ -23,7 +23,6 @@
     "fileDependencies": [
       "./box",
       "./close-button",
-      "./factory",
       "./motion"
     ],
     "hasRecipe": true,
@@ -38,7 +37,6 @@
     "file": "alert.tsx",
     "component": "Alert",
     "fileDependencies": [
-      "./factory",
       "./icon",
       "./text"
     ],
@@ -55,7 +53,6 @@
     "component": "Avatar",
     "fileDependencies": [
       "./box",
-      "./factory",
       "./flex",
       "./icon",
       "./image"
@@ -71,9 +68,7 @@
     "id": "badge",
     "file": "badge.tsx",
     "component": "Badge",
-    "fileDependencies": [
-      "./factory"
-    ],
+    "fileDependencies": [],
     "hasRecipe": true,
     "hasPattern": false,
     "recipeIds": [
@@ -85,9 +80,7 @@
     "id": "box",
     "file": "box.tsx",
     "component": "Box",
-    "fileDependencies": [
-      "./factory"
-    ],
+    "fileDependencies": [],
     "hasRecipe": false,
     "hasPattern": false
   },
@@ -96,9 +89,7 @@
     "id": "breadcrumb",
     "file": "breadcrumb.tsx",
     "component": "Breadcrumb",
-    "fileDependencies": [
-      "./factory"
-    ],
+    "fileDependencies": [],
     "hasRecipe": true,
     "hasPattern": false,
     "recipeIds": [
@@ -112,9 +103,9 @@
     "component": "Button",
     "fileDependencies": [
       "./box",
-      "./factory",
       "./ripple",
-      "./spinner"
+      "./spinner",
+      "./span"
     ],
     "hasRecipe": true,
     "hasPattern": false,
@@ -127,9 +118,7 @@
     "id": "card",
     "file": "card.tsx",
     "component": "Card",
-    "fileDependencies": [
-      "./factory"
-    ],
+    "fileDependencies": [],
     "hasRecipe": true,
     "hasPattern": false,
     "recipeIds": [
@@ -144,7 +133,6 @@
     "fileDependencies": [
       "./box",
       "./checkbox",
-      "./factory",
       "./text",
       "./visually-hidden"
     ],
@@ -160,7 +148,6 @@
     "file": "checkbox.tsx",
     "component": "Checkbox",
     "fileDependencies": [
-      "./factory",
       "./flex",
       "./visually-hidden"
     ],
@@ -186,9 +173,7 @@
     "id": "divider",
     "file": "divider.tsx",
     "component": "Divider",
-    "fileDependencies": [
-      "./factory"
-    ],
+    "fileDependencies": [],
     "hasRecipe": false,
     "hasPattern": true,
     "patternIds": [
@@ -201,8 +186,7 @@
     "file": "editable.tsx",
     "component": "Editable",
     "fileDependencies": [
-      "./box",
-      "./factory"
+      "./box"
     ],
     "hasRecipe": true,
     "hasPattern": false,
@@ -212,21 +196,11 @@
   },
   {
     "type": "component",
-    "id": "factory",
-    "file": "factory.ts",
-    "component": "Factory",
-    "fileDependencies": [],
-    "hasRecipe": false,
-    "hasPattern": false
-  },
-  {
-    "type": "component",
     "id": "field",
     "file": "field.tsx",
     "component": "Field",
     "fileDependencies": [
       "./box",
-      "./factory",
       "./icon"
     ],
     "hasRecipe": true,
@@ -240,9 +214,7 @@
     "id": "flex",
     "file": "flex.tsx",
     "component": "Flex",
-    "fileDependencies": [
-      "./factory"
-    ],
+    "fileDependencies": [],
     "hasRecipe": false,
     "hasPattern": true,
     "patternIds": [
@@ -254,9 +226,7 @@
     "id": "grid",
     "file": "grid.tsx",
     "component": "Grid",
-    "fileDependencies": [
-      "./factory"
-    ],
+    "fileDependencies": [],
     "hasRecipe": false,
     "hasPattern": true,
     "patternIds": [
@@ -269,9 +239,7 @@
     "id": "group",
     "file": "group.tsx",
     "component": "Group",
-    "fileDependencies": [
-      "./factory"
-    ],
+    "fileDependencies": [],
     "hasRecipe": true,
     "hasPattern": true,
     "recipeIds": [
@@ -286,9 +254,7 @@
     "id": "heading",
     "file": "heading.tsx",
     "component": "Heading",
-    "fileDependencies": [
-      "./factory"
-    ],
+    "fileDependencies": [],
     "hasRecipe": false,
     "hasPattern": false,
     "patternIds": [
@@ -301,8 +267,7 @@
     "file": "icon-button.tsx",
     "component": "IconButton",
     "fileDependencies": [
-      "./button",
-      "./factory"
+      "./button"
     ],
     "hasRecipe": false,
     "hasPattern": false
@@ -312,9 +277,7 @@
     "id": "icon",
     "file": "icon.tsx",
     "component": "Icon",
-    "fileDependencies": [
-      "./factory"
-    ],
+    "fileDependencies": [],
     "hasRecipe": true,
     "hasPattern": false,
     "recipeIds": [
@@ -327,8 +290,7 @@
     "file": "image.tsx",
     "component": "Image",
     "fileDependencies": [
-      "./box",
-      "./factory"
+      "./box"
     ],
     "hasRecipe": true,
     "hasPattern": false,
@@ -343,7 +305,6 @@
     "component": "Input",
     "fileDependencies": [
       "./box",
-      "./factory",
       "./flex"
     ],
     "hasRecipe": true,
@@ -357,9 +318,7 @@
     "id": "kbd",
     "file": "kbd.tsx",
     "component": "Kbd",
-    "fileDependencies": [
-      "./factory"
-    ],
+    "fileDependencies": [],
     "hasRecipe": true,
     "hasPattern": false,
     "recipeIds": [
@@ -371,9 +330,7 @@
     "id": "link",
     "file": "link.tsx",
     "component": "Link",
-    "fileDependencies": [
-      "./factory"
-    ],
+    "fileDependencies": [],
     "hasRecipe": false,
     "hasPattern": false,
     "patternIds": [
@@ -385,9 +342,7 @@
     "id": "list",
     "file": "list.tsx",
     "component": "List",
-    "fileDependencies": [
-      "./factory"
-    ],
+    "fileDependencies": [],
     "hasRecipe": true,
     "hasPattern": false,
     "recipeIds": [
@@ -401,7 +356,6 @@
     "component": "Menu",
     "fileDependencies": [
       "./box",
-      "./factory",
       "./kbd",
       "./popover"
     ],
@@ -434,9 +388,7 @@
     "id": "motion",
     "file": "motion.tsx",
     "component": "Motion",
-    "fileDependencies": [
-      "./factory"
-    ],
+    "fileDependencies": [],
     "hasRecipe": false,
     "hasPattern": true,
     "patternIds": [
@@ -464,7 +416,6 @@
     "fileDependencies": [
       "./box",
       "./close-button",
-      "./factory",
       "./heading",
       "./motion"
     ],
@@ -479,9 +430,7 @@
     "id": "progress-circular",
     "file": "progress-circular.tsx",
     "component": "ProgressCircular",
-    "fileDependencies": [
-      "./factory"
-    ],
+    "fileDependencies": [],
     "hasRecipe": true,
     "hasPattern": false,
     "recipeIds": [
@@ -494,8 +443,7 @@
     "file": "progress.tsx",
     "component": "Progress",
     "fileDependencies": [
-      "./box",
-      "./factory"
+      "./box"
     ],
     "hasRecipe": true,
     "hasPattern": false,
@@ -510,7 +458,6 @@
     "component": "RadioCard",
     "fileDependencies": [
       "./box",
-      "./factory",
       "./text",
       "./visually-hidden"
     ],
@@ -526,7 +473,6 @@
     "file": "radio.tsx",
     "component": "Radio",
     "fileDependencies": [
-      "./factory",
       "./flex",
       "./visually-hidden"
     ],
@@ -554,7 +500,6 @@
     "component": "Select",
     "fileDependencies": [
       "./box",
-      "./factory",
       "./popover",
       "./visually-hidden"
     ],
@@ -569,9 +514,7 @@
     "id": "skeleton",
     "file": "skeleton.tsx",
     "component": "Skeleton",
-    "fileDependencies": [
-      "./factory"
-    ],
+    "fileDependencies": [],
     "hasRecipe": true,
     "hasPattern": false,
     "recipeIds": [
@@ -585,7 +528,6 @@
     "component": "Slider",
     "fileDependencies": [
       "./box",
-      "./factory",
       "./visually-hidden"
     ],
     "hasRecipe": true,
@@ -600,7 +542,6 @@
     "file": "snippet.tsx",
     "component": "Snippet",
     "fileDependencies": [
-      "./factory",
       "./icon-button",
       "./tooltip"
     ],
@@ -612,12 +553,20 @@
   },
   {
     "type": "component",
+    "id": "span",
+    "file": "span.tsx",
+    "component": "Span",
+    "fileDependencies": [],
+    "hasRecipe": false,
+    "hasPattern": false
+  },
+  {
+    "type": "component",
     "id": "spinner",
     "file": "spinner.tsx",
     "component": "Spinner",
     "fileDependencies": [
-      "./box",
-      "./factory"
+      "./box"
     ],
     "hasRecipe": true,
     "hasPattern": false,
@@ -630,9 +579,7 @@
     "id": "stack",
     "file": "stack.tsx",
     "component": "Stack",
-    "fileDependencies": [
-      "./factory"
-    ],
+    "fileDependencies": [],
     "hasRecipe": false,
     "hasPattern": true,
     "patternIds": [
@@ -646,9 +593,7 @@
     "id": "stat",
     "file": "stat.tsx",
     "component": "Stat",
-    "fileDependencies": [
-      "./factory"
-    ],
+    "fileDependencies": [],
     "hasRecipe": true,
     "hasPattern": false,
     "recipeIds": [
@@ -661,7 +606,6 @@
     "file": "switch.tsx",
     "component": "Switch",
     "fileDependencies": [
-      "./factory",
       "./motion",
       "./visually-hidden"
     ],
@@ -676,9 +620,7 @@
     "id": "table",
     "file": "table.tsx",
     "component": "Table",
-    "fileDependencies": [
-      "./factory"
-    ],
+    "fileDependencies": [],
     "hasRecipe": true,
     "hasPattern": false,
     "recipeIds": [
@@ -693,7 +635,6 @@
     "fileDependencies": [
       "./box",
       "./button",
-      "./factory",
       "./flex",
       "./motion"
     ],
@@ -708,9 +649,7 @@
     "id": "text",
     "file": "text.tsx",
     "component": "Text",
-    "fileDependencies": [
-      "./factory"
-    ],
+    "fileDependencies": [],
     "hasRecipe": false,
     "hasPattern": false,
     "patternIds": [
@@ -722,9 +661,7 @@
     "id": "textarea",
     "file": "textarea.tsx",
     "component": "Textarea",
-    "fileDependencies": [
-      "./factory"
-    ],
+    "fileDependencies": [],
     "hasRecipe": true,
     "hasPattern": false,
     "recipeIds": [
@@ -736,9 +673,7 @@
     "id": "theme",
     "file": "theme.tsx",
     "component": "Theme",
-    "fileDependencies": [
-      "./factory"
-    ],
+    "fileDependencies": [],
     "hasRecipe": true,
     "hasPattern": false,
     "recipeIds": [
@@ -765,7 +700,6 @@
     "fileDependencies": [
       "./alert",
       "./close-button",
-      "./factory",
       "./icon",
       "./spinner",
       "./text",
@@ -783,8 +717,7 @@
     "file": "tooltip.tsx",
     "component": "Tooltip",
     "fileDependencies": [
-      "./box",
-      "./factory"
+      "./box"
     ],
     "hasRecipe": true,
     "hasPattern": false,
@@ -808,9 +741,7 @@
     "id": "visually-hidden",
     "file": "visually-hidden.tsx",
     "component": "VisuallyHidden",
-    "fileDependencies": [
-      "./factory"
-    ],
+    "fileDependencies": [],
     "hasRecipe": false,
     "hasPattern": true,
     "patternIds": [
@@ -822,9 +753,7 @@
     "id": "wrap",
     "file": "wrap.tsx",
     "component": "Wrap",
-    "fileDependencies": [
-      "./factory"
-    ],
+    "fileDependencies": [],
     "hasRecipe": false,
     "hasPattern": true,
     "patternIds": [

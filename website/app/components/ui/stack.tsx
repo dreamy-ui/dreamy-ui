@@ -1,5 +1,6 @@
 import { splitProps } from "@dreamy-ui/react";
 import React, { forwardRef } from "react";
+import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import {
     type HstackProperties,
     type StackProperties,
@@ -8,7 +9,6 @@ import {
     stack,
     vstack
 } from "styled-system/patterns";
-import { type HTMLDreamyProps, dreamy } from "./factory";
 
 interface WithSeparator {
     /**

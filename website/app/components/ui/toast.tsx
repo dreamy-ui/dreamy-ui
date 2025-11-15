@@ -1,13 +1,12 @@
 "use client";
 
-import { TRANSITION_EASINGS, dataAttr } from "@dreamy-ui/react";
+import { type Status, TRANSITION_EASINGS, dataAttr } from "@dreamy-ui/react";
 import { isValidMotionProp, m } from "motion/react";
 import { useCallback } from "react";
-import { isCssProperty } from "styled-system/jsx";
+import { dreamy, isCssProperty } from "styled-system/jsx";
 import { toast } from "styled-system/recipes";
 import { useStatusIcon } from "./alert";
 import { CloseButton } from "./close-button";
-import { type Status, dreamy } from "./factory";
 import { Icon } from "./icon";
 import { Spinner } from "./spinner";
 import { Text } from "./text";
@@ -54,29 +53,29 @@ export function Toast({ toast }: { toast: IToast }) {
 
     return (
         <StyledToast
+            animate={{ opacity: 1, scale: 1 }}
+            data-closable={dataAttr(toast.isClosable)}
+            data-status={toast.status}
+            data-variant={"default"}
+            exit={{ opacity: 0, scale: 0.95 }}
+            id={toast.id}
+            initial={{ opacity: 0, scale: 0.95 }}
             key={`${toast.id}-toast`}
             layout
             layoutId={toast.id}
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
             transition={{
                 duration: 0.3,
                 ease: TRANSITION_EASINGS.easeInOut
             }}
-            id={toast.id}
-            data-status={toast.status}
-            data-variant={"default"}
-            data-closable={dataAttr(toast.isClosable)}
             {...toast.containerProps}
         >
             <m.div
-                layout="position"
                 data-part={"container"}
+                layout="position"
             >
                 <Text
-                    data-part={"title"}
                     as={"h4"}
+                    data-part={"title"}
                 >
                     {toast.status === "loading" ? (
                         <Spinner
@@ -94,8 +93,8 @@ export function Toast({ toast }: { toast: IToast }) {
             {toast.isClosable && (
                 <CloseButton
                     data-part={"close"}
-                    size={"xs"}
                     onClick={handleClose}
+                    size={"xs"}
                 />
             )}
         </StyledToast>
@@ -107,9 +106,9 @@ function ToastIcon({ status }: { status: Status }) {
 
     return (
         <Icon
-            role="img"
-            data-part={"icon"}
             asChild
+            data-part={"icon"}
+            role="img"
         >
             {statusIcon}
         </Icon>

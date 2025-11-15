@@ -12,10 +12,9 @@ import {
     useMenuItem
 } from "@dreamy-ui/react";
 import { Children, type ReactNode, cloneElement, forwardRef } from "react";
-import { createStyleContext } from "styled-system/jsx";
+import { type HTMLDreamyProps, createStyleContext, dreamy } from "styled-system/jsx";
 import { menu } from "styled-system/recipes";
 import { Box } from "./box";
-import { type HTMLDreamyProps, dreamy } from "./factory";
 import { Kbd } from "./kbd";
 import { Popover, type PopoverContentProps, type PopoverProps } from "./popover";
 
@@ -48,13 +47,13 @@ const MenuRoot = withProvider(function MenuRoot({
         <MenuProvider value={ctx as any}>
             <Box {...ctx.getRootProps({ className })}>
                 <Popover.Root
-                    placement={placement ?? "bottom"}
-                    isOpen={ctx.isOpen}
-                    onOpen={ctx.onOpen}
-                    onClose={ctx.onClose}
                     hasArrow={false}
                     initialFocusRef={ctx.triggerRef}
+                    isOpen={ctx.isOpen}
                     lazyBehavior="keepMounted"
+                    onClose={ctx.onClose}
+                    onOpen={ctx.onOpen}
+                    placement={placement ?? "bottom"}
                     reduceMotion={ctx.reduceMotion}
                     {...props.popoverProps}
                 >

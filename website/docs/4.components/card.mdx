@@ -130,7 +130,7 @@ Example of a card with a dividers layout.
         <Divider />
         <Card.Footer pt={6}>
             <Link isExternal href="https://github.com/dreamy-ui/dreamy-ui" fontWeight={500} display={"flex"} alignItems={"center"} gap={1}>
-                <>Visit source code on GitHub <Icon h={4} asComp={<HiExternalLink />} /></>
+                <>Visit source code on GitHub <Icon h={4} as={<HiExternalLink />} /></>
             </Link>
         </Card.Footer>
     </Card.Root>
@@ -305,7 +305,7 @@ Example of a card with a multiple fields and a buttons.
 Example of a card as a link, that navigates to a different page.
 
 <Wrapper p={10}>
-    <Card.Root asComp={<RemixLink target="_blank" to="https://github.com/dreamy-ui/dreamy-ui" />} maxW="sm">
+    <Card.Root as={<RemixLink target="_blank" to="https://github.com/dreamy-ui/dreamy-ui" />} maxW="sm">
         <Card.Header row alignItems="center" gap={4}>
             <Image
                 alt="Dreamy UI logo"
@@ -322,14 +322,14 @@ Example of a card as a link, that navigates to a different page.
         </Card.Body>
         <Card.Footer>
             <Link isExternal href="https://github.com/dreamy-ui/dreamy-ui" fontWeight={500} display={"flex"} alignItems={"center"} gap={1}>
-                <>Star on GitHub <Icon h={4} asComp={<HiExternalLink />} /></>
+                <>Star on GitHub <Icon h={4} as={<HiExternalLink />} /></>
             </Link>
         </Card.Footer>
     </Card.Root>
 </Wrapper>
 
 ```tsx
-<Card.Root asComp={<a target="_blank" to="https://github.com/dreamy-ui/dreamy-ui" />} maxW="sm">
+<Card.Root as={<a target="_blank" to="https://github.com/dreamy-ui/dreamy-ui" />} maxW="sm">
     <Card.Header row alignItems="center" gap={4}>
         <Image
             alt="Dreamy UI logo"
@@ -346,7 +346,7 @@ Example of a card as a link, that navigates to a different page.
     </Card.Body>
     <Card.Footer>
         <Link isExternal href="https://github.com/dreamy-ui/dreamy-ui" fontWeight={500} display={"flex"} alignItems={"center"} gap={1}>
-            Star on GitHub <Icon h={4} asComp={<HiExternalLink />} />
+            Star on GitHub <Icon h={4} as={<HiExternalLink />} />
         </Link>
     </Card.Footer>
 </Card.Root>

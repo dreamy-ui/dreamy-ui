@@ -55,11 +55,14 @@ export const timingsMiddleware: MiddlewareFunction = async (_, next) => {
     const response = (await next()) as Response;
     const timings = getTimings();
 
-    // map over the timings and add them to the response headers
     let serverTiming = "";
-    timings.forEach((value, key) => {
-        serverTiming += `${key};dur=${value.toFixed(2)};`;
-    });
+
+    let index = 0;
+    for (const [key, value] of timings.entries()) {
+        serverTiming += `${key};dur=${value.toFixed(2)}${index < timings.size - 1 ? ", " : ""}`;
+        index++;
+    }
+
     if (serverTiming) {
         response.headers.append("Server-Timing", serverTiming);
     }

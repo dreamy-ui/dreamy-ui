@@ -3,11 +3,12 @@
 import { dataAttr, isMobile, nextTick } from "@dreamy-ui/react";
 import { cloneElement, forwardRef, isValidElement, useCallback, useMemo } from "react";
 import { css, cx } from "styled-system/css";
+import { dreamy, type HTMLDreamyProps } from "styled-system/jsx";
 import { type ButtonVariantProps, button } from "styled-system/recipes";
 import { Box } from "./box";
-import { type HTMLDreamyProps, dreamy } from "./factory";
 import { Ripple, useRipple } from "./ripple";
 import { Spinner } from "./spinner";
+import { Span } from "./span";
 
 export interface UniversalButtonProps extends ButtonSpinnerOptions {
     /**
@@ -249,12 +250,5 @@ function ButtonIcon(props: ButtonIconProps) {
           })
         : children;
 
-    return (
-        <Box
-            as={"span"}
-            {...rest}
-        >
-            {_children}
-        </Box>
-    );
+    return <Span {...rest}>{_children}</Span>;
 }

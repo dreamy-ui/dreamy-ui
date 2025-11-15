@@ -1,0 +1,12 @@
+{
+  "type": "component",
+  "fileDependencies": [],
+  "id": "span",
+  "file": {
+    "name": "span.tsx",
+    "content": "import { forwardRef } from \"react\";\nimport { type HTMLDreamyProps, dreamy } from \"styled-system/jsx\";\n\nexport interface SpanProps extends HTMLDreamyProps<\"span\"> {}\n\n/**\n * Span component\n *\n * @See Docs https://dreamy-ui.com/docs/components/span\n */\nexport const Span = forwardRef<HTMLSpanElement, SpanProps>((props, ref) => {\n    return (\n        <dreamy.span\n            ref={ref}\n            {...props}\n        />\n    );\n});\n"
+  },
+  "component": "Span",
+  "hasRecipe": false,
+  "hasPattern": false
+}

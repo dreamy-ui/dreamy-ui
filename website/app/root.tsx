@@ -1,14 +1,7 @@
 import { ToastProvider } from "@/toast-provider";
 import { DreamyProvider } from "@dreamy-ui/react";
 import { getColorModeHTMLProps, getSSRColorMode } from "@dreamy-ui/react/rsc";
-import {
-    Links,
-    Meta,
-    Outlet,
-    Scripts,
-    ScrollRestoration,
-    type ShouldRevalidateFunctionArgs
-} from "react-router";
+import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
 import AppLayout from "~/src/ui/global/Layout";
 import type { Route } from "./+types/root";
 import styles from "./index.css?url";
@@ -70,7 +63,7 @@ export function loader({ request }: Route.LoaderArgs) {
     };
 }
 
-export function shouldRevalidate(_: ShouldRevalidateFunctionArgs) {
+export function shouldRevalidate() {
     return false;
 }
 
@@ -95,18 +88,18 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <head>
                 <meta charSet="utf-8" />
                 <meta
-                    name="viewport"
                     content="width=device-width, initial-scale=1"
+                    name="viewport"
                 />
                 <Meta />
                 <Links />
             </head>
             <body>
                 <DreamyProvider
-                    motionFeatures={motionFeatures}
                     colorMode={colorMode}
-                    useUserPreferenceColorMode
+                    motionFeatures={motionFeatures}
                     motionStrict
+                    useUserPreferenceColorMode
                 >
                     <ToastProvider>
                         <GlobalContextProvider>
@@ -117,9 +110,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 <ScrollRestoration />
                 <Scripts />
                 <script
+                    data-website-id="24f8ae64-8f5d-42f2-b50f-86f7b2b672a8"
                     defer
                     src="https://analytics.dreamy-ui.com/script.js"
-                    data-website-id="24f8ae64-8f5d-42f2-b50f-86f7b2b672a8"
                 />
             </body>
         </html>

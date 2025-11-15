@@ -1,8 +1,8 @@
 import { valueToPercent } from "@dreamy-ui/react";
 import { forwardRef, useMemo } from "react";
+import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type ProgressVariantProps, progress } from "styled-system/recipes";
 import { Box } from "./box";
-import { type HTMLDreamyProps, dreamy } from "./factory";
 
 interface ProgressFilledTrackProps extends HTMLDreamyProps<"div">, GetProgressPropsOptions {}
 

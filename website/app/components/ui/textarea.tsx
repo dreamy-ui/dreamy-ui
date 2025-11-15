@@ -8,8 +8,8 @@ import {
     useField
 } from "@dreamy-ui/react";
 import { type ComponentType, forwardRef } from "react";
+import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type TextareaVariantProps, textarea } from "styled-system/recipes";
-import { type HTMLDreamyProps, dreamy } from "./factory";
 
 export interface TextareaProps
     extends HTMLDreamyProps<"textarea">,
