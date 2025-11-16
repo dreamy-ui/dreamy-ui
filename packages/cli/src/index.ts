@@ -2,6 +2,7 @@ import * as p from "@clack/prompts";
 import { Command } from "commander";
 import { AddCommand } from "./commands/add";
 import { DiffCommand } from "./commands/diff";
+import { InitCommand } from "./commands/init";
 import { ListCommand } from "./commands/list";
 
 process.setMaxListeners(Number.POSITIVE_INFINITY);
@@ -15,6 +16,7 @@ export async function run() {
         .description("The official CLI for Dreamy UI projects")
         .version(packageJson.version);
 
+    program.addCommand(InitCommand);
     program.addCommand(AddCommand);
     program.addCommand(ListCommand);
     program.addCommand(DiffCommand);

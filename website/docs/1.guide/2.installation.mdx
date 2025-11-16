@@ -4,7 +4,28 @@ title: Installation
 
 # Install Dreamy UI
 
-If you are using one of the following frameworks, please follow the corresponding guide:
+## Quick Start (Recommended)
+
+Use the automated CLI to set up Dreamy UI in your project:
+
+```bash
+npx @dreamy-ui/cli init
+```
+
+The CLI will automatically:
+- Detect your framework (React Router v7, Next.js, or Vite)
+- Install all required dependencies (Panda CSS + Dreamy UI)
+- Create and configure `panda.config.ts`
+- Remove default Tailwind CSS (React Router v7 only)
+- Set up CSS files with proper imports
+- Create a `DreamyProvider` component
+- Update your `tsconfig.json` (if using TypeScript)
+- Run Panda CSS codegen to generate the styled-system
+- Add default components (button, input, card) to get you started
+
+## Manual Installation
+
+If you prefer manual installation or need more control, follow the framework-specific guides:
 
 -   [Next.js](/docs/frameworks/next.js)
 -   [React Router](/docs/frameworks/react-router)
@@ -18,7 +39,7 @@ Install panda by following the [panda CSS installation](https://panda-css.com/do
 ### 2. Install Dreamy UI
 
 ```bash
-pnpm install @dreamy-ui/react @dreamy-ui/panda-preset motion
+pnpm install @dreamy-ui/react @dreamy-ui/panda-preset @dreamy-ui/cli motion
 ```
 
 ### 3. Add Dream preset
@@ -28,6 +49,8 @@ After installing, you should configure your panda config with Dream preset. Copy
 ```ts {1, 10-16}
 import createDreamyPreset, { dreamyPlugin } from "@dreamy-ui/panda-preset";
 import { defineConfig } from "@pandacss/dev";
+import { patterns } from "./app/components/patterns";
+import { recipes } from "./app/components/recipes";
 
 export default defineConfig({
 	preflight: true,
@@ -35,13 +58,17 @@ export default defineConfig({
 	jsxFramework: "react",
 	jsxStyleProps: "all",
 	outExtension: "js",
+	jsxFactory: "dreamy",
 	include: [
 		"./app/**/*.{js,jsx,ts,tsx}" // Replace with your app source directory
 	],
 	presets: [createDreamyPreset()],
-	plugins: [dreamyPlugin],
+	plugins: [dreamyPlugin()],
+	patterns,
 	theme: {
-		extend: {}
+		extend: {
+			recipes
+		}
 	},
 	globalCss: {
 		extend: {}

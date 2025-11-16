@@ -1,0 +1,277 @@
+---
+title: CLI Reference
+---
+
+# Dreamy UI CLI
+
+The Dreamy UI CLI helps you initialize and manage your Dreamy UI project with ease.
+
+## Installation
+
+The CLI is included when you install the `@dreamy-ui/cli` package:
+
+```bash
+pnpm add -D @dreamy-ui/cli
+```
+
+Or you can use it directly with `npx`:
+
+```bash
+npx @dreamy-ui/cli [command]
+```
+
+## Commands
+
+### `init`
+
+Initialize Dreamy UI in your project with automatic setup.
+
+```bash
+npx @dreamy-ui/cli init
+```
+
+**What it does:**
+
+1. **Detects your framework** - Automatically identifies React Router v7, Next.js, or Vite
+2. **Installs dependencies** - Adds Panda CSS and Dreamy UI packages
+3. **Creates configuration** - Generates `panda.config.ts` with proper presets
+4. **Removes Tailwind** (React Router only) - Removes default Tailwind CSS setup
+5. **Sets up CSS** - Creates CSS entry file with Panda layers and imports it
+6. **Creates provider** - Generates a `DreamyProvider` component for your framework
+7. **Updates TypeScript config** - Adds `styled-system` to `tsconfig.json` includes
+8. **Runs Panda codegen** - Generates the styled-system
+9. **Adds default components** - Installs button, input, and card components to get you started
+
+**Options:**
+
+- `--yes, -y` - Skip all prompts and use defaults
+- `--skip-install` - Skip dependency installation (useful if you want to install manually)
+- `--skip-components` - Skip adding default components (button, input, card)
+
+**Examples:**
+
+```bash
+# Interactive setup with prompts
+npx @dreamy-ui/cli init
+
+# Skip all prompts
+npx @dreamy-ui/cli init --yes
+
+# Skip dependency installation
+npx @dreamy-ui/cli init --skip-install
+
+# Skip adding default components
+npx @dreamy-ui/cli init --skip-components
+```
+
+**React Router v7 Specific:**
+
+For React Router v7 projects, the `init` command will automatically:
+- Remove the default `app/app.css` file (Tailwind CSS)
+- Remove the import from `app/root.tsx`
+- Replace it with Panda CSS configuration
+
+**Framework Detection:**
+
+The CLI detects your framework by looking for these config files:
+
+- **React Router v7**: `react-router.config.ts` (or `.js`, `.mjs`)
+- **Next.js**: `next.config.js` (or `.ts`, `.mjs`)
+- **Vite**: `vite.config.js` (or `.ts`, `.mjs`, `.mts`)
+
+**Error Handling:**
+
+The `init` command is designed to be resilient. If any step fails:
+
+- ✓ The CLI will show a friendly error message
+- ✓ Suggest manual fixes you can apply
+- ✓ Continue with the remaining steps
+
+This means even if one step fails (e.g., file already exists), other steps will still complete successfully.
+
+---
+
+### `add`
+
+Add Dreamy UI components to your project.
+
+```bash
+npx @dreamy-ui/cli add [components...]
+```
+
+**Examples:**
+
+```bash
+# Add a single component
+npx @dreamy-ui/cli add button
+
+# Add multiple components
+npx @dreamy-ui/cli add button input card
+
+# Add all components
+npx @dreamy-ui/cli add --all
+```
+
+**Options:**
+
+- `--all` - Add all available components
+- `--force, -f` - Overwrite existing files
+- `--dry-run, -d` - Preview changes without writing files
+- `--outdir <dir>` - Specify output directory for components
+- `--tsx` - Force TypeScript output
+
+**What it does:**
+
+1. Downloads component files from the registry
+2. Installs component dependencies (other components)
+3. Adds required recipes and patterns
+4. Runs Panda CSS codegen
+
+---
+
+### `list`
+
+List all available components in the Dreamy UI registry.
+
+```bash
+npx @dreamy-ui/cli list
+```
+
+Shows a table of all available components with their names and descriptions.
+
+---
+
+### `diff`
+
+Compare your local components with the registry versions.
+
+```bash
+npx @dreamy-ui/cli diff [component]
+```
+
+**Examples:**
+
+```bash
+# Check differences for a specific component
+npx @dreamy-ui/cli diff button
+
+# Check all components
+npx @dreamy-ui/cli diff
+```
+
+**What it shows:**
+
+- Files that are up-to-date ✓
+- Files that differ from registry ✗
+- Files that don't exist locally →
+- A detailed diff of changes
+
+---
+
+## Workflows
+
+### Setting up a new project
+
+```bash
+# 1. Create your React project with your preferred framework
+npx create-react-router@latest # or create-next-app, etc.
+
+# 2. Initialize Dreamy UI
+npx @dreamy-ui/cli init
+
+# 3. Add components you need
+npx @dreamy-ui/cli add button input card
+
+# 4. Start building!
+```
+
+### Updating components
+
+```bash
+# 1. Check what changed
+npx @dreamy-ui/cli diff button
+
+# 2. Update the component (overwrite)
+npx @dreamy-ui/cli add button --force
+```
+
+### Managing components
+
+```bash
+# See all available components
+npx @dreamy-ui/cli list
+
+# Add specific components
+npx @dreamy-ui/cli add accordion tabs modal
+
+# Check for updates
+npx @dreamy-ui/cli diff
+```
+
+---
+
+## Troubleshooting
+
+### CLI not found
+
+If you get a "command not found" error:
+
+```bash
+# Install the CLI globally
+npm install -g @dreamy-ui/cli
+
+# Or use npx
+npx @dreamy-ui/cli [command]
+```
+
+### Framework not detected
+
+If the CLI can't detect your framework:
+
+1. Make sure you have a config file (`next.config.js`, `react-router.config.ts`, or `vite.config.ts`)
+2. The file should be in the root of your project
+3. Try running from your project root directory
+
+### TypeScript errors after init
+
+After running `init`, you might need to:
+
+1. Restart your TypeScript server (VS Code: Cmd/Ctrl + Shift + P → "Restart TS Server")
+2. Run `npx panda codegen` to generate types
+3. Check that `styled-system/**/*` is in your `tsconfig.json` include array
+
+### Dependency installation fails
+
+If dependency installation fails during `init`:
+
+```bash
+# Run init without installing
+npx @dreamy-ui/cli init --skip-install
+
+# Then manually install dependencies
+pnpm add @pandacss/dev @pandacss/postcss -D
+pnpm add @dreamy-ui/react @dreamy-ui/panda-preset @dreamy-ui/cli motion
+```
+
+---
+
+## Environment Variables
+
+The CLI respects these environment variables:
+
+- `HTTPS_PROXY` - Use a proxy for fetching components from the registry
+- `REGISTRY_URL` - Override the default registry URL (for development)
+
+---
+
+## Getting Help
+
+For more help with any command:
+
+```bash
+npx @dreamy-ui/cli --help
+npx @dreamy-ui/cli [command] --help
+```
+
+Visit our [documentation](https://dreamy-ui.com/docs) for more information.
+
