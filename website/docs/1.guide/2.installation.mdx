@@ -16,12 +16,14 @@ The CLI will automatically:
 - Detect your framework (React Router v7, Next.js, or Vite)
 - Install all required dependencies (Panda CSS + Dreamy UI)
 - Create and configure `panda.config.ts`
+- Update `vite.config.ts` or `postcss.config.mjs` with Panda CSS PostCSS plugin
 - Remove default Tailwind CSS (React Router v7 only)
 - Set up CSS files with proper imports
 - Create a `DreamyProvider` component
-- Update your `tsconfig.json` (if using TypeScript)
+- Update your `tsconfig.json` with `@/*` path alias and styled-system (if using TypeScript)
+  - Next.js also gets `styled-system/*` path alias for proper type resolution
 - Run Panda CSS codegen to generate the styled-system
-- Add default components (button, input, card) to get you started
+- Add recommended components (button, flex, text, heading) to get you started
 
 ## Manual Installation
 
@@ -46,7 +48,7 @@ pnpm install @dreamy-ui/react @dreamy-ui/panda-preset @dreamy-ui/cli motion
 
 After installing, you should configure your panda config with Dream preset. Copy and paste the following code into your `panda.config.ts` file:
 
-```ts {1, 10-16}
+```ts {1-4, 14-20}
 import createDreamyPreset, { dreamyPlugin } from "@dreamy-ui/panda-preset";
 import { defineConfig } from "@pandacss/dev";
 import { patterns } from "./app/components/patterns";
@@ -78,6 +80,8 @@ export default defineConfig({
 	}
 });
 ```
+
+Note: The `patterns` and `recipes` imports are automatically configured by the CLI based on your framework. The paths will be adjusted for Next.js (`./src/components` or `./components`) or Vite (`./src/components`).
 
 ### 4. Add Dream Provider
 

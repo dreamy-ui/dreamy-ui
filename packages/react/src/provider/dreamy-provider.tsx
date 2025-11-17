@@ -14,6 +14,7 @@ import {
 import type React from "react";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { type DefaultVariants, defaultDefaultTransition, defaultMotionVariants } from "./motion";
+import { DREAMY_COLOR_MODE_COOKIE_KEY } from "./ssr-color-mode";
 
 export type ColorMode = "light" | "dark";
 
@@ -75,8 +76,6 @@ interface DreamyProviderProps extends Partial<Omit<IDreamContext, "hasHydrated">
     children: React.ReactNode;
 }
 
-export const DreamColorModeCookieKey = "dreamy-ui-color-mode";
-
 export function DreamyProvider({
     children,
     motionVariants = defaultMotionVariants,
@@ -87,7 +86,6 @@ export function DreamyProvider({
     defaultColorMode = "light",
     reduceMotion: InitialReduceMotion = false,
     motionFeatures,
-    // defaultToastProps = emptyObject,
     motionStrict = false,
     colorModeCookieOptions = {}
 }: DreamyProviderProps) {
@@ -99,7 +97,7 @@ export function DreamyProvider({
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     const setColorModeCookie = useCallback((newColorMode: ColorMode) => {
         cookieStore.set({
-            name: DreamColorModeCookieKey,
+            name: DREAMY_COLOR_MODE_COOKIE_KEY,
             value: newColorMode,
             path: "/",
             expires: Date.now() + 31536000000,
@@ -109,9 +107,6 @@ export function DreamyProvider({
 
     const setColorMode = useCallback(
         (colorModeCb: ColorMode | ((prevColorMode: ColorMode) => ColorMode)) => {
-            const newColorMode =
-                typeof colorModeCb === "function" ? colorModeCb(colorMode) : colorModeCb;
-
             const css = document.createElement("style");
             css.appendChild(
                 document.createTextNode(
@@ -119,11 +114,18 @@ export function DreamyProvider({
                 )
             );
             document.head.appendChild(css);
-            document.documentElement.style.colorScheme = newColorMode;
-            document.documentElement.dataset.theme = newColorMode;
 
-            setColorModeCookie(newColorMode);
-            setResolvedColorMode(newColorMode);
+            setResolvedColorMode((prev) => {
+                const newColorMode =
+                    typeof colorModeCb === "function" ? colorModeCb(prev) : colorModeCb;
+
+                document.documentElement.style.colorScheme = newColorMode;
+                document.documentElement.dataset.theme = newColorMode;
+
+                setColorModeCookie(newColorMode);
+
+                return newColorMode;
+            });
 
             (() => window.getComputedStyle(document.body))();
 
@@ -131,7 +133,7 @@ export function DreamyProvider({
                 document.head.removeChild(css);
             });
         },
-        [colorMode, setColorModeCookie]
+        [setColorModeCookie]
     );
 
     const toggleColorMode = useCallback(() => {
@@ -158,7 +160,6 @@ export function DreamyProvider({
             useUserPreferenceColorMode,
             hasHydrated,
             reduceMotion
-            // defaultToastProps,
         }),
         [
             motionVariants,
@@ -168,7 +169,6 @@ export function DreamyProvider({
             useUserPreferenceColorMode,
             hasHydrated,
             reduceMotion
-            // defaultToastProps,
         ]
     );
 

@@ -51,16 +51,16 @@ export default defineConfig({
 });
 ```
 
-## 3. Add styled-system alias to tsconfig.json
+## 3. Add styled-system to tsconfig.json
 
-Add the following alias to your `tsconfig.json` file:
+Add the following configuration to your `tsconfig.json` file:
 
 ```json {6, 13-14}
 {
 	"compilerOptions": {
 		...
 		"paths": {
-			"@/*": ["./src/*"],
+			"@/*": ["./components/ui/*"],
 			"styled-system/*": ["./styled-system/*"]
 		}
 	},
@@ -68,13 +68,14 @@ Add the following alias to your `tsconfig.json` file:
 		"next-env.d.ts",
 		"**/*.ts",
 		"**/*.tsx",
-		"styled-system/**/*.ts",
-		"styled-system/**/*.tsx",
+		"styled-system/**/*",
 		".next/types/**/*.ts"
 	],
 	"exclude": ["node_modules"]
 }
 ```
+
+**Note:** Next.js requires both the `styled-system/*` path alias AND the include entry for proper type resolution. The CLI automatically configures both for you.
 
 {/* Add the following alias to your `next.config.ts` file:
 
@@ -98,41 +99,43 @@ export default {
 
 After configuring Panda CSS, finally we can add the main Dreamy Provider to your `app/layout.tsx`.
 
-First create a `providers.tsx` file in `app/providers.tsx`. This is where you will add all the providers you need for your app.
+First create a `dreamy-provider.tsx` file in `components/dreamy-provider.tsx` (or `src/components/dreamy-provider.tsx` if using src directory):
 
 ```tsx
 "use client";
 
-import { type ColorMode, DreamyProvider } from "@dreamy-ui/react";
-import { domMax } from "motion/react";
-import type { PropsWithChildren } from "react";
+import { DreamyProvider as BaseDreamyProvider } from "@dreamy-ui/react";
+import type { ColorMode } from "@dreamy-ui/react";
 
-interface ProvidersProps extends PropsWithChildren {
+const domMax = () => import("motion/react").then((mod) => mod.domMax);
+
+interface DreamyProviderProps {
+    children: React.ReactNode;
     colorMode?: ColorMode;
 }
 
-export function Providers({ children, colorMode }: ProvidersProps) {
+export function DreamyProvider({ children, colorMode }: DreamyProviderProps) {
     return (
-        <DreamyProvider
-            motionFeatures={domMax}
-            colorMode={colorMode}
+        <BaseDreamyProvider 
+            motionFeatures={domMax} 
             motionStrict
+            colorMode={colorMode}
             useUserPreferenceColorMode
         >
             {children}
-        </DreamyProvider>
+        </BaseDreamyProvider>
     );
 }
 ```
 
-Next, add the `Providers` component to your `app/layout.tsx` file:
+Next, add the `DreamyProvider` component to your `app/layout.tsx` file.
 
-This way we pass the color mode to the `Providers` component so initial document request will have the user color mode.
+This way we pass the color mode from server-side cookies so the initial document request will have the correct user color mode without flashing:
 
-```tsx {2-4, 13, 19, 22}
+```tsx {2-3, 12, 15-19}
 ...
-import { Providers } from "./providers";
-import { getColorModeHTMLProps, getSSRColorMode } from "@dreamy-ui/react/rsc";
+import { DreamyProvider } from "@/components/dreamy-provider";
+import { getSSRColorMode } from "@dreamy-ui/react/rsc";
 import { cookies } from "next/headers";
 
 ...
@@ -145,13 +148,9 @@ export default async function RootLayout({
     const colorMode = getSSRColorMode((await cookies()).toString());
 
     return (
-        <html 
-            lang="en" 
-            suppressHydrationWarning 
-            {...getColorModeHTMLProps(colorMode)}
-        >
-            <body className={`${geistSans.variable} ${geistMono.variable}`}>
-                <Providers colorMode={colorMode}>{children}</Providers>
+        <html lang="en">
+            <body>
+                <DreamyProvider colorMode={colorMode}>{children}</DreamyProvider>
             </body>
         </html>
     );

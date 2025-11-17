@@ -1,4 +1,4 @@
-import { splitProps } from "@dreamy-ui/react";
+import { splitProps } from "@dreamy-ui/react/rsc";
 import { forwardRef } from "react";
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { visuallyHidden } from "styled-system/patterns";
@@ -39,8 +39,8 @@ export const VisuallyHiddenInput = forwardRef<HTMLInputElement, VisuallyHiddenIn
 
         return (
             <dreamy.input
-                ref={ref}
                 readOnly
+                ref={ref}
                 {...styleProps}
                 {...restProps}
             />

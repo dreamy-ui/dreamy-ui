@@ -37,7 +37,7 @@ export const button = defineRecipe({
             textAlign: "center",
             userSelect: "none",
             transition:
-                "background-color {durations.normal} {easings.ease-in-out}, color {durations.normal} {easings.ease-in-out}, border-color {durations.normal} {easings.ease-in-out}, fill {durations.normal} {easings.ease-in-out}, transform {durations.fast} {easings.ease-in-out}",
+                "background-color {durations.normal} {easings.ease-in-out}, color {durations.normal} {easings.ease-in-out}, border-color {durations.normal} {easings.ease-in-out}, fill {durations.normal} {easings.ease-in-out}",
             justifyContent: "center",
             _disabled: {
                 cursor: "not-allowed",

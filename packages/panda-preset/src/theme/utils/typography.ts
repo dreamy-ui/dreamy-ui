@@ -1,6 +1,24 @@
 import type { UtilityConfig } from "@pandacss/types";
 
 export const typographyUtilities: UtilityConfig = {
+	leading: {
+		values: 'lineHeights',
+		transform: (value, { token }) => {
+			if (!value) return {};
+			return {
+				lineHeight: token("lineHeights." + value)
+			};
+		}
+	},
+	tracking: {
+		values: 'letterSpacings',
+		transform: (value, { token }) => {
+			if (!value) return {};
+			return {
+				letterSpacing: token("letterSpacings." + value)
+			};
+		}
+	},
 	textCenter: {
 		values: { type: "boolean" },
 		transform: (value) => {

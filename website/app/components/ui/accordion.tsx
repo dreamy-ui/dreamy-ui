@@ -13,7 +13,7 @@ import {
     useAccordionItemContext
 } from "@dreamy-ui/react";
 import { forwardRef, useMemo } from "react";
-import { type HTMLDreamyProps, createStyleContext, dreamy } from "styled-system/jsx";
+import { createStyleContext, type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import type { AccordionVariantProps } from "styled-system/recipes";
 import { accordion } from "styled-system/recipes";
 import { Box } from "./box";
@@ -179,20 +179,20 @@ const AccordionIcon = withContext(
     forwardRef<SVGSVGElement, AccordionIconProps>(function AccordionIcon(props, ref) {
         return (
             <dreamy.svg
-                aria-hidden="true"
-                asChild
                 ref={ref}
+                asChild
+                aria-hidden="true"
                 {...props}
             >
                 <svg
                     aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
+                    strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
                 >
                     <path d="m6 9 6 6 6-6" />
                 </svg>

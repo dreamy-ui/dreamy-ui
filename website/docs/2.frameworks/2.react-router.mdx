@@ -91,11 +91,12 @@ After configuring Panda CSS, finally we can add the main Dreamy Provider to your
 
 (Optional, only for Framework mode) To fix color mode flashing on document request, we need to get color mode from the loader, to render the correct color mode.
 
-```tsx {2-4, 8-12, 14, 17, 22, 31-38}
+```tsx {2-4, 5, 9-13, 15, 18, 23, 32-39}
 ...
 import { DreamyProvider } from "@dreamy-ui/react";
 import { getColorModeHTMLProps, getSSRColorMode } from "@dreamy-ui/react/rsc";
 import type { Route } from "./+types/root";
+import { useRouteLoaderData } from "react-router";
 
 // Loaders only work for Framework mode,
 // you can skip this, if you are using React Router as library mode.

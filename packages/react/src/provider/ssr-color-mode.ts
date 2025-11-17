@@ -1,5 +1,7 @@
 import type { ColorMode } from "@/provider";
 
+export const DREAMY_COLOR_MODE_COOKIE_KEY = "dreamy-ui-color-mode";
+
 export function getColorModeHTMLProps(ssrColorMode: ColorMode | undefined | null = "light") {
     return {
         style: {
@@ -12,13 +14,14 @@ export function getColorModeHTMLProps(ssrColorMode: ColorMode | undefined | null
 }
 
 export function getSSRColorMode(
-    cookiesOrRequest: string | Request | undefined
+    cookiesOrRequest: string | Request | undefined,
+    cookieKey: string = DREAMY_COLOR_MODE_COOKIE_KEY
 ): ColorMode | undefined {
     if (typeof cookiesOrRequest === "undefined") {
         return undefined;
     }
 
-    const colorModeCookie = getCookie("dreamy-ui-color-mode", cookiesOrRequest);
+    const colorModeCookie = getCookie(cookieKey, cookiesOrRequest);
 
     if (!colorModeCookie) {
         return undefined;

@@ -34,19 +34,20 @@ npx @dreamy-ui/cli init
 
 1. **Detects your framework** - Automatically identifies React Router v7, Next.js, or Vite
 2. **Installs dependencies** - Adds Panda CSS and Dreamy UI packages
-3. **Creates configuration** - Generates `panda.config.ts` with proper presets
-4. **Removes Tailwind** (React Router only) - Removes default Tailwind CSS setup
-5. **Sets up CSS** - Creates CSS entry file with Panda layers and imports it
-6. **Creates provider** - Generates a `DreamyProvider` component for your framework
-7. **Updates TypeScript config** - Adds `styled-system` to `tsconfig.json` includes
-8. **Runs Panda codegen** - Generates the styled-system
-9. **Adds default components** - Installs button, input, and card components to get you started
+3. **Creates configuration** - Generates `panda.config.ts` with proper presets, patterns, and recipes imports
+4. **Updates build config** - Configures PostCSS plugin for your framework (vite.config/postcss.config)
+5. **Removes Tailwind** (React Router only) - Removes default Tailwind CSS setup
+6. **Sets up CSS** - Creates CSS entry file with Panda layers and imports it
+7. **Creates provider** - Generates a `DreamyProvider` component for your framework
+8. **Updates TypeScript config** - Adds `styled-system` to includes and `@/*` path alias for components
+9. **Runs Panda codegen** - Generates the styled-system
+10. **Adds recommended components** - Installs button, flex, text, and heading components to get you started
 
 **Options:**
 
 - `--yes, -y` - Skip all prompts and use defaults
 - `--skip-install` - Skip dependency installation (useful if you want to install manually)
-- `--skip-components` - Skip adding default components (button, input, card)
+- `--skip-components` - Skip adding recommended components (button, flex, text, heading)
 
 **Examples:**
 
@@ -64,12 +65,33 @@ npx @dreamy-ui/cli init --skip-install
 npx @dreamy-ui/cli init --skip-components
 ```
 
-**React Router v7 Specific:**
+**Framework-Specific Behavior:**
 
-For React Router v7 projects, the `init` command will automatically:
-- Remove the default `app/app.css` file (Tailwind CSS)
-- Remove the import from `app/root.tsx`
-- Replace it with Panda CSS configuration
+**React Router v7:**
+- Removes the default `app/app.css` file (Tailwind CSS)
+- Removes the Tailwind import from `app/root.tsx`
+- Updates `vite.config.ts` to use Panda CSS PostCSS plugin
+- Removes `@tailwindcss/vite` plugin if present
+
+**Vite:**
+- Updates `vite.config.ts` to use Panda CSS PostCSS plugin
+- Removes `@tailwindcss/vite` plugin if present
+
+**Next.js:**
+- Creates `postcss.config.mjs` with Panda CSS PostCSS plugin
+
+**TypeScript Configuration:**
+
+The `init` command automatically updates your `tsconfig.json` to include:
+- `styled-system/**/*` in the include array (for Panda CSS generated types)
+- `@/*` path alias pointing to your components/ui directory:
+  - React Router v7: `./app/components/ui/*`
+  - Next.js (with src): `./src/components/ui/*`
+  - Next.js (without src): `./components/ui/*`
+  - Vite: `./src/components/ui/*`
+- `styled-system/*` path alias (Next.js only): `./styled-system/*` - Required for Next.js to properly resolve styled-system types
+
+This allows you to import components using `@/button` instead of relative paths like `../../../../components/ui/button`.
 
 **Framework Detection:**
 

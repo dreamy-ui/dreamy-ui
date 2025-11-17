@@ -13,7 +13,7 @@ interface Props extends UniversalButtonProps {
     /*
      * The icon to display
      */
-    icon: React.ReactNode;
+    icon?: React.ReactNode;
 }
 
 export interface IconButtonProps

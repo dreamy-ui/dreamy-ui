@@ -1,4 +1,4 @@
-import { splitProps } from "@dreamy-ui/react";
+import { splitProps } from "@dreamy-ui/react/rsc";
 import { forwardRef } from "react";
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type FlexProperties, flex } from "styled-system/patterns";

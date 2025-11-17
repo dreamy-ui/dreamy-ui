@@ -8,6 +8,7 @@ import { Command } from "commander";
 import { globbySync } from "globby";
 import { detect } from "package-manager-detector";
 import { installCommand, pandaCodegenCommand } from "../utils/codegen-command";
+import { RECOMMENDED_COMPONENTS } from "../utils/components";
 import { ensureDir } from "../utils/io";
 
 const execAsync = promisify(exec);
@@ -27,7 +28,7 @@ async function detectFramework(cwd: string): Promise<FrameworkConfig | null> {
     if (files.find((file) => file.startsWith("react-router.config"))) {
         return {
             type: "react-router",
-            cssPath: "app/index.css",
+            cssPath: "app/app.css",
             cssImportPath: "app/root.tsx",
             providerPath: "app/components/dreamy-provider.tsx",
             includePattern: "./app/**/*.{js,jsx,ts,tsx}"
@@ -66,25 +67,17 @@ async function detectFramework(cwd: string): Promise<FrameworkConfig | null> {
 }
 
 async function installDependencies(cwd: string, _framework: FrameworkConfig) {
+    const s = p.spinner();
     try {
-        p.log.info("Installing Dreamy UI dependencies...");
-
-        // Install Panda CSS
-        await installCommand(["@pandacss/dev", "@pandacss/postcss", "-D"], cwd);
-        p.log.success("✓ Panda CSS dev dependencies installed");
-
-        // Install Dreamy UI packages
-        await installCommand(
-            ["@dreamy-ui/react", "@dreamy-ui/panda-preset", "@dreamy-ui/cli", "motion"],
-            cwd
-        );
-        p.log.success("✓ Dreamy UI packages installed");
-
+        s.start("Installing Panda CSS dev dependencies...");
+        await installCommand(["@pandacss/dev", "@pandacss/postcss", "@dreamy-ui/cli", "-D"], cwd);
+        s.message("Installing Dreamy UI packages...");
+        await installCommand(["@dreamy-ui/react", "@dreamy-ui/panda-preset", "motion"], cwd);
+        s.stop("✓ Dependencies installed successfully");
         return true;
     } catch (error) {
-        p.log.error(
-            `✗ Failed to install dependencies: ${error instanceof Error ? error.message : String(error)}`
-        );
+        s.stop("✗ Failed to install dependencies");
+        p.log.error(`${error instanceof Error ? error.message : String(error)}`);
         p.log.warn(
             "💡 You can manually install dependencies by running:\n" +
                 `   ${await getPackageManagerCommand(cwd)} @pandacss/dev @pandacss/postcss -D\n` +
@@ -125,9 +118,21 @@ async function createPandaConfig(cwd: string, framework: FrameworkConfig, isType
             }
         }
 
+        // Determine the import path for patterns and recipes based on framework
+        const componentsImportPath =
+            framework.type === "react-router"
+                ? "./app/components"
+                : framework.type === "nextjs" && existsSync(join(cwd, "src"))
+                  ? "./src/components"
+                  : framework.type === "nextjs"
+                    ? "./components"
+                    : "./src/components";
+
         const configContent = isTypeScript
             ? `import createDreamyPreset, { dreamyPlugin } from "@dreamy-ui/panda-preset";
 import { defineConfig } from "@pandacss/dev";
+import { patterns } from "${componentsImportPath}/patterns";
+import { recipes } from "${componentsImportPath}/recipes";
 
 export default defineConfig({
     preflight: true,
@@ -141,8 +146,11 @@ export default defineConfig({
     ],
     presets: [createDreamyPreset()],
     plugins: [dreamyPlugin()],
+    patterns,
     theme: {
-        extend: {}
+        extend: {
+            recipes
+        }
     },
     globalCss: {
         extend: {}
@@ -154,6 +162,8 @@ export default defineConfig({
 `
             : `import createDreamyPreset, { dreamyPlugin } from "@dreamy-ui/panda-preset";
 import { defineConfig } from "@pandacss/dev";
+import { patterns } from "${componentsImportPath}/patterns";
+import { recipes } from "${componentsImportPath}/recipes";
 
 export default defineConfig({
     preflight: true,
@@ -167,8 +177,11 @@ export default defineConfig({
     ],
     presets: [createDreamyPreset()],
     plugins: [dreamyPlugin()],
+    patterns,
     theme: {
-        extend: {}
+        extend: {
+            recipes
+        }
     },
     globalCss: {
         extend: {}
@@ -242,6 +255,106 @@ async function setupPostCSS(cwd: string, framework: FrameworkConfig) {
     }
 }
 
+async function updateViteConfig(cwd: string, framework: FrameworkConfig) {
+    try {
+        // Only for Vite and React Router
+        if (framework.type !== "vite" && framework.type !== "react-router") {
+            return true;
+        }
+
+        const viteConfigFiles = globbySync(
+            ["vite.config.ts", "vite.config.js", "vite.config.mts"],
+            {
+                cwd
+            }
+        );
+
+        if (viteConfigFiles.length === 0) {
+            p.log.warn("⚠ Could not find vite.config file to update");
+            return false;
+        }
+
+        const viteConfigPath = join(cwd, viteConfigFiles[0]);
+        let content = readFileSync(viteConfigPath, "utf-8");
+
+        // Check if already configured
+        if (content.includes("@pandacss/dev/postcss") && content.includes("css:")) {
+            p.log.info("⊘ Vite config already configured for Panda CSS");
+            return true;
+        }
+
+        const shouldUpdate = await p.confirm({
+            message: "Update vite.config to use Panda CSS PostCSS plugin?",
+            initialValue: true
+        });
+
+        if (p.isCancel(shouldUpdate) || !shouldUpdate) {
+            p.log.warn("⊘ Skipped vite.config update");
+            p.log.info(
+                "💡 Manually add Panda CSS PostCSS plugin to your vite.config:\n" +
+                    '   import pandacss from "@pandacss/dev/postcss";\n' +
+                    "   css: { postcss: { plugins: [pandacss] } }"
+            );
+            return false;
+        }
+
+        // Remove tailwindcss import and plugin
+        content = content.replace(
+            /import\s+tailwindcss\s+from\s+["']@tailwindcss\/vite["'];?\n?/g,
+            ""
+        );
+        content = content.replace(/tailwindcss\(\)\s*,?\s*/g, "");
+
+        // Add pandacss import if not present
+        if (!content.includes("@pandacss/dev/postcss")) {
+            // Find the first import statement
+            const importMatch = content.match(/import\s+.*?from\s+["'].*?["'];?/);
+            if (importMatch) {
+                const insertPosition = content.indexOf(importMatch[0]);
+                content =
+                    content.slice(0, insertPosition) +
+                    'import pandacss from "@pandacss/dev/postcss";\n' +
+                    content.slice(insertPosition);
+            } else {
+                // No imports found, add at the beginning
+                content = 'import pandacss from "@pandacss/dev/postcss";\n' + content;
+            }
+        }
+
+        // Add css.postcss config if not present
+        if (!content.includes("css:")) {
+            // Find defineConfig and add css config
+            const defineConfigMatch = content.match(/defineConfig\s*\(\s*\{/);
+            if (defineConfigMatch) {
+                const insertPosition =
+                    content.indexOf(defineConfigMatch[0]) + defineConfigMatch[0].length;
+                const cssConfig = `
+    css: {
+        postcss: {
+            plugins: [pandacss]
+        }
+    },`;
+                content =
+                    content.slice(0, insertPosition) + cssConfig + content.slice(insertPosition);
+            }
+        }
+
+        await writeFile(viteConfigPath, content, "utf-8");
+        p.log.success(`✓ Updated ${viteConfigFiles[0]} with Panda CSS PostCSS plugin`);
+        return true;
+    } catch (error) {
+        p.log.error(
+            `✗ Failed to update vite.config: ${error instanceof Error ? error.message : String(error)}`
+        );
+        p.log.warn(
+            "💡 Manually add Panda CSS PostCSS plugin to your vite.config:\n" +
+                '   import pandacss from "@pandacss/dev/postcss";\n' +
+                "   css: { postcss: { plugins: [pandacss] } }"
+        );
+        return false;
+    }
+}
+
 async function createCSSFile(cwd: string, framework: FrameworkConfig) {
     try {
         const cssPath = join(cwd, framework.cssPath);
@@ -257,7 +370,7 @@ async function createCSSFile(cwd: string, framework: FrameworkConfig) {
             }
 
             const shouldUpdate = await p.confirm({
-                message: `${framework.cssPath} exists. Add Panda CSS layers to it?`,
+                message: `${framework.cssPath} exists. Replace with Panda CSS layers?`,
                 initialValue: true
             });
 
@@ -266,12 +379,21 @@ async function createCSSFile(cwd: string, framework: FrameworkConfig) {
                 return false;
             }
 
-            // Prepend Panda CSS layers
-            const updatedContent = `@layer reset, base, tokens, recipes, utilities;
+            // For Next.js, replace all content with Panda CSS layers only
+            // For other frameworks, prepend Panda CSS layers
+            const cssContent = `@layer reset, base, tokens, recipes, utilities;
+`;
 
-${content}`;
-            await writeFile(cssPath, updatedContent, "utf-8");
-            p.log.success(`✓ Updated ${framework.cssPath} with Panda CSS layers`);
+            if (framework.type === "nextjs") {
+                // Replace entire file content for Next.js
+                await writeFile(cssPath, cssContent, "utf-8");
+                p.log.success(`✓ Replaced ${framework.cssPath} with Panda CSS layers`);
+            } else {
+                // Prepend for other frameworks
+                const updatedContent = cssContent + "\n" + content;
+                await writeFile(cssPath, updatedContent, "utf-8");
+                p.log.success(`✓ Updated ${framework.cssPath} with Panda CSS layers`);
+            }
         } else {
             const cssContent = `@layer reset, base, tokens, recipes, utilities;
 `;
@@ -460,16 +582,23 @@ export { getColorModeHTMLProps, getSSRColorMode };
                 ? `"use client";
 
 import { DreamyProvider as BaseDreamyProvider } from "@dreamy-ui/react";
+import type { ColorMode } from "@dreamy-ui/react";
 
 const domMax = () => import("motion/react").then((mod) => mod.domMax);
 
 interface DreamyProviderProps {
     children: React.ReactNode;
+    colorMode?: ColorMode;
 }
 
-export function DreamyProvider({ children }: DreamyProviderProps) {
+export function DreamyProvider({ children, colorMode }: DreamyProviderProps) {
     return (
-        <BaseDreamyProvider motionFeatures={domMax} motionStrict>
+        <BaseDreamyProvider 
+            motionFeatures={domMax} 
+            motionStrict
+            colorMode={colorMode}
+            useUserPreferenceColorMode
+        >
             {children}
         </BaseDreamyProvider>
     );
@@ -481,9 +610,14 @@ import { DreamyProvider as BaseDreamyProvider } from "@dreamy-ui/react";
 
 const domMax = () => import("motion/react").then((mod) => mod.domMax);
 
-export function DreamyProvider({ children }) {
+export function DreamyProvider({ children, colorMode }) {
     return (
-        <BaseDreamyProvider motionFeatures={domMax} motionStrict>
+        <BaseDreamyProvider 
+            motionFeatures={domMax} 
+            motionStrict
+            colorMode={colorMode}
+            useUserPreferenceColorMode
+        >
             {children}
         </BaseDreamyProvider>
     );
@@ -535,7 +669,7 @@ export function DreamyProvider({ children }) {
     }
 }
 
-async function updateTsConfig(cwd: string) {
+async function updateTsConfig(cwd: string, framework: FrameworkConfig) {
     try {
         const tsconfigPath = join(cwd, "tsconfig.json");
 
@@ -545,63 +679,105 @@ async function updateTsConfig(cwd: string) {
         }
 
         const content = readFileSync(tsconfigPath, "utf-8");
-
-        if (content.includes("styled-system")) {
-            p.log.info("⊘ tsconfig.json already includes styled-system");
-            return true;
-        }
-
-        const shouldUpdate = await p.confirm({
-            message: "Add styled-system to tsconfig.json include?",
-            initialValue: true
-        });
-
-        if (p.isCancel(shouldUpdate) || !shouldUpdate) {
-            p.log.warn("⊘ Skipped tsconfig.json update");
-            p.log.info(
-                '💡 Manually add "styled-system/**/*" to the "include" array in tsconfig.json'
-            );
-            return false;
-        }
-
-        // Parse and update tsconfig
         const tsconfig = JSON.parse(content);
-        if (!tsconfig.include) {
-            tsconfig.include = [];
-        }
-        tsconfig.include.push("styled-system/**/*");
 
-        await writeFile(tsconfigPath, JSON.stringify(tsconfig, null, 2), "utf-8");
-        p.log.success("✓ Updated tsconfig.json");
+        let needsUpdate = false;
+
+        // Add styled-system to include
+        if (!content.includes("styled-system")) {
+            const shouldUpdate = await p.confirm({
+                message: "Add styled-system to tsconfig.json include?",
+                initialValue: true
+            });
+
+            if (p.isCancel(shouldUpdate) || !shouldUpdate) {
+                p.log.warn("⊘ Skipped tsconfig.json update");
+                p.log.info(
+                    '💡 Manually add "styled-system/**/*" to the "include" array in tsconfig.json'
+                );
+                return false;
+            }
+
+            if (!tsconfig.include) {
+                tsconfig.include = [];
+            }
+            tsconfig.include.push("styled-system/**/*");
+            needsUpdate = true;
+        }
+
+        // Add path aliases
+        const componentsPath =
+            framework.type === "react-router"
+                ? "./app/components/ui/*"
+                : framework.type === "nextjs" && existsSync(join(cwd, "src"))
+                  ? "./src/components/ui/*"
+                  : framework.type === "nextjs"
+                    ? "./components/ui/*"
+                    : "./src/components/ui/*";
+
+        if (!tsconfig.compilerOptions) {
+            tsconfig.compilerOptions = {};
+        }
+        if (!tsconfig.compilerOptions.paths) {
+            tsconfig.compilerOptions.paths = {};
+        }
+
+        // Add @/* path alias for components
+        if (!tsconfig.compilerOptions.paths["@/*"]) {
+            tsconfig.compilerOptions.paths["@/*"] = [componentsPath];
+            needsUpdate = true;
+        }
+
+        // Add styled-system/* path alias for Next.js (required for Next.js to find types)
+        if (framework.type === "nextjs" && !tsconfig.compilerOptions.paths["styled-system/*"]) {
+            tsconfig.compilerOptions.paths["styled-system/*"] = ["./styled-system/*"];
+            needsUpdate = true;
+        }
+
+        if (needsUpdate) {
+            await writeFile(tsconfigPath, JSON.stringify(tsconfig, null, 2), "utf-8");
+            const message = framework.type === "nextjs"
+                ? "✓ Updated tsconfig.json with styled-system, styled-system/* path, and @/* path alias"
+                : "✓ Updated tsconfig.json with styled-system and @/* path alias";
+            p.log.success(message);
+        } else {
+            p.log.info("⊘ tsconfig.json already configured");
+        }
+
         return true;
     } catch (error) {
         p.log.error(
             `✗ Failed to update tsconfig.json: ${error instanceof Error ? error.message : String(error)}`
         );
-        p.log.warn('💡 Manually add "styled-system/**/*" to the "include" array in tsconfig.json');
+        const pathAliasInfo = framework.type === "nextjs"
+            ? '"@/*" and "styled-system/*" path aliases'
+            : '"@/*" path alias';
+        p.log.warn(
+            `💡 Manually add "styled-system/**/*" to the "include" array and ${pathAliasInfo} in tsconfig.json`
+        );
         return false;
     }
 }
 
 async function runPandaCodegen(cwd: string) {
+    const s = p.spinner();
     try {
-        p.log.info("Running Panda CSS codegen...");
+        s.start("Running Panda CSS codegen...");
         await pandaCodegenCommand(cwd);
-        p.log.success("✓ Panda CSS codegen completed");
+        s.stop("✓ Panda CSS codegen completed");
         return true;
     } catch (error) {
-        p.log.error(
-            `✗ Failed to run Panda codegen: ${error instanceof Error ? error.message : String(error)}`
-        );
+        s.stop("✗ Failed to run Panda codegen");
+        p.log.error(`${error instanceof Error ? error.message : String(error)}`);
         p.log.warn("💡 You can manually run Panda codegen:\n" + "   npx panda codegen");
         return false;
     }
 }
 
 async function addDefaultComponents(cwd: string) {
+    const s = p.spinner();
     try {
-        const defaultComponents = ["button", "input", "card"];
-        p.log.info(`Adding default components (${defaultComponents.join(", ")})...`);
+        s.start(`Adding recommended components (${RECOMMENDED_COMPONENTS.join(", ")})...`);
 
         // Use the dreamy CLI to add components
         const res = await detect({ cwd });
@@ -615,17 +791,16 @@ async function addDefaultComponents(cwd: string) {
         };
 
         const runner = commandMap[agent] || "npx";
-        const command = `${runner} dreamy add ${defaultComponents.join(" ")}`;
+        const command = `${runner} dreamy add ${RECOMMENDED_COMPONENTS.join(" ")}`;
 
         await execAsync(command, { cwd, encoding: "utf-8" });
-        p.log.success("✓ Default components added");
+        s.stop("✓ Recommended components added");
         return true;
     } catch (error) {
-        p.log.warn(
-            `⚠ Failed to add default components: ${error instanceof Error ? error.message : String(error)}`
-        );
+        s.stop("⚠ Failed to add recommended components");
+        p.log.error(`${error instanceof Error ? error.message : String(error)}`);
         p.log.info(
-            "💡 You can manually add components later:\n   npx dreamy add button input card"
+            `💡 You can manually add components later:\n   npx dreamy add ${RECOMMENDED_COMPONENTS.join(" ")}`
         );
         return false;
     }
@@ -637,9 +812,10 @@ function printNextSteps(framework: FrameworkConfig) {
 
     if (framework.type === "react-router") {
         p.log.info(
-            "\n1. Update your app/root.tsx to use DreamyProvider:\n\n" +
+            "1. Update your app/root.tsx to use DreamyProvider:\n\n" +
                 `   import { DreamyProvider, getColorModeHTMLProps, getSSRColorMode } from "./${framework.providerPath.replace("app/", "")}";\n` +
-                '   import type { Route } from "./+types/root";\n\n' +
+                '   import type { Route } from "./+types/root";\n' +
+                '   import { useRouteLoaderData } from "react-router";\n\n' +
                 "   export function loader({ request }: Route.LoaderArgs) {\n" +
                 "       return { colorMode: getSSRColorMode(request) };\n" +
                 "   }\n\n" +
@@ -647,10 +823,16 @@ function printNextSteps(framework: FrameworkConfig) {
                 '       const { colorMode } = useRouteLoaderData<Route.ComponentProps["loaderData"]>("root") ?? {};\n' +
                 "       return (\n" +
                 '           <html lang="en" {...getColorModeHTMLProps(colorMode)}>\n' +
+                "               <head>\n" +
+                '                   <meta charSet="utf-8" />\n' +
+                '                   <meta content="width=device-width, initial-scale=1" name="viewport" />\n' +
+                "                   <Meta />\n" +
+                "                   <Links />\n" +
+                "               </head>\n" +
                 "               <body>\n" +
-                "                   <DreamyProvider colorMode={colorMode}>\n" +
-                "                       {children}\n" +
-                "                   </DreamyProvider>\n" +
+                "                   <DreamyProvider colorMode={colorMode}>{children}</DreamyProvider>\n" +
+                "                   <ScrollRestoration />\n" +
+                "                   <Scripts />\n" +
                 "               </body>\n" +
                 "           </html>\n" +
                 "       );\n" +
@@ -658,15 +840,20 @@ function printNextSteps(framework: FrameworkConfig) {
         );
     } else if (framework.type === "nextjs") {
         p.log.info(
-            "\n1. Update your app/layout.tsx to use DreamyProvider:\n\n" +
-                `   import { DreamyProvider } from "@/${framework.providerPath.replace(/^(src\/)?/, "")}";\n\n` +
-                "   export default function RootLayout({ children }) {\n" +
+            "1. Update your app/layout.tsx to use DreamyProvider:\n\n" +
+                `   import { DreamyProvider } from "@/${framework.providerPath.replace(/^(src\/)?/, "")}";\n` +
+                '   import { getSSRColorMode, getColorModeHTMLProps } from "@dreamy-ui/react/rsc";\n' +
+                '   import { cookies } from "next/headers";\n\n' +
+                "   export default async function RootLayout({\n" +
+                "       children,\n" +
+                "   }: Readonly<{\n" +
+                "       children: React.ReactNode;\n" +
+                "   }>) {\n" +
+                "       const colorMode = getSSRColorMode((await cookies()).toString());\n\n" +
                 "       return (\n" +
-                '           <html lang="en">\n' +
-                "               <body>\n" +
-                "                   <DreamyProvider>\n" +
-                "                       {children}\n" +
-                "                   </DreamyProvider>\n" +
+                '           <html lang="en" {...getColorModeHTMLProps(colorMode)}>\n' +
+                "               <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>\n" +
+                "                   <DreamyProvider colorMode={colorMode}>{children}</DreamyProvider>\n" +
                 "               </body>\n" +
                 "           </html>\n" +
                 "       );\n" +
@@ -674,7 +861,7 @@ function printNextSteps(framework: FrameworkConfig) {
         );
     } else {
         p.log.info(
-            "\n1. Update your src/main.tsx or src/App.tsx to use DreamyProvider:\n\n" +
+            "1. Update your src/main.tsx or src/App.tsx to use DreamyProvider:\n\n" +
                 `   import { DreamyProvider } from "./${framework.providerPath.replace("src/", "")}";\n\n` +
                 "   function App() {\n" +
                 "       return (\n" +
@@ -687,10 +874,14 @@ function printNextSteps(framework: FrameworkConfig) {
     }
 
     p.log.info(
-        "\n2. Run Panda CSS codegen:\n   npx panda codegen\n" +
-            '\n3. Start using Dreamy UI components:\n   import { Button } from "@dreamy-ui/react";\n' +
-            "\n4. Visit https://dreamy-ui.com/docs for more information\n"
+        "2. Start your development server and begin using Dreamy UI components:\n\n" +
+            '   import { Button } from "@/button";\n\n' +
+            "   export default function Page() {\n" +
+            '       return <Button variant="primary">Hello Dreamy UI! 🌙</Button>;\n' +
+            "   }\n"
     );
+
+    p.log.info("3. Visit https://dreamy-ui.com/docs for more information\n");
 }
 
 export const InitCommand = new Command("init")
@@ -739,6 +930,9 @@ export const InitCommand = new Command("init")
         // Setup PostCSS (Next.js only)
         await setupPostCSS(cwd, framework);
 
+        // Update Vite config (Vite and React Router only)
+        await updateViteConfig(cwd, framework);
+
         // Remove Tailwind CSS (React Router only)
         if (framework.type === "react-router") {
             await removeTailwindFromReactRouter(cwd);
@@ -752,14 +946,11 @@ export const InitCommand = new Command("init")
 
         // Update tsconfig
         if (isTypeScript) {
-            await updateTsConfig(cwd);
+            await updateTsConfig(cwd, framework);
         }
 
         // Create DreamyProvider
         await createDreamyProvider(cwd, framework, isTypeScript);
-
-        // Run Panda codegen
-        await runPandaCodegen(cwd);
 
         // Add default components
         if (!flags.skipInstall && !flags.skipComponents) {
@@ -767,6 +958,9 @@ export const InitCommand = new Command("init")
         } else if (flags.skipComponents) {
             p.log.info("⊘ Skipped adding default components");
         }
+
+        // Run Panda codegen
+        await runPandaCodegen(cwd);
 
         // Print next steps
         printNextSteps(framework);
