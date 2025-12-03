@@ -117,3 +117,11 @@ export function genForegroundTokens(bgHex: string): ForegroundTokens {
         disabled: disabled.toString({ format: "oklch" })
     };
 }
+
+export function alpha(color: string, amount: number) {
+    const normal = new Color(color);
+
+    normal.alpha = amount;
+
+    return normal.toString({ format: "oklch" });
+}

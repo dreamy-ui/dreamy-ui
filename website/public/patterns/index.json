@@ -31,6 +31,11 @@
   },
   {
     "type": "pattern",
+    "id": "text",
+    "file": "text.ts"
+  },
+  {
+    "type": "pattern",
     "id": "visually-hidden",
     "file": "visually-hidden.ts"
   },

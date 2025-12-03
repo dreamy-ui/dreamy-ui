@@ -53,10 +53,6 @@ import {
 } from "./factory-helper.js";
 import { isCssProperty } from "./is-valid-prop.js";
 
-function objectToDeps(obj) {
-    return Object.entries(obj).map(([key, value]) => \`\${key}:\${value}\`);
-}
-
 function setRef(ref, value) {
     if (typeof ref === "function") {
         ref(value);
@@ -94,7 +90,7 @@ function styledFn(Dynamic, configOrCva = {}, options = {}) {
 
         const combinedProps = useMemo(
             () => Object.assign({}, defaultProps, restProps),
-            objectToDeps(restProps)
+            [restProps]
         );
 
         const [htmlProps, forwardedProps, variantProps, styleProps, elementProps] = useMemo(() => {

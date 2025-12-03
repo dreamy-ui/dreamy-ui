@@ -1,3 +1,4 @@
+import "./app.css";
 import "./index.css";
 import {
     Links,

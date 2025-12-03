@@ -11,7 +11,33 @@ const { withProvider, withContext } = createStyleContext(slider);
 
 export interface SliderProps
     extends UseSliderProps,
-        Omit<HTMLDreamyProps<"div">, keyof UseSliderProps> {}
+    Omit<HTMLDreamyProps<"div">, keyof UseSliderProps> {
+    /**
+     * The size of the slider
+     * @default "md"
+     */
+    size?: "sm" | "md" | "lg";
+    /**
+     * If `true`, the thumb will be hidden
+     * @default false
+     */
+    hideThumb?: boolean;
+}
+
+const SIZE_CONFIG = {
+    sm: {
+        thumbSize: 20,
+        trackSize: "8px"
+    },
+    md: {
+        thumbSize: 22,
+        trackSize: "16px"
+    },
+    lg: {
+        thumbSize: 24,
+        trackSize: "24px"
+    }
+} as const;
 
 /**
  * Slider component
@@ -20,19 +46,40 @@ export interface SliderProps
  */
 const SliderRoot = withProvider(
     forwardRef<HTMLDivElement, SliderProps>((props, ref) => {
-        const { getRootProps, getInputProps, ...rest } = useSlider(props);
+        const { size = "md", orientation = "horizontal", hideThumb = false, focusThumbOnChange, ...restProps } = props;
+        const config = SIZE_CONFIG[size];
+        const thumbSize = hideThumb ? 0 : config.thumbSize;
+        const { getRootProps, getInputProps, ...rest } = useSlider({
+            ...restProps,
+            orientation,
+            thumbSize,
+            focusThumbOnChange: hideThumb ? false : focusThumbOnChange
+        });
+
+        const rootProps = getRootProps(undefined, ref) as any;
 
         return (
             <SliderProvider value={rest}>
                 <VisuallyHiddenInput {...(getInputProps(undefined, ref) as any)} />
-                <Box {...(getRootProps(undefined, ref) as any)} />
+                <Box
+                    {...rootProps}
+                    data-hide-thumb={hideThumb ? "" : undefined}
+                    style={{
+                        ...rootProps.style,
+                        "--slider-thumb-size": `${thumbSize}px`,
+                        ...(orientation === "horizontal"
+                            ? { height: config.trackSize }
+                            : { width: config.trackSize }
+                        )
+                    } as React.CSSProperties}
+                />
             </SliderProvider>
         );
     }),
     "root"
 );
 
-export interface SliderTrackProps extends HTMLDreamyProps<"div"> {}
+export interface SliderTrackProps extends HTMLDreamyProps<"div"> { }
 
 const SliderTrack = withContext(
     forwardRef<HTMLDivElement, SliderTrackProps>((props, ref) => {
@@ -43,7 +90,7 @@ const SliderTrack = withContext(
     "track"
 );
 
-export interface SliderFilledTrackProps extends HTMLDreamyProps<"div"> {}
+export interface SliderFilledTrackProps extends HTMLDreamyProps<"div"> { }
 
 const SliderFilledTrack = withContext(
     forwardRef<HTMLDivElement, SliderFilledTrackProps>((props, ref) => {
@@ -58,7 +105,7 @@ const SliderFilledTrack = withContext(
     "trackFilled"
 );
 
-export interface SliderThumbProps extends HTMLDreamyProps<"div"> {}
+export interface SliderThumbProps extends HTMLDreamyProps<"div"> { }
 
 const SliderThumb = withContext(
     forwardRef<HTMLDivElement, SliderThumbProps>((props, ref) => {

@@ -30,6 +30,7 @@ import { Progress } from "@/progress";
 import { ProgressCircular } from "@/progress-circular";
 import { Radio, RadioGroup } from "@/radio";
 import { RadioCard } from "@/radio-card";
+import { RangeSlider } from "@/range-slider";
 import { Select } from "@/select";
 import { Skeleton, SkeletonText } from "@/skeleton";
 import { Slider } from "@/slider";
@@ -132,6 +133,7 @@ import { ControlledPinInput } from "./components/inputs";
 import { LinkButton } from "./components/others";
 import { PMTabs } from "./components/pm-tabs";
 import { ControlledRadioCards, ControlledRadios } from "./components/radioes";
+import { ControlledRangeSlider, MaxMinRangeSlider } from "./components/range-sliders";
 import { AsyncSelect, ControlledSelect } from "./components/selects";
 import { ControlledSlider, MaxMinSlider } from "./components/sliders";
 import { ControlledSwitch } from "./components/switches";
@@ -228,6 +230,9 @@ const DreamComponents = {
     ControlledSlider,
     MaxMinSlider,
     Slider,
+    ControlledRangeSlider,
+    MaxMinRangeSlider,
+    RangeSlider,
     Tabs,
     VariantTabs,
     ControlledTabs,
@@ -295,20 +300,21 @@ const DreamComponents = {
     ActionBarSizes,
     ActionBarTable,
     ActionBarWithClose,
-    ControlledActionBar
+    ControlledActionBar,
+    ControlledRangeSlider
 };
 
 function Wrapper({ children, ...props }: PropsWithChildren<FlexProps>) {
     return (
         <Flex
+            align={"flex-start"}
+            border={"1px solid"}
+            borderColor={"border"}
             col
             gap={2}
             p={4}
             rounded={"p-4"}
-            border={"1px solid"}
-            borderColor={"border"}
             w={"full"}
-            align={"flex-start"}
             {...props}
         >
             {children}
@@ -349,37 +355,37 @@ const icons = {
 const components: any = {
     p: (props: any) => (
         <Text
-            mb={2}
             color={"fg.medium"}
             fontWeight={400}
+            // mb={2}
             {...props}
         />
     ),
     h1: (props: any) => (
         <DefaultHeading
             as="h2"
-            size={"3xl"}
-            mt={10}
             mb={3}
+            mt={10}
+            size={"3xl"}
             {...props}
         />
     ),
     h2: (props: any) => (
         <DefaultHeading
             as="h3"
-            size={"2xl"}
-            mt={6}
             mb={2}
+            mt={6}
+            size={"2xl"}
             {...props}
         />
     ),
     h3: (props: any) => (
         <DefaultHeading
             as="h4"
-            size={"lg"}
             fontWeight={600}
-            mt={4}
             mb={1}
+            mt={4}
+            size={"lg"}
             {...props}
         />
     ),
@@ -395,16 +401,16 @@ const components: any = {
         if (href?.startsWith("/")) {
             return (
                 <Link
-                    to={href || "#"}
+                    color={"fg"}
                     target={isExternal ? "_blank" : undefined}
                     // _hover={{
                     //     textDecoration: "underline"
                     // }}
-                    color={"fg"}
                     textDecoration={"underline"}
-                    textUnderlineOffset={"3px"}
-                    textDecorationThickness={"2px"}
                     textDecorationColor={"alpha.500"}
+                    textDecorationThickness={"2px"}
+                    textUnderlineOffset={"3px"}
+                    to={href || "#"}
                     {...props}
                 >
                     {children}{" "}
@@ -420,13 +426,13 @@ const components: any = {
 
         return (
             <DreamLink
+                color={"fg"}
                 href={href || "#"}
                 target={isExternal ? "_blank" : undefined}
-                color={"fg"}
                 textDecoration={"underline"}
-                textUnderlineOffset={"3px"}
-                textDecorationThickness={"2px"}
                 textDecorationColor={"alpha.500"}
+                textDecorationThickness={"2px"}
+                textUnderlineOffset={"3px"}
                 {...props}
             >
                 {children}{" "}
@@ -442,6 +448,7 @@ const components: any = {
     em: (props: any) => (
         <Text
             as="em"
+            // color={"fg.medium"}
             fontStyle="italic"
             {...props}
         />
@@ -458,8 +465,8 @@ const components: any = {
             return (
                 <Alert
                     {...rest}
-                    status="error"
                     boxShadow={"xs"}
+                    status="error"
                     title="Error parsing blockquote"
                 />
             );
@@ -479,12 +486,12 @@ const components: any = {
         const status = statusText.startsWith("warning:")
             ? "warning"
             : statusText.startsWith("error:")
-              ? "error"
-              : statusText.startsWith("info:")
-                ? "info"
-                : statusText.startsWith("success:")
-                  ? "success"
-                  : "warning";
+                ? "error"
+                : statusText.startsWith("info:")
+                    ? "info"
+                    : statusText.startsWith("success:")
+                        ? "success"
+                        : "warning";
 
         let content: ReactNode = [];
 
@@ -501,13 +508,56 @@ const components: any = {
         }
 
         return (
-            <Alert
-                status={status}
-                mt={4}
+            <Flex
+                // mt={4}
+                // status={status}
+                // boxShadow={"xs"}
+                // title={content}
+                border={"1px solid"}
+                borderColor={"border"}
+                full
+                gap={4}
+                my={2}
+                p={3}
+                pl={2}
+                rounded={"l2"}
                 {...rest}
-                boxShadow={"xs"}
-                title={content}
-            />
+            >
+                <Flex
+                    bg={"border.hover"}
+                    h={"100%"}
+                    rounded={"full"}
+                    w={"2px"}
+                />
+                <Text
+                    medium
+                    relative
+                >
+                    <Flex
+                        absolute
+                        bg={"fg"}
+                        color={"bg"}
+                        fontSize={"xs"}
+                        fontWeight={500}
+                        left={-4.5}
+                        px={1}
+                        py={0.5}
+                        rounded={"xs"}
+                        top={"-5.5"}
+                    >
+                        {status === "info"
+                            ? "Tip"
+                            : status === "success"
+                                ? "Success"
+                                : status === "warning"
+                                    ? "Warning"
+                                    : status === "error"
+                                        ? "Error"
+                                        : "Info"}
+                    </Flex>
+                    {content}
+                </Text>
+            </Flex>
         );
     },
     img: ({ alt = "image", ...props }) => {
@@ -515,27 +565,27 @@ const components: any = {
 
         return (
             <Flex
-                as={"span"}
-                w={"fit-content"}
-                display={"inline-flex"}
-                col
                 alignItems={"center"}
+                as={"span"}
+                col
+                display={"inline-flex"}
                 maxW={isFullWidth ? "3xl" : "lg"}
+                w={"fit-content"}
             >
                 <Image
                     alt={alt}
-                    rounded={"md"}
                     loading="lazy"
+                    rounded={"md"}
                     {...props}
                 />
                 {alt && (
                     <Text
-                        as={"span"}
                         aria-hidden="true"
-                        fontWeight={500}
-                        fontSize={"sm"}
-                        color={"fg.disabled"}
+                        as={"span"}
                         bottom={1}
+                        color={"fg.disabled"}
+                        fontSize={"sm"}
+                        fontWeight={500}
                     >
                         {alt}
                     </Text>
@@ -555,11 +605,24 @@ const components: any = {
             {...props}
         />
     ),
-    li: (props: any) => <ListItem {...props} />,
+    li: (props: any) => (
+        <ListItem
+            color={"fg.medium"}
+            css={{
+                "&:not(:last-child)": {
+                    mb: 1
+                },
+                "& > strong": {
+                    color: "fg!"
+                }
+            }}
+            {...props}
+        />
+    ),
     strong: (props: any) => (
         <Text
             as="strong"
-            color={"fg"}
+            color={"fg.medium"}
             fontWeight={600}
             {...props}
         />
@@ -575,29 +638,29 @@ function DefaultHeading({ mt, mb, ...props }: HeadingProps) {
 
     return (
         <Flex
-            mt={mt}
+            _first={{ mt: 0 }}
+            flex={1}
             mb={mb}
+            mt={mt}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
-            _first={{ mt: 0 }}
             w={"fit-content"}
-            flex={1}
         >
             <MotionBox
-                overflow={"hidden"}
-                initial={false}
                 animate={{
                     width: isHovered ? "auto" : 0,
                     opacity: isHovered ? 1 : 0
                 }}
+                initial={false}
+                overflow={"hidden"}
             >
                 <DreamLink
-                    tabIndex={-1}
-                    href={`#${hId}`}
                     cursor="pointer"
+                    href={`#${hId}`}
                     onClick={() => {
                         navigator.clipboard.writeText(window.location.href);
                     }}
+                    tabIndex={-1}
                 >
                     <Heading
                         id={hId}
@@ -610,19 +673,19 @@ function DefaultHeading({ mt, mb, ...props }: HeadingProps) {
             </MotionBox>
 
             <DreamLink
+                cursor="pointer"
                 href={`#${hId}`}
                 scrollMarginTop={24}
-                cursor="pointer"
                 w={"fit-content"}
             >
                 <Heading
-                    id={hId}
-                    textDecoration={hash === `#${hId}` ? "underline" : "none"}
-                    scrollMarginTop={24}
-                    // lineClamp={1}
                     _hover={{
                         textDecoration: "underline"
                     }}
+                    id={hId}
+                    scrollMarginTop={24}
+                    // lineClamp={1}
+                    textDecoration={hash === `#${hId}` ? "underline" : "none"}
                     {...props}
                 />
             </DreamLink>

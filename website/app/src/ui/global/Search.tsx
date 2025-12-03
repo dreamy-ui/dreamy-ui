@@ -121,6 +121,8 @@ export default function Search() {
                     if (results.length <= 0) {
                         break;
                     }
+                    console.log("results[active].path", results[active].path);
+
                     onClose();
                     navigate(`${results[active].path}`);
                     setQuery("");
@@ -153,45 +155,62 @@ export default function Search() {
     return (
         <>
             <Button
+                _active={{
+                    bg: "alpha.200"
+                }}
+                _hover={{
+                    bg: "alpha.200"
+                }}
+                bg={"alpha.100"}
+                boxShadow={"xs"}
                 display={{
                     base: "none",
                     md: "inline-flex"
                 }}
+                justifyContent={"space-between"}
                 leftIcon={
-                    <Icon
-                        as={BiSearch}
-                        color={"alpha.900"}
-                        boxSize={"5"}
-                    />
+                    <>
+                        <Icon
+                            as={BiSearch}
+                            boxSize={"5"}
+                            color={"fg.medium"}
+                        />
+                        <Text
+                            color={"fg.medium"}
+                            fontWeight={"normal"}
+                            ml={2}
+                        >
+                            Search...
+                        </Text>
+                    </>
                 }
                 onClick={onToggle}
-                variant="ghost"
                 rightIcon={<Kbd size={"sm"}>{actionKey} K</Kbd>}
-            >
-                Search docs
-            </Button>
+                variant="solid"
+                w={"250px"}
+            />
             <IconButton
                 aria-label="Search docs"
-                icon={
-                    <Icon
-                        as={BiSearch}
-                        color={"alpha.900"}
-                        boxSize={"5"}
-                    />
-                }
-                onClick={onToggle}
-                variant="ghost"
                 display={{
                     base: "inline-flex",
                     md: "none"
                 }}
+                icon={
+                    <Icon
+                        as={BiSearch}
+                        boxSize={"5"}
+                        color={"fg"}
+                    />
+                }
+                onClick={onToggle}
+                variant="ghost"
             />
             <Modal.Root
+                initialFocusRef={inputRef}
                 isOpen={isOpen}
                 onClose={onClose}
-                size={"xl"}
-                initialFocusRef={inputRef}
                 placement={"top"}
+                size={"xl"}
             >
                 <Modal.Overlay />
                 <Modal.Content>
@@ -200,23 +219,14 @@ export default function Search() {
                             <InputLeftAddon pl={"0.75rem!"}>
                                 <Icon
                                     as={BiSearch}
-                                    color={"alpha.900"}
                                     boxSize={"5"}
+                                    color={"alpha.900"}
                                 />
                             </InputLeftAddon>
                             <Input
-                                pl={12}
-                                value={query}
-                                onKeyDown={onKeyDown}
-                                ref={inputRef}
-                                placeholder="Search docs"
-                                w="100%"
-                                size="lg"
-                                variant={"flushed"}
-                                spellCheck={"false"}
-                                maxLength={100}
                                 aria-autocomplete="list"
                                 autoComplete={"false"}
+                                maxLength={100}
                                 onChange={(e) => {
                                     setQuery(e.target.value);
                                     if (e.target.value.length > 0)
@@ -229,6 +239,15 @@ export default function Search() {
                                             }
                                         );
                                 }}
+                                onKeyDown={onKeyDown}
+                                pl={12}
+                                placeholder="Search docs"
+                                ref={inputRef}
+                                size="lg"
+                                spellCheck={"false"}
+                                value={query}
+                                variant={"flushed"}
+                                w="100%"
                             />
                         </InputGroup>
 
@@ -237,32 +256,29 @@ export default function Search() {
                         fetcher.data.docs.length > 0 &&
                         debouncedQuery.length > 0 ? (
                             <Flex
-                                opacity={fetcher.state !== "idle" ? 0.5 : 1}
-                                transition={"opacity 0.2s {easings.ease-in-out"}
                                 col
                                 gap={2}
                                 key={"docs-" + debouncedQuery}
+                                opacity={fetcher.state !== "idle" ? 0.5 : 1}
+                                transition={"opacity 0.2s {easings.ease-in-out"}
                             >
                                 {fetcher.data.docs.map((doc, i) => {
                                     return (
                                         <SearchDoc
-                                            key={
-                                                "doc-" +
-                                                doc.filename +
-                                                "-" +
-                                                (debouncedQuery.length > 0).toString()
-                                            }
+                                            doc={doc}
                                             id={
                                                 "doc-" +
                                                 doc.filename +
                                                 "-" +
                                                 (debouncedQuery.length > 0).toString()
                                             }
-                                            doc={doc}
                                             isActive={active === i}
-                                            onMouseEnter={() => {
-                                                setActive(i);
-                                            }}
+                                            key={
+                                                "doc-" +
+                                                doc.filename +
+                                                "-" +
+                                                (debouncedQuery.length > 0).toString()
+                                            }
                                             onClick={() => {
                                                 onClose();
                                                 setQuery("");
@@ -271,21 +287,24 @@ export default function Search() {
                                                     path: doc.path
                                                 });
                                             }}
+                                            onMouseEnter={() => {
+                                                setActive(i);
+                                            }}
                                         />
                                     );
                                 })}
                             </Flex>
                         ) : fetcher.state !== "idle" ? (
                             <Spinner
-                                py={3}
                                 color={"primary"}
+                                py={3}
                             />
                         ) : debouncedQuery.length > 0 ? (
                             <Text
                                 color={"error"}
                                 fontWeight={"semibold"}
-                                textAlign={"center"}
                                 py={4}
+                                textAlign={"center"}
                             >
                                 No results found
                             </Text>
@@ -296,9 +315,9 @@ export default function Search() {
                             >
                                 {!recentSearches.length && (
                                     <Text
-                                        textCenter
                                         fontWeight={"semibold"}
                                         py={4}
+                                        textCenter
                                     >
                                         No recent searches
                                     </Text>
@@ -307,14 +326,14 @@ export default function Search() {
                                 {recentSearches.map((search, i) => {
                                     return (
                                         <SearchDoc
-                                            key={"recent-search-" + search.filename + "-" + i}
                                             doc={search}
                                             isActive={active === i}
-                                            onMouseEnter={() => setActive(i)}
+                                            key={"recent-search-" + search.filename + "-" + i}
                                             onClick={() => {
                                                 onClose();
                                                 setQuery("");
                                             }}
+                                            onMouseEnter={() => setActive(i)}
                                         />
                                     );
                                 })}
@@ -338,20 +357,20 @@ interface SearchDocProps extends Partial<LinkProps> {
 function SearchDoc({ doc, isActive, ...rest }: SearchDocProps) {
     return (
         <Link
-            flexbox
-            key={doc.filename}
-            gap={2}
-            contentBetween
             alignItems={"center"}
-            w={"full"}
-            rounded={"md"}
-            to={doc.path}
             bg={"alpha.50"}
+            contentBetween
+            flexbox
+            gap={2}
+            key={doc.filename}
+            pos={"relative"}
+            prefetch={isActive ? "render" : "intent"}
             px={4}
             py={3}
-            prefetch={isActive ? "render" : "intent"}
+            rounded={"md"}
+            to={doc.path}
             transition={"none"}
-            pos={"relative"}
+            w={"full"}
             {...rest}
         >
             <Flex
@@ -359,8 +378,8 @@ function SearchDoc({ doc, isActive, ...rest }: SearchDocProps) {
                 gap={0}
             >
                 <Text
-                    fontWeight={"semibold"}
                     color={isActive ? "{colors.white/87}" : "fg"}
+                    fontWeight={"semibold"}
                     transition={"color 0.15s {easings.ease-in-out}"}
                 >
                     {capitalize(doc.filename)}
@@ -385,17 +404,17 @@ function SearchDoc({ doc, isActive, ...rest }: SearchDocProps) {
             <AnimatePresence>
                 {isActive && (
                     <MotionBox
-                        pos={"absolute"}
-                        inset={0}
                         bg={"primary"}
-                        zIndex={-1}
-                        rounded={"md"}
+                        inset={0}
                         layout
                         layoutId="active-search-doc"
+                        pos={"absolute"}
+                        rounded={"md"}
                         transition={{
                             duration: 0.15,
                             ease: TRANSITION_EASINGS.easeOut
                         }}
+                        zIndex={-1}
                     />
                 )}
             </AnimatePresence>

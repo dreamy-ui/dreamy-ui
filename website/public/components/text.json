@@ -8,7 +8,7 @@
   },
   "component": "Text",
   "hasRecipe": false,
-  "hasPattern": false,
+  "hasPattern": true,
   "patternIds": [
     "text"
   ]

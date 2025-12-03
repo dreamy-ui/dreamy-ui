@@ -126,6 +126,11 @@
   },
   {
     "type": "recipe",
+    "id": "range-slider",
+    "file": "range-slider.ts"
+  },
+  {
+    "type": "recipe",
     "id": "select",
     "file": "select.ts"
   },

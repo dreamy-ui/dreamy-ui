@@ -2,11 +2,11 @@ import { existsSync } from "node:fs";
 import { writeFile } from "node:fs/promises";
 import { join } from "node:path/posix";
 import {
-    getComponents,
-    printFileSync,
-    printPatternSync,
-    printRecipeSync,
-    transformToJsx
+	getComponents,
+	printFileSync,
+	printPatternSync,
+	printRecipeSync,
+	transformToJsx
 } from "@/utils/components";
 import { writePatternsIndexFile, writeRecipesIndexFile } from "@/utils/index-files";
 import * as p from "@clack/prompts";
@@ -16,10 +16,10 @@ import { pandaCodegenCommand } from "../utils/codegen-command";
 import { getProjectContext } from "../utils/context";
 import { convertTsxToJsx } from "../utils/convert-tsx-to-jsx";
 import {
-    fetchComposition,
-    fetchCompositions,
-    getPatternForComponent,
-    getRecipeForComponent
+	fetchComposition,
+	fetchCompositions,
+	getPatternForComponent,
+	getRecipeForComponent
 } from "../utils/fetch";
 import { getFileDependencies } from "../utils/get-file-dependencies";
 import { ensureDir } from "../utils/io";
@@ -30,322 +30,346 @@ import { tasks } from "../utils/tasks";
 const debug = createDebug("dreamy-ui:add");
 
 export const AddCommand = new Command("add")
-    .description("Add components to your project")
-    .argument("[components...]", "components to add")
-    .option("-d, --dry-run", "Dry run")
-    .option("--outdir <dir>", "Output directory to write the components")
-    .option("--all", "Add all components")
-    .option("-f, --force", "Overwrite existing files")
-    .option("--tsx", "Convert to TSX")
-    .action(async (selectedComponents: string[], flags: unknown) => {
-        const parsedFlags = addCommandFlagsSchema.parse(flags);
-        const { dryRun, force, all, tsx } = parsedFlags;
+	.description("Add components to your project")
+	.argument("[components...]", "components to add")
+	.option("-d, --dry-run", "Dry run")
+	.option("--outdir <dir>", "Output directory to write the components")
+	.option("--all", "Add all components")
+	.option("-f, --force", "Overwrite existing files")
+	.option("--tsx", "Convert to TSX")
+	.action(async (selectedComponents: string[], flags: unknown) => {
+		const parsedFlags = addCommandFlagsSchema.parse(flags);
+		const { dryRun, force, all, tsx } = parsedFlags;
 
-        const ctx = await getProjectContext({
-            cwd: parsedFlags.outdir || process.cwd(),
-            tsx
-        });
+		const ctx = await getProjectContext({
+			cwd: parsedFlags.outdir || process.cwd(),
+			tsx
+		});
 
-        debug("context", ctx);
+		debug("context", ctx);
 
-        const jsx = !ctx.isTypeScript;
+		const jsx = !ctx.isTypeScript;
 
-        const outdir = parsedFlags.outdir || ctx.scope.componentsDir;
-        // Find the components directory and place recipes as a sibling to ui
-        // e.g., if outdir is "src/components/ui", recipesDir should be "src/components/recipes"
-        const pathParts = outdir.split(/[\/\\]/);
-        const componentsIndex = pathParts.lastIndexOf("components");
-        let recipesDir: string;
-        let patternsDir: string;
-        if (componentsIndex !== -1) {
-            // Build path up to components directory and add recipes/patterns
-            const basePath = pathParts.slice(0, componentsIndex + 1).join("/");
-            recipesDir = join(basePath, "recipes");
-            patternsDir = join(basePath, "patterns");
-        } else {
-            // Fallback: if no components directory found, use outdir
-            recipesDir = join(outdir, "recipes");
-            patternsDir = join(outdir, "patterns");
-        }
-        ensureDir(outdir);
-        ensureDir(recipesDir);
-        ensureDir(patternsDir);
+		const outdir = parsedFlags.outdir || ctx.scope.componentsDir;
+		// Find the components directory and place recipes as a sibling to ui
+		// e.g., if outdir is "src/components/ui", recipesDir should be "src/components/recipes"
+		const pathParts = outdir.split(/[\/\\]/);
+		const componentsIndex = pathParts.lastIndexOf("components");
+		let recipesDir: string;
+		let patternsDir: string;
+		if (componentsIndex !== -1) {
+			// Build path up to components directory and add recipes/patterns
+			const basePath = pathParts.slice(0, componentsIndex + 1).join("/");
+			recipesDir = join(basePath, "recipes");
+			patternsDir = join(basePath, "patterns");
+		} else {
+			// Fallback: if no components directory found, use outdir
+			recipesDir = join(outdir, "recipes");
+			patternsDir = join(outdir, "patterns");
+		}
+		ensureDir(outdir);
+		ensureDir(recipesDir);
+		ensureDir(patternsDir);
 
-        const items = await fetchCompositions();
+		const items = await fetchCompositions();
 
-        const inferredComponents = getComponents({
-            components: selectedComponents,
-            all,
-            items
-        });
+		// If no components specified and --all flag not set, prompt user to select
+		if (selectedComponents.length === 0 && !all) {
+			p.intro("Select components to add");
 
-        const components = inferredComponents.items;
-        debug("components", components);
+			const options = items.map((item) => ({
+				value: item.id,
+				label: item.component,
+				hint: item.type
+			}));
 
-        p.log.info(inferredComponents.message);
+			const selected = await p.multiselect({
+				message: "Pick components to add",
+				options,
+				required: true
+			});
 
-        const deps = uniq(components.flatMap((id) => getFileDependencies(items, id)));
+			if (p.isCancel(selected)) {
+				p.cancel("Operation cancelled");
+				process.exit(0);
+			}
 
-        const fileDependencies = uniq(deps.flatMap((dep) => dep.fileDependencies));
+			selectedComponents = selected as string[];
+		}
 
-        debug("fileDependencies", fileDependencies);
+		const inferredComponents = getComponents({
+			components: selectedComponents,
+			all,
+			items
+		});
 
-        // Create a list of all component IDs (selected + dependencies) for recipes/patterns
-        // Extract component IDs from file dependencies by removing file extensions
-        const dependencyComponentIds = fileDependencies.map((dep) =>
-            dep.replace(/\.(tsx|ts|jsx|js)$/, "")
-        );
-        const allComponentIds = uniq([...components, ...dependencyComponentIds]);
+		const components = inferredComponents.items;
+		debug("components", components);
 
-        debug("allComponentIds", allComponentIds);
+		p.log.info(inferredComponents.message);
 
-        const skippedFiles: string[] = [];
-        const skippedRecipes: string[] = [];
-        const skippedPatterns: string[] = [];
+		const deps = uniq(components.flatMap((id) => getFileDependencies(items, id)));
 
-        // Get recipes for all components (selected + dependencies)
-        const componentRecipes = await Promise.all(
-            allComponentIds.map(async (id) => {
-                const recipes = await getRecipeForComponent(id, recipesDir);
-                return recipes.length > 0 ? { componentId: id, recipes } : null;
-            })
-        );
+		const fileDependencies = uniq(deps.flatMap((dep) => dep.fileDependencies));
 
-        const validRecipes = componentRecipes.filter(Boolean) as Array<{
-            componentId: string;
-            recipes: Array<{ id: string; content: string }>;
-        }>;
+		debug("fileDependencies", fileDependencies);
 
-        // Get patterns for all components (selected + dependencies)
-        const componentPatterns = await Promise.all(
-            allComponentIds.map(async (id) => {
-                const patterns = await getPatternForComponent(id, patternsDir);
-                return patterns.length > 0 ? { componentId: id, patterns } : null;
-            })
-        );
+		// Create a list of all component IDs (selected + dependencies) for recipes/patterns
+		// Extract component IDs from file dependencies by removing file extensions
+		const dependencyComponentIds = fileDependencies.map((dep) =>
+			dep.replace(/\.(tsx|ts|jsx|js)$/, "")
+		);
+		const allComponentIds = uniq([...components, ...dependencyComponentIds]);
 
-        const validPatterns = componentPatterns.filter(Boolean) as Array<{
-            componentId: string;
-            patterns: Array<{ id: string; content: string }>;
-        }>;
+		debug("allComponentIds", allComponentIds);
 
-        await tasks([
-            // {
-            //     title: "Installing required dependencies...",
-            //     enabled: !!npmDependencies.length && !dryRun,
-            //     task: () => installCommand([...npmDependencies, "--silent"], outdir)
-            // },
-            {
-                title: "Writing file dependencies",
-                enabled: !!fileDependencies.length && !dryRun,
-                task: async () => {
-                    await Promise.all(
-                        fileDependencies.map(async (dep) => {
-                            if (existsSync(join(outdir, dep)) && !force) {
-                                skippedFiles.push(dep);
-                                return;
-                            }
-                            const item = await fetchComposition(dep);
+		const skippedFiles: string[] = [];
+		const skippedRecipes: string[] = [];
+		const skippedPatterns: string[] = [];
 
-                            if (jsx) {
-                                item.file.name = item.file.name.replace(".tsx", ".jsx");
-                                await transformToJsx(item);
-                            }
+		// Get recipes for all components (selected + dependencies)
+		const componentRecipes = await Promise.all(
+			allComponentIds.map(async (id) => {
+				const recipes = await getRecipeForComponent(id, recipesDir);
+				return recipes.length > 0 ? { componentId: id, recipes } : null;
+			})
+		);
 
-                            const outPath = join(outdir, item.file.name);
+		const validRecipes = componentRecipes.filter(Boolean) as Array<{
+			componentId: string;
+			recipes: Array<{ id: string; content: string }>;
+		}>;
 
-                            await writeFile(
-                                outPath,
-                                item.file.content.replace("compositions/ui", "."),
-                                "utf-8"
-                            );
-                        })
-                    );
+		// Get patterns for all components (selected + dependencies)
+		const componentPatterns = await Promise.all(
+			allComponentIds.map(async (id) => {
+				const patterns = await getPatternForComponent(id, patternsDir);
+				return patterns.length > 0 ? { componentId: id, patterns } : null;
+			})
+		);
 
-                    return "File dependencies written";
-                }
-            },
-            {
-                title: "Writing recipes",
-                enabled: !!validRecipes.length && !dryRun,
-                task: async () => {
-                    await Promise.all(
-                        validRecipes.flatMap(async ({ recipes }) => {
-                            return Promise.all(
-                                recipes.map(async (recipe) => {
-                                    let recipeFilename = `${recipe.id}.ts`;
-                                    if (jsx) {
-                                        recipeFilename = recipeFilename.replace(".ts", ".js");
-                                    }
+		const validPatterns = componentPatterns.filter(Boolean) as Array<{
+			componentId: string;
+			patterns: Array<{ id: string; content: string }>;
+		}>;
 
-                                    const recipeOutPath = join(recipesDir, recipeFilename);
+		await tasks([
+			// {
+			//     title: "Installing required dependencies...",
+			//     enabled: !!npmDependencies.length && !dryRun,
+			//     task: () => installCommand([...npmDependencies, "--silent"], outdir)
+			// },
+			{
+				title: "Writing file dependencies",
+				enabled: !!fileDependencies.length && !dryRun,
+				task: async () => {
+					await Promise.all(
+						fileDependencies.map(async (dep) => {
+							if (existsSync(join(outdir, dep)) && !force) {
+								skippedFiles.push(dep);
+								return;
+							}
+							const item = await fetchComposition(dep);
 
-                                    if (existsSync(recipeOutPath) && !force) {
-                                        skippedRecipes.push(recipe.id);
-                                        return;
-                                    }
+							if (jsx) {
+								item.file.name = item.file.name.replace(".tsx", ".jsx");
+								await transformToJsx(item);
+							}
 
-                                    let recipeContent = recipe.content;
+							const outPath = join(outdir, item.file.name);
 
-                                    // Transform recipe imports to use local paths if needed
-                                    recipeContent = recipeContent.replace(
-                                        /from "@\/recipes\//g,
-                                        'from "./'
-                                    );
+							await writeFile(
+								outPath,
+								item.file.content.replace("compositions/ui", "."),
+								"utf-8"
+							);
+						})
+					);
 
-                                    // Convert to JSX if needed
-                                    if (jsx) {
-                                        recipeContent = await convertTsxToJsx(recipeContent);
-                                    }
+					return "File dependencies written";
+				}
+			},
+			{
+				title: "Writing recipes",
+				enabled: !!validRecipes.length && !dryRun,
+				task: async () => {
+					await Promise.all(
+						validRecipes.flatMap(async ({ recipes }) => {
+							return Promise.all(
+								recipes.map(async (recipe) => {
+									let recipeFilename = `${recipe.id}.ts`;
+									if (jsx) {
+										recipeFilename = recipeFilename.replace(".ts", ".js");
+									}
 
-                                    if (dryRun) {
-                                        printRecipeSync({
-                                            content: recipeContent,
-                                            filename: recipeFilename
-                                        });
-                                    } else {
-                                        await writeFile(recipeOutPath, recipeContent, "utf-8");
-                                    }
-                                })
-                            );
-                        })
-                    );
+									const recipeOutPath = join(recipesDir, recipeFilename);
 
-                    await writeRecipesIndexFile(recipesDir, jsx, debug);
+									if (existsSync(recipeOutPath) && !force) {
+										skippedRecipes.push(recipe.id);
+										return;
+									}
 
-                    return "Recipes written";
-                }
-            },
-            {
-                title: "Writing patterns",
-                enabled: !!validPatterns.length && !dryRun,
-                task: async () => {
-                    await Promise.all(
-                        validPatterns.flatMap(async ({ patterns }) => {
-                            return Promise.all(
-                                patterns.map(async (pattern) => {
-                                    let patternFilename = `${pattern.id}.ts`;
-                                    if (jsx) {
-                                        patternFilename = patternFilename.replace(".ts", ".js");
-                                    }
+									let recipeContent = recipe.content;
 
-                                    const patternOutPath = join(patternsDir, patternFilename);
+									// Transform recipe imports to use local paths if needed
+									recipeContent = recipeContent.replace(
+										/from "@\/recipes\//g,
+										'from "./'
+									);
 
-                                    if (existsSync(patternOutPath) && !force) {
-                                        skippedPatterns.push(pattern.id);
-                                        return;
-                                    }
+									// Convert to JSX if needed
+									if (jsx) {
+										recipeContent = await convertTsxToJsx(recipeContent);
+									}
 
-                                    let patternContent = pattern.content;
+									if (dryRun) {
+										printRecipeSync({
+											content: recipeContent,
+											filename: recipeFilename
+										});
+									} else {
+										await writeFile(recipeOutPath, recipeContent, "utf-8");
+									}
+								})
+							);
+						})
+					);
 
-                                    // Transform pattern imports to use local paths if needed
-                                    patternContent = patternContent.replace(
-                                        /from "@\/patterns\//g,
-                                        'from "./'
-                                    );
+					await writeRecipesIndexFile(recipesDir, jsx, debug);
 
-                                    // Convert to JSX if needed
-                                    if (jsx) {
-                                        patternContent = await convertTsxToJsx(patternContent);
-                                    }
+					return "Recipes written";
+				}
+			},
+			{
+				title: "Writing patterns",
+				enabled: !!validPatterns.length && !dryRun,
+				task: async () => {
+					await Promise.all(
+						validPatterns.flatMap(async ({ patterns }) => {
+							return Promise.all(
+								patterns.map(async (pattern) => {
+									let patternFilename = `${pattern.id}.ts`;
+									if (jsx) {
+										patternFilename = patternFilename.replace(".ts", ".js");
+									}
 
-                                    if (dryRun) {
-                                        printPatternSync({
-                                            content: patternContent,
-                                            filename: patternFilename
-                                        });
-                                    } else {
-                                        await writeFile(patternOutPath, patternContent, "utf-8");
-                                    }
-                                })
-                            );
-                        })
-                    );
+									const patternOutPath = join(patternsDir, patternFilename);
 
-                    await writePatternsIndexFile(patternsDir, jsx, debug);
+									if (existsSync(patternOutPath) && !force) {
+										skippedPatterns.push(pattern.id);
+										return;
+									}
 
-                    return "Patterns written";
-                }
-            },
-            {
-                title: "Writing selected components",
-                task: async () => {
-                    await Promise.all(
-                        components.map(async (id) => {
-                            let filename = id + ".tsx";
-                            if (jsx) {
-                                filename = filename.replace(".tsx", ".jsx");
-                            }
+									let patternContent = pattern.content;
 
-                            if (existsSync(join(outdir, filename)) && !force) {
-                                skippedFiles.push(id);
-                                return;
-                            }
+									// Transform pattern imports to use local paths if needed
+									patternContent = patternContent.replace(
+										/from "@\/patterns\//g,
+										'from "./'
+									);
 
-                            try {
-                                const item = await fetchComposition(id);
-                                if (jsx) {
-                                    item.file.name = item.file.name.replace(".tsx", ".jsx");
-                                    await transformToJsx(item);
-                                }
+									// Convert to JSX if needed
+									if (jsx) {
+										patternContent = await convertTsxToJsx(patternContent);
+									}
 
-                                const outPath = join(outdir, item.file.name);
+									if (dryRun) {
+										printPatternSync({
+											content: patternContent,
+											filename: patternFilename
+										});
+									} else {
+										await writeFile(patternOutPath, patternContent, "utf-8");
+									}
+								})
+							);
+						})
+					);
 
-                                if (dryRun) {
-                                    printFileSync(item);
-                                } else {
-                                    await writeFile(
-                                        outPath,
-                                        item.file.content.replace("compositions/ui", "."),
-                                        "utf-8"
-                                    );
-                                }
-                            } catch (error) {
-                                if (error instanceof Error) {
-                                    p.log.error(error?.message);
-                                    process.exit(0);
-                                }
-                            }
-                        })
-                    );
+					await writePatternsIndexFile(patternsDir, jsx, debug);
 
-                    return "Selected components written";
-                }
-            },
-            {
-                title: "Running panda codegen",
-                enabled: !dryRun,
-                task: async () => {
-                    await pandaCodegenCommand(process.cwd());
+					return "Patterns written";
+				}
+			},
+			{
+				title: "Writing selected components",
+				task: async () => {
+					await Promise.all(
+						components.map(async (id) => {
+							let filename = id + ".tsx";
+							if (jsx) {
+								filename = filename.replace(".tsx", ".jsx");
+							}
 
-                    return "panda codegen finished";
-                }
-            }
-        ]);
+							if (existsSync(join(outdir, filename)) && !force) {
+								skippedFiles.push(id);
+								return;
+							}
 
-        if (skippedFiles.length) {
-            p.log.warn(
-                `Skipped ${skippedFiles.length} component file${
-                    skippedFiles.length > 1 ? "s" : ""
-                } that already exist. Use the --force flag to overwrite.`
-            );
-        }
+							try {
+								const item = await fetchComposition(id);
+								if (jsx) {
+									item.file.name = item.file.name.replace(".tsx", ".jsx");
+									await transformToJsx(item);
+								}
 
-        if (skippedRecipes.length) {
-            p.log.warn(
-                `Skipped ${skippedRecipes.length} recipe file${
-                    skippedRecipes.length > 1 ? "s" : ""
-                } that already exist. Use the --force flag to overwrite.`
-            );
-        }
+								const outPath = join(outdir, item.file.name);
 
-        if (skippedPatterns.length) {
-            p.log.warn(
-                `Skipped ${skippedPatterns.length} pattern file${
-                    skippedPatterns.length > 1 ? "s" : ""
-                } that already exist. Use the --force flag to overwrite.`
-            );
-        }
+								if (dryRun) {
+									printFileSync(item);
+								} else {
+									await writeFile(
+										outPath,
+										item.file.content.replace("compositions/ui", "."),
+										"utf-8"
+									);
+								}
+							} catch (error) {
+								if (error instanceof Error) {
+									p.log.error(error?.message);
+									process.exit(0);
+								}
+							}
+						})
+					);
 
-        p.outro("🎉 Done!");
-    });
+					return "Selected components written";
+				}
+			},
+			{
+				title: "Running panda codegen",
+				enabled: !dryRun,
+				task: async () => {
+					await pandaCodegenCommand(process.cwd());
+
+					return "panda codegen finished";
+				}
+			}
+		]);
+
+		if (skippedFiles.length) {
+			p.log.warn(
+				`Skipped ${skippedFiles.length} component file${
+					skippedFiles.length > 1 ? "s" : ""
+				} that already exist. Use the --force flag to overwrite.`
+			);
+		}
+
+		if (skippedRecipes.length) {
+			p.log.warn(
+				`Skipped ${skippedRecipes.length} recipe file${
+					skippedRecipes.length > 1 ? "s" : ""
+				} that already exist. Use the --force flag to overwrite.`
+			);
+		}
+
+		if (skippedPatterns.length) {
+			p.log.warn(
+				`Skipped ${skippedPatterns.length} pattern file${
+					skippedPatterns.length > 1 ? "s" : ""
+				} that already exist. Use the --force flag to overwrite.`
+			);
+		}
+
+		p.outro("🎉 Done!");
+	});

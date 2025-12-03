@@ -23,6 +23,7 @@ import { progressCircular } from "./progress-circular";
 import { progress } from "./progress";
 import { radioCard } from "./radio-card";
 import { radio } from "./radio";
+import { rangeSlider } from "./range-slider";
 import { select } from "./select";
 import { skeleton } from "./skeleton";
 import { slider } from "./slider";
@@ -63,6 +64,7 @@ export const recipes = {
     progress,
     radioCard,
     radio,
+    rangeSlider,
     select,
     skeleton,
     slider,

@@ -3,6 +3,6 @@
   "id": "vstack",
   "file": {
     "name": "vstack.ts",
-    "content": "import { definePattern } from \"@pandacss/dev\";\n\nexport const vstack = definePattern({\n    jsx: [\"VStack\"],\n    properties: {\n        justify: { type: \"property\", value: \"justifyContent\" },\n        gap: { type: \"property\", value: \"gap\" },\n        align: { type: \"property\", value: \"alignItems\" }\n    },\n    defaultValues: {\n        gap: \"10px\",\n        align: \"start\"\n    },\n    transform(props) {\n        const { justify, gap, align, ...rest } = props;\n        return {\n            display: \"flex\",\n            flexDirection: \"column\",\n            alignItems: align,\n            justifyContent: justify,\n            gap,\n            ...rest\n        };\n    }\n});\n"
+    "content": "import { definePattern } from \"@pandacss/dev\";\n\nexport const vstack = definePattern({\n    jsx: [\"VStack\"],\n    properties: {\n        justify: { type: \"property\", value: \"justifyContent\" },\n        gap: { type: \"property\", value: \"gap\" },\n        align: { type: \"property\", value: \"alignItems\" }\n    },\n    defaultValues: {\n        gap: \"8px\",\n        align: \"start\"\n    },\n    transform(props) {\n        const { justify, gap, align, ...rest } = props;\n        return {\n            display: \"flex\",\n            flexDirection: \"column\",\n            alignItems: align,\n            justifyContent: justify,\n            gap,\n            ...rest\n        };\n    }\n});\n"
   }
 }

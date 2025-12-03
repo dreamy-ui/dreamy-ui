@@ -723,8 +723,8 @@ async function updateTsConfig(cwd: string, framework: FrameworkConfig) {
         }
 
         // Add @/* path alias for components
-        if (!tsconfig.compilerOptions.paths["@/*"]) {
-            tsconfig.compilerOptions.paths["@/*"] = [componentsPath];
+        if (!tsconfig.compilerOptions.paths["@/ui/*"]) {
+            tsconfig.compilerOptions.paths["@/ui/*"] = [componentsPath];
             needsUpdate = true;
         }
 
@@ -736,9 +736,10 @@ async function updateTsConfig(cwd: string, framework: FrameworkConfig) {
 
         if (needsUpdate) {
             await writeFile(tsconfigPath, JSON.stringify(tsconfig, null, 2), "utf-8");
-            const message = framework.type === "nextjs"
-                ? "✓ Updated tsconfig.json with styled-system, styled-system/* path, and @/* path alias"
-                : "✓ Updated tsconfig.json with styled-system and @/* path alias";
+            const message =
+                framework.type === "nextjs"
+                    ? "✓ Updated tsconfig.json with styled-system, styled-system/* path, and @/ui/* path alias"
+                    : "✓ Updated tsconfig.json with styled-system and @/ui/* path alias";
             p.log.success(message);
         } else {
             p.log.info("⊘ tsconfig.json already configured");
@@ -749,9 +750,10 @@ async function updateTsConfig(cwd: string, framework: FrameworkConfig) {
         p.log.error(
             `✗ Failed to update tsconfig.json: ${error instanceof Error ? error.message : String(error)}`
         );
-        const pathAliasInfo = framework.type === "nextjs"
-            ? '"@/*" and "styled-system/*" path aliases'
-            : '"@/*" path alias';
+        const pathAliasInfo =
+            framework.type === "nextjs"
+                ? '"@/ui/*" and "styled-system/*" path aliases'
+                : '"@/ui/*" path alias';
         p.log.warn(
             `💡 Manually add "styled-system/**/*" to the "include" array and ${pathAliasInfo} in tsconfig.json`
         );
@@ -841,7 +843,7 @@ function printNextSteps(framework: FrameworkConfig) {
     } else if (framework.type === "nextjs") {
         p.log.info(
             "1. Update your app/layout.tsx to use DreamyProvider:\n\n" +
-                `   import { DreamyProvider } from "@/${framework.providerPath.replace(/^(src\/)?/, "")}";\n` +
+                `   import { DreamyProvider } from "@/ui/${framework.providerPath.replace(/^(src\/)?/, "")}";\n` +
                 '   import { getSSRColorMode, getColorModeHTMLProps } from "@dreamy-ui/react/rsc";\n' +
                 '   import { cookies } from "next/headers";\n\n' +
                 "   export default async function RootLayout({\n" +
@@ -875,7 +877,7 @@ function printNextSteps(framework: FrameworkConfig) {
 
     p.log.info(
         "2. Start your development server and begin using Dreamy UI components:\n\n" +
-            '   import { Button } from "@/button";\n\n' +
+            '   import { Button } from "@/ui/button";\n\n' +
             "   export default function Page() {\n" +
             '       return <Button variant="primary">Hello Dreamy UI! 🌙</Button>;\n' +
             "   }\n"

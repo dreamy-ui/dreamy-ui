@@ -1,0 +1,8 @@
+{
+  "type": "pattern",
+  "id": "text",
+  "file": {
+    "name": "text.ts",
+    "content": "import { definePattern } from \"@pandacss/dev\";\r\n\r\nexport const text = definePattern({\r\n\tjsx: [\"Heading\", \"Text\"],\r\n\tproperties: {\r\n\t\tvariant: {\r\n\t\t\ttype: \"enum\",\r\n\t\t\tvalue: [\"heading\", \"link\"]\r\n\t\t},\r\n\t\tsize: {\r\n\t\t\ttype: \"enum\",\r\n\t\t\tvalue: [\"xs\", \"sm\", \"md\", \"lg\", \"xl\", \"2xl\", \"3xl\", \"4xl\", \"5xl\", \"6xl\", \"7xl\"]\r\n\t\t}\r\n\t},\r\n\ttransform(props, { map }) {\r\n\t\tconst { variant, size, ...rest } = props;\r\n\t\treturn {\r\n\t\t\ttextStyle: size ?? map(variant, (v) => (v === \"heading\" ? \"xl\" : undefined)),\r\n\t\t\tfontWeight: map(variant, (v) =>\r\n\t\t\t\tv === \"heading\" ? \"bold\" : v === \"link\" ? \"semibold\" : undefined\r\n\t\t\t),\r\n\t\t\tfontFamily: map(variant, (v) => (v === \"heading\" ? \"heading\" : undefined)),\r\n\t\t\ttransition: map(variant, (v) => (v === \"link\" ? \"colors\" : undefined)),\r\n\t\t\t_hover: map(variant, (v) =>\r\n\t\t\t\tv === \"link\" ? ({ color: \"{colors.fg.max}\" } as any) : undefined\r\n\t\t\t),\r\n\t\t\t...rest\r\n\t\t};\r\n\t}\r\n});\r\n"
+  }
+}

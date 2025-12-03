@@ -1,6 +1,6 @@
 import { getPresetOptions } from "@/theme/preset";
 import { defineSemanticTokens } from "@pandacss/dev";
-import { genForegroundTokens } from "../colors";
+import { alpha, genForegroundTokens } from "../colors";
 
 export function createColorTokens() {
     const {
@@ -108,9 +108,11 @@ export function createColorTokens() {
             panel: {
                 value: {
                     // light background with 85% opacity
-                    base: `color-mix(in srgb, ${lightBackground} 85%, transparent 15%)`,
+                    // base: `color-mix(in srgb, ${lightBackground} 85%, transparent 15%)`,
+                    base: lightBackground,
                     // dark background with white alpha, to whiten the background and also alphied
-                    _dark: `color-mix(in srgb, ${darkBackground} 85%, {colors.whiteAlpha.200} 20%)`
+                    // _dark: `color-mix(in srgb, ${darkBackground} 85%, {colors.whiteAlpha.200} 20%)`
+                    _dark: alpha(darkBackground, 0.8)
                 }
             }
         },

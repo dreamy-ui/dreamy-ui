@@ -58,7 +58,7 @@ export const patternFileSchema = z.object({
 export interface PatternFile extends z.infer<typeof patternFileSchema> {}
 
 export const processEnvSchema = z.object({
-	REGISTRY_URL: z.string().default("http://localhost:3000"),
+	REGISTRY_URL: z.string(),
 	// REGISTRY_URL: z.string().default("https://dreamy-ui.com"),
 	HTTPS_PROXY: z.string().optional()
 });
