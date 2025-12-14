@@ -51,6 +51,11 @@ export default defineConfig(({ isSsrBuild }) => ({
         tsconfigPaths()
     ],
     optimizeDeps: {
+        esbuildOptions: {
+            loader: {
+                ".js": "jsx"
+            }
+        },
         exclude: [
             "@dreamy-ui/panda-preset",
             "@dreamy-ui/react",
@@ -64,6 +69,11 @@ export default defineConfig(({ isSsrBuild }) => ({
             "@resvg/resvg-js"
         ]
     }
+    // esbuild: {
+    // loader: "jsx",
+    //     include: /.*\.jsx?$/,
+    //     exclude: []
+    // }
     // esbuild: {
     //     exclude: [
     //         "@dreamy-ui/panda-preset",

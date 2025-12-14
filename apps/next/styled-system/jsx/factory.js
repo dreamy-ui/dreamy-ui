@@ -10,9 +10,7 @@ import {
 import { isCssProperty } from "./is-valid-prop.js";
 
 function objectToDeps(obj) {
-    return Object.entries(obj).map(
-        ([key, value]) => `${key}:${typeof value === "object" ? JSON.stringify(value) : value}`
-    );
+    return Object.entries(obj).map(([key, value]) => `${key}:${value}`);
 }
 
 function setRef(ref, value) {

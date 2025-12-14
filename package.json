@@ -9,7 +9,7 @@
 		"dev:panda-preset": "cd packages/panda-preset && pnpm run dev",
 		"dev:react": "cd packages/react && pnpm run dev",
 		"dev:cli": "cd packages/cli && pnpm run dev",
-		"dev:website": "cd website && pnpm run dev",
+		"dev:web": "cd website && pnpm run dev",
 		"dev:lib": "concurrently \"pnpm run dev:panda-preset\" \"pnpm run dev:react\" \"pnpm run dev:cli\"",
 		"codegen": "concurrently \"cd packages/react && pnpm panda codegen\" \"cd website && pnpm panda codegen\"",
 		"build:panda-preset": "cd packages/panda-preset && pnpm run build",
@@ -32,6 +32,7 @@
 	"devDependencies": {
 		"@biomejs/biome": "1.9.2",
 		"@dreamy-ui/cli": "workspace:*",
+		"@dreamy-ui/mcp": "workspace:*",
 		"concurrently": "^8.2.2",
 		"kill-port": "^2.0.1",
 		"turbo": "^2.0.14",

@@ -84,9 +84,51 @@ export const AddCommand = new Command("add")
 
         p.log.info(inferredComponents.message);
 
-        const deps = uniq(components.flatMap((id) => getFileDependencies(items, id)));
+        // Recursively collect all dependencies
+        function getAllDependenciesRecursive(
+            componentIds: string[]
+        ): Array<{ fileDependencies: string[] }> {
+            const allDeps = new Map<string, { fileDependencies: string[] }>();
+            const processed = new Set<string>();
+
+            function processDependencies(id: string) {
+                if (processed.has(id)) return;
+                processed.add(id);
+
+                debug(`Processing dependencies for: ${id}`);
+                const result = getFileDependencies(items, id);
+
+                // getFileDependencies returns either [] or { fileDependencies: string[] }
+                if (Array.isArray(result)) {
+                    debug(`No dependencies found for: ${id}`);
+                    return;
+                }
+
+                debug(`Found dependencies for ${id}:`, result.fileDependencies);
+
+                // Store dependency with a unique key
+                const key = JSON.stringify(result);
+                allDeps.set(key, result);
+
+                // For each file dependency, recursively process its dependencies
+                result.fileDependencies.forEach((fileDep) => {
+                    const depId = fileDep.replace(/\.(tsx|ts|jsx|js)$/, "");
+                    debug(`Recursively processing: ${depId} (from ${fileDep})`);
+                    processDependencies(depId);
+                });
+            }
+
+            componentIds.forEach((id) => processDependencies(id));
+
+            debug("All collected dependencies:", Array.from(allDeps.values()));
+            return Array.from(allDeps.values());
+        }
+
+        const deps = getAllDependenciesRecursive(components);
 
         const fileDependencies = uniq(deps.flatMap((dep) => dep.fileDependencies));
+
+        debug("Final unique fileDependencies:", fileDependencies);
 
         debug("fileDependencies", fileDependencies);
 

@@ -1,0 +1,9 @@
+{
+	"mcpServers": {
+		"dreamy-ui": {
+			"type": "stdio",
+			"command": "npx",
+			"args": ["-y", "@dreamy-ui/mcp"]
+		}
+	}
+}

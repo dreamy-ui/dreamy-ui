@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "prebuild": "panda codegen",
     "build": "react-router build",
     "devv": "react-router dev",
     "start": "react-router-serve ./build/server/index.js",
