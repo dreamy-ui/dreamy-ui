@@ -32,35 +32,35 @@ export default function SectionsNav() {
 
     return (
         <Flex
-            ref={ref}
-            pos={"sticky"}
-            top={20}
-            h={"fit-content"}
+            _hover={{
+                overflowY: "auto"
+            }}
             as={"aside"}
             col
-            w={{
-                base: "100%",
-                md: "225px"
-            }}
             display={{
                 base: "none",
                 md: "flex"
             }}
-            minW={200}
-            gap={0}
-            overflow={"auto"}
-            maxH={"87.5vh"}
-            pr={3}
             flexShrink={0}
-            scrollbarGutter={"stable"}
-            scrollbarWidth="thin"
+            gap={0}
+            h={"fit-content"}
+            maxH={"87.5vh"}
+            minW={200}
+            overflow={"auto"}
+            overflowY={"hidden"}
+            pos={"sticky"}
+            pr={3}
+            ref={ref}
             scrollbarColor={{
                 base: "rgba(0, 0, 0, 0.1) transparent",
                 _dark: "rgba(255, 255, 255, 0.1) transparent"
             }}
-            overflowY={"hidden"}
-            _hover={{
-                overflowY: "auto"
+            scrollbarGutter={"stable"}
+            scrollbarWidth="thin"
+            top={20}
+            w={{
+                base: "100%",
+                md: "225px"
             }}
         >
             {sections.map((section) => (
@@ -82,15 +82,15 @@ export const Section = memo(function Section({ section }: SectionProps) {
 
     return (
         <Flex
-            key={section.title}
             col
+            key={section.title}
         >
             <Button
-                variant="ghost"
-                onClick={() => setIsOpen((prev) => !prev)}
                 justifyContent={"flex-start"}
-                size={"sm"}
                 mb={2}
+                onClick={() => setIsOpen((prev) => !prev)}
+                size={"sm"}
+                variant="ghost"
             >
                 <Flex
                     justifyContent={"space-between"}
@@ -108,26 +108,26 @@ export const Section = memo(function Section({ section }: SectionProps) {
 
             <AnimatePresence initial={false}>
                 <Collapse
-                    isOpen={isOpen}
                     animateOpacity={false}
+                    isOpen={isOpen}
                 >
                     <Flex
-                        row
                         gap={2}
-                        ml={2}
                         mb={2}
+                        ml={2}
+                        row
                     >
                         <Flex
-                            x={"1px"}
+                            bg={"alpha.300"}
                             translate={"auto"}
                             w={"1px"}
-                            bg={"alpha.300"}
+                            x={"1px"}
                         />
 
                         <Flex
                             col
-                            gap={2}
                             full
+                            gap={2}
                         >
                             {section.sections.map((file) => (
                                 <MemoSectionButton
@@ -155,29 +155,29 @@ const MemoSectionButton = memo(function SectionButton({
 
     return (
         <Button
-            key={"doc-" + file.name}
-            id={isCurrent ? "current-doc" : undefined}
-            variant={isCurrent ? "primary" : "ghost"}
             _hover={{
                 color: isCurrent ? "white" : "fg"
             }}
-            full
             as={
                 <Link
-                    to={file.slug}
                     prefetch="intent"
+                    to={file.slug}
                 />
             }
-            size={"sm"}
+            full
+            id={isCurrent ? "current-doc" : undefined}
             justifyContent={"space-between"}
+            key={"doc-" + file.name}
+            size={"sm"}
+            variant={isCurrent ? "primary" : "ghost"}
         >
-            {file.name === "Llms" ? "LLMs" : file.name}
+            {file.name === "Llms" ? "LLMs" : file.name === "Cli" ? "CLI" : file.name}
             {(isNew || isUpdated) && (
                 <Badge
-                    scheme={isCurrent ? "none" : "secondary"}
                     css={{
                         "--badge-color": isCurrent ? "{colors.bg.light}" : undefined
                     }}
+                    scheme={isCurrent ? "none" : "secondary"}
                 >
                     {isNew ? "New" : "Updated"}
                 </Badge>

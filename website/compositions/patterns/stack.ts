@@ -13,7 +13,7 @@ export const stack = definePattern({
         justify: { type: "property", value: "justifyContent" }
     },
     defaultValues: {
-        gap: "10px",
+        gap: "8px",
         align: "center",
         direction: "vertical"
     },

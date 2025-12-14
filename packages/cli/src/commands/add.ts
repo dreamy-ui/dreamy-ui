@@ -73,6 +73,30 @@ export const AddCommand = new Command("add")
 
         const items = await fetchCompositions();
 
+        // If no components specified and --all flag not set, prompt user to select
+        if (selectedComponents.length === 0 && !all) {
+            p.intro("Select components to add");
+
+            const options = items.map((item) => ({
+                value: item.id,
+                label: item.component,
+                hint: item.type
+            }));
+
+            const selected = await p.multiselect({
+                message: "Pick components to add",
+                options,
+                required: true
+            });
+
+            if (p.isCancel(selected)) {
+                p.cancel("Operation cancelled");
+                process.exit(0);
+            }
+
+            selectedComponents = selected as string[];
+        }
+
         const inferredComponents = getComponents({
             components: selectedComponents,
             all,
@@ -127,8 +151,6 @@ export const AddCommand = new Command("add")
         const deps = getAllDependenciesRecursive(components);
 
         const fileDependencies = uniq(deps.flatMap((dep) => dep.fileDependencies));
-
-        debug("Final unique fileDependencies:", fileDependencies);
 
         debug("fileDependencies", fileDependencies);
 

@@ -93,9 +93,9 @@ export const button = defineRecipe({
             }),
             solid: parts({
                 root: {
-                    bg: "currentColor/08",
+                    bg: "currentColor/06",
                     _hover: {
-                        bg: "currentColor/12"
+                        bg: "currentColor/10"
                     }
                 }
             }),
@@ -114,7 +114,7 @@ export const button = defineRecipe({
                 root: {
                     bg: "transparent",
                     _hover: {
-                        bg: "currentColor/12"
+                        bg: "currentColor/10"
                     }
                 }
             }),

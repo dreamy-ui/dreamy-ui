@@ -1,7 +1,7 @@
-import { HttpsProxyAgent } from "https-proxy-agent";
-import fetch from "node-fetch";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
+import { HttpsProxyAgent } from "https-proxy-agent";
+import fetch from "node-fetch";
 import {
 	type PatternFile,
 	type RecipeFile,
@@ -12,11 +12,12 @@ import {
 	recipeFileSchema
 } from "./schema";
 
-const env = processEnvSchema.parse(process.env);
+const env = processEnvSchema.parse({
+	REGISTRY_URL: process.env.REGISTRY_URL || "http://localhost:3000",
+	HTTPS_PROXY: process.env.HTTPS_PROXY || undefined
+});
 
-const agent = env.HTTPS_PROXY
-	? new HttpsProxyAgent(env.HTTPS_PROXY)
-	: undefined;
+const agent = env.HTTPS_PROXY ? new HttpsProxyAgent(env.HTTPS_PROXY) : undefined;
 
 export async function fetchCompositions() {
 	const res = await fetch(`${env.REGISTRY_URL}/components/index.json`, {
@@ -108,11 +109,7 @@ export async function getRecipeForComponent(
 		const component = await fetchComposition(componentId);
 
 		// If component doesn't have recipes, return empty array
-		if (
-			!component.hasRecipe ||
-			!component.recipeIds ||
-			component.recipeIds.length === 0
-		) {
+		if (!component.hasRecipe || !component.recipeIds || component.recipeIds.length === 0) {
 			return [];
 		}
 
@@ -120,9 +117,7 @@ export async function getRecipeForComponent(
 		const recipes = await Promise.all(
 			component.recipeIds.map(async (recipeId) => {
 				const recipe = await fetchRecipe(recipeId);
-				return recipe?.file
-					? { id: recipe.id, content: recipe.file.content }
-					: null;
+				return recipe?.file ? { id: recipe.id, content: recipe.file.content } : null;
 			})
 		);
 
@@ -146,11 +141,7 @@ export async function getPatternForComponent(
 		const component = await fetchComposition(componentId);
 
 		// If component doesn't have patterns, return empty array
-		if (
-			!component.hasPattern ||
-			!component.patternIds ||
-			component.patternIds.length === 0
-		) {
+		if (!component.hasPattern || !component.patternIds || component.patternIds.length === 0) {
 			return [];
 		}
 
@@ -158,9 +149,7 @@ export async function getPatternForComponent(
 		const patterns = await Promise.all(
 			component.patternIds.map(async (patternId) => {
 				const pattern = await fetchPattern(patternId);
-				return pattern?.file
-					? { id: pattern.id, content: pattern.file.content }
-					: null;
+				return pattern?.file ? { id: pattern.id, content: pattern.file.content } : null;
 			})
 		);
 

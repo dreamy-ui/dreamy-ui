@@ -167,8 +167,7 @@ function parsePatternId(content: string): string[] {
 	return patternIds;
 }
 
-const setFileExtension = (file: string, ext: string) =>
-	basename(file, extname(file)) + ext;
+const setFileExtension = (file: string, ext: string) => basename(file, extname(file)) + ext;
 
 const excludedDependencies = ["@dreamy-ui/react", "react", "react-dom"];
 
@@ -176,8 +175,7 @@ const camelCase = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
 const getFileName = (file: string) => basename(file, extname(file));
 
-const getComponentName = (file: string) =>
-	getFileName(file).split("-").map(camelCase).join("");
+const getComponentName = (file: string) => getFileName(file).split("-").map(camelCase).join("");
 
 function generateRecipes(recipesDir: string, publicDir: string) {
 	if (!existsSync(recipesDir)) {
@@ -185,8 +183,8 @@ function generateRecipes(recipesDir: string, publicDir: string) {
 		return [];
 	}
 
-	const recipeFiles = readdirSync(recipesDir, { encoding: "utf-8" }).filter(
-		(file) => file.endsWith(".ts")
+	const recipeFiles = readdirSync(recipesDir, { encoding: "utf-8" }).filter((file) =>
+		file.endsWith(".ts")
 	);
 
 	const recipes = recipeFiles.map((file) => {
@@ -227,8 +225,8 @@ function generatePatterns(patternsDir: string, publicDir: string) {
 		return [];
 	}
 
-	const patternFiles = readdirSync(patternsDir, { encoding: "utf-8" }).filter(
-		(file) => file.endsWith(".ts")
+	const patternFiles = readdirSync(patternsDir, { encoding: "utf-8" }).filter((file) =>
+		file.endsWith(".ts")
 	);
 
 	const patterns = patternFiles.map((file) => {
@@ -263,26 +261,14 @@ function generatePatterns(patternsDir: string, publicDir: string) {
 	return patterns;
 }
 
-function checkForRecipeOrPattern(file: string, dir: string): boolean {
-	const filePath = join(dir, file.replace(".tsx", ".ts"));
-	return existsSync(filePath);
-}
-
 function checkForRecipesOrPatterns(
 	recipeIds: string[],
 	patternIds: string[],
 	recipesDir: string,
 	patternsDir: string
 ) {
-	const hasRecipe = recipeIds.some((id) => {
-		const filePath = join(recipesDir, `${id}.ts`);
-		return existsSync(filePath);
-	});
-
-	const hasPattern = patternIds.some((id) => {
-		const filePath = join(patternsDir, `${id}.ts`);
-		return existsSync(filePath);
-	});
+	const hasRecipe = !!recipeIds.length;
+	const hasPattern = !!patternIds.length;
 
 	return { hasRecipe, hasPattern };
 }
@@ -329,11 +315,7 @@ export async function main() {
 		);
 
 		return {
-			path: join(
-				publicDir,
-				"components",
-				setFileExtension(file, ".json")
-			),
+			path: join(publicDir, "components", setFileExtension(file, ".json")),
 			data: {
 				type: "component",
 				// npmDependencies: Array.from(npmDependencies),

@@ -256,7 +256,7 @@
     "component": "Heading",
     "fileDependencies": [],
     "hasRecipe": false,
-    "hasPattern": false,
+    "hasPattern": true,
     "patternIds": [
       "text"
     ]
@@ -332,7 +332,7 @@
     "component": "Link",
     "fileDependencies": [],
     "hasRecipe": false,
-    "hasPattern": false,
+    "hasPattern": true,
     "patternIds": [
       "text"
     ]
@@ -480,6 +480,21 @@
     "hasPattern": false,
     "recipeIds": [
       "radio"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "range-slider",
+    "file": "range-slider.tsx",
+    "component": "RangeSlider",
+    "fileDependencies": [
+      "./box",
+      "./visually-hidden"
+    ],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "range-slider"
     ]
   },
   {
@@ -651,7 +666,7 @@
     "component": "Text",
     "fileDependencies": [],
     "hasRecipe": false,
-    "hasPattern": false,
+    "hasPattern": true,
     "patternIds": [
       "text"
     ]

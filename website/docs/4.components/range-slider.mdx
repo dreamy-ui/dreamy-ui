@@ -1,0 +1,375 @@
+---
+title: Range Slider
+description: Range Slider is a component that allows you to select a range between two values.
+isServerComponent: false
+source: /packages/react/src/components/slider/use-range-slider.ts
+themeSource: /website/app/components/recipes/range-slider.ts
+---
+
+## Installation
+
+```bash
+pnpm dreamy add range-slider
+```
+
+## Usage
+
+<Wrapper>
+	<RangeSlider.Root>
+		<RangeSlider.Track maxW="xs">
+			<RangeSlider.FilledTrack />
+			<RangeSlider.Thumb index={0} />
+			<RangeSlider.Thumb index={1} />
+		</RangeSlider.Track>
+	</RangeSlider.Root>
+</Wrapper>
+
+```tsx
+<RangeSlider.Root>
+	<RangeSlider.Track maxW="xs">
+		<RangeSlider.FilledTrack />
+		<RangeSlider.Thumb index={0} />
+		<RangeSlider.Thumb index={1} />
+	</RangeSlider.Track>
+</RangeSlider.Root>
+```
+
+### Max, Min, Step
+
+You can change the max, min, and step of the Range Slider by using the `max`, `min`, and `step` props.
+
+<Wrapper>
+	<MaxMinRangeSlider />
+</Wrapper>
+
+```tsx
+function MaxMinRangeSlider() {
+    const [value, setValue] = useState<[number, number]>([0, 25]);
+
+    return (
+        <>
+            <Text>
+                Range: {value[0]} - {value[1]}
+            </Text>
+
+            <RangeSlider.Root
+                min={0}
+                max={50}
+                step={5}
+                value={value}
+                onChangeValue={setValue}
+                >
+                <RangeSlider.Track maxW="xs">
+                    <RangeSlider.FilledTrack />
+                    <RangeSlider.Thumb index={0} />
+                    <RangeSlider.Thumb index={1} />
+                </RangeSlider.Track>
+            </RangeSlider.Root>
+        </>
+    );
+}
+```
+
+### Size
+
+You can change the size of the Range Slider by using the `size` prop. This adjusts both the track height/width and the thumb size.
+
+<Wrapper>
+	<VStack w="full" gap={10}>
+		<RangeSlider.Root size='sm'>
+			<RangeSlider.Track maxW="xs">
+				<RangeSlider.FilledTrack />
+				<RangeSlider.Thumb index={0} />
+				<RangeSlider.Thumb index={1} />
+			</RangeSlider.Track>
+		</RangeSlider.Root>
+		<RangeSlider.Root size='md'>
+			<RangeSlider.Track maxW="xs">
+				<RangeSlider.FilledTrack />
+				<RangeSlider.Thumb index={0} />
+				<RangeSlider.Thumb index={1} />
+			</RangeSlider.Track>
+		</RangeSlider.Root>
+		<RangeSlider.Root size='lg'>
+			<RangeSlider.Track maxW="xs">
+				<RangeSlider.FilledTrack />
+				<RangeSlider.Thumb index={0} />
+				<RangeSlider.Thumb index={1} />
+			</RangeSlider.Track>
+		</RangeSlider.Root>
+	</VStack>
+</Wrapper>
+
+```tsx
+<VStack w="full" gap={10}>
+	<RangeSlider.Root size='sm'>
+		<RangeSlider.Track maxW="xs">
+			<RangeSlider.FilledTrack />
+			<RangeSlider.Thumb index={0} />
+			<RangeSlider.Thumb index={1} />
+		</RangeSlider.Track>
+	</RangeSlider.Root>
+	<RangeSlider.Root size='md'>
+		<RangeSlider.Track maxW="xs">
+			<RangeSlider.FilledTrack />
+			<RangeSlider.Thumb index={0} />
+			<RangeSlider.Thumb index={1} />
+		</RangeSlider.Track>
+	</RangeSlider.Root>
+	<RangeSlider.Root size='lg'>
+		<RangeSlider.Track maxW="xs">
+			<RangeSlider.FilledTrack />
+			<RangeSlider.Thumb index={0} />
+			<RangeSlider.Thumb index={1} />
+		</RangeSlider.Track>
+	</RangeSlider.Root>
+</VStack>
+```
+
+### Scheme
+
+You can change the scheme of the Range Slider by using the `scheme` prop.
+
+<Wrapper>
+	<VStack w="full" gap={10}>
+		<RangeSlider.Root scheme="primary">
+			<RangeSlider.Track maxW="xs">
+				<RangeSlider.FilledTrack />
+				<RangeSlider.Thumb index={0} />
+				<RangeSlider.Thumb index={1} />
+			</RangeSlider.Track>
+		</RangeSlider.Root>
+		<RangeSlider.Root scheme="secondary">
+			<RangeSlider.Track maxW="xs">
+				<RangeSlider.FilledTrack />
+				<RangeSlider.Thumb index={0} />
+				<RangeSlider.Thumb index={1} />
+			</RangeSlider.Track>
+		</RangeSlider.Root>
+		<RangeSlider.Root scheme="info">
+			<RangeSlider.Track maxW="xs">
+				<RangeSlider.FilledTrack />
+				<RangeSlider.Thumb index={0} />
+				<RangeSlider.Thumb index={1} />
+			</RangeSlider.Track>
+		</RangeSlider.Root>
+		<RangeSlider.Root scheme="success">
+			<RangeSlider.Track maxW="xs">
+				<RangeSlider.FilledTrack />
+				<RangeSlider.Thumb index={0} />
+				<RangeSlider.Thumb index={1} />
+			</RangeSlider.Track>
+		</RangeSlider.Root>
+		<RangeSlider.Root scheme="warning">
+			<RangeSlider.Track maxW="xs">
+				<RangeSlider.FilledTrack />
+				<RangeSlider.Thumb index={0} />
+				<RangeSlider.Thumb index={1} />
+			</RangeSlider.Track>
+		</RangeSlider.Root>
+		<RangeSlider.Root scheme="error">
+			<RangeSlider.Track maxW="xs">
+				<RangeSlider.FilledTrack />
+				<RangeSlider.Thumb index={0} />
+				<RangeSlider.Thumb index={1} />
+			</RangeSlider.Track>
+		</RangeSlider.Root>
+		<RangeSlider.Root scheme="none">
+			<RangeSlider.Track maxW="xs">
+				<RangeSlider.FilledTrack />
+				<RangeSlider.Thumb index={0} />
+				<RangeSlider.Thumb index={1} />
+			</RangeSlider.Track>
+		</RangeSlider.Root>
+	</VStack>
+</Wrapper>
+
+```tsx
+<VStack w="full" gap={10}>
+	<RangeSlider.Root scheme="primary">
+		<RangeSlider.Track maxW="xs">
+			<RangeSlider.FilledTrack />
+			<RangeSlider.Thumb index={0} />
+			<RangeSlider.Thumb index={1} />
+		</RangeSlider.Track>
+	</RangeSlider.Root>
+	<RangeSlider.Root scheme="secondary">
+		<RangeSlider.Track maxW="xs">
+			<RangeSlider.FilledTrack />
+			<RangeSlider.Thumb index={0} />
+			<RangeSlider.Thumb index={1} />
+		</RangeSlider.Track>
+	</RangeSlider.Root>
+	<RangeSlider.Root scheme="info">
+		<RangeSlider.Track maxW="xs">
+			<RangeSlider.FilledTrack />
+			<RangeSlider.Thumb index={0} />
+			<RangeSlider.Thumb index={1} />
+		</RangeSlider.Track>
+	</RangeSlider.Root>
+	<RangeSlider.Root scheme="success">
+		<RangeSlider.Track maxW="xs">
+			<RangeSlider.FilledTrack />
+			<RangeSlider.Thumb index={0} />
+			<RangeSlider.Thumb index={1} />
+		</RangeSlider.Track>
+	</RangeSlider.Root>
+	<RangeSlider.Root scheme="warning">
+		<RangeSlider.Track maxW="xs">
+			<RangeSlider.FilledTrack />
+			<RangeSlider.Thumb index={0} />
+			<RangeSlider.Thumb index={1} />
+		</RangeSlider.Track>
+	</RangeSlider.Root>
+	<RangeSlider.Root scheme="error">
+		<RangeSlider.Track maxW="xs">
+			<RangeSlider.FilledTrack />
+			<RangeSlider.Thumb index={0} />
+			<RangeSlider.Thumb index={1} />
+		</RangeSlider.Track>
+	</RangeSlider.Root>
+	<RangeSlider.Root scheme="none">
+		<RangeSlider.Track maxW="xs">
+			<RangeSlider.FilledTrack />
+			<RangeSlider.Thumb index={0} />
+			<RangeSlider.Thumb index={1} />
+		</RangeSlider.Track>
+	</RangeSlider.Root>
+</VStack>
+```
+
+### Orientation
+
+You can change the orientation of the Range Slider by using the `orientation` prop.
+
+<Wrapper>
+	<RangeSlider.Root orientation="vertical" h="200px">
+		<RangeSlider.Track maxW="xs">
+			<RangeSlider.FilledTrack />
+			<RangeSlider.Thumb index={0} />
+			<RangeSlider.Thumb index={1} />
+		</RangeSlider.Track>
+	</RangeSlider.Root>
+</Wrapper>
+
+```tsx
+<RangeSlider.Root orientation="vertical" h="200px">
+	<RangeSlider.Track maxW="xs">
+		<RangeSlider.FilledTrack />
+		<RangeSlider.Thumb index={0} />
+		<RangeSlider.Thumb index={1} />
+	</RangeSlider.Track>
+</RangeSlider.Root>
+```
+
+### Reversed
+
+You can reverse the Range Slider by using the `isReversed` prop.
+
+<Wrapper>	
+	<RangeSlider.Root isReversed>
+		<RangeSlider.Track maxW="xs">
+			<RangeSlider.FilledTrack />
+			<RangeSlider.Thumb index={0} />
+			<RangeSlider.Thumb index={1} />
+		</RangeSlider.Track>
+	</RangeSlider.Root>
+</Wrapper>
+
+```tsx
+<RangeSlider.Root isReversed>
+	<RangeSlider.Track maxW="xs">
+		<RangeSlider.FilledTrack />
+		<RangeSlider.Thumb index={0} />
+		<RangeSlider.Thumb index={1} />
+	</RangeSlider.Track>
+</RangeSlider.Root>
+```
+
+### Custom Thumb Size
+
+You can set a custom thumb size by using the `thumbSize` prop (in pixels). This is useful when you need precise control over the thumb size beyond the predefined `size` variants.
+
+<Wrapper>
+	<VStack w="full" gap={10}>
+		<RangeSlider.Root thumbSize={16}>
+			<RangeSlider.Track maxW="xs">
+				<RangeSlider.FilledTrack />
+				<RangeSlider.Thumb index={0} />
+				<RangeSlider.Thumb index={1} />
+			</RangeSlider.Track>
+		</RangeSlider.Root>
+		<RangeSlider.Root thumbSize={32}>
+			<RangeSlider.Track maxW="xs">
+				<RangeSlider.FilledTrack />
+				<RangeSlider.Thumb index={0} />
+				<RangeSlider.Thumb index={1} />
+			</RangeSlider.Track>
+		</RangeSlider.Root>
+		<RangeSlider.Root thumbSize={48} scheme="info">
+			<RangeSlider.Track maxW="xs">
+				<RangeSlider.FilledTrack />
+				<RangeSlider.Thumb index={0} />
+				<RangeSlider.Thumb index={1} />
+			</RangeSlider.Track>
+		</RangeSlider.Root>
+	</VStack>
+</Wrapper>
+
+```tsx
+<VStack w="full" gap={10}>
+	<RangeSlider.Root thumbSize={16}>
+		<RangeSlider.Track maxW="xs">
+			<RangeSlider.FilledTrack />
+			<RangeSlider.Thumb index={0} />
+			<RangeSlider.Thumb index={1} />
+		</RangeSlider.Track>
+	</RangeSlider.Root>
+	<RangeSlider.Root thumbSize={32}>
+		<RangeSlider.Track maxW="xs">
+			<RangeSlider.FilledTrack />
+			<RangeSlider.Thumb index={0} />
+			<RangeSlider.Thumb index={1} />
+		</RangeSlider.Track>
+	</RangeSlider.Root>
+	<RangeSlider.Root thumbSize={48} scheme="info">
+		<RangeSlider.Track maxW="xs">
+			<RangeSlider.FilledTrack />
+			<RangeSlider.Thumb index={0} />
+			<RangeSlider.Thumb index={1} />
+		</RangeSlider.Track>
+	</RangeSlider.Root>
+</VStack>
+```
+
+### Controlled
+
+You can control the Range Slider by using the `value` prop.
+
+<Wrapper>
+	<ControlledRangeSlider />
+</Wrapper>
+
+```tsx
+function ControlledRangeSlider() {
+    const [value, setValue] = useState<[number, number]>([25, 75]);
+
+    return (
+        <>
+            <Text>
+                Range: {value[0]} - {value[1]}
+            </Text>
+
+            <RangeSlider.Root value={value} onChangeValue={setValue}>
+                <RangeSlider.Track maxW="xs">
+                    <RangeSlider.FilledTrack />
+                    <RangeSlider.Thumb index={0} />
+                    <RangeSlider.Thumb index={1} />
+                </RangeSlider.Track>
+            </RangeSlider.Root>
+        </>
+    );
+}
+
+```
+

@@ -18,21 +18,32 @@ function transformTree(parent: any) {
         // Only consider code blocks
         if (!node || node.type !== "code" || typeof node.value !== "string") continue;
 
-        // Detect commands that start with `pnpm dreamy`
+        // Detect commands that start with `pnpm` or `npx`
         const lines = node.value.split("\n").map((l: string) => l.trim());
 
-        const firstDreamyLine = lines.find((l: string) => /^pnpm\s+/.test(l));
-        if (!firstDreamyLine) continue;
+        const firstCommandLine = lines.find((l: string) => /^(pnpm|npx)\s+/.test(l));
+        if (!firstCommandLine) continue;
 
-        // Extract the sub-command after `pnpm `
-        const sub = firstDreamyLine.replace(/^pnpm\s+/, "").trim(); // e.g. "dreamy components add card"
+        // Determine if it's pnpm or npx
+        const isPnpm = /^pnpm\s+/.test(firstCommandLine);
+        const isNpx = /^npx\s+/.test(firstCommandLine);
 
+        // Extract the sub-command after `pnpm ` or `npx `
+        let sub = "";
+        if (isPnpm) {
+            sub = firstCommandLine.replace(/^pnpm\s+/, "").trim();
+        } else if (isNpx) {
+            sub = firstCommandLine.replace(/^npx\s+/, "").trim();
+        }
+
+        // Check if it's a dreamy command or an npx-style command
         const isDreamy = !!lines.find((l: string) => /^pnpm\s+dreamy\b/.test(l));
+        const isNpxCommand = isNpx || isDreamy;
 
-        const commands = isDreamy
+        const commands = isNpxCommand
             ? {
                   npm: `npx ${sub}`,
-                  pnpm: `pnpm ${sub}`,
+                  pnpm: `pnpm dlx ${sub}`,
                   yarn: `yarn dlx ${sub}`,
                   bun: `bunx ${sub}`
               }
@@ -45,7 +56,7 @@ function transformTree(parent: any) {
 
         // <PMTabs>
         //   <PMTabs.Option name="npm">npx dreamy ...</PMTabs.Option>
-        //   <PMTabs.Option name="pnpm">pnpm dreamy ...</PMTabs.Option>
+        //   <PMTabs.Option name="pnpm">pnpm dlx dreamy ...</PMTabs.Option>
         //   <PMTabs.Option name="yarn">yarn dlx dreamy ...</PMTabs.Option>
         //   <PMTabs.Option name="bun">bunx dreamy ...</PMTabs.Option>
         // </PMTabs>

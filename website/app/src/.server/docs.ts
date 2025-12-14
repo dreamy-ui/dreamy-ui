@@ -1,7 +1,7 @@
-import type { MDXRemoteSerializeResult } from "next-mdx-remote";
-import { serialize } from "next-mdx-remote/serialize";
 import cluster from "node:cluster";
 import fs from "node:fs/promises";
+import type { MDXRemoteSerializeResult } from "next-mdx-remote";
+import { serialize } from "next-mdx-remote/serialize";
 import type { Root } from "node_modules/remark-parse/lib";
 import rehypePrettyCode, { type Options } from "rehype-pretty-code";
 import remarkParse from "remark-parse";
@@ -434,7 +434,7 @@ export class Docs {
         });
     }
 
-    private static async serialize(content: string) {
+    public static async serialize(content: string) {
         const headings = await extractHeadings(content);
 
         return await serialize(content, {

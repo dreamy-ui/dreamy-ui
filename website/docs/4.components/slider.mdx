@@ -9,7 +9,7 @@ themeSource: /packages/system/src/recipes/slider.ts
 ## Installation
 
 ```bash
-pnpm dreamy components add slider
+pnpm dreamy add slider
 ```
 
 ## Usage
@@ -69,7 +69,7 @@ function MaxMinSlider() {
 
 ### Size
 
-You can change the size of the Slider by using the `size` prop.
+You can change the size of the Slider by using the `size` prop. This adjusts both the track height/width and the thumb size.
 
 <Wrapper>
 	<VStack w="full" gap={10}>
@@ -257,6 +257,90 @@ You can reverse the Slider by using the `isReversed` prop.
 		<Slider.Thumb />
 	</Slider.Track>
 </Slider.Root>
+```
+
+### Custom Thumb Size
+
+You can set a custom thumb size by using the `thumbSize` prop (in pixels). This is useful when you need precise control over the thumb size beyond the predefined `size` variants.
+
+<Wrapper>
+	<VStack w="full" gap={10}>
+		<Slider.Root thumbSize={16}>
+			<Slider.Track maxW="xs">
+				<Slider.FilledTrack />
+				<Slider.Thumb />
+			</Slider.Track>
+		</Slider.Root>
+		<Slider.Root thumbSize={32}>
+			<Slider.Track maxW="xs">
+				<Slider.FilledTrack />
+				<Slider.Thumb />
+			</Slider.Track>
+		</Slider.Root>
+		<Slider.Root thumbSize={48} scheme="info">
+			<Slider.Track maxW="xs">
+				<Slider.FilledTrack />
+				<Slider.Thumb />
+			</Slider.Track>
+		</Slider.Root>
+	</VStack>
+</Wrapper>
+
+```tsx
+<VStack w="full" gap={10}>
+	<Slider.Root thumbSize={16}>
+		<Slider.Track maxW="xs">
+			<Slider.FilledTrack />
+			<Slider.Thumb />
+		</Slider.Track>
+	</Slider.Root>
+	<Slider.Root thumbSize={32}>
+		<Slider.Track maxW="xs">
+			<Slider.FilledTrack />
+			<Slider.Thumb />
+		</Slider.Track>
+	</Slider.Root>
+	<Slider.Root thumbSize={48} scheme="info">
+		<Slider.Track maxW="xs">
+			<Slider.FilledTrack />
+			<Slider.Thumb />
+		</Slider.Track>
+	</Slider.Root>
+</VStack>
+```
+
+### Hide Thumb
+
+You can hide the slider thumb by using the `hideThumb` prop. This is useful when you want a simpler slider appearance.
+
+<Wrapper>
+	<VStack w="full" gap={10}>
+		<Slider.Root hideThumb>
+			<Slider.Track maxW="xs">
+				<Slider.FilledTrack />
+			</Slider.Track>
+		</Slider.Root>
+		<Slider.Root hideThumb scheme="success" defaultValue={70}>
+			<Slider.Track maxW="xs">
+				<Slider.FilledTrack />
+			</Slider.Track>
+		</Slider.Root>
+	</VStack>
+</Wrapper>
+
+```tsx
+<VStack w="full" gap={10}>
+	<Slider.Root hideThumb>
+		<Slider.Track maxW="xs">
+			<Slider.FilledTrack />
+		</Slider.Track>
+	</Slider.Root>
+	<Slider.Root hideThumb scheme="success" defaultValue={70}>
+		<Slider.Track maxW="xs">
+			<Slider.FilledTrack />
+		</Slider.Track>
+	</Slider.Root>
+</VStack>
 ```
 
 ### Controlled

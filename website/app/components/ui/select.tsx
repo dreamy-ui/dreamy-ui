@@ -199,8 +199,9 @@ const SelectContent = withContext(
         const { children, ...rest } = props;
 
         const { getContentProps } = useSelectContext();
+        const contentPropsResult = getContentProps(rest, ref);
 
-        return <Popover.Content {...getContentProps(rest, ref)}>{children}</Popover.Content>;
+        return <Popover.Content {...contentPropsResult}>{children}</Popover.Content>;
     }),
     "content"
 );

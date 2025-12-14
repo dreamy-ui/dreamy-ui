@@ -57,6 +57,7 @@
 		"@types/fs-extra": "11.0.4",
 		"@types/node": "22.10.1",
 		"@types/yargs": "17.0.33",
+		"dotenv": "^17.2.3",
 		"tsup": "^8.4.0",
 		"typescript": "5.7.2"
 	},

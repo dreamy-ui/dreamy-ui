@@ -131,8 +131,7 @@ const PopoverContent = withContext(
         return (
             <div {...getPopoverPositionerProps(rootProps)}>
                 <PopoverTransition
-                    {...motionProps}
-                    {...getPopoverProps(contentProps, ref)}
+                    {...getPopoverProps({ ...motionProps, ...contentProps }, ref)}
                     onAnimationComplete={callAll(
                         onAnimationComplete,
                         contentProps.onAnimationComplete

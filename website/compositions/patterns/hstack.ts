@@ -8,7 +8,7 @@ export const hstack = definePattern({
         align: { type: "property", value: "alignItems" }
     },
     defaultValues: {
-        gap: "10px",
+        gap: "8px",
         align: "center"
     },
     transform(props) {

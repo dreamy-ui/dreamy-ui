@@ -60,7 +60,7 @@ export const popover = defineSlotRecipe({
         },
         close: {
             position: "absolute",
-            top: 1,
+            top: 2,
             insetInlineEnd: 2
         }
     },

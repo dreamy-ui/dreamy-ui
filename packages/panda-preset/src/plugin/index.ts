@@ -1,8 +1,8 @@
 import { definePlugin } from "@pandacss/dev";
 import chalk from "chalk";
-import { ensureJsxFolderExists, ensureStyledSystemExists, ensureTypesFolderExists } from "./system";
-import { removeJsxElements } from "./remove-jsx-elements";
 import { updateFactory } from "./factory";
+import { removeJsxElements } from "./remove-jsx-elements";
+import { ensureJsxFolderExists, ensureStyledSystemExists, ensureTypesFolderExists } from "./system";
 
 export interface DreamyPluginOptions {
 	/**
@@ -43,6 +43,8 @@ export function dreamyPlugin(options?: DreamyPluginOptions) {
 			"codegen:done": async () => {
 				const isSilent = process.argv.includes("--silent");
 
+				const start = performance.now();
+
 				const styledFolder = await ensureStyledSystemExists(cwd);
 				const [jsxFolder, typesFolder] = await Promise.all([
 					ensureJsxFolderExists(styledFolder),
@@ -54,13 +56,16 @@ export function dreamyPlugin(options?: DreamyPluginOptions) {
 					updateFactoryOption && updateFactory(jsxFolder, typesFolder!)
 				]);
 
+				const end = performance.now();
+
 				if (!isSilent) {
 					console.log(
-						chalk.ansi256(140)(`✔️  Dreamy UI`),
+						chalk.ansi256(140)("✔️  Dreamy UI"),
 						chalk.reset("has successfully modified"),
 						chalk.cyan("`styled-system/jsx`"),
 						chalk.reset("and"),
-						chalk.cyan("`styled-system/types`")
+						chalk.cyan("`styled-system/types`"),
+						chalk.gray(` (${(end - start).toFixed(0)}ms)`)
 					);
 				}
 			}

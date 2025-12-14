@@ -61,6 +61,11 @@ export interface UseSliderProps
 	 */
 	isReversed?: boolean;
 	/**
+	 * The size of the slider thumb in pixels. Used for calculating pointer interactions.
+	 * @default 28
+	 */
+	thumbSize?: number;
+	/**
 	 * Function called when the user starts selecting a new value (by dragging or clicking)
 	 */
 	onChangeStart?(value: number): void;
@@ -128,8 +133,6 @@ export interface SliderActions {
 	stepTo(value: number): void;
 }
 
-const BORDER_SIZE = 28 / 2;
-
 export function useSlider(props: UseSliderProps) {
 	const {
 		ref,
@@ -150,12 +153,15 @@ export function useSlider(props: UseSliderProps) {
 		onChangeStart: onChangeStartProp,
 		onChangeEnd: onChangeEndProp,
 		focusThumbOnChange = true,
+		thumbSize = 28,
 		id: idProp,
 		"aria-valuetext": ariaValueText,
 		"aria-label": ariaLabel,
 		"aria-labelledby": ariaLabelledBy,
 		...htmlProps
 	} = props;
+
+	const BORDER_SIZE = thumbSize / 2;
 
 	const field = useFieldContext();
 
@@ -264,7 +270,7 @@ export function useSlider(props: UseSliderProps) {
 
 			return nextValue;
 		},
-		[isVertical, isReversed, stateRef, clampValue]
+		[isVertical, isReversed, stateRef, clampValue, BORDER_SIZE]
 	);
 
 	const constrain = useCallback(

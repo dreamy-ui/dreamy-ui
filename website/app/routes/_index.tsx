@@ -79,7 +79,7 @@ export async function loader() {
     const codes = await cachified({
         key: "landing-page-codes",
         getFreshValue: getLandingPageCodes,
-        staleWhileRevalidate: CACHE_DURATION.ONE_MONTH
+        staleWhileRevalidate: process.env.NODE_ENV === "production" ? CACHE_DURATION.ONE_MONTH : 0
     });
 
     return data(codes, {
@@ -92,8 +92,8 @@ export const headers = CacheHeaders.cache(CACHE_DURATION.DEFAULT);
 export default function Index() {
     return (
         <Flex
-            full
             col
+            full
             gap={{
                 base: 24,
                 xl: "64"
@@ -103,8 +103,8 @@ export default function Index() {
             <Flex
                 col
                 full
-                justify={"center"}
                 gap={24}
+                justify={"center"}
                 minH={"calc(100vh - 288px)"}
             >
                 <Main />
