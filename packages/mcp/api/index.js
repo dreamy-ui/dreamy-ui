@@ -188,6 +188,7 @@ var getComponentExampleTool = {
   async ctx() {
     try {
       const componentList = await getAllComponentNames();
+      console.error("componentList", componentList);
       return { componentList };
     } catch (error) {
       throw new Error(
@@ -209,7 +210,6 @@ var getComponentExampleTool = {
         try {
           component = component.toLowerCase();
           const doc = await getComponentExample(component);
-          console.error("doc", doc);
           return {
             content: [
               {

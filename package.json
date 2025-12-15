@@ -20,6 +20,8 @@
 		"dev": "turbo dev",
 		"start": "cd website && pnpm run start",
 		"build": "turbo build",
+		"build:dev": "cross-env NODE_ENV=development turbo build:dev",
+		"build:production": "cross-env NODE_ENV=production turbo build:production",
 		"publish": "changeset publish",
 		"storybook": "cd packages/react && pnpm run storybook dev",
 		"sync": "git pull && pnpm i && pnpm run build",
@@ -34,6 +36,7 @@
 		"@dreamy-ui/cli": "workspace:*",
 		"@dreamy-ui/mcp": "workspace:*",
 		"concurrently": "^8.2.2",
+		"cross-env": "^7.0.3",
 		"kill-port": "^2.0.1",
 		"turbo": "^2.0.14",
 		"typescript": "^5.9.2"

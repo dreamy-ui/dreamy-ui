@@ -30,8 +30,6 @@ export const getComponentTool: Tool<{ componentList: string[] }> = {
 			},
 			async ({ component }) => {
 				try {
-					component = component.toLowerCase();
-
 					const [componentJson, recipe] = await Promise.all([
 						fetchComponent(component),
 						fetchRecipe(component)

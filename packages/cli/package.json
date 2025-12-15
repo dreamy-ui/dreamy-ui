@@ -9,10 +9,7 @@
 	"main": "dist/index.js",
 	"module": "dist/index.js",
 	"types": "dist/index.d.ts",
-	"files": [
-		"dist",
-		"bin"
-	],
+	"files": ["dist", "bin"],
 	"bin": {
 		"dreamy": "./bin/index.js"
 	},
@@ -30,7 +27,9 @@
 		"dev": "tsup --watch",
 		"start": "bun run ./src/index.ts",
 		"lint": "biome lint ./src",
-		"build": "tsup"
+		"build": "tsup",
+		"build:dev": "tsup",
+		"build:production": "tsup"
 	},
 	"dependencies": {
 		"@clack/prompts": "^0.11.0",

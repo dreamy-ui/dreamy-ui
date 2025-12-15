@@ -3,7 +3,7 @@
 		"dreamy-ui": {
 			"type": "stdio",
 			"command": "node",
-			"args": ["apps/mcp/dist/stdio.js"]
+			"args": ["packages/mcp/dist/stdio.js"]
 		}
 	}
 }

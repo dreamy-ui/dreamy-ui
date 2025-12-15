@@ -37,7 +37,8 @@ export interface File {
 }
 
 // Base URLs for different API endpoints
-const DREAMY_BASE_URL = process.env.DREAMY_UI_BASE_URL;
+// Fallback to localhost for development if not set
+const DREAMY_BASE_URL = process.env.DREAMY_UI_BASE_URL || "http://localhost:3000";
 
 /**
  * Generic fetch utility with consistent error handling
@@ -113,7 +114,7 @@ export async function fetchComponentExample(component: string): Promise<any> {
 export async function getAllComponentNames(): Promise<string[]> {
 	const componentList = await fetchComponentList();
 
-	return componentList.map((c) => c.component);
+	return componentList.map((c) => c.id); // return the slugified component name
 }
 
 /**
@@ -124,7 +125,7 @@ export async function getAllComponents(): Promise<ExtendedComponentIndexItem[]> 
 	return componentList.map((c) => {
 		return {
 			...c,
-			installCommand: `dreamy add ${c.component}`
+			installCommand: `dreamy add ${c.id}`
 		};
 	});
 }

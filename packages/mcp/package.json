@@ -15,6 +15,8 @@
 	},
 	"scripts": {
 		"build": "tsup",
+		"build:dev": "tsup",
+		"build:production": "tsup",
 		"dev": "tsup --watch",
 		"typecheck": "tsc --noEmit",
 		"serve": "tsx --watch ./src/http.ts"

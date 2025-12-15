@@ -6,6 +6,18 @@
 			"inputs": ["$TURBO_DEFAULT$", ".env*"],
 			"outputs": ["dist/**"]
 		},
+		"build:dev": {
+			"dependsOn": ["^build"],
+			"inputs": ["$TURBO_DEFAULT$", ".env*"],
+			"outputs": ["dist/**"],
+			"env": ["NODE_ENV"]
+		},
+		"build:production": {
+			"dependsOn": ["^build"],
+			"inputs": ["$TURBO_DEFAULT$", ".env*"],
+			"outputs": ["dist/**"],
+			"env": ["NODE_ENV"]
+		},
 		"lint": {},
 		"dev": {
 			"cache": false,

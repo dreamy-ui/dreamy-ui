@@ -8,6 +8,8 @@
 	"license": "MIT",
 	"scripts": {
 		"build": "tsup",
+		"build:dev": "tsup",
+		"build:production": "tsup",
 		"dev": "tsup --watch",
 		"typecheck": "tsc --noEmit",
 		"storybook": "storybook dev -p 6006"

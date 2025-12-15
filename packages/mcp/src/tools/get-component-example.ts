@@ -9,7 +9,6 @@ export const getComponentExampleTool: Tool<{ componentList: string[] }> = {
 	async ctx() {
 		try {
 			const componentList = await getAllComponentNames();
-			console.error("componentList", componentList);
 
 			return { componentList };
 		} catch (error) {
@@ -32,8 +31,6 @@ export const getComponentExampleTool: Tool<{ componentList: string[] }> = {
 			},
 			async ({ component }) => {
 				try {
-					component = component.toLowerCase();
-
 					const doc = await getComponentExample(component);
 
 					return {
