@@ -1,1 +1,9 @@
-../.mcp.json
+{
+	"mcpServers": {
+		"dreamy-ui": {
+			"type": "stdio",
+			"command": "node",
+			"args": ["apps/mcp/dist/stdio.js"]
+		}
+	}
+}

@@ -25,6 +25,14 @@ async function fetchJson(url, options, errorContext) {
   const json = await response.json();
   return json;
 }
+async function fetchText(url, options, errorContext) {
+  const response = await fetch(url, options);
+  if (!response.ok) {
+    const context = errorContext || `fetch ${url}`;
+    throw new Error(`Failed to ${context}: ${response.status} ${response.statusText}`);
+  }
+  return await response.text();
+}
 function createDreamyUrl(path) {
   return `${DREAMY_BASE_URL}${path}`;
 }
@@ -46,6 +54,22 @@ async function getAllComponentNames() {
   const componentList = await fetchComponentList();
   return componentList.map((c) => c.component);
 }
+async function getAllComponents() {
+  const componentList = await fetchComponentList();
+  return componentList.map((c) => {
+    return {
+      ...c,
+      installCommand: `dreamy add ${c.component}`
+    };
+  });
+}
+async function getComponentExample(component) {
+  return fetchText(
+    createDreamyUrl(`/docs/components/${component}.mdx`),
+    void 0,
+    `fetch example for component ${component}`
+  );
+}
 async function fetchRecipe(component) {
   return await fetchJson(
     createDreamyUrl(`/recipes/${component}.json`),
@@ -55,7 +79,7 @@ async function fetchRecipe(component) {
 }
 
 // src/tools/get-component.ts
-var getComponentPropsTool = {
+var getComponentTool = {
   name: "get_component",
   description: "Get whole data of a specific Dreamy UI component. This tool retrieves the properties, attributes, design related props for a component, like size, variant, etc. and configuration options available for a given Dreamy UI component.",
   async ctx() {
@@ -64,7 +88,7 @@ var getComponentPropsTool = {
       return { componentList };
     } catch (error) {
       throw new Error(
-        `Failed to initialize component props tool: ${error instanceof Error ? error.message : "Unknown error"}`
+        `Failed to initialize get component tool: ${error instanceof Error ? error.message : "Unknown error"}`
       );
     }
   },
@@ -85,7 +109,6 @@ var getComponentPropsTool = {
             fetchComponent(component),
             fetchRecipe(component)
           ]);
-          console.error("componentJson", componentJson);
           return {
             content: [
               {
@@ -113,18 +136,105 @@ var getComponentPropsTool = {
   }
 };
 
+// src/tools/get-components.ts
+var getComponentsTool = {
+  name: "get_components",
+  description: "Get whole data of all Dreamy UI components. This tool retrieves the all possible components, their recipe and pattern ids, their file dependencies and also",
+  async ctx() {
+    try {
+      const componentList = await getAllComponents();
+      return { componentList };
+    } catch (error) {
+      throw new Error(
+        `Failed to initialize component props tool: ${error instanceof Error ? error.message : "Unknown error"}`
+      );
+    }
+  },
+  exec(server2, { ctx, name, description }) {
+    server2.registerTool(
+      name,
+      {
+        title: name,
+        description
+      },
+      async () => {
+        try {
+          const componentList = ctx.componentList;
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify(componentList)
+              }
+            ]
+          };
+        } catch (error) {
+          return {
+            content: [
+              {
+                type: "text",
+                text: `Failed to get data of all components: ${error instanceof Error ? error.message : "Unknown error"}`
+              }
+            ]
+          };
+        }
+      }
+    );
+  }
+};
+var getComponentExampleTool = {
+  name: "get_component_example",
+  description: "Get example code for a specific Dreamy UI component. This tool retrieves the example code for a given Dreamy UI component.",
+  async ctx() {
+    try {
+      const componentList = await getAllComponentNames();
+      return { componentList };
+    } catch (error) {
+      throw new Error(
+        `Failed to initialize get component example tool: ${error instanceof Error ? error.message : "Unknown error"}`
+      );
+    }
+  },
+  exec(server2, { ctx, name, description }) {
+    server2.registerTool(
+      name,
+      {
+        title: name,
+        description,
+        inputSchema: z.object({
+          component: z.enum(ctx.componentList).describe("The name of the Dreamy UI component to get example of")
+        })
+      },
+      async ({ component }) => {
+        try {
+          component = component.toLowerCase();
+          const doc = await getComponentExample(component);
+          console.error("doc", doc);
+          return {
+            content: [
+              {
+                type: "text",
+                text: doc
+              }
+            ]
+          };
+        } catch (error) {
+          return {
+            content: [
+              {
+                type: "text",
+                text: `Failed to get data of ${component}: ${error instanceof Error ? error.message : "Unknown error"}`
+              }
+            ]
+          };
+        }
+      }
+    );
+  }
+};
+
 // src/tools/index.ts
-var tools = [
-  // getComponentExampleTool,
-  getComponentPropsTool
-  // getThemeTool,
-  // listComponentsTool,
-  // customizeThemeTool,
-  // v2ToV3MigrationTool,
-  // listComponentTemplatesTool,
-  // getComponentTemplatesTool,
-  // installationTool
-];
+var tools = [getComponentTool, getComponentsTool, getComponentExampleTool];
 var registeredToolCache = /* @__PURE__ */ new Map();
 var initializeTools = async (server2) => {
   await Promise.all(

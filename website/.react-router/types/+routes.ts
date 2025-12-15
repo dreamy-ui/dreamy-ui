@@ -32,6 +32,12 @@ type Pages = {
   "/docs": {
     params: {};
   };
+  "/docs/:section/:page.mdx": {
+    params: {
+      "section": string;
+      "page": string;
+    };
+  };
   "/docs/:section/:page": {
     params: {
       "section": string;
@@ -54,7 +60,7 @@ type Pages = {
 type RouteFiles = {
   "root.tsx": {
     id: "root";
-    page: "/" | "/api/fake-select-data" | "/api/docs/prefetch" | "/api/docs/search" | "/llms.txt" | "/testing" | "/docs" | "/docs/:section/:page" | "/docs/:section/:page/og-image" | "/*";
+    page: "/" | "/api/fake-select-data" | "/api/docs/prefetch" | "/api/docs/search" | "/llms.txt" | "/testing" | "/docs" | "/docs/:section/:page.mdx" | "/docs/:section/:page" | "/docs/:section/:page/og-image" | "/*";
   };
   "routes/api.fake-select-data.tsx": {
     id: "routes/api.fake-select-data";
@@ -82,7 +88,11 @@ type RouteFiles = {
   };
   "routes/docs.tsx": {
     id: "routes/docs";
-    page: "/docs" | "/docs/:section/:page" | "/docs/:section/:page/og-image";
+    page: "/docs" | "/docs/:section/:page.mdx" | "/docs/:section/:page" | "/docs/:section/:page/og-image";
+  };
+  "routes/docs.$section.$page[.mdx].ts": {
+    id: "routes/docs.$section.$page[.mdx]";
+    page: "/docs/:section/:page.mdx";
   };
   "routes/docs.$section.$page.tsx": {
     id: "routes/docs.$section.$page";
@@ -111,6 +121,7 @@ type RouteModules = {
   "routes/testing": typeof import("./app/routes/testing.tsx");
   "routes/_index": typeof import("./app/routes/_index.tsx");
   "routes/docs": typeof import("./app/routes/docs.tsx");
+  "routes/docs.$section.$page[.mdx]": typeof import("./app/routes/docs.$section.$page[.mdx].ts");
   "routes/docs.$section.$page": typeof import("./app/routes/docs.$section.$page.tsx");
   "routes/docs.$section.$page.og-image": typeof import("./app/routes/docs.$section.$page.og-image.tsx");
   "routes/docs._index": typeof import("./app/routes/docs._index.ts");

@@ -2,8 +2,8 @@
 	"mcpServers": {
 		"dreamy-ui": {
 			"type": "stdio",
-			"command": "npx",
-			"args": ["-y", "@dreamy-ui/mcp"]
+			"command": "node",
+			"args": ["apps/mcp/dist/stdio.js"]
 		}
 	}
 }
