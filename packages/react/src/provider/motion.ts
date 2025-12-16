@@ -2,7 +2,14 @@ import { TRANSITION_DEFAULTS, TRANSITION_EASINGS } from "@/utils";
 import { isNumeric } from "@/utils/number";
 import type { Transition, Variants } from "motion/react";
 
-type VariantKeys = "modal" | "overlay" | "tooltip" | "popover" | "collapse" | "checkboxCheckIcon";
+type VariantKeys =
+	| "modal"
+	| "overlay"
+	| "tooltip"
+	| "popover"
+	| "collapse"
+	| "checkboxCheckIcon"
+	| "actionBar";
 export type DefaultVariants = Record<VariantKeys, { default: Variants }>;
 
 export const defaultMotionVariants: DefaultVariants = {
@@ -128,6 +135,13 @@ export const defaultMotionVariants: DefaultVariants = {
 					ease: TRANSITION_EASINGS.easeInOut
 				}
 			})
+		}
+	},
+	actionBar: {
+		default: {
+			initial: { y: 100, opacity: 0, transition: TRANSITION_DEFAULTS.enter },
+			animate: { y: 0, opacity: 1 },
+			exit: { y: 100, opacity: 0, transition: TRANSITION_DEFAULTS.exit }
 		}
 	}
 } as const;

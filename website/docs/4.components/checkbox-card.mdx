@@ -31,14 +31,14 @@ Checkbox Card is a component that allows you to select a value from a list of op
 Change the variant of the checkbox card.
 
 <Wrapper>	
-	<VStack w='250px'>
+	<VStack w='250px' align='stretch'>
 		<CheckboxCard variant={"outline"} title={"Outline variant"} description={`Description for Outline variant`} />
 		<CheckboxCard variant={"subtle"} title={"Subtle variant"} description={`Description for Subtle variant`} />
 	</VStack>
 </Wrapper>
 
 ```tsx
-<VStack w='250px'>
+<VStack w='250px' align='stretch'>
 	<CheckboxCard variant={"outline"} title={"Outline variant"} description={`Description for Outline variant`} />
 	<CheckboxCard variant={"subtle"} title={"Subtle variant"} description={`Description for Subtle variant`} />
 </VStack>
@@ -49,14 +49,14 @@ Change the variant of the checkbox card.
 Change the checkbox variant of the checkbox card.
 	
 <Wrapper>
-	<VStack w='250px'>
+	<VStack w='250px' align='stretch'>
 		<CheckboxCard checkboxVariant={"solid"} title={"Solid variant"} description={`Description for Solid variant`} />
 		<CheckboxCard checkboxVariant={"outline"} title={"Outline variant"} description={`Description for Outline variant`} />
 	</VStack>
 </Wrapper>
 
 ```tsx
-<VStack w='250px'>
+<VStack w='250px' align='stretch'>
 	<CheckboxCard checkboxVariant={"solid"} title={"Solid variant"} description={`Description for Solid variant`} />
 	<CheckboxCard checkboxVariant={"outline"} title={"Outline variant"} description={`Description for Outline variant`} />
 </VStack>
@@ -67,7 +67,7 @@ Change the checkbox variant of the checkbox card.
 Change the color scheme of the checkbox card.
 
 <Wrapper>
-	<VStack w='250px'>
+	<VStack w='250px' align='stretch'>
 		<CheckboxCard scheme={"primary"} defaultChecked title={"Primary"} description={`Description for Primary`} />
 		<CheckboxCard scheme={"secondary"} defaultChecked title={"Secondary"} description={`Description for Secondary`} />
 		<CheckboxCard scheme={"success"} defaultChecked title={"Success"} description={`Description for Success`} />
@@ -78,7 +78,7 @@ Change the color scheme of the checkbox card.
 </Wrapper>
 
 ```tsx
-<VStack w='250px'>
+<VStack w='250px' align='stretch'>
 	<CheckboxCard scheme={"primary"} defaultChecked title={"Primary"} description={`Description for Primary`} />
 	<CheckboxCard scheme={"secondary"} defaultChecked title={"Secondary"} description={`Description for Secondary`} />
 	<CheckboxCard scheme={"success"} defaultChecked title={"Success"} description={`Description for Success`} />
@@ -93,7 +93,7 @@ Change the color scheme of the checkbox card.
 Change the checkbox card size.
 
 <Wrapper>
-	<VStack w='250px'>
+	<VStack w='250px' align='stretch'>
 		<CheckboxCard size={"sm"} title={"Small"} description={`Description for Small`} />
 		<CheckboxCard size={"md"} title={"Medium"} description={`Description for Medium`} />
 		<CheckboxCard size={"lg"} title={"Large"} description={`Description for Large`} />
@@ -101,7 +101,7 @@ Change the checkbox card size.
 </Wrapper>
 
 ```tsx
-<VStack w='250px'>
+<VStack w='250px' align='stretch'>
 	<CheckboxCard size={"sm"} title={"Small"} description={`Description for Small`} />
 	<CheckboxCard size={"md"} title={"Medium"} description={`Description for Medium`} />
 	<CheckboxCard size={"lg"} title={"Large"} description={`Description for Large`} />
@@ -123,7 +123,7 @@ export function ControlledCheckboxCard() {
     return (
         <>
             <Text>Selected: {isChecked ? "true" : "false"}</Text>
-            <VStack w="250px">
+            <VStack w="250px" align='stretch'>
                 <CheckboxCard
                     title="Controlled"
                     description="Description for Controlled"

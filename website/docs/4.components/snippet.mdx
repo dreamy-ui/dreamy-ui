@@ -15,60 +15,60 @@ pnpm dreamy add snippet
 ## Usage
 
 <Wrapper>
-	<Snippet>
-		<>pnpm install @dreamy-ui/react @dreamy-ui/system</>
+	<Snippet w='full'>
+		<>pnpm dlx dreamy add --all</>
 	</Snippet>
 </Wrapper>
 
 ```tsx
 <Snippet>
-	pnpm install @dreamy-ui/react @dreamy-ui/system
+	pnpm dlx dreamy add --all
 </Snippet>
 ```
 
 ### Variants 
 
 <Wrapper>
-	<Snippet variant="bordered">
-		<>pnpm install @dreamy-ui/react @dreamy-ui/system</>
+	<Snippet variant="bordered" w='full'>
+		<>pnpm dlx dreamy add --all</>
 	</Snippet>
-	<Snippet variant="solid">
-		<>pnpm install @dreamy-ui/react @dreamy-ui/system</>
+	<Snippet variant="solid" w='full'>
+		<>pnpm dlx dreamy add --all</>
 	</Snippet>
 </Wrapper>
 
 ```tsx
 <Snippet variant="bordered">
-	pnpm install @dreamy-ui/react @dreamy-ui/system
+	pnpm dlx dreamy add --all
 </Snippet>
 <Snippet variant="solid">
-	pnpm install @dreamy-ui/react @dreamy-ui/system
+	pnpm dlx dreamy add --all
 </Snippet>
 ```
 
 ### Sizes
 
 <Wrapper>
-	<Snippet size="sm">
-		<>pnpm install @dreamy-ui/react @dreamy-ui/system</>
+	<Snippet size="sm" w='full'>
+		<>pnpm dlx dreamy add --all</>
 	</Snippet>
-	<Snippet size="md">
-		<>pnpm install @dreamy-ui/react @dreamy-ui/system</>
+	<Snippet size="md" w='full'>
+		<>pnpm dlx dreamy add --all</>
 	</Snippet>
-	<Snippet size="lg">
-		<>pnpm install @dreamy-ui/react @dreamy-ui/system</>
+	<Snippet size="lg" w='full'>
+		<>pnpm dlx dreamy add --all</>
 	</Snippet>
 </Wrapper>
 
 ```tsx
 <Snippet size="sm">
-	pnpm install @dreamy-ui/react @dreamy-ui/system
+	pnpm dlx dreamy add --all
 </Snippet>
 <Snippet size="md">
-	pnpm install @dreamy-ui/react @dreamy-ui/system
+	pnpm dlx dreamy add --all
 </Snippet>
 <Snippet size="lg">
-	pnpm install @dreamy-ui/react @dreamy-ui/system
+	pnpm dlx dreamy add --all
 </Snippet>
 ```
 
@@ -89,8 +89,8 @@ pnpm dreamy add snippet
 			w='full'
 		>
 			<Text minW={20}>{scheme}</Text>	
-			<Snippet key={scheme} scheme={scheme} w='full'>
-				pnpm install @dreamy-ui/react @dreamy-ui/system
+			<Snippet key={scheme} scheme={scheme} w='full' >
+				pnpm dlx dreamy add --all
 			</Snippet>
 		</Stack>
 	))}
@@ -112,7 +112,7 @@ pnpm dreamy add snippet
 	>
 		<Text minW={20}>{scheme}</Text>	
 		<Snippet key={scheme} scheme={scheme} w='full'>
-			pnpm install @dreamy-ui/react @dreamy-ui/system
+			pnpm dlx dreamy add --all
 		</Snippet>
 	</Stack>
 ))}
@@ -123,13 +123,13 @@ pnpm dreamy add snippet
 You can disable the "Copy To Clipboard" tooltip by using the `disableTooltip` prop.
 
 <Wrapper>
-	<Snippet disableTooltip>
-		<>pnpm install @dreamy-ui/react @dreamy-ui/system</>
+	<Snippet disableTooltip w='full'>
+		<>pnpm dlx dreamy add --all</>
 	</Snippet>
 </Wrapper>
 
 ```tsx
 <Snippet disableTooltip>
-	pnpm install @dreamy-ui/react @dreamy-ui/system
+	pnpm dlx dreamy add --all
 </Snippet>
 ```

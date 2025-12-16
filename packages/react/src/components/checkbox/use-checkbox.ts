@@ -26,12 +26,12 @@ export interface IconCustomProps {
 	pathProps?: SVGMotionProps<SVGPathElement>;
 }
 
-export type CheckboxIconProps = {
-	"data-checked": string;
-	isSelected: boolean;
-	isIndeterminate: boolean;
-	reduceMotion: boolean;
-};
+export interface CheckboxIconProps {
+	"data-checked"?: string;
+	isSelected?: boolean;
+	isIndeterminate?: boolean;
+	reduceMotion?: boolean;
+}
 
 interface Props extends IconCustomProps {
 	/**
@@ -238,11 +238,13 @@ export function useCheckbox(props: UseCheckboxProps = {}) {
 	const onKeyUp = useCallback(
 		(event: React.KeyboardEvent) => {
 			if (event.key === " ") {
+				event.preventDefault();
 				setActive(false);
+				(event.target as any).checked = !isChecked;
 				handleChange(event as any);
 			}
 		},
-		[handleChange]
+		[handleChange, isChecked]
 	);
 
 	const getInputProps: PropGetter = useCallback(() => {
@@ -300,15 +302,17 @@ export function useCheckbox(props: UseCheckboxProps = {}) {
 	]);
 
 	const getLabelProps: PropGetter = useCallback(
-		() => ({
+		(props = {}) => ({
+			...props,
 			htmlFor: labelId,
 			"data-part": "label"
 		}),
 		[labelId]
 	);
 
-	const getIconProps: PropGetter = useCallback(
-		() => ({
+	const getIconProps = useCallback(
+		(props: Record<string, any> = {}) => ({
+			...props,
 			isChecked,
 			active,
 			isIndeterminate,

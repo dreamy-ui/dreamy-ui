@@ -6,8 +6,12 @@ export const globalCss = defineGlobalStyles({
 		outlineColor: "{colors.primary}"
 	},
 	"*:focus-visible": {
-		outline: "none",
-		boxShadow: "0 0 0 1.5px {colors.primary}",
+		outlineOffset: "2px",
+		outlineStyle: "solid",
+		outlineWidth: "2px",
+		outlineColor: "{colors.primary}",
+		// outline: "none",
+		// boxShadow: "0 0 0 1.5px {colors.primary}",
 		borderColor: "{colors.primary}"
 	},
 	html: {

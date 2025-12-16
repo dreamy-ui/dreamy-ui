@@ -10,26 +10,26 @@ import { Text, type TextProps } from "./text";
 import { VisuallyHiddenInput } from "./visually-hidden";
 
 export interface CheckboxCardProps extends UseCheckboxProps, CheckboxCardVariantProps {
-    /**
-     * The title of the checkbox card
-     */
-    title?: string;
-    /**
-     * The description of the checkbox card
-     */
-    description?: string;
-    /**
-     * The tag of the title
-     */
-    titleTag?: ElementType;
-    /**
-     * The props of the title
-     */
-    titleProps?: TextProps;
-    /**
-     * The props of the description
-     */
-    descriptionProps?: TextProps;
+	/**
+	 * The title of the checkbox card
+	 */
+	title?: string;
+	/**
+	 * The description of the checkbox card
+	 */
+	description?: string;
+	/**
+	 * The tag of the title
+	 */
+	titleTag?: ElementType;
+	/**
+	 * The props of the title
+	 */
+	titleProps?: TextProps;
+	/**
+	 * The props of the description
+	 */
+	descriptionProps?: TextProps;
 }
 
 const StyledCheckbox = dreamy("div", checkboxCard);
@@ -40,75 +40,68 @@ const StyledCheckbox = dreamy("div", checkboxCard);
  * @See Docs https://dreamy-ui.com/docs/components/checkbox-card
  */
 export const CheckboxCard = forwardRef<HTMLInputElement, CheckboxCardProps>((props, ref) => {
-    const { title, description, titleTag = "p", titleProps, descriptionProps, ...rest } = props;
-    const {
-        children,
-        icon = <CheckboxIcon />,
-        isChecked,
-        isDisabled,
-        isInvalid,
-        getRootProps,
-        getWrapperProps,
-        getInputProps,
-        getIconProps,
-        getLabelProps
-    } = useCheckbox({ ...rest, isCard: true, ref });
+	const { title, description, titleTag = "p", titleProps, descriptionProps, ...rest } = props;
+	const {
+		children,
+		icon = <CheckboxIcon />,
+		isChecked,
+		isDisabled,
+		isInvalid,
+		getRootProps,
+		getWrapperProps,
+		getInputProps,
+		getIconProps,
+		getLabelProps
+	} = useCheckbox({ ...rest, isCard: true, ref });
 
-    const clonedIcon = useMemo(() => {
-        return typeof icon === "function"
-            ? icon(getIconProps() as any)
-            : cloneElement(icon as ReactElement, getIconProps());
-    }, [getIconProps, icon]);
+	const clonedIcon = useMemo(() => {
+		return typeof icon === "function"
+			? icon(getIconProps())
+			: cloneElement(icon as ReactElement, getIconProps());
+	}, [getIconProps, icon]);
 
-    const ctx = useMemo(() => {
-        return {
-            children,
-            icon,
-            isChecked,
-            isDisabled,
-            isInvalid,
-            getRootProps,
-            getWrapperProps,
-            getInputProps,
-            getIconProps,
-            getLabelProps
-        };
-    }, [
-        children,
-        icon,
-        isChecked,
-        isDisabled,
-        isInvalid,
-        getRootProps,
-        getWrapperProps,
-        getInputProps,
-        getIconProps,
-        getLabelProps
-    ]);
+	const ctx = useMemo(() => {
+		return {
+			children,
+			icon,
+			isChecked,
+			isDisabled,
+			isInvalid,
+			getRootProps,
+			getWrapperProps,
+			getInputProps,
+			getIconProps,
+			getLabelProps
+		};
+	}, [
+		children,
+		icon,
+		isChecked,
+		isDisabled,
+		isInvalid,
+		getRootProps,
+		getWrapperProps,
+		getInputProps,
+		getIconProps,
+		getLabelProps
+	]);
 
-    return (
-        <CheckboxProvider value={ctx}>
-            <StyledCheckbox {...(getRootProps() as any)}>
-                <Box data-part={"header"}>
-                    <Text
-                        as={titleTag}
-                        data-part={"title"}
-                        {...titleProps}
-                    >
-                        {title}
-                    </Text>
-                    <Box data-part={"checkbox-root"}>
-                        <VisuallyHiddenInput {...(getInputProps() as any)} />
-                        <span {...getWrapperProps()}>{clonedIcon}</span>
-                    </Box>
-                </Box>
-                <Text
-                    data-part={"description"}
-                    {...descriptionProps}
-                >
-                    {description}
-                </Text>
-            </StyledCheckbox>
-        </CheckboxProvider>
-    );
+	return (
+		<CheckboxProvider value={ctx}>
+			<StyledCheckbox {...getRootProps()}>
+				<Box data-part={"header"}>
+					<Text as={titleTag} data-part={"title"} {...titleProps}>
+						{title}
+					</Text>
+					<Box data-part={"checkbox-root"}>
+						<VisuallyHiddenInput {...getInputProps()} />
+						<span {...getWrapperProps()}>{clonedIcon}</span>
+					</Box>
+				</Box>
+				<Text data-part={"description"} {...descriptionProps}>
+					{description}
+				</Text>
+			</StyledCheckbox>
+		</CheckboxProvider>
+	);
 });
