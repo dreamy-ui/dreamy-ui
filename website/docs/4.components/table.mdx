@@ -329,3 +329,140 @@ pnpm dreamy add table
   </>
 ))}
 ```
+
+### Table With Action Bar
+
+A common use case is integrating the action bar with table selections.
+
+<Wrapper>
+  <ActionBarTable />
+</Wrapper>
+
+```tsx
+interface User {
+	id: number;
+	name: string;
+	age: number;
+	gender: string;
+	isSelected: boolean;
+}
+
+function ActionBarTable() {
+	const [users, setUsers] = useState<User[]>([
+		{ id: 1, name: "John Doe", age: 20, gender: "Male", isSelected: false },
+		{ id: 2, name: "Jane Doe", age: 22, gender: "Female", isSelected: false },
+		{ id: 3, name: "Jim Doe", age: 25, gender: "Male", isSelected: false }
+	]);
+
+	const { isOpen, onClose } = useControllable({
+		isOpen: users.some((user) => user.isSelected),
+		onClose: () => setUsers((prev) => prev.map((user) => ({ ...user, isSelected: false })))
+	});
+
+	const toggleSelection = useCallback((id: number) => {
+		setUsers((prev) =>
+			prev.map((user) => (user.id === id ? { ...user, isSelected: !user.isSelected } : user))
+		);
+	}, []);
+
+	const unselectAll = useCallback(() => {
+		setUsers((prev) => prev.map((user) => ({ ...user, isSelected: false })));
+	}, []);
+
+	const toggleSelectionAll = useCallback(() => {
+		setUsers((prev) =>
+			prev.map((user) => ({ ...user, isSelected: !prev.every((user) => user.isSelected) }))
+		);
+	}, []);
+
+	return (
+		<>
+			<Table.Root variant={"simple"} w="full" withBackground>
+				<Table.Table>
+					<Table.Header>
+						<Table.Row>
+							<Table.ColumnHeader w={"60px"}>
+								<Checkbox
+									isChecked={users.every((user) => user.isSelected)}
+									isIndeterminate={
+										users.some((user) => user.isSelected) &&
+										!users.every((user) => user.isSelected)
+									}
+									onChangeValue={toggleSelectionAll}
+								/>
+							</Table.ColumnHeader>
+							<Table.ColumnHeader>Name</Table.ColumnHeader>
+							<Table.ColumnHeader>Age</Table.ColumnHeader>
+							<Table.ColumnHeader>Gender</Table.ColumnHeader>
+						</Table.Row>
+					</Table.Header>
+					<Table.Body>
+						{users.map((user, index) => (
+							<Table.Row
+								/* apply border radiuses to first and last rows in the cells */
+								_first={{
+									"& > td:first-of-type": {
+										borderStartStartRadius: "l2"
+									},
+									"& > td:last-of-type": {
+										borderStartEndRadius: "l2"
+									}
+								}}
+								_hover={{
+									bg: "alpha.50"
+								}}
+								_last={{
+									"& > td:first-of-type": {
+										borderEndStartRadius: "l2"
+									},
+									"& > td:last-of-type": {
+										borderEndEndRadius: "l2"
+									}
+								}}
+								bg={user.isSelected ? "alpha.50" : "transparent"}
+								cursor={"pointer"}
+								key={index}
+								onClick={() => toggleSelection(user.id)}
+							>
+								<Table.Cell w={"60px"}>
+									<Checkbox
+										isChecked={user.isSelected}
+										onChangeValue={() => toggleSelection(user.id)}
+									/>
+								</Table.Cell>
+								<Table.Cell>{user.name}</Table.Cell>
+								<Table.Cell>{user.age}</Table.Cell>
+								<Table.Cell>{user.gender}</Table.Cell>
+							</Table.Row>
+						))}
+					</Table.Body>
+				</Table.Table>
+			</Table.Root>
+
+			<ActionBar.Root isOpen={isOpen} onClose={onClose}>
+				<ActionBar.Content>
+					<ActionBar.SelectionTrigger>
+						{users.filter((user) => user.isSelected).length} selected
+					</ActionBar.SelectionTrigger>
+					<ActionBar.Separator />
+					<Button size="sm" variant="outline">
+						Download
+					</Button>
+					<Button
+						color="error"
+						onClick={() => {
+							unselectAll();
+							onClose();
+						}}
+						rightIcon={<LuTrash />}
+						size="sm"
+						variant="outline"
+					>
+						Delete
+					</Button>
+				</ActionBar.Content>
+			</ActionBar.Root>
+		</>
+	);
+}
+```

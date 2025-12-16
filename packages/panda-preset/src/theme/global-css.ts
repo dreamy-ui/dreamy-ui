@@ -3,7 +3,8 @@ import { defineGlobalStyles } from "@pandacss/dev";
 export const globalCss = defineGlobalStyles({
 	"*": {
 		boxSizing: "border-box",
-		outlineColor: "{colors.primary}"
+		outlineColor: "{colors.primary}",
+		borderColor: "border"
 	},
 	"*:focus-visible": {
 		outlineOffset: "2px",

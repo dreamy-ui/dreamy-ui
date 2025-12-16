@@ -24,7 +24,7 @@ export default defineConfig({
 				dark: "#080808", // main
 				// dark: "#06050a",
 				// dark: "#161216",
-				// dark: "#261620",
+				// dark: "#1a191d",
 				light: "#FFF" // main
 				// light: "#f8f0ff"
 			},
@@ -44,29 +44,6 @@ export default defineConfig({
 	theme: {
 		extend: {
 			recipes,
-			// recipes: {
-			// 	button: {
-			// 		variants: {
-			// 			variant: {
-			// 				tertiary: {
-			// 					bg: "tertiary",
-			// 					color: "black"
-			// 				}
-			// 				// glass: parts.button({
-			// 				//     root: {
-			// 				//         bg: "currentColor/12",
-			// 				//         border: "1px solid",
-			// 				//         borderColor: "currentColor/50",
-			// 				//         boxShadow: "inset 0 0 4px {currentColor/12}",
-			// 				//         _hover: {
-			// 				//             bg: "currentColor/18"
-			// 				//         }
-			// 				//     }
-			// 				// })
-			// 			}
-			// 		}
-			// 	}
-			// },
 			semanticTokens: {
 				colors: {
 					tertiary: {
