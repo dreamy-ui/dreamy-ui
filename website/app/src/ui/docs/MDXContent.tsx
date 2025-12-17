@@ -98,6 +98,7 @@ import {
     SizePopovers
 } from "~/src/ui/docs/components/popovers";
 import { Link } from "~/src/ui/global/Link";
+import { ControlledTabs, VariantTabs } from "./components/Tabs";
 import { ControlledAccordion } from "./components/accordions";
 import {
     ActionBarMultiple,
@@ -136,7 +137,6 @@ import { ControlledRangeSlider, MaxMinRangeSlider } from "./components/range-sli
 import { AsyncSelect, ControlledSelect } from "./components/selects";
 import { ControlledSlider, MaxMinSlider } from "./components/sliders";
 import { ControlledSwitch } from "./components/switches";
-import { ControlledTabs, VariantTabs } from "./components/tabs";
 import { UpdateToast } from "./components/toasts";
 import { Collapsed, Scaled } from "./components/transitions";
 
