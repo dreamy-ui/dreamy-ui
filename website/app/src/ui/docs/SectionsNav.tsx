@@ -171,7 +171,13 @@ const MemoSectionButton = memo(function SectionButton({
             size={"sm"}
             variant={isCurrent ? "primary" : "ghost"}
         >
-            {file.name === "Llms" ? "LLMs" : file.name === "Cli" ? "CLI" : file.name}
+            {file.name === "Llms"
+                ? "LLMs"
+                : file.name === "Cli"
+                  ? "CLI"
+                  : file.name === "Mcp Server"
+                    ? "MCP Server"
+                    : file.name}
             {(isNew || isUpdated) && (
                 <Badge
                     css={{
