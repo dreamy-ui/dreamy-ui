@@ -1,6 +1,6 @@
 {
 	"name": "@dreamy-ui/cli",
-	"version": "1.0.0",
+	"version": "2.0.0",
 	"description": "CLI for Dreamy UI",
 	"author": "imexoodeex",
 	"license": "MIT",
@@ -9,7 +9,10 @@
 	"main": "dist/index.js",
 	"module": "dist/index.js",
 	"types": "dist/index.d.ts",
-	"files": ["dist", "bin"],
+	"files": [
+		"dist",
+		"bin"
+	],
 	"bin": {
 		"dreamy": "./bin/index.js"
 	},

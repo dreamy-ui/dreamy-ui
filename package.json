@@ -26,6 +26,7 @@
 		"storybook": "cd packages/react && pnpm run storybook dev",
 		"sync": "git pull && pnpm i && pnpm run build",
 		"kill-ports": "kill-port 3000 && kill-port 3001 && kill-port 3002",
+		"components": "cd website && pnpm run components",
 		"components:watch": "cd website && pnpm run components:watch"
 	},
 	"keywords": [],
