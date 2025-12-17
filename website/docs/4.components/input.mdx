@@ -47,6 +47,7 @@ pnpm dreamy add input
 		<Input placeholder="Enter your username" variant="outline" />
 		<Input placeholder="Enter your username" variant="filled" />
 		<Input placeholder="Enter your username" variant="flushed" />
+		<Input placeholder="Enter your username" variant="filledOutline" />
 	</VStack>
 </Wrapper>
 
@@ -55,6 +56,7 @@ pnpm dreamy add input
 	<Input placeholder="Enter your username" variant="outline" />
 	<Input placeholder="Enter your username" variant="filled" />
 	<Input placeholder="Enter your username" variant="flushed" />
+	<Input placeholder="Enter your username" variant="filledOutline" />
 </VStack>
 ```
 
@@ -67,6 +69,7 @@ Pass `isInvalid` prop to the `Input` to show the error state.
 		<Input placeholder="Enter your username" variant="outline" isInvalid />
 		<Input placeholder="Enter your username" variant="filled" isInvalid />
 		<Input placeholder="Enter your username" variant="flushed" isInvalid />
+		<Input placeholder="Enter your username" variant="filledOutline" isInvalid />
 	</VStack>
 </Wrapper>
 ```tsx
@@ -74,6 +77,7 @@ Pass `isInvalid` prop to the `Input` to show the error state.
 	<Input placeholder="Enter your username" variant="outline" isInvalid />
 	<Input placeholder="Enter your username" variant="filled" isInvalid />
 	<Input placeholder="Enter your username" variant="flushed" isInvalid />
+	<Input placeholder="Enter your username" variant="filledOutline" isInvalid />
 </VStack>
 ```
 
@@ -84,20 +88,36 @@ Combine `Input` with `InputGroup` to create a add elements on the left or right 
 Due to specificity of the `Input` component, space for addons won't be added automatically, so you will need to add padding left (`pl`) or right (`pr`) to the `Input` to make space for the addons.
 
 <Wrapper>
-	<InputGroup variant="filled">
+	<InputGroup>
 		<InputLeftAddon>
 			<Icon as={<BiSearch />} boxSize="5" color="fg.medium" />
 		</InputLeftAddon>
 		<Input pl="10" placeholder="Search for..." />
 	</InputGroup>	
+
+	<InputGroup leftElement={"$"}>
+		<Input placeholder="Product Price" />
+	</InputGroup>
+
+	<InputGroup rightElement={".com"} leftElement={"https://"}>
+		<Input placeholder="Domain" />
+	</InputGroup>	
 </Wrapper>
 
 ```tsx
-<InputGroup variant="filled">
+<InputGroup>
 	<InputLeftAddon>
-		<Icon as={BiSearch} boxSize="5" color="fg.medium" />
+		<Icon as={<BiSearch />} boxSize="5" color="fg.medium" />
 	</InputLeftAddon>
 	<Input pl="10" placeholder="Search for..." />
+</InputGroup>	
+
+<InputGroup leftElement={"$"}>
+	<Input placeholder="Product Price" />
+</InputGroup>
+
+<InputGroup rightElement={".com"} leftElement={"https://"}>
+	<Input placeholder="Domain" />
 </InputGroup>	
 ```
 
