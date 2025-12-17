@@ -1,0 +1,145 @@
+---
+title: MCP Server
+---
+
+# MCP Server
+
+Dreamy UI has a MCP server that you can use to get information about the components and patterns.
+
+## Usage
+
+The Dreamy UI has a 
+[Model Context Protocol](https://modelcontextprotocol.io/introduction) server
+that provides AI assistants (like Claude Code, Cursor, and Copilot) with access
+to the Dreamy UI component library.
+
+## Tools
+
+The Dreamy UI MCP exposes the following tools to AI agents:
+
+### Component Tools
+
+- **`get_components`**: Get a complete list of all available components
+- **`get_component`**: Get detailed props, types, and configuration options
+  for any component
+- **`get_component_example`**: Get example code for a specific Dreamy UI component
+
+## Setup
+
+The MCP server currently supports only
+[stdio transport](https://modelcontextprotocol.io/specification/2025-06-18/basic/transports#stdio)
+and is published at `@dreamy-ui/mcp`.
+
+### Cursor
+
+In the `.cursor/mcp.json` file at the root of your project, add the following
+configuration:
+
+```json
+{
+  "mcpServers": {
+    "dreamy-ui": {
+      "command": "npx",
+      "args": ["-y", "@dreamy-ui/mcp"]
+    }
+  }
+}
+```
+
+> If Cursor doesn't automatically detect the changes, restart the editor or
+> manually enable the Dreamy UI server via "MCP Tools."
+
+### Visual Studio Code
+
+> Make sure you have the
+> [GitHub Copilot](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot)
+> and
+> [GitHub Copilot Chat](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot-chat)
+> extensions installed.
+
+In the `.vscode/mcp.json` file at the root of your project, add the MCP server
+block:
+
+```json
+{
+  "servers": {
+    "dreamy-ui": {
+      "command": "npx",
+      "args": ["-y", "@dreamy-ui/mcp"]
+    }
+  }
+}
+```
+
+The MCP server is now ready to use. Click on Start on the MCP server.
+
+### Claude Code
+
+> Make sure you have Claude Code installed. Visit
+> [Anthropic docs](https://docs.anthropic.com/en/docs/claude-code/mcp) for
+> installation instructions.
+
+Run the following command in your terminal to add the Dreamy UI MCP server:
+
+```bash
+claude mcp add dreamy-ui -- npx -y @dreamy-ui/mcp
+```
+
+The MCP server is now ready to use. Start a Claude Code session by running
+`claude`.
+
+### Windsurf
+
+1. <>Navigate to "Settings" > "Windsurf Settings" > "Cascade"</>
+
+2. <>Click the "Manage MCPs" button, then click the "View raw config" button.</>
+
+3. <>Add the following to the MCP configuration file (`.codeium/windsurf/mcp_config.json`):</>
+
+```json
+{
+  "mcpServers": {
+    "dreamy-ui": {
+      "command": "npx",
+      "args": ["-y", "@dreamy-ui/mcp"]
+    }
+  }
+}
+```
+
+> You might need to click the "Refresh" button to see the MCP server in the
+> list.
+
+### Zed
+
+1. <>Go to Settings > Open Settings</>
+
+2. <>In the `settings.json` file, add MCP server as a new **context server**</>
+
+```json
+{
+  "context_servers": {
+    "dreamy-ui": {
+      "source": "custom",
+      "command": "npx",
+      "args": ["-y", "@dreamy-ui/mcp"]
+    }
+  }
+}
+```
+
+### Custom MCP Client
+
+To run the MCP server in a local or development environment using a custom MCP
+client, you need to add the MCP server to the client's configuration file.
+
+```json
+{
+  "mcpServers": {
+    "dreamy-ui": {
+      "command": "npx",
+      "args": ["-y", "@dreamy-ui/mcp"]
+    }
+  }
+}
+```

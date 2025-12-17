@@ -85,7 +85,7 @@ The best practice is to use `<Field />` component to wrap your form elements wit
 <Wrapper>
 	<Field.Root name="name" isRequired>
 		<Field.Label>Name</Field.Label>
-		<Input />
+		<Input placeholder="Preferred name" />
 		<Field.Hint>
 			<>Enter your preferred name</>
 		</Field.Hint>
@@ -153,7 +153,7 @@ Use `asComp` to pass a custom component to the component. Same as `asChild`, but
 
 ```tsx
 <Box as="section">
-    <>I render as section. Inspect to see the element type.</>
+    I render as section. Inspect to see the element type.
 </Box>
 
 <Button asChild>
@@ -167,7 +167,10 @@ Use `asComp` to pass a custom component to the component. Same as `asChild`, but
 
 ## Customization
 
-If you dislike any of the token, component recipe or default values of the patterns like `<Flex />`, you can customize it by overriding it in the `panda.config.ts`.
+If you dislike any of the token, component recipe or default values of the patterns like `Flex`, you can customize it with:
+
+- Components: Modify recipe and pattern files directly in the `recipes` and `patterns` folders.
+- Tokens: Modify the panda tokens in the `panda.config.ts` file. See [Panda Docs](https://panda-css.com/docs/customization/theme) for more information.
 
 Please note that Dreamy UI uses user's `styled-system` as design system, so any changes you make to the `panda.config.ts`, will be applied to all Dreamy UI components.
 This means components are always in sync with variants, patterns and token types.

@@ -1,0 +1,205 @@
+---
+title: CLI Reference
+---
+
+# Dreamy UI CLI
+
+The Dreamy UI CLI helps you initialize and manage your Dreamy UI project with ease.
+
+## Installation
+
+The CLI is included when you install the `@dreamy-ui/cli` package:
+
+```bash
+pnpm add -D @dreamy-ui/cli
+```
+
+## Commands
+
+### init
+
+Initialize Dreamy UI in your project with automatic setup.
+
+```bash
+pnpm dreamy init
+```
+
+**What it does:**
+
+1. Detect your framework (React Router v7, Next.js, or Vite)
+2. Install all required dependencies (Panda CSS + Dreamy UI)
+3. Create and configure `panda.config.ts`
+4. Update `vite.config.ts` or `postcss.config.mjs` with Panda CSS PostCSS plugin
+5. Remove default Tailwind CSS (React Router v7 and Next.js only)
+6. Set up CSS files with proper imports
+7. Create a `DreamyProvider` component
+8. Update your `tsconfig.json` with `@/*` path alias and styled-system (if using TypeScript)
+9. Next.js also gets `styled-system/*` path alias for proper type resolution
+10. Run Panda CSS codegen to generate the styled-system
+11. Add recommended components (button, flex, text, heading) to get you started
+12. Prints out code to add to the root of your application
+
+**Options:**
+
+- `--yes, -y` - Skip all prompts and use defaults
+- `--skip-install` - Skip dependency installation (useful if you want to install manually)
+- `--skip-components` - Skip adding recommended components (button, flex, text, heading)
+
+**Examples:**
+
+```bash
+# Interactive setup with prompts
+dreamy init
+
+# Skip all prompts
+dreamy init --yes
+
+# Skip dependency installation
+dreamy init --skip-install
+
+# Skip adding default components
+dreamy init --skip-components
+```
+
+---
+
+### add
+
+Add Dreamy UI components to your project.
+
+```bash
+dreamy add [components...]
+```
+
+**Examples:**
+
+```bash
+# Add a single component
+dreamy add button
+
+# Add multiple components
+dreamy add button input card
+
+# Add all components
+dreamy add --all
+
+# Add components interactively
+dreamy add
+```
+
+**Options:**
+
+- `--all` - Add all available components
+- `--force, -f` - Overwrite existing files
+- `--dry-run, -d` - Preview changes without writing files
+- `--outdir <dir>` - Specify output directory for components
+- `--tsx` - Force TypeScript output
+
+**What it does:**
+
+1. Downloads component files from the registry
+2. Installs component dependencies (other components)
+3. Adds required recipes and patterns
+4. Runs Panda CSS codegen
+
+---
+
+### list
+
+List all available components in the Dreamy UI registry.
+
+```bash
+dreamy list
+```
+
+Shows a table of all available components with their names and descriptions.
+
+---
+
+### diff
+
+Compare your local components with the registry versions.
+
+```bash
+dreamy diff [component]
+```
+
+**Examples:**
+
+```bash
+# Check differences for a specific component
+dreamy diff button
+
+# Check all components
+dreamy diff
+```
+
+**What it shows:**
+
+- Files that are up-to-date ✓
+- Files that differ from registry ✗
+- Files that don't exist locally →
+- A detailed diff of changes
+
+---
+
+## Troubleshooting
+
+### CLI not found
+
+If you get a "command not found" error, try installing the command again:
+
+```bash
+pnpm install -D @dreamy-ui/cli
+```
+
+### Framework not detected
+
+If the CLI can't detect your framework:
+
+1. Make sure you have a config file (`next.config.js`, `react-router.config.ts`, or `vite.config.ts`)
+2. The file should be in the root of your project
+3. Try running from your project root directory
+
+### TypeScript errors after init
+
+After running `init`, you might need to:
+
+1. Restart your TypeScript server (VS Code: Cmd/Ctrl + Shift + P → "Restart TS Server")
+2. Run `npx panda codegen` to generate types
+3. Check that `styled-system/**/*` is in your `tsconfig.json` include array
+
+### Dependency installation fails
+
+If dependency installation fails during `init`, run without installing dependencies:
+
+```md
+dreamy init --skip-install
+
+# Then manually install dependencies
+pnpm add -D @pandacss/dev @pandacss/postcss @dreamy-ui/cli
+pnpm add @dreamy-ui/react @dreamy-ui/panda-preset motion
+```
+
+---
+
+## Environment Variables
+
+The CLI respects these environment variables:
+
+- `HTTPS_PROXY` - Use a proxy for fetching components from the registry
+- `REGISTRY_URL` - Override the default registry URL (for development)
+
+---
+
+## Getting Help
+
+For more help with any command:
+
+```md
+dreamy --help
+dreamy [command] --help
+```
+
+Visit our [documentation](https://dreamy-ui.com/docs) for more information.
+

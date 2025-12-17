@@ -41,59 +41,10 @@ export default defineConfig({
 
 ## Customizing Components
 
-Every component in Dreamy UI has it's own recipe/slot recipe. You can customize any component by extending the theme in panda config.
+Every component in Dreamy UI has it's own recipe/slot recipe. Dreamy UI adds components to your project via CLI. That means you can go into recipes or patterns folder and manually edit the theme to your liking.
 
-Let's make the `Flex` component to have `flexDirection: "column"` by default.
-Flex uses a pattern, so we need to extends the patterns.
+Do not forget to generate panda styled-system after changing the recipe or pattern.
 
-```ts
-/**
- * ...
- * theme.extend
- */
-patterns: {
-	flex: {
-		base: {
-			flexDirection: "column"
-		}
-	}
-}
-```
-
-Now let's make the `Button` component to have `bg: "blue"` by default in the solid variant.
-Button is a multi-part recipe, so we need to import `buttonParts` from `@dreamy-ui/system`.
-
-```ts
-import { parts } from "@dreamy-ui/system";
-
-...
-recipes: {
-	button: {
-		variants: { // variants allow us to have multiple variants
-			variant: { // select `variant` property
-				solid: parts.button({ // select `solid` part and extend `base` from `parts.button`
-					base: {
-						bg: "blue.500"
-					}
-				})
-			}
-		}
-	}
-}
-```
-
-Now the hardest and most complicated part: Customizing slot recipes. Slot recipes and recipes that have multiple JSX components that are exported for user to use.
-
-Let's make the `Field` root gap to be `0.5` smaller than the default.
-
-> info: Tip: Don't know how slots are named? Check the component's theme source, by going to component doc and clicking "Theme Source" button.
-
-```ts
-recipes: {
-	field: {
-		root: {
-			gap: 1
-		}
-	}
-}
+```bash
+pnpm panda codegen
 ```

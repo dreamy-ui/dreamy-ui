@@ -12,18 +12,21 @@ Use the automated CLI to set up Dreamy UI in your project:
 npx @dreamy-ui/cli init
 ```
 
+---
+
 The CLI will automatically:
-- Detect your framework (React Router v7, Next.js, or Vite)
-- Install all required dependencies (Panda CSS + Dreamy UI)
-- Create and configure `panda.config.ts`
-- Update `vite.config.ts` or `postcss.config.mjs` with Panda CSS PostCSS plugin
-- Remove default Tailwind CSS (React Router v7 only)
-- Set up CSS files with proper imports
-- Create a `DreamyProvider` component
-- Update your `tsconfig.json` with `@/*` path alias and styled-system (if using TypeScript)
-  - Next.js also gets `styled-system/*` path alias for proper type resolution
-- Run Panda CSS codegen to generate the styled-system
-- Add recommended components (button, flex, text, heading) to get you started
+1. Detect your framework (React Router v7, Next.js, or Vite)
+2. Install all required dependencies (Panda CSS + Dreamy UI)
+3. Create and configure `panda.config.ts`
+4. Update `vite.config.ts` or `postcss.config.mjs` with Panda CSS PostCSS plugin
+5. Remove default Tailwind CSS (React Router v7 and Next.js only)
+6. Set up CSS files with proper imports
+7. Create a `DreamyProvider` component
+8. Update your `tsconfig.json` with `@/*` path alias and styled-system (if using TypeScript)
+9. Next.js also gets `styled-system/*` path alias for proper type resolution
+10. Run Panda CSS codegen to generate the styled-system
+11. Add recommended components (button, flex, text, heading) to get you started
+12. Prints out code to add to the root of your application
 
 ## Manual Installation
 
@@ -48,7 +51,7 @@ pnpm install @dreamy-ui/react @dreamy-ui/panda-preset @dreamy-ui/cli motion
 
 After installing, you should configure your panda config with Dream preset. Copy and paste the following code into your `panda.config.ts` file:
 
-```ts {1-4, 14-20}
+```ts {1-4, 9-25}
 import createDreamyPreset, { dreamyPlugin } from "@dreamy-ui/panda-preset";
 import { defineConfig } from "@pandacss/dev";
 import { patterns } from "./app/components/patterns";
@@ -66,7 +69,9 @@ export default defineConfig({
 	],
 	presets: [createDreamyPreset()],
 	plugins: [dreamyPlugin()],
-	patterns,
+	patterns: {
+		extend: patterns
+	},
 	theme: {
 		extend: {
 			recipes
@@ -77,7 +82,8 @@ export default defineConfig({
 	},
 	staticCss: {
 		extend: {}
-	}
+	},
+	
 });
 ```
 

@@ -4,13 +4,37 @@ title: Using Remix
 
 # Using Dreamy UI with Remix
 
-Set up Dreamy UI in your Remix project.
+## Quick Start (Recommended)
 
-## 1. Follow the Panda CSS installation guide
+Use the automated CLI to set up Dreamy UI in your project:
+
+```bash
+npx @dreamy-ui/cli init
+```
+
+---
+
+The CLI will automatically:
+1. Detect your framework (React Router v7, Next.js, or Vite)
+2. Install all required dependencies (Panda CSS + Dreamy UI)
+3. Create and configure `panda.config.ts`
+4. Update `vite.config.ts` or `postcss.config.mjs` with Panda CSS PostCSS plugin
+5. Remove default Tailwind CSS (React Router v7 and Next.js only)
+6. Set up CSS files with proper imports
+7. Create a `DreamyProvider` component
+8. Update your `tsconfig.json` with `@/*` path alias and styled-system (if using TypeScript)
+9. Next.js also gets `styled-system/*` path alias for proper type resolution
+10. Run Panda CSS codegen to generate the styled-system
+11. Add recommended components (button, flex, text, heading) to get you started
+12. Prints out code to add to the root of your application
+
+## Manual Installation
+
+### 1. Follow the Panda CSS installation guide
 
 Follow the [Panda CSS installation guide](https://panda-css.com/docs/installation/remix) to set up Panda CSS in your Remix project.
 
-## 2. Install Dreamy UI
+### 2. Install Dreamy UI
 
 Install Dreamy UI in your project:
 
@@ -18,7 +42,7 @@ Install Dreamy UI in your project:
 pnpm install @dreamy-ui/react @dreamy-ui/panda-preset motion
 ```
 
-## 2. Configure panda.config.ts
+### 2. Configure panda.config.ts
 
 Configure environment and panda presets in your `panda.config.ts` file:
 
@@ -51,7 +75,7 @@ export default defineConfig({
 });
 ```
 
-## 3. Add styled-system alias to tsconfig.json and vite.config.ts
+### 3. Add styled-system alias to tsconfig.json and vite.config.ts
 
 Add the following alias to your `tsconfig.json` file:
 
@@ -80,7 +104,7 @@ export default defineConfig({
 })
 ``` */}
 
-## 4. Add Dreamy Provider
+### 4. Add Dreamy Provider
 
 After configuring Panda CSS, finally we can add the main Dreamy Provider to your `app/root.tsx`.
 
@@ -133,7 +157,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 ...
 ```
 
-## 5. Start using Dreamy UI
+### 5. Start using Dreamy UI
 
 Let's write some Dreamy UI in `app/routes/_index.tsx`.
 

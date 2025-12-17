@@ -23,9 +23,10 @@ Contributors are welcome! If you got any questions, please view #contributing ch
 
 Making Dreamy UI wouldn't be possible without the following libraries:
 
--   [Panda CSS](https://panda-css.com/) - For the amazing CSS-in-JS styling system Dreamy UI relies on.
--   [Chakra UI](https://chakra-ui.com/) - Where it all started and for components inspiration.
--   [HeroUI](https://www.heroui.com/) - For components inspiration.
+- [Panda CSS](https://panda-css.com/) - For the amazing CSS-in-JS styling system Dreamy UI relies on.
+- [Chakra UI](https://chakra-ui.com/) - Where it all started and for components inspiration.
+- [Untitled UI](https://www.untitledui.com/) - For styling inspiration.
+- [HeroUI](https://www.heroui.com/) - For components inspiration.
 
 ## License
 

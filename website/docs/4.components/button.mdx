@@ -70,21 +70,23 @@ You can set the size of the Button by using the `size` prop.
 
 ### Color
 
-When using `solid`, `outline` and `ghost` variants, the background will follow the current color.
+When using `solid`, `outline` and `ghost` variants, the button color will follow the current color scheme.
+
+For `solid` and `ghost` variants, you can just use `color` property, it will work the same. However for `outline` variant, you need to use only `scheme` property.
 
 <Wrapper>
 	<Flex wrapped gap={2}>
-		<Button variant="solid" color="success">Solid success</Button>
-		<Button variant="outline" color="warning">Outline warning</Button>
-		<Button variant="ghost" color="error">Ghost error</Button>
+		<Button variant="solid" scheme="success">Solid success</Button>
+		<Button variant="outline" scheme="warning">Outline warning</Button>
+		<Button variant="ghost" scheme="error">Ghost error</Button>
 	</Flex>
 </Wrapper>
 
 ```tsx
 <Flex wrapped gap={2}>
-  <Button variant="solid" color="success">Solid success</Button>
-  <Button variant="outline" color="warning">Outline warning</Button>
-  <Button variant="ghost" color="error">Ghost error</Button>
+  <Button variant="solid" scheme="success">Solid success</Button>
+  <Button variant="outline" scheme="warning">Outline warning</Button>
+  <Button variant="ghost" scheme="error">Ghost error</Button>
 </Flex>
 ```
 

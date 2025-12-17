@@ -5,11 +5,16 @@ export const group = defineRecipe({
     jsx: ["Group"],
     base: {
         display: "inline-flex",
-        gap: "0.5rem",
         isolation: "isolate",
         position: "relative",
         "& [data-group-item]": {
             _focusVisible: {
+                zIndex: 1
+            },
+            _focus: {
+                zIndex: 1
+            },
+            _hover: {
                 zIndex: 1
             }
         }
@@ -25,7 +30,10 @@ export const group = defineRecipe({
         },
         attached: {
             true: {
-                gap: "0!"
+                gap: "0"
+            },
+            false: {
+                gap: "0.5rem"
             }
         },
         grow: {
@@ -56,16 +64,14 @@ export const group = defineRecipe({
             css: {
                 "& > *[data-first]": {
                     borderEndRadius: "0!"
-                    // marginEnd: "-1px"
                 },
                 "& > *[data-between]": {
                     borderRadius: "0!",
-                    borderLeft: "0!"
-                    // marginEnd: "-1px"
+                    marginStart: "-1px"
                 },
                 "& > *[data-last]": {
                     borderStartRadius: "0!",
-                    borderLeft: "0!"
+                    marginStart: "-1px"
                 }
             }
         },
@@ -75,21 +81,20 @@ export const group = defineRecipe({
             css: {
                 "& > *[data-first]": {
                     borderBottomRadius: "0!"
-                    // marginBottom: "-1px"
                 },
                 "& > *[data-between]": {
                     borderRadius: "0!",
-                    // marginBottom: "-1px",
-                    borderTop: "0!"
+                    marginBottom: "-0.5px"
                 },
                 "& > *[data-last]": {
                     borderTopRadius: "0!",
-                    borderTop: "0!"
+                    marginBottom: "-0.5px"
                 }
             }
         }
     ],
     defaultVariants: {
-        orientation: "horizontal"
+        orientation: "horizontal",
+        attached: false
     }
 });

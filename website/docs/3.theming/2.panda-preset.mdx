@@ -55,11 +55,10 @@ interface PresetOptions {
 }
 ```
 
-Here's a preset configuration of Dreamy UI Docs:
+Here's a preset configuration in `panda.config.ts` of Dreamy UI Docs:
 
 ```ts {2, 7-22}
-// > panda.config.ts <
-import createDreamyPreset, { dreamyPlugin, parts } from "@dreamy-ui/panda-preset";
+import createDreamyPreset, { dreamyPlugin } from "@dreamy-ui/panda-preset";
 import { defineConfig } from "@pandacss/dev";
 
 export default defineConfig({
@@ -79,15 +78,14 @@ export default defineConfig({
             rounded: "md"
         })
     ],
-    plugins: [dreamyPlugin]
+    plugins: [dreamyPlugin()]
 });
 ```
 
 In other words, that's how default preset args look like:
 
 ```ts {2, 7-29}
-// > panda.config.ts <
-import createDreamyPreset, { dreamyPlugin, parts } from "@dreamy-ui/panda-preset";
+import createDreamyPreset, { dreamyPlugin } from "@dreamy-ui/panda-preset";
 import { defineConfig } from "@pandacss/dev";
 
 export default defineConfig({
@@ -114,6 +112,6 @@ export default defineConfig({
             rounded: "md"
         })
     ],
-    plugins: [dreamyPlugin]
+    plugins: [dreamyPlugin()]
 });
 ```
