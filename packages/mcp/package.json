@@ -1,7 +1,7 @@
 {
 	"name": "@dreamy-ui/mcp",
 	"main": "dist/stdio.js",
-	"version": "2.0.0",
+	"version": "2.0.1",
 	"description": "MCP for Dreamy UI",
 	"author": "imexoodeex",
 	"license": "MIT",
