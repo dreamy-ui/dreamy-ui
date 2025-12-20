@@ -486,6 +486,70 @@ export function AsyncSelect() {
 }
 ```
 
+### Virtualized
+
+For better performance with large lists (100+ items), use `Select.VirtualContent` instead of `Select.Content`. It only renders visible items, significantly improving rendering performance and reducing memory usage.
+
+<Wrapper>
+    <Select.Root width="xs">
+        <Select.Trigger placeholder="Select a number" />
+        <Select.VirtualContent>
+            {Array.from({ length: 250 }).map((_, index) => (
+                <Select.Item
+                    key={index}
+                    value={index.toString()}
+                >
+                    Item {index + 1}
+                </Select.Item>
+            ))}
+        </Select.VirtualContent>
+    </Select.Root>
+</Wrapper>
+
+```tsx
+<Select.Root width="xs">
+    <Select.Trigger placeholder="Select a number" />
+    <Select.VirtualContent>
+        {Array.from({ length: 250 }).map((_, index) => (
+            <Select.Item
+                key={index}
+                value={index.toString()}
+            >
+                Item {index + 1}
+            </Select.Item>
+        ))}
+    </Select.VirtualContent>
+</Select.Root>
+```
+
+#### Props
+
+- `estimatedItemHeight` - Estimated height of each item in pixels. Used for virtualization calculations. For different select sizes the values will be: `xs`: `26`, `sm`: `28`, `md`: `32`, `lg`: `40`. Default: `32`
+- `overscan` - Number of items to render outside the visible area. Higher values reduce flickering during fast scrolling but increase initial render cost. Default: `5`
+- `maxHeight` - Maximum height of the virtualized list container in pixels. Default: `300`
+
+```tsx
+<Select.Root width="xs">
+    <Select.Trigger placeholder="Select a number" />
+    <Select.VirtualContent
+        maxHeight={400}
+        estimatedItemHeight={36}
+        overscan={10}
+    >
+        {largeItemsList.map((item) => (
+            <Select.Item
+                key={item.value}
+                value={item.value}
+            >
+                {item.label}
+            </Select.Item>
+        ))}
+    </Select.VirtualContent>
+</Select.Root>
+```
+
+**Note:** Selected items are always rendered (even when scrolled out of view) to ensure the trigger can display the selected value correctly.
+
 ### Close on select
 
 You can customize whether the Select should close when an item is selected. Defalult is `true` for non-multiple select, `false` for multiple select.

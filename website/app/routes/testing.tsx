@@ -1,12 +1,13 @@
 import { Button } from "@/button";
 import { Flex } from "@/flex";
 import { MotionFlex } from "@/motion";
+import { Select } from "@/select";
 import { Switch } from "@/switch";
 import { Text } from "@/text";
 import { useColorMode, useControllable, useUpdateLayoutEffect } from "@dreamy-ui/react";
 import { AnimatePresence, m } from "motion/react";
 import { useState } from "react";
-import type { Route } from "./+types/test";
+import type { Route } from "./+types/testing";
 
 export function meta() {
     return [
@@ -50,9 +51,9 @@ export default function Test() {
 
     return (
         <Flex
+            align={"start"}
             col
             gap={10}
-            align={"start"}
         >
             <Button
                 size={"lg"}
@@ -65,11 +66,11 @@ export default function Test() {
                 initial
                 layout
                 layoutId="modal"
+                onClick={onOpen}
                 transition={{
                     duration: 0.2,
                     ease: "easeInOut"
                 }}
-                onClick={onOpen}
             >
                 Open
             </MotionButton>
@@ -77,21 +78,21 @@ export default function Test() {
             <AnimatePresence>
                 {isOpen && (
                     <Flex
-                        fixed
-                        top={0}
-                        left={0}
-                        right={0}
                         bottom={0}
-                        onClick={onClose}
                         center
+                        fixed
+                        left={0}
+                        onClick={onClose}
+                        right={0}
+                        top={0}
                     >
                         <MotionFlex
+                            bg={"red"}
+                            h={20}
                             initial
                             layout
                             layoutId="modal"
-                            h={20}
                             w={40}
-                            bg={"red"}
                         />
                     </Flex>
                 )}
@@ -142,6 +143,23 @@ export default function Test() {
                     />
                 </Flex>
             </Flex>
+
+            <Select.Root>
+                <Select.Trigger
+                    placeholder="Select a favorite fruit"
+                    w={"250px"}
+                />
+                <Select.VirtualContent>
+                    {Array.from({ length: 250 }).map((_, index) => (
+                        <Select.Item
+                            key={index}
+                            value={index.toString()}
+                        >
+                            {index.toString()}
+                        </Select.Item>
+                    ))}
+                </Select.VirtualContent>
+            </Select.Root>
         </Flex>
     );
 }

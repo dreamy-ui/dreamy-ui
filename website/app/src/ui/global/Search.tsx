@@ -16,7 +16,6 @@ import {
     useEventListener,
     useUpdateEffect
 } from "@dreamy-ui/react";
-import { AnimatePresence } from "motion/react";
 import { useCallback, useRef, useState } from "react";
 import { BiSearch } from "react-icons/bi";
 import { MdNavigateNext } from "react-icons/md";
@@ -398,10 +397,10 @@ function SearchDoc({ doc, isActive, ...rest }: SearchDocProps) {
 
             <Icon
                 as={MdNavigateNext}
+                color={isActive ? "{colors.white/87}" : "fg.medium"}
                 boxSize={"5"}
             />
 
-            <AnimatePresence>
                 {isActive && (
                     <MotionBox
                         bg={"primary"}
@@ -417,7 +416,6 @@ function SearchDoc({ doc, isActive, ...rest }: SearchDocProps) {
                         zIndex={-1}
                     />
                 )}
-            </AnimatePresence>
         </Link>
     );
 }

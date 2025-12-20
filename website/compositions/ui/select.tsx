@@ -12,8 +12,17 @@ import {
     useSelectContext,
     useSelectItem
 } from "@dreamy-ui/react";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import type React from "react";
-import { type ReactNode, type RefObject, type SVGProps, forwardRef, useState } from "react";
+import {
+    Children,
+    type ReactNode,
+    type RefObject,
+    type SVGProps,
+    forwardRef,
+    useRef,
+    useState
+} from "react";
 import { type HTMLDreamyProps, createStyleContext, dreamy, splitCssProps } from "styled-system/jsx";
 import { select } from "styled-system/recipes";
 import { Box } from "./box";
@@ -197,7 +206,6 @@ export interface SelectContentProps extends PopoverContentProps {}
 const SelectContent = withContext(
     forwardRef<HTMLDivElement, SelectContentProps>(function SelectContent(props, ref) {
         const { children, ...rest } = props;
-
         const { getContentProps } = useSelectContext();
         const contentPropsResult = getContentProps(rest, ref);
 
@@ -205,6 +213,198 @@ const SelectContent = withContext(
     }),
     "content"
 );
+
+export interface SelectVirtualContentProps extends PopoverContentProps {
+    /**
+     * Estimated height of each item in pixels.
+     * Used for virtualization calculations.
+     * @default 32
+     */
+    estimatedItemHeight?: number;
+    /**
+     * Number of items to render outside the visible area.
+     * Higher values reduce flickering during fast scrolling but increase initial render cost.
+     * @default 5
+     */
+    overscan?: number;
+    /**
+     * Maximum height of the virtualized list container in pixels.
+     * @default 300
+     */
+    maxHeight?: number;
+}
+
+/**
+ * Virtualized SelectContent for better performance with large lists.
+ * Only renders visible items.
+ */
+const SelectVirtualContent = withContext(
+    forwardRef<HTMLDivElement, SelectVirtualContentProps>(function SelectVirtualContent(props, ref) {
+        const {
+            children,
+            estimatedItemHeight = 32,
+            overscan = 5,
+            maxHeight = 300,
+            ...rest
+        } = props;
+
+        const { getContentProps, isOpen, selectedKeys } = useSelectContext();
+        const contentPropsResult = getContentProps(rest, ref);
+
+        return (
+            <Popover.Content {...contentPropsResult}>
+                <VirtualizedList
+                    estimatedItemHeight={estimatedItemHeight}
+                    isOpen={isOpen}
+                    maxHeight={maxHeight}
+                    overscan={overscan}
+                    selectedKeys={selectedKeys}
+                >
+                    {children}
+                </VirtualizedList>
+            </Popover.Content>
+        );
+    }),
+    "content"
+);
+
+interface VirtualizedListProps {
+    children: ReactNode;
+    estimatedItemHeight: number;
+    overscan: number;
+    maxHeight: number;
+    isOpen: boolean;
+    selectedKeys: string[];
+}
+
+function VirtualizedList({
+    children,
+    estimatedItemHeight,
+    overscan,
+    maxHeight,
+    isOpen,
+    selectedKeys
+}: VirtualizedListProps) {
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const childArray = Children.toArray(children);
+    const [hasMeasured, setHasMeasured] = useState(false);
+
+    const virtualizer = useVirtualizer({
+        count: childArray.length,
+        getScrollElement: () => scrollContainerRef.current,
+        estimateSize: () => estimatedItemHeight,
+        overscan
+    });
+
+    // Force remeasure when popover opens
+    useSafeLayoutEffect(() => {
+        if (isOpen && scrollContainerRef.current) {
+            // Use requestAnimationFrame to ensure the DOM has fully painted
+            requestAnimationFrame(() => {
+                virtualizer.measure();
+                setHasMeasured(true);
+            });
+        }
+    }, [isOpen, virtualizer]);
+
+    const virtualItems = virtualizer.getVirtualItems();
+    const totalSize = virtualizer.getTotalSize();
+
+    // Find indices of selected items to always render them
+    const selectedIndices = new Set<number>();
+    childArray.forEach((child, index) => {
+        if (
+            child &&
+            typeof child === "object" &&
+            "props" in child &&
+            selectedKeys.includes((child as React.ReactElement<{ value: string }>).props.value)
+        ) {
+            selectedIndices.add(index);
+        }
+    });
+
+    // Get the set of indices that are already being rendered by virtualizer
+    const virtualizedIndices = new Set(virtualItems.map((item) => item.index));
+
+    // Find selected items that are NOT in the virtualized view
+    const hiddenSelectedIndices = Array.from(selectedIndices).filter(
+        (index) => !virtualizedIndices.has(index)
+    );
+
+    // If we haven't measured yet but we're open, show initial items as fallback
+    const showFallback = isOpen && !hasMeasured && virtualItems.length === 0 && childArray.length > 0;
+    const initialItemsToShow = Math.min(Math.ceil(maxHeight / estimatedItemHeight) + overscan, childArray.length);
+
+    return (
+        <div
+            ref={scrollContainerRef}
+            style={{
+                maxHeight,
+                overflowY: "auto",
+                width: "100%"
+            }}
+        >
+            <div
+                style={{
+                    height: showFallback ? childArray.length * estimatedItemHeight : totalSize,
+                    width: "100%",
+                    position: "relative"
+                }}
+            >
+                {showFallback
+                    ? childArray.slice(0, initialItemsToShow).map((child, index) => (
+                          <div
+                              key={index}
+                              style={{
+                                  position: "absolute",
+                                  top: 0,
+                                  left: 0,
+                                  width: "100%",
+                                  transform: `translateY(${index * estimatedItemHeight}px)`
+                              }}
+                          >
+                              {child}
+                          </div>
+                      ))
+                    : virtualItems.map((virtualItem) => (
+                          <div
+                              key={virtualItem.key}
+                              data-index={virtualItem.index}
+                              ref={virtualizer.measureElement}
+                              style={{
+                                  position: "absolute",
+                                  top: 0,
+                                  left: 0,
+                                  width: "100%",
+                                  transform: `translateY(${virtualItem.start}px)`
+                              }}
+                          >
+                              {childArray[virtualItem.index]}
+                          </div>
+                      ))}
+
+                {/* Always render selected items that are outside the virtualized view (hidden but mounted for descendants registration) */}
+                {!showFallback &&
+                    hiddenSelectedIndices.map((index) => (
+                        <div
+                            key={`selected-${index}`}
+                            aria-hidden="true"
+                            style={{
+                                position: "absolute",
+                                top: 0,
+                                left: 0,
+                                width: "100%",
+                                pointerEvents: "none",
+                                visibility: "hidden"
+                            }}
+                        >
+                            {childArray[index]}
+                        </div>
+                    ))}
+            </div>
+        </div>
+    );
+}
 
 export interface SelectItemProps extends UseSelectItemProps {}
 
@@ -288,5 +488,6 @@ export namespace Select {
     export const Root = SelectRoot;
     export const Trigger = SelectTrigger;
     export const Content = SelectContent;
+    export const VirtualContent = SelectVirtualContent;
     export const Item = SelectItem;
 }
