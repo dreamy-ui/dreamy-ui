@@ -17,9 +17,9 @@ interface Props extends UniversalButtonProps {
 }
 
 export interface IconButtonProps
-    extends Omit<HTMLDreamyProps<"button">, "aria-label">,
-        ButtonVariantProps,
-        Props {}
+    extends Omit<HTMLDreamyProps<"button">, keyof Props>,
+    ButtonVariantProps,
+    Props { }
 
 /**
  * IconButton component

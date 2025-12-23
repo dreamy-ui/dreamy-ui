@@ -1,5 +1,4 @@
 import "./app.css";
-import "./index.css";
 import {
     Links,
     Meta,
@@ -11,8 +10,8 @@ import {
 } from "react-router";
 
 import { getColorModeHTMLProps, getSSRColorMode } from "@dreamy-ui/react";
+import { DreamyProvider } from "../components/dreamy-provider";
 import type { Route } from "./+types/root";
-import { DreamyProvider } from "./components/dreamy-provider";
 
 export const links: Route.LinksFunction = () => [
     { rel: "preconnect", href: "https://fonts.googleapis.com" },

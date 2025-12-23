@@ -92,11 +92,11 @@ export const Progress = forwardRef<HTMLDivElement, ProgressProps>((props, ref) =
                 aria-label={ariaLabel}
                 aria-labelledby={ariaLabelledBy}
                 aria-valuetext={ariaValueText}
-                min={min}
                 max={max}
-                value={value}
-                title={title}
+                min={min}
                 role={role}
+                title={title}
+                value={value}
             />
             {children}
         </StyledProgress>

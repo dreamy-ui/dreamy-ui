@@ -10,8 +10,8 @@ import { Flex, type FlexProps } from "./flex";
 
 export interface InputProps
     extends Omit<HTMLDreamyProps<"input">, "size">,
-        InputVariantProps,
-        UserFeedbackProps {
+    InputVariantProps,
+    UserFeedbackProps {
     /**
      * The callback function that is called when the input value changes.
      */
@@ -20,7 +20,7 @@ export interface InputProps
 
 const StyledInput = dreamy("input", input);
 
-export const [InputGroupProvider, useInputGroup] = createContext<InputGroupProviderContext>({
+const [InputGroupProvider, useInputGroup] = createContext<InputGroupProviderContext>({
     strict: false,
     name: "InputGroupContext"
 });
@@ -52,7 +52,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     );
 });
 
-interface InputGroupProviderContext extends InputVariantProps, UserFeedbackProps {}
+interface InputGroupProviderContext extends InputVariantProps, UserFeedbackProps { }
 
 export const InputElement = forwardRef<HTMLDivElement, FlexProps>(
     function InputElement(props, ref) {
@@ -117,7 +117,7 @@ export const InputGroup = forwardRef<HTMLDivElement, InputGroupProps>(
     }
 );
 
-export interface InputAddonProps extends FlexProps {}
+export interface InputAddonProps extends FlexProps { }
 
 const InputAddon = forwardRef<HTMLDivElement, InputAddonProps>(function InputAddon(props, ref) {
     return (

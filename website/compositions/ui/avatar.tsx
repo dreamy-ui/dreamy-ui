@@ -5,14 +5,11 @@ import {
     compact,
     dataAttr,
     getValidChildren,
-    initials,
-    randomColor,
-    useAvatarImage
+    initials, useAvatarImage
 } from "@dreamy-ui/react";
 import { cloneElement, forwardRef, useMemo, useState } from "react";
 import { dreamy, type HTMLDreamyProps } from "styled-system/jsx";
 import { type AvatarVariantProps, avatar } from "styled-system/recipes";
-import { token } from "styled-system/tokens";
 import type { SystemProperties, SystemStyleObject } from "styled-system/types";
 import { Box } from "./box";
 import { Flex, type FlexProps } from "./flex";
@@ -111,7 +108,6 @@ function AvatarName(props: AvatarNameProps) {
     );
 }
 
-// Avatar Image Component
 interface AvatarImageProps extends ImageProps {
     getInitials?: (name: string) => string;
     borderRadius?: SystemStyleObject["borderRadius"];
@@ -215,14 +211,13 @@ export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(
 ) {
     const [isLoaded, setIsLoaded] = useState(false);
 
-    const bg = useMemo(() => (name ? randomColor(name) : token.var("colors.alpha.200")), [name]);
-
     return (
         <StyledBase
             ref={ref}
             {...rest}
             style={{
-                backgroundColor: isLoaded ? "transparent" : bg,
+                backgroundColor: isLoaded ? "transparent" : "var(--colors-primary)",
+                color: "var(--colors-primary-fg)",
                 ...rest.style
             }}
             data-loaded={dataAttr(isLoaded)}

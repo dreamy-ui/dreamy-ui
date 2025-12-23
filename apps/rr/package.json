@@ -1,38 +1,38 @@
 {
-  "name": "rr",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "prebuild": "panda codegen",
-    "build": "react-router build",
-    "devv": "react-router dev",
-    "start": "react-router-serve ./build/server/index.js",
-    "typecheck": "react-router typegen && tsc"
-  },
-  "dependencies": {
-    "@dreamy-ui/panda-preset": "workspace:*",
-    "@dreamy-ui/react": "workspace:*",
-    "@react-router/node": "^7.9.2",
-    "@react-router/serve": "^7.9.2",
-    "autoprefixer": "^10.4.22",
-    "isbot": "^5.1.31",
-    "motion": "^12.23.24",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1",
-    "react-router": "^7.9.2"
-  },
-  "devDependencies": {
-    "@dreamy-ui/cli": "workspace:*",
-    "@pandacss/dev": "^1.5.0",
-    "@pandacss/postcss": "^1.5.1",
-    "@react-router/dev": "^7.9.2",
-    "@tailwindcss/vite": "^4.1.13",
-    "@types/node": "^22",
-    "@types/react": "^19.1.13",
-    "@types/react-dom": "^19.1.9",
-    "tailwindcss": "^4.1.13",
-    "typescript": "^5.9.2",
-    "vite": "^7.1.7",
-    "vite-tsconfig-paths": "^5.1.4"
-  }
+	"name": "rr",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"prebuild": "panda codegen",
+		"build": "react-router build",
+		"dev": "react-router dev",
+		"start": "react-router-serve ./build/server/index.js",
+		"typecheck": "react-router typegen && tsc"
+	},
+	"dependencies": {
+		"@dreamy-ui/panda-preset": "workspace:*",
+		"@dreamy-ui/react": "workspace:*",
+		"@react-router/node": "^7.9.2",
+		"@react-router/serve": "^7.9.2",
+		"autoprefixer": "^10.4.22",
+		"isbot": "^5.1.31",
+		"motion": "^12.23.26",
+		"react": "^19.1.1",
+		"react-dom": "^19.1.1",
+		"react-router": "^7.9.2"
+	},
+	"devDependencies": {
+		"@dreamy-ui/cli": "workspace:*",
+		"@pandacss/dev": "^1.7.1",
+		"@pandacss/postcss": "^1.7.1",
+		"@react-router/dev": "^7.9.2",
+		"@tailwindcss/vite": "^4.1.13",
+		"@types/node": "^22",
+		"@types/react": "^19.1.13",
+		"@types/react-dom": "^19.1.9",
+		"tailwindcss": "^4.1.13",
+		"typescript": "^5.9.2",
+		"vite": "^7.1.7",
+		"vite-tsconfig-paths": "^5.1.4"
+	}
 }

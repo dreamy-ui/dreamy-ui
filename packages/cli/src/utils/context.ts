@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { globbySync } from "globby";
 import { lookItUpSync } from "look-it-up";
@@ -49,16 +49,17 @@ function getFramework(files: string[], cwd: string) {
 function getComponentsDir(scope: ProjectScope, cwd: string) {
     const basePath = join("components", "ui");
 
-    if (scope.framework === "remix" || scope.framework === "react-router") {
-        return join("app", basePath);
-    }
+    // if (scope.framework === "remix" || scope.framework === "react-router") {
+    //     return join("app", basePath);
+    // }
 
-    if (scope.framework === "next") {
-        const isSrcDir = existsSync(join(cwd, "src"));
-        return join(isSrcDir ? "src" : "", basePath);
-    }
+    // if (scope.framework === "next") {
+    //     const isSrcDir = existsSync(join(cwd, "src"));
+    //     return join(isSrcDir ? "src" : "", basePath);
+    // }
 
-    return join("src", basePath);
+    // return join("", basePath);
+    return basePath;
 }
 
 export async function getProjectContext(opts: ProjectContextOptions) {

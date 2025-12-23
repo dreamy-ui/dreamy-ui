@@ -30,7 +30,7 @@ async function detectFramework(cwd: string): Promise<FrameworkConfig | null> {
             type: "react-router",
             cssPath: "app/app.css",
             cssImportPath: "app/root.tsx",
-            providerPath: "app/components/dreamy-provider.tsx",
+            providerPath: "components/dreamy-provider.tsx",
             includePattern: "./app/**/*.{js,jsx,ts,tsx}"
         };
     }
@@ -42,9 +42,7 @@ async function detectFramework(cwd: string): Promise<FrameworkConfig | null> {
             type: "nextjs",
             cssPath: hasSrcDir ? "src/app/globals.css" : "app/globals.css",
             cssImportPath: hasSrcDir ? "src/app/layout.tsx" : "app/layout.tsx",
-            providerPath: hasSrcDir
-                ? "src/components/dreamy-provider.tsx"
-                : "components/dreamy-provider.tsx",
+            providerPath: "components/dreamy-provider.tsx",
             includePattern: hasSrcDir ? "./src/**/*.{js,jsx,ts,tsx}" : "./app/**/*.{js,jsx,ts,tsx}"
         };
     }
@@ -56,9 +54,7 @@ async function detectFramework(cwd: string): Promise<FrameworkConfig | null> {
             type: "vite",
             cssPath: hasSrcDir ? "src/index.css" : "src/index.css",
             cssImportPath: hasSrcDir ? "src/main.tsx" : "src/main.tsx",
-            providerPath: hasSrcDir
-                ? "src/components/dreamy-provider.tsx"
-                : "src/components/dreamy-provider.tsx",
+            providerPath: "components/dreamy-provider.tsx",
             includePattern: "./src/**/*.{js,jsx,ts,tsx}"
         };
     }
@@ -119,14 +115,7 @@ async function createPandaConfig(cwd: string, framework: FrameworkConfig, isType
         }
 
         // Determine the import path for patterns and recipes based on framework
-        const componentsImportPath =
-            framework.type === "react-router"
-                ? "./app/components"
-                : framework.type === "nextjs" && existsSync(join(cwd, "src"))
-                  ? "./src/components"
-                  : framework.type === "nextjs"
-                    ? "./components"
-                    : "./src/components";
+        const componentsImportPath = "./components";
 
         const configContent = isTypeScript
             ? `import createDreamyPreset, { dreamyPlugin } from "@dreamy-ui/panda-preset";
@@ -136,7 +125,6 @@ import { recipes } from "${componentsImportPath}/recipes";
 
 export default defineConfig({
     preflight: true,
-    watch: true,
     jsxFramework: "react",
     jsxStyleProps: "all",
     outExtension: "js",
@@ -167,7 +155,6 @@ import { recipes } from "${componentsImportPath}/recipes";
 
 export default defineConfig({
     preflight: true,
-    watch: true,
     jsxFramework: "react",
     jsxStyleProps: "all",
     outExtension: "js",
@@ -277,8 +264,12 @@ async function updateViteConfig(cwd: string, framework: FrameworkConfig) {
         const viteConfigPath = join(cwd, viteConfigFiles[0]);
         let content = readFileSync(viteConfigPath, "utf-8");
 
-        // Check if already configured
-        if (content.includes("@pandacss/dev/postcss") && content.includes("css:")) {
+        // Check if Panda plugin is already configured (look for pandacss in plugins array)
+        const hasPandaPlugin =
+            /plugins:\s*\[[^\]]*pandacss[^\]]*\]/.test(content) ||
+            /plugins:\s*\[[^\]]*@pandacss\/dev\/postcss[^\]]*\]/.test(content);
+
+        if (hasPandaPlugin) {
             p.log.info("⊘ Vite config already configured for Panda CSS");
             return true;
         }
@@ -321,13 +312,93 @@ async function updateViteConfig(cwd: string, framework: FrameworkConfig) {
             }
         }
 
-        // Add css.postcss config if not present
-        if (!content.includes("css:")) {
-            // Find defineConfig and add css config
-            const defineConfigMatch = content.match(/defineConfig\s*\(\s*\{/);
-            if (defineConfigMatch) {
+        // Add or update css.postcss config
+        const hasCssProperty = /css\s*:\s*\{/.test(content);
+
+        if (hasCssProperty) {
+            // css: {} exists, check if it has postcss with plugins array
+            // Find postcss property and check if it has plugins nearby
+            const postcssIndex = content.search(/postcss\s*:\s*\{/);
+            const hasPostcssPlugins =
+                postcssIndex !== -1 &&
+                content.slice(postcssIndex).search(/plugins\s*:\s*\[/) !== -1;
+
+            if (hasPostcssPlugins) {
+                // postcss.plugins exists, add pandacss to the array if not already there
+                const pluginsArrayMatch = content.match(/plugins\s*:\s*\[([^\]]*)\]/);
+                if (pluginsArrayMatch) {
+                    const pluginsContent = pluginsArrayMatch[1];
+                    if (!pluginsContent.includes("pandacss")) {
+                        // Add pandacss to the plugins array
+                        const arrayStart = content.indexOf(pluginsArrayMatch[0]);
+                        const pluginsStart =
+                            arrayStart + content.slice(arrayStart).indexOf("[") + 1;
+                        const insertPosition = pluginsStart + pluginsContent.trim().length;
+                        const separator = pluginsContent.trim() ? ", " : "";
+                        content =
+                            content.slice(0, insertPosition) +
+                            separator +
+                            "pandacss" +
+                            content.slice(insertPosition);
+                    }
+                } else {
+                    // postcss exists but no plugins array, add it
+                    const postcssMatch = content.match(/postcss\s*:\s*\{/);
+                    if (postcssMatch) {
+                        const postcssStart = content.indexOf(postcssMatch[0]);
+                        const postcssBraceStart = postcssStart + postcssMatch[0].length - 1;
+                        // Check if postcss object has content
+                        const afterBrace = content.slice(postcssBraceStart + 1);
+                        const nextBrace = afterBrace.indexOf("}");
+                        const postcssContent = afterBrace.slice(0, nextBrace);
+                        const needsComma =
+                            postcssContent.trim().length > 0 &&
+                            !postcssContent.trim().endsWith(",");
+                        const insertPosition = postcssBraceStart + 1;
+                        const pluginsConfig = `${needsComma ? ", " : ""}plugins: [pandacss]`;
+                        content =
+                            content.slice(0, insertPosition) +
+                            pluginsConfig +
+                            content.slice(insertPosition);
+                    }
+                }
+            } else {
+                // css exists but no postcss, add postcss.plugins
+                const cssMatch = content.match(/css\s*:\s*\{/);
+                if (cssMatch) {
+                    const cssStart = content.indexOf(cssMatch[0]);
+                    const cssBraceStart = cssStart + cssMatch[0].length - 1; // Position of '{'
+                    // Find the content of css object to determine if we need a comma
+                    const afterBrace = content.slice(cssBraceStart + 1);
+                    // Find matching closing brace (simplified - just look for first } that's not inside nested objects)
+                    let braceCount = 1;
+                    let nextBracePos = -1;
+                    for (let i = 0; i < afterBrace.length; i++) {
+                        if (afterBrace[i] === "{") braceCount++;
+                        if (afterBrace[i] === "}") braceCount--;
+                        if (braceCount === 0) {
+                            nextBracePos = i;
+                            break;
+                        }
+                    }
+                    const cssContent = nextBracePos > 0 ? afterBrace.slice(0, nextBracePos) : "";
+                    const needsComma =
+                        cssContent.trim().length > 0 && !cssContent.trim().endsWith(",");
+                    const insertPosition = cssBraceStart + 1;
+                    const postcssConfig = `${needsComma ? ", " : ""}postcss: { plugins: [pandacss] }`;
+                    content =
+                        content.slice(0, insertPosition) +
+                        postcssConfig +
+                        content.slice(insertPosition);
+                }
+            }
+        } else {
+            // css: {} doesn't exist, create it
+            // Try to find defineConfig with object literal: defineConfig({...})
+            const defineConfigObjectMatch = content.match(/defineConfig\s*\(\s*\{/);
+            if (defineConfigObjectMatch) {
                 const insertPosition =
-                    content.indexOf(defineConfigMatch[0]) + defineConfigMatch[0].length;
+                    content.indexOf(defineConfigObjectMatch[0]) + defineConfigObjectMatch[0].length;
                 const cssConfig = `
     css: {
         postcss: {
@@ -336,6 +407,93 @@ async function updateViteConfig(cwd: string, framework: FrameworkConfig) {
     },`;
                 content =
                     content.slice(0, insertPosition) + cssConfig + content.slice(insertPosition);
+            } else {
+                // Try to find defineConfig with callback: defineConfig(cb => {...}) or defineConfig(async (cb) => {...})
+                // Also handle: defineConfig(cb => ({...})) - implicit return with parentheses
+                // Handle both: (cb) => and cb => (single param without parens)
+                const defineConfigCallbackMatch = content.match(
+                    /defineConfig\s*\(\s*(?:async\s+)?(?:\([^)]*\)|[a-zA-Z_$][a-zA-Z0-9_$]*)\s*=>\s*(\{|\()/
+                );
+                if (defineConfigCallbackMatch) {
+                    const callbackStart = content.indexOf(defineConfigCallbackMatch[0]);
+                    const arrowIndex = content.indexOf("=>", callbackStart);
+                    const isImplicitReturn = defineConfigCallbackMatch[1] === "(";
+
+                    if (isImplicitReturn) {
+                        // Handle implicit return: defineConfig(cb => ({...}))
+                        // The match already found the opening paren, now find the brace inside it
+                        const matchEnd = callbackStart + defineConfigCallbackMatch[0].length;
+                        const braceInParen = content.indexOf("{", matchEnd);
+                        if (braceInParen !== -1) {
+                            const insertPosition = braceInParen + 1;
+                            const cssConfig = `
+        css: {
+            postcss: {
+                plugins: [pandacss]
+            }
+        },`;
+                            content =
+                                content.slice(0, insertPosition) +
+                                cssConfig +
+                                content.slice(insertPosition);
+                        } else {
+                            p.log.warn("⚠ Could not find config object in implicit return");
+                            return false;
+                        }
+                    } else {
+                        // Handle explicit return: defineConfig(cb => { return {...} })
+                        const callbackBodyStart = arrowIndex + 2; // After '=>'
+                        const firstBrace = content.indexOf("{", callbackBodyStart);
+
+                        if (firstBrace === -1) {
+                            p.log.warn("⚠ Could not find callback body");
+                            return false;
+                        }
+
+                        // Look for a return statement in the callback
+                        const callbackBody = content.slice(firstBrace);
+                        const returnMatch = callbackBody.match(/return\s*\{/);
+
+                        if (returnMatch) {
+                            // Insert css config after the return statement's opening brace
+                            const returnStart = firstBrace + callbackBody.indexOf(returnMatch[0]);
+                            const insertPosition = returnStart + returnMatch[0].length;
+                            const cssConfig = `
+        css: {
+            postcss: {
+                plugins: [pandacss]
+            }
+        },`;
+                            content =
+                                content.slice(0, insertPosition) +
+                                cssConfig +
+                                content.slice(insertPosition);
+                        } else {
+                            // No return statement found, try to find the config object directly
+                            // Look for the first opening brace after the callback arrow
+                            const insertPosition = firstBrace + 1;
+                            const cssConfig = `
+        css: {
+            postcss: {
+                plugins: [pandacss]
+            }
+        },`;
+                            content =
+                                content.slice(0, insertPosition) +
+                                cssConfig +
+                                content.slice(insertPosition);
+                        }
+                    }
+                } else {
+                    // Could not detect defineConfig pattern
+                    p.log.warn("⚠ Could not detect defineConfig pattern in vite.config");
+                    p.log.info(
+                        "💡 Manually add Panda CSS PostCSS plugin to your vite.config:\n" +
+                            '   import pandacss from "@pandacss/dev/postcss";\n' +
+                            "   css: { postcss: { plugins: [pandacss] } }"
+                    );
+                    return false;
+                }
             }
         }
 
@@ -706,14 +864,7 @@ async function updateTsConfig(cwd: string, framework: FrameworkConfig) {
         }
 
         // Add path aliases
-        const componentsPath =
-            framework.type === "react-router"
-                ? "./app/components/ui/*"
-                : framework.type === "nextjs" && existsSync(join(cwd, "src"))
-                  ? "./src/components/ui/*"
-                  : framework.type === "nextjs"
-                    ? "./components/ui/*"
-                    : "./src/components/ui/*";
+        const componentsPath = "./components/ui/*";
 
         if (!tsconfig.compilerOptions) {
             tsconfig.compilerOptions = {};
@@ -722,10 +873,65 @@ async function updateTsConfig(cwd: string, framework: FrameworkConfig) {
             tsconfig.compilerOptions.paths = {};
         }
 
-        // Add @/* path alias for components
-        if (!tsconfig.compilerOptions.paths["@/ui/*"]) {
-            tsconfig.compilerOptions.paths["@/ui/*"] = [componentsPath];
-            needsUpdate = true;
+        // Ensure @/ui/* is the first path alias
+        const existingPaths = tsconfig.compilerOptions.paths;
+        const hasUiPath = "@/ui/*" in existingPaths;
+        
+        if (!hasUiPath) {
+            const shouldAddUiPath = await p.confirm({
+                message: "Add @/ui/* path alias to tsconfig.json?",
+                initialValue: true
+            });
+
+            if (p.isCancel(shouldAddUiPath) || !shouldAddUiPath) {
+                p.log.warn("⊘ Skipped @/ui/* path alias");
+                p.log.info(
+                    '💡 Manually add "@/ui/*": ["./components/ui/*"] to the "paths" object in tsconfig.json compilerOptions'
+                );
+                // Continue with other updates (styled-system, etc.)
+            } else {
+                // Create new paths object without @/ui/* if it exists
+                const pathsWithoutUi = Object.keys(existingPaths).reduce(
+                    (acc, key) => {
+                        if (key !== "@/ui/*") {
+                            acc[key] = existingPaths[key];
+                        }
+                        return acc;
+                    },
+                    {} as Record<string, string[]>
+                );
+
+                // Reconstruct paths with @/ui/* first
+                tsconfig.compilerOptions.paths = {
+                    "@/ui/*": [componentsPath],
+                    ...pathsWithoutUi
+                };
+                needsUpdate = true;
+            }
+        } else {
+            // Path already exists, just ensure it's first
+            const firstKey = Object.keys(existingPaths)[0];
+            const needsReorder = firstKey !== "@/ui/*";
+
+            if (needsReorder) {
+                // Create new paths object without @/ui/* if it exists
+                const pathsWithoutUi = Object.keys(existingPaths).reduce(
+                    (acc, key) => {
+                        if (key !== "@/ui/*") {
+                            acc[key] = existingPaths[key];
+                        }
+                        return acc;
+                    },
+                    {} as Record<string, string[]>
+                );
+
+                // Reconstruct paths with @/ui/* first
+                tsconfig.compilerOptions.paths = {
+                    "@/ui/*": existingPaths["@/ui/*"],
+                    ...pathsWithoutUi
+                };
+                needsUpdate = true;
+            }
         }
 
         // Add styled-system/* path alias for Next.js (required for Next.js to find types)
@@ -815,7 +1021,7 @@ function printNextSteps(framework: FrameworkConfig) {
     if (framework.type === "react-router") {
         p.log.info(
             "1. Update your app/root.tsx to use DreamyProvider:\n\n" +
-                `   import { DreamyProvider, getColorModeHTMLProps, getSSRColorMode } from "./${framework.providerPath.replace("app/", "")}";\n` +
+                `   import { DreamyProvider, getColorModeHTMLProps, getSSRColorMode } from "../${framework.providerPath.replace("app/", "")}";\n` +
                 '   import type { Route } from "./+types/root";\n' +
                 '   import { useRouteLoaderData } from "react-router";\n\n' +
                 "   export function loader({ request }: Route.LoaderArgs) {\n" +
@@ -843,7 +1049,7 @@ function printNextSteps(framework: FrameworkConfig) {
     } else if (framework.type === "nextjs") {
         p.log.info(
             "1. Update your app/layout.tsx to use DreamyProvider:\n\n" +
-                `   import { DreamyProvider } from "@/ui/${framework.providerPath.replace(/^(src\/)?/, "")}";\n` +
+                `   import { DreamyProvider } from "../${framework.providerPath.replace(/^(src\/)?/, "")}";\n` +
                 '   import { getSSRColorMode, getColorModeHTMLProps } from "@dreamy-ui/react/rsc";\n' +
                 '   import { cookies } from "next/headers";\n\n' +
                 "   export default async function RootLayout({\n" +
@@ -864,7 +1070,7 @@ function printNextSteps(framework: FrameworkConfig) {
     } else {
         p.log.info(
             "1. Update your src/main.tsx or src/App.tsx to use DreamyProvider:\n\n" +
-                `   import { DreamyProvider } from "./${framework.providerPath.replace("src/", "")}";\n\n` +
+                `   import { DreamyProvider } from "../${framework.providerPath.replace("src/", "")}";\n\n` +
                 "   function App() {\n" +
                 "       return (\n" +
                 "           <DreamyProvider>\n" +

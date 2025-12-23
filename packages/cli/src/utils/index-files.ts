@@ -173,3 +173,74 @@ export async function writePatternsIndexFile(
 
 	await writeFile(indexPath, indexContent, "utf-8");
 }
+
+function toPascalCase(str: string): string {
+	return str
+		.split(/[-_]/)
+		.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+		.join("");
+}
+
+export async function writeComponentsIndexFile(
+	componentsDir: string,
+	jsx: boolean,
+	debug: Debugger
+) {
+	let componentFiles: string[] = [];
+	try {
+		const allFiles = await readdir(componentsDir);
+		componentFiles = allFiles.filter(
+			(file) => {
+				// Exclude index files
+				if (file === "index.ts" || file === "index.tsx" || file === "index.js" || file === "index.jsx") {
+					return false;
+				}
+				return (
+					(jsx && (file.endsWith(".jsx") || file.endsWith(".js"))) ||
+					(!jsx && (file.endsWith(".tsx") || file.endsWith(".ts")))
+				);
+			}
+		);
+	} catch (error) {
+		// Directory doesn't exist or is empty, skip
+		return;
+	}
+
+	if (componentFiles.length === 0) return;
+
+	const exports: string[] = [];
+
+	for (const file of componentFiles) {
+		try {
+			const filePath = join(componentsDir, file);
+			const fileContent = await readFile(filePath, "utf-8");
+
+			const fileName = file.replace(/\.(tsx|ts|jsx|js)$/, "");
+			const componentName = toPascalCase(fileName);
+
+			// Check if component has namespace exports (like export namespace ComponentName or export const Root)
+			const hasRootExport =
+				fileContent.match(/export\s+const\s+Root\s*=/) !== null;
+
+			if (hasRootExport) {
+				// Export as namespace: export * as ComponentName from "./component-name"
+				exports.push(`export * as ${componentName} from "./${fileName}";`);
+			} else {
+				// Regular export: export * from "./component-name"
+				exports.push(`export * from "./${fileName}";`);
+			}
+		} catch (error) {
+			// Skip files that can't be read
+			debug(`Failed to read component file ${file}:`, error);
+		}
+	}
+
+	if (exports.length === 0) return;
+
+	const indexContent = exports.join("\n") + "\n";
+
+	const indexFilename = jsx ? "index.js" : "index.ts";
+	const indexPath = join(componentsDir, indexFilename);
+
+	await writeFile(indexPath, indexContent, "utf-8");
+}

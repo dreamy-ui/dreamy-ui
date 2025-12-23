@@ -1,11 +1,10 @@
 import createDreamyPreset, { dreamyPlugin } from "@dreamy-ui/panda-preset";
 import { defineConfig } from "@pandacss/dev";
-import { patterns } from "./app/components/patterns";
-import { recipes } from "./app/components/recipes";
+import { patterns } from "./components/patterns";
+import { recipes } from "./components/recipes";
 
 export default defineConfig({
     preflight: true,
-    watch: true,
     jsxFramework: "react",
     jsxStyleProps: "all",
     outExtension: "js",

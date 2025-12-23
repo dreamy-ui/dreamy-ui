@@ -9,6 +9,5 @@ export default defineConfig({
         postcss: {
             plugins: [pandacss]
         }
-    },
-  plugins: [reactRouter(), tsconfigPaths()],
+    },    plugins: [reactRouter(), tsconfigPaths()]
 });

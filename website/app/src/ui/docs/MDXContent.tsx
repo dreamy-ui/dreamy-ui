@@ -75,7 +75,7 @@ import { PiConfetti } from "react-icons/pi";
 import { RiNextjsLine } from "react-icons/ri";
 import { SiApple, SiReactrouter } from "react-icons/si";
 import { Link as RemixLink, useLocation } from "react-router";
-import { CloseButton } from "~/components/ui/close-button";
+import { CloseButton } from "@/close-button";
 import type { MdxContent } from "~/src/.server/docs";
 import { PlatformSpecificKbd } from "~/src/ui/docs/components/kbds";
 import {

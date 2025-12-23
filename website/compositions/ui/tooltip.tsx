@@ -6,7 +6,9 @@ import {
     type UseTooltipProps,
     omit,
     pick,
+    transformReducedMotion,
     useMotionVariants,
+    useReducedMotion,
     useTooltip
 } from "@dreamy-ui/react";
 import { AnimatePresence, type HTMLMotionProps, m } from "motion/react";
@@ -129,6 +131,8 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>((props, ref) => 
 
     const PortalComponent = useMemo(() => (disablePortal ? Fragment : Portal), [disablePortal]);
 
+    const reducedMotion = useReducedMotion();
+
     /**
      * If the `label` is empty, there's no point showing the tooltip.
      * Let's simply return the children
@@ -145,10 +149,10 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>((props, ref) => 
                     <PortalComponent {...(disablePortal ? {} : portalProps)}>
                         <Box {...tooltip.getTooltipPositionerProps()}>
                             <StyledTooltip
-                                variants={variants}
-                                initial="exit"
                                 animate="initial"
                                 exit="exit"
+                                initial="exit"
+                                variants={transformReducedMotion(variants, reducedMotion)}
                                 {...motionProps}
                                 {...tooltipProps}
                             >

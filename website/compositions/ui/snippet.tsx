@@ -77,8 +77,8 @@ export const Snippet = forwardRef<HTMLDivElement, SnippetProps>((props, ref) => 
                 <div data-part="content">
                     {children.map((t, index) => (
                         <pre
-                            key={`${index}-${t}`}
                             data-part="pre"
+                            key={`${index}-${t}`}
                             tabIndex={0}
                         >
                             {!hideSymbol && <span data-part="symbol">{symbolBefore}</span>}
@@ -91,8 +91,8 @@ export const Snippet = forwardRef<HTMLDivElement, SnippetProps>((props, ref) => 
 
         return (
             <pre
-                ref={preRef}
                 data-part="pre"
+                ref={preRef}
                 tabIndex={0}
             >
                 {!hideSymbol && <span data-part="symbol">{symbolBefore}</span>}
@@ -113,14 +113,14 @@ export function CheckIcon(props: SVGProps<SVGSVGElement>) {
     return (
         <svg
             aria-hidden="true"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
             fill="none"
+            height="16"
             stroke="currentColor"
-            strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+            width="16"
             {...props}
         >
             <path d="M20 6 9 17l-5-5" />
@@ -132,24 +132,24 @@ function CopyIcon(props: SVGProps<SVGSVGElement>) {
     return (
         <svg
             aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
             fill="none"
+            height="16"
             stroke="currentColor"
-            strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+            width="16"
+            xmlns="http://www.w3.org/2000/svg"
             {...props}
         >
             <rect
-                width="14"
                 height="14"
-                x="8"
-                y="8"
                 rx="2"
                 ry="2"
+                width="14"
+                x="8"
+                y="8"
             />
             <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
         </svg>

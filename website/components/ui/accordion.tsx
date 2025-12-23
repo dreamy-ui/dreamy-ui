@@ -39,7 +39,7 @@ export interface AccordionProps
  *
  * @See Docs https://dreamy-ui.com/docs/components/accordion
  */
-const AccordionRoot = withProvider(
+export const Root = withProvider(
     forwardRef<HTMLDivElement, AccordionProps>(function AccordionRoot(ownProps, ref) {
         const { htmlProps, descendants, ...context } = useAccordion(ownProps);
 
@@ -73,7 +73,7 @@ export interface AccordionItemProps
           }) => React.ReactNode);
 }
 
-const AccordionItem = withContext(
+export const Item = withContext(
     forwardRef<HTMLDivElement, AccordionItemProps>(function AccordionItem(props, ref) {
         const { children } = props;
         const { htmlProps, ...ctx } = useAccordionItem(props);
@@ -104,7 +104,7 @@ export interface AccordionContentProps extends HTMLDreamyProps<"div"> {
     collapseProps?: CollapseProps;
 }
 
-const AccordionContent = withContext(
+export const Content = withContext(
     forwardRef<HTMLDivElement, AccordionContentProps>(function AccordionContent(props, ref) {
         const { collapseProps, ...rest } = props;
 
@@ -151,7 +151,7 @@ export interface AccordionTriggerProps extends HTMLDreamyProps<"button"> {
     iconProps?: IconProps;
 }
 
-const AccordionTrigger = withContext(
+export const Trigger = withContext(
     forwardRef<HTMLButtonElement, AccordionTriggerProps>(function AccordionTrigger(
         { headingTag: HeadingTag = "h2", children, icon, iconProps, ...props },
         ref
@@ -201,10 +201,3 @@ const AccordionIcon = withContext(
     }),
     "icon"
 );
-
-export namespace Accordion {
-    export const Root = AccordionRoot;
-    export const Item = AccordionItem;
-    export const Content = AccordionContent;
-    export const Trigger = AccordionTrigger;
-}

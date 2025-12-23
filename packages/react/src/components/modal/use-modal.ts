@@ -1,5 +1,6 @@
 import { mergeRefs } from "@/hooks/use-merge-refs";
 import { createContext } from "@/provider";
+import type { PropGetter } from "@/utils";
 import { callAllHandlers } from "@/utils/call-all";
 import { hideOthers } from "aria-hidden";
 import {
@@ -241,7 +242,7 @@ export function useModal(props: UseModalProps) {
         [onClose, closeOnOverlayClick, onOverlayClickProp]
     );
 
-    const getDialogContainerProps = useCallback(
+    const getDialogContainerProps: PropGetter = useCallback(
         (props: Record<string, any> = {}, ref = null) => {
             return {
                 ...props,

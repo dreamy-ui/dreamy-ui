@@ -16,7 +16,7 @@ import { Children, cloneElement, forwardRef } from "react";
 import { type HTMLDreamyProps, createStyleContext } from "styled-system/jsx";
 import { popover } from "styled-system/recipes";
 import { Box, type BoxProps } from "./box";
-import { CloseButton, type CloseButtonProps } from "./close-button";
+import { CloseButton as CloseButtonComponent, type CloseButtonProps } from "./close-button";
 import { Heading } from "./heading";
 import { MotionBox, type MotionBoxProps } from "./motion";
 
@@ -44,7 +44,7 @@ export interface PopoverProps extends UsePopoverProps {
  *
  * @See Docs https://dreamy-ui.com/docs/components/popover
  */
-const PopoverRoot = withRootProvider(function PopoverRoot(props: PopoverProps) {
+export const Root = withRootProvider(function PopoverRoot(props: PopoverProps) {
     const { children, direction = "ltr", hasArrow, ...rest } = props;
 
     const context = usePopover({ ...rest, direction });
@@ -67,7 +67,7 @@ const PopoverRoot = withRootProvider(function PopoverRoot(props: PopoverProps) {
 
 export interface PopoverArrowProps extends HTMLDreamyProps<"div"> {}
 
-function PopoverArrow(props: PopoverArrowProps) {
+export function Arrow(props: PopoverArrowProps) {
     return (
         <Box
             data-popper-arrow
@@ -91,7 +91,7 @@ export interface PopoverTransitionProps extends Omit<MotionBoxProps, "children">
     arrowProps?: PopoverArrowProps;
 }
 
-const PopoverTransition = forwardRef(function PopoverTransition(
+const Transition = forwardRef(function PopoverTransition(
     props: PopoverTransitionProps,
     ref: React.Ref<any>
 ) {
@@ -108,7 +108,7 @@ const PopoverTransition = forwardRef(function PopoverTransition(
             variants={transformReducedMotion(popover.default, reduceMotion)}
             {...rest}
         >
-            {hasArrow && <PopoverArrow {...arrowProps} />}
+            {hasArrow && <Arrow {...arrowProps} />}
             {children}
         </MotionBox>
     );
@@ -119,7 +119,7 @@ export interface PopoverContentProps extends PopoverTransitionProps {
     motionProps?: Omit<MotionBoxProps, "children">;
 }
 
-const PopoverContent = withContext(
+export const Content = withContext(
     forwardRef<HTMLElement, PopoverContentProps>(function PopoverContent(props, ref) {
         const { rootProps, motionProps, ...contentProps } = props;
 
@@ -130,7 +130,7 @@ const PopoverContent = withContext(
 
         return (
             <div {...getPopoverPositionerProps(rootProps)}>
-                <PopoverTransition
+                <Transition
                     {...getPopoverProps({ ...motionProps, ...contentProps }, ref)}
                     onAnimationComplete={callAll(
                         onAnimationComplete,
@@ -145,7 +145,7 @@ const PopoverContent = withContext(
 
 export interface PopoverHeaderProps extends HTMLDreamyProps<"header"> {}
 
-const PopoverHeader = withContext(
+export const Header = withContext(
     forwardRef<HTMLDivElement, PopoverHeaderProps>(function PopoverHeader(props, ref) {
         const { children, ...rest } = props;
         const { getHeaderProps } = usePopoverContext();
@@ -173,7 +173,7 @@ const PopoverHeader = withContext(
 
 export interface PopoverBodyProps extends HTMLDreamyProps<"div"> {}
 
-const PopoverBody = withContext(
+export const Body = withContext(
     forwardRef<HTMLDivElement, PopoverBodyProps>(function PopoverHeader(props, ref) {
         const { getBodyProps } = usePopoverContext();
 
@@ -184,7 +184,7 @@ const PopoverBody = withContext(
 
 export interface PopoverFooterProps extends BoxProps {}
 
-const PopoverFooter = withContext(
+export const Footer = withContext(
     forwardRef<HTMLDivElement, PopoverFooterProps>(function PopoverFooter(props, ref) {
         return (
             <Box
@@ -199,12 +199,12 @@ const PopoverFooter = withContext(
 
 export interface PopoverCloseButtonProps extends CloseButtonProps {}
 
-const PopoverCloseButton = withContext(
+export const CloseButton = withContext(
     forwardRef<HTMLButtonElement, PopoverCloseButtonProps>(function PopoverCloseButton(props, ref) {
         const { onClose } = usePopoverContext();
 
         return (
-            <CloseButton
+            <CloseButtonComponent
                 {...props}
                 onClick={callAllHandlers(props.onClick, onClose)}
                 ref={ref}
@@ -219,7 +219,7 @@ const PopoverCloseButton = withContext(
  * PopoverAnchor is element that is used as the positioning reference
  * for the popover.
  */
-function PopoverAnchor(props: React.PropsWithChildren<{}>) {
+export function Anchor(props: React.PropsWithChildren<{}>) {
     const child: any = Children.only(props.children);
     const { getAnchorProps } = usePopoverContext();
 
@@ -230,20 +230,9 @@ function PopoverAnchor(props: React.PropsWithChildren<{}>) {
  * PopoverTrigger opens the popover's content. It must be an interactive element
  * such as `button` or `a`.
  */
-function PopoverTrigger(props: { children: React.ReactNode }) {
+export function Trigger(props: { children: React.ReactNode }) {
     const child: any = Children.only(props.children);
     const { getTriggerProps } = usePopoverContext();
 
     return <>{cloneElement(child, getTriggerProps(child.props, child.ref))}</>;
-}
-
-export namespace Popover {
-    export const Root = PopoverRoot;
-    export const Content = PopoverContent;
-    export const Header = PopoverHeader;
-    export const Body = PopoverBody;
-    export const Footer = PopoverFooter;
-    export const CloseButton = PopoverCloseButton;
-    export const Anchor = PopoverAnchor;
-    export const Trigger = PopoverTrigger;
 }

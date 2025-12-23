@@ -36,7 +36,7 @@ export interface TabsProps
  *
  * @See Docs https://dreamy-ui.com/docs/components/tabs
  */
-const TabsRoot = withProvider(
+export const Root = withProvider(
     forwardRef<HTMLDivElement, TabsProps>(function Tabs(props, ref) {
         const { children, ...rest } = props;
 
@@ -60,7 +60,7 @@ const TabsRoot = withProvider(
 
 export interface TabListProps extends UseTabListProps, Omit<FlexProps, "onKeyDown" | "ref"> {}
 
-const TabList = withContext(
+export const List = withContext(
     forwardRef<HTMLDivElement, TabListProps>(function TabList(props, ref) {
         const tablistProps = useTabList({ ...props, ref });
 
@@ -71,7 +71,7 @@ const TabList = withContext(
 
 export interface TabProps extends UseTabOptions, ButtonProps {}
 
-const TabTab = withContext(
+export const Tab = withContext(
     forwardRef<HTMLButtonElement, TabProps>(function Tab(props, ref) {
         const { children, ...rest } = props;
 
@@ -85,7 +85,7 @@ const TabTab = withContext(
                 {...tabProps}
             >
                 {children}
-                {isSelected && <TabIndicator />}
+                {isSelected && <Indicator />}
             </Button>
         );
     }),
@@ -94,7 +94,7 @@ const TabTab = withContext(
 
 export interface TabPanelsProps extends FlexProps {}
 
-const TabPanels = withContext(
+export const Panels = withContext(
     forwardRef<HTMLDivElement, TabPanelsProps>(function TabPanels(props, ref) {
         const panelsProps = useTabPanels(props);
 
@@ -110,7 +110,7 @@ const TabPanels = withContext(
 
 export interface TabPanelProps extends HTMLDreamyProps<"div"> {}
 
-const TabPanel = withContext(
+export const Panel = withContext(
     forwardRef<HTMLDivElement, TabPanelProps>(function TabPanel(props, ref) {
         const panelProps = useTabPanel({ ...props, ref });
 
@@ -130,7 +130,7 @@ export interface TabIndicatorProps extends MotionFlexProps {}
  * Used inside Tab components
  * @internal
  */
-const TabIndicator = withContext(
+const Indicator = withContext(
     forwardRef<HTMLDivElement, TabIndicatorProps>(function TabIndicator(props, ref) {
         const { id } = useTabsContext();
         const transition = useDefaultTransition();
@@ -155,11 +155,3 @@ const TabIndicator = withContext(
     }),
     "tabIndicator"
 );
-
-export namespace Tabs {
-    export const Root = TabsRoot;
-    export const List = TabList;
-    export const Tab = TabTab;
-    export const Panels = TabPanels;
-    export const Panel = TabPanel;
-}

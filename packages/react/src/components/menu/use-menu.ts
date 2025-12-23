@@ -1,23 +1,27 @@
-import { createDescendantContext } from "@/components/descendant";
+import { type DescendantsManager, createDescendantContext } from "@/components/descendant";
 import { useControllable, type useControllableProps } from "@/hooks";
 import { type ReactRef, mergeRefs } from "@/hooks/use-merge-refs";
 import { createContext, useReducedMotion } from "@/provider";
 import { type PropGetter, callAllHandlers, cx } from "@/utils";
 import { dataAttr } from "@/utils/attr";
-import { type KeyboardEvent, type ReactNode, useCallback, useId, useRef, useState } from "react";
+import {
+    type DOMAttributes,
+    DOMElement,
+    type KeyboardEvent,
+    PointerEvent,
+    type ReactNode,
+    type RefAttributes,
+    useCallback,
+    useId,
+    useRef,
+    useState
+} from "react";
 import type { UserFeedbackProps } from "../field";
+import type { UsePopoverProps } from "../popover";
 
 interface MenuContext extends Omit<UseMenuReturn, "rest"> {}
 
-export const [MenuProvider, useMenuContext] = createContext<MenuContext>({
-    name: "MenuContext",
-    hookName: "useMenuContext",
-    providerName: "Menu"
-});
-
-export interface UseMenuProps<T extends Record<string, any>>
-    extends UserFeedbackProps,
-        useControllableProps {
+export interface UseMenuProps<T extends any> extends UserFeedbackProps, useControllableProps {
     children?: ReactNode;
     /**
      * The class name for the wrapper. You probably want to style the Menu trigger, use `MenuTrigger` instead.
@@ -39,7 +43,7 @@ export interface UseMenuProps<T extends Record<string, any>>
     /**
      * The props to be passed to the popover.
      */
-    popoverProps?: T;
+    popoverProps?: UsePopoverProps & T;
     /**
      * Whether to close the popover when a menu button is clicked.
      * @default true
@@ -47,7 +51,7 @@ export interface UseMenuProps<T extends Record<string, any>>
     closeOnClick?: boolean;
 }
 
-export function useMenu<T extends Record<string, any>>(props: UseMenuProps<T>) {
+export function useMenu<T extends any>(props: UseMenuProps<T>): UseMenuReturn {
     const globalReduceMotion = useReducedMotion();
 
     const {
@@ -201,7 +205,39 @@ export function useMenu<T extends Record<string, any>>(props: UseMenuProps<T>) {
     };
 }
 
-export type UseMenuReturn = ReturnType<typeof useMenu>;
+export interface UseMenuReturn {
+    triggerRef: React.RefObject<HTMLButtonElement | null>;
+    reduceMotion: boolean;
+    focusedIndex: number;
+    setFocusedIndex: (index: number) => void;
+    isOpen: boolean;
+    onOpen: () => void;
+    onClose: () => void;
+    onToggle: () => void;
+    popoverRef: React.RefObject<HTMLDivElement | null>;
+    getRootProps: PropGetter;
+    getTriggerProps: PropGetter;
+    getContentProps: (
+        props: Record<string, any>,
+        ref: React.Ref<any>
+    ) => {
+        rootProps: {
+            style: {
+                zIndex: "var(--z-index-dropdown)";
+            };
+        };
+    };
+    id: string;
+    getItemProps: PropGetter;
+    descendants: DescendantsManager<HTMLButtonElement>;
+    rest: UseMenuProps<any>;
+}
+
+export const [MenuProvider, useMenuContext] = createContext<MenuContext>({
+    name: "MenuContext",
+    hookName: "useMenuContext",
+    providerName: "Menu"
+});
 
 export const [
     MenuDescendantsProvider,
@@ -210,14 +246,25 @@ export const [
     useMenuDescendant
 ] = createDescendantContext<HTMLButtonElement>();
 
-export interface UseMenuItemProps extends Record<string, any> {
+export interface UseMenuItemProps {
     isDisabled?: boolean;
+    disabled?: boolean;
+    onPointerEnter?: (event: React.PointerEvent<HTMLButtonElement>) => void;
+    index?: number;
+    "data-focused"?: string;
 }
 
-/**
- * @internal
- */
-export function useMenuItem(props: UseMenuItemProps, ref: React.Ref<any> = null): any {
+interface UseMenuItemReturn extends UseMenuItemProps {
+    isDisabled: boolean;
+    onPointerEnter: (event: React.PointerEvent<HTMLButtonElement>) => void;
+    index: number;
+    "data-focused"?: string;
+}
+
+export function useMenuItem(
+    props: UseMenuItemProps,
+    ref: React.Ref<any> = null
+): DOMAttributes<HTMLButtonElement> & RefAttributes<HTMLButtonElement> {
     const { getItemProps, focusedIndex, setFocusedIndex } = useMenuContext();
     const { index, register } = useMenuDescendant({
         disabled: props?.isDisabled || props?.disabled || false

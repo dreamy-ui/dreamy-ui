@@ -11,7 +11,7 @@ import {
     useMenuContext,
     useMenuItem
 } from "@dreamy-ui/react";
-import { Children, type ReactNode, cloneElement, forwardRef } from "react";
+import { Children, type ReactElement, type ReactNode, cloneElement, forwardRef } from "react";
 import { type HTMLDreamyProps, createStyleContext, dreamy } from "styled-system/jsx";
 import { menu } from "styled-system/recipes";
 import { Box } from "./box";
@@ -35,7 +35,7 @@ export interface MenuProps extends UseMenuProps<PopoverProps> {
  *
  * @See Docs https://dreamy-ui.com/docs/components/menu
  */
-const MenuRoot = withProvider(function MenuRoot({
+export const Root = withProvider(function MenuRoot({
     children,
     className,
     placement,
@@ -44,7 +44,7 @@ const MenuRoot = withProvider(function MenuRoot({
     const { rest, ...ctx } = useMenu(props);
 
     return (
-        <MenuProvider value={ctx as any}>
+        <MenuProvider value={ctx}>
             <Box {...ctx.getRootProps({ className })}>
                 <Popover.Root
                     hasArrow={false}
@@ -64,9 +64,9 @@ const MenuRoot = withProvider(function MenuRoot({
     );
 }, "root");
 
-export interface MenuContentProps extends PopoverContentProps {}
+export interface MenuContentProps extends PopoverContentProps { }
 
-const MenuContent = withContext(
+export const Content = withContext(
     forwardRef<HTMLDivElement, MenuContentProps>(function MenuContent(props, ref) {
         const { children, ...rest } = props;
 
@@ -85,7 +85,7 @@ export interface MenuButtonProps extends UseMenuItemProps {
     /**
      * Icon to display on the left side of the menu item
      */
-    icon?: React.ReactNode | React.ElementType;
+    icon?: React.ReactNode | (() => React.ReactNode);
     /**
      * Command to display on the right side of the menu item
      */
@@ -93,25 +93,24 @@ export interface MenuButtonProps extends UseMenuItemProps {
     /**
      * The content to display on the right side of the menu item
      */
-    rightContent?: React.ReactNode | React.ElementType;
+    rightContent?: React.ReactNode | (() => React.ReactNode);
 }
 
-const MenuItem = withContext(
+export const Item = withContext(
     forwardRef<HTMLDivElement, MenuButtonProps>(function MenuButton(props, ref) {
         const { icon, command, rightContent, ...rest } = props;
-        console.log("menu button");
-        const buttonProps = useMenuItem(rest, ref);
 
+        const buttonProps = useMenuItem(rest, ref);
         const actionKey = useActionKey();
 
         return (
-            <dreamy.button {...(buttonProps as any)}>
+            <dreamy.button {...buttonProps}>
                 <span>
-                    {runIfFn(icon as any)}
+                    {runIfFn(icon)}
                     {buttonProps.children}
                 </span>
                 {command && <Kbd size={"sm"}>{command.replaceAll("{actionKey}", actionKey)}</Kbd>}
-                {rightContent && runIfFn(rightContent as any)}
+                {rightContent && runIfFn(rightContent)}
             </dreamy.button>
         );
     }),
@@ -122,21 +121,14 @@ export interface MenuTriggerProps extends HTMLDreamyProps<"button"> {
     placeholder?: string;
 }
 
-const MenuTrigger = forwardRef<HTMLButtonElement, MenuTriggerProps>(function MenuTrigger(
+export const Trigger = forwardRef<HTMLButtonElement, MenuTriggerProps>(function MenuTrigger(
     { children, placeholder, ...rest },
     ref
 ) {
     const { getTriggerProps } = useMenuContext();
 
-    const child = Children.only(children) as any;
+    const child = Children.only(children) as ReactElement;
     const trigger = cloneElement(child, getTriggerProps(rest, ref));
 
     return <Popover.Trigger {...rest}>{trigger}</Popover.Trigger>;
 });
-
-export namespace Menu {
-    export const Root = MenuRoot;
-    export const Content = MenuContent;
-    export const Item = MenuItem;
-    export const Trigger = MenuTrigger;
-}

@@ -3,7 +3,9 @@
 import {
     TRANSITION_DEFAULTS,
     type WithTransitionConfig,
-    useMotionVariants
+    transformReducedMotion,
+    useMotionVariants,
+    useReducedMotion
 } from "@dreamy-ui/react";
 import {
     AnimatePresence,
@@ -83,20 +85,22 @@ export const Collapse = forwardRef<HTMLDivElement, CollapseProps>((props, ref) =
         [isOpen, unmountOnExit]
     );
 
+    const reducedMotion = useReducedMotion();
+
     return (
         <AnimatePresence
-            initial={false}
             custom={custom}
+            initial={false}
             {...animatePresenceProps}
         >
             {show && (
                 <MotionBox
-                    ref={ref}
-                    custom={custom}
-                    variants={variants}
-                    initial={unmountOnExit ? "exit" : false}
                     animate={animate}
+                    custom={custom}
                     exit="exit"
+                    initial={unmountOnExit ? "exit" : false}
+                    ref={ref}
+                    variants={transformReducedMotion(variants, reducedMotion)}
                     {...rest}
                     className={cx(
                         css({
@@ -173,6 +177,8 @@ export const Scale = forwardRef<HTMLDivElement, ScaleProps>(function Scale(props
 
     const custom = { initialScale, reverse, transition, transitionEnd, delay };
 
+    const reducedMotion = useReducedMotion();
+
     return (
         <AnimatePresence
             {...animatePresenceProps}
@@ -180,10 +186,10 @@ export const Scale = forwardRef<HTMLDivElement, ScaleProps>(function Scale(props
         >
             {show && (
                 <MotionBox
-                    ref={ref}
-                    {...ScaleConfig}
                     animate={animate}
                     custom={custom}
+                    ref={ref}
+                    variants={transformReducedMotion(variants, reducedMotion)}
                     {...rest}
                 />
             )}

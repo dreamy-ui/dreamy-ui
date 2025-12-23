@@ -1,13 +1,10 @@
 "use client";
 
 import {
+	CheckboxGroupProvider,
 	TRANSITION_EASINGS,
-	type UseCheckboxGroupProps,
-	type UseCheckboxGroupReturn,
-	type UseCheckboxProps,
-	type UseCheckboxReturn,
-	createContext,
-	useCheckbox,
+	type UseCheckboxGroupProps, type UseCheckboxProps,
+	type UseCheckboxReturn, useCheckbox,
 	useCheckboxGroup,
 	useMotionVariants
 } from "@dreamy-ui/react";
@@ -19,7 +16,7 @@ import { type CheckboxVariantProps, checkbox } from "styled-system/recipes";
 import { Flex, type FlexProps } from "./flex";
 import { VisuallyHiddenInput } from "./visually-hidden";
 
-export interface CheckboxProps extends UseCheckboxProps, CheckboxVariantProps {}
+export interface CheckboxProps extends UseCheckboxProps, CheckboxVariantProps { }
 
 const StyledCheckbox = dreamy("div", checkbox);
 
@@ -68,7 +65,7 @@ export interface IconCustomProps {
 
 interface CheckboxIconProps extends Partial<
 	ReturnType<UseCheckboxReturn["getIconProps"]> & IconCustomProps
-> {}
+> { }
 
 function CheckIcon(props: CheckboxIconProps) {
 	const {
@@ -153,28 +150,11 @@ export function CheckboxIcon(props: CheckboxIconProps) {
 	return <BaseIcon {...otherProps} />;
 }
 
-export interface CheckboxGroupContext
-	extends
-		Pick<
-			UseCheckboxGroupReturn,
-			"onChange" | "value" | "isDisabled" | "isInvalid" | "isRequired" | "isReadOnly"
-		>,
-		CheckboxVariantProps {
-	reduceMotion?: boolean;
-}
-
-export const [CheckboxGroupProvider, useCheckboxGroupContext] = createContext<CheckboxGroupContext>(
-	{
-		name: "CheckboxGroupContext",
-		strict: false
-	}
-);
-
 export interface CheckboxGroupProps
 	extends
-		UseCheckboxGroupProps,
-		CheckboxVariantProps,
-		Omit<FlexProps, "defaultValue" | "onChange"> {}
+	UseCheckboxGroupProps,
+	CheckboxVariantProps,
+	Omit<FlexProps, "defaultValue" | "onChange"> { }
 
 /**
  * CheckboxGroup component. Useful for grouping multiple checkboxes together.
@@ -204,9 +184,11 @@ export function CheckboxGroup(props: CheckboxGroupProps) {
 
 	const group = useMemo(
 		() => ({
-			size,
-			scheme,
-			variant,
+			variants: {
+				size,
+				scheme,
+				variant
+			},
 			value,
 			onChange,
 			isDisabled,

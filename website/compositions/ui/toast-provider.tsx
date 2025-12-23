@@ -14,7 +14,7 @@ import {
 import type { MotionBoxProps } from "./motion";
 import { Toast } from "./toast";
 
-type ToastBase = {
+interface ToastBase {
     id: string;
     title?: string;
     description?: string;
@@ -25,17 +25,17 @@ type ToastBase = {
     rightContent?: React.ReactNode;
     onMouseEnter?: () => void;
     onMouseLeave?: () => void;
-};
+}
 
-type ToastWithRender = ToastBase & {
+interface ToastWithRender extends ToastBase {
     render: (toast: ToastWithRender) => React.ReactNode;
     containerProps?: MotionProps;
-};
+}
 
-type ToastWithoutRender = ToastBase & {
+interface ToastWithoutRender extends ToastBase {
     render?: undefined;
     containerProps?: MotionBoxProps;
-};
+}
 
 export type IToast = ToastWithRender | ToastWithoutRender;
 
@@ -221,7 +221,7 @@ export function useToast(): ToastContextType {
     return context;
 }
 
-export const positions = [
+const positions = [
     "top",
     "top-left",
     "top-right",

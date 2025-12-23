@@ -19,7 +19,7 @@ import { forwardRef, useEffect, useMemo } from "react";
 import { createStyleContext } from "styled-system/jsx";
 import { modal } from "styled-system/recipes";
 import { Box, type BoxProps } from "./box";
-import { CloseButton, type CloseButtonProps } from "./close-button";
+import { CloseButton as CloseButtonComponent, type CloseButtonProps } from "./close-button";
 import { Flex, type FlexProps } from "./flex";
 import { Heading } from "./heading";
 import { MotionBox, type MotionBoxProps, MotionFlex, type MotionFlexProps } from "./motion";
@@ -51,7 +51,7 @@ export interface ModalProps extends UseModalProps, ModalOptions {
  *
  * @See Docs https://dreamy-ui.com/docs/components/modal
  */
-const ModalRoot = withRootProvider(function ModalRoot(props: ModalProps) {
+export const Root = withRootProvider(function ModalRoot(props: ModalProps) {
     const modalProps: ModalProps = {
         scrollBehavior: "inside",
         autoFocus: true,
@@ -113,9 +113,9 @@ const ModalRoot = withRootProvider(function ModalRoot(props: ModalProps) {
     );
 });
 
-export interface ModalOverlayProps extends MotionBoxProps {}
+export interface ModalOverlayProps extends MotionBoxProps { }
 
-const ModalOverlay = withContext(
+export const Overlay = withContext(
     forwardRef<HTMLDivElement, ModalOverlayProps>((props, ref) => {
         const { isOpen } = useModalContext();
         const { overlay } = useMotionVariants();
@@ -124,11 +124,11 @@ const ModalOverlay = withContext(
             <AnimatePresence>
                 {isOpen && (
                     <MotionBox
-                        variants={overlay.default}
-                        initial="initial"
                         animate="animate"
                         exit="exit"
+                        initial="initial"
                         ref={ref}
+                        variants={overlay.default}
                         {...props}
                     />
                 )}
@@ -138,9 +138,9 @@ const ModalOverlay = withContext(
     "overlay"
 );
 
-export interface ModalContainerProps extends BoxProps {}
+interface ModalContainerProps extends BoxProps { }
 
-const ModalContainer = withContext(
+const Container = withContext(
     forwardRef<HTMLDivElement, ModalContainerProps>(({ children, ...props }, ref) => {
         const { getDialogContainerProps } = useModalContext();
 
@@ -149,9 +149,9 @@ const ModalContainer = withContext(
     "container"
 );
 
-export interface ModalContentProps extends MotionFlexProps {}
+export interface ModalContentProps extends MotionFlexProps { }
 
-const ModalContent = withContext(
+export const Content = withContext(
     forwardRef<HTMLDivElement, ModalContentProps>(({ children, ...props }, ref) => {
         const { getDialogProps } = useModalContext();
         const { modal } = useMotionVariants();
@@ -160,18 +160,18 @@ const ModalContent = withContext(
         return (
             <>
                 <ModalFocusScope>
-                    <ModalContainer>
+                    <Container>
                         <MotionFlex
-                            variants={modal.default}
-                            initial="initial"
                             animate="animate"
                             exit="exit"
+                            initial="initial"
                             transition={transition}
+                            variants={modal.default}
                             {...getDialogProps(props, ref)}
                         >
                             {children}
                         </MotionFlex>
-                    </ModalContainer>
+                    </Container>
                 </ModalFocusScope>
             </>
         );
@@ -179,9 +179,9 @@ const ModalContent = withContext(
     "content"
 );
 
-export interface ModalHeaderProps extends FlexProps {}
+export interface ModalHeaderProps extends FlexProps { }
 
-const ModalHeader = withContext(
+export const Header = withContext(
     forwardRef<HTMLDivElement, ModalHeaderProps>(({ children, ...props }, ref) => {
         return (
             <Flex
@@ -191,8 +191,8 @@ const ModalHeader = withContext(
             >
                 {typeof children === "string" ? (
                     <Heading
-                        variant={"heading"}
                         size="lg"
+                        variant={"heading"}
                     >
                         {children}
                     </Heading>
@@ -205,9 +205,9 @@ const ModalHeader = withContext(
     "header"
 );
 
-export interface ModalBodyProps extends FlexProps {}
+export interface ModalBodyProps extends FlexProps { }
 
-const ModalBody = withContext(
+export const Body = withContext(
     forwardRef<HTMLDivElement, ModalBodyProps>(({ children, style, ...props }, ref) => {
         const { scrollBehavior } = useModalContext();
 
@@ -228,9 +228,9 @@ const ModalBody = withContext(
     "body"
 );
 
-export interface ModalFooterProps extends FlexProps {}
+export interface ModalFooterProps extends FlexProps { }
 
-const ModalFooter = withContext(
+export const Footer = withContext(
     forwardRef<HTMLDivElement, ModalFooterProps>(({ children, ...props }, ref) => {
         return (
             <Flex
@@ -245,16 +245,16 @@ const ModalFooter = withContext(
     "footer"
 );
 
-export interface ModalCloseButtonProps extends CloseButtonProps {}
+export interface ModalCloseButtonProps extends CloseButtonProps { }
 
-const ModalCloseButton = withContext(
+export const CloseButton = withContext(
     forwardRef<HTMLButtonElement, ModalCloseButtonProps>(({ ...props }, ref) => {
         const { onClose } = useModalContext();
 
         return (
-            <CloseButton
-                ref={ref}
+            <CloseButtonComponent
                 onClick={onClose}
+                ref={ref}
                 {...props}
             />
         );
@@ -295,20 +295,20 @@ function ModalFocusScope(props: ModalFocusScopeProps) {
     return (
         <FocusLock
             autoFocus={autoFocus}
-            isDisabled={!trapFocus}
-            initialFocusRef={initialFocusRef}
-            finalFocusRef={finalFocusRef}
-            restoreFocus={returnFocusOnClose}
             contentRef={dialogRef}
+            finalFocusRef={finalFocusRef}
+            initialFocusRef={initialFocusRef}
+            isDisabled={!trapFocus}
             lockFocusAcrossFrames={lockFocusAcrossFrames}
+            restoreFocus={returnFocusOnClose}
         >
             <RemoveScroll
-                removeScrollBar={!preserveScrollBarGap}
                 allowPinchZoom={allowPinchZoom}
-                // only block scroll for first dialog
                 enabled={index === 1 && blockScrollOnMount}
+                // only block scroll for first dialog
                 forwardProps
                 inert={useInert}
+                removeScrollBar={!preserveScrollBarGap}
             >
                 {props.children}
             </RemoveScroll>
@@ -317,14 +317,3 @@ function ModalFocusScope(props: ModalFocusScopeProps) {
 }
 
 type ScrollBehavior = "inside" | "outside";
-
-export namespace Modal {
-    export const Root = ModalRoot;
-    export const Overlay = ModalOverlay;
-    export const Container = ModalContainer;
-    export const Content = ModalContent;
-    export const Header = ModalHeader;
-    export const Body = ModalBody;
-    export const Footer = ModalFooter;
-    export const CloseButton = ModalCloseButton;
-}

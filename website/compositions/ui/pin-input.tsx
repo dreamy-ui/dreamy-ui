@@ -28,7 +28,7 @@ export interface PinInputProps
  *
  * @see Docs https://dreamy-ui.com/docs/components/pin-input
  */
-const PinInputRoot = forwardRef<HTMLDivElement, PinInputProps>(function PinInput(props, ref) {
+export const Root = forwardRef<HTMLDivElement, PinInputProps>(function PinInput(props, ref) {
     const { children, ...rest } = props;
     const [cssProps, otherProps] = splitCssProps(rest);
     const { descendants, ...context } = usePinInput<InputProps, HStackProps>(otherProps);
@@ -48,20 +48,13 @@ const PinInputRoot = forwardRef<HTMLDivElement, PinInputProps>(function PinInput
 
 export interface PinInputFieldProps extends InputProps {}
 
-const PinInputField = forwardRef<PinInputFieldProps, InputProps>(
-    function PinInputField(props, ref) {
-        const inputProps = usePinInputField<InputProps>(props, ref);
+export const Field = forwardRef<PinInputFieldProps, InputProps>(function PinInputField(props, ref) {
+    const inputProps = usePinInputField<InputProps>(props, ref);
 
-        return (
-            <Input
-                inputType={"pin"}
-                {...inputProps}
-            />
-        );
-    }
-);
-
-export namespace PinInput {
-    export const Root = PinInputRoot;
-    export const Field = PinInputField;
-}
+    return (
+        <Input
+            inputType={"pin"}
+            {...inputProps}
+        />
+    );
+});

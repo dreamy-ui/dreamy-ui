@@ -1,3 +1,4 @@
+import { getColorSchemes } from "@dreamy-ui/panda-preset";
 import { defineParts, defineRecipe } from "@pandacss/dev";
 
 const parts = defineParts({
@@ -85,6 +86,7 @@ export const button = defineRecipe({
             secondary: parts({
                 root: {
                     bg: "secondary",
+                    outlineColor: "{colors.secondary}",
                     color: "{colors.secondaryButtonText}",
                     _hover: {
                         bg: "{colors.secondary.hover}"
@@ -93,9 +95,10 @@ export const button = defineRecipe({
             }),
             solid: parts({
                 root: {
-                    bg: "currentColor/08",
+                    bg: "currentColor/06",
+                    outlineColor: "currentColor",
                     _hover: {
-                        bg: "currentColor/12"
+                        bg: "currentColor/10"
                     }
                 }
             }),
@@ -104,17 +107,20 @@ export const button = defineRecipe({
                     bg: "transparent",
                     borderWidth: 1,
                     borderStyle: "solid",
-                    borderColor: "currentColor/16",
+                    outlineColor: "currentColor",
+                    borderColor: "border",
                     _hover: {
-                        bg: "currentColor/08"
+                        bg: "currentColor/08",
+                        borderColor: "border.hover"
                     }
                 }
             }),
             ghost: parts({
                 root: {
                     bg: "transparent",
+                    outlineColor: "currentColor",
                     _hover: {
-                        bg: "currentColor/12"
+                        bg: "currentColor/08"
                     }
                 }
             }),
@@ -122,6 +128,7 @@ export const button = defineRecipe({
                 root: {
                     bg: "transparent",
                     h: "fit-content",
+                    outlineColor: "currentColor",
                     px: 0,
                     py: 0,
                     rounded: "none",
@@ -145,6 +152,7 @@ export const button = defineRecipe({
                     h: 6,
                     px: 2,
                     py: 1,
+                    gap: 1,
                     "--icon-button-icon-size": "16px"
                 }
             }),
@@ -154,13 +162,8 @@ export const button = defineRecipe({
                     h: 8,
                     px: 3,
                     py: 1,
+                    gap: 1.5,
                     "--icon-button-icon-size": "20px"
-                },
-                leftIcon: {
-                    marginRight: 1.5
-                },
-                rightIcon: {
-                    marginLeft: 1.5
                 }
             }),
             md: parts({
@@ -169,13 +172,8 @@ export const button = defineRecipe({
                     h: 10,
                     px: 4,
                     py: 2,
+                    gap: 2,
                     "--icon-button-icon-size": "24px"
-                },
-                leftIcon: {
-                    marginRight: 2
-                },
-                rightIcon: {
-                    marginLeft: 2
                 }
             }),
             lg: parts({
@@ -184,15 +182,32 @@ export const button = defineRecipe({
                     h: 12,
                     px: 5,
                     py: 3,
+                    gap: 3,
                     "--icon-button-icon-size": "28px"
-                },
-                leftIcon: {
-                    marginRight: 3
-                },
-                rightIcon: {
-                    marginLeft: 3
                 }
             })
+        },
+        scheme: getColorSchemes("--button-scheme", undefined, "root")
+    },
+    compoundVariants: [
+        {
+            variant: ["outline"],
+            scheme: ["error", "warning", "info", "success", "primary", "secondary"],
+            css: {
+                color: "var(--button-scheme)",
+                borderColor: "var(--button-scheme)/16",
+                _hover: {
+                    bg: "var(--button-scheme)/08",
+                    borderColor: "var(--button-scheme)/16"
+                }
+            }
+        },
+        {
+            variant: ["ghost", "solid"],
+            scheme: ["error", "warning", "info", "success", "primary", "secondary"],
+            css: {
+                color: "var(--button-scheme)"
+            }
         }
-    }
+    ]
 });

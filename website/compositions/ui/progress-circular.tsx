@@ -29,10 +29,8 @@ export const ProgressCircular = forwardRef<HTMLDivElement, ProgressCircularProps
         valueText
     } = useCircularProgress({ ref, ...props });
 
-    const progressBarProps = getProgressBarProps();
-
     return (
-        <StyledProgressCircular {...progressBarProps}>
+        <StyledProgressCircular {...getProgressBarProps()}>
             <div>
                 <svg
                     {...getSvgProps()}

@@ -2,6 +2,7 @@
 
 import {
     EditableProvider,
+    type MaybeRenderProp,
     type UseEditableProps,
     type UseEditableReturn,
     runIfFn,
@@ -15,15 +16,9 @@ import { Box } from "./box";
 
 type RenderProps = Pick<UseEditableReturn, "isEditing" | "onSubmit" | "onCancel" | "onEdit">;
 
-type MaybeRenderProp<P> = React.ReactNode | ((props: P) => React.ReactNode);
-
-interface BaseEditableProps
-    extends Omit<
-        HTMLDreamyProps<"div">,
-        "onChange" | "value" | "defaultValue" | "onSubmit" | "onBlur"
-    > {}
-
-export interface EditableProps extends UseEditableProps, Omit<BaseEditableProps, "children"> {
+export interface EditableProps
+    extends UseEditableProps,
+    Omit<HTMLDreamyProps<"div">, keyof UseEditableProps | "children"> {
     children?: MaybeRenderProp<RenderProps>;
 }
 
@@ -34,7 +29,7 @@ const { withProvider, withContext } = createStyleContext(editable);
  *
  * @see Docs https://dreamy-ui.com/docs/components/editable
  */
-const EditableRoot = withProvider(
+export const Root = withProvider(
     forwardRef<HTMLDivElement, EditableProps>(function EditableRoot(props, ref) {
         const context = useEditable(props);
 
@@ -56,14 +51,14 @@ const EditableRoot = withProvider(
     "root"
 );
 
-export interface EditablePreviewProps extends HTMLDreamyProps<"div"> {}
+export interface EditablePreviewProps extends HTMLDreamyProps<"div"> { }
 
 /**
  * EditablePreview component
  *
  * The `span` used to display the final value, in the `preview` mode
  */
-const EditablePreview = withContext(
+export const Preview = withContext(
     forwardRef<HTMLSpanElement, EditablePreviewProps>(function EditablePreview(props, ref) {
         const { getPreviewProps } = useEditableContext();
 
@@ -81,14 +76,14 @@ const EditablePreview = withContext(
     "preview"
 );
 
-export interface EditableInputProps extends HTMLDreamyProps<"input"> {}
+export interface EditableInputProps extends HTMLDreamyProps<"input"> { }
 
 /**
  * EditableInput component
  *
  * The input used in the `edit` mode
  */
-const EditableInput = withContext(
+export const Input = withContext(
     forwardRef<HTMLInputElement, EditableInputProps>(function EditableInput(props, ref) {
         const { getInputProps } = useEditableContext();
 
@@ -106,9 +101,9 @@ const EditableInput = withContext(
     "input"
 );
 
-export interface EditableEditButtonProps extends HTMLDreamyProps<"button"> {}
+export interface EditableEditButtonProps extends HTMLDreamyProps<"button"> { }
 
-const EditableEditButton = withContext(
+export const EditButton = withContext(
     forwardRef<HTMLButtonElement, EditableEditButtonProps>(function EditableEditButton(props, ref) {
         const { getEditButtonProps } = useEditableContext();
 
@@ -117,9 +112,9 @@ const EditableEditButton = withContext(
     "editButton"
 );
 
-interface EditableSubmitButtonProps extends HTMLDreamyProps<"button"> {}
+interface EditableSubmitButtonProps extends HTMLDreamyProps<"button"> { }
 
-const EditableSubmitButton = withContext(
+export const SubmitButton = withContext(
     forwardRef<HTMLButtonElement, EditableSubmitButtonProps>(
         function EditableSubmitButton(props, ref) {
             const { getSubmitButtonProps } = useEditableContext();
@@ -130,9 +125,9 @@ const EditableSubmitButton = withContext(
     "submitButton"
 );
 
-interface EditableCancelButtonProps extends HTMLDreamyProps<"button"> {}
+interface EditableCancelButtonProps extends HTMLDreamyProps<"button"> { }
 
-const EditableCancelButton = withContext(
+export const CancelButton = withContext(
     forwardRef<HTMLButtonElement, EditableCancelButtonProps>(
         function EditableCancelButton(props, ref) {
             const { getCancelButtonProps } = useEditableContext();
@@ -142,12 +137,3 @@ const EditableCancelButton = withContext(
     ),
     "cancelButton"
 );
-
-export namespace Editable {
-    export const Root = EditableRoot;
-    export const Preview = EditablePreview;
-    export const Input = EditableInput;
-    export const EditButton = EditableEditButton;
-    export const SubmitButton = EditableSubmitButton;
-    export const CancelButton = EditableCancelButton;
-}

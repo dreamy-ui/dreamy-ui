@@ -29,7 +29,7 @@ function useActionBarContext() {
 
 export interface ActionBarRootProps extends BoxProps, ActionBarVariantProps, useControllableProps {}
 
-const ActionBarRoot = withProvider(
+export const Root = withProvider(
 	forwardRef<HTMLDivElement, ActionBarRootProps>(function ActionBarRoot(props, ref) {
 		const { children, isOpen, defaultIsOpen, onOpen, onClose, ...rest } = props;
 		const actionBarProps = useControllable({
@@ -94,7 +94,7 @@ const ActionBarContent = withContext(
 
 export interface ActionBarSelectionTriggerProps extends HTMLDreamyProps<"span"> {}
 
-const ActionBarSelectionTrigger = withContext(
+export const SelectionTrigger = withContext(
 	forwardRef<HTMLSpanElement, ActionBarSelectionTriggerProps>(
 		function ActionBarSelectionTrigger(props, ref) {
 			const { children, ...rest } = props;
@@ -112,7 +112,7 @@ const ActionBarSelectionTrigger = withContext(
 
 export interface ActionBarSeparatorProps extends HTMLDreamyProps<"div"> {}
 
-const ActionBarSeparator = withContext(
+export const Separator = withContext(
 	forwardRef<HTMLDivElement, ActionBarSeparatorProps>(function ActionBarSeparator(props, ref) {
 		return <Box aria-orientation="vertical" ref={ref} role="separator" {...props} />;
 	}),
@@ -121,7 +121,7 @@ const ActionBarSeparator = withContext(
 
 export interface ActionBarCloseTriggerProps extends CloseButtonProps {}
 
-const ActionBarCloseTrigger = withContext(
+export const CloseTrigger = withContext(
 	forwardRef<HTMLButtonElement, ActionBarCloseTriggerProps>(
 		function ActionBarCloseTrigger(props, ref) {
 			const { children, onClick, ...rest } = props;
@@ -148,10 +148,3 @@ const ActionBarCloseTrigger = withContext(
 	"closeTrigger"
 );
 
-export namespace ActionBar {
-	export const Root = ActionBarRoot;
-	export const Content = ActionBarContent;
-	export const SelectionTrigger = ActionBarSelectionTrigger;
-	export const Separator = ActionBarSeparator;
-	export const CloseTrigger = ActionBarCloseTrigger;
-}

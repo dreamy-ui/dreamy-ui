@@ -8,7 +8,11 @@ import {
     printRecipeSync,
     transformToJsx
 } from "@/utils/components";
-import { writePatternsIndexFile, writeRecipesIndexFile } from "@/utils/index-files";
+import {
+    writeComponentsIndexFile,
+    writePatternsIndexFile,
+    writeRecipesIndexFile
+} from "@/utils/index-files";
 import * as p from "@clack/prompts";
 import { Command } from "commander";
 import createDebug from "debug";
@@ -166,6 +170,7 @@ export const AddCommand = new Command("add")
         const skippedFiles: string[] = [];
         const skippedRecipes: string[] = [];
         const skippedPatterns: string[] = [];
+        const writtenComponentFiles: string[] = [];
 
         // Get recipes for all components (selected + dependencies)
         const componentRecipes = await Promise.all(
@@ -223,6 +228,8 @@ export const AddCommand = new Command("add")
                                 item.file.content.replace("compositions/ui", "."),
                                 "utf-8"
                             );
+
+                            writtenComponentFiles.push(item.file.name);
                         })
                     );
 
@@ -363,6 +370,7 @@ export const AddCommand = new Command("add")
                                         item.file.content.replace("compositions/ui", "."),
                                         "utf-8"
                                     );
+                                    writtenComponentFiles.push(item.file.name);
                                 }
                             } catch (error) {
                                 if (error instanceof Error) {
@@ -383,6 +391,15 @@ export const AddCommand = new Command("add")
                     await pandaCodegenCommand(process.cwd());
 
                     return "panda codegen finished";
+                }
+            },
+            {
+                title: "Generating components index file",
+                enabled: !dryRun,
+                task: async () => {
+                    await writeComponentsIndexFile(outdir, jsx, debug);
+
+                    return "Components index file generated";
                 }
             }
         ]);
