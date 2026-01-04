@@ -6,9 +6,7 @@ import { type PropGetter, callAllHandlers, cx } from "@/utils";
 import { dataAttr } from "@/utils/attr";
 import {
     type DOMAttributes,
-    DOMElement,
     type KeyboardEvent,
-    PointerEvent,
     type ReactNode,
     type RefAttributes,
     useCallback,
@@ -254,16 +252,16 @@ export interface UseMenuItemProps {
     "data-focused"?: string;
 }
 
-interface UseMenuItemReturn extends UseMenuItemProps {
-    isDisabled: boolean;
-    onPointerEnter: (event: React.PointerEvent<HTMLButtonElement>) => void;
-    index: number;
-    "data-focused"?: string;
-}
+// interface UseMenuItemReturn extends UseMenuItemProps {
+//     isDisabled: boolean;
+//     onPointerEnter: (event: React.PointerEvent<HTMLButtonElement>) => void;
+//     index: number;
+//     "data-focused"?: string;
+// }
 
 export function useMenuItem(
     props: UseMenuItemProps,
-    ref: React.Ref<any> = null
+    ref: React.Ref<HTMLButtonElement> | null = null
 ): DOMAttributes<HTMLButtonElement> & RefAttributes<HTMLButtonElement> {
     const { getItemProps, focusedIndex, setFocusedIndex } = useMenuContext();
     const { index, register } = useMenuDescendant({

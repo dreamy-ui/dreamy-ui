@@ -90,6 +90,7 @@ export interface UtilityValues {
 	textIndent: Tokens["spacing"];
 	textShadow: Tokens["shadows"];
 	textShadowColor: Tokens["colors"];
+	WebkitTextFillColor: Tokens["colors"];
 	textWrap: "wrap" | "balance" | "nowrap";
 	truncate: boolean;
 	background: Tokens["colors"];
@@ -269,8 +270,7 @@ export interface UtilityValues {
 	standard: boolean;
 	video: boolean;
 	ultrawide: boolean;
-	colorPalette: "black" | "white" | "rose" | "pink" | "fuchsia" | "purple" | "violet" | "indigo" | "blue" | "sky" | "cyan" | "teal" | "emerald" | "green" | "lime" | "yellow" | "amber" | "orange" | "red" | "neutral" | "stone" | "zinc" | "slate" | "current" | "blackAlpha" | "whiteAlpha" | "transparent" | "gray" | "bg" | "border" | "primary" | "secondary" | "primaryButtonText" | "secondaryButtonText" | "fg" | "success" | "warning" | "error" | "info" | "alpha" | "inverted";
-	textStyle: "8xl" | "9xl" | "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl" | "6xl" | "7xl";
+	textStyle: "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl" | "6xl" | "7xl";
 }
 
 

@@ -1,53 +1,53 @@
-import { Accordion } from "@/accordion";
-import { ActionBar } from "@/action-bar";
-import { Alert } from "@/alert";
-import { Avatar, AvatarGroup } from "@/avatar";
-import { Badge } from "@/badge";
-import { Box } from "@/box";
-import { Breadcrumb } from "@/breadcrumb";
-import { Button } from "@/button";
-import { Card } from "@/card";
-import { Checkbox, CheckboxGroup } from "@/checkbox";
-import { CheckboxCard } from "@/checkbox-card";
-import { Divider } from "@/divider";
-import { Editable } from "@/editable";
-import { Field } from "@/field";
-import { Flex, type FlexProps } from "@/flex";
-import { Grid, GridItem } from "@/grid";
-import { Group } from "@/group";
-import { Heading, type HeadingProps } from "@/heading";
-import { Icon } from "@/icon";
-import { Image } from "@/image";
-import { Input, InputGroup, InputLeftAddon, InputRightAddon } from "@/input";
-import { Kbd } from "@/kbd";
-import { Link as DreamLink } from "@/link";
-import { List, ListItem } from "@/list";
-import { Menu } from "@/menu";
-import { MotionBox } from "@/motion";
-import { PinInput } from "@/pin-input";
-import { Popover } from "@/popover";
-import { Progress } from "@/progress";
-import { ProgressCircular } from "@/progress-circular";
-import { Radio, RadioGroup } from "@/radio";
-import { RadioCard } from "@/radio-card";
-import { RangeSlider } from "@/range-slider";
-import { Select } from "@/select";
-import { Skeleton, SkeletonText } from "@/skeleton";
-import { Slider } from "@/slider";
-import { Snippet } from "@/snippet";
-import { Spinner } from "@/spinner";
-import { HStack, Stack, VStack } from "@/stack";
-import { Stat } from "@/stat";
-import { Switch } from "@/switch";
-import { Table } from "@/table";
-import { Tabs } from "@/tabs";
-import { Text } from "@/text";
-import { Textarea, TextareaNoAutoSize } from "@/textarea";
-import { DarkTheme, LightTheme } from "@/theme";
-import { useToast } from "@/toast-provider";
-import { Tooltip } from "@/tooltip";
-import { VisuallyHidden, VisuallyHiddenInput } from "@/visually-hidden";
-import { Wrap } from "@/wrap";
+import { Accordion, List } from "@/ui";
+import { ActionBar } from "@/ui";
+import { Alert } from "@/ui";
+import { Avatar, AvatarGroup } from "@/ui";
+import { Badge } from "@/ui";
+import { Box } from "@/ui";
+import { Breadcrumb } from "@/ui";
+import { Button } from "@/ui";
+import { Card } from "@/ui";
+import { Checkbox, CheckboxGroup } from "@/ui";
+import { CheckboxCard } from "@/ui";
+import { Divider } from "@/ui";
+import { Editable } from "@/ui";
+import { Field } from "@/ui";
+import { Flex, type FlexProps } from "@/ui";
+import { Grid, GridItem } from "@/ui";
+import { Group } from "@/ui";
+import { Heading, type HeadingProps } from "@/ui";
+import { Icon } from "@/ui";
+import { Image } from "@/ui";
+import { Input, InputGroup, InputLeftAddon, InputRightAddon } from "@/ui";
+import { Kbd } from "@/ui";
+import { Link as DreamLink } from "@/ui";
+import { Menu } from "@/ui";
+import { MotionBox } from "@/ui";
+import { PinInput } from "@/ui";
+import { Popover } from "@/ui";
+import { Progress } from "@/ui";
+import { ProgressCircular } from "@/ui";
+import { Radio, RadioGroup } from "@/ui";
+import { RadioCard } from "@/ui";
+import { RangeSlider } from "@/ui";
+import { Select } from "@/ui";
+import { Skeleton, SkeletonText } from "@/ui";
+import { Slider } from "@/ui";
+import { Snippet } from "@/ui";
+import { Spinner } from "@/ui";
+import { HStack, Stack, VStack } from "@/ui";
+import { Stat } from "@/ui";
+import { Switch } from "@/ui";
+import { Table } from "@/ui";
+import { Tabs } from "@/ui";
+import { Text } from "@/ui";
+import { Textarea, TextareaNoAutoSize } from "@/ui";
+import { DarkTheme, LightTheme } from "@/ui";
+import { useToast } from "@/ui";
+import { Tooltip } from "@/ui";
+import { VisuallyHidden, VisuallyHiddenInput } from "@/ui";
+import { Wrap } from "@/ui";
+import { CloseButton } from "@/ui";
 import { Portal } from "@dreamy-ui/react";
 import { MDXRemote } from "next-mdx-remote";
 import { type PropsWithChildren, type ReactNode, useEffect, useMemo, useState } from "react";
@@ -75,7 +75,6 @@ import { PiConfetti } from "react-icons/pi";
 import { RiNextjsLine } from "react-icons/ri";
 import { SiApple, SiReactrouter } from "react-icons/si";
 import { Link as RemixLink, useLocation } from "react-router";
-import { CloseButton } from "@/close-button";
 import type { MdxContent } from "~/src/.server/docs";
 import { PlatformSpecificKbd } from "~/src/ui/docs/components/kbds";
 import {
@@ -204,7 +203,6 @@ const DreamComponents = {
     Field,
     RadioCard,
     List,
-    ListItem,
     BasicModal,
     ScrollableInsideModal,
     ScrollableOutsideModal,
@@ -526,10 +524,7 @@ const components: any = {
                     rounded={"full"}
                     w={"2px"}
                 />
-                <Text
-                    medium
-                    relative
-                >
+                <Box relative>
                     <Flex
                         absolute
                         bg={"fg"}
@@ -553,7 +548,7 @@ const components: any = {
                                   : "Info"}
                     </Flex>
                     {content}
-                </Text>
+                </Box>
             </Flex>
         );
     },
@@ -591,19 +586,19 @@ const components: any = {
         );
     },
     ul: (props: any) => (
-        <List
+        <List.Root
             unordered
             {...props}
         />
     ),
     ol: (props: any) => (
-        <List
+        <List.Root
             ordered
             {...props}
         />
     ),
     li: (props: any) => (
-        <ListItem
+        <List.Item
             color={"fg.medium"}
             css={{
                 // "&:not(:last-child)": {

@@ -1,0 +1,39 @@
+/* eslint-disable */
+import type { ConditionalValue } from '../types/index';
+import type { DistributiveOmit, Pretty } from '../types/system-types';
+
+interface InputVariant {
+  /**
+ * @default "md"
+ */
+size: "sm" | "md" | "lg"
+/**
+ * @default "outline"
+ */
+variant: "outline" | "filled" | "flushed" | "filledOutline"
+inputType: "pin" | "default"
+}
+
+type InputVariantMap = {
+  [key in keyof InputVariant]: Array<InputVariant[key]>
+}
+
+
+
+export type InputVariantProps = {
+  [key in keyof InputVariant]?: InputVariant[key] | undefined
+}
+
+export interface InputRecipe {
+  
+  __type: InputVariantProps
+  (props?: InputVariantProps): string
+  raw: (props?: InputVariantProps) => InputVariantProps
+  variantMap: InputVariantMap
+  variantKeys: Array<keyof InputVariant>
+  splitVariantProps<Props extends InputVariantProps>(props: Props): [InputVariantProps, Pretty<DistributiveOmit<Props, keyof InputVariantProps>>]
+  getVariantProps: (props?: InputVariantProps) => InputVariantProps
+}
+
+
+export declare const input: InputRecipe

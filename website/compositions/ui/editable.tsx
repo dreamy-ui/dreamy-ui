@@ -18,7 +18,7 @@ type RenderProps = Pick<UseEditableReturn, "isEditing" | "onSubmit" | "onCancel"
 
 export interface EditableProps
     extends UseEditableProps,
-    Omit<HTMLDreamyProps<"div">, keyof UseEditableProps | "children"> {
+        Omit<HTMLDreamyProps<"div">, keyof UseEditableProps | "children"> {
     children?: MaybeRenderProp<RenderProps>;
 }
 
@@ -51,7 +51,7 @@ export const Root = withProvider(
     "root"
 );
 
-export interface EditablePreviewProps extends HTMLDreamyProps<"div"> { }
+export interface EditablePreviewProps extends HTMLDreamyProps<"div"> {}
 
 /**
  * EditablePreview component
@@ -62,21 +62,12 @@ export const Preview = withContext(
     forwardRef<HTMLSpanElement, EditablePreviewProps>(function EditablePreview(props, ref) {
         const { getPreviewProps } = useEditableContext();
 
-        return (
-            <Box
-                {...getPreviewProps(props, ref)}
-                style={{
-                    cursor: "text",
-                    display: "inline-block",
-                    ...props.style
-                }}
-            />
-        );
+        return <Box {...getPreviewProps(props, ref)} />;
     }),
     "preview"
 );
 
-export interface EditableInputProps extends HTMLDreamyProps<"input"> { }
+export interface EditableInputProps extends HTMLDreamyProps<"input"> {}
 
 /**
  * EditableInput component
@@ -87,21 +78,12 @@ export const Input = withContext(
     forwardRef<HTMLInputElement, EditableInputProps>(function EditableInput(props, ref) {
         const { getInputProps } = useEditableContext();
 
-        return (
-            <dreamy.input
-                {...getInputProps(props, ref)}
-                style={{
-                    outline: 0,
-                    borderRadius: "4px",
-                    ...props.style
-                }}
-            />
-        );
+        return <dreamy.input {...getInputProps(props, ref)} />;
     }),
     "input"
 );
 
-export interface EditableEditButtonProps extends HTMLDreamyProps<"button"> { }
+export interface EditableEditButtonProps extends HTMLDreamyProps<"button"> {}
 
 export const EditButton = withContext(
     forwardRef<HTMLButtonElement, EditableEditButtonProps>(function EditableEditButton(props, ref) {
@@ -112,7 +94,7 @@ export const EditButton = withContext(
     "editButton"
 );
 
-interface EditableSubmitButtonProps extends HTMLDreamyProps<"button"> { }
+interface EditableSubmitButtonProps extends HTMLDreamyProps<"button"> {}
 
 export const SubmitButton = withContext(
     forwardRef<HTMLButtonElement, EditableSubmitButtonProps>(
@@ -125,7 +107,7 @@ export const SubmitButton = withContext(
     "submitButton"
 );
 
-interface EditableCancelButtonProps extends HTMLDreamyProps<"button"> { }
+interface EditableCancelButtonProps extends HTMLDreamyProps<"button"> {}
 
 export const CancelButton = withContext(
     forwardRef<HTMLButtonElement, EditableCancelButtonProps>(

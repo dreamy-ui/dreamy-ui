@@ -6,9 +6,9 @@ import type { DistributiveOmit } from '../types/system-types';
 import type { Tokens } from '../tokens/index';
 
 export interface DividerProperties {
-   color?: ConditionalValue<Tokens["colors"] | Properties["borderColor"]>
-	orientation?: ConditionalValue<"horizontal" | "vertical" | "horizontal" | "vertical">
-	thickness?: ConditionalValue<string>
+   orientation?: "horizontal" | "vertical"
+	thickness?: ConditionalValue<Tokens["sizes"] | Properties["borderWidth"]>
+	color?: ConditionalValue<Tokens["colors"] | Properties["borderColor"]>
 }
 
 interface DividerStyles extends DividerProperties, DistributiveOmit<SystemStyleObject, keyof DividerProperties > {}
@@ -18,7 +18,5 @@ interface DividerPatternFn {
   raw: (styles?: DividerStyles) => SystemStyleObject
 }
 
-/**
- * divider pattern
- */
+
 export declare const divider: DividerPatternFn;

@@ -19,5 +19,4 @@ export * from "./snippet";
 export * from "./stat";
 export * from "./switch";
 export * from "./tabs";
-export * from "./textarea";
 export * from "./tooltip";

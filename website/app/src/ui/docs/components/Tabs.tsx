@@ -1,7 +1,7 @@
-import { Flex } from "@/flex";
-import { VStack } from "@/stack";
-import { Tabs } from "@/tabs";
-import { Text } from "@/text";
+import { Flex } from "@/ui";
+import { VStack } from "@/ui";
+import { Tabs } from "@/ui";
+import { Text } from "@/ui";
 import React, { useState } from "react";
 import { capitalize } from "~/src/functions/string";
 

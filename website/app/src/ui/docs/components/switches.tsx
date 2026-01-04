@@ -1,5 +1,5 @@
-import { Switch } from "@/switch";
-import { Text } from "@/text";
+import { Switch } from "@/ui";
+import { Text } from "@/ui";
 import { useState } from "react";
 
 export function ControlledSwitch() {

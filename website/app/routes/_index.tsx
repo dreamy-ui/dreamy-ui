@@ -1,4 +1,4 @@
-import { Flex } from "@/flex";
+import { Flex } from "@/ui";
 import { data } from "react-router";
 import { CACHE_DURATION, CacheHeaders, cachified } from "~/src/.server/cache";
 import { getLandingPageCodes } from "~/src/.server/codes";
@@ -14,16 +14,9 @@ export const meta: Route.MetaFunction = () => {
     return [
         { title: "Dreamy UI - Build websites with next-gen DX!" },
         {
-            description:
-                "Build performant, accessible, websites with ease using Dreamy UI. Level up your UI with next-gen DX."
-        },
-        {
-            property: "og:title",
-            content: "Build performant, accessible websites with Dreamy UI"
-        },
-        {
-            property: "image",
-            content: "/dreamy-ui-wallpaper.png"
+            property: "description",
+            content:
+                "Build performant, accessible, websites with ease using Dreamy UI. CSS-in-JS component library for React."
         },
         {
             property: "og:image",

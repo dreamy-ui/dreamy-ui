@@ -1,4 +1,4 @@
-import { Kbd } from "@/kbd";
+import { Kbd } from "@/ui";
 import { useActionKey } from "@dreamy-ui/react";
 
 export function PlatformSpecificKbd() {

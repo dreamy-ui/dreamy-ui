@@ -11,7 +11,8 @@ export default defineConfig({
     outExtension: "js",
     jsxFactory: "dreamy",
     include: [
-        "./app/**/*.{js,jsx,ts,tsx}"
+        "./app/**/*.{js,jsx,ts,tsx}",
+        "./src/**/*.{js,jsx,ts,tsx}"
     ],
     presets: [createDreamyPreset()],
     plugins: [dreamyPlugin()],

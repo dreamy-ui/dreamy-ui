@@ -12,6 +12,7 @@
 	"dependencies": {
 		"@dreamy-ui/panda-preset": "workspace:*",
 		"@dreamy-ui/react": "workspace:*",
+		"@tanstack/react-virtual": "^3.13.13",
 		"lucide-react": "^0.553.0",
 		"motion": "^12.23.24",
 		"next": "16.0.3",
@@ -20,8 +21,8 @@
 	},
 	"devDependencies": {
 		"@dreamy-ui/cli": "workspace:*",
-		"@pandacss/dev": "^1.5.1",
-		"@pandacss/postcss": "^1.5.1",
+		"@pandacss/dev": "^1.7.1",
+		"@pandacss/postcss": "^1.7.1",
 		"@tailwindcss/postcss": "^4",
 		"@types/node": "^20",
 		"@types/react": "^19",

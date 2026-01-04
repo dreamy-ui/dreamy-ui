@@ -1,8 +1,8 @@
-import { Flex } from "@/flex";
-import { Icon } from "@/icon";
-import { IconButton } from "@/icon-button";
-import { Image } from "@/image";
-import { Text } from "@/text";
+import { Flex } from "@/ui";
+import { Icon } from "@/ui";
+import { IconButton } from "@/ui";
+import { Image } from "@/ui";
+import { Text } from "@/ui";
 import { TRANSITION_EASINGS, useColorMode } from "@dreamy-ui/react";
 import { AnimatePresence, m } from "motion/react";
 import { BsArrowRight } from "react-icons/bs";
@@ -46,12 +46,8 @@ export default function MobileMenu({ isOpen, setIsOpen }: Props) {
     return (
         <AnimatePresence>
             <m.div
-                initial={{ x: "80vw" }}
                 animate={{ x: isOpen ? 0 : "80vw" }}
-                transition={{
-                    duration: 0.3,
-                    ease: TRANSITION_EASINGS.easeInOut
-                }}
+                initial={{ x: "80vw" }}
                 style={{
                     position: "fixed",
                     top: 0,
@@ -60,34 +56,37 @@ export default function MobileMenu({ isOpen, setIsOpen }: Props) {
                     width: "80vw",
                     zIndex: 9999
                 }}
+                transition={{
+                    duration: 0.3,
+                    ease: TRANSITION_EASINGS.easeInOut
+                }}
             >
                 <Flex
-                    gap={10}
-                    py={4}
-                    px={6}
-                    flexDir={"column"}
-                    h="100vh"
-                    w={"100%"}
-                    borderLeft={"1px solid"}
-                    borderColor={"alpha.300"}
                     bg={{
                         base: "white",
                         _dark: "black"
                     }}
+                    borderColor={"alpha.300"}
+                    borderLeft={"1px solid"}
+                    flexDir={"column"}
+                    gap={10}
+                    h="100vh"
+                    px={6}
+                    py={4}
+                    w={"100%"}
                 >
                     <Flex
-                        w="100%"
                         alignItems={"center"}
                         justifyContent={"space-between"}
+                        w="100%"
                     >
                         <Image
-                            src={"/dream.svg"}
                             alt="Dream Logo"
                             h={"5"}
+                            src={"/dream.svg"}
                         />
 
                         <IconButton
-                            variant={"ghost"}
                             aria-label="Close Menu"
                             icon={
                                 <Icon
@@ -96,47 +95,48 @@ export default function MobileMenu({ isOpen, setIsOpen }: Props) {
                                 />
                             }
                             onClick={() => setIsOpen(false)}
+                            variant={"ghost"}
                         />
                     </Flex>
 
                     <Flex
-                        w="100%"
+                        contentCenter
+                        flex={1}
                         flexDir={"column"}
                         gap={10}
                         itemsCenter
-                        contentCenter
-                        flex={1}
                         pb={40}
+                        w="100%"
                     >
                         {routes.map((route) => (
                             <Link
-                                key={route.name}
-                                to={route.link}
-                                size={"2xl"}
-                                fontWeight={600}
-                                onClick={() => setIsOpen(false)}
                                 _hover={{
                                     textDecoration: "none",
                                     color: "brand"
                                 }}
+                                fontWeight={600}
                                 isExternal={route.isExternal}
+                                key={route.name}
+                                onClick={() => setIsOpen(false)}
+                                size={"2xl"}
+                                to={route.link}
                             >
                                 {route.name}
                             </Link>
                         ))}
 
                         <Text
-                            size={"2xl"}
                             fontWeight={600}
                             onClick={toggleColorMode}
+                            size={"2xl"}
                         >
                             Toggle {colorMode === "light" ? "Dark" : "Light"}
                         </Text>
 
                         <Text
-                            size={"2xl"}
                             fontWeight={600}
                             onClick={() => setIsOpen(false)}
+                            size={"2xl"}
                         >
                             Close
                         </Text>

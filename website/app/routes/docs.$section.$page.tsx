@@ -1,9 +1,9 @@
-import { Box } from "@/box";
-import { Button } from "@/button";
-import { Flex } from "@/flex";
-import { Heading } from "@/heading";
-import { VStack } from "@/stack";
-import { Text } from "@/text";
+import { Box } from "@/ui";
+import { Button } from "@/ui";
+import { Flex } from "@/ui";
+import { Heading } from "@/ui";
+import { VStack } from "@/ui";
+import { Text } from "@/ui";
 import { useEffect, useMemo } from "react";
 import { AiFillThunderbolt } from "react-icons/ai";
 import { BiLogoGithub } from "react-icons/bi";
@@ -30,7 +30,8 @@ export function meta({ loaderData, params }: Route.MetaArgs) {
                 : "Doc not found - Dreamy UI"
         },
         {
-            description: loaderData?.frontmatter?.description ?? undefined
+            property: "description",
+            content: loaderData?.frontmatter?.description ?? undefined
         },
         {
             property: "og:image",

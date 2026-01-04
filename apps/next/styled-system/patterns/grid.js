@@ -15,7 +15,7 @@ transform(props, { map, isCssUnit }) {
   };
 },
 defaultValues(props) {
-  return { gap: props.columnGap || props.rowGap ? void 0 : "8px" };
+  return { gap: props.columnGap || props.rowGap ? void 0 : "10px" };
 }}
 
 export const getGridStyle = (styles = {}) => {

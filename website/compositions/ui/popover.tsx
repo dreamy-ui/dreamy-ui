@@ -3,6 +3,7 @@
 import {
     type MaybeRenderProp,
     PopoverProvider,
+    Portal,
     type UsePopoverProps,
     callAll,
     callAllHandlers,
@@ -37,6 +38,11 @@ export interface PopoverProps extends UsePopoverProps {
      * @default true
      */
     hasArrow?: boolean;
+    /**
+     * If `true`, the popover content will be rendered in a portal
+     * @default true
+     */
+    usePortal?: boolean;
 }
 
 /**
@@ -45,7 +51,7 @@ export interface PopoverProps extends UsePopoverProps {
  * @See Docs https://dreamy-ui.com/docs/components/popover
  */
 export const Root = withRootProvider(function PopoverRoot(props: PopoverProps) {
-    const { children, direction = "ltr", hasArrow, ...rest } = props;
+    const { children, direction = "ltr", hasArrow, usePortal = true, ...rest } = props;
 
     const context = usePopover({ ...rest, direction });
 
@@ -53,7 +59,8 @@ export const Root = withRootProvider(function PopoverRoot(props: PopoverProps) {
         <PopoverProvider
             value={{
                 ...context,
-                hasArrow: hasArrow ?? false
+                hasArrow: hasArrow ?? false,
+                usePortal
             }}
         >
             {runIfFn(children, {
@@ -123,12 +130,12 @@ export const Content = withContext(
     forwardRef<HTMLElement, PopoverContentProps>(function PopoverContent(props, ref) {
         const { rootProps, motionProps, ...contentProps } = props;
 
-        const { getPopoverProps, getPopoverPositionerProps, onAnimationComplete } =
+        const { getPopoverProps, getPopoverPositionerProps, onAnimationComplete, usePortal } =
             usePopoverContext();
 
         if (typeof document === "undefined") return null;
 
-        return (
+        const content = (
             <div {...getPopoverPositionerProps(rootProps)}>
                 <Transition
                     {...getPopoverProps({ ...motionProps, ...contentProps }, ref)}
@@ -139,6 +146,8 @@ export const Content = withContext(
                 />
             </div>
         );
+
+        return usePortal ? <Portal>{content}</Portal> : content;
     }),
     "content"
 );

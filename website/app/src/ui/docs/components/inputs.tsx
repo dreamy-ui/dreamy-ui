@@ -1,4 +1,4 @@
-import { PinInput } from "@/pin-input";
+import { PinInput } from "@/ui";
 import { useState } from "react";
 
 export function ControlledPinInput() {
@@ -6,8 +6,8 @@ export function ControlledPinInput() {
 
     return (
         <PinInput.Root
-            value={pin}
             onChange={setPin}
+            value={pin}
         >
             <PinInput.Field />
             <PinInput.Field />

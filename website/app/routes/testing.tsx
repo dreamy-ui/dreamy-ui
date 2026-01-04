@@ -1,9 +1,9 @@
-import { Button } from "@/button";
-import { Flex } from "@/flex";
-import { MotionFlex } from "@/motion";
-import { Select } from "@/select";
-import { Switch } from "@/switch";
-import { Text } from "@/text";
+import { Button } from "@/ui";
+import { Flex } from "@/ui";
+import { MotionFlex } from "@/ui";
+import { Select } from "@/ui";
+import { Switch } from "@/ui";
+import { Text } from "@/ui";
 import { useColorMode, useControllable, useUpdateLayoutEffect } from "@dreamy-ui/react";
 import { AnimatePresence, m } from "motion/react";
 import { useState } from "react";

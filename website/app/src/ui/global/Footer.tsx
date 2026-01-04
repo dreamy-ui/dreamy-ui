@@ -1,25 +1,25 @@
-import { Flex } from "@/flex";
-import { Image } from "@/image";
-import { HStack } from "@/stack";
-import { Text } from "@/text";
+import { Flex } from "@/ui";
+import { Image } from "@/ui";
+import { HStack } from "@/ui";
+import { Text } from "@/ui";
 import { Link } from "./Link";
 
 export default function Footer() {
     return (
         <Flex
-            as="footer"
-            direction="column"
             align="center"
-            py={8}
-            px={4}
-            gap={6}
+            as="footer"
             bg="bg.panel/30"
+            borderColor="border!"
             borderTop="1px solid"
-            borderColor="border.muted"
+            direction="column"
+            gap={6}
             mt={{
                 base: 20,
                 md: 40
             }}
+            px={4}
+            py={8}
         >
             <Link to="/">
                 <Flex
@@ -27,13 +27,13 @@ export default function Footer() {
                     gap={3}
                 >
                     <Image
-                        src="/dreamy-ui-no-bg.png"
                         alt="Dreamy UI Logo"
                         boxSize="8"
+                        src="/dream.svg"
                     />
                     <Text
-                        size="lg"
                         fontWeight="semibold"
+                        size="lg"
                     >
                         Dreamy UI
                     </Text>
@@ -45,37 +45,37 @@ export default function Footer() {
                 justify="center"
             >
                 <Link
-                    to="/docs"
                     color="fg.medium"
+                    to="/docs"
                 >
                     Documentation
                 </Link>
                 <Link
-                    to="/github"
-                    isExternal
                     color="fg.medium"
+                    isExternal
+                    to="/github"
                 >
                     GitHub
                 </Link>
                 <Link
-                    to="/discord"
-                    isExternal
                     color="fg.medium"
+                    isExternal
+                    to="/discord"
                 >
                     Discord
                 </Link>
                 <Link
-                    to="/bluesky"
                     color="fg.medium"
                     isExternal
+                    to="/bluesky"
                 >
                     Bluesky
                 </Link>
             </HStack>
 
             <Text
-                size="sm"
                 color="fg.medium"
+                size="sm"
             >
                 Dreamy UI {new Date().getFullYear()}
             </Text>

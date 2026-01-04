@@ -1,9 +1,9 @@
-import { Box } from "@/box";
-import { Button } from "@/button";
-import { Flex } from "@/flex";
-import { Icon } from "@/icon";
-import { IconButton } from "@/icon-button";
-import { DarkTheme } from "@/theme";
+import { Box } from "@/ui";
+import { Button } from "@/ui";
+import { Flex } from "@/ui";
+import { Icon } from "@/ui";
+import { IconButton } from "@/ui";
+import { DarkTheme } from "@/ui";
 import { useClipboard } from "@dreamy-ui/react";
 import { Children, type ReactElement, type ReactNode, isValidElement, useMemo } from "react";
 import { FaTerminal } from "react-icons/fa";

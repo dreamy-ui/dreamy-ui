@@ -16,7 +16,7 @@ import {
 import * as p from "@clack/prompts";
 import { Command } from "commander";
 import createDebug from "debug";
-import { pandaCodegenCommand } from "../utils/codegen-command";
+import { installCommand, pandaCodegenCommand } from "../utils/codegen-command";
 import { getProjectContext } from "../utils/context";
 import { convertTsxToJsx } from "../utils/convert-tsx-to-jsx";
 import {
@@ -113,10 +113,14 @@ export const AddCommand = new Command("add")
         p.log.info(inferredComponents.message);
 
         // Recursively collect all dependencies
-        function getAllDependenciesRecursive(
-            componentIds: string[]
-        ): Array<{ fileDependencies: string[] }> {
-            const allDeps = new Map<string, { fileDependencies: string[] }>();
+        function getAllDependenciesRecursive(componentIds: string[]): Array<{
+            fileDependencies: string[];
+            npmDependencies: string[];
+        }> {
+            const allDeps = new Map<
+                string,
+                { fileDependencies: string[]; npmDependencies: string[] }
+            >();
             const processed = new Set<string>();
 
             function processDependencies(id: string) {
@@ -126,7 +130,7 @@ export const AddCommand = new Command("add")
                 debug(`Processing dependencies for: ${id}`);
                 const result = getFileDependencies(items, id);
 
-                // getFileDependencies returns either [] or { fileDependencies: string[] }
+                // getFileDependencies returns either [] or { fileDependencies: string[], npmDependencies?: string[] }
                 if (Array.isArray(result)) {
                     debug(`No dependencies found for: ${id}`);
                     return;
@@ -134,9 +138,13 @@ export const AddCommand = new Command("add")
 
                 debug(`Found dependencies for ${id}:`, result.fileDependencies);
 
-                // Store dependency with a unique key
-                const key = JSON.stringify(result);
-                allDeps.set(key, result);
+                // Store dependency with a unique key, including npm dependencies
+                const depData = {
+                    fileDependencies: result.fileDependencies,
+                    npmDependencies: (result as any).npmDependencies || []
+                };
+                const key = JSON.stringify(depData);
+                allDeps.set(key, depData);
 
                 // For each file dependency, recursively process its dependencies
                 result.fileDependencies.forEach((fileDep) => {
@@ -155,8 +163,10 @@ export const AddCommand = new Command("add")
         const deps = getAllDependenciesRecursive(components);
 
         const fileDependencies = uniq(deps.flatMap((dep) => dep.fileDependencies));
+        const npmDependencies = uniq(deps.flatMap((dep) => dep.npmDependencies));
 
         debug("fileDependencies", fileDependencies);
+        debug("npmDependencies", npmDependencies);
 
         // Create a list of all component IDs (selected + dependencies) for recipes/patterns
         // Extract component IDs from file dependencies by removing file extensions
@@ -199,11 +209,11 @@ export const AddCommand = new Command("add")
         }>;
 
         await tasks([
-            // {
-            //     title: "Installing required dependencies...",
-            //     enabled: !!npmDependencies.length && !dryRun,
-            //     task: () => installCommand([...npmDependencies, "--silent"], outdir)
-            // },
+            {
+                title: "Installing required dependencies...",
+                enabled: !!npmDependencies.length && !dryRun,
+                task: () => installCommand([...npmDependencies, "--silent"], outdir)
+            },
             {
                 title: "Writing file dependencies",
                 enabled: !!fileDependencies.length && !dryRun,
@@ -385,21 +395,21 @@ export const AddCommand = new Command("add")
                 }
             },
             {
-                title: "Running panda codegen",
-                enabled: !dryRun,
-                task: async () => {
-                    await pandaCodegenCommand(process.cwd());
-
-                    return "panda codegen finished";
-                }
-            },
-            {
                 title: "Generating components index file",
                 enabled: !dryRun,
                 task: async () => {
                     await writeComponentsIndexFile(outdir, jsx, debug);
 
                     return "Components index file generated";
+                }
+            },
+            {
+                title: "Running panda codegen",
+                enabled: !dryRun,
+                task: async () => {
+                    await pandaCodegenCommand(process.cwd());
+
+                    return "panda codegen finished";
                 }
             }
         ]);

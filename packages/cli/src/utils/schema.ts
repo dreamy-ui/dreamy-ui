@@ -1,74 +1,74 @@
 import { z } from "zod";
 
 export const compositionFileSchema = z.object({
-	type: z.string(),
-	id: z.string(),
-	file: z.object({
-		name: z.string(),
-		content: z.string()
-	}),
-	component: z.string(),
-	// npmDependencies: z.array(z.string()),
-	fileDependencies: z.array(z.string()),
-	hasRecipe: z.boolean(),
-	hasPattern: z.boolean(),
-	recipeIds: z.array(z.string()).optional(),
-	patternIds: z.array(z.string()).optional()
+    type: z.string(),
+    id: z.string(),
+    file: z.object({
+        name: z.string(),
+        content: z.string()
+    }),
+    component: z.string(),
+    npmDependencies: z.array(z.string()),
+    fileDependencies: z.array(z.string()),
+    hasRecipe: z.boolean(),
+    hasPattern: z.boolean(),
+    recipeIds: z.array(z.string()).optional(),
+    patternIds: z.array(z.string()).optional()
 });
 
 export interface CompositionFile extends z.infer<typeof compositionFileSchema> {}
 
 export const compositionIndexSchema = z.array(
-	z.object({
-		type: z.string(),
-		id: z.string(),
-		file: z.string(),
-		component: z.string(),
-		// npmDependencies: z.array(z.string()),
-		fileDependencies: z.array(z.string()),
-		hasRecipe: z.boolean(),
-		hasPattern: z.boolean(),
-		recipeIds: z.array(z.string()).optional(),
-		patternIds: z.array(z.string()).optional()
-	})
+    z.object({
+        type: z.string(),
+        id: z.string(),
+        file: z.string(),
+        component: z.string(),
+        npmDependencies: z.array(z.string()),
+        fileDependencies: z.array(z.string()),
+        hasRecipe: z.boolean(),
+        hasPattern: z.boolean(),
+        recipeIds: z.array(z.string()).optional(),
+        patternIds: z.array(z.string()).optional()
+    })
 );
 
 export interface Compositions extends z.infer<typeof compositionIndexSchema> {}
 
 export const recipeFileSchema = z.object({
-	type: z.string(),
-	id: z.string(),
-	file: z.object({
-		name: z.string(),
-		content: z.string()
-	})
+    type: z.string(),
+    id: z.string(),
+    file: z.object({
+        name: z.string(),
+        content: z.string()
+    })
 });
 
 export interface RecipeFile extends z.infer<typeof recipeFileSchema> {}
 
 export const patternFileSchema = z.object({
-	type: z.string(),
-	id: z.string(),
-	file: z.object({
-		name: z.string(),
-		content: z.string()
-	})
+    type: z.string(),
+    id: z.string(),
+    file: z.object({
+        name: z.string(),
+        content: z.string()
+    })
 });
 
 export interface PatternFile extends z.infer<typeof patternFileSchema> {}
 
 export const processEnvSchema = z.object({
-	REGISTRY_URL: z.string(),
-	// REGISTRY_URL: z.string().default("https://dreamy-ui.com"),
-	HTTPS_PROXY: z.string().optional()
+    REGISTRY_URL: z.string(),
+    // REGISTRY_URL: z.string().default("https://dreamy-ui.com"),
+    HTTPS_PROXY: z.string().optional()
 });
 
 export const addCommandFlagsSchema = z.object({
-	force: z.boolean().optional(),
-	dryRun: z.boolean().optional(),
-	outdir: z.string().optional(),
-	all: z.boolean().optional(),
-	tsx: z.boolean().optional()
+    force: z.boolean().optional(),
+    dryRun: z.boolean().optional(),
+    outdir: z.string().optional(),
+    all: z.boolean().optional(),
+    tsx: z.boolean().optional()
 });
 
 export interface AddCommandFlags extends z.infer<typeof addCommandFlagsSchema> {}

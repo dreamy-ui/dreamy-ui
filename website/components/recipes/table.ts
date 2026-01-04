@@ -29,7 +29,7 @@ export const table = defineSlotRecipe({
         },
         row: {
             _selected: {
-                bg: "colorPalette.subtle"
+                bg: "alpha.50"
             }
         },
         cell: {

@@ -1,6 +1,6 @@
-import { Button } from "@/button";
-import { Flex } from "@/flex";
-import { Popover } from "@/popover";
+import { Button } from "@/ui";
+import { Flex } from "@/ui";
+import { Popover } from "@/ui";
 import { type PlacementWithLogical, useControllable } from "@dreamy-ui/react";
 import { useCallback, useRef } from "react";
 
@@ -18,8 +18,8 @@ export function ControlledPopover() {
         <Popover.Root
             hasArrow
             isOpen={isOpen}
-            onOpen={onOpen}
             onClose={onClose}
+            onOpen={onOpen}
         >
             <Popover.Trigger>
                 <Button
@@ -38,14 +38,14 @@ export function ControlledPopover() {
                 </Popover.Body>
                 <Popover.Footer>
                     <Button
-                        variant={"solid"}
                         onClick={onClose}
+                        variant={"solid"}
                     >
                         Cancel
                     </Button>
                     <Button
-                        variant={"primary"}
                         onClick={handleDelete}
+                        variant={"primary"}
                     >
                         Delete
                     </Button>
@@ -62,10 +62,10 @@ export function FocusPopover() {
     return (
         <Popover.Root
             hasArrow
-            isOpen={isOpen}
-            onOpen={onOpen}
-            onClose={onClose}
             initialFocusRef={initialFocusRef}
+            isOpen={isOpen}
+            onClose={onClose}
+            onOpen={onOpen}
         >
             <Popover.Trigger>
                 <Button
@@ -84,9 +84,9 @@ export function FocusPopover() {
                 </Popover.Body>
                 <Popover.Footer>
                     <Button
-                        variant={"solid"}
                         onClick={onClose}
                         ref={initialFocusRef}
+                        variant={"solid"}
                     >
                         Cancel
                     </Button>
@@ -100,8 +100,8 @@ export function FocusPopover() {
 export function PlacementPopovers() {
     return (
         <Flex
-            wrapped
             gap={5}
+            wrapped
         >
             {(
                 [
@@ -189,8 +189,8 @@ export function SizePopover({ size }: { size: string }) {
 export function SizePopovers() {
     return (
         <Flex
-            wrapped
             gap={5}
+            wrapped
         >
             {["sm", "md", "lg", "xl", "2xl", "3xl", "4xl", "5xl", "6xl", "7xl", "8xl"].map(
                 (size) => (

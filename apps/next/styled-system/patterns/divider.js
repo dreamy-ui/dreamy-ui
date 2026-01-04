@@ -3,25 +3,34 @@ import { css } from '../css/index.js';
 
 const dividerConfig = {
 transform(props, { map }) {
-  const { orientation, thickness, color, backgroundColor, background, bg, ...rest } = props;
+  const {
+    orientation,
+    thickness,
+    color,
+    backgroundColor,
+    background,
+    bg,
+    borderColor,
+    ...rest
+  } = props;
   return {
     "--thickness": thickness,
     width: map(orientation, (v) => v === "vertical" ? void 0 : "100%"),
     height: map(orientation, (v) => v === "horizontal" ? void 0 : "100%"),
-    borderTop: "none",
-    borderBlockEndWidth: map(
+    border: "none",
+    borderTop: map(
       orientation,
       (v) => v === "horizontal" ? "var(--thickness)" : void 0
     ),
-    borderInlineStartWidth: map(
+    borderLeft: map(
       orientation,
       (v) => v === "vertical" ? "var(--thickness)" : void 0
     ),
-    borderColor: color ?? backgroundColor ?? background ?? bg,
+    borderColor: color ?? backgroundColor ?? background ?? bg ?? borderColor ?? "border",
     ...rest
   };
 },
-defaultValues:{orientation:'horizontal',thickness:'1px',color:'alpha.300'}}
+defaultValues:{orientation:'horizontal',thickness:'1px'}}
 
 export const getDividerStyle = (styles = {}) => {
   const _styles = getPatternStyles(dividerConfig, styles)

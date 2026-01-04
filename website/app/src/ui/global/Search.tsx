@@ -1,13 +1,13 @@
-import { Button } from "@/button";
-import { Flex } from "@/flex";
-import { Icon } from "@/icon";
-import { IconButton } from "@/icon-button";
-import { Input, InputGroup, InputLeftAddon } from "@/input";
-import { Kbd } from "@/kbd";
-import { Modal } from "@/modal";
-import { MotionBox } from "@/motion";
-import { Spinner } from "@/spinner";
-import { Text } from "@/text";
+import { Button } from "@/ui";
+import { Flex } from "@/ui";
+import { Icon } from "@/ui";
+import { IconButton } from "@/ui";
+import { Input, InputGroup, InputLeftAddon } from "@/ui";
+import { Kbd } from "@/ui";
+import { Modal } from "@/ui";
+import { MotionBox } from "@/ui";
+import { Spinner } from "@/ui";
+import { Text } from "@/ui";
 import {
     TRANSITION_EASINGS,
     getActionKeyCode,
@@ -397,25 +397,25 @@ function SearchDoc({ doc, isActive, ...rest }: SearchDocProps) {
 
             <Icon
                 as={MdNavigateNext}
-                color={isActive ? "{colors.white/87}" : "fg.medium"}
                 boxSize={"5"}
+                color={isActive ? "{colors.white/87}" : "fg.medium"}
             />
 
-                {isActive && (
-                    <MotionBox
-                        bg={"primary"}
-                        inset={0}
-                        layout
-                        layoutId="active-search-doc"
-                        pos={"absolute"}
-                        rounded={"md"}
-                        transition={{
-                            duration: 0.15,
-                            ease: TRANSITION_EASINGS.easeOut
-                        }}
-                        zIndex={-1}
-                    />
-                )}
+            {isActive && (
+                <MotionBox
+                    bg={"primary"}
+                    inset={0}
+                    layout
+                    layoutId="active-search-doc"
+                    pos={"absolute"}
+                    rounded={"md"}
+                    transition={{
+                        duration: 0.15,
+                        ease: TRANSITION_EASINGS.easeOut
+                    }}
+                    zIndex={-1}
+                />
+            )}
         </Link>
     );
 }

@@ -1,4 +1,4 @@
-import { Button } from "@/button";
+import { Button } from "@/ui";
 
 export function LinkButton() {
     return (

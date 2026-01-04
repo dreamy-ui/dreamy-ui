@@ -1,21 +1,7 @@
-"use client";
+import ColorModeSwitch from "@/src/ColorModeSwitch";
+import { Flex, Heading, Image, Link, Text } from "@/ui";
 
-import { Flex } from "@/components/ui/flex";
-import { Heading } from "@/components/ui/heading";
-import { Icon } from "@/components/ui/icon";
-import { IconButton } from "@/components/ui/icon-button";
-import { Image } from "@/components/ui/image";
-import { Link } from "@/components/ui/link";
-import { Text } from "@/components/ui/text";
-import { useColorMode } from "@dreamy-ui/react";
-import { Moon, Sun } from "lucide-react";
-import { m } from "motion/react";
-
-const MotionIconButton = m.create(IconButton);
-
-export default function Home() {
-    const { colorMode, toggleColorMode } = useColorMode();
-
+export default async function Home() {
     return (
         <>
             <Flex
@@ -150,41 +136,7 @@ export default function Home() {
                     </Flex>
                 </Flex>
             </Flex>
-            <MotionIconButton
-                _hover={{
-                    bg: {
-                        _dark: "yellow.300/20",
-                        base: "purple.600/20"
-                    }
-                }}
-                aria-label="Toggle color mode"
-                bg={{
-                    _dark: "yellow.300/15",
-                    base: "purple.600/15"
-                }}
-                bottom={5}
-                color={{
-                    _dark: "yellow.300",
-                    base: "purple.600"
-                }}
-                fixed
-                onClick={toggleColorMode}
-                right={5}
-                rounded={"xl"}
-                transition={{
-                    duration: 0.1,
-                    ease: "easeInOut",
-                    delay: 0
-                }}
-                whileHover={{
-                    rotate: colorMode === "light" ? 15 : -15
-                }}
-            >
-                <Icon
-                    as={colorMode === "light" ? Sun : Moon}
-                    boxSize={"5"}
-                />
-            </MotionIconButton>
+            <ColorModeSwitch />
         </>
     );
 }

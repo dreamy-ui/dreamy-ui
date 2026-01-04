@@ -1,8 +1,8 @@
-import { Flex } from "@/flex";
-import { Icon } from "@/icon";
-import { IconButton } from "@/icon-button";
-import { HStack } from "@/stack";
-import { Text } from "@/text";
+import { Flex } from "@/ui";
+import { Icon } from "@/ui";
+import { IconButton } from "@/ui";
+import { HStack } from "@/ui";
+import { Text } from "@/ui";
 import { useEventListener } from "@dreamy-ui/react";
 import { useState } from "react";
 import { FaDiscord } from "react-icons/fa";
@@ -36,28 +36,28 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: Props) {
 
     return (
         <Flex
-            full
-            h={16}
-            itemsCenter
-            row
-            bg={"color-mix(in srgb, {colors.bg} 70%, transparent 10%)"}
             as={"header"}
+            backdropBlur={"sm"}
+            backdropFilter={"auto"}
+            bg={"color-mix(in srgb, {colors.bg} 70%, transparent 10%)"}
             borderBottomWidth={"1px"}
             borderColor={hasScrolled ? "border" : "transparent"}
             contentBetween
+            full
+            h={16}
+            itemsCenter
             pos={"sticky"}
+            row
             top={0}
-            backdropBlur={"sm"}
-            backdropFilter={"auto"}
-            zIndex={"sticky"}
             transition={"all 0.15s"}
             transitionTimingFunction={"ease-out"}
+            zIndex={"sticky"}
         >
             <Flex
-                mx={"auto"}
+                contentBetween
                 full
                 maxW={"7xl"}
-                contentBetween
+                mx={"auto"}
                 px={4}
             >
                 <Logo />
@@ -69,52 +69,52 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: Props) {
                     }}
                 >
                     <HStack
-                        className="group"
                         as={
                             <Link
-                                to={"/discord"}
-                                isExternal
-                                mr={4}
-                                prefetch="none"
                                 display={{
                                     base: "none",
                                     md: "inline-flex"
                                 }}
+                                isExternal
+                                mr={4}
+                                prefetch="none"
+                                to={"/discord"}
                             />
                         }
+                        className="group"
                         // add shadow on hover as filter
                     >
                         <Icon
+                            _groupHover={{
+                                filter: "drop-shadow(0 0 4px #5865F2)",
+                                color: "#5865F2"
+                            }}
                             as={FaDiscord}
                             h={4}
                             transition={
                                 "filter {durations.normal} {easings.easeInOut}, color {durations.fastest} {easings.easeInOut}"
                             }
+                        />
+                        <Text
                             _groupHover={{
                                 filter: "drop-shadow(0 0 4px #5865F2)",
                                 color: "#5865F2"
                             }}
-                        />
-                        <Text
                             transition={
                                 "filter {durations.normal} {easings.easeInOut}, color {durations.fastest} {easings.easeInOut}"
                             }
-                            _groupHover={{
-                                filter: "drop-shadow(0 0 4px #5865F2)",
-                                color: "#5865F2"
-                            }}
                         >
                             Discord
                         </Text>
                     </HStack>
 
                     <Link
-                        to={"/docs"}
-                        prefetch="intent"
                         display={{
                             base: "none",
                             md: "inline-flex"
                         }}
+                        prefetch="intent"
+                        to={"/docs"}
                     >
                         Docs
                     </Link>
@@ -124,17 +124,17 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: Props) {
                     <ToggleThemeButton />
 
                     <IconButton
+                        _hover={{
+                            bg: "transparent"
+                        }}
+                        aria-label={`${isMenuOpen ? "Close" : "Open"} Menu`}
                         display={{
                             base: "inline-flex",
                             md: "none"
                         }}
-                        _hover={{
-                            bg: "transparent"
-                        }}
-                        variant={"ghost"}
                         icon={<HamburgerMenu isOpen={isMenuOpen} />}
-                        aria-label={`${isMenuOpen ? "Close" : "Open"} Menu`}
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
+                        variant={"ghost"}
                     />
                 </HStack>
             </Flex>

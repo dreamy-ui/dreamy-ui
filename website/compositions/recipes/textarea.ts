@@ -9,7 +9,6 @@ export const textarea = defineRecipe({
         borderColor: "border",
         borderRadius: "l2",
         borderWidth: "1px",
-        colorPalette: "accent",
         minWidth: 0,
         p: 2,
         outline: 0,

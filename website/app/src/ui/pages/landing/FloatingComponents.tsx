@@ -1,13 +1,13 @@
-import { Card } from "@/card";
-import { Field } from "@/field";
-import { Flex } from "@/flex";
-import { Grid } from "@/grid";
-import { Heading } from "@/heading";
-import { Input } from "@/input";
-import { PinInput } from "@/pin-input";
-import { Spinner } from "@/spinner";
-import { Switch } from "@/switch";
-import { Text } from "@/text";
+import { Card } from "@/ui";
+import { Field } from "@/ui";
+import { Flex } from "@/ui";
+import { Grid } from "@/ui";
+import { Heading } from "@/ui";
+import { Input } from "@/ui";
+import { PinInput } from "@/ui";
+import { Spinner } from "@/ui";
+import { Switch } from "@/ui";
+import { Text } from "@/ui";
 import { useColorMode } from "@dreamy-ui/react";
 import ExploreComponents from "./ExploreComponents";
 
@@ -25,10 +25,10 @@ export default function FloatingComponents() {
                 >
                     <Field.Label>Username</Field.Label>
                     <Input
-                        minLength={3}
-                        maxLength={16}
-                        placeholder="CatLover"
                         full
+                        maxLength={16}
+                        minLength={3}
+                        placeholder="CatLover"
                     />
                     <Field.Hint>Enter a public username</Field.Hint>
                 </Field.Root>
@@ -38,14 +38,14 @@ export default function FloatingComponents() {
             title: "Spinner",
             component: (
                 <Flex
+                    center
                     col
                     gap={4}
-                    center
                 >
                     <Spinner color={"primary"} />
                     <Flex
-                        gap={2}
                         col
+                        gap={2}
                         textCenter
                     >
                         <Heading size={"md"}>Loading...</Heading>
@@ -94,20 +94,20 @@ export default function FloatingComponents() {
             gap={10}
         >
             <Grid
-                full
                 columns={{
                     base: 1,
                     md: 2
                     // xl: 4
                 }}
+                full
             >
                 {components.map((component, i) => (
                     <Card.Root
-                        key={`component-${i}`}
-                        variant={"outline"}
-                        center
-                        relative
                         bg={"transparent"}
+                        center
+                        key={`component-${i}`}
+                        relative
+                        variant={"outline"}
                         // full
                         // p={4}
                         // pt={14}
@@ -123,21 +123,21 @@ export default function FloatingComponents() {
                     >
                         <Card.Body
                             // maxW={"xs"}
-                            w={"full"}
+                            center
                             gap={10}
                             p={10}
                             pb={14}
-                            center
+                            w={"full"}
                             // pt={16}
                         >
                             {component.component}
                             <Text
-                                color={"fg.medium"}
-                                fontFamily={"mono"}
-                                textCenter
                                 absolute
                                 bottom={2}
+                                color={"fg.medium"}
+                                fontFamily={"mono"}
                                 left={"50%"}
+                                textCenter
                                 translate={"auto"}
                                 x={"-50%"}
                             >

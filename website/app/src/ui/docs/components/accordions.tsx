@@ -1,4 +1,4 @@
-import { Accordion } from "@/accordion";
+import { Accordion } from "@/ui";
 import { useState } from "react";
 
 export function ControlledAccordion() {

@@ -1,7 +1,7 @@
-import { Flex } from "@/flex";
-import { Heading } from "@/heading";
-import { Icon } from "@/icon";
-import { Text } from "@/text";
+import { Flex } from "@/ui";
+import { Heading } from "@/ui";
+import { Icon } from "@/ui";
+import { Text } from "@/ui";
 import { useMemo } from "react";
 import { LuCircleAlert } from "react-icons/lu";
 import { type MetaFunction, data, isRouteErrorResponse, useRouteError } from "react-router";
@@ -63,24 +63,24 @@ export function ErrorBoundary() {
 
     return (
         <Flex
-            w={"100%"}
-            maxW={"md"}
-            mx={"auto"}
-            flex={1}
             center
             col
+            flex={1}
             gap={4}
-            // footer 349
-            // header 144
-            // 205
+            maxW={"md"}
             mb={{
                 base: 0,
                 md: "calc(-205px / 2)"
             }}
+            mx={"auto"}
+            // footer 349
+            // header 144
+            // 205
+            w={"100%"}
         >
             <Icon
-                boxSize={"10"}
                 as={LuCircleAlert}
+                boxSize={"10"}
             />
             <Heading>
                 {data.status} {data.title}

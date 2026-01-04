@@ -1,6 +1,6 @@
-import { Group } from "@/group";
-import { Radio, RadioGroup } from "@/radio";
-import { RadioCard } from "@/radio-card";
+import { Group } from "@/ui";
+import { Radio, RadioGroup } from "@/ui";
+import { RadioCard } from "@/ui";
 import { useState } from "react";
 
 export function ControlledRadios() {
@@ -8,8 +8,8 @@ export function ControlledRadios() {
 
     return (
         <RadioGroup
-            value={value}
             onChange={setValue}
+            value={value}
         >
             <Radio value="rr">React Router</Radio>
             <Radio value="next">Next.js</Radio>
@@ -23,31 +23,31 @@ export function ControlledRadioCards() {
 
     return (
         <RadioGroup
-            value={value}
-            onChange={setValue}
             full
+            onChange={setValue}
+            value={value}
         >
             <Group
                 full
                 wrapped
             >
                 <RadioCard
-                    full
-                    value="rr"
-                    title="React Router"
                     description="Description for React Router"
+                    full
+                    title="React Router"
+                    value="rr"
                 />
                 <RadioCard
-                    full
-                    value="next"
-                    title="Next.js"
                     description="Description for Next.js"
+                    full
+                    title="Next.js"
+                    value="next"
                 />
                 <RadioCard
-                    full
-                    value="vue"
-                    title="Vue.js"
                     description="Description for Vue.js"
+                    full
+                    title="Vue.js"
+                    value="vue"
                 />
             </Group>
         </RadioGroup>

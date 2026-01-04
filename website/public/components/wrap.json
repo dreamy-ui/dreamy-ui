@@ -1,10 +1,11 @@
 {
   "type": "component",
+  "npmDependencies": [],
   "fileDependencies": [],
   "id": "wrap",
   "file": {
     "name": "wrap.tsx",
-    "content": "import { splitProps } from \"@dreamy-ui/react/rsc\";\r\nimport { forwardRef } from \"react\";\r\nimport { type HTMLDreamyProps, dreamy } from \"styled-system/jsx\";\r\nimport type { WrapProperties } from \"styled-system/patterns\";\r\nimport { wrap } from \"styled-system/patterns/wrap\";\r\n\r\nexport interface WrapProps\r\n    extends Omit<HTMLDreamyProps<\"div\">, keyof WrapProperties>,\r\n        WrapProperties {}\r\n\r\n/**\r\n * Wrap component\r\n *\r\n * @See Docs https://dreamy-ui.com/docs/components/wrap\r\n */\r\nexport const Wrap = forwardRef<HTMLDivElement, WrapProps>((props, ref) => {\r\n    const [patternProps, restProps] = splitProps(props, [\r\n        \"gap\",\r\n        \"rowGap\",\r\n        \"columnGap\",\r\n        \"align\",\r\n        \"justify\"\r\n    ]);\r\n\r\n    const styles = wrap.raw(patternProps);\r\n\r\n    return (\r\n        <dreamy.div\r\n            ref={ref}\r\n            {...styles}\r\n            {...restProps}\r\n        />\r\n    );\r\n});\r\n"
+    "content": "import { splitProps } from \"@dreamy-ui/react/rsc\";\nimport { forwardRef } from \"react\";\nimport { type HTMLDreamyProps, dreamy } from \"styled-system/jsx\";\nimport type { WrapProperties } from \"styled-system/patterns\";\nimport { wrap } from \"styled-system/patterns/wrap\";\n\nexport interface WrapProps\n    extends Omit<HTMLDreamyProps<\"div\">, keyof WrapProperties>,\n        WrapProperties {}\n\n/**\n * Wrap component\n *\n * @See Docs https://dreamy-ui.com/docs/components/wrap\n */\nexport const Wrap = forwardRef<HTMLDivElement, WrapProps>((props, ref) => {\n    const [patternProps, restProps] = splitProps(props, [\n        \"gap\",\n        \"rowGap\",\n        \"columnGap\",\n        \"align\",\n        \"justify\"\n    ]);\n\n    const styles = wrap.raw(patternProps);\n\n    return (\n        <dreamy.div\n            ref={ref}\n            {...styles}\n            {...restProps}\n        />\n    );\n});\n"
   },
   "component": "Wrap",
   "hasRecipe": false,

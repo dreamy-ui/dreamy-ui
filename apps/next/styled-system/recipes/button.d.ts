@@ -11,6 +11,7 @@ variant: "primary" | "secondary" | "solid" | "outline" | "ghost" | "link"
  * @default "md"
  */
 size: "xs" | "sm" | "md" | "lg"
+scheme: "primary" | "secondary" | "success" | "warning" | "error" | "info" | "none"
 }
 
 type ButtonVariantMap = {
@@ -20,7 +21,7 @@ type ButtonVariantMap = {
 
 
 export type ButtonVariantProps = {
-  [key in keyof ButtonVariant]?: ConditionalValue<ButtonVariant[key]> | undefined
+  [key in keyof ButtonVariant]?: ButtonVariant[key] | undefined
 }
 
 export interface ButtonRecipe {

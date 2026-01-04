@@ -1,5 +1,5 @@
-import { Select } from "@/select";
-import { Spinner } from "@/spinner";
+import { Select } from "@/ui";
+import { Spinner } from "@/ui";
 import { useState } from "react";
 
 export function AsyncSelect() {
@@ -46,8 +46,8 @@ export function ControlledSelect() {
 
     return (
         <Select.Root
-            value={value}
             onChangeValue={setValue}
+            value={value}
             width={"xs"}
         >
             <Select.Trigger placeholder="Select a favorite fruit" />

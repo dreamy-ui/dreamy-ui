@@ -26,7 +26,13 @@ import {
 import { type HTMLDreamyProps, createStyleContext, dreamy, splitCssProps } from "styled-system/jsx";
 import { select } from "styled-system/recipes";
 import { Box } from "./box";
-import { Popover, type PopoverContentProps, type PopoverProps } from "./popover";
+import {
+    Content as PopoverContent,
+    type PopoverContentProps,
+    type PopoverProps,
+    Root as PopoverRoot,
+    Trigger as PopoverTrigger
+} from "./popover";
 import { VisuallyHidden } from "./visually-hidden";
 
 const { withProvider, withContext } = createStyleContext(select);
@@ -98,7 +104,7 @@ export interface SelectProps<T extends boolean>
  *
  * @See Docs https://dreamy-ui.com/docs/components/select
  */
-const SelectRoot: <T extends boolean = false>(props: SelectProps<T>) => React.JSX.Element =
+export const Root: <T extends boolean = false>(props: SelectProps<T>) => React.JSX.Element =
     withProvider(function SelectRoot<T extends boolean = false>({
         children,
         ...props
@@ -115,7 +121,7 @@ const SelectRoot: <T extends boolean = false>(props: SelectProps<T>) => React.JS
                     })}
                 >
                     <HiddenSelect {...ctx.getHiddenSelectProps()} />
-                    <Popover.Root
+                    <PopoverRoot
                         hasArrow={false}
                         initialFocusRef={ctx.triggerRef}
                         isOpen={ctx.isOpen}
@@ -129,7 +135,7 @@ const SelectRoot: <T extends boolean = false>(props: SelectProps<T>) => React.JS
                         <SelectDescendantsProvider value={ctx.descendants}>
                             {children}
                         </SelectDescendantsProvider>
-                    </Popover.Root>
+                    </PopoverRoot>
                 </Box>
             </SelectProvider>
         );
@@ -150,7 +156,7 @@ export interface SelectTriggerProps extends HTMLDreamyProps<"button"> {
     multipleSelectedText?: (selectedKeys: string[]) => string;
 }
 
-const SelectTrigger = withContext(
+export const Trigger = withContext(
     forwardRef<HTMLButtonElement, SelectTriggerProps>(function SelectTrigger(
         {
             children,
@@ -178,7 +184,7 @@ const SelectTrigger = withContext(
 
         return (
             <>
-                <Popover.Trigger>
+                <PopoverTrigger>
                     <dreamy.button {...(getTriggerProps(rest, ref) as any)}>
                         {icon && icon}
 
@@ -194,7 +200,7 @@ const SelectTrigger = withContext(
                             <SelectIndicator />
                         </SelectIndicatorGroup>
                     </dreamy.button>
-                </Popover.Trigger>
+                </PopoverTrigger>
             </>
         );
     }),
@@ -203,13 +209,13 @@ const SelectTrigger = withContext(
 
 export interface SelectContentProps extends PopoverContentProps {}
 
-const SelectContent = withContext(
+export const Content = withContext(
     forwardRef<HTMLDivElement, SelectContentProps>(function SelectContent(props, ref) {
         const { children, ...rest } = props;
         const { getContentProps } = useSelectContext();
         const contentPropsResult = getContentProps(rest, ref);
 
-        return <Popover.Content {...contentPropsResult}>{children}</Popover.Content>;
+        return <PopoverContent {...contentPropsResult}>{children}</PopoverContent>;
     }),
     "content"
 );
@@ -238,33 +244,35 @@ export interface SelectVirtualContentProps extends PopoverContentProps {
  * Virtualized SelectContent for better performance with large lists.
  * Only renders visible items.
  */
-const SelectVirtualContent = withContext(
-    forwardRef<HTMLDivElement, SelectVirtualContentProps>(function SelectVirtualContent(props, ref) {
-        const {
-            children,
-            estimatedItemHeight = 32,
-            overscan = 5,
-            maxHeight = 300,
-            ...rest
-        } = props;
+export const VirtualContent = withContext(
+    forwardRef<HTMLDivElement, SelectVirtualContentProps>(
+        function SelectVirtualContent(props, ref) {
+            const {
+                children,
+                estimatedItemHeight = 32,
+                overscan = 5,
+                maxHeight = 300,
+                ...rest
+            } = props;
 
-        const { getContentProps, isOpen, selectedKeys } = useSelectContext();
-        const contentPropsResult = getContentProps(rest, ref);
+            const { getContentProps, isOpen, selectedKeys } = useSelectContext();
+            const contentPropsResult = getContentProps(rest, ref);
 
-        return (
-            <Popover.Content {...contentPropsResult}>
-                <VirtualizedList
-                    estimatedItemHeight={estimatedItemHeight}
-                    isOpen={isOpen}
-                    maxHeight={maxHeight}
-                    overscan={overscan}
-                    selectedKeys={selectedKeys}
-                >
-                    {children}
-                </VirtualizedList>
-            </Popover.Content>
-        );
-    }),
+            return (
+                <PopoverContent {...contentPropsResult}>
+                    <VirtualizedList
+                        estimatedItemHeight={estimatedItemHeight}
+                        isOpen={isOpen}
+                        maxHeight={maxHeight}
+                        overscan={overscan}
+                        selectedKeys={selectedKeys}
+                    >
+                        {children}
+                    </VirtualizedList>
+                </PopoverContent>
+            );
+        }
+    ),
     "content"
 );
 
@@ -332,8 +340,12 @@ function VirtualizedList({
     );
 
     // If we haven't measured yet but we're open, show initial items as fallback
-    const showFallback = isOpen && !hasMeasured && virtualItems.length === 0 && childArray.length > 0;
-    const initialItemsToShow = Math.min(Math.ceil(maxHeight / estimatedItemHeight) + overscan, childArray.length);
+    const showFallback =
+        isOpen && !hasMeasured && virtualItems.length === 0 && childArray.length > 0;
+    const initialItemsToShow = Math.min(
+        Math.ceil(maxHeight / estimatedItemHeight) + overscan,
+        childArray.length
+    );
 
     return (
         <div
@@ -368,8 +380,8 @@ function VirtualizedList({
                       ))
                     : virtualItems.map((virtualItem) => (
                           <div
-                              key={virtualItem.key}
                               data-index={virtualItem.index}
+                              key={virtualItem.key}
                               ref={virtualizer.measureElement}
                               style={{
                                   position: "absolute",
@@ -387,8 +399,8 @@ function VirtualizedList({
                 {!showFallback &&
                     hiddenSelectedIndices.map((index) => (
                         <div
-                            key={`selected-${index}`}
                             aria-hidden="true"
+                            key={`selected-${index}`}
                             style={{
                                 position: "absolute",
                                 top: 0,
@@ -429,14 +441,15 @@ const CheckIcon = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
                 {...props}
                 ref={ref}
             >
-                <path d="m6 9 6 6 6-6" />
+                <path d="M20 6 9 17l-5-5" />
             </svg>
         );
     }
 );
 
 const SelectItemIndicator = withContext(CheckIcon, "itemIndicator");
-const SelectItem = withContext(
+
+export const Item = withContext(
     forwardRef<HTMLDivElement, SelectItemProps>(function SelectItem(props, ref) {
         const { selectedStrategy, selectedKeys } = useSelectContext();
         const itemProps = useSelectItem(props, ref);
@@ -453,7 +466,28 @@ const SelectItem = withContext(
     "item"
 );
 
-const SelectIndicator = withContext(CheckIcon, "indicator");
+const SelectIndicatorBase = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
+    function SelectIndicator(props, ref) {
+        return (
+            <svg
+                aria-hidden="true"
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+                {...props}
+                ref={ref}
+            >
+                <path d="m6 9 6 6 6-6" />
+            </svg>
+        );
+    }
+);
+
+const SelectIndicator = withContext(SelectIndicatorBase, "indicator");
 
 export interface SelectClearButtonProps extends HTMLDreamyProps<"button"> {}
 
@@ -483,11 +517,3 @@ const SelectClearButton = withContext(
     }),
     "clearButton"
 );
-
-export namespace Select {
-    export const Root = SelectRoot;
-    export const Trigger = SelectTrigger;
-    export const Content = SelectContent;
-    export const VirtualContent = SelectVirtualContent;
-    export const Item = SelectItem;
-}

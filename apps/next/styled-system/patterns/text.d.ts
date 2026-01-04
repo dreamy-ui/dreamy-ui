@@ -6,8 +6,8 @@ import type { DistributiveOmit } from '../types/system-types';
 import type { Tokens } from '../tokens/index';
 
 export interface TextProperties {
-   variant?: ConditionalValue<"heading" | "link">
-	size?: ConditionalValue<"xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl" | "6xl" | "7xl">
+   variant?: "heading" | "link"
+	size?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl" | "6xl" | "7xl"
 }
 
 interface TextStyles extends TextProperties, DistributiveOmit<SystemStyleObject, keyof TextProperties > {}

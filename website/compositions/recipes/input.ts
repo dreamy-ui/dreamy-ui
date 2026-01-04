@@ -15,7 +15,6 @@ export const input = defineRecipe({
         appearance: "none",
         borderRadius: "l2",
         borderWidth: 0,
-        colorPalette: "accent",
         color: "fg",
         background: "transparent",
         position: "relative",

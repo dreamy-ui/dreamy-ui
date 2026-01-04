@@ -1,7 +1,7 @@
-import { Button } from "@/button";
-import { Flex } from "@/flex";
-import { Menu } from "@/menu";
-import { Text } from "@/text";
+import { Button } from "@/ui";
+import { Flex } from "@/ui";
+import { Menu } from "@/ui";
+import { Text } from "@/ui";
 import { getActionKeyCode, useControllable, useEventListener } from "@dreamy-ui/react";
 import { IoAdd } from "react-icons/io5";
 import { LuAlarmClock, LuBattery, LuTrash, LuWarehouse } from "react-icons/lu";

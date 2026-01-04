@@ -1,6 +1,6 @@
-import { Button } from "@/button";
-import { HStack } from "@/stack";
-import { useToast } from "@/toast-provider";
+import { Button } from "@/ui";
+import { HStack } from "@/ui";
+import { useToast } from "@/ui";
 import { useState } from "react";
 
 export function UpdateToast() {

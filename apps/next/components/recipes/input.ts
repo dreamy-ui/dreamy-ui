@@ -1,0 +1,184 @@
+import { defineRecipe } from "@pandacss/dev";
+
+export const input = defineRecipe({
+    className: "input",
+    jsx: [
+        "Input",
+        "PinInput.Root",
+        "PinInput.Field",
+        "InputGroup",
+        "InputLeftAddon",
+        "InputRightAddon"
+    ],
+    staticCss: ["*"],
+    base: {
+        appearance: "none",
+        borderRadius: "l2",
+        borderWidth: 0,
+        colorPalette: "accent",
+        color: "fg",
+        background: "transparent",
+        position: "relative",
+        transitionDuration: "normal",
+        transitionTimingFunction: "default",
+        transitionProperty: "box-shadow, border-color, background",
+        outline: "none",
+        width: "fit-content",
+        _disabled: {
+            opacity: 0.4,
+            cursor: "not-allowed"
+        },
+        "[data-pin-input]:has(&)": {
+            display: "flex",
+            alignItems: "center",
+            gap: 2
+        },
+        "[data-input-group]:has(&)": {
+            width: "fit-content",
+            display: "flex",
+            position: "relative",
+            isolation: "isolate"
+        }
+    },
+    defaultVariants: {
+        size: "md",
+        variant: "outline"
+    },
+    variants: {
+        size: {
+            sm: { px: "2", h: "8", minW: "8", fontSize: "xs" },
+            md: { px: "3", h: "10", minW: "10", fontSize: "md" },
+            lg: { px: "4", h: "12", minW: "12", fontSize: "lg" }
+        },
+        variant: {
+            outline: {
+                borderWidth: "1px",
+                background: "none",
+                borderColor: "{colors.border}",
+                _hover: {
+                    borderColor: "{colors.border.hover}"
+                },
+                _focusWithin: {
+                    boxShadow: "0 0 0 0.5px {colors.primary}",
+                    borderColor: "{colors.primary}",
+                    _hover: {
+                        boxShadow: "0 0 0 0.5px {colors.primary}",
+                        borderColor: "{colors.primary}"
+                    }
+                },
+                "&:user-invalid, &[data-invalid]": {
+                    _focusWithin: {
+                        boxShadow: "0 0 0 0.5px {colors.error} !important"
+                    },
+                    borderColor: "{colors.error} !important",
+                    _hover: {
+                        boxShadow: "0 0 0 0.5px {colors.error}",
+                        borderColor: "{colors.error}"
+                    }
+                }
+            },
+            filled: {
+                background: "{colors.alpha.100}",
+                borderColor: "transparent",
+                borderWidth: "0",
+                _hover: {
+                    background: "{colors.alpha.200}"
+                },
+                _focusWithin: {
+                    boxShadow: "0 0 0 1.5px {colors.primary}"
+                },
+                "&:user-invalid, &[data-invalid]": {
+                    _focusWithin: {
+                        boxShadow: "0 0 0 1.5px {colors.error} !important"
+                    },
+                    boxShadow: "0 0 0 1px {colors.error} !important"
+                }
+            },
+            flushed: {
+                borderRadius: 0,
+                borderBottomWidth: "1px",
+                borderBottomColor: "{colors.border}",
+                _hover: {
+                    borderBottomColor: "{colors.border.hover}"
+                },
+                _focusVisible: {
+                    borderBottomColor: "{colors.primary}",
+                    boxShadow: "0 0.5px 0 0 {colors.primary}",
+                    outline: "none",
+                    _hover: {
+                        borderBottomColor: "{colors.primary}"
+                    }
+                },
+                "&:user-invalid, &[data-invalid]": {
+                    borderBottomColor: "{colors.error} !important",
+                    _focusWithin: {
+                        boxShadow: "0 0.5px 0 0 {colors.error} !important"
+                    },
+                    _hover: {
+                        borderBottomColor: "{colors.error}"
+                    }
+                }
+            },
+            // name a variant that has border and is filled at once
+            filledOutline: {
+                borderWidth: "2px",
+                background: "{colors.alpha.50}",
+                borderColor: "{colors.border}",
+                _hover: {
+                    borderColor: "{colors.border.hover}",
+                    background: "{colors.alpha.100}"
+                },
+                _focusWithin: {
+                    boxShadow: "0 0 0 0.5px {colors.primary}",
+                    borderColor: "{colors.primary}",
+                    _hover: {
+                        boxShadow: "0 0 0 0.5px {colors.primary}",
+                        borderColor: "{colors.primary}"
+                    }
+                },
+                "&:user-invalid, &[data-invalid]": {
+                    _focusWithin: {
+                        boxShadow: "0 0 0 0.5px {colors.error} !important"
+                    },
+                    borderColor: "{colors.error} !important",
+                    _hover: {
+                        boxShadow: "0 0 0 0.5px {colors.error}",
+                        borderColor: "{colors.error}"
+                    }
+                }
+            }
+        },
+        inputType: {
+            pin: {
+                width: "fit-content",
+                minWidth: "0",
+                aspectRatio: "1/1",
+                textAlign: "center"
+            },
+            default: {}
+        }
+    },
+    compoundVariants: [
+        {
+            size: "sm",
+            inputType: "pin",
+            css: {
+                fontSize: "xs"
+            }
+        },
+        {
+            size: "md",
+            inputType: "pin",
+            css: {
+                fontSize: "sm"
+            }
+        },
+        {
+            size: "lg",
+            inputType: "pin",
+            css: {
+                fontSize: "md"
+            }
+        }
+    ]
+});

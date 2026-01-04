@@ -1,6 +1,6 @@
-import { Button } from "@/button";
-import { Editable } from "@/editable";
-import { HStack } from "@/stack";
+import { Button } from "@/ui";
+import { Editable } from "@/ui";
+import { HStack } from "@/ui";
 import { useRef, useState } from "react";
 
 export function ControlledEditable() {
@@ -8,8 +8,8 @@ export function ControlledEditable() {
 
     return (
         <Editable.Root
-            value={value}
             onChange={setValue}
+            value={value}
         >
             <Editable.Preview />
             <Editable.Input />

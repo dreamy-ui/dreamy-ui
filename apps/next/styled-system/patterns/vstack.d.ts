@@ -8,6 +8,7 @@ import type { Tokens } from '../tokens/index';
 export interface VstackProperties {
    justify?: SystemProperties["justifyContent"]
 	gap?: SystemProperties["gap"]
+	align?: SystemProperties["alignItems"]
 }
 
 interface VstackStyles extends VstackProperties, DistributiveOmit<SystemStyleObject, keyof VstackProperties > {}

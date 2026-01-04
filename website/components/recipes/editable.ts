@@ -20,7 +20,15 @@ export const editable = defineSlotRecipe({
             gap: 1
         },
         preview: {
-            cursor: "pointer"
+            cursor: "text",
+            display: "inline-block"
+        },
+        input: {
+            outline: 0,
+            rounded: "l05",
+            _focusVisible: {
+                boxShadow: "0 0 0 1px {colors.primary}"
+            }
         },
         cancelButton: {
             color: "fg.medium",

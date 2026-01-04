@@ -1,7 +1,7 @@
-import { Button } from "@/button";
-import { Flex } from "@/flex";
-import { Modal } from "@/modal";
-import { Text } from "@/text";
+import { Button } from "@/ui";
+import { Flex } from "@/ui";
+import { Modal } from "@/ui";
+import { Text } from "@/ui";
 import { useControllable } from "@dreamy-ui/react";
 import { useCallback } from "react";
 
@@ -18,8 +18,8 @@ export function BasicModal() {
     return (
         <>
             <Button
-                variant={"primary"}
                 onClick={onOpen}
+                variant={"primary"}
                 w="fit-content"
             >
                 Open Modal
@@ -64,8 +64,8 @@ export function SizeModals() {
         return (
             <>
                 <Button
-                    variant={"primary"}
                     onClick={onOpen}
+                    variant={"primary"}
                     w="fit-content"
                 >
                     Open {size} Modal
@@ -92,13 +92,13 @@ export function SizeModals() {
 
     return (
         <Flex
-            wrapped
             gap={2}
+            wrapped
         >
             {sizes.map((size) => (
                 <ModalSize
-                    size={size}
                     key={"modal-size-" + size}
+                    size={size}
                 />
             ))}
         </Flex>
@@ -111,8 +111,8 @@ export function ScrollableInsideModal() {
     return (
         <>
             <Button
-                variant={"primary"}
                 onClick={onOpen}
+                variant={"primary"}
                 w="fit-content"
             >
                 Open Modal
@@ -151,8 +151,8 @@ export function ScrollableOutsideModal() {
     return (
         <>
             <Button
-                variant={"primary"}
                 onClick={onOpen}
+                variant={"primary"}
                 w="fit-content"
             >
                 Open Modal
@@ -161,9 +161,9 @@ export function ScrollableOutsideModal() {
             <Modal.Root
                 isOpen={isOpen}
                 onClose={onClose}
+                placement="top"
                 scrollBehavior="outside"
                 size={"lg"}
-                placement="top"
             >
                 <Modal.Overlay />
                 <Modal.Content>
@@ -192,8 +192,8 @@ export function PlacementModal() {
     return (
         <>
             <Button
-                variant={"primary"}
                 onClick={onOpen}
+                variant={"primary"}
                 w="fit-content"
             >
                 Open Modal

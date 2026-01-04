@@ -1,7 +1,7 @@
-import { Flex } from "@/flex";
-import { Icon } from "@/icon";
-import { HStack } from "@/stack";
-import { Text } from "@/text";
+import { Flex } from "@/ui";
+import { Icon } from "@/ui";
+import { HStack } from "@/ui";
+import { Text } from "@/ui";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import { Link } from "../global/Link";
 

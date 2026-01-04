@@ -8,6 +8,7 @@ import type { Tokens } from '../tokens/index';
 export interface HstackProperties {
    justify?: SystemProperties["justifyContent"]
 	gap?: SystemProperties["gap"]
+	align?: SystemProperties["alignItems"]
 }
 
 interface HstackStyles extends HstackProperties, DistributiveOmit<SystemStyleObject, keyof HstackProperties > {}

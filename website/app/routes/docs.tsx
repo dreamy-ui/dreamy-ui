@@ -1,4 +1,4 @@
-import { Flex } from "@/flex";
+import { Flex } from "@/ui";
 import { Outlet } from "react-router";
 import { Docs } from "~/src/.server/docs";
 import { getTimings } from "~/src/.server/middlewares";
@@ -25,14 +25,14 @@ export function shouldRevalidate() {
 export default function DocsLayout() {
     return (
         <Flex
-            pos="relative"
             flexDir={{
                 base: "column",
                 md: "row"
             }}
-            justifyContent="space-between"
             full
             gap={5}
+            justifyContent="space-between"
+            pos="relative"
         >
             <SectionsNav />
             <MobileDocsNav />

@@ -2,7 +2,6 @@ import { splitProps } from "@dreamy-ui/react/rsc";
 import { forwardRef } from "react";
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type FlexProperties, flex } from "styled-system/patterns";
-
 export interface FlexProps
     extends Omit<HTMLDreamyProps<"div">, keyof FlexProperties>,
         FlexProperties {}
@@ -12,7 +11,7 @@ export interface FlexProps
  *
  * @See Docs https://dreamy-ui.com/docs/components/flex
  */
-export const Flex = forwardRef<HTMLDivElement, FlexProps>((props, ref) => {
+export const Flex = forwardRef<HTMLDivElement, FlexProps>(async (props, ref) => {
     const [patternProps, restProps] = splitProps(props, [
         "align",
         "justify",

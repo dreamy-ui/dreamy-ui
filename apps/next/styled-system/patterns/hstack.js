@@ -3,17 +3,17 @@ import { css } from '../css/index.js';
 
 const hstackConfig = {
 transform(props) {
-  const { justify, gap, ...rest } = props;
+  const { justify, gap, align, ...rest } = props;
   return {
     display: "flex",
-    alignItems: "center",
+    flexDirection: "row",
+    alignItems: align,
     justifyContent: justify,
     gap,
-    flexDirection: "row",
     ...rest
   };
 },
-defaultValues:{gap:'8px'}}
+defaultValues:{gap:'8px',align:'center'}}
 
 export const getHstackStyle = (styles = {}) => {
   const _styles = getPatternStyles(hstackConfig, styles)

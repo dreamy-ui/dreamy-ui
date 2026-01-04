@@ -1,9 +1,9 @@
-import { Button } from "@/button";
-import { Flex } from "@/flex";
-import { Modal } from "@/modal";
-import { HStack } from "@/stack";
-import { Text } from "@/text";
-import { useToast } from "@/toast-provider";
+import { Button } from "@/ui";
+import { Flex } from "@/ui";
+import { Modal } from "@/ui";
+import { HStack } from "@/ui";
+import { Text } from "@/ui";
+import { useToast } from "@/ui";
 import {
     useActionKey,
     useCanUseDOM,
@@ -26,8 +26,8 @@ export function UseColorMode() {
         >
             <Text>Current color mode: {colorMode}</Text>
             <Flex
-                wrapped
                 gap={2}
+                wrapped
             >
                 <Button onClick={() => setColorMode("light")}>Light</Button>
                 <Button onClick={() => setColorMode("dark")}>Dark</Button>
@@ -93,8 +93,8 @@ export function UseControllable() {
             gap={2}
         >
             <Flex
-                wrapped
                 gap={2}
+                wrapped
             >
                 <Button onClick={onOpen}>Open</Button>
                 <Button onClick={onClose}>Close</Button>
@@ -185,9 +185,9 @@ export function UseClipboard() {
 
     return (
         <Flex
+            align={"flex-start"}
             col
             gap={2}
-            align={"flex-start"}
         >
             <Text>Copied: {copied ? "Yes" : "No"}</Text>
             <Text>Error: {error ? "Yes" : "No"}</Text>

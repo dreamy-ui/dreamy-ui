@@ -1,5 +1,5 @@
-import { Slider } from "@/slider";
-import { Text } from "@/text";
+import { Slider } from "@/ui";
+import { Text } from "@/ui";
 import { useState } from "react";
 
 export function MaxMinSlider() {
@@ -10,11 +10,11 @@ export function MaxMinSlider() {
             <Text>Slider value: {value}</Text>
 
             <Slider.Root
-                min={0}
                 max={50}
+                min={0}
+                onChangeValue={setValue}
                 step={10}
                 value={value}
-                onChangeValue={setValue}
             >
                 <Slider.Track maxW="xs">
                     <Slider.FilledTrack />
@@ -33,8 +33,8 @@ export function ControlledSlider() {
             <Text>Slider value: {value}</Text>
 
             <Slider.Root
-                value={value}
                 onChangeValue={setValue}
+                value={value}
             >
                 <Slider.Track maxW="xs">
                     <Slider.FilledTrack />

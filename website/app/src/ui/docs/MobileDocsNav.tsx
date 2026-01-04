@@ -1,8 +1,8 @@
-import { Box } from "@/box";
-import { Button } from "@/button";
-import { Flex } from "@/flex";
-import { Icon } from "@/icon";
-import { MotionFlex } from "@/motion";
+import { Box } from "@/ui";
+import { Button } from "@/ui";
+import { Flex } from "@/ui";
+import { Icon } from "@/ui";
+import { MotionFlex } from "@/ui";
 import { TRANSITION_EASINGS, useReducedMotion, useSafeLayoutEffect } from "@dreamy-ui/react";
 import { AnimatePresence } from "motion/react";
 import { useState } from "react";
@@ -15,18 +15,18 @@ import { Section } from "~/src/ui/docs/SectionsNav";
 export default function MobileDocsNav() {
     return (
         <Flex
-            col
-            md={{
-                display: "none"
-            }}
-            left={0}
-            right={0}
-            // fixed, because sticky was causing issues with the scrollbar
-            position={"fixed"}
-            top={"64px"}
             backdropBlur={"sm"}
             backdropFilter="auto"
             backgroundColor="color-mix(in srgb, {colors.bg} 70%, {colors.alpha.100} 10%)"
+            col
+            // fixed, because sticky was causing issues with the scrollbar
+            left={0}
+            md={{
+                display: "none"
+            }}
+            position={"fixed"}
+            right={0}
+            top={"64px"}
             zIndex={10}
         >
             <DocsNav />
@@ -49,49 +49,49 @@ function DocsNav() {
 
     return (
         <Flex
-            col
-            borderColor="border"
             borderBottomWidth="1px"
+            borderColor="border"
+            col
         >
             <Button
-                rounded={"none"}
-                justifyContent={"flex-start"}
-                leftIcon={
-                    <Icon
-                        boxSize={"5"}
-                        as={BiChevronDown}
-                        rotate={isOpen ? "180deg" : "0deg"}
-                        transition="rotate 0.2s"
-                        transitionTimingFunction="ease-in-out"
-                        transformOrigin="center"
-                    />
-                }
-                variant="ghost"
-                onClick={() => setIsOpen((prev) => !prev)}
                 _hover={{
                     bg: "transparent"
                 }}
+                justifyContent={"flex-start"}
+                leftIcon={
+                    <Icon
+                        as={BiChevronDown}
+                        boxSize={"5"}
+                        rotate={isOpen ? "180deg" : "0deg"}
+                        transformOrigin="center"
+                        transition="rotate 0.2s"
+                        transitionTimingFunction="ease-in-out"
+                    />
+                }
+                onClick={() => setIsOpen((prev) => !prev)}
+                rounded={"none"}
+                variant="ghost"
             >
                 Docs
             </Button>
 
             <AnimatePresence>
                 <MotionFlex
-                    col
-                    initial={{
-                        height: 0
-                    }}
                     animate={{
                         height: isOpen ? "auto" : 0,
                         transition: {
                             duration: reduceMotion ? 0 : isOpen ? 0.2 : 0.15
                         }
                     }}
+                    col
+                    initial={{
+                        height: 0
+                    }}
+                    maxH={"calc(100dvh - 63px - 40px)"}
+                    overflowY={"scroll"}
                     transition={{
                         ease: TRANSITION_EASINGS.easeInOut
                     }}
-                    overflowY={"scroll"}
-                    maxH={"calc(100dvh - 63px - 40px)"}
                 >
                     <Box p={4}>
                         {sections.map((section) => (
@@ -123,28 +123,28 @@ function OnThisPageNav() {
 
     return (
         <Flex
-            col
             borderBottomWidth="1px"
             borderColor="border"
+            col
         >
             <Button
-                rounded={"none"}
-                justifyContent={"flex-start"}
-                leftIcon={
-                    <Icon
-                        boxSize={"5"}
-                        as={BiChevronDown}
-                        rotate={isOpen ? "180deg" : "0deg"}
-                        transition="rotate 0.2s"
-                        transitionTimingFunction="ease-in-out"
-                        transformOrigin="center"
-                    />
-                }
-                variant="ghost"
-                onClick={() => setIsOpen(!isOpen)}
                 _hover={{
                     bg: "transparent"
                 }}
+                justifyContent={"flex-start"}
+                leftIcon={
+                    <Icon
+                        as={BiChevronDown}
+                        boxSize={"5"}
+                        rotate={isOpen ? "180deg" : "0deg"}
+                        transformOrigin="center"
+                        transition="rotate 0.2s"
+                        transitionTimingFunction="ease-in-out"
+                    />
+                }
+                onClick={() => setIsOpen(!isOpen)}
+                rounded={"none"}
+                variant="ghost"
             >
                 On this page
             </Button>
@@ -152,23 +152,23 @@ function OnThisPageNav() {
             <AnimatePresence>
                 {isOpen && (
                     <MotionFlex
-                        col
-                        overflowY={"hidden"}
-                        initial={{
-                            height: 0
-                        }}
                         animate={{
                             height: "auto",
                             transition: {
                                 duration: reduceMotion ? 0 : 0.2
                             }
                         }}
+                        col
                         exit={{
                             height: 0,
                             transition: {
                                 duration: reduceMotion ? 0 : 0.15
                             }
                         }}
+                        initial={{
+                            height: 0
+                        }}
+                        overflowY={"hidden"}
                         transition={{
                             ease: TRANSITION_EASINGS.easeInOut
                         }}

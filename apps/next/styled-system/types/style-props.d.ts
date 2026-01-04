@@ -188,7 +188,7 @@ WebkitTapHighlightColor?: ConditionalValue<CssProperties["WebkitTapHighlightColo
    *
    * **Initial value**: `currentcolor`
    */
-WebkitTextFillColor?: ConditionalValue<CssProperties["WebkitTextFillColor"] | AnyString>
+WebkitTextFillColor?: ConditionalValue<UtilityValues["WebkitTextFillColor"] | CssVars | CssProperties["WebkitTextFillColor"] | AnyString>
  /**
    * The **`-webkit-text-stroke`** CSS property specifies the width and color of strokes for text characters. This is a shorthand property for the longhand properties `-webkit-text-stroke-width` and `-webkit-text-stroke-color`.
    *
@@ -7563,6 +7563,5 @@ scrollSnapMarginRight?: ConditionalValue<UtilityValues["scrollSnapMarginRight"] 
  standard?: ConditionalValue<UtilityValues["standard"] | CssVars | AnyString>
  video?: ConditionalValue<UtilityValues["video"] | CssVars | AnyString>
  ultrawide?: ConditionalValue<UtilityValues["ultrawide"] | CssVars | AnyString>
- colorPalette?: ConditionalValue<UtilityValues["colorPalette"] | CssVars | AnyString>
  textStyle?: ConditionalValue<UtilityValues["textStyle"] | CssVars | AnyString>
 }

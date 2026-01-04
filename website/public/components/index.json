@@ -4,6 +4,7 @@
     "id": "accordion",
     "file": "accordion.tsx",
     "component": "Accordion",
+    "npmDependencies": [],
     "fileDependencies": [
       "./box",
       "./icon",
@@ -20,6 +21,7 @@
     "id": "action-bar",
     "file": "action-bar.tsx",
     "component": "ActionBar",
+    "npmDependencies": [],
     "fileDependencies": [
       "./box",
       "./close-button",
@@ -36,6 +38,7 @@
     "id": "alert",
     "file": "alert.tsx",
     "component": "Alert",
+    "npmDependencies": [],
     "fileDependencies": [
       "./icon",
       "./text"
@@ -51,6 +54,7 @@
     "id": "avatar",
     "file": "avatar.tsx",
     "component": "Avatar",
+    "npmDependencies": [],
     "fileDependencies": [
       "./box",
       "./flex",
@@ -68,6 +72,7 @@
     "id": "badge",
     "file": "badge.tsx",
     "component": "Badge",
+    "npmDependencies": [],
     "fileDependencies": [],
     "hasRecipe": true,
     "hasPattern": false,
@@ -80,6 +85,7 @@
     "id": "box",
     "file": "box.tsx",
     "component": "Box",
+    "npmDependencies": [],
     "fileDependencies": [],
     "hasRecipe": false,
     "hasPattern": false
@@ -89,6 +95,7 @@
     "id": "breadcrumb",
     "file": "breadcrumb.tsx",
     "component": "Breadcrumb",
+    "npmDependencies": [],
     "fileDependencies": [],
     "hasRecipe": true,
     "hasPattern": false,
@@ -101,6 +108,7 @@
     "id": "button",
     "file": "button.tsx",
     "component": "Button",
+    "npmDependencies": [],
     "fileDependencies": [
       "./box",
       "./ripple",
@@ -118,6 +126,7 @@
     "id": "card",
     "file": "card.tsx",
     "component": "Card",
+    "npmDependencies": [],
     "fileDependencies": [],
     "hasRecipe": true,
     "hasPattern": false,
@@ -130,6 +139,7 @@
     "id": "checkbox-card",
     "file": "checkbox-card.tsx",
     "component": "CheckboxCard",
+    "npmDependencies": [],
     "fileDependencies": [
       "./box",
       "./checkbox",
@@ -147,6 +157,7 @@
     "id": "checkbox",
     "file": "checkbox.tsx",
     "component": "Checkbox",
+    "npmDependencies": [],
     "fileDependencies": [
       "./flex",
       "./visually-hidden"
@@ -162,6 +173,7 @@
     "id": "close-button",
     "file": "close-button.tsx",
     "component": "CloseButton",
+    "npmDependencies": [],
     "fileDependencies": [
       "./icon-button"
     ],
@@ -173,6 +185,7 @@
     "id": "divider",
     "file": "divider.tsx",
     "component": "Divider",
+    "npmDependencies": [],
     "fileDependencies": [],
     "hasRecipe": false,
     "hasPattern": true,
@@ -185,6 +198,7 @@
     "id": "editable",
     "file": "editable.tsx",
     "component": "Editable",
+    "npmDependencies": [],
     "fileDependencies": [
       "./box"
     ],
@@ -199,6 +213,7 @@
     "id": "field",
     "file": "field.tsx",
     "component": "Field",
+    "npmDependencies": [],
     "fileDependencies": [
       "./box",
       "./icon"
@@ -214,6 +229,7 @@
     "id": "flex",
     "file": "flex.tsx",
     "component": "Flex",
+    "npmDependencies": [],
     "fileDependencies": [],
     "hasRecipe": false,
     "hasPattern": true,
@@ -226,6 +242,7 @@
     "id": "grid",
     "file": "grid.tsx",
     "component": "Grid",
+    "npmDependencies": [],
     "fileDependencies": [],
     "hasRecipe": false,
     "hasPattern": true,
@@ -239,6 +256,7 @@
     "id": "group",
     "file": "group.tsx",
     "component": "Group",
+    "npmDependencies": [],
     "fileDependencies": [],
     "hasRecipe": true,
     "hasPattern": true,
@@ -254,6 +272,7 @@
     "id": "heading",
     "file": "heading.tsx",
     "component": "Heading",
+    "npmDependencies": [],
     "fileDependencies": [],
     "hasRecipe": false,
     "hasPattern": true,
@@ -266,6 +285,7 @@
     "id": "icon-button",
     "file": "icon-button.tsx",
     "component": "IconButton",
+    "npmDependencies": [],
     "fileDependencies": [
       "./button"
     ],
@@ -277,6 +297,7 @@
     "id": "icon",
     "file": "icon.tsx",
     "component": "Icon",
+    "npmDependencies": [],
     "fileDependencies": [],
     "hasRecipe": true,
     "hasPattern": false,
@@ -289,6 +310,7 @@
     "id": "image",
     "file": "image.tsx",
     "component": "Image",
+    "npmDependencies": [],
     "fileDependencies": [
       "./box"
     ],
@@ -303,6 +325,7 @@
     "id": "input",
     "file": "input.tsx",
     "component": "Input",
+    "npmDependencies": [],
     "fileDependencies": [
       "./box",
       "./flex"
@@ -318,6 +341,7 @@
     "id": "kbd",
     "file": "kbd.tsx",
     "component": "Kbd",
+    "npmDependencies": [],
     "fileDependencies": [],
     "hasRecipe": true,
     "hasPattern": false,
@@ -330,6 +354,7 @@
     "id": "link",
     "file": "link.tsx",
     "component": "Link",
+    "npmDependencies": [],
     "fileDependencies": [],
     "hasRecipe": false,
     "hasPattern": true,
@@ -342,6 +367,7 @@
     "id": "list",
     "file": "list.tsx",
     "component": "List",
+    "npmDependencies": [],
     "fileDependencies": [],
     "hasRecipe": true,
     "hasPattern": false,
@@ -354,6 +380,7 @@
     "id": "menu",
     "file": "menu.tsx",
     "component": "Menu",
+    "npmDependencies": [],
     "fileDependencies": [
       "./box",
       "./kbd",
@@ -370,6 +397,7 @@
     "id": "modal",
     "file": "modal.tsx",
     "component": "Modal",
+    "npmDependencies": [],
     "fileDependencies": [
       "./box",
       "./close-button",
@@ -388,6 +416,7 @@
     "id": "motion",
     "file": "motion.tsx",
     "component": "Motion",
+    "npmDependencies": [],
     "fileDependencies": [],
     "hasRecipe": false,
     "hasPattern": true,
@@ -400,6 +429,7 @@
     "id": "pin-input",
     "file": "pin-input.tsx",
     "component": "PinInput",
+    "npmDependencies": [],
     "fileDependencies": [
       "./box",
       "./input",
@@ -413,6 +443,7 @@
     "id": "popover",
     "file": "popover.tsx",
     "component": "Popover",
+    "npmDependencies": [],
     "fileDependencies": [
       "./box",
       "./close-button",
@@ -430,6 +461,7 @@
     "id": "progress-circular",
     "file": "progress-circular.tsx",
     "component": "ProgressCircular",
+    "npmDependencies": [],
     "fileDependencies": [],
     "hasRecipe": true,
     "hasPattern": false,
@@ -442,6 +474,7 @@
     "id": "progress",
     "file": "progress.tsx",
     "component": "Progress",
+    "npmDependencies": [],
     "fileDependencies": [
       "./box"
     ],
@@ -456,6 +489,7 @@
     "id": "radio-card",
     "file": "radio-card.tsx",
     "component": "RadioCard",
+    "npmDependencies": [],
     "fileDependencies": [
       "./box",
       "./text",
@@ -472,6 +506,7 @@
     "id": "radio",
     "file": "radio.tsx",
     "component": "Radio",
+    "npmDependencies": [],
     "fileDependencies": [
       "./flex",
       "./visually-hidden"
@@ -487,6 +522,7 @@
     "id": "range-slider",
     "file": "range-slider.tsx",
     "component": "RangeSlider",
+    "npmDependencies": [],
     "fileDependencies": [
       "./box",
       "./visually-hidden"
@@ -502,6 +538,7 @@
     "id": "ripple",
     "file": "ripple.tsx",
     "component": "Ripple",
+    "npmDependencies": [],
     "fileDependencies": [
       "./motion"
     ],
@@ -513,6 +550,9 @@
     "id": "select",
     "file": "select.tsx",
     "component": "Select",
+    "npmDependencies": [
+      "@tanstack/react-virtual"
+    ],
     "fileDependencies": [
       "./box",
       "./popover",
@@ -529,6 +569,7 @@
     "id": "skeleton",
     "file": "skeleton.tsx",
     "component": "Skeleton",
+    "npmDependencies": [],
     "fileDependencies": [],
     "hasRecipe": true,
     "hasPattern": false,
@@ -541,6 +582,7 @@
     "id": "slider",
     "file": "slider.tsx",
     "component": "Slider",
+    "npmDependencies": [],
     "fileDependencies": [
       "./box",
       "./visually-hidden"
@@ -556,6 +598,7 @@
     "id": "snippet",
     "file": "snippet.tsx",
     "component": "Snippet",
+    "npmDependencies": [],
     "fileDependencies": [
       "./icon-button",
       "./tooltip"
@@ -571,6 +614,7 @@
     "id": "span",
     "file": "span.tsx",
     "component": "Span",
+    "npmDependencies": [],
     "fileDependencies": [],
     "hasRecipe": false,
     "hasPattern": false
@@ -580,6 +624,7 @@
     "id": "spinner",
     "file": "spinner.tsx",
     "component": "Spinner",
+    "npmDependencies": [],
     "fileDependencies": [
       "./box"
     ],
@@ -594,6 +639,7 @@
     "id": "stack",
     "file": "stack.tsx",
     "component": "Stack",
+    "npmDependencies": [],
     "fileDependencies": [],
     "hasRecipe": false,
     "hasPattern": true,
@@ -608,6 +654,7 @@
     "id": "stat",
     "file": "stat.tsx",
     "component": "Stat",
+    "npmDependencies": [],
     "fileDependencies": [],
     "hasRecipe": true,
     "hasPattern": false,
@@ -620,6 +667,7 @@
     "id": "switch",
     "file": "switch.tsx",
     "component": "Switch",
+    "npmDependencies": [],
     "fileDependencies": [
       "./motion",
       "./visually-hidden"
@@ -635,6 +683,7 @@
     "id": "table",
     "file": "table.tsx",
     "component": "Table",
+    "npmDependencies": [],
     "fileDependencies": [],
     "hasRecipe": true,
     "hasPattern": false,
@@ -647,6 +696,7 @@
     "id": "tabs",
     "file": "tabs.tsx",
     "component": "Tabs",
+    "npmDependencies": [],
     "fileDependencies": [
       "./box",
       "./button",
@@ -664,6 +714,7 @@
     "id": "text",
     "file": "text.tsx",
     "component": "Text",
+    "npmDependencies": [],
     "fileDependencies": [],
     "hasRecipe": false,
     "hasPattern": true,
@@ -676,6 +727,9 @@
     "id": "textarea",
     "file": "textarea.tsx",
     "component": "Textarea",
+    "npmDependencies": [
+      "react-textarea-autosize"
+    ],
     "fileDependencies": [],
     "hasRecipe": true,
     "hasPattern": false,
@@ -688,6 +742,7 @@
     "id": "theme",
     "file": "theme.tsx",
     "component": "Theme",
+    "npmDependencies": [],
     "fileDependencies": [],
     "hasRecipe": true,
     "hasPattern": false,
@@ -700,6 +755,7 @@
     "id": "toast-provider",
     "file": "toast-provider.tsx",
     "component": "ToastProvider",
+    "npmDependencies": [],
     "fileDependencies": [
       "./motion",
       "./toast"
@@ -712,6 +768,7 @@
     "id": "toast",
     "file": "toast.tsx",
     "component": "Toast",
+    "npmDependencies": [],
     "fileDependencies": [
       "./alert",
       "./close-button",
@@ -731,6 +788,7 @@
     "id": "tooltip",
     "file": "tooltip.tsx",
     "component": "Tooltip",
+    "npmDependencies": [],
     "fileDependencies": [
       "./box"
     ],
@@ -745,6 +803,7 @@
     "id": "transitions",
     "file": "transitions.tsx",
     "component": "Transitions",
+    "npmDependencies": [],
     "fileDependencies": [
       "./motion"
     ],
@@ -756,6 +815,7 @@
     "id": "visually-hidden",
     "file": "visually-hidden.tsx",
     "component": "VisuallyHidden",
+    "npmDependencies": [],
     "fileDependencies": [],
     "hasRecipe": false,
     "hasPattern": true,
@@ -768,6 +828,7 @@
     "id": "wrap",
     "file": "wrap.tsx",
     "component": "Wrap",
+    "npmDependencies": [],
     "fileDependencies": [],
     "hasRecipe": false,
     "hasPattern": true,

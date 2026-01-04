@@ -4,7 +4,46 @@ import { createRecipe, mergeRecipes } from './create-recipe.js';
 const buttonFn = /* @__PURE__ */ createRecipe('button', {
   "variant": "solid",
   "size": "md"
-}, [])
+}, [
+  {
+    "variant": [
+      "outline"
+    ],
+    "scheme": [
+      "error",
+      "warning",
+      "info",
+      "success",
+      "primary",
+      "secondary"
+    ],
+    "css": {
+      "color": "var(--button-scheme)",
+      "borderColor": "var(--button-scheme)/16",
+      "_hover": {
+        "bg": "var(--button-scheme)/08",
+        "borderColor": "var(--button-scheme)/16"
+      }
+    }
+  },
+  {
+    "variant": [
+      "ghost",
+      "solid"
+    ],
+    "scheme": [
+      "error",
+      "warning",
+      "info",
+      "success",
+      "primary",
+      "secondary"
+    ],
+    "css": {
+      "color": "var(--button-scheme)"
+    }
+  }
+])
 
 const buttonVariantMap = {
   "variant": [
@@ -20,6 +59,15 @@ const buttonVariantMap = {
     "sm",
     "md",
     "lg"
+  ],
+  "scheme": [
+    "primary",
+    "secondary",
+    "success",
+    "warning",
+    "error",
+    "info",
+    "none"
   ]
 }
 

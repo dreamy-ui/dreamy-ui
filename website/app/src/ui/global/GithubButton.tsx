@@ -1,6 +1,6 @@
-import { Icon } from "@/icon";
-import { IconButton } from "@/icon-button";
-import { MotionBox } from "@/motion";
+import { Icon } from "@/ui";
+import { IconButton } from "@/ui";
+import { MotionBox } from "@/ui";
 import { TRANSITION_EASINGS } from "@dreamy-ui/react";
 import { AnimatePresence } from "motion/react";
 import { useState } from "react";

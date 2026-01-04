@@ -1,10 +1,10 @@
-import { Box } from "@/box";
-import { Button } from "@/button";
-import { Flex } from "@/flex";
-import { Heading } from "@/heading";
-import { Icon } from "@/icon";
-import { HStack } from "@/stack";
-import { Text } from "@/text";
+import { Box } from "@/ui";
+import { Button } from "@/ui";
+import { Flex } from "@/ui";
+import { Heading } from "@/ui";
+import { Icon } from "@/ui";
+import { HStack } from "@/ui";
+import { Text } from "@/ui";
 import { BsDiscord } from "react-icons/bs";
 import { IoArrowForward } from "react-icons/io5";
 import { MdOutlineCloud } from "react-icons/md";

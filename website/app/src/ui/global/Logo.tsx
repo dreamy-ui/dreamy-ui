@@ -1,12 +1,12 @@
-import { Badge } from "@/badge";
-import { Box } from "@/box";
-import { Button } from "@/button";
-import { Divider } from "@/divider";
-import { Heading } from "@/heading";
-import { Icon } from "@/icon";
-import { Image } from "@/image";
-import { MotionBox } from "@/motion";
-import { HStack } from "@/stack";
+import { Badge } from "@/ui";
+import { Box } from "@/ui";
+import { Button } from "@/ui";
+import { Divider } from "@/ui";
+import { Heading } from "@/ui";
+import { Icon } from "@/ui";
+import { Image } from "@/ui";
+import { MotionBox } from "@/ui";
+import { HStack } from "@/ui";
 import { TRANSITION_EASINGS } from "@dreamy-ui/react";
 import { useState } from "react";
 import { MdOutlineFavorite } from "react-icons/md";
@@ -27,7 +27,7 @@ export function Logo() {
             >
                 <Image
                     alt={"Dreamy UI Logo"}
-                    h={"4"}
+                    boxSize={"8"}
                     src={"/dream.svg"}
                 />
                 <Box

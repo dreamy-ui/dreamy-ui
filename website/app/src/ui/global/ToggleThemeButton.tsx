@@ -1,6 +1,6 @@
-import { Icon } from "@/icon";
-import { IconButton } from "@/icon-button";
-import { Tooltip } from "@/tooltip";
+import { Icon } from "@/ui";
+import { IconButton } from "@/ui";
+import { Tooltip } from "@/ui";
 import { getActionKeyCode, useActionKey, useColorMode, useEventListener } from "@dreamy-ui/react";
 import { BiMoon, BiSun } from "react-icons/bi";
 import { useRouteLoaderData } from "react-router";

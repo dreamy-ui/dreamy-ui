@@ -1,6 +1,6 @@
-import { Box } from "@/box";
-import { Button } from "@/button";
-import { Collapse, type CollapseProps, Scale, type ScaleProps } from "@/transitions";
+import { Box } from "@/ui";
+import { Button } from "@/ui";
+import { Collapse, type CollapseProps, Scale, type ScaleProps } from "@/ui";
 import { useState } from "react";
 
 export function Collapsed(props: CollapseProps) {
@@ -9,14 +9,14 @@ export function Collapsed(props: CollapseProps) {
     return (
         <>
             <Button
-                w={"min-content"}
                 onClick={() => setIsOpen(!isOpen)}
+                w={"min-content"}
             >
                 Toggle
             </Button>
             <Collapse
-                w={"full"}
                 isOpen={isOpen}
+                w={"full"}
                 {...props}
             >
                 <Box
@@ -39,14 +39,14 @@ export function Scaled(props: ScaleProps) {
     return (
         <>
             <Button
-                w={"min-content"}
                 onClick={() => setIsOpen(!isOpen)}
+                w={"min-content"}
             >
                 Toggle
             </Button>
             <Scale
-                w={"full"}
                 isOpen={isOpen}
+                w={"full"}
                 {...props}
             >
                 <Box

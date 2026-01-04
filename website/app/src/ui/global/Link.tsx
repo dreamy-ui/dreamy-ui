@@ -1,4 +1,4 @@
-import { Link as DreamyLink, type LinkProps as DreamyLinkProps } from "@/link";
+import { Link as DreamyLink, type LinkProps as DreamyLinkProps } from "@/ui";
 import { forwardRef } from "react";
 import { Link as ReactRouterLink, type LinkProps as ReactRouterLinkProps } from "react-router";
 
@@ -9,8 +9,8 @@ export interface LinkProps
 export const Link = forwardRef<HTMLAnchorElement, LinkProps>((props, ref) => {
     return (
         <DreamyLink
-            ref={ref}
             as={ReactRouterLink}
+            ref={ref}
             {...props}
         />
     );

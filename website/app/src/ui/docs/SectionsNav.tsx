@@ -1,8 +1,8 @@
-import { Badge } from "@/badge";
-import { Button } from "@/button";
-import { Flex } from "@/flex";
-import { Icon } from "@/icon";
-import { Collapse } from "@/transitions";
+import { Badge } from "@/ui";
+import { Button } from "@/ui";
+import { Flex } from "@/ui";
+import { Icon } from "@/ui";
+import { Collapse } from "@/ui";
 import { useSafeLayoutEffect } from "@dreamy-ui/react";
 import { AnimatePresence } from "motion/react";
 import { memo, useRef, useState } from "react";

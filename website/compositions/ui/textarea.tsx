@@ -1,13 +1,8 @@
 "use client";
 
-import {
-    TextareaAutosize,
-    type TextareaAutosizeProps,
-    type UserFeedbackProps,
-    callAllHandlers,
-    useField
-} from "@dreamy-ui/react";
+import { type UserFeedbackProps, callAllHandlers, useField } from "@dreamy-ui/react";
 import { type ComponentType, forwardRef } from "react";
+import TextareaAutosize, { type TextareaAutosizeProps } from "react-textarea-autosize";
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type TextareaVariantProps, textarea } from "styled-system/recipes";
 

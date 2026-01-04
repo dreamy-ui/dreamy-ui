@@ -441,13 +441,14 @@ const CheckIcon = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
                 {...props}
                 ref={ref}
             >
-                <path d="m6 9 6 6 6-6" />
+                <path d="M20 6 9 17l-5-5" />
             </svg>
         );
     }
 );
 
 const SelectItemIndicator = withContext(CheckIcon, "itemIndicator");
+
 export const Item = withContext(
     forwardRef<HTMLDivElement, SelectItemProps>(function SelectItem(props, ref) {
         const { selectedStrategy, selectedKeys } = useSelectContext();
@@ -465,7 +466,28 @@ export const Item = withContext(
     "item"
 );
 
-const SelectIndicator = withContext(CheckIcon, "indicator");
+const SelectIndicatorBase = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
+    function SelectIndicator(props, ref) {
+        return (
+            <svg
+                aria-hidden="true"
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+                {...props}
+                ref={ref}
+            >
+                <path d="m6 9 6 6 6-6" />
+            </svg>
+        );
+    }
+);
+
+const SelectIndicator = withContext(SelectIndicatorBase, "indicator");
 
 export interface SelectClearButtonProps extends HTMLDreamyProps<"button"> {}
 

@@ -1,0 +1,25 @@
+import { definePattern } from "@pandacss/dev";
+
+export const hstack = definePattern({
+    jsx: ["HStack"],
+    properties: {
+        justify: { type: "property", value: "justifyContent" },
+        gap: { type: "property", value: "gap" },
+        align: { type: "property", value: "alignItems" }
+    },
+    defaultValues: {
+        gap: "8px",
+        align: "center"
+    },
+    transform(props) {
+        const { justify, gap, align, ...rest } = props;
+        return {
+            display: "flex",
+            flexDirection: "row",
+            alignItems: align,
+            justifyContent: justify,
+            gap,
+            ...rest
+        };
+    }
+});

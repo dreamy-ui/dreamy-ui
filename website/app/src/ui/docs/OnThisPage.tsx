@@ -1,10 +1,10 @@
-import { Box } from "@/box";
-import { Button } from "@/button";
-import { Divider } from "@/divider";
-import { Flex, type FlexProps } from "@/flex";
-import { Heading } from "@/heading";
-import { Icon } from "@/icon";
-import { Link as DreamLink } from "@/link";
+import { Box } from "@/ui";
+import { Button } from "@/ui";
+import { Divider } from "@/ui";
+import { Flex, type FlexProps } from "@/ui";
+import { Heading } from "@/ui";
+import { Icon } from "@/ui";
+import { Link as DreamLink } from "@/ui";
 import { useEventListener } from "@dreamy-ui/react";
 import { Fragment, memo, useState } from "react";
 import { BiChevronUp, BiEdit } from "react-icons/bi";

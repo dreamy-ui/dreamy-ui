@@ -16,7 +16,13 @@ import { type HTMLDreamyProps, createStyleContext, dreamy } from "styled-system/
 import { menu } from "styled-system/recipes";
 import { Box } from "./box";
 import { Kbd } from "./kbd";
-import { Popover, type PopoverContentProps, type PopoverProps } from "./popover";
+import {
+    Content as PopoverContent,
+    type PopoverContentProps,
+    type PopoverProps,
+    Root as PopoverRoot,
+    Trigger as PopoverTrigger
+} from "./popover";
 
 const { withProvider, withContext } = createStyleContext(menu);
 
@@ -46,7 +52,7 @@ export const Root = withProvider(function MenuRoot({
     return (
         <MenuProvider value={ctx}>
             <Box {...ctx.getRootProps({ className })}>
-                <Popover.Root
+                <PopoverRoot
                     hasArrow={false}
                     initialFocusRef={ctx.triggerRef}
                     isOpen={ctx.isOpen}
@@ -58,13 +64,13 @@ export const Root = withProvider(function MenuRoot({
                     {...props.popoverProps}
                 >
                     {children}
-                </Popover.Root>
+                </PopoverRoot>
             </Box>
         </MenuProvider>
     );
 }, "root");
 
-export interface MenuContentProps extends PopoverContentProps { }
+export interface MenuContentProps extends PopoverContentProps {}
 
 export const Content = withContext(
     forwardRef<HTMLDivElement, MenuContentProps>(function MenuContent(props, ref) {
@@ -73,9 +79,9 @@ export const Content = withContext(
         const { getContentProps, descendants } = useMenuContext();
 
         return (
-            <Popover.Content {...getContentProps(rest, ref)}>
+            <PopoverContent {...getContentProps(rest, ref)}>
                 <MenuDescendantsProvider value={descendants}>{children}</MenuDescendantsProvider>
-            </Popover.Content>
+            </PopoverContent>
         );
     }),
     "content"
@@ -97,7 +103,7 @@ export interface MenuButtonProps extends UseMenuItemProps {
 }
 
 export const Item = withContext(
-    forwardRef<HTMLDivElement, MenuButtonProps>(function MenuButton(props, ref) {
+    forwardRef<HTMLButtonElement, MenuButtonProps>(function MenuButton(props, ref) {
         const { icon, command, rightContent, ...rest } = props;
 
         const buttonProps = useMenuItem(rest, ref);
@@ -130,5 +136,5 @@ export const Trigger = forwardRef<HTMLButtonElement, MenuTriggerProps>(function 
     const child = Children.only(children) as ReactElement;
     const trigger = cloneElement(child, getTriggerProps(rest, ref));
 
-    return <Popover.Trigger {...rest}>{trigger}</Popover.Trigger>;
+    return <PopoverTrigger {...rest}>{trigger}</PopoverTrigger>;
 });
