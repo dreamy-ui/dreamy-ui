@@ -26,6 +26,9 @@ type Pages = {
   "/llms.txt": {
     params: {};
   };
+  "/playground": {
+    params: {};
+  };
   "/testing": {
     params: {};
   };
@@ -60,7 +63,7 @@ type Pages = {
 type RouteFiles = {
   "root.tsx": {
     id: "root";
-    page: "/" | "/api/fake-select-data" | "/api/docs/prefetch" | "/api/docs/search" | "/llms.txt" | "/testing" | "/docs" | "/docs/:section/:page.mdx" | "/docs/:section/:page" | "/docs/:section/:page/og-image" | "/*";
+    page: "/" | "/api/fake-select-data" | "/api/docs/prefetch" | "/api/docs/search" | "/llms.txt" | "/playground" | "/testing" | "/docs" | "/docs/:section/:page.mdx" | "/docs/:section/:page" | "/docs/:section/:page/og-image" | "/*";
   };
   "routes/api.fake-select-data.tsx": {
     id: "routes/api.fake-select-data";
@@ -77,6 +80,10 @@ type RouteFiles = {
   "routes/llms[.txt].ts": {
     id: "routes/llms[.txt]";
     page: "/llms.txt";
+  };
+  "routes/playground.tsx": {
+    id: "routes/playground";
+    page: "/playground";
   };
   "routes/testing.tsx": {
     id: "routes/testing";
@@ -118,6 +125,7 @@ type RouteModules = {
   "routes/api.docs.prefetch": typeof import("./app/routes/api.docs.prefetch.ts");
   "routes/api.docs.search": typeof import("./app/routes/api.docs.search.tsx");
   "routes/llms[.txt]": typeof import("./app/routes/llms[.txt].ts");
+  "routes/playground": typeof import("./app/routes/playground.tsx");
   "routes/testing": typeof import("./app/routes/testing.tsx");
   "routes/_index": typeof import("./app/routes/_index.tsx");
   "routes/docs": typeof import("./app/routes/docs.tsx");

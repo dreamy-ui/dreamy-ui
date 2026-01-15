@@ -1,16 +1,22 @@
 "use client";
 
-import { type Status, TRANSITION_EASINGS, dataAttr } from "@dreamy-ui/react";
+import {
+    type IToast,
+    type Status,
+    TRANSITION_EASINGS,
+    type ToastWithoutRender,
+    dataAttr,
+    useToast
+} from "@dreamy-ui/react";
 import { isValidMotionProp, m } from "motion/react";
 import { useCallback } from "react";
 import { dreamy, isCssProperty } from "styled-system/jsx";
 import { toast } from "styled-system/recipes";
-import { useStatusIcon } from "./alert";
+import { StatusIcon } from "./alert";
 import { CloseButton } from "./close-button";
 import { Icon } from "./icon";
 import { Spinner } from "./spinner";
 import { Text } from "./text";
-import { type IToast, useToast } from "./toast-provider";
 
 const StyledToast = m.create(
     dreamy("div", toast, {
@@ -46,7 +52,7 @@ export function Toast({ toast }: { toast: IToast }) {
                 }}
                 {...toast.containerProps}
             >
-                {toast.render(toast)}
+                {toast.render(toast as unknown as ToastWithoutRender)}
             </m.div>
         );
     }
@@ -102,15 +108,13 @@ export function Toast({ toast }: { toast: IToast }) {
 }
 
 function ToastIcon({ status }: { status: Status }) {
-    const statusIcon = useStatusIcon(status);
-
     return (
         <Icon
             asChild
             data-part={"icon"}
             role="img"
         >
-            {statusIcon}
+            <StatusIcon status={status} />
         </Icon>
     );
 }

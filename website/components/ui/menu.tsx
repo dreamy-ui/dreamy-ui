@@ -87,7 +87,7 @@ export const Content = withContext(
     "content"
 );
 
-export interface MenuButtonProps extends UseMenuItemProps {
+export interface MenuButtonProps extends HTMLDreamyProps<"button"> {
     /**
      * Icon to display on the left side of the menu item
      */
@@ -100,11 +100,15 @@ export interface MenuButtonProps extends UseMenuItemProps {
      * The content to display on the right side of the menu item
      */
     rightContent?: React.ReactNode | (() => React.ReactNode);
+    /**
+     * Children to render in the menu item
+     */
+    children?: React.ReactNode;
 }
 
 export const Item = withContext(
     forwardRef<HTMLButtonElement, MenuButtonProps>(function MenuButton(props, ref) {
-        const { icon, command, rightContent, ...rest } = props;
+        const { icon, command, rightContent, children, ...rest } = props;
 
         const buttonProps = useMenuItem(rest, ref);
         const actionKey = useActionKey();
@@ -113,7 +117,7 @@ export const Item = withContext(
             <dreamy.button {...buttonProps}>
                 <span>
                     {runIfFn(icon)}
-                    {buttonProps.children}
+                    {children}
                 </span>
                 {command && <Kbd size={"sm"}>{command.replaceAll("{actionKey}", actionKey)}</Kbd>}
                 {rightContent && runIfFn(rightContent)}

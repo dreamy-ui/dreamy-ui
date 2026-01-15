@@ -1,12 +1,13 @@
 {
 	"include": [
-		"**/*.ts",
-		"**/*.tsx",
-		"**/.server/**/*.ts",
-		"**/.server/**/*.tsx",
-		"**/.client/**/*.ts",
-		"**/.client/**/*.tsx",
+		"app/**/*",
+		"components/**/*",
+		"compositions/**/*",
+		"app/**/.server/**/*",
+		"app/**/.client/**/*",
 		"styled-system/*",
+		"stories/**/*",
+		".storybook/**/*",
 		".react-router/types/**/*"
 	],
 	"compilerOptions": {

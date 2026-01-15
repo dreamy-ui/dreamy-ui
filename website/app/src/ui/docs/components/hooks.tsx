@@ -3,7 +3,6 @@ import { Flex } from "@/ui";
 import { Modal } from "@/ui";
 import { HStack } from "@/ui";
 import { Text } from "@/ui";
-import { useToast } from "@/ui";
 import {
     useActionKey,
     useCanUseDOM,
@@ -12,6 +11,7 @@ import {
     useControllable,
     useEventListener,
     useReducedMotion,
+    useToast,
     useUpdateEffect
 } from "@dreamy-ui/react";
 import { useCallback, useState } from "react";

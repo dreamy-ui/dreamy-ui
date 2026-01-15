@@ -61,8 +61,8 @@ export const InputElement = forwardRef<HTMLDivElement, FlexProps>(
                 bg={"alpha.50"}
                 border="1px solid"
                 borderColor="border"
+                flex={1}
                 center
-                h="full"
                 px={4}
                 ref={ref}
                 {...props}

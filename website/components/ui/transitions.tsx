@@ -150,13 +150,6 @@ const variants: Variants = {
     })
 };
 
-export const ScaleConfig: HTMLMotionProps<"div"> = {
-    initial: "exit",
-    animate: "enter",
-    exit: "exit",
-    variants: variants
-};
-
 export interface ScaleProps extends ScaleOptions, WithTransitionConfig<MotionBoxProps> {}
 
 export const Scale = forwardRef<HTMLDivElement, ScaleProps>(function Scale(props, ref) {

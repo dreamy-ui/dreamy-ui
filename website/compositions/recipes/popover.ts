@@ -11,11 +11,15 @@ export const popover = defineSlotRecipe({
         "Popover.Header",
         "Popover.Footer",
         "Popover.CloseButton",
-        // menu, as it depends on the popover
         "Menu.Root",
         "Menu.Trigger",
         "Menu.Content",
-        "Menu.Item"
+        "Menu.Item",
+        "Select.Root",
+        "Select.Trigger",
+        "Select.Content",
+        "Select.VirtualContent",
+        "Select.Item"
     ],
     base: {
         content: {

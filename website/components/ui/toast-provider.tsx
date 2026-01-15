@@ -1,10 +1,18 @@
 "use client";
 
-import { AnimatePresence, type MotionProps, m } from "motion/react";
+import {
+    type IToast,
+    type Position,
+    ToastContext,
+    type ToastContextType,
+    type ToastWithRender,
+    type ToastWithoutRender,
+    useToast
+} from "@dreamy-ui/react";
+import { AnimatePresence, m } from "motion/react";
 import {
     Fragment,
     type PropsWithChildren,
-    createContext,
     useCallback,
     useContext,
     useMemo,
@@ -13,42 +21,6 @@ import {
 } from "react";
 import type { MotionBoxProps } from "./motion";
 import { Toast } from "./toast";
-
-interface ToastBase {
-    id: string;
-    title?: string;
-    description?: string;
-    status: "success" | "error" | "info" | "warning" | "loading";
-    duration?: number;
-    position: Position;
-    isClosable?: boolean;
-    rightContent?: React.ReactNode;
-    onMouseEnter?: () => void;
-    onMouseLeave?: () => void;
-}
-
-interface ToastWithRender extends ToastBase {
-    render: (toast: ToastWithRender) => React.ReactNode;
-    containerProps?: MotionProps;
-}
-
-interface ToastWithoutRender extends ToastBase {
-    render?: undefined;
-    containerProps?: MotionBoxProps;
-}
-
-export type IToast = ToastWithRender | ToastWithoutRender;
-
-interface ToastContextType {
-    toast(toast: Omit<Partial<IToast>, "id">): string;
-    updateToast(id: string, toast: Partial<IToast>): void;
-    removeToast(id: string): void;
-    pauseToast(id: string): void;
-    resumeToast(id: string): void;
-    toasts: IToast[];
-}
-
-const ToastContext = createContext<ToastContextType | null>(null);
 
 export interface ToastProviderProps extends PropsWithChildren {
     defaultToastProps?: Partial<IToast>;
@@ -117,7 +89,7 @@ export function ToastProvider({ children, defaultToastProps = emptyObject }: Toa
             }
 
             const resolvedRender = (toast.render ?? defaultToastProps.render) as
-                | ((toast: ToastWithRender) => React.ReactNode)
+                | ((toast: ToastWithoutRender) => React.ReactNode)
                 | undefined;
 
             if (!toast.isClosable) {
@@ -215,12 +187,6 @@ export function ToastProvider({ children, defaultToastProps = emptyObject }: Toa
     );
 }
 
-export function useToast(): ToastContextType {
-    const context = useContext(ToastContext);
-    if (!context) throw new Error("useToast must be used within a ToastProvider");
-    return context;
-}
-
 const positions = [
     "top",
     "top-left",
@@ -229,8 +195,6 @@ const positions = [
     "bottom-left",
     "bottom-right"
 ] as const;
-
-export type Position = (typeof positions)[number];
 
 export function ToastManager() {
     const { toasts } = useToast();

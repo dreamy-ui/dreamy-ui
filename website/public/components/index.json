@@ -112,8 +112,8 @@
     "fileDependencies": [
       "./box",
       "./ripple",
-      "./spinner",
-      "./span"
+      "./span",
+      "./spinner"
     ],
     "hasRecipe": true,
     "hasPattern": false,
@@ -774,8 +774,7 @@
       "./close-button",
       "./icon",
       "./spinner",
-      "./text",
-      "./toast-provider"
+      "./text"
     ],
     "hasRecipe": true,
     "hasPattern": false,

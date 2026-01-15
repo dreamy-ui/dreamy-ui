@@ -1,6 +1,6 @@
 import { Button } from "@/ui";
 import { HStack } from "@/ui";
-import { useToast } from "@/ui";
+import { useToast } from "@dreamy-ui/react";
 import { useState } from "react";
 
 export function UpdateToast() {

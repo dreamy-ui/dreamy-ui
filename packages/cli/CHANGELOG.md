@@ -1,5 +1,11 @@
 # @dreamy-ui/cli
 
+## 2.0.2
+
+### Patch Changes
+
+- fix bugs
+
 ## 2.0.1
 
 ### Patch Changes

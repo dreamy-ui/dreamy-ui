@@ -27,7 +27,7 @@ export const editable = defineSlotRecipe({
             outline: 0,
             rounded: "l05",
             _focusVisible: {
-                boxShadow: "0 0 0 1px {colors.primary}"
+                boxShadow: "0 0 0 2px {colors.primary}"
             }
         },
         cancelButton: {

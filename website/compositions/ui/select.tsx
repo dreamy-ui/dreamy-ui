@@ -24,7 +24,7 @@ import {
     useState
 } from "react";
 import { type HTMLDreamyProps, createStyleContext, dreamy, splitCssProps } from "styled-system/jsx";
-import { select } from "styled-system/recipes";
+import { type SelectVariantProps, select } from "styled-system/recipes";
 import { Box } from "./box";
 import {
     Content as PopoverContent,
@@ -95,6 +95,7 @@ function HiddenSelect(props: HiddenSelectProps) {
 
 export interface SelectProps<T extends boolean>
     extends UseSelectProps<T, PopoverProps>,
+        SelectVariantProps,
         Omit<HTMLDreamyProps<"div">, keyof UseSelectProps<T, PopoverProps>> {
     children?: ReactNode;
 }

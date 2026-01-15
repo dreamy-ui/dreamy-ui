@@ -63,7 +63,7 @@ export const tabs = defineSlotRecipe({
                     }
                 },
                 tabIndicator: {
-                    backgroundColor: "alpha.100",
+                    backgroundColor: { _dark: "alpha.100", _light: "bg" },
                     top: 0,
                     bottom: 0,
                     zIndex: -1

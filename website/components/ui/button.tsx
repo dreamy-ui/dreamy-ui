@@ -1,14 +1,14 @@
 "use client";
 
-import { dataAttr, isMobile, nextTick } from "@dreamy-ui/react";
+import { dataAttr, isMobile, nextTick, useRipple } from "@dreamy-ui/react";
 import { cloneElement, forwardRef, isValidElement, useCallback, useMemo } from "react";
 import { css, cx } from "styled-system/css";
-import { dreamy, type HTMLDreamyProps } from "styled-system/jsx";
+import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type ButtonVariantProps, button } from "styled-system/recipes";
 import { Box } from "./box";
-import { Ripple, useRipple } from "./ripple";
-import { Spinner } from "./spinner";
+import { Ripple } from "./ripple";
 import { Span } from "./span";
+import { Spinner } from "./spinner";
 
 export interface UniversalButtonProps extends ButtonSpinnerOptions {
     /**
@@ -135,14 +135,14 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
         return (
             <StyledButton
-                ref={ref}
-                data-loading={dataAttr(isLoading)}
                 data-disabled={dataAttr(isDisabled)}
+                data-loading={dataAttr(isLoading)}
                 disabled={isDisabled || isLoading}
+                ref={ref}
                 {...rest}
-                type={rest.type || "button"}
                 onClick={handleClick}
                 onPointerDown={onPointerDown}
+                type={rest.type || "button"}
             >
                 {leftIcon &&
                     (isLoading ? <span style={{ opacity: 0 }}>{LeftIcon}</span> : LeftIcon)}
@@ -181,8 +181,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
                             }}
                         >
                             <Ripple
-                                onClear={onClearRipple}
                                 currentRipple={currentRipple}
+                                onClear={onClearRipple}
                                 ripples={ripples}
                             />
                         </div>
@@ -216,13 +216,6 @@ function ButtonSpinner(props: ButtonSpinnerProps) {
     return (
         <Box
             {...rest}
-            data-part={
-                spinnerPlacement === "start"
-                    ? "icon-left"
-                    : spinnerPlacement === "end"
-                      ? "icon-right"
-                      : undefined
-            }
             className={cx(
                 css({
                     display: "flex",
@@ -232,6 +225,13 @@ function ButtonSpinner(props: ButtonSpinnerProps) {
                 }),
                 rest.className
             )}
+            data-part={
+                spinnerPlacement === "start"
+                    ? "icon-left"
+                    : spinnerPlacement === "end"
+                      ? "icon-right"
+                      : undefined
+            }
         >
             {children}
         </Box>

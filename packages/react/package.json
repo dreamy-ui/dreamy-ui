@@ -1,6 +1,6 @@
 {
 	"name": "@dreamy-ui/react",
-	"version": "2.0.1",
+	"version": "2.0.2",
 	"description": "Dreamy UI library for React",
 	"type": "module",
 	"keywords": [
@@ -16,8 +16,7 @@
 		"build:dev": "tsup",
 		"build:production": "tsup",
 		"dev": "tsup --watch",
-		"typecheck": "tsc --noEmit",
-		"storybook": "storybook dev -p 6006"
+		"typecheck": "tsc --noEmit"
 	},
 	"repository": {
 		"type": "git",

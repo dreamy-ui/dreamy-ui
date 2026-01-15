@@ -20,3 +20,5 @@ export * from "./stat";
 export * from "./switch";
 export * from "./tabs";
 export * from "./tooltip";
+export * from "./ripple";
+export * from "./toast";

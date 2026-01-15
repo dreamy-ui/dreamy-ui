@@ -1,6 +1,6 @@
 import { StrictMode, startTransition } from "react";
 import { hydrateRoot } from "react-dom/client";
-import { unstable_ClientInstrumentation } from "react-router";
+import type { unstable_ClientInstrumentation } from "react-router";
 import { HydratedRouter } from "react-router/dom";
 import { stripHost, timing } from "./src/functions/instrumentation";
 

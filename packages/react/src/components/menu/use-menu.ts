@@ -170,9 +170,9 @@ export function useMenu<T extends any>(props: UseMenuProps<T>): UseMenuReturn {
 
     const getItemProps: PropGetter = useCallback((props, ref) => {
         return {
-            ref: mergeRefs(ref),
             "data-slot": "item",
             ...props,
+            ref: mergeRefs(props?.ref, ref),
             onClick: callAllHandlers(props?.onClick, () => {
                 if (triggerRef.current) {
                     requestAnimationFrame(() => {

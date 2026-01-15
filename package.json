@@ -1,48 +1,50 @@
 {
-	"name": "dreamy-ui",
-	"version": "1.0.0",
-	"description": "",
-	"private": true,
-	"packageManager": "pnpm@9.1.4",
-	"workspaces": ["packages/*"],
-	"scripts": {
-		"dev:panda-preset": "cd packages/panda-preset && pnpm run dev",
-		"dev:react": "cd packages/react && pnpm run dev",
-		"dev:cli": "cd packages/cli && pnpm run dev",
-		"dev:web": "cd website && pnpm run dev",
-		"dev:lib": "concurrently \"pnpm run dev:panda-preset\" \"pnpm run dev:react\" \"pnpm run dev:cli\"",
-		"codegen": "concurrently \"cd packages/react && pnpm panda codegen\" \"cd website && pnpm panda codegen\"",
-		"build:panda-preset": "cd packages/panda-preset && pnpm run build",
-		"build:react": "cd packages/react && pnpm run build",
-		"build:cli": "cd packages/cli && pnpm run build",
-		"build:lib": "pnpm run build:panda-preset && pnpm run build:react && pnpm run build:cli",
-		"typecheck": "concurrently \"cd packages/panda-preset && pnpm run typecheck\" \"cd packages/react && pnpm run typecheck\" \"cd website && pnpm run typecheck\"",
-		"dev": "turbo dev",
-		"start": "cd website && pnpm run start",
-		"build": "turbo build",
-		"build:dev": "cross-env NODE_ENV=development turbo build:dev",
-		"build:production": "cross-env NODE_ENV=production turbo build:production",
-		"publish": "changeset publish",
-		"storybook": "cd packages/react && pnpm run storybook dev",
-		"sync": "git pull && pnpm i && pnpm run build",
-		"kill-ports": "kill-port 3000 && kill-port 3001 && kill-port 3002",
-		"components": "cd website && pnpm run components",
-		"components:watch": "cd website && pnpm run components:watch"
-	},
-	"keywords": [],
-	"author": "imexoodeex",
-	"license": "MIT",
-	"devDependencies": {
-		"@biomejs/biome": "1.9.2",
-		"@dreamy-ui/cli": "workspace:*",
-		"@dreamy-ui/mcp": "workspace:*",
-		"concurrently": "^8.2.2",
-		"cross-env": "^7.0.3",
-		"kill-port": "^2.0.1",
-		"turbo": "^2.0.14",
-		"typescript": "^5.9.2"
-	},
-	"dependencies": {
-		"@changesets/cli": "^2.27.9"
-	}
+  "name": "dreamy-ui",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "packageManager": "pnpm@9.1.4",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:panda-preset": "cd packages/panda-preset && pnpm run dev",
+    "dev:react": "cd packages/react && pnpm run dev",
+    "dev:cli": "cd packages/cli && pnpm run dev",
+    "dev:web": "cd website && pnpm run dev",
+    "dev:lib": "concurrently \"pnpm run dev:panda-preset\" \"pnpm run dev:react\" \"pnpm run dev:cli\"",
+    "codegen": "concurrently \"cd packages/react && pnpm panda codegen\" \"cd website && pnpm panda codegen\"",
+    "build:panda-preset": "cd packages/panda-preset && pnpm run build",
+    "build:react": "cd packages/react && pnpm run build",
+    "build:cli": "cd packages/cli && pnpm run build",
+    "build:lib": "pnpm run build:panda-preset && pnpm run build:react && pnpm run build:cli",
+    "typecheck": "concurrently \"cd packages/panda-preset && pnpm run typecheck\" \"cd packages/react && pnpm run typecheck\" \"cd website && pnpm run typecheck\"",
+    "dev": "turbo dev",
+    "start": "cd website && pnpm run start",
+    "build": "turbo build",
+    "build:dev": "cross-env NODE_ENV=development turbo build:dev",
+    "build:production": "cross-env NODE_ENV=production turbo build:production",
+    "publish": "changeset publish",
+    "story": "cd website && pnpm run story",
+    "sync": "git pull && pnpm i && pnpm run build",
+    "kill-ports": "kill-port 3000 && kill-port 3001 && kill-port 3002",
+    "components": "cd website && pnpm run components",
+    "components:watch": "cd website && pnpm run components:watch"
+  },
+  "keywords": [],
+  "author": "imexoodeex",
+  "license": "MIT",
+  "devDependencies": {
+    "@biomejs/biome": "1.9.2",
+    "@dreamy-ui/cli": "workspace:*",
+    "@dreamy-ui/mcp": "workspace:*",
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
+    "kill-port": "^2.0.1",
+    "turbo": "^2.0.14",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "@changesets/cli": "^2.27.9"
+  }
 }
