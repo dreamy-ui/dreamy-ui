@@ -26,7 +26,6 @@ export const image = defineRecipe({
         },
         wrapper: {
             position: "relative",
-            maxW: "fit-content",
             rounded: "inherit"
         },
         zoomedWrapper: {
