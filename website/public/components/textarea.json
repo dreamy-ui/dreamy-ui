@@ -1,0 +1,18 @@
+{
+  "type": "component",
+  "npmDependencies": [
+    "react-textarea-autosize"
+  ],
+  "fileDependencies": [],
+  "id": "textarea",
+  "file": {
+    "name": "textarea.tsx",
+    "content": "\"use client\";\n\nimport { type UserFeedbackProps, callAllHandlers, useField } from \"@dreamy-ui/react\";\nimport { type ComponentType, forwardRef } from \"react\";\nimport TextareaAutosize, { type TextareaAutosizeProps } from \"react-textarea-autosize\";\nimport { type HTMLDreamyProps, dreamy } from \"styled-system/jsx\";\nimport { type TextareaVariantProps, textarea } from \"styled-system/recipes\";\n\nexport interface TextareaProps\n    extends HTMLDreamyProps<\"textarea\">,\n        TextareaVariantProps,\n        Omit<TextareaAutosizeProps, keyof HTMLDreamyProps<\"textarea\">>,\n        UserFeedbackProps {\n    /**\n     * The callback function that is called when the textarea value changes.\n     */\n    onChangeValue?: (value: string) => void;\n}\n\nconst StyledTextarea = dreamy(TextareaAutosize, textarea);\n\n/**\n * Textarea component\n *\n * @See Docs https://dreamy-ui.com/docs/components/textarea\n */\nexport const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>((props, ref) => {\n    const field = useField(props);\n\n    return (\n        <StyledTextarea\n            ref={ref}\n            {...field}\n            onChange={callAllHandlers(props.onChange, (e: React.ChangeEvent<HTMLTextAreaElement>) =>\n                props.onChangeValue?.(e.target.value)\n            )}\n        />\n    );\n});\n\nconst StyledTextareaNoAutoSize = dreamy(\"textarea\", textarea);\n\nexport type TextareaNoAutoSizeProps = HTMLDreamyProps<\"textarea\"> &\n    TextareaVariantProps &\n    UserFeedbackProps & {\n        /**\n         * The callback function that is called when the textarea value changes.\n         */\n        onChangeValue?: (value: string) => void;\n    };\n\n/**\n * Textarea component without autosize\n *\n * @See Docs https://dreamy-ui.com/docs/components/textarea\n */\nexport const TextareaNoAutoSize: ComponentType<TextareaNoAutoSizeProps> = forwardRef<\n    HTMLTextAreaElement,\n    TextareaNoAutoSizeProps\n>((props, ref) => {\n    const field = useField(props);\n\n    return (\n        <StyledTextareaNoAutoSize\n            ref={ref}\n            {...field}\n            onChange={callAllHandlers(props.onChange, (e: React.ChangeEvent<HTMLTextAreaElement>) =>\n                props.onChangeValue?.(e.target.value)\n            )}\n        />\n    );\n});\n"
+  },
+  "component": "Textarea",
+  "hasRecipe": true,
+  "hasPattern": false,
+  "recipeIds": [
+    "textarea"
+  ]
+}

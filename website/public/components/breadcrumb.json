@@ -1,0 +1,16 @@
+{
+  "type": "component",
+  "npmDependencies": [],
+  "fileDependencies": [],
+  "id": "breadcrumb",
+  "file": {
+    "name": "breadcrumb.tsx",
+    "content": "\"use client\";\n\nimport { ariaAttr } from \"@dreamy-ui/react\";\nimport { forwardRef } from \"react\";\nimport { createStyleContext, dreamy, type HTMLDreamyProps } from \"styled-system/jsx\";\nimport { type BreadcrumbVariantProps, breadcrumb } from \"styled-system/recipes\";\n\nconst { withProvider, withContext } = createStyleContext(breadcrumb);\n\nexport interface BreadcrumbRootProps extends HTMLDreamyProps<\"nav\">, BreadcrumbVariantProps {}\nexport const Root = withProvider(dreamy.nav, \"root\");\n\nexport interface BreadcrumbListProps extends HTMLDreamyProps<\"ol\"> {}\nexport const List = withContext(dreamy.ol, \"list\");\n\nexport interface BreadcrumbItemProps extends HTMLDreamyProps<\"li\"> {}\nexport const Item = withContext(dreamy.li, \"item\");\n\nexport interface BreadcrumbLinkProps extends HTMLDreamyProps<\"a\"> {}\nexport const Link = withContext(dreamy.a, \"link\");\n\nexport interface BreadcrumbCurrentLinkProps extends HTMLDreamyProps<\"span\"> {}\nexport const CurrentLink = withContext(dreamy.span, \"currentLink\", {\n    defaultProps: {\n        \"aria-current\": \"page\"\n    }\n});\n\nexport interface BreadcrumbSeparatorProps extends HTMLDreamyProps<\"li\"> {}\nexport const Separator = withContext(\n    forwardRef<HTMLLIElement, BreadcrumbSeparatorProps>((props, ref) => {\n        return (\n            <dreamy.li\n                ref={ref}\n                {...props}\n                role=\"presentation\"\n                aria-hidden={ariaAttr(true)}\n            >\n                {props.children ?? \"/\"}\n            </dreamy.li>\n        );\n    }),\n    \"separator\"\n);\n\nexport interface BreadcrumbEllipsisProps extends HTMLDreamyProps<\"li\"> {}\nexport const Ellipsis = withContext(\n    forwardRef<HTMLLIElement, BreadcrumbEllipsisProps>((props, ref) => {\n        return (\n            <dreamy.li\n                ref={ref}\n                {...props}\n                role=\"presentation\"\n                aria-hidden={ariaAttr(true)}\n            >\n                {props.children ?? \"...\"}\n            </dreamy.li>\n        );\n    }),\n    \"ellipsis\"\n);\n\n\n"
+  },
+  "component": "Breadcrumb",
+  "hasRecipe": true,
+  "hasPattern": false,
+  "recipeIds": [
+    "breadcrumb"
+  ]
+}

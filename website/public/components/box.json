@@ -1,0 +1,13 @@
+{
+  "type": "component",
+  "npmDependencies": [],
+  "fileDependencies": [],
+  "id": "box",
+  "file": {
+    "name": "box.tsx",
+    "content": "import { forwardRef } from \"react\";\nimport { type HTMLDreamyProps, dreamy } from \"styled-system/jsx\";\n\nexport interface BoxProps extends HTMLDreamyProps<\"div\"> {}\n\n/**\n * Box component\n *\n * @See Docs https://dreamy-ui.com/docs/components/box\n */\nexport const Box = forwardRef<HTMLDivElement, BoxProps>((props, ref) => {\n    return (\n        <dreamy.div\n            ref={ref}\n            {...props}\n        />\n    );\n});\n"
+  },
+  "component": "Box",
+  "hasRecipe": false,
+  "hasPattern": false
+}

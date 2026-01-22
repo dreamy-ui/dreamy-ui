@@ -1,0 +1,16 @@
+{
+  "type": "component",
+  "npmDependencies": [],
+  "fileDependencies": [],
+  "id": "stat",
+  "file": {
+    "name": "stat.tsx",
+    "content": "\"use client\";\n\nimport { ArrowDownIcon, ArrowUpIcon } from \"@dreamy-ui/react\";\nimport {\n    type DreamyComponent,\n    type HTMLDreamyProps,\n    createStyleContext,\n    dreamy\n} from \"styled-system/jsx\";\nimport { type StatVariantProps, stat } from \"styled-system/recipes\";\n\nconst { withProvider, withContext } = createStyleContext(stat);\n\nexport interface StatRootProps extends HTMLDreamyProps<\"dl\">, StatVariantProps {}\nexport const Root = withProvider<DreamyComponent<\"dl\", StatRootProps>>(dreamy.dl, \"root\");\n\nexport interface StatLabelProps extends HTMLDreamyProps<\"dt\"> {}\nexport const Label = withContext<DreamyComponent<\"dt\", StatLabelProps>>(dreamy.dt, \"label\");\n\nexport interface StatValueTextProps extends HTMLDreamyProps<\"dd\"> {}\nexport const ValueText = withContext<DreamyComponent<\"dd\", StatValueTextProps>>(\n    dreamy.dd,\n    \"valueText\"\n);\n\nexport interface StatHintProps extends HTMLDreamyProps<\"span\"> {}\nexport const Hint = withContext<DreamyComponent<\"span\", StatHintProps>>(dreamy.span, \"hint\");\n\nexport interface StatValueUnitProps extends HTMLDreamyProps<\"span\"> {}\nexport const ValueUnit = withContext<DreamyComponent<\"span\", StatValueUnitProps>>(\n    dreamy.span,\n    \"valueUnit\"\n);\n\nexport interface StatUpIndicatorProps extends HTMLDreamyProps<\"span\"> {}\nexport const UpIndicator = withContext<DreamyComponent<\"span\", StatUpIndicatorProps>>(\n    dreamy.span,\n    \"indicator\",\n    {\n        defaultProps: {\n            \"data-type\": \"up\",\n            children: <ArrowUpIcon />\n        }\n    }\n);\n\nexport interface StatDownIndicatorProps extends HTMLDreamyProps<\"span\"> {}\nexport const DownIndicator = withContext<DreamyComponent<\"span\", StatDownIndicatorProps>>(\n    dreamy.span,\n    \"indicator\",\n    {\n        defaultProps: {\n            \"data-type\": \"down\",\n            children: <ArrowDownIcon />\n        }\n    }\n);\n"
+  },
+  "component": "Stat",
+  "hasRecipe": true,
+  "hasPattern": false,
+  "recipeIds": [
+    "stat"
+  ]
+}

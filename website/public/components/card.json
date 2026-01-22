@@ -1,0 +1,16 @@
+{
+  "type": "component",
+  "npmDependencies": [],
+  "fileDependencies": [],
+  "id": "card",
+  "file": {
+    "name": "card.tsx",
+    "content": "\"use client\";\n\nimport { createStyleContext, dreamy } from \"styled-system/jsx\";\nimport { card } from \"styled-system/recipes\";\n\nconst { withProvider, withContext } = createStyleContext(card);\n\n/**\n * Card component\n *\n * @See Docs https://dreamy-ui.com/docs/components/card\n */\nexport const Root = withProvider(dreamy.div, \"root\");\nexport const Header = withContext(dreamy.div, \"header\");\nexport const Body = withContext(dreamy.div, \"body\");\nexport const Footer = withContext(dreamy.div, \"footer\");\nexport const Title = withContext(dreamy.h3, \"title\");\nexport const Description = withContext(dreamy.p, \"description\");\n\n\n"
+  },
+  "component": "Card",
+  "hasRecipe": true,
+  "hasPattern": false,
+  "recipeIds": [
+    "card"
+  ]
+}

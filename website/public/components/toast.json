@@ -1,0 +1,22 @@
+{
+  "type": "component",
+  "npmDependencies": [],
+  "fileDependencies": [
+    "./alert",
+    "./close-button",
+    "./icon",
+    "./spinner",
+    "./text"
+  ],
+  "id": "toast",
+  "file": {
+    "name": "toast.tsx",
+    "content": "\"use client\";\n\nimport {\n    type IToast,\n    type Status,\n    TRANSITION_EASINGS,\n    type ToastWithoutRender,\n    dataAttr,\n    useToast\n} from \"@dreamy-ui/react\";\nimport { isValidMotionProp, m } from \"motion/react\";\nimport { useCallback } from \"react\";\nimport { dreamy, isCssProperty } from \"styled-system/jsx\";\nimport { toast } from \"styled-system/recipes\";\nimport { StatusIcon } from \"./alert\";\nimport { CloseButton } from \"./close-button\";\nimport { Icon } from \"./icon\";\nimport { Spinner } from \"./spinner\";\nimport { Text } from \"./text\";\n\nconst StyledToast = m.create(\n    dreamy(\"div\", toast, {\n        shouldForwardProp: (prop, variantKeys) =>\n            isValidMotionProp(prop) || (!variantKeys.includes(prop) && !isCssProperty(prop))\n    })\n);\n\nexport function Toast({ toast }: { toast: IToast }) {\n    const { removeToast } = useToast();\n\n    const handleClose = useCallback(() => {\n        removeToast(toast.id);\n    }, [removeToast, toast.id]);\n\n    if (toast.render) {\n        return (\n            <m.div\n                style={{\n                    zIndex: \"var(--z-index-toast)\",\n                    pointerEvents: \"auto\"\n                }}\n                {...{\n                    layout: \"position\",\n                    layoutId: toast.id,\n                    initial: { opacity: 0, scale: 0.95 },\n                    animate: { opacity: 1, scale: 1 },\n                    exit: { opacity: 0, scale: 0.95 },\n                    transition: {\n                        duration: 0.3,\n                        ease: TRANSITION_EASINGS.easeInOut\n                    }\n                }}\n                {...toast.containerProps}\n            >\n                {toast.render(toast as unknown as ToastWithoutRender)}\n            </m.div>\n        );\n    }\n\n    return (\n        <StyledToast\n            animate={{ opacity: 1, scale: 1 }}\n            data-closable={dataAttr(toast.isClosable)}\n            data-status={toast.status}\n            data-variant={\"default\"}\n            exit={{ opacity: 0, scale: 0.95 }}\n            id={toast.id}\n            initial={{ opacity: 0, scale: 0.95 }}\n            key={`${toast.id}-toast`}\n            layout\n            layoutId={toast.id}\n            transition={{\n                duration: 0.3,\n                ease: TRANSITION_EASINGS.easeInOut\n            }}\n            {...toast.containerProps}\n        >\n            <m.div\n                data-part={\"container\"}\n                layout=\"position\"\n            >\n                <Text\n                    as={\"h4\"}\n                    data-part={\"title\"}\n                >\n                    {toast.status === \"loading\" ? (\n                        <Spinner\n                            color={\"info\"}\n                            size={\"sm\"}\n                        />\n                    ) : (\n                        <ToastIcon status={toast.status} />\n                    )}\n                    {toast.title}\n                </Text>\n                {toast.description && <Text data-part={\"description\"}>{toast.description}</Text>}\n            </m.div>\n            {toast.rightContent}\n            {toast.isClosable && (\n                <CloseButton\n                    data-part={\"close\"}\n                    onClick={handleClose}\n                    size={\"xs\"}\n                />\n            )}\n        </StyledToast>\n    );\n}\n\nfunction ToastIcon({ status }: { status: Status }) {\n    return (\n        <Icon\n            asChild\n            data-part={\"icon\"}\n            role=\"img\"\n        >\n            <StatusIcon status={status} />\n        </Icon>\n    );\n}\n"
+  },
+  "component": "Toast",
+  "hasRecipe": true,
+  "hasPattern": false,
+  "recipeIds": [
+    "toast"
+  ]
+}

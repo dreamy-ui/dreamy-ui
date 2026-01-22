@@ -1,0 +1,16 @@
+{
+  "type": "component",
+  "npmDependencies": [],
+  "fileDependencies": [],
+  "id": "badge",
+  "file": {
+    "name": "badge.tsx",
+    "content": "import { forwardRef } from \"react\";\nimport { type BadgeVariantProps, badge } from \"styled-system/recipes\";\nimport { type HTMLDreamyProps, dreamy } from \"styled-system/jsx\";\n\nexport interface BadgeProps extends HTMLDreamyProps<\"div\">, BadgeVariantProps {}\n\nconst DreamyBadge = dreamy(\"div\", badge);\n\n/**\n * Badge component\n *\n * @See Docs https://dreamy-ui.com/docs/components/badge\n */\nexport const Badge = forwardRef<HTMLDivElement, BadgeProps>((props, ref) => {\n    return (\n        <DreamyBadge\n            ref={ref}\n            {...props}\n        />\n    );\n});\n"
+  },
+  "component": "Badge",
+  "hasRecipe": true,
+  "hasPattern": false,
+  "recipeIds": [
+    "badge"
+  ]
+}

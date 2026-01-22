@@ -1,0 +1,197 @@
+[
+  {
+    "type": "recipe",
+    "id": "accordion",
+    "file": "accordion.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "action-bar",
+    "file": "action-bar.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "alert",
+    "file": "alert.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "avatar",
+    "file": "avatar.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "badge",
+    "file": "badge.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "breadcrumb",
+    "file": "breadcrumb.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "button",
+    "file": "button.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "card",
+    "file": "card.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "checkbox-card",
+    "file": "checkbox-card.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "checkbox",
+    "file": "checkbox.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "editable",
+    "file": "editable.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "field",
+    "file": "field.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "group",
+    "file": "group.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "icon",
+    "file": "icon.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "image",
+    "file": "image.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "input",
+    "file": "input.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "kbd",
+    "file": "kbd.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "list",
+    "file": "list.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "menu",
+    "file": "menu.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "modal",
+    "file": "modal.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "popover",
+    "file": "popover.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "progress-circular",
+    "file": "progress-circular.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "progress",
+    "file": "progress.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "radio-card",
+    "file": "radio-card.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "radio",
+    "file": "radio.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "range-slider",
+    "file": "range-slider.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "select",
+    "file": "select.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "skeleton",
+    "file": "skeleton.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "slider",
+    "file": "slider.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "snippet",
+    "file": "snippet.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "spinner",
+    "file": "spinner.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "stat",
+    "file": "stat.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "swittch",
+    "file": "swittch.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "table",
+    "file": "table.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "tabs",
+    "file": "tabs.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "textarea",
+    "file": "textarea.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "theme",
+    "file": "theme.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "toast",
+    "file": "toast.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "tooltip",
+    "file": "tooltip.ts"
+  }
+]

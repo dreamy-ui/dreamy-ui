@@ -1,0 +1,8 @@
+{
+  "type": "pattern",
+  "id": "stack",
+  "file": {
+    "name": "stack.ts",
+    "content": "import { definePattern } from \"@pandacss/dev\";\n\nexport const stack = definePattern({\n    jsx: [\"Stack\"],\n    description: \"A pattern for stacking elements with consistent spacing\",\n    properties: {\n        direction: {\n            type: \"enum\",\n            value: [\"horizontal\", \"vertical\"]\n        },\n        gap: { type: \"property\", value: \"gap\" },\n        align: { type: \"property\", value: \"alignItems\" },\n        justify: { type: \"property\", value: \"justifyContent\" }\n    },\n    defaultValues: {\n        gap: \"8px\",\n        align: \"center\",\n        direction: \"vertical\"\n    },\n    transform(props) {\n        const { direction, gap, align, justify, ...rest } = props;\n\n        return {\n            display: \"flex\",\n            flexDirection: direction === \"horizontal\" ? \"row\" : \"column\",\n            alignItems: align,\n            justifyContent: justify,\n            gap,\n            ...rest\n        };\n    }\n});\n"
+  }
+}

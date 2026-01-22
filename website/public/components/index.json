@@ -1,0 +1,838 @@
+[
+  {
+    "type": "component",
+    "id": "accordion",
+    "file": "accordion.tsx",
+    "component": "Accordion",
+    "npmDependencies": [],
+    "fileDependencies": [
+      "./box",
+      "./icon",
+      "./transitions"
+    ],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "accordion"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "action-bar",
+    "file": "action-bar.tsx",
+    "component": "ActionBar",
+    "npmDependencies": [],
+    "fileDependencies": [
+      "./box",
+      "./close-button",
+      "./motion"
+    ],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "action-bar"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "alert",
+    "file": "alert.tsx",
+    "component": "Alert",
+    "npmDependencies": [],
+    "fileDependencies": [
+      "./icon",
+      "./text"
+    ],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "alert"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "avatar",
+    "file": "avatar.tsx",
+    "component": "Avatar",
+    "npmDependencies": [],
+    "fileDependencies": [
+      "./box",
+      "./flex",
+      "./icon",
+      "./image"
+    ],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "avatar"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "badge",
+    "file": "badge.tsx",
+    "component": "Badge",
+    "npmDependencies": [],
+    "fileDependencies": [],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "badge"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "box",
+    "file": "box.tsx",
+    "component": "Box",
+    "npmDependencies": [],
+    "fileDependencies": [],
+    "hasRecipe": false,
+    "hasPattern": false
+  },
+  {
+    "type": "component",
+    "id": "breadcrumb",
+    "file": "breadcrumb.tsx",
+    "component": "Breadcrumb",
+    "npmDependencies": [],
+    "fileDependencies": [],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "breadcrumb"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "button",
+    "file": "button.tsx",
+    "component": "Button",
+    "npmDependencies": [],
+    "fileDependencies": [
+      "./box",
+      "./ripple",
+      "./span",
+      "./spinner"
+    ],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "button"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "card",
+    "file": "card.tsx",
+    "component": "Card",
+    "npmDependencies": [],
+    "fileDependencies": [],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "card"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "checkbox-card",
+    "file": "checkbox-card.tsx",
+    "component": "CheckboxCard",
+    "npmDependencies": [],
+    "fileDependencies": [
+      "./box",
+      "./checkbox",
+      "./text",
+      "./visually-hidden"
+    ],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "checkbox-card"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "checkbox",
+    "file": "checkbox.tsx",
+    "component": "Checkbox",
+    "npmDependencies": [],
+    "fileDependencies": [
+      "./flex",
+      "./visually-hidden"
+    ],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "checkbox"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "close-button",
+    "file": "close-button.tsx",
+    "component": "CloseButton",
+    "npmDependencies": [],
+    "fileDependencies": [
+      "./icon-button"
+    ],
+    "hasRecipe": false,
+    "hasPattern": false
+  },
+  {
+    "type": "component",
+    "id": "divider",
+    "file": "divider.tsx",
+    "component": "Divider",
+    "npmDependencies": [],
+    "fileDependencies": [],
+    "hasRecipe": false,
+    "hasPattern": true,
+    "patternIds": [
+      "divider"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "editable",
+    "file": "editable.tsx",
+    "component": "Editable",
+    "npmDependencies": [],
+    "fileDependencies": [
+      "./box"
+    ],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "editable"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "field",
+    "file": "field.tsx",
+    "component": "Field",
+    "npmDependencies": [],
+    "fileDependencies": [
+      "./box",
+      "./icon"
+    ],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "field"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "flex",
+    "file": "flex.tsx",
+    "component": "Flex",
+    "npmDependencies": [],
+    "fileDependencies": [],
+    "hasRecipe": false,
+    "hasPattern": true,
+    "patternIds": [
+      "flex"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "grid",
+    "file": "grid.tsx",
+    "component": "Grid",
+    "npmDependencies": [],
+    "fileDependencies": [],
+    "hasRecipe": false,
+    "hasPattern": true,
+    "patternIds": [
+      "grid",
+      "grid-item"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "group",
+    "file": "group.tsx",
+    "component": "Group",
+    "npmDependencies": [],
+    "fileDependencies": [],
+    "hasRecipe": true,
+    "hasPattern": true,
+    "recipeIds": [
+      "group"
+    ],
+    "patternIds": [
+      "flex"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "heading",
+    "file": "heading.tsx",
+    "component": "Heading",
+    "npmDependencies": [],
+    "fileDependencies": [],
+    "hasRecipe": false,
+    "hasPattern": true,
+    "patternIds": [
+      "text"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "icon-button",
+    "file": "icon-button.tsx",
+    "component": "IconButton",
+    "npmDependencies": [],
+    "fileDependencies": [
+      "./button"
+    ],
+    "hasRecipe": false,
+    "hasPattern": false
+  },
+  {
+    "type": "component",
+    "id": "icon",
+    "file": "icon.tsx",
+    "component": "Icon",
+    "npmDependencies": [],
+    "fileDependencies": [],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "icon"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "image",
+    "file": "image.tsx",
+    "component": "Image",
+    "npmDependencies": [],
+    "fileDependencies": [
+      "./box"
+    ],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "image"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "input",
+    "file": "input.tsx",
+    "component": "Input",
+    "npmDependencies": [],
+    "fileDependencies": [
+      "./box",
+      "./flex"
+    ],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "input"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "kbd",
+    "file": "kbd.tsx",
+    "component": "Kbd",
+    "npmDependencies": [],
+    "fileDependencies": [],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "kbd"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "link",
+    "file": "link.tsx",
+    "component": "Link",
+    "npmDependencies": [],
+    "fileDependencies": [],
+    "hasRecipe": false,
+    "hasPattern": true,
+    "patternIds": [
+      "text"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "list",
+    "file": "list.tsx",
+    "component": "List",
+    "npmDependencies": [],
+    "fileDependencies": [],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "list"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "menu",
+    "file": "menu.tsx",
+    "component": "Menu",
+    "npmDependencies": [],
+    "fileDependencies": [
+      "./box",
+      "./kbd",
+      "./popover"
+    ],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "menu"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "modal",
+    "file": "modal.tsx",
+    "component": "Modal",
+    "npmDependencies": [],
+    "fileDependencies": [
+      "./box",
+      "./close-button",
+      "./flex",
+      "./heading",
+      "./motion"
+    ],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "modal"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "motion",
+    "file": "motion.tsx",
+    "component": "Motion",
+    "npmDependencies": [],
+    "fileDependencies": [],
+    "hasRecipe": false,
+    "hasPattern": true,
+    "patternIds": [
+      "flex"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "pin-input",
+    "file": "pin-input.tsx",
+    "component": "PinInput",
+    "npmDependencies": [],
+    "fileDependencies": [
+      "./box",
+      "./input",
+      "./stack"
+    ],
+    "hasRecipe": false,
+    "hasPattern": false
+  },
+  {
+    "type": "component",
+    "id": "popover",
+    "file": "popover.tsx",
+    "component": "Popover",
+    "npmDependencies": [],
+    "fileDependencies": [
+      "./box",
+      "./close-button",
+      "./heading",
+      "./motion"
+    ],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "popover"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "progress-circular",
+    "file": "progress-circular.tsx",
+    "component": "ProgressCircular",
+    "npmDependencies": [],
+    "fileDependencies": [],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "progress-circular"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "progress",
+    "file": "progress.tsx",
+    "component": "Progress",
+    "npmDependencies": [],
+    "fileDependencies": [
+      "./box"
+    ],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "progress"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "radio-card",
+    "file": "radio-card.tsx",
+    "component": "RadioCard",
+    "npmDependencies": [],
+    "fileDependencies": [
+      "./box",
+      "./text",
+      "./visually-hidden"
+    ],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "radio-card"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "radio",
+    "file": "radio.tsx",
+    "component": "Radio",
+    "npmDependencies": [],
+    "fileDependencies": [
+      "./flex",
+      "./visually-hidden"
+    ],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "radio"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "range-slider",
+    "file": "range-slider.tsx",
+    "component": "RangeSlider",
+    "npmDependencies": [],
+    "fileDependencies": [
+      "./box",
+      "./visually-hidden"
+    ],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "range-slider"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "ripple",
+    "file": "ripple.tsx",
+    "component": "Ripple",
+    "npmDependencies": [],
+    "fileDependencies": [
+      "./motion"
+    ],
+    "hasRecipe": false,
+    "hasPattern": false
+  },
+  {
+    "type": "component",
+    "id": "select",
+    "file": "select.tsx",
+    "component": "Select",
+    "npmDependencies": [
+      "@tanstack/react-virtual"
+    ],
+    "fileDependencies": [
+      "./box",
+      "./popover",
+      "./visually-hidden"
+    ],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "select"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "skeleton",
+    "file": "skeleton.tsx",
+    "component": "Skeleton",
+    "npmDependencies": [],
+    "fileDependencies": [],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "skeleton"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "slider",
+    "file": "slider.tsx",
+    "component": "Slider",
+    "npmDependencies": [],
+    "fileDependencies": [
+      "./box",
+      "./visually-hidden"
+    ],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "slider"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "snippet",
+    "file": "snippet.tsx",
+    "component": "Snippet",
+    "npmDependencies": [],
+    "fileDependencies": [
+      "./icon-button",
+      "./tooltip"
+    ],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "snippet"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "span",
+    "file": "span.tsx",
+    "component": "Span",
+    "npmDependencies": [],
+    "fileDependencies": [],
+    "hasRecipe": false,
+    "hasPattern": false
+  },
+  {
+    "type": "component",
+    "id": "spinner",
+    "file": "spinner.tsx",
+    "component": "Spinner",
+    "npmDependencies": [],
+    "fileDependencies": [
+      "./box"
+    ],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "spinner"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "stack",
+    "file": "stack.tsx",
+    "component": "Stack",
+    "npmDependencies": [],
+    "fileDependencies": [],
+    "hasRecipe": false,
+    "hasPattern": true,
+    "patternIds": [
+      "hstack",
+      "stack",
+      "vstack"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "stat",
+    "file": "stat.tsx",
+    "component": "Stat",
+    "npmDependencies": [],
+    "fileDependencies": [],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "stat"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "switch",
+    "file": "switch.tsx",
+    "component": "Switch",
+    "npmDependencies": [],
+    "fileDependencies": [
+      "./motion",
+      "./visually-hidden"
+    ],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "swittch"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "table",
+    "file": "table.tsx",
+    "component": "Table",
+    "npmDependencies": [],
+    "fileDependencies": [],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "table"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "tabs",
+    "file": "tabs.tsx",
+    "component": "Tabs",
+    "npmDependencies": [],
+    "fileDependencies": [
+      "./box",
+      "./button",
+      "./flex",
+      "./motion"
+    ],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "tabs"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "text",
+    "file": "text.tsx",
+    "component": "Text",
+    "npmDependencies": [],
+    "fileDependencies": [],
+    "hasRecipe": false,
+    "hasPattern": true,
+    "patternIds": [
+      "text"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "textarea",
+    "file": "textarea.tsx",
+    "component": "Textarea",
+    "npmDependencies": [
+      "react-textarea-autosize"
+    ],
+    "fileDependencies": [],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "textarea"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "theme",
+    "file": "theme.tsx",
+    "component": "Theme",
+    "npmDependencies": [],
+    "fileDependencies": [],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "theme"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "toast-provider",
+    "file": "toast-provider.tsx",
+    "component": "ToastProvider",
+    "npmDependencies": [],
+    "fileDependencies": [
+      "./motion",
+      "./toast"
+    ],
+    "hasRecipe": false,
+    "hasPattern": false
+  },
+  {
+    "type": "component",
+    "id": "toast",
+    "file": "toast.tsx",
+    "component": "Toast",
+    "npmDependencies": [],
+    "fileDependencies": [
+      "./alert",
+      "./close-button",
+      "./icon",
+      "./spinner",
+      "./text"
+    ],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "toast"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "tooltip",
+    "file": "tooltip.tsx",
+    "component": "Tooltip",
+    "npmDependencies": [],
+    "fileDependencies": [
+      "./box"
+    ],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "tooltip"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "transitions",
+    "file": "transitions.tsx",
+    "component": "Transitions",
+    "npmDependencies": [],
+    "fileDependencies": [
+      "./motion"
+    ],
+    "hasRecipe": false,
+    "hasPattern": false
+  },
+  {
+    "type": "component",
+    "id": "visually-hidden",
+    "file": "visually-hidden.tsx",
+    "component": "VisuallyHidden",
+    "npmDependencies": [],
+    "fileDependencies": [],
+    "hasRecipe": false,
+    "hasPattern": true,
+    "patternIds": [
+      "visually-hidden"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "wrap",
+    "file": "wrap.tsx",
+    "component": "Wrap",
+    "npmDependencies": [],
+    "fileDependencies": [],
+    "hasRecipe": false,
+    "hasPattern": true,
+    "patternIds": [
+      "wrap"
+    ]
+  }
+]

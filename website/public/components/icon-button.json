@@ -1,0 +1,15 @@
+{
+  "type": "component",
+  "npmDependencies": [],
+  "fileDependencies": [
+    "./button"
+  ],
+  "id": "icon-button",
+  "file": {
+    "name": "icon-button.tsx",
+    "content": "\"use client\";\n\nimport { forwardRef } from \"react\";\nimport type { HTMLDreamyProps } from \"styled-system/jsx\";\nimport type { ButtonVariantProps } from \"styled-system/recipes\";\nimport { Button, type UniversalButtonProps } from \"./button\";\n\ninterface Props extends UniversalButtonProps {\n    /**\n     * aria-label is required for accessibility\n     */\n    \"aria-label\": string;\n    /*\n     * The icon to display\n     */\n    icon?: React.ReactNode;\n}\n\nexport interface IconButtonProps\n    extends Omit<HTMLDreamyProps<\"button\">, keyof Props>,\n    ButtonVariantProps,\n    Props { }\n\n/**\n * IconButton component\n *\n * @See Docs https://dreamy-ui.com/docs/components/icon-button\n */\nexport const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(\n    ({ icon, children, ...props }, ref) => {\n        return (\n            <Button\n                ref={ref}\n                {...props}\n                data-type={\"icon-button\"}\n            >\n                {icon ?? children}\n            </Button>\n        );\n    }\n);\n"
+  },
+  "component": "IconButton",
+  "hasRecipe": false,
+  "hasPattern": false
+}

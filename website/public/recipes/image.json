@@ -1,0 +1,8 @@
+{
+  "type": "recipe",
+  "id": "image",
+  "file": {
+    "name": "image.ts",
+    "content": "import { defineParts, defineRecipe } from \"@pandacss/dev\";\n\nconst parts = defineParts({\n    zoomedWrapper: { selector: '[data-part=\"wrapper-zoomed\"]:has(&)' },\n    wrapper: { selector: '[data-part=\"wrapper\"]:has(&)' },\n    image: { selector: \"&\" },\n    blurredImg: {\n        selector: '[data-part=\"wrapper\"]:has(&) [data-part=\"blurred\"]'\n    }\n});\n\nexport { parts as imageParts };\n\nexport const image = defineRecipe({\n    className: \"image\",\n    jsx: [\"Image\"],\n    staticCss: [\"*\"],\n    base: parts({\n        image: {\n            \"&[data-zoomed]\": {\n                transition: \"transform {durations.normal} {easings.ease-in-out}\",\n                _hover: {\n                    transform: \"scale(var(--hover-zoom-scale, 1.1))\"\n                }\n            }\n        },\n        wrapper: {\n            position: \"relative\",\n            maxW: \"fit-content\",\n            rounded: \"inherit\"\n        },\n        zoomedWrapper: {\n            overflow: \"hidden\",\n            position: \"relative\",\n            maxW: \"fit-content\"\n        },\n        blurredImg: {\n            filter: \"auto\",\n            blur: \"var(--blur-radius, {blurs.lg})\",\n            position: \"absolute\",\n            inset: \"0\",\n            zIndex: -1,\n            translate: \"auto\",\n            scale: \"var(--blurred-zoom-scale, 1.05)\",\n            saturate: \"150%\",\n            opacity: \"var(--blurred-opacity, 0.4)\",\n            y: \"1\"\n        }\n    })\n});\n"
+  }
+}
