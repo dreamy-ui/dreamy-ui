@@ -1,8 +1,0 @@
-{
-  "type": "recipe",
-  "id": "kbd",
-  "file": {
-    "name": "kbd.ts",
-    "content": "import { defineRecipe } from \"@pandacss/dev\";\n\nexport const kbd = defineRecipe({\n    className: \"kbd\",\n    jsx: [\"Kbd\", \"Menu\", \"MenuButton\", \"MenuItem\"],\n    staticCss: [\"*\"],\n    base: {\n        display: \"inline-flex\",\n        gap: 0.5,\n        alignItems: \"center\",\n        bg: \"alpha.100\",\n        width: \"fit-content\",\n        fontWeight: \"normal\"\n    },\n    variants: {\n        size: {\n            sm: {\n                px: 1,\n                py: 0.25,\n                fontSize: \"xs\",\n                rounded: \"l2\"\n            },\n            md: {\n                px: 1.5,\n                py: 0.5,\n                fontSize: \"sm\",\n                rounded: \"l2\"\n            },\n            lg: {\n                px: 2,\n                py: 0.75,\n                fontSize: \"md\",\n                rounded: \"l3\"\n            }\n        }\n    },\n    defaultVariants: {\n        size: \"md\"\n    }\n});\n"
-  }
-}

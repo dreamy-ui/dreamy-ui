@@ -1,8 +1,0 @@
-{
-  "type": "recipe",
-  "id": "list",
-  "file": {
-    "name": "list.ts",
-    "content": "import { defineRecipe } from \"@pandacss/dev\";\n\nexport const list = defineRecipe({\n    className: \"list\",\n    jsx: [\"List.Root\", \"List.Item\"],\n    base: {\n        listStylePosition: \"inside\",\n        \"&[data-type=ordered]\": {\n            listStyleType: \"decimal\"\n        },\n        \"&[data-type=unordered]\": {\n            listStyleType: \"disc\"\n        },\n        \"& li::marker\": {\n            color: \"fg.medium\"\n        }\n    }\n});\n"
-  }
-}

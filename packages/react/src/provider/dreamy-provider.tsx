@@ -100,6 +100,7 @@ export function DreamyProvider({
             name: DREAMY_COLOR_MODE_COOKIE_KEY,
             value: newColorMode,
             path: "/",
+            sameSite: "none",
             expires: Date.now() + 31536000000,
             ...colorModeCookieOptions
         });

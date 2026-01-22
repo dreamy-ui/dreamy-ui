@@ -1,8 +1,0 @@
-{
-  "type": "recipe",
-  "id": "tooltip",
-  "file": {
-    "name": "tooltip.ts",
-    "content": "import { defineParts, defineRecipe } from \"@pandacss/dev\";\n\nconst parts = defineParts({\n    root: {\n        selector: \"&\"\n    },\n    arrowOuter: {\n        selector: \"& [data-popper-arrow]\"\n    },\n    arrowInner: {\n        selector: \"& [data-popper-arrow-inner]\"\n    }\n});\n\nexport { parts as tooltipParts };\n\nexport const tooltip = defineRecipe({\n    className: \"tooltip\",\n    jsx: [\"Tooltip\"],\n    base: parts({\n        root: {\n            \"--tooltip-bg\": \"{colors.fg.max}\",\n            \"--tooltip-color\": \"{colors.bg}\",\n            \"--popper-arrow-bg\": \"var(--tooltip-bg)\",\n            bg: \"var(--tooltip-bg)\",\n            color: \"var(--tooltip-color)\",\n            px: 2,\n            py: 0.5,\n            fontSize: \"sm\",\n            rounded: \"l1\",\n            boxShadow: \"md\",\n            maxW: \"xs\",\n            zIndex: \"{zIndex.tooltip}\"\n        }\n    })\n});\n"
-  }
-}

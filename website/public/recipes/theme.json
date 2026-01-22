@@ -1,8 +1,0 @@
-{
-  "type": "recipe",
-  "id": "theme",
-  "file": {
-    "name": "theme.ts",
-    "content": "import { defineRecipe } from \"@pandacss/dev\";\n\nexport const theme = defineRecipe({\n    className: \"theme\",\n    description: \"Dreamy UI Theme component\",\n    jsx: [\"DarkTheme\", \"LightTheme\"],\n    base: {\n        root: {\n            color: \"fg\",\n            \"&[data-theme='dark']\": {\n                colorScheme: \"dark\"\n            },\n            \"&[data-theme='light']\": {\n                colorScheme: \"light\"\n            }\n        }\n    }\n});\n"
-  }
-}

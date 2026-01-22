@@ -1,8 +1,0 @@
-{
-  "type": "recipe",
-  "id": "badge",
-  "file": {
-    "name": "badge.ts",
-    "content": "import { getColorSchemes } from \"@dreamy-ui/panda-preset\";\nimport { defineRecipe } from \"@pandacss/dev\";\n\nexport const badge = defineRecipe({\n    className: \"badge\",\n    jsx: [\"Badge\"],\n    base: {\n        display: \"flex\",\n        alignItems: \"center\",\n        whiteSpace: \"nowrap\",\n        verticalAlign: \"middle\",\n        px: 1,\n        textTransform: \"uppercase\",\n        fontSize: \"xs\",\n        borderRadius: \"sm\",\n        fontWeight: \"bold\",\n        width: \"fit-content\"\n    },\n    defaultVariants: {\n        variant: \"subtle\",\n        scheme: \"primary\"\n    },\n    variants: {\n        variant: {\n            outline: {\n                border: \"1px solid\",\n                borderColor: \"var(--badge-color)\",\n                color: \"var(--badge-color)\",\n                bg: \"transparent\"\n            },\n            subtle: {\n                color: \"var(--badge-color)\",\n                bg: \"var(--badge-color)/10\"\n            },\n            plain: {\n                color: \"var(--badge-color)\",\n                bg: \"transparent\"\n            }\n        },\n        scheme: getColorSchemes(\"--badge-color\")\n    }\n});\n"
-  }
-}
