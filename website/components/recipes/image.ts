@@ -30,8 +30,7 @@ export const image = defineRecipe({
         },
         zoomedWrapper: {
             overflow: "hidden",
-            position: "relative",
-            maxW: "fit-content"
+            position: "relative"
         },
         blurredImg: {
             filter: "auto",

@@ -151,7 +151,6 @@ export const button = defineRecipe({
                     fontSize: "xs",
                     h: 6,
                     px: 2,
-                    py: 1,
                     gap: 1,
                     "--icon-button-icon-size": "16px"
                 }
@@ -161,7 +160,6 @@ export const button = defineRecipe({
                     fontSize: "sm",
                     h: 8,
                     px: 3,
-                    py: 1,
                     gap: 1.5,
                     "--icon-button-icon-size": "20px"
                 }
@@ -171,7 +169,6 @@ export const button = defineRecipe({
                     fontSize: "md",
                     h: 10,
                     px: 4,
-                    py: 2,
                     gap: 2,
                     "--icon-button-icon-size": "24px"
                 }
@@ -181,7 +178,6 @@ export const button = defineRecipe({
                     fontSize: "lg",
                     h: 12,
                     px: 5,
-                    py: 3,
                     gap: 3,
                     "--icon-button-icon-size": "28px"
                 }
