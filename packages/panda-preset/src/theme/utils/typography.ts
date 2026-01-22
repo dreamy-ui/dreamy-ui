@@ -256,5 +256,15 @@ export const typographyUtilities: UtilityConfig = {
                 color: value
             };
         }
+    },
+    trimText: {
+        values: { type: "boolean" },
+        transform: (value) => {
+            if (!value) return {};
+            return {
+                textBoxEdge: "cap alphabetic",
+                textBoxTrim: "trim-both"
+            };
+        }
     }
 };
