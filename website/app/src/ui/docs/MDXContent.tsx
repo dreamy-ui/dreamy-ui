@@ -1,4 +1,4 @@
-import { Accordion, List } from "@/ui";
+import { Accordion, List, Span } from "@/ui";
 import { ActionBar } from "@/ui";
 import { Alert } from "@/ui";
 import { Avatar, AvatarGroup } from "@/ui";
@@ -295,7 +295,8 @@ const DreamComponents = {
     ActionBarSizes,
     ActionBarTable,
     ActionBarWithClose,
-    ControlledActionBar
+    ControlledActionBar,
+    Span
 };
 
 function Wrapper({ children, ...props }: PropsWithChildren<FlexProps>) {
