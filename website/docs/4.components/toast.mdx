@@ -9,7 +9,7 @@ themeSource: /packages/system/src/recipes/toast.ts
 ## Installation
 
 ```bash
-pnpm dreamy add toast
+pnpm dreamy add toast toast-provider
 ```
 
 ### Add ToastProvider
@@ -17,11 +17,13 @@ pnpm dreamy add toast
 You need to wrap your app with `ToastProvider` to use the toasts.
 
 ```tsx {4,6}
+import { ToastProvider } from "@ui/toast-provider";
+
 export function App() {
 	return (
 		<Providers>
 			<ToastProvider>
-				<App />
+				<YourApp />
 			</ToastProvider>
 		</Providers>
 	);

@@ -43,3 +43,23 @@ You can change the orientation of the Divider by using the `orientation` prop.
 <Text semibold mt={4}>Vertical</Text>
 <Divider orientation="vertical" h="100px" />
 ```
+
+### Label
+
+You can add a label between dividers to create a visual separation.
+
+<Wrapper>
+	<HStack w="full" align="center">
+		<Divider />
+		<Text semibold color="fg.medium">OR</Text>
+		<Divider />
+	</HStack>
+</Wrapper>
+
+```tsx
+<HStack w="full" align="center">
+	<Divider />
+	<Text semibold color="fg.medium">OR</Text>
+	<Divider />
+</HStack>
+```
