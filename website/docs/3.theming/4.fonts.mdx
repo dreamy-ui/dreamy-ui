@@ -1,0 +1,105 @@
+---
+title: Fonts
+---
+
+# Using fonts
+
+Learn how to use custom fonts in your project. For more bare bone guide, see [pandaCSS docs](https://panda-css.com/docs/guides/fonts).
+
+## Own font files
+
+This is the easiest way to use custom fonts in your project. You can add your font files to the `public` folder and use them in your project.
+
+Then we need to set the font face and use the fonts in the `panda.config.ts` file. If you font is variable, you can skip the array and just use one object.
+
+```ts {3-24}
+export default defineConfig({
+	...
+	globalFontface: {
+        Metropolis: [
+            {
+                src: 'url(/fonts/Metropolis-Bold.otf) format("opentype")',
+                fontWeight: "700",
+                fontStyle: "normal",
+                fontDisplay: "swap"
+            },
+            {
+                src: 'url(/fonts/Metropolis-Regular.otf) format("opentype")',
+                fontWeight: "400",
+                fontStyle: "normal",
+                fontDisplay: "swap"
+            },
+            {
+                src: 'url(/fonts/Metropolis-Light.otf) format("opentype")',
+                fontWeight: "300",
+                fontStyle: "normal",
+                fontDisplay: "swap"
+            }
+        ]
+    }
+});
+```
+
+Now we just have to set the tokens in dreamy preset. Heading font is optional, if not provided, it will use body font for headings.
+
+```ts {5-8}
+export default defineConfig({
+	...
+	presets: [
+		createDreamyPreset({
+			fonts: {
+				heading: "Metropolis", // optional
+				body: "Metropolis",
+			}
+		})
+	],
+	globalFontface: { ... }
+});
+```
+
+## Next.js 
+
+Next.js provides a built-in way to use Google Fonts and local fonts at once.
+
+```tsx
+import { Fira_Code } from 'next/font/google'
+import localFont from 'next/font/local'
+ 
+export const MonaSans = localFont({
+  src: '../fonts/Mona-Sans.woff2',
+  display: 'swap',
+  variable: '--font-mona-sans'
+})
+ 
+export const FiraCode = Fira_Code({
+  weight: ['400', '500', '700'],
+  display: 'swap',
+  subsets: ['latin'],
+  variable: '--font-fira-code'
+})
+
+export default function Layout(props) {
+  const { children } = props
+  return (
+    <html className={`${MonaSans.variable} ${FiraCode.variable}`}>
+      <body>{children}</body>
+    </html>
+  )
+}
+```
+
+Then make sure to set the fonts in the dreamy preset in the `panda.config.ts` file.
+
+```ts {4-7}
+export default defineConfig({
+	presets: [
+		createDreamyPreset({
+			fonts: {
+				body: "var(--font-mona-sans)",
+				heading: "var(--font-fira-code)",
+			}
+		})
+	],
+	...
+});
+```
