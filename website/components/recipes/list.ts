@@ -2,7 +2,7 @@ import { defineRecipe } from "@pandacss/dev";
 
 export const list = defineRecipe({
     className: "list",
-    jsx: ["List", "ListItem"],
+    jsx: ["List.Root", "List.Item"],
     base: {
         listStylePosition: "inside",
         "&[data-type=ordered]": {
