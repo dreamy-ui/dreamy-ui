@@ -876,7 +876,7 @@ async function updateTsConfig(cwd: string, framework: FrameworkConfig) {
         // Ensure @/ui/* is the first path alias
         const existingPaths = tsconfig.compilerOptions.paths;
         const hasUiPath = "@/ui/*" in existingPaths;
-        
+
         if (!hasUiPath) {
             const shouldAddUiPath = await p.confirm({
                 message: "Add @/ui/* path alias to tsconfig.json?",
@@ -962,6 +962,70 @@ async function updateTsConfig(cwd: string, framework: FrameworkConfig) {
                 : '"@/ui/*" path alias';
         p.log.warn(
             `💡 Manually add "styled-system/**/*" to the "include" array and ${pathAliasInfo} in tsconfig.json`
+        );
+        return false;
+    }
+}
+
+async function updatePackageJson(cwd: string) {
+    try {
+        const packageJsonPath = join(cwd, "package.json");
+
+        if (!existsSync(packageJsonPath)) {
+            p.log.warn("⚠ Could not find package.json to add prepare script");
+            p.log.info(
+                "💡 Manually add this script to your package.json:\n" +
+                    '   "prepare": "panda codegen"'
+            );
+            return false;
+        }
+
+        const content = readFileSync(packageJsonPath, "utf-8");
+        const packageJson = JSON.parse(content);
+
+        // Check if prepare script already exists
+        if (packageJson.scripts?.prepare) {
+            // If it already contains "panda codegen", skip
+            if (packageJson.scripts.prepare.includes("panda codegen")) {
+                p.log.info("⊘ prepare script already configured with panda codegen");
+                return true;
+            }
+
+            // If it exists but doesn't contain panda codegen, ask to update
+            const shouldUpdate = await p.confirm({
+                message: "prepare script exists but doesn't include 'panda codegen'. Update it?",
+                initialValue: true
+            });
+
+            if (p.isCancel(shouldUpdate) || !shouldUpdate) {
+                p.log.warn("⊘ Skipped package.json prepare script update");
+                p.log.info(
+                    "💡 Manually add 'panda codegen' to your prepare script in package.json"
+                );
+                return false;
+            }
+
+            // Append panda codegen to existing prepare script
+            packageJson.scripts.prepare = `${packageJson.scripts.prepare} && panda codegen`;
+        } else {
+            // Create scripts object if it doesn't exist
+            if (!packageJson.scripts) {
+                packageJson.scripts = {};
+            }
+
+            // Add prepare script
+            packageJson.scripts.prepare = "panda codegen";
+        }
+
+        await writeFile(packageJsonPath, JSON.stringify(packageJson, null, 2) + "\n", "utf-8");
+        p.log.success("✓ Added prepare script to package.json");
+        return true;
+    } catch (error) {
+        p.log.error(
+            `✗ Failed to update package.json: ${error instanceof Error ? error.message : String(error)}`
+        );
+        p.log.warn(
+            "💡 Manually add this script to your package.json:\n" + '   "prepare": "panda codegen"'
         );
         return false;
     }
@@ -1134,6 +1198,9 @@ export const InitCommand = new Command("init")
 
         // Create panda config
         await createPandaConfig(cwd, framework, isTypeScript);
+
+        // Update package.json with prepare script
+        await updatePackageJson(cwd);
 
         // Setup PostCSS (Next.js only)
         await setupPostCSS(cwd, framework);

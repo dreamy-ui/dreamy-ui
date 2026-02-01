@@ -5,10 +5,11 @@ import {
     compact,
     dataAttr,
     getValidChildren,
-    initials, useAvatarImage
+    initials,
+    useAvatarImage
 } from "@dreamy-ui/react";
 import { cloneElement, forwardRef, useMemo, useState } from "react";
-import { dreamy, type HTMLDreamyProps } from "styled-system/jsx";
+import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type AvatarVariantProps, avatar } from "styled-system/recipes";
 import type { SystemProperties, SystemStyleObject } from "styled-system/types";
 import { Box } from "./box";
@@ -69,21 +70,21 @@ export interface AvatarOptions {
 const GenericAvatarIcon = (props: HTMLDreamyProps<"svg">) => {
     return (
         <Icon
-            viewBox="0 0 128 128"
+            aria-label="Avatar"
             color="currentColor"
-            width="100%"
             height="100%"
             role="img"
-            aria-label="Avatar"
+            viewBox="0 0 128 128"
+            width="100%"
             {...props}
         >
             <path
-                fill="currentColor"
                 d="M103,102.1388 C93.094,111.92 79.3504,118 64.1638,118 C48.8056,118 34.9294,111.768 25,101.7892 L25,95.2 C25,86.8096 31.981,80 40.6,80 L87.4,80 C96.019,80 103,86.8096 103,95.2 L103,102.1388 Z"
+                fill="currentColor"
             />
             <path
-                fill="currentColor"
                 d="M63.9961647,24 C51.2938136,24 41,34.2938136 41,46.9961647 C41,59.7061864 51.2938136,70 63.9961647,70 C76.6985159,70 87,59.7061864 87,46.9961647 C87,34.2938136 76.6985159,24 63.9961647,24"
+                fill="currentColor"
             />
         </Icon>
     );
@@ -98,9 +99,9 @@ function AvatarName(props: AvatarNameProps) {
 
     return (
         <Box
-            role="img"
             aria-label={name}
             data-part="name"
+            role="img"
             {...rest}
         >
             {name ? getInitials?.(name) : null}
@@ -163,14 +164,14 @@ function AvatarImage(props: AvatarImageProps) {
 
     return (
         <Image
-            src={src}
-            srcSet={srcSet}
             alt={name}
+            crossOrigin={crossOrigin ?? undefined}
+            data-part="image"
+            loading={loading}
             onLoad={onLoad}
             referrerPolicy={referrerPolicy}
-            crossOrigin={crossOrigin ?? undefined}
-            loading={loading}
-            data-part="image"
+            src={src}
+            srcSet={srcSet}
         />
     );
 }
@@ -215,28 +216,23 @@ export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(
         <StyledBase
             ref={ref}
             {...rest}
-            style={{
-                backgroundColor: isLoaded ? "transparent" : "var(--colors-primary)",
-                color: "var(--colors-primary-fg)",
-                ...rest.style
-            }}
             data-loaded={dataAttr(isLoaded)}
             data-part="root"
         >
             <AvatarImage
-                src={src}
-                srcSet={srcSet}
+                crossOrigin={crossOrigin}
+                getInitials={getInitials}
+                icon={icon}
+                iconLabel={iconLabel}
                 loading={loading}
+                name={name}
+                onError={onError}
                 onLoad={callAllHandlers(onLoadProp, () => {
                     setIsLoaded(true);
                 })}
-                onError={onError}
-                getInitials={getInitials}
-                name={name}
-                icon={icon}
-                iconLabel={iconLabel}
-                crossOrigin={crossOrigin}
                 referrerPolicy={referrerPolicy}
+                src={src}
+                srcSet={srcSet}
             />
             {children}
         </StyledBase>
@@ -302,15 +298,15 @@ export const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
 
         return (
             <Flex
+                data-part="group"
                 ref={ref}
                 role="group"
-                data-part="group"
                 {...rest}
             >
                 {excess > 0 && (
                     <Box
-                        style={{ marginInlineStart: spacing }}
                         data-part="excess"
+                        style={{ marginInlineStart: spacing }}
                     >{`+${excess}`}</Box>
                 )}
                 {clones}

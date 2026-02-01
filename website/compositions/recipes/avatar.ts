@@ -1,3 +1,4 @@
+import { getColorSchemes } from "@dreamy-ui/panda-preset";
 import { defineParts, defineRecipe } from "@pandacss/dev";
 
 const parts = defineParts({
@@ -14,7 +15,7 @@ export { parts as avatarParts };
 
 export const avatar = defineRecipe({
     className: "avatar",
-    jsx: ["Avatar", "AvatarImage", "AvatarName"],
+    jsx: ["Avatar"],
     base: parts({
         root: {
             display: "flex",
@@ -57,7 +58,9 @@ export const avatar = defineRecipe({
         }
     }),
     defaultVariants: {
-        size: "md"
+        size: "md",
+        variant: "filled",
+        scheme: "none"
     },
     variants: {
         size: {
@@ -98,6 +101,35 @@ export const avatar = defineRecipe({
                     borderWidth: "2px",
                     borderStyle: "solid",
                     borderColor: "{colors.bg}"
+                }
+            })
+        },
+        scheme: getColorSchemes("--avatar-scheme", undefined, "root", true),
+        variant: {
+            filled: parts({
+                root: {
+                    "&:not([data-loaded])": {
+                        bg: "var(--avatar-scheme)",
+                        color: "var(--avatar-scheme-fg)"
+                    }
+                }
+            }),
+            subtle: parts({
+                root: {
+                    "&:not([data-loaded])": {
+                        bg: "{colors.alpha.100}",
+                        color: "fg"
+                    }
+                }
+            }),
+            outline: parts({
+                root: {
+                    "&:not([data-loaded])": {
+                        borderWidth: "1px",
+                        borderStyle: "solid",
+                        borderColor: "{colors.border}",
+                        color: "fg"
+                    }
                 }
             })
         }

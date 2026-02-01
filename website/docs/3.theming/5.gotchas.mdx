@@ -51,6 +51,24 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 ```
 
+## Button as a Link
+
+In many cases, you might want to use a Button as a Link. You can use polymorphic props to achieve this.
+
+```tsx
+import { Link } from "react-router";
+import { Button } from "@/ui";
+
+export function LinkButton() {
+	return (
+		<Button as={<Link to="/" />}>
+			Home
+		</Button>
+	);
+}
+
+```
+
 ## Fastest way to center a div
 
 Dreamy UI provides various utilities to use, like `center`, which is a `alignItems="center"` and `justifyContent="center"`.

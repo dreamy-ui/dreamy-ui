@@ -29,7 +29,8 @@ export function getColorSchemes<T extends string>(
     /**
      * if it is a slot recipe, select a main slot to apply the color scheme
      */
-    slot?: T
+    slot?: T,
+    generateFg = false
 ): Record<
     SchemeName,
     T extends string ? Record<T, Record<any, SystemStyleObject>> : Record<any, SystemStyleObject>
@@ -37,7 +38,13 @@ export function getColorSchemes<T extends string>(
     const entries = Object.fromEntries(
         schemeNames.map((scheme) => {
             const val = slot
-                ? { [slot]: { [cssVar]: schemes[scheme] as any, ...schemeProps?.(scheme) } }
+                ? {
+                      [slot]: {
+                          [cssVar]: schemes[scheme] as any,
+                          ...schemeProps?.(scheme),
+                          ...(generateFg ? { [cssVar + "-fg"]: addFgToTheScheme(scheme) } : {})
+                      }
+                  }
                 : {
                       [cssVar]: schemes[scheme] as any,
                       ...schemeProps?.(scheme)
@@ -48,4 +55,14 @@ export function getColorSchemes<T extends string>(
     );
 
     return Object.assign({}, entries) as any;
+}
+
+function addFgToTheScheme(scheme: SchemeName) {
+    const s = schemes[scheme];
+
+    if (scheme !== "none") {
+        return s.replace("}", ".fg}");
+    }
+
+    return "{colors.bg}";
 }

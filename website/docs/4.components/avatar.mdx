@@ -50,7 +50,7 @@ AvatarGroup is a wrapper around Avatars that displays a number of avatars groupe
 Use `maxAvatars` prop to limit the number of avatars displayed.
 
 <Wrapper>
-	<AvatarGroup arGroup maxAvatars={4}>
+	<AvatarGroup maxAvatars={4}>
 		<Avatar name="Dream" />
 		<Avatar name="Dream" />
 		<Avatar name="Dream" />
@@ -75,6 +75,56 @@ Use `maxAvatars` prop to limit the number of avatars displayed.
 </AvatarGroup>
 ```
 
+### Variants
+
+You can change the variant of the avatar by using the `variant` prop.
+
+<Wrapper>
+	<HStack>
+		<Avatar variant="filled" name="Girlfriend" />
+		<Avatar variant="subtle" name="Girlfriend" />
+		<Avatar variant="outline" name="Girlfriend" />
+	</HStack>
+</Wrapper>
+
+```tsx
+<HStack>
+	<Avatar variant="filled" src="/olcia.webp" name="Girlfriend" />
+	<Avatar variant="subtle" src="/olcia.webp" name="Girlfriend" />
+	<Avatar variant="outline" src="/olcia.webp" name="Girlfriend" />
+</HStack>
+```
+
+### Badge
+
+You can add a badge to the avatar by creating an absolute container inside relative one.
+
+<Wrapper>
+	<Box relative>
+		<Avatar src="/olcia.webp" name="Girlfriend" />
+		<Box rounded='full' bg='success' absolute right={0} bottom={0} boxSize="3" />
+	</Box>
+</Wrapper>
+
+```tsx
+<Box relative>
+	<Avatar src="/olcia.webp" name="Girlfriend" />
+	<Box rounded='full' bg='success' absolute right={0} bottom={0} boxSize="3" />
+</Box>
+```
+
+### Show border
+
+You can show a border around the avatar by using the `showBorder` prop. This will create a border with a current background color. Use `borderColor` prop to change the color of the border.
+
+<Wrapper>
+	<Avatar showBorder borderColor="border" src="/olcia.webp" name="Girlfriend" />
+</Wrapper>
+
+```tsx
+<Avatar showBorder borderColor="border" src="/olcia.webp" name="Girlfriend" />
+```
+
 ### Persona
 
 Using more Dreamy UI components, you can create a nice looking persona component.
@@ -97,12 +147,8 @@ Using more Dreamy UI components, you can create a nice looking persona component
 <HStack>
 	<Avatar src="/olcia.webp" size="md" name="Alexandra" />
 	<Flex col>
-		<Text size="sm" fontWeight="medium">
-			Alexandra
-		</Text>
-		<Text size="sm" color="fg.medium">
-			Dream
-		</Text>
+		<Text size="sm" fontWeight="medium">Alexandra</Text>
+		<Text size="sm" color="fg.medium">Dream</Text>
 	</Flex>
 </HStack>
 ```
