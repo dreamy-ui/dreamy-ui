@@ -12,6 +12,7 @@ import { octokit } from "~/src/.server/github";
 import { Logger } from "~/src/.server/logger";
 import { capitalize, filenameToSlug } from "~/src/functions/string";
 import { createHId } from "~/src/ui/docs/MDXContent";
+import { log } from "./middlewares";
 import { remarkDreamyPMTabs } from "./remark-tabs";
 import { cursorDarkTheme } from "./theme";
 
@@ -102,9 +103,9 @@ export class Docs {
 
         const content = await fs.readFile(`docs/${filepath}`, "utf-8");
 
-        const serializeStart = performance.now();
+        // const serializeStart = performance.now();
         const mdxContent = await Docs.serialize(content);
-        Logger.debug(`Docs.serialize took ${performance.now() - serializeStart}ms`);
+        // log().set("serialize", performance.now() - serializeStart);
 
         const mdxFrontmatterDescription =
             mdxContent.frontmatter.description &&
@@ -144,12 +145,12 @@ export class Docs {
         const fileIndex = getIndex(file);
         file = removeIndex(file);
 
-        console.log({
-            filePath,
-            folder,
-            file,
-            fileIndex
-        });
+        // console.log({
+        //     filePath,
+        //     folder,
+        //     file,
+        //     fileIndex
+        // });
 
         // Fetch a single file from the GitHub repo
         if (!env.VITE_SOURCE_REPO) {
@@ -410,7 +411,7 @@ export class Docs {
             staleWhileRevalidate: Docs.shouldCacheDocs ? daysToMs(30) : 0,
             getFreshValue: async () => {
                 // await new Promise((resolve) => setTimeout(resolve, 1000));
-                Logger.info(`Fetching doc: docs-${folder}-${page}`);
+                const start = performance.now();
 
                 const sections = await Docs.getSections();
 
@@ -428,6 +429,8 @@ export class Docs {
                     fileIndex !== -1 ? `${fileIndex}.` : ""
                 }${page}.mdx`;
                 const doc = await Docs.fetchFreshDoc(filepath);
+
+                log().set({ doc: (performance.now() - start).toFixed(2) + "ms" });
 
                 return doc;
             }

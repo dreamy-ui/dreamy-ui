@@ -10,7 +10,7 @@ import { BiChevronRight } from "react-icons/bi";
 import { useLocation } from "react-router";
 import type { ISection } from "~/src/.server/docs";
 import { useSections } from "~/src/hooks/useSections";
-import { Link } from "~/src/ui/global/Link";
+import { Link, ReactRouterLink } from "~/src/ui/global/Link";
 
 const newComponents = ["toast", "progress circular", "group", "radio card", "wrap", "action bar"];
 const updatedComponents = ["menu"];
@@ -130,7 +130,7 @@ export const Section = memo(function Section({ section }: SectionProps) {
                             gap={2}
                         >
                             {section.sections.map((file) => (
-                                <MemoSectionButton
+                                <SectionButton
                                     file={file}
                                     key={"doc-" + file.name}
                                 />
@@ -143,7 +143,7 @@ export const Section = memo(function Section({ section }: SectionProps) {
     );
 });
 
-const MemoSectionButton = memo(function SectionButton({
+function SectionButton({
     file
 }: {
     file: ISection["sections"][number];
@@ -159,7 +159,7 @@ const MemoSectionButton = memo(function SectionButton({
                 color: isCurrent ? "white" : "fg"
             }}
             as={
-                <Link
+                <ReactRouterLink
                     prefetch="intent"
                     to={file.slug}
                 />
@@ -190,4 +190,4 @@ const MemoSectionButton = memo(function SectionButton({
             )}
         </Button>
     );
-});
+}

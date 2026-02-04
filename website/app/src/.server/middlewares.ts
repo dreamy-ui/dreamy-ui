@@ -1,10 +1,12 @@
 import { AsyncLocalStorage } from "node:async_hooks";
+import { type RequestLogger, createRequestLogger } from "evlog";
 import type { MiddlewareFunction, RouterContextProvider } from "react-router";
 
 interface RequestContext {
     timings: Map<string, number>;
     request: Request;
     context: Readonly<RouterContextProvider>;
+    log: RequestLogger;
 }
 
 const requestStorage = new AsyncLocalStorage<RequestContext>();
@@ -12,17 +14,26 @@ const requestStorage = new AsyncLocalStorage<RequestContext>();
 export const requestMiddleware: MiddlewareFunction = async ({ context, request }, next) => {
     const start = performance.now();
 
+    const log = createRequestLogger({
+        method: request.method,
+        path: new URL(request.url).pathname
+    });
+    log.set({ type: request.headers.get("sec-fetch-dest") === "document" ? "document" : "data" });
+
     const response = (await requestStorage.run(
         {
             timings: new Map(),
             request,
-            context
+            context,
+            log
         },
         next
     )) as Response;
 
     const end = performance.now();
     response.headers.set("X-Response-Time", (end - start).toFixed(2) + "ms");
+
+    log.emit();
 
     return response;
 };
@@ -49,6 +60,14 @@ export function getContext() {
         throw new Error("Request not found");
     }
     return store.context;
+}
+
+export function log() {
+    const store = requestStorage.getStore();
+    if (!store) {
+        throw new Error("Request not found");
+    }
+    return store.log;
 }
 
 export const timingsMiddleware: MiddlewareFunction = async (_, next) => {

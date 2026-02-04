@@ -24,7 +24,6 @@ if (DEVELOPMENT) {
         })
     );
     app.use(viteDevServer.middlewares);
-    app.use(morgan("tiny"));
     app.use(async (req, res, next) => {
         try {
             const source = await viteDevServer.ssrLoadModule("virtual:react-router/server-build");
