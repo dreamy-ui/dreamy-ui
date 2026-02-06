@@ -105,6 +105,7 @@ import {
     ActionBarWithClose,
     ControlledActionBar
 } from "./components/action-bars";
+import { BarChartExample, LineChartExample, PieChartExample } from "./components/charts";
 import {
     CheckboxCardGroupControl,
     CheckboxGroupControl,
@@ -296,7 +297,10 @@ const DreamComponents = {
     ActionBarTable,
     ActionBarWithClose,
     ControlledActionBar,
-    Span
+    Span,
+    BarChartExample,
+    LineChartExample,
+    PieChartExample
 };
 
 function Wrapper({ children, ...props }: PropsWithChildren<FlexProps>) {

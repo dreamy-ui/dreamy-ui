@@ -1,17 +1,22 @@
 import { Flex } from "@/ui";
+import { createError } from "evlog";
 import { Outlet } from "react-router";
-import { Docs } from "~/src/.server/docs";
-import { getTimings } from "~/src/.server/middlewares";
+import { sectionsContext, sectionsMiddleware } from "~/src/.server/middlewares";
 import MobileDocsNav from "~/src/ui/docs/MobileDocsNav";
 import OnThisPage from "~/src/ui/docs/OnThisPage";
 import SectionsNav from "~/src/ui/docs/SectionsNav";
 import type { Route } from "./+types/docs";
 
-export async function loader(_: Route.LoaderArgs) {
-    const start = performance.now();
-    const sections = await Docs.getSections();
-    const end = performance.now();
-    getTimings().set("sections", end - start);
+export const middleware = [sectionsMiddleware];
+
+export async function loader({ context }: Route.LoaderArgs) {
+    const sections = context.get(sectionsContext);
+    if (!sections) {
+        throw createError({
+            message: "Sections not found",
+            cause: new Error("Sections not found")
+        });
+    }
 
     return {
         sections

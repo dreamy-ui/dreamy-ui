@@ -138,7 +138,7 @@ function ActionButtons() {
         let file = path.split("/")[1];
 
         const folderIndex = sections.findIndex(
-            (s) => s.title.toLowerCase() === folder.toLowerCase()
+            (s) => s.title.toLowerCase().replaceAll(" ", "-") === folder.toLowerCase()
         );
         folder = `${folderIndex + 1}.${folder}`;
 

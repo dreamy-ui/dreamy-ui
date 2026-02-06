@@ -4,6 +4,7 @@ import { Flex } from "@/ui";
 import { Heading } from "@/ui";
 import { VStack } from "@/ui";
 import { Text } from "@/ui";
+import { createError } from "evlog";
 import { useEffect, useMemo } from "react";
 import { AiFillThunderbolt } from "react-icons/ai";
 import { BiLogoGithub } from "react-icons/bi";
@@ -12,7 +13,7 @@ import type { MetaFunction } from "react-router";
 import { type ShouldRevalidateFunctionArgs, data, useLocation } from "react-router";
 import { CACHE_DURATION, CacheHeaders } from "~/src/.server/cache";
 import { Docs } from "~/src/.server/docs";
-import { getTimings } from "~/src/.server/middlewares";
+import { getTimings, sectionsContext } from "~/src/.server/middlewares";
 import { useDoc } from "~/src/hooks/useDoc";
 import { useSections } from "~/src/hooks/useSections";
 import MDXContent from "~/src/ui/docs/MDXContent";
@@ -95,12 +96,19 @@ export function meta({ loaderData, params }: Route.MetaArgs) {
 
 export const headers = CacheHeaders.cache(CACHE_DURATION.DEFAULT);
 
-export async function loader({ params }: Route.LoaderArgs) {
+export async function loader({ params, context }: Route.LoaderArgs) {
     const section = params.section as string;
     const page = params.page as string;
 
+    const sections = context.get(sectionsContext);
+    if (!sections) {
+        throw createError({
+            message: "Sections not found",
+            cause: new Error("Sections not found")
+        });
+    }
     const start = performance.now();
-    const doc = await Docs.getDoc(section, page).catch((e) => {
+    const doc = await Docs.getDoc(section, page, sections).catch((e) => {
         console.error(e);
         return null;
     });

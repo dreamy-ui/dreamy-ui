@@ -24,6 +24,7 @@ export default function AppLayout({ children }: PropsWithChildren) {
                 }}
                 col
                 flex={1}
+                minH={"100dvh"}
                 transition={{
                     duration: 0.3,
                     ease: TRANSITION_EASINGS.easeInOut

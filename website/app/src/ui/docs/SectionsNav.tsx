@@ -1,4 +1,4 @@
-import { Badge } from "@/ui";
+import { Badge, Box } from "@/ui";
 import { Button } from "@/ui";
 import { Flex } from "@/ui";
 import { Icon } from "@/ui";
@@ -9,6 +9,7 @@ import { memo, useRef, useState } from "react";
 import { BiChevronRight } from "react-icons/bi";
 import { useLocation } from "react-router";
 import type { ISection } from "~/src/.server/docs";
+import { useDoc } from "~/src/hooks/useDoc";
 import { useSections } from "~/src/hooks/useSections";
 import { Link, ReactRouterLink } from "~/src/ui/global/Link";
 
@@ -80,6 +81,13 @@ interface SectionProps {
 export const Section = memo(function Section({ section }: SectionProps) {
     const [isOpen, setIsOpen] = useState(true);
 
+    const path = useLocation().pathname;
+    console.log({
+        path,
+        sectionSlug: "/docs/" + section.slugified
+    });
+    const isCurrent = path.startsWith("/docs/" + section.slugified);
+
     return (
         <Flex
             col
@@ -118,11 +126,25 @@ export const Section = memo(function Section({ section }: SectionProps) {
                         row
                     >
                         <Flex
-                            bg={"alpha.300"}
+                            flex={1}
+                            relative
                             translate={"auto"}
-                            w={"1px"}
                             x={"1px"}
-                        />
+                        >
+                            <Flex
+                                bg={"alpha.300"}
+                                w={"1px"}
+                            />
+                            <Flex
+                                // absolute
+                                bg={"alpha.300"}
+                                // right={"0px"}
+                                // translate={"auto"}
+                                opacity={isCurrent ? 1 : 0}
+                                transition={"all 0.3s {easings.easeInOut}"}
+                                w={"1px"}
+                            />
+                        </Flex>
 
                         <Flex
                             col

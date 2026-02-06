@@ -1,6 +1,7 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 import { type RequestLogger, createRequestLogger } from "evlog";
-import type { MiddlewareFunction, RouterContextProvider } from "react-router";
+import { type MiddlewareFunction, type RouterContextProvider, createContext } from "react-router";
+import { Docs, type Sections } from "./docs";
 
 interface RequestContext {
     timings: Map<string, number>;
@@ -100,4 +101,14 @@ export const prefetchCacheControlHeaderMiddleware: MiddlewareFunction = async (
     }
 
     return response;
+};
+
+export const sectionsContext = createContext<Sections | null>(null);
+
+export const sectionsMiddleware: MiddlewareFunction = async ({ context }, _next) => {
+    const start = performance.now();
+    const sections = await Docs.getSections();
+    const end = performance.now();
+    getTimings().set("sections", end - start);
+    context.set(sectionsContext, sections);
 };

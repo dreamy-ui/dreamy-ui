@@ -64,6 +64,7 @@ export class Docs {
 
                 docs.push({
                     title: capitalize(folderName),
+                    slugified: removeIndex(folderName),
                     sections: files.map((file) => ({
                         name: filenameToTitle(file.filename),
                         slug: `/docs/${removeIndex(folderName)}/${filenameToSlug(file.filename)}`,
@@ -74,9 +75,9 @@ export class Docs {
             } else {
                 docs.push({
                     title: capitalize(removeIndex(folderName)),
+                    slugified: removeIndex(folderName),
                     sections: filenames.map((filename) => {
                         const name = filenameToTitle(removeIndex(filename));
-
                         return {
                             name,
                             slug: `/docs/${filenameToSlug(
@@ -253,6 +254,7 @@ export class Docs {
 
             docs.push({
                 title: capitalize(folder),
+                slugified: removeIndex(folder),
                 sections: filenames.map((filename) => ({
                     name: filenameToTitle(removeIndex(filename)),
                     slug: `/docs/${folder}/${filenameToSlug(removeIndex(filename))}`,
@@ -392,10 +394,11 @@ export class Docs {
 
                 // return sorted sections
                 return docsStructure
-                    .map(({ title, sections, index }) => {
+                    .map(({ title, sections, index, slugified }) => {
                         return {
                             title: filenameToTitle(removeIndex(title)),
                             sections,
+                            slugified,
                             index
                         };
                     })
@@ -404,7 +407,11 @@ export class Docs {
         });
     }
 
-    public static async getDoc(folder: string, page: string): Promise<ValidDocsFile | null> {
+    public static async getDoc(
+        folder: string,
+        page: string,
+        sectionsArg?: Sections
+    ): Promise<ValidDocsFile | null> {
         return cachified({
             key: `docs-${folder}-${page}`,
             ttl: Docs.shouldCacheDocs ? minToMs(5) : 0,
@@ -413,10 +420,12 @@ export class Docs {
                 // await new Promise((resolve) => setTimeout(resolve, 1000));
                 const start = performance.now();
 
-                const sections = await Docs.getSections();
+                const sections = sectionsArg || (await Docs.getSections());
 
+                // Normalize folder name: convert hyphens to spaces to match section.title format
+                const normalizedFolder = folder.replaceAll("-", " ").toLowerCase();
                 const folderIndex = sections.find(
-                    (section) => removeIndex(section.title).toLowerCase() === folder.toLowerCase()
+                    (section) => removeIndex(section.title).toLowerCase() === normalizedFolder
                 )?.index;
                 if (!folderIndex) {
                     throw new Error("Missing folder index: " + folder);
@@ -535,6 +544,7 @@ export interface MdxContent
 
 export interface ISection {
     title: string;
+    slugified: string;
     sections: Page[];
 }
 
@@ -547,12 +557,14 @@ interface LocalPage extends Page {
     index: number;
 }
 
-interface LocalSection {
+export interface LocalSection {
     index: number;
+    slugified: string;
     title: string;
     sections: LocalPage[];
 }
-type Sections = LocalSection[];
+
+export type Sections = LocalSection[];
 
 function getHeadings(tree: Root) {
     const headings = new Array<Heading>();
