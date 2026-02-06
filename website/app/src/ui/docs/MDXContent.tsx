@@ -1,59 +1,79 @@
-import { Accordion, List, Span } from "@/ui";
-import { ActionBar } from "@/ui";
-import { Alert } from "@/ui";
-import { Avatar, AvatarGroup } from "@/ui";
-import { Badge } from "@/ui";
-import { Box } from "@/ui";
-import { Breadcrumb } from "@/ui";
-import { Button } from "@/ui";
-import { Card } from "@/ui";
-import { Checkbox, CheckboxGroup } from "@/ui";
-import { CheckboxCard } from "@/ui";
-import { Divider } from "@/ui";
-import { Editable } from "@/ui";
-import { Field } from "@/ui";
-import { Flex, type FlexProps } from "@/ui";
-import { Grid, GridItem } from "@/ui";
-import { Group } from "@/ui";
-import { Heading, type HeadingProps } from "@/ui";
-import { Icon } from "@/ui";
-import { Image } from "@/ui";
-import { Input, InputGroup, InputLeftAddon, InputRightAddon } from "@/ui";
-import { Kbd } from "@/ui";
-import { Link as DreamLink } from "@/ui";
-import { Menu } from "@/ui";
-import { MotionBox } from "@/ui";
-import { PinInput } from "@/ui";
-import { Popover } from "@/ui";
-import { Progress } from "@/ui";
-import { ProgressCircular } from "@/ui";
-import { Radio, RadioGroup } from "@/ui";
-import { RadioCard } from "@/ui";
-import { RangeSlider } from "@/ui";
-import { Select } from "@/ui";
-import { Skeleton, SkeletonText } from "@/ui";
-import { Slider } from "@/ui";
-import { Snippet } from "@/ui";
-import { Spinner } from "@/ui";
-import { HStack, Stack, VStack } from "@/ui";
-import { Stat } from "@/ui";
-import { Switch } from "@/ui";
-import { Table } from "@/ui";
-import { Tabs } from "@/ui";
-import { Text } from "@/ui";
-import { Textarea, TextareaNoAutoSize } from "@/ui";
-import { DarkTheme, LightTheme } from "@/ui";
-import { Tooltip } from "@/ui";
-import { VisuallyHidden, VisuallyHiddenInput } from "@/ui";
-import { Wrap } from "@/ui";
-import { CloseButton } from "@/ui";
+import {
+    Accordion,
+    ActionBar,
+    Alert,
+    Avatar,
+    AvatarGroup,
+    Badge,
+    Box,
+    Breadcrumb,
+    Button,
+    Card,
+    Checkbox,
+    CheckboxCard,
+    CheckboxGroup,
+    CloseButton,
+    DarkTheme,
+    Divider,
+    Link as DreamLink,
+    Editable,
+    EmptyState,
+    Field,
+    Flex,
+    type FlexProps,
+    Grid,
+    GridItem,
+    Group,
+    HStack,
+    Heading,
+    type HeadingProps,
+    Icon,
+    Image,
+    Input,
+    InputGroup,
+    InputLeftAddon,
+    InputRightAddon,
+    Kbd,
+    LightTheme,
+    List,
+    Menu,
+    MotionBox,
+    PinInput,
+    Popover,
+    Progress,
+    ProgressCircular,
+    Radio,
+    RadioCard,
+    RadioGroup,
+    RangeSlider,
+    Select,
+    Skeleton,
+    SkeletonText,
+    Slider,
+    Snippet,
+    Span,
+    Spinner,
+    Stack,
+    Stat,
+    Switch,
+    Table,
+    Tabs,
+    Text,
+    Textarea,
+    TextareaNoAutoSize,
+    Tooltip,
+    VStack,
+    VisuallyHidden,
+    VisuallyHiddenInput,
+    Wrap
+} from "@/ui";
 import { Portal, useToast } from "@dreamy-ui/react";
 import { MDXRemote } from "next-mdx-remote";
 import { type PropsWithChildren, type ReactNode, useEffect, useMemo, useState } from "react";
 import { BiHome, BiSearch } from "react-icons/bi";
 import { FaPaypal, FaReact, FaVuejs } from "react-icons/fa";
 import { FiCoffee, FiCreditCard } from "react-icons/fi";
-import { HiExternalLink, HiOutlineMail } from "react-icons/hi";
+import { HiColorSwatch, HiExternalLink, HiOutlineMail } from "react-icons/hi";
 import { IoAdd, IoClose } from "react-icons/io5";
 import {
     LuAlarmClock,
@@ -67,6 +87,7 @@ import {
     LuFileWarning,
     LuHouse,
     LuLamp,
+    LuShoppingCart,
     LuTrash,
     LuWarehouse
 } from "react-icons/lu";
@@ -300,7 +321,8 @@ const DreamComponents = {
     Span,
     BarChartExample,
     LineChartExample,
-    PieChartExample
+    PieChartExample,
+    EmptyState
 };
 
 function Wrapper({ children, ...props }: PropsWithChildren<FlexProps>) {
@@ -348,7 +370,9 @@ const icons = {
     LuCitrus,
     LuCherry,
     LuFileWarning,
-    LuDollarSign
+    LuDollarSign,
+    HiColorSwatch,
+    LuShoppingCart
 };
 
 const components: any = {

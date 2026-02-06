@@ -9,6 +9,7 @@ import { card } from "./card";
 import { checkboxCard } from "./checkbox-card";
 import { checkbox } from "./checkbox";
 import { editable } from "./editable";
+import { emptyState } from "./empty-state";
 import { field } from "./field";
 import { group } from "./group";
 import { icon } from "./icon";
@@ -50,6 +51,7 @@ export const recipes = {
     checkboxCard,
     checkbox,
     editable,
+    emptyState,
     field,
     group,
     icon,

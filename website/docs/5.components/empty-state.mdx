@@ -1,0 +1,233 @@
+---
+title: Empty State
+description: Used to indicate when a resource is empty or unavailable.
+isServerComponent: false
+source: /packages/react/src/components/empty-state/empty-state.tsx
+themeSource: /packages/panda-preset/src/recipes/empty-state.ts
+---
+
+## Installation
+
+```bash
+pnpm dreamy add empty-state
+```
+
+## Usage
+
+Empty State is used to indicate when a resource is empty or unavailable, for example when there are no items in a table, no search results, or an empty cart.
+
+<Wrapper>
+    <EmptyState.Root>
+        <EmptyState.Content>
+            <EmptyState.Indicator>
+                <LuShoppingCart />
+            </EmptyState.Indicator>
+            <VStack alignItems="center">
+                <EmptyState.Title>Your cart is empty</EmptyState.Title>
+                <EmptyState.Description>
+                    Explore our products and add items to your cart
+                </EmptyState.Description>
+            </VStack>
+        </EmptyState.Content>
+    </EmptyState.Root>
+</Wrapper>
+
+```tsx
+<EmptyState.Root>
+    <EmptyState.Content>
+        <EmptyState.Indicator>
+            <LuShoppingCart />
+        </EmptyState.Indicator>
+        <VStack alignItems="center">
+            <EmptyState.Title>Your cart is empty</EmptyState.Title>
+            <EmptyState.Description>
+                Explore our products and add items to your cart
+            </EmptyState.Description>
+        </VStack>
+    </EmptyState.Content>
+</EmptyState.Root>
+```
+
+### Sizes
+
+Use the `size` prop to set the size of the Empty state.
+
+<Wrapper>
+    <VStack gap={8}>
+        <EmptyState.Root size="sm">
+            <EmptyState.Content>
+                <EmptyState.Indicator>
+                    <LuShoppingCart />
+                </EmptyState.Indicator>
+                <VStack alignItems="center">
+                    <EmptyState.Title>Your cart is empty</EmptyState.Title>
+                    <EmptyState.Description>
+                        Explore our products and add items to your cart
+                    </EmptyState.Description>
+                </VStack>
+            </EmptyState.Content>
+        </EmptyState.Root>
+
+        <EmptyState.Root size="md">
+            <EmptyState.Content>
+                <EmptyState.Indicator>
+                    <LuShoppingCart />
+                </EmptyState.Indicator>
+                <VStack alignItems="center">
+                    <EmptyState.Title>Your cart is empty</EmptyState.Title>
+                    <EmptyState.Description>
+                        Explore our products and add items to your cart
+                    </EmptyState.Description>
+                </VStack>
+            </EmptyState.Content>
+        </EmptyState.Root>
+
+        <EmptyState.Root size="lg">
+            <EmptyState.Content>
+                <EmptyState.Indicator>
+                    <LuShoppingCart />
+                </EmptyState.Indicator>
+                <VStack alignItems="center">
+                    <EmptyState.Title>Your cart is empty</EmptyState.Title>
+                    <EmptyState.Description>
+                        Explore our products and add items to your cart
+                    </EmptyState.Description>
+                </VStack>
+            </EmptyState.Content>
+        </EmptyState.Root>
+    </VStack>
+</Wrapper>
+
+```tsx
+<VStack gap={8}>
+    <EmptyState.Root size="sm">
+        <EmptyState.Content>
+            <EmptyState.Indicator>
+                <LuShoppingCart />
+            </EmptyState.Indicator>
+            <VStack alignItems="center">
+                <EmptyState.Title>Your cart is empty</EmptyState.Title>
+                <EmptyState.Description>
+                    Explore our products and add items to your cart
+                </EmptyState.Description>
+            </VStack>
+        </EmptyState.Content>
+    </EmptyState.Root>
+
+    <EmptyState.Root size="md">
+        <EmptyState.Content>
+            <EmptyState.Indicator>
+                <LuShoppingCart />
+            </EmptyState.Indicator>
+            <VStack alignItems="center">
+                <EmptyState.Title>Your cart is empty</EmptyState.Title>
+                <EmptyState.Description>
+                    Explore our products and add items to your cart
+                </EmptyState.Description>
+            </VStack>
+        </EmptyState.Content>
+    </EmptyState.Root>
+
+    <EmptyState.Root size="lg">
+        <EmptyState.Content>
+            <EmptyState.Indicator>
+                <LuShoppingCart />
+            </EmptyState.Indicator>
+            <VStack alignItems="center">
+                <EmptyState.Title>Your cart is empty</EmptyState.Title>
+                <EmptyState.Description>
+                    Explore our products and add items to your cart
+                </EmptyState.Description>
+            </VStack>
+        </EmptyState.Content>
+    </EmptyState.Root>
+</VStack>
+```
+
+### With Action
+
+Here's an example of an empty state with an action button.
+
+<Wrapper>
+    <EmptyState.Root>
+        <EmptyState.Content>
+            <EmptyState.Indicator>
+                <HiColorSwatch />
+            </EmptyState.Indicator>
+            <VStack alignItems="center">
+                <EmptyState.Title>Start adding tokens</EmptyState.Title>
+                <EmptyState.Description>
+                    Add a new design token to get started
+                </EmptyState.Description>
+            </VStack>
+            <Group>
+                <Button variant="primary"n>Create token</Button>
+                <Button variant="outline">Import</Button>
+            </Group>
+        </EmptyState.Content>
+    </EmptyState.Root>
+</Wrapper>
+
+```tsx
+<EmptyState.Root>
+    <EmptyState.Content>
+        <EmptyState.Indicator>
+            <HiColorSwatch />
+        </EmptyState.Indicator>
+        <VStack alignItems="center">
+            <EmptyState.Title>Start adding tokens</EmptyState.Title>
+            <EmptyState.Description>
+                Add a new design token to get started
+            </EmptyState.Description>
+        </VStack>
+        <Group>
+            <Button variant="primary">Create token</Button>
+            <Button variant="outline">Import</Button>
+        </Group>
+    </EmptyState.Content>
+</EmptyState.Root>
+```
+
+### With List
+
+Here's an example of an empty state with a list.
+
+<Wrapper>
+    <EmptyState.Root>
+        <EmptyState.Content>
+            <EmptyState.Indicator>
+                <HiColorSwatch />
+            </EmptyState.Indicator>
+            <VStack alignItems="center">
+                <EmptyState.Title>No results found</EmptyState.Title>
+                <EmptyState.Description>
+                    Try adjusting your search
+                </EmptyState.Description>
+            </VStack>
+            <List.Root>
+                <List.Item>Try removing filters</List.Item>
+                <List.Item>Try different keywords</List.Item>
+            </List.Root>
+        </EmptyState.Content>
+    </EmptyState.Root>
+</Wrapper>
+
+```tsx
+<EmptyState.Root>
+    <EmptyState.Content>
+        <EmptyState.Indicator>
+            <HiColorSwatch />
+        </EmptyState.Indicator>
+        <VStack alignItems="center">
+            <EmptyState.Title>No results found</EmptyState.Title>
+            <EmptyState.Description>
+                Try adjusting your search
+            </EmptyState.Description>
+        </VStack>
+        <List.Root>
+            <List.Item>Try removing filters</List.Item>
+            <List.Item>Try different keywords</List.Item>
+        </List.Root>
+    </EmptyState.Content>
+</EmptyState.Root>
+```

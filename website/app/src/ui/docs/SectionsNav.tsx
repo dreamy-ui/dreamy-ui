@@ -1,4 +1,4 @@
-import { Badge, Box } from "@/ui";
+import { Badge } from "@/ui";
 import { Button } from "@/ui";
 import { Flex } from "@/ui";
 import { Icon } from "@/ui";
@@ -9,11 +9,18 @@ import { memo, useRef, useState } from "react";
 import { BiChevronRight } from "react-icons/bi";
 import { useLocation } from "react-router";
 import type { ISection } from "~/src/.server/docs";
-import { useDoc } from "~/src/hooks/useDoc";
 import { useSections } from "~/src/hooks/useSections";
-import { Link, ReactRouterLink } from "~/src/ui/global/Link";
+import { ReactRouterLink } from "~/src/ui/global/Link";
 
-const newComponents = ["toast", "progress circular", "group", "radio card", "wrap", "action bar"];
+const newComponents = [
+    "toast",
+    "progress circular",
+    "group",
+    "radio card",
+    "action bar",
+    "empty state",
+    "range slider"
+];
 const updatedComponents = ["menu"];
 
 export default function SectionsNav() {
@@ -82,10 +89,10 @@ export const Section = memo(function Section({ section }: SectionProps) {
     const [isOpen, setIsOpen] = useState(true);
 
     const path = useLocation().pathname;
-    console.log({
-        path,
-        sectionSlug: "/docs/" + section.slugified
-    });
+    // console.log({
+    //     path,
+    //     sectionSlug: "/docs/" + section.slugified
+    // });
     const isCurrent = path.startsWith("/docs/" + section.slugified);
 
     return (

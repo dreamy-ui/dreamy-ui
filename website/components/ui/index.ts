@@ -12,6 +12,7 @@ export * from "./checkbox";
 export * from "./close-button";
 export * from "./divider";
 export * as Editable from "./editable";
+export * as EmptyState from "./empty-state";
 export * as Field from "./field";
 export * from "./flex";
 export * from "./grid";
