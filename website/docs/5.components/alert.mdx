@@ -53,3 +53,21 @@ The `status` prop changes the color of the alert and the icon.
   <Alert status='info' title="Info" description="Your credit card information will expire soon. Please update." />
 </VStack>
 ```
+
+### Variants
+
+The `variant` prop changes the style of the alert.
+
+<Wrapper>
+  <VStack spacing={3} w="100%">
+    <Alert variant="subtle" status='error' title="Error" description="There has been an error!" />
+    <Alert variant="outline" status='success' title="Success" description="Your visit has been created!" />
+  </VStack>
+</Wrapper>
+
+```tsx
+<VStack spacing={3} w="100%">
+  <Alert variant="subtle" status='error' title="Error" description="There has been an error!" />
+  <Alert variant="outline" status='success' title="Success" description="Your visit has been created!" />
+</VStack>
+```

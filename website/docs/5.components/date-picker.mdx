@@ -1,0 +1,273 @@
+---
+title: Date Picker
+description: Date Picker allows users to select a date from a calendar popover.
+isServerComponent: false
+source: /packages/react/src/components/date-picker/date-picker.tsx
+themeSource: /packages/system/src/recipes/date-picker.ts
+---
+
+## Installation
+
+```bash
+pnpm dreamy add date-picker
+```
+
+## Usage
+
+Date Picker provides a calendar interface for selecting dates. It can be used with either an input field or a button trigger.
+
+### With Input
+
+The most common usage is with an input field that displays the selected date.
+
+<Wrapper>
+    <DatePicker.Root>
+        <DatePicker.Input />
+        <DatePicker.PopoverContent>
+            <DatePicker.Calendar />
+        </DatePicker.PopoverContent>
+    </DatePicker.Root>
+</Wrapper>
+
+```tsx
+<DatePicker.Root>
+    <DatePicker.Input />
+    <DatePicker.PopoverContent>
+        <DatePicker.Calendar />
+    </DatePicker.PopoverContent>
+</DatePicker.Root>
+```
+
+### With Button Trigger
+
+You can also use a button as the trigger instead of an input field.
+
+<Wrapper>
+    <DatePicker.Root>
+        <DatePicker.Trigger>Select Date</DatePicker.Trigger>
+        <DatePicker.PopoverContent>
+            <DatePicker.Calendar />
+        </DatePicker.PopoverContent>
+    </DatePicker.Root>
+</Wrapper>
+
+```tsx
+<DatePicker.Root>
+    <DatePicker.Trigger>Select Date</DatePicker.Trigger>
+    <DatePicker.PopoverContent>
+        <DatePicker.Calendar />
+    </DatePicker.PopoverContent>
+</DatePicker.Root>
+```
+
+### Controlled
+
+You can control the date picker's value using the `value` and `onChange` props.
+
+<Wrapper>
+    <ControlledDatePicker />
+</Wrapper>
+
+```tsx
+function ControlledDatePicker() {
+    const [date, setDate] = useState<Date | null>(null);
+
+    return (
+        <DatePicker.Root
+            value={date}
+            onChange={setDate}
+        >
+            <DatePicker.Input />
+            <DatePicker.PopoverContent>
+                <DatePicker.Calendar />
+            </DatePicker.PopoverContent>
+        </DatePicker.Root>
+    );
+}
+```
+
+### With Default Value
+
+Set an initial date using the `defaultValue` prop.
+
+<Wrapper>
+    <DatePicker.Root defaultValue={new Date()}>
+        <DatePicker.Input />
+        <DatePicker.PopoverContent>
+            <DatePicker.Calendar />
+        </DatePicker.PopoverContent>
+    </DatePicker.Root>
+</Wrapper>
+
+```tsx
+<DatePicker.Root defaultValue={new Date()}>
+    <DatePicker.Input />
+    <DatePicker.PopoverContent>
+        <DatePicker.Calendar />
+    </DatePicker.PopoverContent>
+</DatePicker.Root>
+```
+
+### Date Range Constraints
+
+Use `minDate` and `maxDate` to restrict selectable dates.
+
+<Wrapper>
+    <DatePicker.Root
+        minDate={new Date(2024, 0, 1)}
+        maxDate={new Date(2024, 11, 31)}
+    >
+        <DatePicker.Input />
+        <DatePicker.PopoverContent>
+            <DatePicker.Calendar />
+        </DatePicker.PopoverContent>
+    </DatePicker.Root>
+</Wrapper>
+
+```tsx
+<DatePicker.Root
+    minDate={new Date(2024, 0, 1)}
+    maxDate={new Date(2024, 11, 31)}
+>
+    <DatePicker.Input />
+    <DatePicker.PopoverContent>
+        <DatePicker.Calendar />
+    </DatePicker.PopoverContent>
+</DatePicker.Root>
+```
+
+### Custom Date Format
+
+Customize the date format displayed in the input using the `dateFormat` prop. The format uses dayjs format strings.
+
+<Wrapper>
+    <DatePicker.Root dateFormat="DD/MM/YYYY">
+        <DatePicker.Input />
+        <DatePicker.PopoverContent>
+            <DatePicker.Calendar />
+        </DatePicker.PopoverContent>
+    </DatePicker.Root>
+</Wrapper>
+
+```tsx
+<DatePicker.Root dateFormat="DD/MM/YYYY">
+    <DatePicker.Input />
+    <DatePicker.PopoverContent>
+        <DatePicker.Calendar />
+    </DatePicker.PopoverContent>
+</DatePicker.Root>
+```
+
+### Custom Placeholder
+
+Set a custom placeholder text for the input field.
+
+<Wrapper>
+    <DatePicker.Root placeholder="Choose your date">
+        <DatePicker.Input />
+        <DatePicker.PopoverContent>
+            <DatePicker.Calendar />
+        </DatePicker.PopoverContent>
+    </DatePicker.Root>
+</Wrapper>
+
+```tsx
+<DatePicker.Root placeholder="Choose your date">
+    <DatePicker.Input />
+    <DatePicker.PopoverContent>
+        <DatePicker.Calendar />
+    </DatePicker.PopoverContent>
+</DatePicker.Root>
+```
+
+### With Footer
+
+Enable the footer with Cancel and Apply buttons by setting `showFooter` to `true`. This is useful when you want users to confirm their selection before closing the popover.
+
+<Wrapper>
+    <DatePickerWithFooter />
+</Wrapper>
+
+```tsx
+function DatePickerWithFooter() {
+    const [date, setDate] = useState<Date | null>(null);
+
+    function handleApply() {
+        console.log("Date applied:", date);
+    }
+
+    function handleCancel() {
+        console.log("Date selection cancelled");
+    }
+
+    return (
+        <DatePicker.Root
+            value={date}
+            onChange={setDate}
+            showFooter
+            onApply={handleApply}
+            onCancel={handleCancel}
+        >
+            <DatePicker.Input />
+            <DatePicker.PopoverContent>
+                <DatePicker.Calendar />
+                <DatePicker.Footer />
+            </DatePicker.PopoverContent>
+        </DatePicker.Root>
+    );
+}
+```
+
+### Sizes
+
+Date Picker comes in three sizes: `sm`, `md`, and `lg`.
+
+<Wrapper>
+    <VStack gap={8} w="full">
+        <DatePicker.Root size="sm">
+            <DatePicker.Input />
+            <DatePicker.PopoverContent>
+                <DatePicker.Calendar />
+            </DatePicker.PopoverContent>
+        </DatePicker.Root>
+
+        <DatePicker.Root size="md">
+            <DatePicker.Input />
+            <DatePicker.PopoverContent>
+                <DatePicker.Calendar />
+            </DatePicker.PopoverContent>
+        </DatePicker.Root>
+
+        <DatePicker.Root size="lg">
+            <DatePicker.Input />
+            <DatePicker.PopoverContent>
+                <DatePicker.Calendar />
+            </DatePicker.PopoverContent>
+        </DatePicker.Root>
+    </VStack>
+</Wrapper>
+
+```tsx
+<VStack gap={8} w="full">
+    <DatePicker.Root size="sm">
+        <DatePicker.Input />
+        <DatePicker.PopoverContent>
+            <DatePicker.Calendar />
+        </DatePicker.PopoverContent>
+    </DatePicker.Root>
+
+    <DatePicker.Root size="md">
+        <DatePicker.Input />
+        <DatePicker.PopoverContent>
+            <DatePicker.Calendar />
+        </DatePicker.PopoverContent>
+    </DatePicker.Root>
+
+    <DatePicker.Root size="lg">
+        <DatePicker.Input />
+        <DatePicker.PopoverContent>
+            <DatePicker.Calendar />
+        </DatePicker.PopoverContent>
+    </DatePicker.Root>
+</VStack>
+```

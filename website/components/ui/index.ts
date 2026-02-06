@@ -10,6 +10,8 @@ export * as Card from "./card";
 export * from "./checkbox-card";
 export * from "./checkbox";
 export * from "./close-button";
+export * as DatePicker from "./date-picker";
+export * as DateRangePicker from "./date-range-picker";
 export * from "./divider";
 export * as Editable from "./editable";
 export * as EmptyState from "./empty-state";

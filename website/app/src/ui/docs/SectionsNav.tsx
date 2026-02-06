@@ -19,7 +19,8 @@ const newComponents = [
     "radio card",
     "action bar",
     "empty state",
-    "range slider"
+    "range slider",
+    "date picker"
 ];
 const updatedComponents = ["menu"];
 

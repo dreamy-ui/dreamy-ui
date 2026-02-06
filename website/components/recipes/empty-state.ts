@@ -25,19 +25,17 @@ export const emptyState = defineSlotRecipe({
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            color: "fg.disabled",
+            color: "fg.subtle",
             "& :where(svg)": {
                 boxSize: "1em"
             }
         },
         title: {
-            fontWeight: "semibold",
-            textAlign: "center"
+            fontWeight: "semibold"
         },
         description: {
             textStyle: "sm",
-            color: "fg.medium",
-            textAlign: "center"
+            color: "fg.muted"
         }
     },
     variants: {

@@ -14,6 +14,7 @@ import {
     CheckboxGroup,
     CloseButton,
     DarkTheme,
+    DatePicker,
     Divider,
     Link as DreamLink,
     Editable,
@@ -149,6 +150,7 @@ import {
     UseReducedMotion,
     UseUpdateEffect
 } from "./components/hooks";
+import { ControlledDatePicker, DatePickerWithFooter } from "./components/date-pickers";
 import { ControlledPinInput } from "./components/inputs";
 import { LinkButton } from "./components/others";
 import { PMTabs } from "./components/pm-tabs";
@@ -322,7 +324,10 @@ const DreamComponents = {
     BarChartExample,
     LineChartExample,
     PieChartExample,
-    EmptyState
+    EmptyState,
+    DatePicker,
+    ControlledDatePicker,
+    DatePickerWithFooter
 };
 
 function Wrapper({ children, ...props }: PropsWithChildren<FlexProps>) {

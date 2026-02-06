@@ -8,6 +8,8 @@ import { button } from "./button";
 import { card } from "./card";
 import { checkboxCard } from "./checkbox-card";
 import { checkbox } from "./checkbox";
+import { datePicker } from "./date-picker";
+import { dateRangePicker } from "./date-range-picker";
 import { editable } from "./editable";
 import { emptyState } from "./empty-state";
 import { field } from "./field";
@@ -50,6 +52,8 @@ export const recipes = {
     card,
     checkboxCard,
     checkbox,
+    datePicker,
+    dateRangePicker,
     editable,
     emptyState,
     field,

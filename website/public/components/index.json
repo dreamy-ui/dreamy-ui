@@ -182,6 +182,52 @@
   },
   {
     "type": "component",
+    "id": "date-picker",
+    "file": "date-picker.tsx",
+    "component": "DatePicker",
+    "npmDependencies": [
+      "dayjs",
+      "react-icons"
+    ],
+    "fileDependencies": [
+      "./box",
+      "./button",
+      "./flex",
+      "./icon",
+      "./icon-button",
+      "./input",
+      "./popover"
+    ],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "date-picker"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "date-range-picker",
+    "file": "date-range-picker.tsx",
+    "component": "DateRangePicker",
+    "npmDependencies": [
+      "dayjs",
+      "react-icons"
+    ],
+    "fileDependencies": [
+      "./box",
+      "./button",
+      "./flex",
+      "./input",
+      "./popover"
+    ],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "date-range-picker"
+    ]
+  },
+  {
+    "type": "component",
     "id": "divider",
     "file": "divider.tsx",
     "component": "Divider",
@@ -206,6 +252,19 @@
     "hasPattern": false,
     "recipeIds": [
       "editable"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "empty-state",
+    "file": "empty-state.tsx",
+    "component": "EmptyState",
+    "npmDependencies": [],
+    "fileDependencies": [],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "empty-state"
     ]
   },
   {
