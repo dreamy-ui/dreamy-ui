@@ -72,52 +72,6 @@ pnpm dreamy add snippet
 </Snippet>
 ```
 
-### Schemes
-
-<Wrapper>
-	{["primary", "secondary", "success", "warning", "info", "error", "none"].map((scheme) => (
-		<Stack
-			key={scheme}
-			direction={{
-				base: "column",
-				md: "row"
-			}}
-			alignItems={{
-				base: "start",
-				md: "center"
-			}}
-			w='full'
-		>
-			<Text minW={20}>{scheme}</Text>	
-			<Snippet key={scheme} scheme={scheme} w='full' >
-				pnpm dlx dreamy add --all
-			</Snippet>
-		</Stack>
-	))}
-</Wrapper>
-
-```tsx
-{["primary", "secondary", "success", "warning", "info", "error", "none"].map((scheme) => (
-	<Stack
-		key={scheme}
-		direction={{
-			base: "column",
-			md: "row"
-		}} 
-		alignItems={{
-			base: "start",
-			md: "center"
-		}}`
-		w='full'
-	>
-		<Text minW={20}>{scheme}</Text>	
-		<Snippet key={scheme} scheme={scheme} w='full'>
-			pnpm dlx dreamy add --all
-		</Snippet>
-	</Stack>
-))}
-```
-
 ### Disable Tooltip
 
 You can disable the "Copy To Clipboard" tooltip by using the `disableTooltip` prop.

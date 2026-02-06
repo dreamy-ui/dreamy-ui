@@ -1,4 +1,3 @@
-import { getColorSchemes } from "@dreamy-ui/panda-preset";
 import { defineParts, defineRecipe } from "@pandacss/dev";
 
 const parts = defineParts({
@@ -43,30 +42,29 @@ export const snippet = defineRecipe({
         variant: {
             solid: parts({
                 root: {
-                    bg: "var(--snippet-color)/10",
-                    color: "var(--snippet-color)"
+                    bg: "alpha.50",
+                    borderColor: "border",
+                    borderWidth: "2px"
                 }
             }),
             bordered: parts({
                 root: {
                     borderWidth: "2px",
-                    borderColor: "var(--snippet-color)/32",
-                    color: "var(--snippet-color)"
+                    borderColor: "border"
                 }
             })
         },
-        scheme: getColorSchemes("--snippet-color", undefined, "root"),
         size: {
             sm: parts({
                 root: {
-                    px: 1.5,
+                    px: 2,
                     py: 0.5,
                     rounded: "l1"
                 }
             }),
             md: parts({
                 root: {
-                    px: 2,
+                    px: 3,
                     py: 1.5,
                     rounded: "l2"
                 }
@@ -82,7 +80,6 @@ export const snippet = defineRecipe({
     },
     defaultVariants: {
         variant: "solid",
-        scheme: "none",
         size: "md"
     }
 });
