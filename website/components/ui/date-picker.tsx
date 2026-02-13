@@ -306,7 +306,9 @@ export const Calendar = withContext(
                     </CalendarGridHeader>
                     <CalendarGridBody>
                         {calendarDays.map((date) => (
-                            <CalendarCell key={date.format("YYYY-MM-DD")}>
+                            <CalendarCell
+                                key={`${date.format("YYYY-MM-DD")}-${viewDate.format("MM")}`}
+                            >
                                 <CalendarCellButton
                                     data-outside-month={isOutsideMonth(date) ? "" : undefined}
                                     data-selected={isSelected(date) ? "" : undefined}

@@ -97,17 +97,21 @@ export const datePicker = defineSlotRecipe({
             display: "contents"
         },
         calendarCell: {
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: "max"
+            position: "relative",
+            width: "full",
+            paddingBottom: "100%"
         },
         calendarCellButton: {
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             width: "full",
-            aspectRatio: "1/1",
+            height: "full",
             borderRadius: "l2",
             borderWidth: "1px",
             borderStyle: "solid",
@@ -115,6 +119,8 @@ export const datePicker = defineSlotRecipe({
             backgroundColor: "transparent",
             cursor: "pointer",
             fontSize: "sm",
+            padding: 0,
+            minWidth: 0,
             transition: "all",
             transitionDuration: "normal",
             _hover: {

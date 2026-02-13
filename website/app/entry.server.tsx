@@ -1,7 +1,7 @@
 import cluster from "node:cluster";
 import { PassThrough } from "node:stream";
 import { createReadableStreamFromReadable } from "@react-router/node";
-import { createRequestLogger, initLogger } from "evlog";
+import { initLogger } from "evlog";
 import { isbot } from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
 import type { EntryContext } from "react-router";
