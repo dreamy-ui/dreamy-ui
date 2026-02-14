@@ -13,6 +13,7 @@ import { dateRangePicker } from "./date-range-picker";
 import { editable } from "./editable";
 import { emptyState } from "./empty-state";
 import { field } from "./field";
+import { fileUpload } from "./file-upload";
 import { group } from "./group";
 import { icon } from "./icon";
 import { image } from "./image";
@@ -57,6 +58,7 @@ export const recipes = {
     editable,
     emptyState,
     field,
+    fileUpload,
     group,
     icon,
     image,

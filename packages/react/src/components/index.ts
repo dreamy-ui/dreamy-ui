@@ -4,6 +4,7 @@ export * from "./checkbox";
 export * from "./circular-progress";
 export * from "./descendant";
 export * from "./editable";
+export * from "./file-upload";
 export * from "./field";
 export * from "./focus-lock";
 export * from "./menu";

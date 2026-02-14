@@ -20,6 +20,7 @@ import {
     Editable,
     EmptyState,
     Field,
+    FileUpload,
     Flex,
     type FlexProps,
     Grid,
@@ -134,11 +135,13 @@ import {
     ControlledCheckbox,
     ControlledCheckboxCard
 } from "./components/checkboxes";
+import { ControlledDatePicker, DatePickerWithFooter } from "./components/date-pickers";
 import {
     ControlledEditable,
     FinalFocusRefEditable,
     StartWithEditViewEditable
 } from "./components/editables";
+import { FileUploadCustomList } from "./components/file-uploads";
 import {
     UseActionKey,
     UseCanUseDOM,
@@ -150,7 +153,6 @@ import {
     UseReducedMotion,
     UseUpdateEffect
 } from "./components/hooks";
-import { ControlledDatePicker, DatePickerWithFooter } from "./components/date-pickers";
 import { ControlledPinInput } from "./components/inputs";
 import { LinkButton } from "./components/others";
 import { PMTabs } from "./components/pm-tabs";
@@ -256,6 +258,7 @@ const DreamComponents = {
     Tabs,
     VariantTabs,
     ControlledTabs,
+    FileUpload,
     Checkbox,
     CheckboxGroup,
     CheckboxGroupControl,
@@ -327,7 +330,8 @@ const DreamComponents = {
     EmptyState,
     DatePicker,
     ControlledDatePicker,
-    DatePickerWithFooter
+    DatePickerWithFooter,
+    FileUploadCustomList
 };
 
 function Wrapper({ children, ...props }: PropsWithChildren<FlexProps>) {

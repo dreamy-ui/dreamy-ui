@@ -285,6 +285,19 @@
   },
   {
     "type": "component",
+    "id": "file-upload",
+    "file": "file-upload.tsx",
+    "component": "FileUpload",
+    "npmDependencies": [],
+    "fileDependencies": [],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "file-upload"
+    ]
+  },
+  {
+    "type": "component",
     "id": "flex",
     "file": "flex.tsx",
     "component": "Flex",

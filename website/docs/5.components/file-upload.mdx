@@ -1,0 +1,314 @@
+---
+title: File Upload
+description: File Upload is used to select and upload files from the user's device.
+isServerComponent: false
+source: /website/compositions/ui/file-upload.tsx
+themeSource: /website/compositions/recipes/file-upload.ts
+---
+
+## Installation
+
+```bash
+pnpm dreamy add file-upload
+```
+
+## Usage
+
+File Upload is a compound component that provides a complete file upload experience including file selection, drag and drop, file previews, and validation.
+
+<Wrapper>
+    <FileUpload.Root maxW="sm">
+        <FileUpload.Trigger asChild>
+            <Button variant="outline">
+                <>Upload file</>
+            </Button>
+        </FileUpload.Trigger>
+        <FileUpload.List />
+    </FileUpload.Root>
+</Wrapper>
+
+```tsx
+<FileUpload.Root maxW="sm">
+    <FileUpload.Trigger asChild>
+        <Button variant="outline">
+            Upload file
+        </Button>
+    </FileUpload.Trigger>
+    <FileUpload.List />
+</FileUpload.Root>
+```
+
+### Accepted Files
+
+Define the accepted file types for upload using the `accept` prop. You can pass MIME types (e.g. `"image/*"`, `"application/pdf"`) or file extensions (e.g. `".png"`, `".jpg"`).
+
+<Wrapper>
+    <FileUpload.Root accept={["image/png"]} maxW="sm">
+        <FileUpload.Trigger asChild>
+            <Button variant="outline">
+                <>Upload PNG</>
+            </Button>
+        </FileUpload.Trigger>
+        <FileUpload.List />
+    </FileUpload.Root>
+</Wrapper>
+
+```tsx
+<FileUpload.Root accept={["image/png"]} maxW="sm">
+    <FileUpload.Trigger asChild>
+        <Button variant="outline">
+            Upload PNG
+        </Button>
+    </FileUpload.Trigger>
+    <FileUpload.List />
+</FileUpload.Root>
+```
+
+### Multiple Files
+
+Upload multiple files at once by setting the `maxFiles` prop.
+
+<Wrapper>
+    <FileUpload.Root maxFiles={5} maxW="sm">
+        <FileUpload.Trigger asChild>
+            <Button variant="outline">
+                <>Upload files</>
+            </Button>
+        </FileUpload.Trigger>
+        <FileUpload.List showSize clearable />
+    </FileUpload.Root>
+</Wrapper>
+
+```tsx
+<FileUpload.Root maxFiles={5} maxW="sm">
+    <FileUpload.Trigger asChild>
+        <Button variant="outline">
+            Upload files
+        </Button>
+    </FileUpload.Trigger>
+    <FileUpload.List showSize clearable />
+</FileUpload.Root>
+```
+
+### Dropzone
+
+Drop files inside the dropzone area. You can combine the dropzone with the `maxFiles` prop to limit the number of files.
+
+<Wrapper>
+    <FileUpload.Root maxW="xl" maxFiles={10} alignItems="stretch">
+        <FileUpload.Dropzone>
+            <FileUpload.DropzoneContent>
+                <Text>Drag and drop files here</Text>
+                <Text color="fg.medium" fontSize="sm">.png, .jpg up to 5MB</Text>
+            </FileUpload.DropzoneContent>
+        </FileUpload.Dropzone>
+        <FileUpload.List showSize clearable />
+    </FileUpload.Root>
+</Wrapper>
+
+```tsx
+<FileUpload.Root maxW="xl" maxFiles={10} alignItems="stretch">
+    <FileUpload.Dropzone>
+        <FileUpload.DropzoneContent>
+            <Text>Drag and drop files here</Text>
+            <Text color="fg.medium" fontSize="sm">.png, .jpg up to 5MB</Text>
+        </FileUpload.DropzoneContent>
+    </FileUpload.Dropzone>
+    <FileUpload.List showSize clearable />
+</FileUpload.Root>
+```
+
+### File Size Validation
+
+Use the `maxFileSize` and `minFileSize` props to validate file sizes. You can pass a number (bytes) or a human-readable string like `"3MB"`, `"1GB"`, `"500KB"`.
+
+<Wrapper>
+    <FileUpload.Root 
+        maxFileSize="3MB" 
+        maxW="sm" 
+        onFileReject={({ files }) => {
+            toast({
+                title: "File rejected",
+                description: files.map((file) => file.errors.map((error) => error.message).join(", ")).join(", "),
+                status: "error"
+            })
+        }}
+    >
+        <FileUpload.Trigger asChild>
+            <Button variant="outline">
+                <>Upload file (max 3MB)</>
+            </Button>
+        </FileUpload.Trigger>
+        <FileUpload.List showSize />
+    </FileUpload.Root>
+</Wrapper>
+
+```tsx
+<FileUpload.Root maxFileSize="3MB" maxW="sm">
+    <FileUpload.Trigger asChild>
+        <Button variant="outline">
+            Upload file (max 3MB)
+        </Button>
+    </FileUpload.Trigger>
+    <FileUpload.List showSize />
+</FileUpload.Root>
+```
+
+### Input Style
+
+Use the `FileUpload.FileText` component inside a trigger to create an input-like file upload.
+
+<Wrapper>
+    <FileUpload.Root maxW="300px" gap="1">
+        <FileUpload.Label>Upload file</FileUpload.Label>
+        <Input asChild>
+            <FileUpload.Trigger>
+                <FileUpload.FileText />
+            </FileUpload.Trigger>
+        </Input>
+    </FileUpload.Root>
+</Wrapper>
+
+```tsx
+<FileUpload.Root maxW="300px" gap="1">
+    <FileUpload.Label>Upload file</FileUpload.Label>
+    <Input asChild>
+        <FileUpload.Trigger>
+            <FileUpload.FileText />
+        </FileUpload.Trigger>
+    </Input>
+</FileUpload.Root>
+```
+
+### Directory Upload
+
+Use the `directory` prop to allow selecting a directory instead of individual files.
+
+<Wrapper>
+    <FileUpload.Root directory maxW="sm">
+        <FileUpload.Trigger asChild>
+            <Button variant="outline">
+                <>Select folder</>
+            </Button>
+        </FileUpload.Trigger>
+        <FileUpload.List />
+    </FileUpload.Root>
+</Wrapper>
+
+```tsx
+<FileUpload.Root directory maxW="sm">
+    <FileUpload.Trigger asChild>
+        <Button variant="outline">
+            Select folder
+        </Button>
+    </FileUpload.Trigger>
+    <FileUpload.List />
+</FileUpload.Root>
+```
+
+### Custom List
+
+Build a custom file list using the low-level `FileUpload.ItemGroup`, `FileUpload.Item`, `FileUpload.ItemPreviewImage`, and `FileUpload.ItemDeleteTrigger` parts. This example shows image thumbnails with delete buttons.
+
+<Wrapper>
+    <FileUploadCustomList />
+</Wrapper>
+
+```tsx
+import { useFileUploadContext } from "@dreamy-ui/react";
+
+function CustomImageList() {
+    const fileUpload = useFileUploadContext();
+    const files = fileUpload.acceptedFiles;
+    if (files.length === 0) return null;
+
+    return (
+        <FileUpload.ItemGroup>
+            {files.map((file) => (
+                <FileUpload.Item
+                    bg={"transparent"}
+                    boxSize="20"
+                    file={file}
+                    key={file.name}
+                    overflow="hidden"
+                    p="2"
+                    position="relative"
+                    w="auto"
+                >
+                    <Image
+                        absolute
+                        alt={file.name}
+                        filter={"brightness(0.4)"}
+                        h="full"
+                        objectFit="cover"
+                        right={0}
+                        src={URL.createObjectURL(file)}
+                        top={0}
+                        w="full"
+                        zIndex={-1}
+                    />
+                    <FileUpload.ItemPreviewImage file={file} />
+                    <Flex
+                        position="absolute"
+                        right="1"
+                        top="1"
+                    >
+                        <FileUpload.ItemDeleteTrigger
+                            boxSize="5"
+                            file={file}
+                            rounded="full"
+                        />
+                    </Flex>
+                </FileUpload.Item>
+            ))}
+        </FileUpload.ItemGroup>
+    );
+}
+
+function Demo() {
+    return (
+        <FileUpload.Root accept={["image/*"]} maxFiles={5} maxW="sm">
+            <FileUpload.Trigger asChild>
+                <Button variant="outline">
+                    Upload Images
+                </Button>
+            </FileUpload.Trigger>
+            <CustomImageList />
+        </FileUpload.Root>
+    );
+}
+```
+
+## Anatomy
+
+The FileUpload component is composed of the following parts:
+
+```tsx
+<FileUpload.Root>
+    {/* Label (optional) */}
+    <FileUpload.Label />
+
+    {/* Option A: Button trigger */}
+    <FileUpload.Trigger />
+
+    {/* Option B: Dropzone */}
+    <FileUpload.Dropzone>
+        <FileUpload.DropzoneContent />
+    </FileUpload.Dropzone>
+
+    {/* File list (shortcut) */}
+    <FileUpload.List />
+
+    {/* Or build the file list manually */}
+    <FileUpload.ItemGroup>
+        <FileUpload.Item file={file}>
+            <FileUpload.ItemPreview />
+            <FileUpload.ItemContent>
+                <FileUpload.ItemName file={file} />
+                <FileUpload.ItemSizeText file={file} />
+            </FileUpload.ItemContent>
+            <FileUpload.ItemDeleteTrigger file={file} />
+        </FileUpload.Item>
+    </FileUpload.ItemGroup>
+</FileUpload.Root>
+```

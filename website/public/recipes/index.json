@@ -76,6 +76,11 @@
   },
   {
     "type": "recipe",
+    "id": "file-upload",
+    "file": "file-upload.ts"
+  },
+  {
+    "type": "recipe",
     "id": "group",
     "file": "group.ts"
   },
