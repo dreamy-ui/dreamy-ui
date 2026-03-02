@@ -9,6 +9,7 @@ export * from "./field";
 export * from "./focus-lock";
 export * from "./menu";
 export * from "./modal";
+export * from "./pagination";
 export * from "./pin-input";
 export * from "./popover";
 export * from "./popper";

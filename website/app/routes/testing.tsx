@@ -1,4 +1,4 @@
-import { Button } from "@/ui";
+import { Button, Pagination } from "@/ui";
 import { Flex } from "@/ui";
 import { MotionFlex } from "@/ui";
 import { Select } from "@/ui";
@@ -55,6 +55,16 @@ export default function Test() {
             col
             gap={10}
         >
+            <Pagination.Root
+                count={100}
+                defaultPage={1}
+                pageSize={10}
+            >
+                <Pagination.PrevTrigger />
+                <Pagination.Items />
+                <Pagination.NextTrigger />
+            </Pagination.Root>
+
             <Button
                 size={"lg"}
                 variant={"primary"}

@@ -1,0 +1,402 @@
+---
+title: Pagination
+description: Pagination allows users to navigate through pages of content.
+isServerComponent: false
+source: /packages/react/src/components/pagination/pagination.tsx
+themeSource: /packages/system/src/recipes/pagination.ts
+---
+
+## Installation
+
+```bash
+pnpm dreamy add pagination
+```
+
+## Usage
+
+Pagination is used to navigate through pages of content when you have too much data to display on a single page.
+
+<Wrapper>
+    <Pagination.Root count={100} pageSize={10} defaultPage={1}>
+        <Pagination.PrevTrigger />
+        <Pagination.Items />
+        <Pagination.NextTrigger />
+    </Pagination.Root>
+</Wrapper>
+
+```tsx
+<Pagination.Root count={100} pageSize={10} defaultPage={1}>
+    <Pagination.PrevTrigger />
+    <Pagination.Items />
+    <Pagination.NextTrigger />
+</Pagination.Root>
+```
+
+### With Page Text
+
+You can display the current page information using the `PageText` component.
+
+<Wrapper>
+    <Pagination.Root count={100} pageSize={10} defaultPage={3}>
+        <Pagination.PrevTrigger />
+        <Pagination.Items />
+        <Pagination.NextTrigger />
+        <Pagination.PageText format="compact" ml={4} />
+    </Pagination.Root>
+</Wrapper>
+
+```tsx
+<Pagination.Root count={100} pageSize={10} defaultPage={3}>
+    <Pagination.PrevTrigger />
+    <Pagination.Items />
+    <Pagination.NextTrigger />
+    <Pagination.PageText format="compact" ml={4} />
+</Pagination.Root>
+```
+
+### Automatic Ellipsis
+
+The `Items` component automatically handles ellipsis placement based on the current page and `siblingCount`. This eliminates the need to manually manage which pages to show.
+
+<Wrapper>
+    <Pagination.Root count={200} pageSize={10} defaultPage={10} siblingCount={1}>
+        <Pagination.PrevTrigger />
+        <Pagination.Items />
+        <Pagination.NextTrigger />
+    </Pagination.Root>
+</Wrapper>
+
+```tsx
+<Pagination.Root count={200} pageSize={10} defaultPage={10} siblingCount={1}>
+    <Pagination.PrevTrigger />
+    <Pagination.Items />
+    <Pagination.NextTrigger />
+</Pagination.Root>
+```
+
+### Manual Items and Ellipsis
+
+If you need full control, you can still manually specify items and ellipsis.
+
+<Wrapper>
+    <Pagination.Root count={100} page={5}>
+        <Pagination.PrevTrigger />
+        <Pagination.Item value={1} />
+        <Pagination.Ellipsis />
+        <Pagination.Item value={4} />
+        <Pagination.Item value={5} />
+        <Pagination.Item value={6} />
+        <Pagination.Ellipsis />
+        <Pagination.Item value={10} />
+        <Pagination.NextTrigger />
+    </Pagination.Root>
+</Wrapper>
+
+```tsx
+<Pagination.Root count={100} page={5}>
+    <Pagination.PrevTrigger />
+    <Pagination.Item value={1} />
+    <Pagination.Ellipsis />
+    <Pagination.Item value={4} />
+    <Pagination.Item value={5} />
+    <Pagination.Item value={6} />
+    <Pagination.Ellipsis />
+    <Pagination.Item value={10} />
+    <Pagination.NextTrigger />
+</Pagination.Root>
+```
+
+### Controlled Pagination
+
+You can control the pagination state using the `page` and `onPageChange` props. The `Items` component automatically updates based on the current page.
+
+<Wrapper>
+    <ControlledPagination />
+</Wrapper>
+
+```tsx
+const [page, setPage] = useState(1);
+
+<Pagination.Root
+    count={100}
+    page={page}
+    pageSize={10}
+    onPageChange={(details) => setPage(details.page)}
+>
+    <Pagination.PrevTrigger />
+    <Pagination.Items />
+    <Pagination.NextTrigger />
+    <Pagination.PageText format="compact" ml={4} />
+</Pagination.Root>
+```
+
+### Sizes
+
+Pagination comes with three sizes: `sm`, `md` (default), and `lg`.
+
+<Wrapper>
+    <Pagination.Root count={100} pageSize={10} defaultPage={1} size="sm">
+        <Pagination.PrevTrigger />
+        <Pagination.Items />
+        <Pagination.NextTrigger />
+    </Pagination.Root>
+
+    <Pagination.Root count={100} pageSize={10} defaultPage={1} size="md">
+        <Pagination.PrevTrigger />
+        <Pagination.Items />
+        <Pagination.NextTrigger />
+    </Pagination.Root>
+
+    <Pagination.Root count={100} pageSize={10} defaultPage={1} size="lg">
+        <Pagination.PrevTrigger />
+        <Pagination.Items />
+        <Pagination.NextTrigger />
+    </Pagination.Root>
+</Wrapper>
+
+```tsx
+<Pagination.Root count={100} pageSize={10} defaultPage={1} size="sm">
+    <Pagination.PrevTrigger />
+    <Pagination.Items />
+    <Pagination.NextTrigger />
+</Pagination.Root>
+
+<Pagination.Root count={100} pageSize={10} defaultPage={1} size="md">
+    <Pagination.PrevTrigger />
+    <Pagination.Items />
+    <Pagination.NextTrigger />
+</Pagination.Root>
+
+<Pagination.Root count={100} pageSize={10} defaultPage={1} size="lg">
+    <Pagination.PrevTrigger />
+    <Pagination.Items />
+    <Pagination.NextTrigger />
+</Pagination.Root>
+```
+
+### Variants
+
+Pagination supports different variants: `solid` (default), `outline`, and `ghost`.
+
+<Wrapper>
+    <Pagination.Root count={100} pageSize={10} defaultPage={2} variant="solid">
+        <Pagination.PrevTrigger />
+        <Pagination.Items />
+        <Pagination.NextTrigger />
+    </Pagination.Root>
+
+    <Pagination.Root count={100} pageSize={10} defaultPage={2} variant="outline">
+        <Pagination.PrevTrigger />
+        <Pagination.Items />
+        <Pagination.NextTrigger />
+    </Pagination.Root>
+
+    <Pagination.Root count={100} pageSize={10} defaultPage={2} variant="ghost">
+        <Pagination.PrevTrigger />
+        <Pagination.Items />
+        <Pagination.NextTrigger />
+    </Pagination.Root>
+</Wrapper>
+
+```tsx
+<Pagination.Root count={100} pageSize={10} defaultPage={2} variant="solid">
+    <Pagination.PrevTrigger />
+    <Pagination.Items />
+    <Pagination.NextTrigger />
+</Pagination.Root>
+
+<Pagination.Root count={100} pageSize={10} defaultPage={2} variant="outline">
+    <Pagination.PrevTrigger />
+    <Pagination.Items />
+    <Pagination.NextTrigger />
+</Pagination.Root>
+
+<Pagination.Root count={100} pageSize={10} defaultPage={2} variant="ghost">
+    <Pagination.PrevTrigger />
+    <Pagination.Items />
+    <Pagination.NextTrigger />
+</Pagination.Root>
+```
+
+### Custom Trigger Content
+
+You can customize the content of the prev and next triggers.
+
+<Wrapper>
+    <Pagination.Root count={100} pageSize={10} defaultPage={3}>
+        <Pagination.PrevTrigger>Previous</Pagination.PrevTrigger>
+        <Pagination.Items />
+        <Pagination.NextTrigger>Next</Pagination.NextTrigger>
+    </Pagination.Root>
+</Wrapper>
+
+```tsx
+<Pagination.Root count={100} pageSize={10} defaultPage={3}>
+    <Pagination.PrevTrigger>Previous</Pagination.PrevTrigger>
+    <Pagination.Items />
+    <Pagination.NextTrigger>Next</Pagination.NextTrigger>
+</Pagination.Root>
+```
+
+### Page Text Formats
+
+The `PageText` component supports three different formats.
+
+<Wrapper>
+    <Pagination.Root count={100} pageSize={10} defaultPage={3}>
+        <Pagination.PrevTrigger />
+        <Pagination.Items />
+        <Pagination.NextTrigger />
+        <Pagination.PageText format="short" ml={4} />
+    </Pagination.Root>
+
+    <Pagination.Root count={100} pageSize={10} defaultPage={3}>
+        <Pagination.PrevTrigger />
+        <Pagination.Items />
+        <Pagination.NextTrigger />
+        <Pagination.PageText format="compact" ml={4} />
+    </Pagination.Root>
+
+    <Pagination.Root count={100} pageSize={10} defaultPage={3}>
+        <Pagination.PrevTrigger />
+        <Pagination.Items />
+        <Pagination.NextTrigger />
+        <Pagination.PageText format="long" ml={4} />
+    </Pagination.Root>
+</Wrapper>
+
+```tsx
+{/* Short format: "3 / 10" */}
+<Pagination.Root count={100} pageSize={10} defaultPage={3}>
+    <Pagination.PrevTrigger />
+    <Pagination.Items />
+    <Pagination.NextTrigger />
+    <Pagination.PageText format="short" ml={4} />
+</Pagination.Root>
+
+{/* Compact format: "3 of 10" */}
+<Pagination.Root count={100} pageSize={10} defaultPage={3}>
+    <Pagination.PrevTrigger />
+    <Pagination.Items />
+    <Pagination.NextTrigger />
+    <Pagination.PageText format="compact" ml={4} />
+</Pagination.Root>
+
+{/* Long format: "21-30 of 100" */}
+<Pagination.Root count={100} pageSize={10} defaultPage={3}>
+    <Pagination.PrevTrigger />
+    <Pagination.Items />
+    <Pagination.NextTrigger />
+    <Pagination.PageText format="long" ml={4} />
+</Pagination.Root>
+```
+
+### Custom Item Rendering
+
+The `Items` component accepts a `render` prop for custom rendering of each page item. This is useful when you want to wrap items in custom components or add additional styling.
+
+<Wrapper>
+    <CustomItemPagination />
+</Wrapper>
+
+```tsx
+<Pagination.Root count={200} pageSize={10} defaultPage={5}>
+    <Pagination.PrevTrigger />
+    <Pagination.Items
+        render={(page) => (
+            <Button variant={{ base: "ghost", _selected: "outline" }}>
+                Page {page.value}
+            </Button>
+        )}
+    />
+    <Pagination.NextTrigger />
+</Pagination.Root>
+```
+
+## Props
+
+### Root
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| count | `number` | - | Total number of items (required) |
+| page | `number` | `1` | Current page (1-indexed) |
+| pageSize | `number` | `10` | Number of items per page |
+| siblingCount | `number` | `1` | Number of siblings to show on each side of current page |
+| size | `'sm' \| 'md' \| 'lg'` | `md` | Size of pagination controls |
+| variant | `'solid' \| 'outline' \| 'ghost'` | `solid` | Visual variant |
+| onPageChange | `(details: { page: number }) => void` | - | Callback when page changes |
+
+### Item
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| value | `number` | - | The page number (required) |
+
+### Items
+
+The `Items` component is a shortcut that automatically renders pagination items with ellipsis based on the current page and sibling count.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| render | `(page: PageItem) => React.ReactNode` | - | Optional custom render function for each page item |
+
+The `PageItem` type has the following shape:
+
+```tsx
+interface PageItem {
+    value: number;
+    type: "page" | "ellipsis";
+}
+```
+
+### PrevTrigger
+
+Standard HTML button element props. Used to navigate to the previous page.
+
+### NextTrigger
+
+Standard HTML button element props. Used to navigate to the next page.
+
+### Ellipsis
+
+Standard HTML span element props. Used to indicate skipped pages.
+
+### PageText
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| format | `'short' \| 'compact' \| 'long'` | `compact` | Format of the page text |
+
+## Hooks
+
+### usePaginationRange
+
+A hook that generates the pagination range based on the current page and total pages. This hook is used internally by the `Items` component, but you can also use it directly for custom implementations.
+
+```tsx
+const pages = usePaginationRange({
+    page: 5,
+    totalPages: 10,
+    siblingCount: 1
+});
+
+// Returns an array like:
+// [
+//   { type: 'page', value: 1 },
+//   { type: 'ellipsis', value: 0 },
+//   { type: 'page', value: 4 },
+//   { type: 'page', value: 5 },
+//   { type: 'page', value: 6 },
+//   { type: 'ellipsis', value: 0 },
+//   { type: 'page', value: 10 }
+// ]
+```
+
+#### Parameters
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| page | `number` | - | Current page (1-indexed) |
+| totalPages | `number` | - | Total number of pages |
+| siblingCount | `number` | `1` | Number of siblings to show on each side |

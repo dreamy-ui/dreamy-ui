@@ -1,0 +1,399 @@
+---
+title: Fieldset
+description: A set of form controls optionally grouped under a common name.
+isServerComponent: false
+source: /packages/react/src/components/fieldset/fieldset.tsx
+themeSource: /packages/system/src/recipes/fieldset.ts
+---
+
+## Installation
+
+```bash
+pnpm dreamy add fieldset
+```
+
+## Usage
+
+Fieldset is a component that groups related form controls under a common name, making it easier to structure and manage forms.
+
+<Wrapper>
+    <Fieldset.Root size="lg" maxW="sm" full>
+        <Fieldset.Header>
+            <Fieldset.Legend><>Contact details</></Fieldset.Legend>
+            <Fieldset.HelperText>
+                <>Please provide your contact details below.</>
+            </Fieldset.HelperText>
+        </Fieldset.Header>
+
+        <Fieldset.Content>
+            <Field.Root>
+                <Field.Label><>Name</></Field.Label>
+                <Input name="name" placeholder="Enter your name" />
+            </Field.Root>
+
+            <Field.Root>
+                <Field.Label><>Email address</></Field.Label>
+                <Input name="email" type="email" placeholder="Enter your email" />
+            </Field.Root>
+
+            <Field.Root>
+                <Field.Label><>Country</></Field.Label>
+                <Select.Root>
+                    <Select.Trigger placeholder="Select a country" />
+                    <Select.Content>
+                        <Select.Item value="uk"><>United Kingdom</></Select.Item>
+                        <Select.Item value="ca"><>Canada</></Select.Item>
+                        <Select.Item value="us"><>United States</></Select.Item>
+                    </Select.Content>
+                </Select.Root>
+            </Field.Root>
+        </Fieldset.Content>
+
+        <Fieldset.Footer>
+            <Button type="submit" variant="primary" alignSelf="flex-start">
+                <>Submit</>
+            </Button>
+        </Fieldset.Footer>
+    </Fieldset.Root>
+</Wrapper>
+
+```tsx
+<Fieldset.Root size="lg" maxW="sm" full>
+    <Fieldset.Header>
+        <Fieldset.Legend>Contact details</Fieldset.Legend>
+        <Fieldset.HelperText>
+            Please provide your contact details below.
+        </Fieldset.HelperText>
+    </Fieldset.Header>
+
+    <Fieldset.Content>
+        <Field.Root>
+            <Field.Label>Name</Field.Label>
+            <Input name="name" placeholder="Enter your name" />
+        </Field.Root>
+
+        <Field.Root>
+            <Field.Label>Email address</Field.Label>
+            <Input name="email" type="email" placeholder="Enter your email" />
+        </Field.Root>
+
+        <Field.Root>
+            <Field.Label>Country</Field.Label>
+            <Select.Root>
+                <Select.Trigger placeholder="Select a country" />
+                <Select.Content>
+                    <Select.Item value="uk">United Kingdom</Select.Item>
+                    <Select.Item value="ca">Canada</Select.Item>
+                    <Select.Item value="us">United States</Select.Item>
+                </Select.Content>
+            </Select.Root>
+        </Field.Root>
+    </Fieldset.Content>
+
+    <Fieldset.Footer>
+        <Button type="submit" variant="primary" alignSelf="flex-start">
+            Submit
+        </Button>
+    </Fieldset.Footer>
+</Fieldset.Root>
+```
+
+### Disabled
+
+Use the `disabled` prop to disable the fieldset, which disables all input elements within it.
+
+<Wrapper>
+    <Fieldset.Root size="lg" disabled maxW="sm" full>
+        <Fieldset.Legend><>Shipping details</></Fieldset.Legend>
+        
+        <Fieldset.Content>
+            <Field.Root>
+                <Field.Label><>Street address</></Field.Label>
+                <Input name="address" placeholder="Enter street address" />
+            </Field.Root>
+
+            <Field.Root>
+                <Field.Label><>Country</></Field.Label>
+                <Select.Root>
+                    <Select.Trigger placeholder="Select a country" />
+                    <Select.Content>
+                        <Select.Item value="uk"><>United Kingdom</></Select.Item>
+                        <Select.Item value="ca"><>Canada</></Select.Item>
+                        <Select.Item value="us"><>United States</></Select.Item>
+                    </Select.Content>
+                </Select.Root>
+            </Field.Root>
+
+            <Field.Root>
+                <Field.Label><>Delivery notes</></Field.Label>
+                <Textarea name="notes" placeholder="Any special instructions?" />
+            </Field.Root>
+        </Fieldset.Content>
+    </Fieldset.Root>
+</Wrapper>
+
+```tsx
+<Fieldset.Root size="lg" disabled maxW="sm" full>
+    <Fieldset.Legend>Shipping details</Fieldset.Legend>
+    
+    <Fieldset.Content>
+        <Field.Root>
+            <Field.Label>Street address</Field.Label>
+            <Input name="address" placeholder="Enter street address" />
+        </Field.Root>
+
+        <Field.Root>
+            <Field.Label>Country</Field.Label>
+            <Select.Root>
+                <Select.Trigger placeholder="Select a country" />
+                <Select.Content>
+                    <Select.Item value="uk">United Kingdom</Select.Item>
+                    <Select.Item value="ca">Canada</Select.Item>
+                    <Select.Item value="us">United States</Select.Item>
+                </Select.Content>
+            </Select.Root>
+        </Field.Root>
+
+        <Field.Root>
+            <Field.Label>Delivery notes</Field.Label>
+            <Textarea name="notes" placeholder="Any special instructions?" />
+        </Field.Root>
+    </Fieldset.Content>
+</Fieldset.Root>
+```
+
+### Invalid
+
+Use the `invalid` prop to mark the fieldset as invalid. This will show the error text.
+
+> Note: You need to pass the `invalid` prop to the `Field` component within the fieldset to make each input element invalid.
+
+<Wrapper>
+    <Fieldset.Root size="lg" invalid maxW="sm" full>
+        <Fieldset.Legend><>Shipping details</></Fieldset.Legend>
+        
+        <Fieldset.Content>
+            <Field.Root>
+                <Field.Label><>Street address</></Field.Label>
+                <Input name="address" placeholder="Enter street address" />
+            </Field.Root>
+
+            <Field.Root invalid>
+                <Field.Label><>Country</></Field.Label>
+                <Select.Root>
+                    <Select.Trigger placeholder="Select a country" />
+                    <Select.Content>
+                        <Select.Item value="uk"><>United Kingdom</></Select.Item>
+                        <Select.Item value="ca"><>Canada</></Select.Item>
+                        <Select.Item value="us"><>United States</></Select.Item>
+                    </Select.Content>
+                </Select.Root>
+            </Field.Root>
+
+            <Field.Root invalid>
+                <Field.Label><>Notes</></Field.Label>
+                <Textarea name="notes" placeholder="Any special instructions?" />
+            </Field.Root>
+        </Fieldset.Content>
+
+        <Fieldset.ErrorText>
+            <>Some fields are invalid. Please check them.</>
+        </Fieldset.ErrorText>
+    </Fieldset.Root>
+</Wrapper>
+
+```tsx
+<Fieldset.Root size="lg" invalid maxW="sm" full>
+    <Fieldset.Legend>Shipping details</Fieldset.Legend>
+    
+    <Fieldset.Content>
+        <Field.Root>
+            <Field.Label>Street address</Field.Label>
+            <Input name="address" placeholder="Enter street address" />
+        </Field.Root>
+
+        <Field.Root invalid>
+            <Field.Label>Country</Field.Label>
+            <Select.Root>
+                <Select.Trigger placeholder="Select a country" />
+                <Select.Content>
+                    <Select.Item value="uk">United Kingdom</Select.Item>
+                    <Select.Item value="ca">Canada</Select.Item>
+                    <Select.Item value="us">United States</Select.Item>
+                </Select.Content>
+            </Select.Root>
+        </Field.Root>
+
+        <Field.Root invalid>
+            <Field.Label>Notes</Field.Label>
+            <Textarea name="notes" placeholder="Any special instructions?" />
+        </Field.Root>
+    </Fieldset.Content>
+
+    <Fieldset.ErrorText>
+        Some fields are invalid. Please check them.
+    </Fieldset.ErrorText>
+</Fieldset.Root>
+```
+
+### Sizes
+
+Fieldset comes with three different sizes: `sm`, `md` (default), and `lg`.
+
+<Wrapper>
+    <Fieldset.Root size="sm" maxW="sm" full>
+        <Fieldset.Header>
+            <Fieldset.Legend><>Small Size</></Fieldset.Legend>
+            <Fieldset.HelperText>
+                <>This is a small fieldset.</>
+            </Fieldset.HelperText>
+        </Fieldset.Header>
+        <Fieldset.Content>
+            <Field.Root>
+                <Field.Label><>Name</></Field.Label>
+                <Input name="name" placeholder="Enter your name" />
+            </Field.Root>
+        </Fieldset.Content>
+        <Fieldset.Footer>
+            <Button type="submit" variant="primary" alignSelf="flex-start">
+                <>Submit</>
+            </Button>
+        </Fieldset.Footer>
+    </Fieldset.Root>
+
+    <Fieldset.Root size="md" maxW="sm" full>
+        <Fieldset.Header>
+            <Fieldset.Legend><>Medium Size</></Fieldset.Legend>
+            <Fieldset.HelperText>
+                <>This is a medium fieldset (default).</>
+            </Fieldset.HelperText>
+        </Fieldset.Header>
+        <Fieldset.Content>
+            <Field.Root>
+                <Field.Label><>Name</></Field.Label>
+                <Input name="name" placeholder="Enter your name" />
+            </Field.Root>
+        </Fieldset.Content>
+        <Fieldset.Footer>
+            <Button type="submit" variant="primary" alignSelf="flex-start">
+                <>Submit</>
+            </Button>
+        </Fieldset.Footer>
+    </Fieldset.Root>
+
+    <Fieldset.Root size="lg" maxW="sm" full>
+        <Fieldset.Header>
+            <Fieldset.Legend><>Large Size</></Fieldset.Legend>
+            <Fieldset.HelperText>
+                <>This is a large fieldset.</>
+            </Fieldset.HelperText>
+        </Fieldset.Header>
+        <Fieldset.Content>
+            <Field.Root>
+                <Field.Label><>Name</></Field.Label>
+                <Input name="name" placeholder="Enter your name" />
+            </Field.Root>
+        </Fieldset.Content>
+        <Fieldset.Footer>
+            <Button type="submit" variant="primary" alignSelf="flex-start">
+                <>Submit</>
+            </Button>
+        </Fieldset.Footer>
+    </Fieldset.Root>
+</Wrapper>
+
+```tsx
+<Fieldset.Root size="sm" maxW="sm" full>
+    <Fieldset.Header>
+        <Fieldset.Legend>Small Size</Fieldset.Legend>
+        <Fieldset.HelperText>
+            This is a small fieldset.
+        </Fieldset.HelperText>
+    </Fieldset.Header>
+    <Fieldset.Content>
+        <Field.Root>
+            <Field.Label>Name</Field.Label>
+            <Input name="name" placeholder="Enter your name" />
+        </Field.Root>
+    </Fieldset.Content>
+    <Fieldset.Footer>
+        <Button type="submit" variant="primary" alignSelf="flex-start">
+            Submit
+        </Button>
+    </Fieldset.Footer>
+</Fieldset.Root>
+
+<Fieldset.Root size="md" maxW="sm" full>
+    <Fieldset.Header>
+        <Fieldset.Legend>Medium Size</Fieldset.Legend>
+        <Fieldset.HelperText>
+            This is a medium fieldset (default).
+        </Fieldset.HelperText>
+    </Fieldset.Header>
+    <Fieldset.Content>
+        <Field.Root>
+            <Field.Label>Name</Field.Label>
+            <Input name="name" placeholder="Enter your name" />
+        </Field.Root>
+    </Fieldset.Content>
+    <Fieldset.Footer>
+        <Button type="submit" variant="primary" alignSelf="flex-start">
+            Submit
+        </Button>
+    </Fieldset.Footer>
+</Fieldset.Root>
+
+<Fieldset.Root size="lg" maxW="sm" full>
+    <Fieldset.Header>
+        <Fieldset.Legend>Large Size</Fieldset.Legend>
+        <Fieldset.HelperText>
+            This is a large fieldset.
+        </Fieldset.HelperText>
+    </Fieldset.Header>
+    <Fieldset.Content>
+        <Field.Root>
+            <Field.Label>Name</Field.Label>
+            <Input name="name" placeholder="Enter your name" />
+        </Field.Root>
+    </Fieldset.Content>
+    <Fieldset.Footer>
+        <Button type="submit" variant="primary" alignSelf="flex-start">
+            Submit
+        </Button>
+    </Fieldset.Footer>
+</Fieldset.Root>
+```
+
+## Props
+
+### Root
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| size | `'sm' \| 'md' \| 'lg'` | `md` | The size of the fieldset |
+| disabled | `boolean` | `false` | If true, the fieldset will be disabled |
+| invalid | `boolean` | `false` | If true, the fieldset will be marked as invalid |
+
+### Legend
+
+Standard HTML legend element props.
+
+### Header
+
+Standard HTML div element props. Wrapper component for legend and helper text.
+
+### Content
+
+Standard HTML div element props. Wrapper component for form controls.
+
+### Footer
+
+Standard HTML div element props. Wrapper component for submit buttons and actions.
+
+### HelperText
+
+Standard HTML div element props.
+
+### ErrorText
+
+Standard HTML div element props.

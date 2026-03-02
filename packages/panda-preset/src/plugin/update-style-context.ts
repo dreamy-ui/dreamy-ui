@@ -137,3 +137,17 @@ export function createStyleContext(recipe) {
 
     await fs.writeFile(path.join(jsxFolder, styleContextFile), newContent);
 }
+
+export async function updateStyleContextTypes(jsxFolder: string) {
+    const dtsPath = path.join(jsxFolder, "create-style-context.d.ts");
+    try {
+        const content = await fs.readFile(dtsPath, "utf-8");
+        const newContent = content.replace(/, JsxStyleProps/g, "");
+        await fs.writeFile(dtsPath, newContent);
+    } catch (error) {
+        if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
+            throw error;
+        }
+        // create-style-context.d.ts not generated yet (e.g. first run), skip
+    }
+}

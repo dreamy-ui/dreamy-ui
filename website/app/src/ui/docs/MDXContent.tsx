@@ -20,6 +20,7 @@ import {
     Editable,
     EmptyState,
     Field,
+    Fieldset,
     FileUpload,
     Flex,
     type FlexProps,
@@ -40,6 +41,7 @@ import {
     List,
     Menu,
     MotionBox,
+    Pagination,
     PinInput,
     Popover,
     Progress,
@@ -155,6 +157,7 @@ import {
 } from "./components/hooks";
 import { ControlledPinInput } from "./components/inputs";
 import { LinkButton } from "./components/others";
+import { ControlledPagination, CustomItemPagination } from "./components/paginations";
 import { PMTabs } from "./components/pm-tabs";
 import { ControlledRadioCards, ControlledRadios } from "./components/radioes";
 import { ControlledRangeSlider, MaxMinRangeSlider } from "./components/range-sliders";
@@ -331,7 +334,11 @@ const DreamComponents = {
     DatePicker,
     ControlledDatePicker,
     DatePickerWithFooter,
-    FileUploadCustomList
+    FileUploadCustomList,
+    Fieldset,
+    Pagination,
+    ControlledPagination,
+    CustomItemPagination
 };
 
 function Wrapper({ children, ...props }: PropsWithChildren<FlexProps>) {

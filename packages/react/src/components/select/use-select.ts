@@ -341,6 +341,7 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
                 "data-slot": "item",
                 ...props,
                 type: "button",
+                "data-selected-strategy": selectedStrategy,
                 onClick: callAllHandlers(props?.onClick, () => {
                     const value = props!.value;
                     handleItemChange(value);
@@ -353,7 +354,7 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
                 })
             };
         },
-        [handleItemChange]
+        [handleItemChange, selectedStrategy]
     );
 
     const getHiddenSelectProps = useCallback(

@@ -13,6 +13,7 @@ import { dateRangePicker } from "./date-range-picker";
 import { editable } from "./editable";
 import { emptyState } from "./empty-state";
 import { field } from "./field";
+import { fieldset } from "./fieldset";
 import { fileUpload } from "./file-upload";
 import { group } from "./group";
 import { icon } from "./icon";
@@ -22,6 +23,7 @@ import { kbd } from "./kbd";
 import { list } from "./list";
 import { menu } from "./menu";
 import { modal } from "./modal";
+import { pagination } from "./pagination";
 import { popover } from "./popover";
 import { progressCircular } from "./progress-circular";
 import { progress } from "./progress";
@@ -58,6 +60,7 @@ export const recipes = {
     editable,
     emptyState,
     field,
+    fieldset,
     fileUpload,
     group,
     icon,
@@ -67,6 +70,7 @@ export const recipes = {
     list,
     menu,
     modal,
+    pagination,
     popover,
     progressCircular,
     progress,

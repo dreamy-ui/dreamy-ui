@@ -76,6 +76,11 @@
   },
   {
     "type": "recipe",
+    "id": "fieldset",
+    "file": "fieldset.ts"
+  },
+  {
+    "type": "recipe",
     "id": "file-upload",
     "file": "file-upload.ts"
   },
@@ -118,6 +123,11 @@
     "type": "recipe",
     "id": "modal",
     "file": "modal.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "pagination",
+    "file": "pagination.ts"
   },
   {
     "type": "recipe",

@@ -36,7 +36,7 @@ export default defineConfig({
             // primaryColor: "#6056aa",
             primaryColor: "#6d52b8",
             secondaryColor: "#d193bb",
-            rounded: "md"
+            rounded: "lg"
         })
     ],
     patterns: {

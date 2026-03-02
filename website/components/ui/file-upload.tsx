@@ -322,25 +322,23 @@ const StyledItemSizeText = withContext(dreamy.span, "itemSizeText");
  *
  * Displays the file size in a human-readable format.
  */
-export const ItemSizeText = forwardRef<HTMLSpanElement, ItemSizeTextProps & HTMLDreamyProps<"span">>(
-    function FileUploadItemSizeText(props, ref) {
-        const { file, children, ...rest } = props;
-        const ctx = useFileUploadContext();
-        const sizeText = useMemo(
-            () => formatFileSize(file.size, ctx.locale),
-            [file.size, ctx.locale]
-        );
+export const ItemSizeText = forwardRef<
+    HTMLSpanElement,
+    ItemSizeTextProps & HTMLDreamyProps<"span">
+>(function FileUploadItemSizeText(props, ref) {
+    const { file, children, ...rest } = props;
+    const ctx = useFileUploadContext();
+    const sizeText = useMemo(() => formatFileSize(file.size, ctx.locale), [file.size, ctx.locale]);
 
-        return (
-            <StyledItemSizeText
-                ref={ref}
-                {...rest}
-            >
-                {children || sizeText}
-            </StyledItemSizeText>
-        );
-    }
-);
+    return (
+        <StyledItemSizeText
+            ref={ref}
+            {...rest}
+        >
+            {children || sizeText}
+        </StyledItemSizeText>
+    );
+});
 
 // ─── ItemDeleteTrigger ───────────────────────────────────────────────────────
 

@@ -1,0 +1,16 @@
+{
+  "type": "component",
+  "npmDependencies": [],
+  "fileDependencies": [],
+  "id": "fieldset",
+  "file": {
+    "name": "fieldset.tsx",
+    "content": "\"use client\";\n\nimport { forwardRef } from \"react\";\nimport { createStyleContext, type HTMLDreamyProps, dreamy } from \"styled-system/jsx\";\nimport { fieldset } from \"styled-system/recipes\";\n\nconst { withProvider, withContext } = createStyleContext(fieldset);\n\nexport interface FieldsetRootProps extends HTMLDreamyProps<\"fieldset\"> {\n    /**\n     * If `true`, the fieldset will be disabled.\n     */\n    disabled?: boolean;\n    /**\n     * If `true`, the fieldset will be marked as invalid.\n     */\n    invalid?: boolean;\n}\n\n/**\n * Fieldset Root component - wraps form controls under a common name\n *\n * @See Docs https://dreamy-ui.com/docs/components/fieldset\n */\nexport const Root = withProvider(\n    forwardRef<HTMLFieldSetElement, FieldsetRootProps>(function FieldsetRoot(props, ref) {\n        const { disabled, invalid, ...rest } = props;\n        return (\n            <dreamy.fieldset\n                ref={ref}\n                disabled={disabled}\n                aria-invalid={invalid}\n                data-invalid={invalid ? \"\" : undefined}\n                data-disabled={disabled ? \"\" : undefined}\n                {...rest}\n            />\n        );\n    }),\n    \"root\"\n);\n\nexport interface FieldsetLegendProps extends HTMLDreamyProps<\"legend\"> {}\n\n/**\n * Fieldset Legend component - provides a caption for the fieldset\n */\nexport const Legend = withContext(dreamy.legend, \"legend\");\n\nexport interface FieldsetHelperTextProps extends HTMLDreamyProps<\"div\"> {}\n\n/**\n * Fieldset Helper Text component - provides additional context\n */\nexport const HelperText = withContext(dreamy.div, \"helperText\");\n\nexport interface FieldsetErrorTextProps extends HTMLDreamyProps<\"div\"> {}\n\n/**\n * Fieldset Error Text component - displays error messages\n */\nexport const ErrorText = withContext(dreamy.div, \"errorText\");\n\nexport interface FieldsetHeaderProps extends HTMLDreamyProps<\"div\"> {}\n\n/**\n * Fieldset Header component - wraps legend and helper text\n */\nexport const Header = withContext(dreamy.div, \"header\");\n\nexport interface FieldsetContentProps extends HTMLDreamyProps<\"div\"> {}\n\n/**\n * Fieldset Content component - wraps the form controls\n */\nexport const Content = withContext(dreamy.div, \"content\");\n\nexport interface FieldsetFooterProps extends HTMLDreamyProps<\"div\"> {}\n\n/**\n * Fieldset Footer component - wraps submit buttons and actions\n */\nexport const Footer = withContext(dreamy.div, \"footer\");\n"
+  },
+  "component": "Fieldset",
+  "hasRecipe": true,
+  "hasPattern": false,
+  "recipeIds": [
+    "fieldset"
+  ]
+}

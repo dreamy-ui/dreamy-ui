@@ -285,6 +285,19 @@
   },
   {
     "type": "component",
+    "id": "fieldset",
+    "file": "fieldset.tsx",
+    "component": "Fieldset",
+    "npmDependencies": [],
+    "fileDependencies": [],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "fieldset"
+    ]
+  },
+  {
+    "type": "component",
     "id": "file-upload",
     "file": "file-upload.tsx",
     "component": "FileUpload",
@@ -494,6 +507,21 @@
     "hasPattern": true,
     "patternIds": [
       "flex"
+    ]
+  },
+  {
+    "type": "component",
+    "id": "pagination",
+    "file": "pagination.tsx",
+    "component": "Pagination",
+    "npmDependencies": [],
+    "fileDependencies": [
+      "./icon-button"
+    ],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "pagination"
     ]
   },
   {

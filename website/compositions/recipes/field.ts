@@ -32,7 +32,10 @@ export const field = defineRecipe({
             width: "100%",
             position: "relative",
             display: "flex",
-            gap: 1.5
+            gap: 1.5,
+            "& > *": {
+                width: "full!"
+            }
         },
         label: {
             display: "flex",

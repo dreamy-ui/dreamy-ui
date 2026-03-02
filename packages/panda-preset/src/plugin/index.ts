@@ -3,7 +3,7 @@ import chalk from "chalk";
 import { updateFactory } from "./factory";
 import { removeJsxElements } from "./remove-jsx-elements";
 import { ensureJsxFolderExists, ensureStyledSystemExists, ensureTypesFolderExists } from "./system";
-import { removeFactoryFromStyleContext } from "./update-style-context";
+import { removeFactoryFromStyleContext, updateStyleContextTypes } from "./update-style-context";
 
 export interface DreamyPluginOptions {
     /**
@@ -61,7 +61,11 @@ export function dreamyPlugin(options?: DreamyPluginOptions) {
                 await Promise.all([
                     removeJsxElementsOption && removeJsxElements(jsxFolder),
                     updateFactoryOption && updateFactory(jsxFolder, typesFolder!),
-                    removeFactoryFromStyleContextOption && removeFactoryFromStyleContext(jsxFolder)
+                    removeFactoryFromStyleContextOption &&
+                        (async () => {
+                            await removeFactoryFromStyleContext(jsxFolder);
+                            await updateStyleContextTypes(jsxFolder);
+                        })()
                 ]);
 
                 const end = performance.now();

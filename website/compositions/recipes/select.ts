@@ -114,7 +114,7 @@ export const select = defineSlotRecipe({
             "&[data-focused]": {
                 bg: "alpha.50"
             },
-            ".group[data-selected-strategy='both'] &[data-selected], .group[data-selected-strategy='background'] &[data-selected]":
+            "&:is([data-selected-strategy='both'][data-selected], [data-selected-strategy='background'][data-selected])":
                 {
                     bg: "var(--selected-item-background)",
                     color: "var(--selected-item-color)"
@@ -326,7 +326,7 @@ export const select = defineSlotRecipe({
                                   : "color-mix(in srgb, white 87%, transparent)"
                 } as Record<any, any>;
             },
-            "root"
+            "content"
         )
     },
     defaultVariants: {
