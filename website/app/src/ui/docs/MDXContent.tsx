@@ -120,7 +120,7 @@ import {
     PlacementPopovers,
     SizePopovers
 } from "~/src/ui/docs/components/popovers";
-import { Link } from "~/src/ui/global/Link";
+import { Link, ReactRouterLink } from "~/src/ui/global/Link";
 import { ControlledTabs, VariantTabs } from "./components/Tabs";
 import { ControlledAccordion } from "./components/accordions";
 import {
@@ -212,6 +212,7 @@ const DreamComponents = {
     Icon,
     Heading,
     Link: DreamLink,
+    ReactRouterLink,
     Accordion,
     ActionBar,
     Breadcrumb,

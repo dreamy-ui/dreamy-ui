@@ -37,8 +37,9 @@ export const button = defineRecipe({
             isolation: "isolate",
             textAlign: "center",
             userSelect: "none",
-            transition:
-                "background-color {durations.normal} {easings.ease-in-out}, color {durations.normal} {easings.ease-in-out}, border-color {durations.normal} {easings.ease-in-out}, fill {durations.normal} {easings.ease-in-out}",
+            transitionProperty: "background-color, color, border-color, fill",
+            transitionDuration: "{durations.normal}",
+            transitionTimingFunction: "{easings.ease-in-out}",
             justifyContent: "center",
             _disabled: {
                 cursor: "not-allowed",

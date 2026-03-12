@@ -201,3 +201,75 @@ Use the `Group` component to group multiple Buttons together.
 	<Button variant="outline">Button 3</Button>
 </Group>
 ```
+
+### As Link
+
+Often you need to use a Button as a link. You can do this by using the `as` prop.
+
+<Wrapper>
+	<Button as={<ReactRouterLink to="/">Home</ReactRouterLink>}>Home</Button>
+	<Button as={<ReactRouterLink to="/">Home</ReactRouterLink>}>Home</Button>
+</Wrapper>
+
+```tsx
+<Button as={<Link to="/">Home</Link>}>Home</Button>
+<Button asChild>
+	<Link to="/">Home</Link>
+</Button>
+```
+
+### Different active state
+
+If you dislike the default ripple effect, you can customize the button recipe to use a different active state. For example scale the button when it's pressed.
+
+<Wrapper>
+	<Wrap>
+		<VStack>
+			<Text>Scale</Text>
+			<Button 
+				variant="primary"
+				disableRipple 
+				_active={{
+					scale: 0.95
+				}}
+				transitionProperty="background-color, color, border-color, fill, scale"
+			>
+				<>Press me</>
+			</Button>
+		</VStack>
+		<VStack>
+			<Text>Scale + Ripple</Text>
+			<Button 
+				variant="primary"
+				_active={{
+					scale: 0.95
+				}}
+				transitionProperty="background-color, color, border-color, fill, scale"
+			>
+				<>Press me</>
+			</Button>
+		</VStack>
+	</Wrap>
+</Wrapper>
+
+```tsx {15-18}
+export const button = defineRecipe({
+    className: "button",
+    staticCss: ["*"],
+    jsx: [
+        "Button",
+        "ModalCloseButton",
+        "PopoverCloseButton",
+        "CloseButton",
+        "IconButton",
+        "ModalCloseButtonBase",
+        "ButtonIcon"
+    ],
+    base: parts({
+        root: {
+            _active: {
+                scale: 0.95
+            },
+            transitionProperty: "background-color, color, border-color, fill, scale",
+			...
+```

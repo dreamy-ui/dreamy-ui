@@ -29,7 +29,27 @@ interface BorderTokens {
     hover: string;
 }
 
-function getFgChroma(bg: Color) {
+export interface ResolvedFgOffsets {
+    max: number;
+    normal: number;
+    medium: number;
+    disabled: number;
+}
+
+export interface ResolvedBorderOffsets {
+    default: number;
+    muted: number;
+    hover: number;
+}
+
+const DEFAULT_FG_OFFSETS: ResolvedFgOffsets = { max: 0, normal: 0, medium: 0, disabled: 0 };
+const DEFAULT_BORDER_OFFSETS: ResolvedBorderOffsets = { default: 0, muted: 0, hover: 0 };
+
+function clampL(l: number, offset = 0): number {
+    return Math.max(0, Math.min(1, l + offset));
+}
+
+function getFgChroma(bg: Color, chromaScale = 1) {
     const isVeryLowSaturation = bg.oklch.c < 0.01; // Nearly grayscale
     const isLowSaturation = bg.oklch.c < 0.04; // Subtle color
     const isModerateSaturation = bg.oklch.c < 0.12; // Moderate color
@@ -91,10 +111,13 @@ function getFgChroma(bg: Color) {
         fgChroma = Math.max(0.005, Math.min(fgChroma, 0.05));
     }
 
+    // Apply user-supplied scale, then re-clamp to safe bounds
+    fgChroma = Math.max(0, Math.min(fgChroma * chromaScale, 0.4));
+
     return { fgChroma, fgHue };
 }
 
-function getBorderChroma(bg: Color) {
+function getBorderChroma(bg: Color, chromaScale = 1) {
     const isVeryLowSaturation = bg.oklch.c < 0.01; // Nearly grayscale
     const isLowSaturation = bg.oklch.c < 0.04; // Subtle color
     const isModerateSaturation = bg.oklch.c < 0.12; // Moderate color
@@ -141,12 +164,19 @@ function getBorderChroma(bg: Color) {
         borderChroma = Math.max(0.006, Math.min(borderChroma, 0.06));
     }
 
+    // Apply user-supplied scale, then re-clamp to safe bounds
+    borderChroma = Math.max(0, Math.min(borderChroma * chromaScale, 0.4));
+
     return { borderChroma, borderHue };
 }
 
-export function genForegroundTokens(bgHex: string): ForegroundTokens {
+export function genForegroundTokens(
+    bgHex: string,
+    chromaScale = 1,
+    offsets: ResolvedFgOffsets = DEFAULT_FG_OFFSETS
+): ForegroundTokens {
     const bg = new Color(bgHex).to("oklch");
-    const { fgChroma, fgHue } = getFgChroma(bg);
+    const { fgChroma, fgHue } = getFgChroma(bg, chromaScale);
     const isDark = bg.oklch.l < 0.5;
 
     // Medium and disabled need more chroma since lower lightness = less color perception
@@ -154,10 +184,10 @@ export function genForegroundTokens(bgHex: string): ForegroundTokens {
     const mediumChroma = Math.min(fgChroma * 1.5, 0.05); // 50% more chroma, capped at 0.05
     const disabledChroma = Math.min(fgChroma * 1.3, 0.045); // 30% more chroma, capped at 0.045
 
-    const max = new Color("oklch", [isDark ? 1 : 0, fgChroma, fgHue]);
-    const normal = new Color("oklch", [isDark ? 0.95 : 0.2, fgChroma, fgHue]);
-    const medium = new Color("oklch", [isDark ? 0.7 : 0.35, mediumChroma, fgHue]);
-    const disabled = new Color("oklch", [isDark ? 0.6 : 0.4, disabledChroma, fgHue]);
+    const max = new Color("oklch", [clampL(isDark ? 1 : 0, offsets.max), fgChroma, fgHue]);
+    const normal = new Color("oklch", [clampL(isDark ? 0.95 : 0.2, offsets.normal), fgChroma, fgHue]);
+    const medium = new Color("oklch", [clampL(isDark ? 0.7 : 0.35, offsets.medium), mediumChroma, fgHue]);
+    const disabled = new Color("oklch", [clampL(isDark ? 0.6 : 0.4, offsets.disabled), disabledChroma, fgHue]);
 
     adjustContrastIfNeeded(max, bg, 7, isDark);
     adjustContrastIfNeeded(normal, bg, 4.5, isDark);
@@ -172,17 +202,21 @@ export function genForegroundTokens(bgHex: string): ForegroundTokens {
     };
 }
 
-export function genBorderTokens(bgHex: string): BorderTokens {
+export function genBorderTokens(
+    bgHex: string,
+    chromaScale = 1,
+    offsets: ResolvedBorderOffsets = DEFAULT_BORDER_OFFSETS
+): BorderTokens {
     const bg = new Color(bgHex).to("oklch");
-    const { borderChroma, borderHue } = getBorderChroma(bg);
+    const { borderChroma, borderHue } = getBorderChroma(bg, chromaScale);
     const isDark = bg.oklch.l < 0.5;
 
     const mutedChroma = Math.min(borderChroma * 1.2, 0.05);
     const hoverChroma = borderChroma;
 
-    const defaultBorder = new Color("oklch", [isDark ? 0.25 : 0.9, borderChroma, borderHue]);
-    const mutedBorder = new Color("oklch", [isDark ? 0.2 : 0.95, mutedChroma, borderHue]);
-    const hoverBorder = new Color("oklch", [isDark ? 0.3 : 0.85, hoverChroma, borderHue]);
+    const defaultBorder = new Color("oklch", [clampL(isDark ? 0.25 : 0.9, offsets.default), borderChroma, borderHue]);
+    const mutedBorder = new Color("oklch", [clampL(isDark ? 0.2 : 0.95, offsets.muted), mutedChroma, borderHue]);
+    const hoverBorder = new Color("oklch", [clampL(isDark ? 0.3 : 0.85, offsets.hover), hoverChroma, borderHue]);
 
     return {
         default: defaultBorder.toString({ format: "oklch" }),

@@ -1,12 +1,12 @@
 "use client";
 
-import { createContext } from "@dreamy-ui/react";
+import { createContext, useUpdateEffect } from "@dreamy-ui/react";
 import { useControllableState } from "@dreamy-ui/react";
 import dayjs, { type Dayjs } from "dayjs";
-import { forwardRef, useMemo, useState } from "react";
+import { forwardRef, useCallback, useEffect, useMemo, useState } from "react";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import { LuCalendar } from "react-icons/lu";
-import { createStyleContext } from "styled-system/jsx";
+import { createStyleContext, dreamy } from "styled-system/jsx";
 import { type DatePickerVariantProps, datePicker } from "styled-system/recipes";
 import { Box, type BoxProps } from "./box";
 import { Button, type ButtonProps } from "./button";
@@ -17,24 +17,63 @@ import {
     Input as InputComponent,
     InputGroup,
     type InputGroupProps,
+    type InputProps,
     InputRightAddon
 } from "./input";
 import * as Popover from "./popover";
 
-const { withProvider, withContext } = createStyleContext(datePicker);
+const { withProvider, withContext } = createStyleContext(datePicker, { forwardVariants: ["size"] });
 
-const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] as const;
+
+type WeekStartsOn = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+
+function getWeekdays(weekStartsOn: WeekStartsOn): string[] {
+    return [...WEEKDAYS.slice(weekStartsOn), ...WEEKDAYS.slice(0, weekStartsOn)];
+}
+
+function getCalendarStartDate(viewDate: Dayjs, weekStartsOn: WeekStartsOn): Dayjs {
+    const startOfMonth = viewDate.startOf("month");
+    const startDay = startOfMonth.day();
+    const daysToSubtract = (startDay - weekStartsOn + 7) % 7;
+    return startOfMonth.subtract(daysToSubtract, "day");
+}
+
+function getCalendarEndDate(viewDate: Dayjs, weekStartsOn: WeekStartsOn): Dayjs {
+    const endOfMonth = viewDate.endOf("month");
+    const endDay = endOfMonth.day();
+    const lastDayOfWeek = (weekStartsOn + 6) % 7;
+    const daysToAdd = (lastDayOfWeek - endDay + 7) % 7;
+    return endOfMonth.add(daysToAdd, "day");
+}
+
+function getInheritedButtonSize(
+    size: DatePickerVariantProps["size"]
+): "sm" | "md" | "lg" | undefined {
+    if (typeof size === "string") {
+        return size as "sm" | "md" | "lg";
+    }
+
+    if (typeof size === "object" && "base" in size) {
+        return (size.base as "sm" | "md" | "lg" | undefined) ?? undefined;
+    }
+
+    return undefined;
+}
 
 interface DatePickerContextValue {
     value: Date | null;
-    setValue: (date: Date | null) => void;
+    setValue: React.Dispatch<React.SetStateAction<Date | null>>;
     viewDate: Dayjs;
-    setViewDate: (date: Dayjs) => void;
+    setViewDate: React.Dispatch<React.SetStateAction<Dayjs>>;
+    size?: DatePickerVariantProps["size"];
     minDate?: Date;
     maxDate?: Date;
     dateFormat: string;
     placeholder: string;
-    showFooter: boolean;
+    weekStartsOn: WeekStartsOn;
+    hasFooter: boolean;
+    setHasFooter: React.Dispatch<React.SetStateAction<boolean>>;
     onApply?: () => void;
     onCancel?: () => void;
 }
@@ -43,6 +82,26 @@ const [DatePickerProvider, useDatePickerContext] = createContext<DatePickerConte
     strict: true,
     name: "DatePickerContext"
 });
+
+function formatDateForInput(date: Date | null): string {
+    if (!date) {
+        return "";
+    }
+
+    return dayjs(date).format("YYYY-MM-DD");
+}
+
+function isDateWithinBounds(date: Dayjs, minDate?: Date, maxDate?: Date): boolean {
+    if (minDate && date.isBefore(dayjs(minDate), "day")) {
+        return false;
+    }
+
+    if (maxDate && date.isAfter(dayjs(maxDate), "day")) {
+        return false;
+    }
+
+    return true;
+}
 
 export interface DatePickerRootProps
     extends Omit<BoxProps, "defaultValue" | "onChange" | "value">,
@@ -86,10 +145,10 @@ export interface DatePickerRootProps
      */
     maxDate?: Date;
     /**
-     * Whether to show the footer with Cancel/Apply buttons
-     * @default false
+     * First day of week (0 = Sunday, 1 = Monday, ... 6 = Saturday)
+     * @default 1
      */
-    showFooter?: boolean;
+    weekStartsOn?: WeekStartsOn;
 }
 
 export const Root = withProvider(
@@ -104,10 +163,11 @@ export const Root = withProvider(
             placeholder = "Select date",
             minDate,
             maxDate,
-            showFooter = false,
+            weekStartsOn = 1,
             children,
             ...rest
         } = props;
+        const calendarSize = props.size;
 
         const [value, setValue] = useControllableState({
             value: valueProp,
@@ -116,43 +176,84 @@ export const Root = withProvider(
         });
 
         const [isOpen, setIsOpen] = useState(false);
+        const [hasFooter, setHasFooter] = useState(false);
         const [viewDate, setViewDate] = useState(() => (value ? dayjs(value) : dayjs()));
 
-        const handleApply = () => {
-            onApply?.();
-            setIsOpen(false);
-        };
+        const handleApply = useCallback(
+            function handleApply() {
+                onApply?.();
+                setIsOpen(false);
+            },
+            [onApply]
+        );
 
-        const handleCancel = () => {
-            onCancel?.();
-            setIsOpen(false);
-        };
+        const handleCancel = useCallback(
+            function handleCancel() {
+                onCancel?.();
+                setIsOpen(false);
+            },
+            [onCancel]
+        );
 
-        return (
-            <DatePickerProvider
-                value={{
+        const handleValueChange = useCallback(
+            function handleValueChange(date: React.SetStateAction<Date | null>) {
+                setValue(date);
+                if (!hasFooter && date) {
+                    setIsOpen(false);
+                }
+            },
+            [hasFooter, setValue]
+        );
+
+        const handleClose = useCallback(function handleClose() {
+            setIsOpen(false);
+        }, []);
+
+        const handleOpen = useCallback(function handleOpen() {
+            setIsOpen(true);
+        }, []);
+
+        const contextValue = useMemo<DatePickerContextValue>(
+            function createContextValue() {
+                return {
                     value,
-                    setValue: (date) => {
-                        setValue(date);
-                        if (!showFooter && date) {
-                            setIsOpen(false);
-                        }
-                    },
+                    setValue: handleValueChange,
                     viewDate,
                     setViewDate,
+                    size: calendarSize,
                     minDate,
                     maxDate,
                     dateFormat,
                     placeholder,
-                    showFooter,
+                    weekStartsOn,
+                    hasFooter,
+                    setHasFooter,
                     onApply: handleApply,
                     onCancel: handleCancel
-                }}
-            >
+                };
+            },
+            [
+                value,
+                handleValueChange,
+                viewDate,
+                calendarSize,
+                minDate,
+                maxDate,
+                dateFormat,
+                placeholder,
+                weekStartsOn,
+                hasFooter,
+                handleApply,
+                handleCancel
+            ]
+        );
+
+        return (
+            <DatePickerProvider value={contextValue}>
                 <Popover.Root
                     isOpen={isOpen}
-                    onClose={() => setIsOpen(false)}
-                    onOpen={() => setIsOpen(true)}
+                    onClose={handleClose}
+                    onOpen={handleOpen}
                 >
                     <Box
                         ref={ref}
@@ -171,10 +272,14 @@ export interface DatePickerTriggerProps extends ButtonProps {}
 
 export const Trigger = withContext(
     forwardRef<HTMLButtonElement, DatePickerTriggerProps>(function DatePickerTrigger(props, ref) {
+        const context = useDatePickerContext();
+        const size = getInheritedButtonSize(context.size);
+
         return (
             <Popover.Trigger>
                 <Button
                     ref={ref}
+                    size={size}
                     variant="outline"
                     {...props}
                 />
@@ -189,11 +294,21 @@ export interface DatePickerInputProps extends InputGroupProps {}
 export const Input = withContext(
     forwardRef<HTMLDivElement, DatePickerInputProps>(function DatePickerInput(props, ref) {
         const context = useDatePickerContext();
-        const formattedDate = context.value ? dayjs(context.value).format(context.dateFormat) : "";
+        const formattedDate = useMemo(
+            function formatDate() {
+                return context.value ? dayjs(context.value).format(context.dateFormat) : "";
+            },
+            [context.value, context.dateFormat]
+        );
+
+        const size = getInheritedButtonSize(context.size);
 
         return (
             <Popover.Trigger>
-                <InputGroup ref={ref}>
+                <InputGroup
+                    ref={ref}
+                    size={size}
+                >
                     <InputComponent
                         placeholder={context.placeholder}
                         readOnly
@@ -225,99 +340,332 @@ export const PopoverContent = withContext(
     "popover"
 );
 
+export interface DatePickerControlProps extends FlexProps {
+    inputProps?: InputProps;
+    todayButtonProps?: ButtonProps;
+}
+
+export const Control = withContext(
+    forwardRef<HTMLDivElement, DatePickerControlProps>(function DatePickerControl(props, ref) {
+        const { inputProps, todayButtonProps, ...rest } = props;
+        const context = useDatePickerContext();
+        const minValue = useMemo(
+            function getMinValue() {
+                return formatDateForInput(context.minDate ?? null);
+            },
+            [context.minDate]
+        );
+        const maxValue = useMemo(
+            function getMaxValue() {
+                return formatDateForInput(context.maxDate ?? null);
+            },
+            [context.maxDate]
+        );
+
+        const [inputValue, setInputValue] = useState(formatDateForInput(context.value));
+
+        const applyInputValue = useCallback(
+            function applyInputValue(nextValue: string) {
+                if (!nextValue) {
+                    context.setValue(null);
+                    setInputValue("");
+                    return;
+                }
+
+                const nextDate = dayjs(nextValue);
+                if (
+                    !nextDate.isValid() ||
+                    !isDateWithinBounds(nextDate, context.minDate, context.maxDate)
+                ) {
+                    return;
+                }
+
+                context.setValue(nextDate.toDate());
+                context.setViewDate(nextDate);
+                setInputValue(nextValue);
+            },
+            [context]
+        );
+
+        const handleInputChange = useCallback(
+            function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
+                applyInputValue(event.target.value);
+            },
+            [applyInputValue]
+        );
+
+        const handleInputValueChange = useCallback(function handleInputValueChange(value: string) {
+            setInputValue(value);
+        }, []);
+
+        const handleInputKeyDown = useCallback(
+            function handleInputKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    applyInputValue(event.currentTarget.value);
+                }
+            },
+            [applyInputValue]
+        );
+
+        useUpdateEffect(() => {
+            setInputValue(formatDateForInput(context.value));
+        }, [context.value]);
+
+        const handleSetToday = useCallback(
+            function handleSetToday() {
+                const today = dayjs();
+                if (!isDateWithinBounds(today, context.minDate, context.maxDate)) {
+                    return;
+                }
+
+                context.setValue(today.toDate());
+                context.setViewDate(today);
+            },
+            [context]
+        );
+
+        const isTodayDisabled = useMemo(
+            function getIsTodayDisabled() {
+                return !isDateWithinBounds(dayjs(), context.minDate, context.maxDate);
+            },
+            [context.minDate, context.maxDate]
+        );
+
+        const size = getInheritedButtonSize(context.size);
+
+        return (
+            <Flex
+                ref={ref}
+                {...rest}
+            >
+                <InputComponent
+                    max={maxValue ?? undefined}
+                    min={minValue ?? undefined}
+                    onBlur={handleInputChange}
+                    onChangeValue={handleInputValueChange}
+                    onKeyDown={handleInputKeyDown}
+                    size={size}
+                    type="date"
+                    value={inputValue}
+                    {...inputProps}
+                />
+                <Button
+                    isDisabled={isTodayDisabled}
+                    onClick={handleSetToday}
+                    size={size}
+                    type="button"
+                    variant="outline"
+                    {...todayButtonProps}
+                >
+                    {todayButtonProps?.children ?? "Today"}
+                </Button>
+            </Flex>
+        );
+    }),
+    "control"
+);
+
+export interface DatePickerHeaderProps extends FlexProps {
+    previousButtonProps?: DatePickerCalendarNavButtonProps;
+    nextButtonProps?: DatePickerCalendarNavButtonProps;
+    titleProps?: DatePickerCalendarTitleProps;
+}
+
+export const Header = withContext(
+    forwardRef<HTMLDivElement, DatePickerHeaderProps>(function DatePickerHeader(props, ref) {
+        const { previousButtonProps, nextButtonProps, titleProps, ...rest } = props;
+        const context = useDatePickerContext();
+
+        const handlePreviousMonth = useCallback(
+            function handlePreviousMonth() {
+                context.setViewDate(context.viewDate.subtract(1, "month"));
+            },
+            [context]
+        );
+
+        const handleNextMonth = useCallback(
+            function handleNextMonth() {
+                context.setViewDate(context.viewDate.add(1, "month"));
+            },
+            [context]
+        );
+
+        return (
+            <CalendarHeader
+                ref={ref}
+                {...rest}
+            >
+                <CalendarNav>
+                    <CalendarNavButton
+                        aria-label="Previous month"
+                        onClick={handlePreviousMonth}
+                        type="button"
+                        {...previousButtonProps}
+                    >
+                        <Icon as={BiChevronLeft} />
+                    </CalendarNavButton>
+                    <CalendarTitle {...titleProps}>
+                        {context.viewDate.format("MMMM YYYY")}
+                    </CalendarTitle>
+                    <CalendarNavButton
+                        aria-label="Next month"
+                        onClick={handleNextMonth}
+                        type="button"
+                        {...nextButtonProps}
+                    >
+                        <Icon as={BiChevronRight} />
+                    </CalendarNavButton>
+                </CalendarNav>
+            </CalendarHeader>
+        );
+    }),
+    "calendarHeader"
+);
+
 export interface DatePickerCalendarProps extends BoxProps {}
 
 export const Calendar = withContext(
     forwardRef<HTMLDivElement, DatePickerCalendarProps>(function DatePickerCalendar(props, ref) {
         const context = useDatePickerContext();
-        const { value, setValue, viewDate, setViewDate, minDate, maxDate } = context;
+        const { value, setValue, viewDate, minDate, maxDate, weekStartsOn } = context;
 
-        const selectedDate = value ? dayjs(value) : null;
+        const selectedDate = useMemo(
+            function getSelectedDate() {
+                return value ? dayjs(value) : null;
+            },
+            [value]
+        );
+        const minBound = useMemo(
+            function getMinBound() {
+                return minDate ? dayjs(minDate) : null;
+            },
+            [minDate]
+        );
+        const maxBound = useMemo(
+            function getMaxBound() {
+                return maxDate ? dayjs(maxDate) : null;
+            },
+            [maxDate]
+        );
+        const today = useMemo(function getToday() {
+            return dayjs();
+        }, []);
+        const viewMonthKey = useMemo(
+            function getViewMonthKey() {
+                return viewDate.format("MM");
+            },
+            [viewDate]
+        );
 
-        const calendarDays = useMemo(() => {
-            const startOfMonth = viewDate.startOf("month");
-            const endOfMonth = viewDate.endOf("month");
-            const startOfCalendar = startOfMonth.startOf("week");
-            const endOfCalendar = endOfMonth.endOf("week");
+        const weekdays = useMemo(
+            function getOrderedWeekdays() {
+                return getWeekdays(weekStartsOn);
+            },
+            [weekStartsOn]
+        );
 
-            const days: Dayjs[] = [];
-            let current = startOfCalendar;
+        const calendarDays = useMemo(
+            function getCalendarDays() {
+                const startOfCalendar = getCalendarStartDate(viewDate, weekStartsOn);
+                const endOfCalendar = getCalendarEndDate(viewDate, weekStartsOn);
 
-            while (current.isBefore(endOfCalendar) || current.isSame(endOfCalendar, "day")) {
-                days.push(current);
-                current = current.add(1, "day");
-            }
+                const days: Dayjs[] = [];
+                let current = startOfCalendar;
 
-            return days;
-        }, [viewDate]);
+                while (current.isBefore(endOfCalendar) || current.isSame(endOfCalendar, "day")) {
+                    days.push(current);
+                    current = current.add(1, "day");
+                }
 
-        const handlePreviousMonth = () => {
-            setViewDate(viewDate.subtract(1, "month"));
-        };
+                return days;
+            },
+            [viewDate, weekStartsOn]
+        );
 
-        const handleNextMonth = () => {
-            setViewDate(viewDate.add(1, "month"));
-        };
+        const handleDateClick = useCallback(
+            function handleDateClick(date: Dayjs) {
+                if (minBound && date.isBefore(minBound, "day")) return;
+                if (maxBound && date.isAfter(maxBound, "day")) return;
+                setValue(date.toDate());
+            },
+            [minBound, maxBound, setValue]
+        );
 
-        const handleDateClick = (date: Dayjs) => {
-            if (minDate && date.isBefore(dayjs(minDate), "day")) return;
-            if (maxDate && date.isAfter(dayjs(maxDate), "day")) return;
-            setValue(date.toDate());
-        };
+        const getIsToday = useCallback(
+            function getIsToday(date: Dayjs) {
+                return date.isSame(today, "day");
+            },
+            [today]
+        );
+        const getIsSelected = useCallback(
+            function getIsSelected(date: Dayjs) {
+                return Boolean(selectedDate?.isSame(date, "day"));
+            },
+            [selectedDate]
+        );
+        const getIsOutsideMonth = useCallback(
+            function getIsOutsideMonth(date: Dayjs) {
+                return !date.isSame(viewDate, "month");
+            },
+            [viewDate]
+        );
+        const getIsDisabled = useCallback(
+            function getIsDisabled(date: Dayjs) {
+                if (minBound && date.isBefore(minBound, "day")) return true;
+                if (maxBound && date.isAfter(maxBound, "day")) return true;
+                return false;
+            },
+            [minBound, maxBound]
+        );
 
-        const isToday = (date: Dayjs) => date.isSame(dayjs(), "day");
-        const isSelected = (date: Dayjs) => selectedDate?.isSame(date, "day");
-        const isOutsideMonth = (date: Dayjs) => !date.isSame(viewDate, "month");
-        const isDisabled = (date: Dayjs) => {
-            if (minDate && date.isBefore(dayjs(minDate), "day")) return true;
-            if (maxDate && date.isAfter(dayjs(maxDate), "day")) return true;
-            return false;
-        };
+        const calendarCells = useMemo(
+            function getCalendarCells() {
+                return calendarDays.map(function mapCalendarDay(date) {
+                    return {
+                        date,
+                        key: `${date.format("YYYY-MM-DD")}-${viewMonthKey}`,
+                        label: date.format("D"),
+                        isOutsideMonth: getIsOutsideMonth(date),
+                        isSelected: getIsSelected(date),
+                        isToday: getIsToday(date),
+                        isDisabled: getIsDisabled(date)
+                    };
+                });
+            },
+            [
+                calendarDays,
+                viewMonthKey,
+                getIsOutsideMonth,
+                getIsSelected,
+                getIsToday,
+                getIsDisabled
+            ]
+        );
 
         return (
             <Box
                 ref={ref}
                 {...props}
             >
-                <CalendarHeader>
-                    <CalendarNav>
-                        <CalendarNavButton
-                            aria-label="Previous month"
-                            onClick={handlePreviousMonth}
-                            type="button"
-                        >
-                            <Icon as={BiChevronLeft} />
-                        </CalendarNavButton>
-                        <CalendarTitle>{viewDate.format("MMMM YYYY")}</CalendarTitle>
-                        <CalendarNavButton
-                            aria-label="Next month"
-                            onClick={handleNextMonth}
-                            type="button"
-                        >
-                            <Icon as={BiChevronRight} />
-                        </CalendarNavButton>
-                    </CalendarNav>
-                </CalendarHeader>
                 <CalendarGrid>
                     <CalendarGridHeader>
-                        {WEEKDAYS.map((day) => (
+                        {weekdays.map((day) => (
                             <CalendarGridHeaderCell key={day}>{day}</CalendarGridHeaderCell>
                         ))}
                     </CalendarGridHeader>
                     <CalendarGridBody>
-                        {calendarDays.map((date) => (
-                            <CalendarCell
-                                key={`${date.format("YYYY-MM-DD")}-${viewDate.format("MM")}`}
-                            >
+                        {calendarCells.map((cell) => (
+                            <CalendarCell key={cell.key}>
                                 <CalendarCellButton
-                                    data-outside-month={isOutsideMonth(date) ? "" : undefined}
-                                    data-selected={isSelected(date) ? "" : undefined}
-                                    data-today={isToday(date) ? "" : undefined}
-                                    disabled={isDisabled(date)}
-                                    onClick={() => handleDateClick(date)}
+                                    data-outside-month={cell.isOutsideMonth ? "" : undefined}
+                                    data-selected={cell.isSelected ? "" : undefined}
+                                    data-today={cell.isToday ? "" : undefined}
+                                    isDisabled={cell.isDisabled}
+                                    onClick={() => handleDateClick(cell.date)}
                                     type="button"
                                 >
-                                    {date.format("D")}
+                                    {cell.label}
                                 </CalendarCellButton>
                             </CalendarCell>
                         ))}
@@ -379,13 +727,22 @@ export const CalendarNav = withContext(
 
 export interface DatePickerCalendarNavButtonProps extends IconButtonProps {}
 
+const sizeMap = {
+    sm: "xs",
+    md: "sm",
+    lg: "md"
+} as const;
+
 export const CalendarNavButton = withContext(
     forwardRef<HTMLButtonElement, DatePickerCalendarNavButtonProps>(
         function DatePickerCalendarNavButton(props, ref) {
+            const context = useDatePickerContext();
+            const inheritedSize = getInheritedButtonSize(context.size);
+
             return (
                 <IconButton
                     ref={ref}
-                    size="sm"
+                    size={sizeMap[inheritedSize ?? "md"]}
                     variant="ghost"
                     {...props}
                 />
@@ -481,10 +838,8 @@ export const CalendarCellButton = withContext(
     forwardRef<HTMLButtonElement, DatePickerCalendarCellButtonProps>(
         function DatePickerCalendarCellButton(props, ref) {
             return (
-                <Button
+                <dreamy.button
                     ref={ref}
-                    size="md"
-                    variant="ghost"
                     {...props}
                 />
             );
@@ -493,32 +848,45 @@ export const CalendarCellButton = withContext(
     "calendarCellButton"
 );
 
-export interface DatePickerFooterProps extends FlexProps {}
+export interface DatePickerFooterProps extends FlexProps {
+    cancelButtonProps?: DatePickerFooterButtonProps;
+    submitButtonProps?: DatePickerFooterButtonProps;
+}
 
 export const Footer = withContext(
     forwardRef<HTMLDivElement, DatePickerFooterProps>(function DatePickerFooter(props, ref) {
+        const { cancelButtonProps, submitButtonProps, ...rest } = props;
         const context = useDatePickerContext();
+        const setHasFooter = context.setHasFooter;
 
-        if (!context.showFooter) {
-            return null;
-        }
+        useEffect(
+            function registerFooter() {
+                setHasFooter(true);
+                return function unregisterFooter() {
+                    setHasFooter(false);
+                };
+            },
+            [setHasFooter]
+        );
 
         return (
             <Flex
                 ref={ref}
-                {...props}
+                {...rest}
             >
                 <FooterButton
                     onClick={context.onCancel}
                     variant="outline"
+                    {...cancelButtonProps}
                 >
-                    Cancel
+                    {cancelButtonProps?.children ?? "Cancel"}
                 </FooterButton>
                 <FooterButton
                     onClick={context.onApply}
-                    variant="solid"
+                    variant="primary"
+                    {...submitButtonProps}
                 >
-                    Apply
+                    {submitButtonProps?.children ?? "Apply"}
                 </FooterButton>
             </Flex>
         );
@@ -531,13 +899,51 @@ export interface DatePickerFooterButtonProps extends ButtonProps {}
 export const FooterButton = withContext(
     forwardRef<HTMLButtonElement, DatePickerFooterButtonProps>(
         function DatePickerFooterButton(props, ref) {
+            const context = useDatePickerContext();
+            const inheritedSize = getInheritedButtonSize(context.size);
             return (
                 <Button
                     ref={ref}
+                    size={inheritedSize}
                     {...props}
                 />
             );
         }
     ),
     "footerButton"
+);
+
+export interface DatePickerAIOProps extends DatePickerRootProps {
+    inputProps?: DatePickerInputProps;
+    popoverContentProps?: DatePickerPopoverProps;
+    headerProps?: DatePickerHeaderProps;
+    calendarProps?: DatePickerCalendarProps;
+    footerProps?: DatePickerFooterProps;
+}
+
+export const AIO = forwardRef<HTMLDivElement, DatePickerAIOProps>(
+    function DatePickerAIO(props, ref) {
+        const {
+            inputProps,
+            popoverContentProps,
+            headerProps,
+            calendarProps,
+            footerProps,
+            ...rootProps
+        } = props;
+
+        return (
+            <Root
+                ref={ref}
+                {...rootProps}
+            >
+                <Input {...inputProps} />
+                <PopoverContent {...popoverContentProps}>
+                    <Header {...headerProps} />
+                    <Calendar {...calendarProps} />
+                    <Footer {...footerProps} />
+                </PopoverContent>
+            </Root>
+        );
+    }
 );

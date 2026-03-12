@@ -1,3 +1,4 @@
+import { mapJsx } from "@dreamy-ui/panda-preset";
 import { defineSlotRecipe } from "@pandacss/dev";
 
 export const popover = defineSlotRecipe({
@@ -5,21 +6,28 @@ export const popover = defineSlotRecipe({
     description: "Dreamy UI Popover component",
     slots: ["content", "body", "header", "footer", "close"],
     jsx: [
-        "Popover.Root",
-        "Popover.Content",
-        "Popover.Body",
-        "Popover.Header",
-        "Popover.Footer",
-        "Popover.CloseButton",
-        "Menu.Root",
-        "Menu.Trigger",
-        "Menu.Content",
-        "Menu.Item",
-        "Select.Root",
-        "Select.Trigger",
-        "Select.Content",
-        "Select.VirtualContent",
-        "Select.Item"
+        ...mapJsx("Popover", ["Root", "Content", "Body", "Header", "Footer", "CloseButton"]),
+        ...mapJsx("Menu", ["Root", "Trigger", "Content", "Item"]),
+        ...mapJsx("Select", ["Root", "Trigger", "Content", "VirtualContent", "Item"]),
+        ...mapJsx("DatePicker", [
+            "Root",
+            "Trigger",
+            "Control",
+            "Popover",
+            "Calendar",
+            "CalendarHeader",
+            "CalendarTitle",
+            "CalendarNav",
+            "CalendarNavButton",
+            "CalendarGrid",
+            "CalendarGridHeader",
+            "CalendarGridHeaderCell",
+            "CalendarGridBody",
+            "CalendarCell",
+            "CalendarCellButton",
+            "Footer",
+            "FooterButton"
+        ])
     ],
     base: {
         content: {

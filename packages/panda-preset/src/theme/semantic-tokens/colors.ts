@@ -1,6 +1,22 @@
 import { getPresetOptions } from "@/theme/preset";
 import { defineSemanticTokens } from "@pandacss/dev";
-import { alpha, genBorderTokens, genForegroundTokens } from "../colors";
+import {
+    type ResolvedBorderOffsets,
+    type ResolvedFgOffsets,
+    alpha,
+    genBorderTokens,
+    genForegroundTokens
+} from "../colors";
+
+function resolveNumber(
+    val: number | { light: number; dark: number } | undefined,
+    mode: "light" | "dark",
+    fallback: number
+): number {
+    if (val === undefined) return fallback;
+    if (typeof val === "number") return val;
+    return val[mode];
+}
 
 export function createColorTokens() {
     const {
@@ -8,14 +24,52 @@ export function createColorTokens() {
         primaryColor,
         secondaryColor,
         buttonPrimaryTextColor,
-        buttonSecondaryTextColor
+        buttonSecondaryTextColor,
+        colorTuning
     } = getPresetOptions();
 
-    const fgLight = genForegroundTokens(lightBackground);
-    const fgDark = genForegroundTokens(darkBackground);
+    // ── Chroma scales ──────────────────────────────────────────────────────────
+    const fgChromaScaleLight = resolveNumber(colorTuning?.fgChromaScale, "light", 1);
+    const fgChromaScaleDark = resolveNumber(colorTuning?.fgChromaScale, "dark", 1);
 
-    const borderLight = genBorderTokens(lightBackground);
-    const borderDark = genBorderTokens(darkBackground);
+    const borderChromaScaleLight = resolveNumber(
+        colorTuning?.borderChromaScale,
+        "light",
+        fgChromaScaleLight
+    );
+    const borderChromaScaleDark = resolveNumber(
+        colorTuning?.borderChromaScale,
+        "dark",
+        fgChromaScaleDark
+    );
+
+    // ── Fg lightness offsets (per token, per mode) ─────────────────────────────
+    const fgOffsets = (mode: "light" | "dark"): ResolvedFgOffsets => ({
+        max: resolveNumber(colorTuning?.fgLightnessOffset?.max, mode, 0),
+        normal: resolveNumber(colorTuning?.fgLightnessOffset?.normal, mode, 0),
+        medium: resolveNumber(colorTuning?.fgLightnessOffset?.medium, mode, 0),
+        disabled: resolveNumber(colorTuning?.fgLightnessOffset?.disabled, mode, 0)
+    });
+
+    // ── Border lightness offsets (per token, per mode) ─────────────────────────
+    // When borderLightnessOffset is entirely absent, fall back to corresponding fg offsets:
+    //   border.default → fg.normal  |  border.muted → fg.disabled  |  border.hover → fg.normal
+    const borderOffsets = (mode: "light" | "dark"): ResolvedBorderOffsets => {
+        const fg = fgOffsets(mode);
+        const bo = colorTuning?.borderLightnessOffset;
+        const isBorderDefined = bo !== undefined;
+        return {
+            default: resolveNumber(bo?.default, mode, isBorderDefined ? 0 : fg.normal),
+            muted: resolveNumber(bo?.muted, mode, isBorderDefined ? 0 : fg.disabled),
+            hover: resolveNumber(bo?.hover, mode, isBorderDefined ? 0 : fg.normal)
+        };
+    };
+
+    const fgLight = genForegroundTokens(lightBackground, fgChromaScaleLight, fgOffsets("light"));
+    const fgDark = genForegroundTokens(darkBackground, fgChromaScaleDark, fgOffsets("dark"));
+
+    const borderLight = genBorderTokens(lightBackground, borderChromaScaleLight, borderOffsets("light"));
+    const borderDark = genBorderTokens(darkBackground, borderChromaScaleDark, borderOffsets("dark"));
 
     return defineSemanticTokens.colors({
         primary: {

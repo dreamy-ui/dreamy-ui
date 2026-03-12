@@ -1,4 +1,5 @@
 import { DatePicker } from "@/ui";
+import { useToast } from "@dreamy-ui/react";
 import { useState } from "react";
 
 export function ControlledDatePicker() {
@@ -6,12 +7,15 @@ export function ControlledDatePicker() {
 
     return (
         <DatePicker.Root
-            value={date}
             onChange={setDate}
+            value={date}
         >
             <DatePicker.Input />
             <DatePicker.PopoverContent>
+                <DatePicker.Header />
+                <DatePicker.Control />
                 <DatePicker.Calendar />
+                <DatePicker.Footer />
             </DatePicker.PopoverContent>
         </DatePicker.Root>
     );
@@ -20,24 +24,34 @@ export function ControlledDatePicker() {
 export function DatePickerWithFooter() {
     const [date, setDate] = useState<Date | null>(null);
 
+    const { toast } = useToast();
+
     function handleApply() {
-        console.log("Date applied:", date);
+        toast({
+            title: "Date applied",
+            description: date ? date.toISOString() : "No date selected",
+            status: "success"
+        });
     }
 
     function handleCancel() {
-        console.log("Date selection cancelled");
+        toast({
+            title: "Date selection cancelled",
+            status: "info"
+        });
     }
 
     return (
         <DatePicker.Root
-            value={date}
-            onChange={setDate}
-            showFooter
             onApply={handleApply}
             onCancel={handleCancel}
+            onChange={setDate}
+            value={date}
         >
             <DatePicker.Input />
             <DatePicker.PopoverContent>
+                <DatePicker.Header />
+                <DatePicker.Control />
                 <DatePicker.Calendar />
                 <DatePicker.Footer />
             </DatePicker.PopoverContent>

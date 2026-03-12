@@ -2,9 +2,11 @@ import fs from "node:fs/promises";
 import path from "node:path";
 
 export async function removeFactoryFromStyleContext(jsxFolder: string) {
-    const files = await fs.readdir(jsxFolder).then(files => files.filter(file => !file.endsWith("d.ts")));
+    const files = await fs
+        .readdir(jsxFolder)
+        .then((files) => files.filter((file) => !file.endsWith("d.ts")));
     const styleContextFile = files.find((file) => file.startsWith("create-style-context"));
-	console.log("styleContextFile", styleContextFile);
+    console.log("styleContextFile", styleContextFile);
 
     if (!styleContextFile) {
         throw new Error(`create-style-context.js file not found in ${jsxFolder}`);
@@ -13,9 +15,8 @@ export async function removeFactoryFromStyleContext(jsxFolder: string) {
     const newContent = `"use client";
 
 import { createContext, createElement, forwardRef, useContext } from "react";
-import { css, cx, sva } from "../css/index.js";
+import { cx, sva } from "../css/index.js";
 import { getDisplayName } from "./factory-helper.js";
-import { dreamy } from "./factory.js";
 
 function createSafeContext(contextName) {
     const Context = createContext(undefined);
@@ -34,13 +35,27 @@ function createSafeContext(contextName) {
     return [Context, useStyleContext];
 }
 
-export function createStyleContext(recipe) {
+export function createStyleContext(recipe, styleContextOptions = {}) {
     const isConfigRecipe = "__recipe__" in recipe;
     const recipeName = isConfigRecipe && recipe.__name__ ? recipe.__name__ : undefined;
     const contextName = recipeName ? \`createStyleContext("\${recipeName}")\` : "createStyleContext";
+    const forwardVariants = styleContextOptions.forwardVariants ?? [];
 
     const [StyleContext, useStyleContext] = createSafeContext(contextName);
     const svaFn = isConfigRecipe ? recipe : sva(recipe.config);
+
+    function getForwardedVariantProps(variantProps) {
+        if (!forwardVariants.length) {
+            return {};
+        }
+
+        return forwardVariants.reduce((accumulator, variantKey) => {
+            if (variantProps[variantKey] !== undefined) {
+                accumulator[variantKey] = variantProps[variantKey];
+            }
+            return accumulator;
+        }, {});
+    }
 
     const getResolvedProps = (props, slotStyles) => {
         const { unstyled, ...restProps } = props;
@@ -54,6 +69,7 @@ export function createStyleContext(recipe) {
     const withRootProvider = (Component, options) => {
         const WithRootProvider = (props) => {
             const [variantProps, otherProps] = svaFn.splitVariantProps(props);
+            const forwardedVariantProps = getForwardedVariantProps(variantProps);
 
             const slotStyles = isConfigRecipe ? svaFn(variantProps) : svaFn.raw(variantProps);
             slotStyles._classNameMap = svaFn.classNameMap;
@@ -64,7 +80,7 @@ export function createStyleContext(recipe) {
 
             return createElement(StyleContext.Provider, {
                 value: slotStyles,
-                children: createElement(Component, mergedProps)
+                children: createElement(Component, { ...mergedProps, ...forwardedVariantProps })
             });
         };
 
@@ -77,6 +93,7 @@ export function createStyleContext(recipe) {
     const withProvider = (Component, slot, options) => {
         const WithProvider = forwardRef((props, ref) => {
             const [variantProps, restProps] = svaFn.splitVariantProps(props);
+            const forwardedVariantProps = getForwardedVariantProps(variantProps);
 
             const slotStyles = isConfigRecipe ? svaFn(variantProps) : svaFn.raw(variantProps);
             slotStyles._classNameMap = svaFn.classNameMap;
@@ -84,6 +101,7 @@ export function createStyleContext(recipe) {
             const propsWithClass = {
                 ...restProps,
                 ...options?.defaultProps,
+                ...forwardedVariantProps,
                 className: restProps.className ?? options?.defaultProps?.className
             };
             const resolvedProps = getResolvedProps(propsWithClass, slotStyles[slot]);
@@ -142,7 +160,27 @@ export async function updateStyleContextTypes(jsxFolder: string) {
     const dtsPath = path.join(jsxFolder, "create-style-context.d.ts");
     try {
         const content = await fs.readFile(dtsPath, "utf-8");
-        const newContent = content.replace(/, JsxStyleProps/g, "");
+        const withoutJsxStyleProps = content.replace(/, JsxStyleProps/g, "");
+
+        const styleContextOptionsInterface = `interface StyleContextOptions {
+  forwardVariants?: string[] | undefined
+}
+
+`;
+        const withStyleContextOptionsInterface = withoutJsxStyleProps.includes(
+            "interface StyleContextOptions {"
+        )
+            ? withoutJsxStyleProps
+            : withoutJsxStyleProps.replace(
+                  "type StyleContextConsumer<T extends ElementType> = ComponentType<\n  JsxHTMLProps<ComponentProps<T> & UnstyledProps & AsProps>\n>\n\n",
+                  "type StyleContextConsumer<T extends ElementType> = ComponentType<\n  JsxHTMLProps<ComponentProps<T> & UnstyledProps & AsProps>\n>\n\n" +
+                      styleContextOptionsInterface
+              );
+
+        const newContent = withStyleContextOptionsInterface.replace(
+            /export declare function createStyleContext<R extends SlotRecipe>\(recipe: R\): StyleContext<R>/,
+            "export declare function createStyleContext<R extends SlotRecipe>(recipe: R, options?: StyleContextOptions | undefined): StyleContext<R>"
+        );
         await fs.writeFile(dtsPath, newContent);
     } catch (error) {
         if ((error as NodeJS.ErrnoException).code !== "ENOENT") {

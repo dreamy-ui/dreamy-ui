@@ -37,13 +37,14 @@ export const AddCommand = new Command("add")
     .description("Add components to your project")
     .argument("[components...]", "components to add")
     .option("-d, --dry-run", "Dry run")
+    .option("--skip-install", "Skip dependency installation")
     .option("--outdir <dir>", "Output directory to write the components")
     .option("--all", "Add all components")
     .option("-f, --force", "Overwrite existing files")
     .option("--tsx", "Convert to TSX")
     .action(async (selectedComponents: string[], flags: unknown) => {
         const parsedFlags = addCommandFlagsSchema.parse(flags);
-        const { dryRun, force, all, tsx } = parsedFlags;
+        const { dryRun, force, all, tsx, skipInstall } = parsedFlags;
 
         const ctx = await getProjectContext({
             cwd: parsedFlags.outdir || process.cwd(),
@@ -211,7 +212,7 @@ export const AddCommand = new Command("add")
         await tasks([
             {
                 title: "Installing required dependencies...",
-                enabled: !!npmDependencies.length && !dryRun,
+                enabled: !!npmDependencies.length && !dryRun && !skipInstall,
                 task: () => installCommand([...npmDependencies, "--silent"], outdir)
             },
             {

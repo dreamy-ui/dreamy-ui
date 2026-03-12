@@ -1,3 +1,4 @@
+import { mapJsx } from "@dreamy-ui/panda-preset";
 import { defineSlotRecipe } from "@pandacss/dev";
 
 export const datePicker = defineSlotRecipe({
@@ -6,6 +7,7 @@ export const datePicker = defineSlotRecipe({
     slots: [
         "root",
         "trigger",
+        "control",
         "popover",
         "calendar",
         "calendarHeader",
@@ -21,24 +23,25 @@ export const datePicker = defineSlotRecipe({
         "footer",
         "footerButton"
     ],
-    jsx: [
-        "DatePicker.Root",
-        "DatePicker.Trigger",
-        "DatePicker.Popover",
-        "DatePicker.Calendar",
-        "DatePicker.CalendarHeader",
-        "DatePicker.CalendarTitle",
-        "DatePicker.CalendarNav",
-        "DatePicker.CalendarNavButton",
-        "DatePicker.CalendarGrid",
-        "DatePicker.CalendarGridHeader",
-        "DatePicker.CalendarGridHeaderCell",
-        "DatePicker.CalendarGridBody",
-        "DatePicker.CalendarCell",
-        "DatePicker.CalendarCellButton",
-        "DatePicker.Footer",
-        "DatePicker.FooterButton"
-    ],
+    jsx: mapJsx("DatePicker", [
+        "Root",
+        "Trigger",
+        "Control",
+        "Popover",
+        "Calendar",
+        "CalendarHeader",
+        "CalendarTitle",
+        "CalendarNav",
+        "CalendarNavButton",
+        "CalendarGrid",
+        "CalendarGridHeader",
+        "CalendarGridHeaderCell",
+        "CalendarGridBody",
+        "CalendarCell",
+        "CalendarCellButton",
+        "Footer",
+        "FooterButton"
+    ]),
     base: {
         root: {
             display: "flex",
@@ -48,28 +51,38 @@ export const datePicker = defineSlotRecipe({
         trigger: {
             width: "full"
         },
-        popover: {
-            width: "fit!"
+        control: {
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 2,
+            width: "full",
+            "& > input": {
+                width: "full"
+            }
         },
         calendar: {
             display: "flex",
             flexDirection: "column",
-            gap: 4,
-            p: 4
+            gap: 4
         },
         calendarHeader: {
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
+            w: "full",
             gap: 2
         },
         calendarTitle: {
-            fontWeight: "semibold",
-            fontSize: "md"
+            fontSize: "sm",
+            fontWeight: "medium",
+            color: "fg.medium"
         },
         calendarNav: {
             display: "flex",
             alignItems: "center",
+            justifyContent: "space-between",
+            w: "full",
             gap: 2
         },
         calendarNavButton: {
@@ -87,9 +100,10 @@ export const datePicker = defineSlotRecipe({
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            textAlign: "center",
             fontSize: "xs",
             fontWeight: "medium",
-            width: "fit",
+            width: "full",
             color: "fg.medium",
             py: 2
         },
@@ -112,7 +126,7 @@ export const datePicker = defineSlotRecipe({
             justifyContent: "center",
             width: "full",
             height: "full",
-            borderRadius: "l2",
+            borderRadius: "full",
             borderWidth: "1px",
             borderStyle: "solid",
             borderColor: "transparent",
@@ -131,16 +145,20 @@ export const datePicker = defineSlotRecipe({
                 cursor: "not-allowed"
             },
             "&[data-selected]": {
-                backgroundColor: "primary",
-                color: "primary.fg",
-                borderColor: "primary",
+                // backgroundColor: "primary!",
+                color: "primary.fg!",
+                // borderColor: "primary!",
+                // scale: "0.95",
+                // transition: "scale {durations.fast} {easings.easeInOut}",
                 _hover: {
-                    backgroundColor: "primary.hover",
-                    borderColor: "primary.hover"
+                    backgroundColor: "primary.hover!",
+                    borderColor: "primary.hover!"
                 }
             },
             "&[data-today]": {
-                borderColor: "primary",
+                borderColor: "alpha.100",
+                backgroundColor: "alpha.100",
+                color: "fg",
                 fontWeight: "semibold"
             },
             "&[data-outside-month]": {
@@ -148,71 +166,91 @@ export const datePicker = defineSlotRecipe({
             }
         },
         footer: {
+            w: "full",
             display: "flex",
             alignItems: "center",
-            justifyContent: "flex-end",
+            justifyContent: "stretch",
             gap: 2,
-            p: 4,
             borderTopWidth: "1px",
             borderTopStyle: "solid",
             borderTopColor: "border"
         },
-        footerButton: {}
+        footerButton: {
+            w: "full"
+        }
     },
     variants: {
         size: {
             sm: {
+                popover: {
+                    width: "2xs!"
+                },
+                calendarHeader: {
+                    pt: 3,
+                    px: 3
+                },
                 calendar: {
-                    p: 3
+                    px: 3
                 },
                 calendarTitle: {
                     fontSize: "sm"
-                },
-                calendarNavButton: {
-                    width: 7,
-                    height: 7
                 },
                 calendarCellButton: {
                     fontSize: "xs"
                 },
                 footer: {
                     p: 3
+                },
+                control: {
+                    px: 3
                 }
             },
             md: {
+                popover: {
+                    width: "xs!"
+                },
+                calendarHeader: {
+                    pt: 4,
+                    px: 4
+                },
                 calendar: {
-                    p: 4
+                    px: 4
                 },
                 calendarTitle: {
                     fontSize: "md"
-                },
-                calendarNavButton: {
-                    width: 8,
-                    height: 8
                 },
                 calendarCellButton: {
                     fontSize: "sm"
                 },
                 footer: {
                     p: 4
+                },
+                control: {
+                    px: 4
                 }
             },
             lg: {
+                popover: {
+                    width: "sm!"
+                },
+                calendarHeader: {
+                    pt: 5,
+                    px: 5
+                },
                 calendar: {
-                    p: 5
+                    px: 5
                 },
                 calendarTitle: {
                     fontSize: "lg"
-                },
-                calendarNavButton: {
-                    width: 9,
-                    height: 9
                 },
                 calendarCellButton: {
                     fontSize: "md"
                 },
                 footer: {
                     p: 5
+                },
+                control: {
+                    px: 5
                 }
             }
         }

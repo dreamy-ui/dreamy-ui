@@ -1,5 +1,5 @@
 {
-	"include": ["./**/*.ts"],
+	"include": ["./src/**/*.ts"],
 	"compilerOptions": {
 		"lib": ["DOM", "DOM.Iterable", "ESNext"],
 		"outDir": "dist",
