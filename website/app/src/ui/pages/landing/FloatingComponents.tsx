@@ -118,7 +118,7 @@ export default function FloatingComponents() {
                         // center
                         // col
                         // gap={"10!"}
-                        // animation={"downUp 5s {easings.easeInOut} infinite"}
+                        // animation={"downUp 5s {easings.ease-in-out} infinite"}
                         // animationDelay={`${i * 0.5}s`}
                     >
                         <Card.Body

@@ -2,6 +2,7 @@ import {
     Accordion,
     ActionBar,
     Alert,
+    Autocomplete,
     Avatar,
     AvatarGroup,
     Badge,
@@ -91,6 +92,7 @@ import {
     LuFileWarning,
     LuHouse,
     LuLamp,
+    LuSearch,
     LuShoppingCart,
     LuTrash,
     LuWarehouse
@@ -130,6 +132,12 @@ import {
     ActionBarWithClose,
     ControlledActionBar
 } from "./components/action-bars";
+import {
+    AsyncAutocomplete,
+    AutocompleteWithIcon,
+    ControlledAutocomplete,
+    VirtualAutocomplete
+} from "./components/autocompletes";
 import { BarChartExample, LineChartExample, PieChartExample } from "./components/charts";
 import {
     CheckboxCardGroupControl,
@@ -339,7 +347,12 @@ const DreamComponents = {
     Fieldset,
     Pagination,
     ControlledPagination,
-    CustomItemPagination
+    CustomItemPagination,
+    Autocomplete,
+    ControlledAutocomplete,
+    AutocompleteWithIcon,
+    AsyncAutocomplete,
+    VirtualAutocomplete
 };
 
 function Wrapper({ children, ...props }: PropsWithChildren<FlexProps>) {
@@ -388,6 +401,7 @@ const icons = {
     LuCherry,
     LuFileWarning,
     LuDollarSign,
+    LuSearch,
     HiColorSwatch,
     LuShoppingCart
 };

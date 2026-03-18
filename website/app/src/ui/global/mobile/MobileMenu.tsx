@@ -64,10 +64,9 @@ export default function MobileMenu({ isOpen, setIsOpen }: Props) {
                 <Flex
                     bg={{
                         base: "white",
-                        _dark: "black"
+                        _dark: "bg"
                     }}
-                    borderColor={"alpha.300"}
-                    borderLeft={"1px solid"}
+                    borderLeft={"1"}
                     flexDir={"column"}
                     gap={10}
                     h="100vh"

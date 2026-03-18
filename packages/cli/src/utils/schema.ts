@@ -67,6 +67,7 @@ export const addCommandFlagsSchema = z.object({
     force: z.boolean().optional(),
     dryRun: z.boolean().optional(),
     skipInstall: z.boolean().optional(),
+    skipCodegen: z.boolean().optional(),
     outdir: z.string().optional(),
     all: z.boolean().optional(),
     tsx: z.boolean().optional()

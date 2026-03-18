@@ -78,11 +78,11 @@ export const input = defineRecipe({
                 }
             },
             filled: {
-                background: "{colors.alpha.100}",
+                background: "{colors.alpha.50}",
                 borderColor: "transparent",
                 borderWidth: "0",
                 _hover: {
-                    background: "{colors.alpha.200}"
+                    background: "{colors.alpha.100}"
                 },
                 _focusWithin: {
                     boxShadow: "0 0 0 1.5px {colors.primary}"

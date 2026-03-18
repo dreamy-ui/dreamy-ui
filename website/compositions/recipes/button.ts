@@ -78,7 +78,7 @@ export const button = defineRecipe({
             primary: parts({
                 root: {
                     bg: "primary",
-                    color: "{colors.primaryButtonText}",
+                    color: "{colors.primary.fg}",
                     _hover: {
                         bg: "{colors.primary.hover}"
                     }
@@ -88,7 +88,7 @@ export const button = defineRecipe({
                 root: {
                     bg: "secondary",
                     outlineColor: "{colors.secondary}",
-                    color: "{colors.secondaryButtonText}",
+                    color: "{colors.secondary.fg}",
                     _hover: {
                         bg: "{colors.secondary.hover}"
                     }

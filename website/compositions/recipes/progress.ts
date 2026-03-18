@@ -20,7 +20,7 @@ export const progress = defineRecipe({
         },
         filledTrack: {
             bg: "var(--progress-color)",
-            transition: "width 0.3s {easings.easeInOut}",
+            transition: "width 0.3s {easings.ease-in-out}",
             height: "full"
         }
     }),

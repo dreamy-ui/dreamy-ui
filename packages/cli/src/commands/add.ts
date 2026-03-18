@@ -38,13 +38,14 @@ export const AddCommand = new Command("add")
     .argument("[components...]", "components to add")
     .option("-d, --dry-run", "Dry run")
     .option("--skip-install", "Skip dependency installation")
+    .option("--skip-codegen", "Skip running panda codegen")
     .option("--outdir <dir>", "Output directory to write the components")
     .option("--all", "Add all components")
     .option("-f, --force", "Overwrite existing files")
     .option("--tsx", "Convert to TSX")
     .action(async (selectedComponents: string[], flags: unknown) => {
         const parsedFlags = addCommandFlagsSchema.parse(flags);
-        const { dryRun, force, all, tsx, skipInstall } = parsedFlags;
+        const { dryRun, force, all, tsx, skipInstall, skipCodegen } = parsedFlags;
 
         const ctx = await getProjectContext({
             cwd: parsedFlags.outdir || process.cwd(),
@@ -406,7 +407,7 @@ export const AddCommand = new Command("add")
             },
             {
                 title: "Running panda codegen",
-                enabled: !dryRun,
+                enabled: !dryRun && !skipCodegen,
                 task: async () => {
                     await pandaCodegenCommand(process.cwd());
 

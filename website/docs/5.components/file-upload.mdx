@@ -144,7 +144,17 @@ Use the `maxFileSize` and `minFileSize` props to validate file sizes. You can pa
 </Wrapper>
 
 ```tsx
-<FileUpload.Root maxFileSize="3MB" maxW="sm">
+<FileUpload.Root 
+    maxFileSize="3MB" 
+    maxW="sm"
+    onFileReject={({ files }) => {
+        toast({
+            title: "File rejected",
+            description: files.map((file) => file.errors.map((error) => error.message).join(", ")).join(", "),
+            status: "error"
+        })
+    }}
+>
     <FileUpload.Trigger asChild>
         <Button variant="outline">
             Upload file (max 3MB)

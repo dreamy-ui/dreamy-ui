@@ -26,6 +26,7 @@ The most common usage is with an input field that displays the selected date.
         <DatePicker.PopoverContent>
             <DatePicker.Header />
             <DatePicker.Control />
+            <DatePicker.Nav />
             <DatePicker.Calendar />
             <DatePicker.Footer />
         </DatePicker.PopoverContent>
@@ -38,6 +39,7 @@ The most common usage is with an input field that displays the selected date.
     <DatePicker.PopoverContent>
         <DatePicker.Header />
         <DatePicker.Control />
+        <DatePicker.Nav />
         <DatePicker.Calendar />
         <DatePicker.Footer />
     </DatePicker.PopoverContent>
@@ -68,6 +70,34 @@ You can also use a button as the trigger instead of an input field.
         <DatePicker.Control />
         <DatePicker.Calendar />
         <DatePicker.Footer />
+    </DatePicker.PopoverContent>
+</DatePicker.Root>
+```
+
+### With View Navigation
+
+Add `DatePicker.Nav` below the `Control` to let users switch between Day, Month, and Year views. The default view is Day (the standard calendar grid). Month view shows a 3-column month grid. Year view shows a scrollable 3-column year grid from the current year +10 down to 1919, with custom year inputs at the top (for future years) and bottom (for years before 1919).
+
+<Wrapper>
+    <DatePicker.Root>
+        <DatePicker.Input />
+        <DatePicker.PopoverContent>
+            <DatePicker.Header />
+            <DatePicker.Control />
+            <DatePicker.Nav />
+            <DatePicker.Calendar />
+        </DatePicker.PopoverContent>
+    </DatePicker.Root>
+</Wrapper>
+
+```tsx
+<DatePicker.Root>
+    <DatePicker.Input />
+    <DatePicker.PopoverContent>
+        <DatePicker.Header />
+        <DatePicker.Control />
+        <DatePicker.Nav />
+        <DatePicker.Calendar />
     </DatePicker.PopoverContent>
 </DatePicker.Root>
 ```

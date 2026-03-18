@@ -68,8 +68,16 @@ export function createColorTokens() {
     const fgLight = genForegroundTokens(lightBackground, fgChromaScaleLight, fgOffsets("light"));
     const fgDark = genForegroundTokens(darkBackground, fgChromaScaleDark, fgOffsets("dark"));
 
-    const borderLight = genBorderTokens(lightBackground, borderChromaScaleLight, borderOffsets("light"));
-    const borderDark = genBorderTokens(darkBackground, borderChromaScaleDark, borderOffsets("dark"));
+    const borderLight = genBorderTokens(
+        lightBackground,
+        borderChromaScaleLight,
+        borderOffsets("light")
+    );
+    const borderDark = genBorderTokens(
+        darkBackground,
+        borderChromaScaleDark,
+        borderOffsets("dark")
+    );
 
     return defineSemanticTokens.colors({
         primary: {
@@ -147,24 +155,6 @@ export function createColorTokens() {
                               _dark: `color-mix(in srgb, ${secondaryColor.dark}, currentColor 20%)`
                           }
             }
-        },
-        primaryButtonText: {
-            value:
-                typeof buttonPrimaryTextColor === "string"
-                    ? buttonPrimaryTextColor
-                    : {
-                          _light: buttonPrimaryTextColor.light,
-                          _dark: buttonPrimaryTextColor.dark
-                      }
-        },
-        secondaryButtonText: {
-            value:
-                typeof buttonSecondaryTextColor === "string"
-                    ? buttonSecondaryTextColor
-                    : {
-                          _light: buttonSecondaryTextColor.light,
-                          _dark: buttonSecondaryTextColor.dark
-                      }
         },
         bg: {
             DEFAULT: {

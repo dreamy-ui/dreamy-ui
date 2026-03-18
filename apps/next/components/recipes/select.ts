@@ -65,7 +65,7 @@ export const select = defineSlotRecipe({
                 _disabled: "fg.disabled",
                 _invalid: "error"
             },
-            transition: "transform {durations.normal} {easings.easeInOut}",
+            transition: "transform {durations.normal} {easings.ease-in-out}",
             transform: "rotate(0deg)",
             ".group[data-open] &": {
                 transform: "rotate(180deg)"
@@ -79,7 +79,7 @@ export const select = defineSlotRecipe({
             cursor: "pointer",
             isolation: "isolate",
             pointerEvents: "auto",
-            transition: "color {durations.normal} {easings.easeInOut}",
+            transition: "color {durations.normal} {easings.ease-in-out}",
             _hover: {
                 color: "fg"
             },
@@ -142,7 +142,7 @@ export const select = defineSlotRecipe({
                     bg: "transparent",
                     borderWidth: "1px",
                     borderColor: "border",
-                    transition: "border-color {durations.normal} {easings.easeInOut}",
+                    transition: "border-color {durations.normal} {easings.ease-in-out}",
                     _hover: {
                         borderColor: "border.hover",
                         _invalid: {
@@ -170,7 +170,7 @@ export const select = defineSlotRecipe({
                     borderWidth: "0px",
                     borderColor: "transparent",
                     bg: "alpha.50",
-                    transition: "background 0.2s {easings.easeInOut}",
+                    transition: "background 0.2s {easings.ease-in-out}",
                     _hover: {
                         bg: "alpha.100"
                     },

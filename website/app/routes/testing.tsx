@@ -1,4 +1,4 @@
-import { Button, Pagination } from "@/ui";
+import { Button, Menu, Pagination } from "@/ui";
 import { Flex } from "@/ui";
 import { MotionFlex } from "@/ui";
 import { Select } from "@/ui";
@@ -170,6 +170,23 @@ export default function Test() {
                     ))}
                 </Select.VirtualContent>
             </Select.Root>
+
+            <Menu.Root>
+                <Menu.Trigger>
+                    <Button>Open Menu</Button>
+                </Menu.Trigger>
+                <Menu.Content>
+                    <Menu.Item>Item 1</Menu.Item>
+                    <Menu.Item>Item 2</Menu.Item>
+                    <Menu.TriggerItem label="More options">
+                        <Menu.Content>
+                            <Menu.Item>Sub Item 1</Menu.Item>
+                            <Menu.Item>Sub Item 2</Menu.Item>
+                            <Menu.Item>Sub Item 3</Menu.Item>
+                        </Menu.Content>
+                    </Menu.TriggerItem>
+                </Menu.Content>
+            </Menu.Root>
         </Flex>
     );
 }

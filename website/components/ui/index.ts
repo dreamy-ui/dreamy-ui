@@ -1,6 +1,7 @@
 export * as Accordion from "./accordion";
 export * as ActionBar from "./action-bar";
 export * from "./alert";
+export * as Autocomplete from "./autocomplete";
 export * from "./avatar";
 export * from "./badge";
 export * from "./box";
@@ -59,5 +60,6 @@ export * from "./toast-provider";
 export * from "./toast";
 export * from "./tooltip";
 export * from "./transitions";
+export * from "./use-autocomplete";
 export * from "./visually-hidden";
 export * from "./wrap";

@@ -5,24 +5,46 @@ import {
     MenuProvider,
     type UseMenuItemProps,
     type UseMenuProps,
+    callAllHandlers,
     runIfFn,
     useActionKey,
     useMenu,
     useMenuContext,
     useMenuItem
 } from "@dreamy-ui/react";
-import { Children, type ReactElement, type ReactNode, cloneElement, forwardRef } from "react";
+import {
+    Children,
+    type ReactElement,
+    type ReactNode,
+    cloneElement,
+    forwardRef,
+    useEffect
+} from "react";
+import { BiChevronRight } from "react-icons/bi";
 import { type HTMLDreamyProps, createStyleContext, dreamy } from "styled-system/jsx";
 import { menu } from "styled-system/recipes";
 import { Box } from "./box";
 import { Kbd } from "./kbd";
 import {
+    Anchor as PopoverAnchor,
     Content as PopoverContent,
     type PopoverContentProps,
     type PopoverProps,
     Root as PopoverRoot,
     Trigger as PopoverTrigger
 } from "./popover";
+
+function mergeRefs<T>(...refs: (React.Ref<T> | undefined | null)[]): React.RefCallback<T> {
+    return (value: T | null) => {
+        refs.forEach((ref) => {
+            if (typeof ref === "function") {
+                ref(value);
+            } else if (ref != null) {
+                (ref as React.MutableRefObject<T | null>).current = value;
+            }
+        });
+    };
+}
 
 const { withProvider, withContext } = createStyleContext(menu);
 
@@ -142,3 +164,147 @@ export const Trigger = forwardRef<HTMLButtonElement, MenuTriggerProps>(function 
 
     return <PopoverTrigger {...rest}>{trigger}</PopoverTrigger>;
 });
+
+export interface MenuTriggerItemProps extends Omit<MenuButtonProps, "children"> {
+    /**
+     * The placement of the sub-menu.
+     * @default "right-start"
+     */
+    placement?: PopoverProps["placement"];
+    /**
+     * The label to display inside the trigger button.
+     */
+    label?: React.ReactNode;
+    /**
+     * The sub-menu content. Should contain a `Menu.Content` component.
+     */
+    children?: React.ReactNode;
+}
+
+/**
+ * A menu item that opens a nested sub-menu when clicked.
+ * It is registered as a regular item in the parent menu's keyboard navigation.
+ *
+ * Usage:
+ * ```tsx
+ * <Menu.TriggerItem label="More options" placement="right-start">
+ *   <Menu.Content>
+ *     <Menu.Item>Sub item</Menu.Item>
+ *   </Menu.Content>
+ * </Menu.TriggerItem>
+ * ```
+ */
+export const TriggerItem = withContext(
+    forwardRef<HTMLButtonElement, MenuTriggerItemProps>(function MenuTriggerItem(props, ref) {
+        const {
+            icon,
+            command,
+            rightContent,
+            label,
+            children,
+            placement = "right-start",
+            onClick: userOnClick,
+            ...rest
+        } = props;
+
+        // All hooks below read from the PARENT menu context (called before any nested context
+        // is rendered), so this button is correctly registered in the parent menu's descendants
+        // list and participates in its keyboard navigation (ArrowUp/Down/Enter).
+        const { isOpen: parentIsOpen, triggerRef: parentTriggerRef } = useMenuContext();
+        const buttonProps = useMenuItem(rest, ref);
+        const actionKey = useActionKey();
+
+        const { rest: _unused, ...nestedCtx } = useMenu({});
+        const { onKeyDown: nestedOnKeyDown } = nestedCtx.getTriggerProps();
+
+        // Close nested menu when the parent menu closes.
+        useEffect(() => {
+            if (!parentIsOpen) nestedCtx.onClose();
+        }, [parentIsOpen, nestedCtx.onClose]);
+
+        // Close nested menu when this item loses virtual focus in the parent menu
+        // (e.g. user navigates to a different item with ArrowDown).
+        const isFocusedAttr = (buttonProps as any)["data-focused"];
+        useEffect(() => {
+            if (isFocusedAttr === undefined) nestedCtx.onClose();
+        }, [isFocusedAttr, nestedCtx.onClose]);
+
+        // ArrowRight while this item is virtually focused opens the sub-menu. The real DOM focus
+        // is on the parent trigger at this point, so we listen at the document level.
+        useEffect(() => {
+            function handleArrowRight(e: KeyboardEvent) {
+                if (e.key !== "ArrowRight") return;
+                const btn = nestedCtx.triggerRef.current;
+                if (!btn?.hasAttribute("data-focused")) return;
+                e.preventDefault();
+                nestedCtx.onOpen();
+            }
+            document.addEventListener("keydown", handleArrowRight);
+            return () => document.removeEventListener("keydown", handleArrowRight);
+        }, [nestedCtx.triggerRef, nestedCtx.onOpen]);
+
+        // ArrowLeft or Escape while the sub-menu is open closes it and returns real DOM
+        // focus to the parent menu trigger so ArrowUp/Down navigation continues there.
+        function handleButtonKeyDown(e: React.KeyboardEvent<HTMLButtonElement>) {
+            if (!nestedCtx.isOpen) return;
+            if (e.key === "ArrowLeft" || e.key === "Escape") {
+                e.preventDefault();
+                nestedCtx.onClose();
+                parentTriggerRef.current?.focus();
+            }
+        }
+
+        return (
+            <MenuProvider value={nestedCtx}>
+                {/*
+                 * returnFocusOnClose={false} so we control focus ourselves — when the sub-menu
+                 * closes via ArrowLeft/Escape we focus the parent trigger, not the button.
+                 * initialFocusRef={nestedCtx.triggerRef} moves DOM focus to this button when
+                 * the sub-menu opens (via ArrowRight or click), enabling nested keyboard nav.
+                 */}
+                <PopoverRoot
+                    hasArrow={false}
+                    initialFocusRef={nestedCtx.triggerRef}
+                    isOpen={nestedCtx.isOpen}
+                    lazyBehavior="keepMounted"
+                    onClose={nestedCtx.onClose}
+                    onOpen={nestedCtx.onOpen}
+                    placement={placement}
+                    reduceMotion={nestedCtx.reduceMotion}
+                    returnFocusOnClose={false}
+                >
+                    <PopoverAnchor>
+                        <dreamy.button
+                            {...buttonProps}
+                            ref={mergeRefs(buttonProps.ref, nestedCtx.triggerRef)}
+                            onClick={callAllHandlers(userOnClick as any, nestedCtx.onToggle)}
+                            onKeyDown={callAllHandlers(
+                                buttonProps.onKeyDown as any,
+                                nestedOnKeyDown as any,
+                                handleButtonKeyDown as any
+                            )}
+                            onPointerEnter={callAllHandlers(
+                                buttonProps.onPointerEnter as any,
+                                nestedCtx.onOpen
+                            )}
+                        >
+                            <span>
+                                {runIfFn(icon)}
+                                {label}
+                            </span>
+                            {command && (
+                                <Kbd size={"sm"}>
+                                    {command.replaceAll("{actionKey}", actionKey)}
+                                </Kbd>
+                            )}
+                            {rightContent && runIfFn(rightContent)}
+                            <BiChevronRight />
+                        </dreamy.button>
+                    </PopoverAnchor>
+                    {children}
+                </PopoverRoot>
+            </MenuProvider>
+        );
+    }),
+    "item"
+);

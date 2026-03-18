@@ -51,6 +51,26 @@
   },
   {
     "type": "component",
+    "id": "autocomplete",
+    "file": "autocomplete.tsx",
+    "component": "Autocomplete",
+    "npmDependencies": [
+      "@tanstack/react-virtual"
+    ],
+    "fileDependencies": [
+      "./box",
+      "./input",
+      "./popover",
+      "./use-autocomplete"
+    ],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "autocomplete"
+    ]
+  },
+  {
+    "type": "component",
     "id": "avatar",
     "file": "avatar.tsx",
     "component": "Avatar",
@@ -465,7 +485,9 @@
     "id": "menu",
     "file": "menu.tsx",
     "component": "Menu",
-    "npmDependencies": [],
+    "npmDependencies": [
+      "react-icons"
+    ],
     "fileDependencies": [
       "./box",
       "./kbd",
@@ -905,6 +927,18 @@
     "npmDependencies": [],
     "fileDependencies": [
       "./motion"
+    ],
+    "hasRecipe": false,
+    "hasPattern": false
+  },
+  {
+    "type": "component",
+    "id": "use-autocomplete",
+    "file": "use-autocomplete.ts",
+    "component": "UseAutocomplete",
+    "npmDependencies": [],
+    "fileDependencies": [
+      "./popover"
     ],
     "hasRecipe": false,
     "hasPattern": false

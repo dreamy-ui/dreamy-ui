@@ -1,0 +1,403 @@
+---
+title: Autocomplete
+description: Autocomplete is a text input that filters a list of options as the user types.
+isServerComponent: false
+---
+
+## Installation
+
+```bash
+pnpm dreamy add autocomplete
+```
+
+## Usage
+
+Basic usage of Autocomplete. Items are passed as an array of `{ value, label }` objects. The dropdown filters automatically as the user types.
+
+<Wrapper>
+    <Autocomplete.Root
+        width="xs"
+        items={[
+            { value: "strawberry", label: "Strawberry" },
+            { value: "banana", label: "Banana" },
+            { value: "orange", label: "Orange" },
+            { value: "cherry", label: "Cherry" },
+            { value: "mango", label: "Mango" },
+        ]}
+    >
+        <Autocomplete.Input placeholder="Search a fruit..." />
+        <Autocomplete.Content />
+    </Autocomplete.Root>
+</Wrapper>
+
+```tsx
+const fruits = [
+    { value: "strawberry", label: "Strawberry" },
+    { value: "banana", label: "Banana" },
+    { value: "orange", label: "Orange" },
+    { value: "cherry", label: "Cherry" },
+    { value: "mango", label: "Mango" },
+];
+
+<Autocomplete.Root items={fruits}>
+    <Autocomplete.Input placeholder="Search a fruit..." />
+    <Autocomplete.Content />
+</Autocomplete.Root>
+```
+
+### Size
+
+Autocomplete comes with 4 different sizes.
+
+<Wrapper>
+    {["sm", "md", "lg"].map((size) => (
+        <Autocomplete.Root
+            key={size}
+            width="xs"
+            size={size}
+            items={[
+                { value: "strawberry", label: "Strawberry" },
+                { value: "banana", label: "Banana" },
+                { value: "orange", label: "Orange" },
+            ]}
+        >
+            <Autocomplete.Input placeholder={`Search (${size})...`} />
+            <Autocomplete.Content />
+        </Autocomplete.Root>
+    ))}
+</Wrapper>
+
+```tsx
+{["sm", "md", "lg"].map((size) => (
+    <Autocomplete.Root key={size} size={size} items={fruits}>
+        <Autocomplete.Input placeholder={`Search (${size})...`} />
+        <Autocomplete.Content />
+    </Autocomplete.Root>
+))}
+```
+
+### Variant
+
+Autocomplete can be used in `outline` or `solid` variant.
+
+<Wrapper>
+    <Autocomplete.Root
+        width="xs"
+        variant="outline"
+        items={[
+            { value: "strawberry", label: "Strawberry" },
+            { value: "banana", label: "Banana" },
+            { value: "orange", label: "Orange" },
+        ]}
+    >
+        <Autocomplete.Input placeholder="Outline variant..." />
+        <Autocomplete.Content />
+    </Autocomplete.Root>
+    <Autocomplete.Root
+        width="xs"
+        variant="solid"
+        items={[
+            { value: "strawberry", label: "Strawberry" },
+            { value: "banana", label: "Banana" },
+            { value: "orange", label: "Orange" },
+        ]}
+    >
+        <Autocomplete.Input placeholder="Solid variant..." />
+        <Autocomplete.Content />
+    </Autocomplete.Root>
+</Wrapper>
+
+```tsx
+<Autocomplete.Root variant="outline" items={fruits}>
+    <Autocomplete.Input placeholder="Outline variant..." />
+    <Autocomplete.Content />
+</Autocomplete.Root>
+
+<Autocomplete.Root variant="solid" items={fruits}>
+    <Autocomplete.Input placeholder="Solid variant..." />
+    <Autocomplete.Content />
+</Autocomplete.Root>
+```
+
+### Controlled
+
+Control the selected value externally with `value` and `onChangeValue`.
+
+<Wrapper>
+    <ControlledAutocomplete />
+</Wrapper>
+
+```tsx
+export function ControlledAutocomplete() {
+    const [value, setValue] = useState<string | null>(null);
+
+    return (
+        <VStack align="start" gap={2}>
+            <Text>Selected: {value ?? "none"}</Text>
+            <Autocomplete.Root
+                width="xs"
+                items={fruits}
+                value={value}
+                onChangeValue={setValue}
+            >
+                <Autocomplete.Input placeholder="Search a fruit..." />
+                <Autocomplete.Content />
+            </Autocomplete.Root>
+        </VStack>
+    );
+}
+```
+
+### Custom filter
+
+Pass a `filterFn` prop to override the default case-insensitive substring matching. The function receives each item and the current query string; return `true` to include the item.
+
+<Wrapper>
+    <Autocomplete.Root
+        width="xs"
+        items={[
+            { value: "strawberry", label: "Strawberry" },
+            { value: "banana", label: "Banana" },
+            { value: "orange", label: "Orange" },
+            { value: "cherry", label: "Cherry" },
+            { value: "mango", label: "Mango" },
+        ]}
+        filterFn={(item, query) => item.label.toLowerCase().startsWith(query.toLowerCase())}
+    >
+        <Autocomplete.Input placeholder="Starts-with filter..." />
+        <Autocomplete.Content />
+    </Autocomplete.Root>
+</Wrapper>
+
+```tsx
+<Autocomplete.Root
+    items={fruits}
+    filterFn={(item, query) =>
+        item.label.toLowerCase().startsWith(query.toLowerCase())
+    }
+>
+    <Autocomplete.Input placeholder="Starts-with filter..." />
+    <Autocomplete.Content />
+</Autocomplete.Root>
+```
+
+### Custom item rendering
+
+Use the `renderItem` prop on `Autocomplete.Content` to fully customise how each item is displayed. The render function receives the filtered `AutocompleteItem` and must return a React node. Use `Autocomplete.Item` with the matching `value` so selection still works correctly.
+
+<Wrapper>
+    <Autocomplete.Root
+        width="xs"
+        items={[
+            { value: "cherry", label: "Cherry" },
+            { value: "banana", label: "Banana" },
+            { value: "citrus", label: "Citrus" },
+        ]}
+    >
+        <Autocomplete.Input placeholder="Search a fruit..." />
+        <Autocomplete.Content
+            renderItem={(item) => (
+                <Autocomplete.Item key={item.value} value={item.value}>
+                    <HStack gap={2}>
+                        <LuCherry />
+                        <Text>{item.label}</Text>
+                    </HStack>
+                </Autocomplete.Item>
+            )}
+        />
+    </Autocomplete.Root>
+</Wrapper>
+
+```tsx
+<Autocomplete.Root items={fruits}>
+    <Autocomplete.Input placeholder="Search a fruit..." />
+    <Autocomplete.Content
+        renderItem={(item) => (
+            <Autocomplete.Item key={item.value} value={item.value}>
+                <HStack gap={2}>
+                    <LuCherry />
+                    <Text>{item.label}</Text>
+                </HStack>
+            </Autocomplete.Item>
+        )}
+    />
+</Autocomplete.Root>
+```
+
+### With icon
+
+Pass an `icon` prop to `Autocomplete.Input` to show a leading icon inside the input.
+
+<Wrapper>
+    <AutocompleteWithIcon />
+</Wrapper>
+
+```tsx
+<Autocomplete.Root items={fruits}>
+    <Autocomplete.Input placeholder="Search a fruit..." icon={<LuSearch />} />
+    <Autocomplete.Content />
+</Autocomplete.Root>
+```
+
+### Clearable
+
+By default, a clear button appears when a value is selected. Set `isClearable={false}` to hide it.
+
+<Wrapper>
+    <Autocomplete.Root
+        width="xs"
+        isClearable={false}
+        items={[
+            { value: "strawberry", label: "Strawberry" },
+            { value: "banana", label: "Banana" },
+            { value: "orange", label: "Orange" },
+        ]}
+    >
+        <Autocomplete.Input placeholder="Search a fruit..." />
+        <Autocomplete.Content />
+    </Autocomplete.Root>
+</Wrapper>
+
+```tsx
+<Autocomplete.Root items={fruits} isClearable={false}>
+    <Autocomplete.Input placeholder="Search a fruit..." />
+    <Autocomplete.Content />
+</Autocomplete.Root>
+```
+
+### No results text
+
+Customise the message shown when no items match the query with the `noResultsText` prop on `Autocomplete.Content`.
+
+<Wrapper>
+    <Autocomplete.Root
+        width="xs"
+        items={[
+            { value: "strawberry", label: "Strawberry" },
+            { value: "banana", label: "Banana" },
+            { value: "orange", label: "Orange" },
+        ]}
+    >
+        <Autocomplete.Input placeholder="Search a fruit..." />
+        <Autocomplete.Content noResultsText="Nothing here..." />
+    </Autocomplete.Root>
+</Wrapper>
+
+```tsx
+<Autocomplete.Root items={fruits}>
+    <Autocomplete.Input placeholder="Search a fruit..." />
+    <Autocomplete.Content noResultsText="Nothing here..." />
+</Autocomplete.Root>
+```
+
+### Async loading
+
+Fetch items when the autocomplete is opened using the `onOpen` prop. Use `noResultsContent` on `Autocomplete.Content` to show a spinner while loading.
+
+<Wrapper>
+    <AsyncAutocomplete />
+</Wrapper>
+
+```tsx
+export function AsyncAutocomplete() {
+    const [isLoading, setIsLoading] = useState(true);
+    const [items, setItems] = useState<AutocompleteItem[]>([]);
+
+    function fetchItems() {
+        if (items.length > 0) return;
+
+        fetch("/api/fake-select-data")
+            .then((res) => res.json())
+            .then((data: string[]) =>
+                setItems(data.map((s) => ({ value: s, label: s.charAt(0).toUpperCase() + s.slice(1) })))
+            )
+            .finally(() => setIsLoading(false));
+    }
+
+    return (
+        <Autocomplete.Root items={items} onOpen={fetchItems}>
+            <Autocomplete.Input placeholder="Search a fruit..." />
+            <Autocomplete.Content
+                noResultsContent={isLoading ? <Spinner color="primary" py={4} /> : undefined}
+            />
+        </Autocomplete.Root>
+    );
+}
+```
+
+### Virtualized
+
+For large lists (100+ items), use `Autocomplete.VirtualContent` instead of `Autocomplete.Content`. It uses windowed rendering — only visible items are in the DOM — which significantly improves performance and reduces memory usage.
+
+<Wrapper>
+    <VirtualAutocomplete />
+</Wrapper>
+
+```tsx
+const manyItems = Array.from({ length: 1000 }, (_, i) => ({
+    value: `item-${i}`,
+    label: `Item ${i + 1}`,
+}));
+
+<Autocomplete.Root items={manyItems}>
+    <Autocomplete.Input placeholder="Search items..." />
+    <Autocomplete.VirtualContent />
+</Autocomplete.Root>
+```
+
+#### Props
+
+- `estimatedItemHeight` — Estimated height of each item in pixels. For different autocomplete sizes: `xs`: `26`, `sm`: `28`, `md`: `32`, `lg`: `40`. Default: `32`
+- `overscan` — Number of items to render outside the visible area. Higher values reduce flickering during fast scrolling. Default: `5`
+- `maxHeight` — Maximum height of the virtualized list in pixels. Default: `300`
+
+```tsx
+<Autocomplete.Root items={manyItems}>
+    <Autocomplete.Input placeholder="Search items..." />
+    <Autocomplete.VirtualContent
+        maxHeight={400}
+        estimatedItemHeight={36}
+        overscan={10}
+    />
+</Autocomplete.Root>
+```
+
+### Selected item background scheme
+
+You can customise the background color of the selected item with the `selectedItemBackgroundScheme` prop.
+
+<Wrapper>
+    {["primary", "success", "warning", "error", "none"].map((scheme) => (
+        <>
+            <Text>{scheme}</Text>
+            <Autocomplete.Root
+                key={scheme}
+                width="xs"
+                defaultValue="strawberry"
+                selectedItemBackgroundScheme={scheme}
+                items={[
+                    { value: "strawberry", label: "Strawberry" },
+                    { value: "banana", label: "Banana" },
+                    { value: "orange", label: "Orange" },
+                ]}
+            >
+                <Autocomplete.Input placeholder="Search a fruit..." />
+                <Autocomplete.Content />
+            </Autocomplete.Root>
+        </>
+    ))}
+</Wrapper>
+
+```tsx
+{["primary", "success", "warning", "error", "none"].map((scheme) => (
+    <Autocomplete.Root
+        key={scheme}
+        defaultValue="strawberry"
+        selectedItemBackgroundScheme={scheme}
+        items={fruits}
+    >
+        <Autocomplete.Input placeholder="Search a fruit..." />
+        <Autocomplete.Content />
+    </Autocomplete.Root>
+))}
+```

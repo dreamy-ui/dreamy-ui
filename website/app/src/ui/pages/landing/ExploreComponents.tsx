@@ -28,7 +28,7 @@ export default function ExploreComponents() {
                 <Icon
                     as={LuArrowRight}
                     transform={isHovering ? "translateX(4px)" : "translateX(0px)"}
-                    transition={"transform {durations.normal} {easings.easeInOut}"}
+                    transition={"transform {durations.normal} {easings.ease-in-out}"}
                 />
             </HStack>
         </Link>

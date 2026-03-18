@@ -16,6 +16,11 @@
   },
   {
     "type": "recipe",
+    "id": "autocomplete",
+    "file": "autocomplete.ts"
+  },
+  {
+    "type": "recipe",
     "id": "avatar",
     "file": "avatar.ts"
   },

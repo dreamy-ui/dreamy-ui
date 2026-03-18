@@ -1,0 +1,49 @@
+# ─── Dependencies ─────────────────────────────────────────────────────────────
+# Never bake local node_modules into the image; pnpm install runs inside Docker.
+node_modules
+**/node_modules
+
+# ─── Build / generated outputs ────────────────────────────────────────────────
+**/dist
+**/build
+**/.turbo
+**/.react-router
+
+# ─── Environment files ────────────────────────────────────────────────────────
+# Secrets must be injected via docker run -e / docker compose environment.
+.env
+**/.env
+**/.env.*
+!**/.env.example
+
+# ─── Version control ──────────────────────────────────────────────────────────
+.git
+.gitignore
+.gitattributes
+
+# ─── IDE / OS ─────────────────────────────────────────────────────────────────
+.vscode
+.idea
+.DS_Store
+Thumbs.db
+
+# ─── Docker files themselves ───────────────────────────────────────────────────
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# ─── Logs ─────────────────────────────────────────────────────────────────────
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# ─── Test & coverage ──────────────────────────────────────────────────────────
+coverage
+.nyc_output
+
+# ─── Storybook ────────────────────────────────────────────────────────────────
+**/storybook-static
+
+# ─── Temporary ────────────────────────────────────────────────────────────────
+*.tmp
+tmp/

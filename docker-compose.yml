@@ -1,0 +1,41 @@
+services:
+  website:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # Baked into the client bundle at build time — must match the runtime value.
+        VITE_SOURCE_REPO: ${VITE_SOURCE_REPO:-dreamy-ui/dreamy-ui}
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      GITHUB_TOKEN: ${GITHUB_TOKEN:?GITHUB_TOKEN is required}
+      VITE_SOURCE_REPO: ${VITE_SOURCE_REPO:-dreamy-ui/dreamy-ui}
+      # Set REDIS_URL to redis://redis:6379 when running with the redis profile.
+      REDIS_URL: ${REDIS_URL:-}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+  # Optional Redis cache.
+  # Start with: docker compose --profile redis up
+  redis:
+    image: redis:7-alpine
+    profiles: [redis]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    volumes:
+      - redis_data:/data
+
+volumes:
+  redis_data:

@@ -92,7 +92,7 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: Props) {
                             as={FaDiscord}
                             h={4}
                             transition={
-                                "filter {durations.normal} {easings.easeInOut}, color {durations.fastest} {easings.easeInOut}"
+                                "filter {durations.normal} {easings.ease-in-out}, color {durations.fastest} {easings.ease-in-out}"
                             }
                         />
                         <Text
@@ -101,7 +101,7 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: Props) {
                                 color: "#5865F2"
                             }}
                             transition={
-                                "filter {durations.normal} {easings.easeInOut}, color {durations.fastest} {easings.easeInOut}"
+                                "filter {durations.normal} {easings.ease-in-out}, color {durations.fastest} {easings.ease-in-out}"
                             }
                         >
                             Discord

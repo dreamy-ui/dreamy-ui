@@ -40,7 +40,7 @@ export const Label = forwardRef<HTMLLabelElement, FieldLabelProps>(function Fiel
     );
 });
 
-export interface RequiredIndicatorProps extends HTMLDreamyProps<"span"> { }
+export interface RequiredIndicatorProps extends HTMLDreamyProps<"span"> {}
 
 /**
  * Used to show a "required" text or an asterisks (*) to indicate that
@@ -62,7 +62,7 @@ export const RequiredIndicator = forwardRef<HTMLSpanElement, RequiredIndicatorPr
     }
 );
 
-export interface FieldErrorProps extends HTMLDreamyProps<"label"> { }
+export interface FieldErrorProps extends HTMLDreamyProps<"label"> {}
 
 export const Error = forwardRef<HTMLLabelElement, FieldErrorProps>(function FieldError(props, ref) {
     const field = useFieldContext();
@@ -109,7 +109,7 @@ export const ErrorIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => {
     );
 });
 
-export interface FieldHintProps extends HTMLDreamyProps<"div"> { }
+export interface FieldHintProps extends HTMLDreamyProps<"div"> {}
 
 export const Hint = forwardRef<HTMLDivElement, FieldHintProps>(function FieldHint(props, ref) {
     const field = useFieldContext();

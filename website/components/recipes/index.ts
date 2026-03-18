@@ -1,6 +1,7 @@
 import { accordion } from "./accordion";
 import { actionBar } from "./action-bar";
 import { alert } from "./alert";
+import { autocomplete } from "./autocomplete";
 import { avatar } from "./avatar";
 import { badge } from "./badge";
 import { breadcrumb } from "./breadcrumb";
@@ -48,6 +49,7 @@ export const recipes = {
     accordion,
     actionBar,
     alert,
+    autocomplete,
     avatar,
     badge,
     breadcrumb,

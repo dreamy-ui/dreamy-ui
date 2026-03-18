@@ -8,6 +8,7 @@ export const datePicker = defineSlotRecipe({
         "root",
         "trigger",
         "control",
+        "nav",
         "popover",
         "calendar",
         "calendarHeader",
@@ -27,6 +28,7 @@ export const datePicker = defineSlotRecipe({
         "Root",
         "Trigger",
         "Control",
+        "Nav",
         "Popover",
         "Calendar",
         "CalendarHeader",
@@ -60,6 +62,12 @@ export const datePicker = defineSlotRecipe({
             "& > input": {
                 width: "full"
             }
+        },
+        nav: {
+            display: "flex",
+            flexDirection: "row",
+            gap: 1,
+            w: "full"
         },
         calendar: {
             display: "flex",
@@ -136,7 +144,8 @@ export const datePicker = defineSlotRecipe({
             padding: 0,
             minWidth: 0,
             transition: "all",
-            transitionDuration: "normal",
+            isolation: "isolate",
+            transitionDuration: "fast",
             _hover: {
                 backgroundColor: "alpha.100"
             },
@@ -149,7 +158,7 @@ export const datePicker = defineSlotRecipe({
                 color: "primary.fg!",
                 // borderColor: "primary!",
                 // scale: "0.95",
-                // transition: "scale {durations.fast} {easings.easeInOut}",
+                // transition: "scale {durations.fast} {easings.ease-in-out}",
                 _hover: {
                     backgroundColor: "primary.hover!",
                     borderColor: "primary.hover!"
@@ -158,11 +167,21 @@ export const datePicker = defineSlotRecipe({
             "&[data-today]": {
                 borderColor: "alpha.100",
                 backgroundColor: "alpha.100",
-                color: "fg",
-                fontWeight: "semibold"
+                color: "fg"
+                // fontWeight: "semibold"
             },
             "&[data-outside-month]": {
                 opacity: 0.4
+            },
+            "& [data-part='indicator']": {
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backgroundColor: "primary",
+                borderRadius: "full",
+                zIndex: -1
             }
         },
         footer: {
@@ -189,6 +208,9 @@ export const datePicker = defineSlotRecipe({
                     pt: 3,
                     px: 3
                 },
+                nav: {
+                    px: 3
+                },
                 calendar: {
                     px: 3
                 },
@@ -213,6 +235,9 @@ export const datePicker = defineSlotRecipe({
                     pt: 4,
                     px: 4
                 },
+                nav: {
+                    px: 4
+                },
                 calendar: {
                     px: 4
                 },
@@ -235,6 +260,9 @@ export const datePicker = defineSlotRecipe({
                 },
                 calendarHeader: {
                     pt: 5,
+                    px: 5
+                },
+                nav: {
                     px: 5
                 },
                 calendar: {

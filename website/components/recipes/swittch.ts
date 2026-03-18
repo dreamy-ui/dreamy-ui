@@ -69,7 +69,7 @@ export const swittch = defineRecipe({
                 width: "calc(var(--switch-height) * 1.35)"
             },
             transition:
-                "width {durations.fast} {easings.easeInOut}, background {durations.normal} {easings.easeInOut}",
+                "width {durations.fast} {easings.ease-in-out}, background {durations.normal} {easings.ease-in-out}",
             bg: "var(--switch-thumb-bg)",
             height: "var(--switch-height)",
             width: "var(--switch-height)",

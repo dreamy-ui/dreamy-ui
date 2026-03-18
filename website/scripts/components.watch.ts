@@ -48,7 +48,7 @@ chokidar.watch("compositions").on("change", async (filePath) => {
         console.log("ℹ️ No affected components detected; skipping add command");
         return;
     }
-    runAddComponents(affectedComponents);
+    runAddComponents(affectedComponents, changed.kind);
     console.log(
         `✅ Components synced (${affectedComponents.length ? affectedComponents.join(", ") : "none"})`
     );
@@ -103,8 +103,9 @@ function getAffectedComponents(change: CompositionChange): string[] {
         .map((item) => item.id);
 }
 
-function runAddComponents(componentIds: string[]) {
-    const command = `pnpm dreamy add ${componentIds.join(" ")} --force --skip-install`;
+function runAddComponents(componentIds: string[], changeKind: CompositionChange["kind"]) {
+    const skipCodegen = changeKind === "component" ? " --skip-codegen" : "";
+    const command = `pnpm dreamy add ${componentIds.join(" ")} --force --skip-install${skipCodegen}`;
     execSync(command, { stdio: "inherit" });
 }
 

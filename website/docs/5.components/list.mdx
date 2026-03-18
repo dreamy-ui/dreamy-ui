@@ -17,19 +17,19 @@ pnpm dreamy add list
 List displays a collection of items in an organized format. Use it to present related content in an ordered or unordered structure.
 
 <Wrapper>
-	<List>
-		<ListItem>i5-10400f</ListItem>
-		<ListItem>RTX 4060ti</ListItem>
-		<ListItem>32GB RAM</ListItem>
-	</List>
+	<List.Root>
+		<List.Item>i5-10400f</List.Item>
+		<List.Item>RTX 4060ti</List.Item>
+		<List.Item>32GB RAM</List.Item>
+	</List.Root>
 </Wrapper>
 
 ```tsx
-<List>
-	<ListItem>i5-10400f</ListItem>
-	<ListItem>RTX 4060ti</ListItem>
-	<ListItem>32GB RAM</ListItem>
-</List>
+<List.Root>
+	<List.Item>i5-10400f</List.Item>
+	<List.Item>RTX 4060ti</List.Item>
+	<List.Item>32GB RAM</List.Item>
+</List.Root>
 ```
 
 ### Ordered List
@@ -37,17 +37,17 @@ List displays a collection of items in an organized format. Use it to present re
 Simply pass the `ordered` prop to the `List` component to create an ordered list. It will render `ol` tag, instead of `ul`.
 
 <Wrapper>
-	<List ordered>
-		<ListItem>i5-10400f</ListItem>
-		<ListItem>RTX 4060ti</ListItem>
-		<ListItem>32GB RAM</ListItem>
-	</List>
+	<List.Root ordered>
+		<List.Item>i5-10400f</List.Item>
+		<List.Item>RTX 4060ti</List.Item>
+		<List.Item>32GB RAM</List.Item>
+	</List.Root>
 </Wrapper>
 
 ```tsx
-<List ordered>
-	<ListItem>i5-10400f</ListItem>
-	<ListItem>RTX 4060ti</ListItem>
-	<ListItem>32GB RAM</ListItem>
-</List>
+<List.Root ordered>
+	<List.Item>i5-10400f</List.Item>
+	<List.Item>RTX 4060ti</List.Item>
+	<List.Item>32GB RAM</List.Item>
+</List.Root>
 ```

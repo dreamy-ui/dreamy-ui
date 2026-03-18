@@ -21,7 +21,8 @@ export const modal = defineSlotRecipe({
             left: 0,
             height: "100vh",
             width: "100vw",
-            backgroundColor: "rgba(0, 0, 0, 0.4)"
+            backgroundColor: "rgba(0, 0, 0, 0.4)",
+            backdropFilter: "blur({blurs.sm})"
         },
         container: {
             zIndex: "modal",
