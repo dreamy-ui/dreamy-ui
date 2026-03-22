@@ -1,5 +1,11 @@
 # @dreamy-ui/mcp
 
+## 2.0.3
+
+### Patch Changes
+
+- Component updates
+
 ## 2.0.2
 
 ### Patch Changes

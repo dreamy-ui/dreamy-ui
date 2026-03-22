@@ -17,6 +17,7 @@ import { field } from "./field";
 import { fieldset } from "./fieldset";
 import { fileUpload } from "./file-upload";
 import { group } from "./group";
+import { hoverCard } from "./hover-card";
 import { icon } from "./icon";
 import { image } from "./image";
 import { input } from "./input";
@@ -37,6 +38,7 @@ import { slider } from "./slider";
 import { snippet } from "./snippet";
 import { spinner } from "./spinner";
 import { stat } from "./stat";
+import { stepper } from "./stepper";
 import { swittch } from "./swittch";
 import { table } from "./table";
 import { tabs } from "./tabs";
@@ -65,6 +67,7 @@ export const recipes = {
     fieldset,
     fileUpload,
     group,
+    hoverCard,
     icon,
     image,
     input,
@@ -85,6 +88,7 @@ export const recipes = {
     snippet,
     spinner,
     stat,
+    stepper,
     swittch,
     table,
     tabs,

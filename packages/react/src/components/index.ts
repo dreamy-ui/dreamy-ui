@@ -1,4 +1,6 @@
 export * from "./accordion";
+export * from "./autocomplete";
+export * from "./hover-card";
 export * from "./avatar";
 export * from "./checkbox";
 export * from "./circular-progress";
@@ -19,6 +21,7 @@ export * from "./select";
 export * from "./slider";
 export * from "./snippet";
 export * from "./stat";
+export * from "./stepper";
 export * from "./switch";
 export * from "./tabs";
 export * from "./tooltip";

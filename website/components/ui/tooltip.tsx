@@ -125,9 +125,7 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>((props, ref) => 
 
     const srOnlyProps = useMemo(() => pick(_tooltipProps, ["role", "id"]), [_tooltipProps]);
 
-    const {
-        tooltip: { default: variants }
-    } = useMotionVariants();
+    const { tooltip: variants } = useMotionVariants();
 
     const PortalComponent = useMemo(() => (disablePortal ? Fragment : Portal), [disablePortal]);
 

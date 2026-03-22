@@ -1,8 +1,6 @@
-import { Flex } from "@/ui";
-import { VStack } from "@/ui";
-import { Tabs } from "@/ui";
-import { Text } from "@/ui";
+import { Flex, HStack, Tabs, Text, VStack } from "@/ui";
 import React, { useState } from "react";
+import { LuBot, LuHouse, LuLayoutDashboard, LuSettings, LuShield, LuUser } from "react-icons/lu";
 import { capitalize } from "~/src/functions/string";
 
 export function VariantTabs() {
@@ -17,20 +15,29 @@ export function VariantTabs() {
                         <Text bold>{capitalize(variant)} Variant</Text>
                         <Tabs.Root variant={variant}>
                             <Tabs.List>
-                                <Tabs.Tab>Tab 1</Tabs.Tab>
-                                <Tabs.Tab>Tab 2</Tabs.Tab>
-                                <Tabs.Tab>Tab 3</Tabs.Tab>
+                                <Tabs.Tab>
+                                    <HStack gap={1.5}>
+                                        <LuHouse />
+                                        Home
+                                    </HStack>
+                                </Tabs.Tab>
+                                <Tabs.Tab>
+                                    <HStack gap={1.5}>
+                                        <LuSettings />
+                                        Settings
+                                    </HStack>
+                                </Tabs.Tab>
+                                <Tabs.Tab>
+                                    <HStack gap={1.5}>
+                                        <LuUser />
+                                        Profile
+                                    </HStack>
+                                </Tabs.Tab>
                             </Tabs.List>
                             <Tabs.Panels>
-                                <Tabs.Panel>
-                                    <p>Tab 1 content</p>
-                                </Tabs.Panel>
-                                <Tabs.Panel>
-                                    <p>Tab 2 content</p>
-                                </Tabs.Panel>
-                                <Tabs.Panel>
-                                    <p>Tab 3 content</p>
-                                </Tabs.Panel>
+                                <Tabs.Panel>Home content</Tabs.Panel>
+                                <Tabs.Panel>Settings content</Tabs.Panel>
+                                <Tabs.Panel>Profile content</Tabs.Panel>
                             </Tabs.Panels>
                         </Tabs.Root>
                     </React.Fragment>
@@ -41,33 +48,88 @@ export function VariantTabs() {
 }
 
 export function ControlledTabs() {
-    const [index, setIndex] = useState(2);
+    const [index, setIndex] = useState(0);
+
+    const tabs = ["Dashboard", "AI Chat", "Security"];
 
     return (
         <>
-            <Text bold>Current Tab: {index + 1}</Text>
+            <Text bold>Current Tab: {tabs[index]}</Text>
 
             <Tabs.Root
                 index={index}
                 onChange={setIndex}
             >
                 <Tabs.List>
-                    <Tabs.Tab>Tab 1</Tabs.Tab>
-                    <Tabs.Tab>Tab 2</Tabs.Tab>
-                    <Tabs.Tab>Tab 3</Tabs.Tab>
+                    <Tabs.Tab>
+                        <HStack gap={1.5}>
+                            <LuLayoutDashboard />
+                            Dashboard
+                        </HStack>
+                    </Tabs.Tab>
+                    <Tabs.Tab>
+                        <HStack gap={1.5}>
+                            <LuBot />
+                            AI Chat
+                        </HStack>
+                    </Tabs.Tab>
+                    <Tabs.Tab>
+                        <HStack gap={1.5}>
+                            <LuShield />
+                            Security
+                        </HStack>
+                    </Tabs.Tab>
                 </Tabs.List>
                 <Tabs.Panels>
-                    <Tabs.Panel>
-                        <p>Tab 1 content</p>
-                    </Tabs.Panel>
-                    <Tabs.Panel>
-                        <p>Tab 2 content</p>
-                    </Tabs.Panel>
-                    <Tabs.Panel>
-                        <p>Tab 3 content</p>
-                    </Tabs.Panel>
+                    <Tabs.Panel>Dashboard content</Tabs.Panel>
+                    <Tabs.Panel>AI Chat content</Tabs.Panel>
+                    <Tabs.Panel>Security content</Tabs.Panel>
                 </Tabs.Panels>
             </Tabs.Root>
         </>
+    );
+}
+
+export function SizeTabs() {
+    return (
+        <VStack gap={6}>
+            <Flex
+                col
+                gap={2}
+            >
+                {(["sm", "md", "lg"] as const).map((size) => (
+                    <React.Fragment key={size}>
+                        <Text bold>{size.toUpperCase()} Size</Text>
+                        <Tabs.Root size={size}>
+                            <Tabs.List>
+                                <Tabs.Tab>
+                                    <HStack gap={1.5}>
+                                        <LuHouse />
+                                        Home
+                                    </HStack>
+                                </Tabs.Tab>
+                                <Tabs.Tab>
+                                    <HStack gap={1.5}>
+                                        <LuSettings />
+                                        Settings
+                                    </HStack>
+                                </Tabs.Tab>
+                                <Tabs.Tab>
+                                    <HStack gap={1.5}>
+                                        <LuUser />
+                                        Profile
+                                    </HStack>
+                                </Tabs.Tab>
+                            </Tabs.List>
+                            <Tabs.Panels>
+                                <Tabs.Panel>Home content</Tabs.Panel>
+                                <Tabs.Panel>Settings content</Tabs.Panel>
+                                <Tabs.Panel>Profile content</Tabs.Panel>
+                            </Tabs.Panels>
+                        </Tabs.Root>
+                    </React.Fragment>
+                ))}
+            </Flex>
+        </VStack>
     );
 }

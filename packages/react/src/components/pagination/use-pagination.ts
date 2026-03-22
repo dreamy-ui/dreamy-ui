@@ -36,11 +36,17 @@ export interface UsePaginationProps {
      * Callback when page changes
      */
     onPageChange?: (details: { page: number }) => void;
+    /**
+     * Size of the pagination controls
+     * @default "md"
+     */
+    size?: "sm" | "md" | "lg";
 }
 
 export function usePagination(props: UsePaginationProps) {
     const {
         count,
+        size = "md",
         pageSize = 10,
         siblingCount = 1,
         onPageChange,
@@ -94,7 +100,8 @@ export function usePagination(props: UsePaginationProps) {
         goToPrevPage,
         goToNextPage,
         goToPage,
-        id
+        id,
+        size
     };
 }
 
@@ -156,9 +163,9 @@ export function usePaginationIndicator(props?: UsePaginationIndicatorProps) {
 
     return {
         ...props,
-        "data-part": "indicator",
-        layoutId: `pagination-indicator-${id}`,
-        layout: true
+        "data-part": "indicator"
+        // layoutId: `pagination-indicator-${id}`,
+        // layout: true
     } satisfies MotionProps & { "data-part": string };
 }
 

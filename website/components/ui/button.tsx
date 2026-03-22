@@ -66,6 +66,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             disableRipple,
             spinner,
             spinnerPlacement,
+            disabled,
             ...rest
         },
         ref
@@ -78,6 +79,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             onPointerDown: onPointerDownRipple,
             isDisabled: isDisabledRipple
         } = useRipple();
+
+        isDisabled = isDisabled || disabled;
 
         const handleClick = useCallback(
             (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -171,7 +174,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
                 {rightIcon &&
                     (isLoading ? <span style={{ opacity: 0 }}>{RightIcon}</span> : RightIcon)}
 
-                {!disableRipple && !isDisabled && (
+                {!disableRipple && (
                     <div data-part="ripple-container">
                         <div
                             style={{

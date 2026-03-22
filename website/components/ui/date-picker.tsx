@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useUpdateEffect } from "@dreamy-ui/react";
+import { createContext, cx, dataAttr, useUpdateEffect } from "@dreamy-ui/react";
 import { useControllableState } from "@dreamy-ui/react";
 import dayjs, { type Dayjs } from "dayjs";
 import * as m from "motion/react-m";
@@ -879,12 +879,13 @@ export interface DatePickerCalendarProps extends BoxProps {}
 
 export const Calendar = withContext(
     forwardRef<HTMLDivElement, DatePickerCalendarProps>(function DatePickerCalendar(props, ref) {
-        const { calendarView } = useDatePickerContext();
+        const { calendarView, hasFooter } = useDatePickerContext();
 
         return (
             <Box
                 ref={ref}
                 {...props}
+                data-no-footer={dataAttr(!hasFooter)}
             >
                 {calendarView === "day" && <DayCalendarView />}
                 {calendarView === "month" && <MonthCalendarView />}

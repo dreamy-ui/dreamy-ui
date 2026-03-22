@@ -28,9 +28,9 @@ while (true) {
     }
 }
 
-// setTimeout(() => {
-//     runAddAllComponents();
-// }, 250);
+setTimeout(() => {
+    runAddAllComponents();
+}, 250);
 
 chokidar.watch("compositions").on("change", async (filePath) => {
     console.log("filePath", filePath);

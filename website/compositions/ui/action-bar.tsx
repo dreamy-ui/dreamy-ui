@@ -68,9 +68,7 @@ export const Content = withContext(
         const { children, ...rest } = props;
         const { isOpen } = useActionBarContext();
 
-        const {
-            actionBar: { default: variants }
-        } = useMotionVariants();
+        const { actionBar: variants } = useMotionVariants();
 
         return (
             <AnimatePresence propagate>

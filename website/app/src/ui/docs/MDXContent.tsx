@@ -31,6 +31,7 @@ import {
     HStack,
     Heading,
     type HeadingProps,
+    HoverCard,
     Icon,
     Image,
     Input,
@@ -60,6 +61,7 @@ import {
     Spinner,
     Stack,
     Stat,
+    Stepper,
     Switch,
     Table,
     Tabs,
@@ -74,7 +76,15 @@ import {
 } from "@/ui";
 import { Portal, useToast } from "@dreamy-ui/react";
 import { MDXRemote } from "next-mdx-remote";
-import { type PropsWithChildren, type ReactNode, useEffect, useMemo, useState } from "react";
+import {
+    type PropsWithChildren,
+    type ReactNode,
+    Suspense,
+    lazy,
+    useEffect,
+    useMemo,
+    useState
+} from "react";
 import { BiHome, BiSearch } from "react-icons/bi";
 import { FaPaypal, FaReact, FaVuejs } from "react-icons/fa";
 import { FiCoffee, FiCreditCard } from "react-icons/fi";
@@ -84,6 +94,9 @@ import {
     LuAlarmClock,
     LuBanana,
     LuBattery,
+    LuBell,
+    LuBot,
+    LuChartBar,
     LuCherry,
     LuChevronDown,
     LuChevronRight,
@@ -92,9 +105,14 @@ import {
     LuFileWarning,
     LuHouse,
     LuLamp,
+    LuLayoutDashboard,
+    LuMessageSquare,
     LuSearch,
+    LuSettings,
+    LuShield,
     LuShoppingCart,
     LuTrash,
+    LuUser,
     LuWarehouse
 } from "react-icons/lu";
 import { PiConfetti } from "react-icons/pi";
@@ -102,78 +120,309 @@ import { RiNextjsLine } from "react-icons/ri";
 import { SiApple, SiReactrouter } from "react-icons/si";
 import { Link as RemixLink, useLocation } from "react-router";
 import type { MdxContent } from "~/src/.server/docs";
-import { PlatformSpecificKbd } from "~/src/ui/docs/components/kbds";
-import {
-    ControlledMenu,
-    InteractiveMenu,
-    VariantMenu,
-    VariantMenus
-} from "~/src/ui/docs/components/menus";
-import {
-    BasicModal,
-    PlacementModal,
-    ScrollableInsideModal,
-    ScrollableOutsideModal,
-    SizeModals
-} from "~/src/ui/docs/components/modals";
-import {
-    ControlledPopover,
-    FocusPopover,
-    PlacementPopovers,
-    SizePopovers
-} from "~/src/ui/docs/components/popovers";
 import { Link, ReactRouterLink } from "~/src/ui/global/Link";
-import { ControlledTabs, VariantTabs } from "./components/Tabs";
-import { ControlledAccordion } from "./components/accordions";
-import {
-    ActionBarMultiple,
-    ActionBarSizes,
-    ActionBarTable,
-    ActionBarWithClose,
-    ControlledActionBar
-} from "./components/action-bars";
-import {
-    AsyncAutocomplete,
-    AutocompleteWithIcon,
-    ControlledAutocomplete,
-    VirtualAutocomplete
-} from "./components/autocompletes";
-import { BarChartExample, LineChartExample, PieChartExample } from "./components/charts";
-import {
-    CheckboxCardGroupControl,
-    CheckboxGroupControl,
-    ControlledCheckbox,
-    ControlledCheckboxCard
-} from "./components/checkboxes";
-import { ControlledDatePicker, DatePickerWithFooter } from "./components/date-pickers";
-import {
-    ControlledEditable,
-    FinalFocusRefEditable,
-    StartWithEditViewEditable
-} from "./components/editables";
-import { FileUploadCustomList } from "./components/file-uploads";
-import {
-    UseActionKey,
-    UseCanUseDOM,
-    UseClipboard,
-    UseColorMode,
-    UseControllable,
-    UseControllableModal,
-    UseEventListener,
-    UseReducedMotion,
-    UseUpdateEffect
-} from "./components/hooks";
-import { ControlledPinInput } from "./components/inputs";
-import { LinkButton } from "./components/others";
-import { ControlledPagination, CustomItemPagination } from "./components/paginations";
 import { PMTabs } from "./components/pm-tabs";
-import { ControlledRadioCards, ControlledRadios } from "./components/radioes";
-import { ControlledRangeSlider, MaxMinRangeSlider } from "./components/range-sliders";
-import { AsyncSelect, ControlledSelect } from "./components/selects";
-import { ControlledSlider, MaxMinSlider } from "./components/sliders";
-import { ControlledSwitch } from "./components/switches";
-import { UpdateToast } from "./components/toasts";
-import { Collapsed, Scaled } from "./components/transitions";
+
+function LazyFallback() {
+    return (
+        <Skeleton
+            h={20}
+            rounded={"md"}
+            w={"full"}
+        />
+    );
+}
+
+function wrapLazy(LazyComp: any) {
+    return function LazyWrapper(props: any) {
+        return (
+            <Suspense fallback={<LazyFallback />}>
+                <LazyComp {...props} />
+            </Suspense>
+        );
+    };
+}
+
+const PlatformSpecificKbd = wrapLazy(
+    lazy(() =>
+        import("~/src/ui/docs/components/kbds").then((m) => ({ default: m.PlatformSpecificKbd }))
+    )
+);
+
+const ControlledMenu = wrapLazy(
+    lazy(() =>
+        import("~/src/ui/docs/components/menus").then((m) => ({ default: m.ControlledMenu }))
+    )
+);
+const InteractiveMenu = wrapLazy(
+    lazy(() =>
+        import("~/src/ui/docs/components/menus").then((m) => ({ default: m.InteractiveMenu }))
+    )
+);
+const VariantMenu = wrapLazy(
+    lazy(() => import("~/src/ui/docs/components/menus").then((m) => ({ default: m.VariantMenu })))
+);
+const VariantMenus = wrapLazy(
+    lazy(() => import("~/src/ui/docs/components/menus").then((m) => ({ default: m.VariantMenus })))
+);
+
+const BasicModal = wrapLazy(
+    lazy(() => import("~/src/ui/docs/components/modals").then((m) => ({ default: m.BasicModal })))
+);
+const PlacementModal = wrapLazy(
+    lazy(() =>
+        import("~/src/ui/docs/components/modals").then((m) => ({ default: m.PlacementModal }))
+    )
+);
+const ScrollableInsideModal = wrapLazy(
+    lazy(() =>
+        import("~/src/ui/docs/components/modals").then((m) => ({
+            default: m.ScrollableInsideModal
+        }))
+    )
+);
+const ScrollableOutsideModal = wrapLazy(
+    lazy(() =>
+        import("~/src/ui/docs/components/modals").then((m) => ({
+            default: m.ScrollableOutsideModal
+        }))
+    )
+);
+const SizeModals = wrapLazy(
+    lazy(() => import("~/src/ui/docs/components/modals").then((m) => ({ default: m.SizeModals })))
+);
+
+const ControlledPopover = wrapLazy(
+    lazy(() =>
+        import("~/src/ui/docs/components/popovers").then((m) => ({ default: m.ControlledPopover }))
+    )
+);
+const FocusPopover = wrapLazy(
+    lazy(() =>
+        import("~/src/ui/docs/components/popovers").then((m) => ({ default: m.FocusPopover }))
+    )
+);
+const PlacementPopovers = wrapLazy(
+    lazy(() =>
+        import("~/src/ui/docs/components/popovers").then((m) => ({ default: m.PlacementPopovers }))
+    )
+);
+const SizePopovers = wrapLazy(
+    lazy(() =>
+        import("~/src/ui/docs/components/popovers").then((m) => ({ default: m.SizePopovers }))
+    )
+);
+
+const ControlledTabs = wrapLazy(
+    lazy(() => import("./components/Tabs").then((m) => ({ default: m.ControlledTabs })))
+);
+const VariantTabs = wrapLazy(
+    lazy(() => import("./components/Tabs").then((m) => ({ default: m.VariantTabs })))
+);
+const SizeTabs = wrapLazy(
+    lazy(() => import("./components/Tabs").then((m) => ({ default: m.SizeTabs })))
+);
+
+const ControlledAccordion = wrapLazy(
+    lazy(() => import("./components/accordions").then((m) => ({ default: m.ControlledAccordion })))
+);
+
+const ControlledHoverCard = wrapLazy(
+    lazy(() => import("./components/hover-cards").then((m) => ({ default: m.ControlledHoverCard })))
+);
+
+const ControlledStepper = wrapLazy(
+    lazy(() => import("./components/steppers").then((m) => ({ default: m.ControlledStepper })))
+);
+const StepperWithIcons = wrapLazy(
+    lazy(() => import("./components/steppers").then((m) => ({ default: m.StepperWithIcons })))
+);
+const StepperWithColors = wrapLazy(
+    lazy(() => import("./components/steppers").then((m) => ({ default: m.StepperWithColors })))
+);
+
+const ActionBarMultiple = wrapLazy(
+    lazy(() => import("./components/action-bars").then((m) => ({ default: m.ActionBarMultiple })))
+);
+const ActionBarSizes = wrapLazy(
+    lazy(() => import("./components/action-bars").then((m) => ({ default: m.ActionBarSizes })))
+);
+const ActionBarTable = wrapLazy(
+    lazy(() => import("./components/action-bars").then((m) => ({ default: m.ActionBarTable })))
+);
+const ActionBarWithClose = wrapLazy(
+    lazy(() => import("./components/action-bars").then((m) => ({ default: m.ActionBarWithClose })))
+);
+const ControlledActionBar = wrapLazy(
+    lazy(() => import("./components/action-bars").then((m) => ({ default: m.ControlledActionBar })))
+);
+
+const AsyncAutocomplete = wrapLazy(
+    lazy(() => import("./components/autocompletes").then((m) => ({ default: m.AsyncAutocomplete })))
+);
+const AutocompleteWithIcon = wrapLazy(
+    lazy(() =>
+        import("./components/autocompletes").then((m) => ({ default: m.AutocompleteWithIcon }))
+    )
+);
+const ControlledAutocomplete = wrapLazy(
+    lazy(() =>
+        import("./components/autocompletes").then((m) => ({ default: m.ControlledAutocomplete }))
+    )
+);
+const VirtualAutocomplete = wrapLazy(
+    lazy(() =>
+        import("./components/autocompletes").then((m) => ({ default: m.VirtualAutocomplete }))
+    )
+);
+
+const BarChartExample = wrapLazy(
+    lazy(() => import("./components/charts").then((m) => ({ default: m.BarChartExample })))
+);
+const LineChartExample = wrapLazy(
+    lazy(() => import("./components/charts").then((m) => ({ default: m.LineChartExample })))
+);
+const PieChartExample = wrapLazy(
+    lazy(() => import("./components/charts").then((m) => ({ default: m.PieChartExample })))
+);
+
+const CheckboxCardGroupControl = wrapLazy(
+    lazy(() =>
+        import("./components/checkboxes").then((m) => ({ default: m.CheckboxCardGroupControl }))
+    )
+);
+const CheckboxGroupControl = wrapLazy(
+    lazy(() => import("./components/checkboxes").then((m) => ({ default: m.CheckboxGroupControl })))
+);
+const ControlledCheckbox = wrapLazy(
+    lazy(() => import("./components/checkboxes").then((m) => ({ default: m.ControlledCheckbox })))
+);
+const ControlledCheckboxCard = wrapLazy(
+    lazy(() =>
+        import("./components/checkboxes").then((m) => ({ default: m.ControlledCheckboxCard }))
+    )
+);
+
+const ControlledDatePicker = wrapLazy(
+    lazy(() =>
+        import("./components/date-pickers").then((m) => ({ default: m.ControlledDatePicker }))
+    )
+);
+const DatePickerWithFooter = wrapLazy(
+    lazy(() =>
+        import("./components/date-pickers").then((m) => ({ default: m.DatePickerWithFooter }))
+    )
+);
+
+const ControlledEditable = wrapLazy(
+    lazy(() => import("./components/editables").then((m) => ({ default: m.ControlledEditable })))
+);
+const FinalFocusRefEditable = wrapLazy(
+    lazy(() => import("./components/editables").then((m) => ({ default: m.FinalFocusRefEditable })))
+);
+const StartWithEditViewEditable = wrapLazy(
+    lazy(() =>
+        import("./components/editables").then((m) => ({ default: m.StartWithEditViewEditable }))
+    )
+);
+
+const FileUploadCustomList = wrapLazy(
+    lazy(() =>
+        import("./components/file-uploads").then((m) => ({ default: m.FileUploadCustomList }))
+    )
+);
+
+const UseActionKey = wrapLazy(
+    lazy(() => import("./components/hooks").then((m) => ({ default: m.UseActionKey })))
+);
+const UseCanUseDOM = wrapLazy(
+    lazy(() => import("./components/hooks").then((m) => ({ default: m.UseCanUseDOM })))
+);
+const UseClipboard = wrapLazy(
+    lazy(() => import("./components/hooks").then((m) => ({ default: m.UseClipboard })))
+);
+const UseColorMode = wrapLazy(
+    lazy(() => import("./components/hooks").then((m) => ({ default: m.UseColorMode })))
+);
+const UseControllable = wrapLazy(
+    lazy(() => import("./components/hooks").then((m) => ({ default: m.UseControllable })))
+);
+const UseControllableModal = wrapLazy(
+    lazy(() => import("./components/hooks").then((m) => ({ default: m.UseControllableModal })))
+);
+const UseEventListener = wrapLazy(
+    lazy(() => import("./components/hooks").then((m) => ({ default: m.UseEventListener })))
+);
+const UseReducedMotion = wrapLazy(
+    lazy(() => import("./components/hooks").then((m) => ({ default: m.UseReducedMotion })))
+);
+const UseUpdateEffect = wrapLazy(
+    lazy(() => import("./components/hooks").then((m) => ({ default: m.UseUpdateEffect })))
+);
+
+const ControlledPinInput = wrapLazy(
+    lazy(() => import("./components/inputs").then((m) => ({ default: m.ControlledPinInput })))
+);
+
+const LinkButton = wrapLazy(
+    lazy(() => import("./components/others").then((m) => ({ default: m.LinkButton })))
+);
+
+const ControlledPagination = wrapLazy(
+    lazy(() =>
+        import("./components/paginations").then((m) => ({ default: m.ControlledPagination }))
+    )
+);
+const CustomItemPagination = wrapLazy(
+    lazy(() =>
+        import("./components/paginations").then((m) => ({ default: m.CustomItemPagination }))
+    )
+);
+
+const ControlledRadioCards = wrapLazy(
+    lazy(() => import("./components/radioes").then((m) => ({ default: m.ControlledRadioCards })))
+);
+const ControlledRadios = wrapLazy(
+    lazy(() => import("./components/radioes").then((m) => ({ default: m.ControlledRadios })))
+);
+
+const ControlledRangeSlider = wrapLazy(
+    lazy(() =>
+        import("./components/range-sliders").then((m) => ({ default: m.ControlledRangeSlider }))
+    )
+);
+const MaxMinRangeSlider = wrapLazy(
+    lazy(() => import("./components/range-sliders").then((m) => ({ default: m.MaxMinRangeSlider })))
+);
+
+const AsyncSelect = wrapLazy(
+    lazy(() => import("./components/selects").then((m) => ({ default: m.AsyncSelect })))
+);
+const ControlledSelect = wrapLazy(
+    lazy(() => import("./components/selects").then((m) => ({ default: m.ControlledSelect })))
+);
+
+const ControlledSlider = wrapLazy(
+    lazy(() => import("./components/sliders").then((m) => ({ default: m.ControlledSlider })))
+);
+const MaxMinSlider = wrapLazy(
+    lazy(() => import("./components/sliders").then((m) => ({ default: m.MaxMinSlider })))
+);
+
+const ControlledSwitch = wrapLazy(
+    lazy(() => import("./components/switches").then((m) => ({ default: m.ControlledSwitch })))
+);
+
+const UpdateToast = wrapLazy(
+    lazy(() => import("./components/toasts").then((m) => ({ default: m.UpdateToast })))
+);
+
+const Collapsed = wrapLazy(
+    lazy(() => import("./components/transitions").then((m) => ({ default: m.Collapsed })))
+);
+const Scaled = wrapLazy(
+    lazy(() => import("./components/transitions").then((m) => ({ default: m.Scaled })))
+);
 
 interface Props {
     mdxContent: MdxContent;
@@ -213,6 +462,7 @@ export function createHId(text: ReactNode) {
 }
 
 const DreamComponents = {
+    PMTabs,
     Alert,
     Box,
     Flex,
@@ -253,7 +503,6 @@ const DreamComponents = {
     InputRightAddon,
     AvatarGroup,
     Badge,
-    PMTabs,
     // BasicPopover,
     SizePopovers,
     ControlledPopover,
@@ -270,6 +519,7 @@ const DreamComponents = {
     Tabs,
     VariantTabs,
     ControlledTabs,
+    SizeTabs,
     FileUpload,
     Checkbox,
     CheckboxGroup,
@@ -352,7 +602,13 @@ const DreamComponents = {
     ControlledAutocomplete,
     AutocompleteWithIcon,
     AsyncAutocomplete,
-    VirtualAutocomplete
+    VirtualAutocomplete,
+    HoverCard,
+    ControlledHoverCard,
+    Stepper,
+    ControlledStepper,
+    StepperWithIcons,
+    StepperWithColors
 };
 
 function Wrapper({ children, ...props }: PropsWithChildren<FlexProps>) {
@@ -363,7 +619,10 @@ function Wrapper({ children, ...props }: PropsWithChildren<FlexProps>) {
             borderColor={"border"}
             col
             gap={2}
-            p={4}
+            p={{
+                base: 4,
+                md: 10
+            }}
             rounded={"p-4"}
             w={"full"}
             {...props}
@@ -389,21 +648,29 @@ const icons = {
     FaVuejs,
     SiReactrouter,
     LuAlarmClock,
-    LuLamp,
+    LuBanana,
     LuBattery,
-    LuTrash,
-    LuWarehouse,
+    LuBell,
+    LuBot,
+    LuChartBar,
+    LuCherry,
     LuChevronDown,
     LuChevronRight,
-    LuHouse,
-    LuBanana,
     LuCitrus,
-    LuCherry,
-    LuFileWarning,
     LuDollarSign,
+    LuFileWarning,
+    LuHouse,
+    LuLamp,
+    LuLayoutDashboard,
+    LuMessageSquare,
     LuSearch,
-    HiColorSwatch,
-    LuShoppingCart
+    LuSettings,
+    LuShield,
+    LuShoppingCart,
+    LuTrash,
+    LuUser,
+    LuWarehouse,
+    HiColorSwatch
 };
 
 const components: any = {

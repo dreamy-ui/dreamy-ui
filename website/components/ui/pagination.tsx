@@ -15,12 +15,15 @@ import * as m from "motion/react-m";
 import { forwardRef, useMemo } from "react";
 import { type HTMLDreamyProps, createStyleContext, dreamy } from "styled-system/jsx";
 import { type PaginationVariantProps, pagination } from "styled-system/recipes";
+import { Icon } from "./icon";
 import { IconButton, type IconButtonProps } from "./icon-button";
 
-const { withProvider, withContext } = createStyleContext(pagination);
+const { withProvider, withContext } = createStyleContext(pagination, {
+    forwardVariants: ["size"]
+});
 
 export interface PaginationRootProps
-    extends UsePaginationProps,
+    extends Omit<UsePaginationProps, "size">,
         Omit<HTMLDreamyProps<"nav">, keyof UsePaginationProps>,
         PaginationVariantProps {}
 
@@ -39,6 +42,7 @@ export const Root = withProvider(
             pageSize,
             siblingCount,
             onPageChange,
+            size = "md",
             ...rest
         } = props;
 
@@ -48,7 +52,8 @@ export const Root = withProvider(
             defaultPage,
             pageSize,
             siblingCount,
-            onPageChange
+            onPageChange,
+            size: size as any
         });
 
         return (
@@ -81,10 +86,11 @@ export const Item = withContext(
         const itemProps = usePaginationItem({ value, ref });
         const indicatorProps = usePaginationIndicator();
 
-        const { page } = usePaginationContext();
+        const { page, size } = usePaginationContext();
 
         return (
             <IconButton
+                size={size}
                 variant="ghost"
                 {...itemProps}
                 {...rest}
@@ -129,13 +135,16 @@ export const PrevTrigger = withContext(
             const { children, ...rest } = props;
             const prevProps = usePaginationPrevTrigger({ ref });
 
+            const { size } = usePaginationContext();
+
             return (
                 <IconButton
+                    size={size}
                     variant="ghost"
                     {...prevProps}
                     {...rest}
                 >
-                    {children || <ChevronLeftIcon />}
+                    {children ?? <ChevronLeftIcon />}
                 </IconButton>
             );
         }
@@ -154,13 +163,16 @@ export const NextTrigger = withContext(
             const { children, ...rest } = props;
             const nextProps = usePaginationNextTrigger({ ref });
 
+            const { size } = usePaginationContext();
+
             return (
                 <IconButton
+                    size={size}
                     variant="ghost"
                     {...nextProps}
                     {...rest}
                 >
-                    {children || <ChevronRightIcon />}
+                    {children ?? <ChevronRightIcon />}
                 </IconButton>
             );
         }
@@ -170,8 +182,9 @@ export const NextTrigger = withContext(
 
 function ChevronLeftIcon() {
     return (
-        <svg
+        <Icon
             aria-hidden="true"
+            boxSize={"6"}
             fill="none"
             stroke="currentColor"
             strokeLinecap="round"
@@ -181,14 +194,15 @@ function ChevronLeftIcon() {
         >
             <title>Previous</title>
             <path d="m15 18-6-6 6-6" />
-        </svg>
+        </Icon>
     );
 }
 
 function ChevronRightIcon() {
     return (
-        <svg
+        <Icon
             aria-hidden="true"
+            boxSize={"6"}
             fill="none"
             stroke="currentColor"
             strokeLinecap="round"
@@ -198,7 +212,7 @@ function ChevronRightIcon() {
         >
             <title>Next</title>
             <path d="m9 18 6-6-6-6" />
-        </svg>
+        </Icon>
     );
 }
 

@@ -1,4 +1,4 @@
-import { Button, Menu, Pagination } from "@/ui";
+import { Autocomplete, Button, Menu, Pagination } from "@/ui";
 import { Flex } from "@/ui";
 import { MotionFlex } from "@/ui";
 import { Select } from "@/ui";

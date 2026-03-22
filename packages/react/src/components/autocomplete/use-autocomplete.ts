@@ -1,10 +1,10 @@
-"use client";
-
-import { createContext } from "@dreamy-ui/react";
-import { callAllHandlers } from "@dreamy-ui/react";
+import type { UsePopoverProps } from "@/components/popover";
+import { mergeRefs } from "@/hooks/use-merge-refs";
+import { createContext } from "@/provider";
+import { callAllHandlers } from "@/utils";
+import { matchSorter } from "match-sorter";
 import type React from "react";
-import { useCallback, useEffect, useRef, useState } from "react";
-import type { PopoverProps } from "./popover";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 export interface AutocompleteItem {
     value: string;
@@ -31,7 +31,7 @@ export interface UseAutocompleteProps {
     /**
      * Custom filter function for items based on the search query.
      * Receives each item and the current query; return `true` to include the item.
-     * @default Case-insensitive substring match on item.label
+     * @default `matchSorter` on the full `items` list keyed by `label` (filtered and ranked)
      */
     filterFn?: (item: AutocompleteItem, query: string) => boolean;
     /**
@@ -52,25 +52,9 @@ export interface UseAutocompleteProps {
      */
     onClose?: () => void;
     /**
-     * Props forwarded to the internal Popover component.
+     * Props forwarded to the internal popover (`usePopover` / `Popover` root).
      */
-    popoverProps?: Partial<PopoverProps>;
-}
-
-function defaultFilterFn(item: AutocompleteItem, query: string): boolean {
-    return item.label.toLowerCase().includes(query.toLowerCase());
-}
-
-function mergeRefs<T>(...refs: React.Ref<T>[]): React.RefCallback<T> {
-    return (value) => {
-        for (const ref of refs) {
-            if (typeof ref === "function") {
-                ref(value);
-            } else if (ref != null) {
-                (ref as React.MutableRefObject<T | null>).current = value;
-            }
-        }
-    };
+    popoverProps?: Partial<UsePopoverProps>;
 }
 
 export function useAutocomplete(props: UseAutocompleteProps) {
@@ -79,7 +63,7 @@ export function useAutocomplete(props: UseAutocompleteProps) {
         value: controlledValue,
         defaultValue,
         onChangeValue,
-        filterFn = defaultFilterFn,
+        filterFn,
         isClearable = true,
         isOpen: controlledIsOpen,
         onOpen: onOpenProp,
@@ -107,14 +91,22 @@ export function useAutocomplete(props: UseAutocompleteProps) {
 
     const selectedLabel = items.find((item) => item.value === selectedValue)?.label ?? "";
 
-    const filteredItems = searchQuery
-        ? items.filter((item) => filterFn(item, searchQuery))
-        : items;
+    const filteredItems = useMemo(() => {
+        if (!searchQuery) {
+            return items;
+        }
+        if (!filterFn) {
+            return matchSorter(items, searchQuery, {
+                keys: ["label"]
+            });
+        }
+        return items.filter((item) => filterFn(item, searchQuery));
+    }, [items, searchQuery, filterFn]);
 
-    // Reset focused index whenever the filtered list changes
+    // Focus first item whenever the filtered list changes, reset when no results
     // biome-ignore lint/correctness/useExhaustiveDependencies: intentional reset
     useEffect(() => {
-        setFocusedIndex(-1);
+        setFocusedIndex(filteredItems.length > 0 ? 0 : -1);
     }, [searchQuery]);
 
     // Scroll focused item into view
@@ -189,13 +181,10 @@ export function useAutocomplete(props: UseAutocompleteProps) {
             "aria-expanded": isOpen,
             "aria-haspopup": "listbox",
             autoComplete: "off",
-            onChange: callAllHandlers(
-                props.onChange,
-                (e: React.ChangeEvent<HTMLInputElement>) => {
-                    setSearchQuery(e.target.value);
-                    if (!isOpen) onOpen();
-                }
-            ),
+            onChange: callAllHandlers(props.onChange, (e: React.ChangeEvent<HTMLInputElement>) => {
+                setSearchQuery(e.target.value);
+                if (!isOpen) onOpen();
+            }),
             onFocus: callAllHandlers(props.onFocus, () => {
                 if (!isOpen) onOpen();
             }),
@@ -222,7 +211,11 @@ export function useAutocomplete(props: UseAutocompleteProps) {
                             break;
                         case "Enter":
                             e.preventDefault();
-                            if (focusedIndex >= 0 && focusedIndex < filteredItems.length) {
+                            if (
+                                focusedIndex >= 0 &&
+                                focusedIndex < filteredItems.length &&
+                                isOpen
+                            ) {
                                 selectItem(filteredItems[focusedIndex].value);
                             }
                             break;
@@ -237,7 +230,16 @@ export function useAutocomplete(props: UseAutocompleteProps) {
                 }
             )
         }),
-        [isOpen, searchQuery, selectedLabel, filteredItems, focusedIndex, onOpen, onClose, selectItem]
+        [
+            isOpen,
+            searchQuery,
+            selectedLabel,
+            filteredItems,
+            focusedIndex,
+            onOpen,
+            onClose,
+            selectItem
+        ]
     );
 
     const getContentProps = useCallback(

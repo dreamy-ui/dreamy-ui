@@ -81,30 +81,23 @@ Autocomplete comes with 4 different sizes.
 Autocomplete can be used in `outline` or `solid` variant.
 
 <Wrapper>
-    <Autocomplete.Root
-        width="xs"
-        variant="outline"
-        items={[
-            { value: "strawberry", label: "Strawberry" },
-            { value: "banana", label: "Banana" },
-            { value: "orange", label: "Orange" },
-        ]}
-    >
-        <Autocomplete.Input placeholder="Outline variant..." />
-        <Autocomplete.Content />
-    </Autocomplete.Root>
-    <Autocomplete.Root
-        width="xs"
-        variant="solid"
-        items={[
-            { value: "strawberry", label: "Strawberry" },
-            { value: "banana", label: "Banana" },
-            { value: "orange", label: "Orange" },
-        ]}
-    >
-        <Autocomplete.Input placeholder="Solid variant..." />
-        <Autocomplete.Content />
-    </Autocomplete.Root>
+    {["outline", "filled", "flushed", "filledOutline"].map((variant) => (
+        <Autocomplete.Root
+            key={variant}
+            width="xs"
+            variant={variant}
+            items={[
+                { value: "strawberry", label: "Strawberry" },
+                { value: "banana", label: "Banana" },
+                { value: "orange", label: "Orange" },
+                { value: "cherry", label: "Cherry" },
+                { value: "mango", label: "Mango" },
+            ]}
+        >
+            <Autocomplete.Input placeholder={`${variant} variant...`} />
+            <Autocomplete.Content />
+        </Autocomplete.Root>
+    ))}
 </Wrapper>
 
 ```tsx
@@ -113,8 +106,18 @@ Autocomplete can be used in `outline` or `solid` variant.
     <Autocomplete.Content />
 </Autocomplete.Root>
 
-<Autocomplete.Root variant="solid" items={fruits}>
-    <Autocomplete.Input placeholder="Solid variant..." />
+<Autocomplete.Root variant="filled" items={fruits}>
+    <Autocomplete.Input placeholder="Filled variant..." />
+    <Autocomplete.Content />
+</Autocomplete.Root>
+
+<Autocomplete.Root variant="flushed" items={fruits}>
+    <Autocomplete.Input placeholder="Flushed variant..." />
+    <Autocomplete.Content />
+</Autocomplete.Root>
+
+<Autocomplete.Root variant="filledOutline" items={fruits}>
+    <Autocomplete.Input placeholder="FilledOutline variant..." />
     <Autocomplete.Content />
 </Autocomplete.Root>
 ```

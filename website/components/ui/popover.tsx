@@ -112,7 +112,7 @@ const Transition = forwardRef(function PopoverTransition(
             animate={isOpen ? "initial" : "exit"}
             initial={false}
             ref={ref}
-            variants={transformReducedMotion(popover.default, reduceMotion)}
+            variants={transformReducedMotion(popover, reduceMotion)}
             {...rest}
         >
             {hasArrow && <Arrow {...arrowProps} />}

@@ -11,7 +11,7 @@ import { BiChevronUp, BiEdit } from "react-icons/bi";
 import { useLocation } from "react-router";
 import { useDoc } from "~/src/hooks/useDoc";
 import { useSections } from "~/src/hooks/useSections";
-import { Link } from "~/src/ui/global/Link";
+import { DreamyLink, Link } from "~/src/ui/global/Link";
 
 export default function OnThisPage() {
     const doc = useDoc();
@@ -159,9 +159,10 @@ function ActionButtons() {
         >
             <Button
                 as={
-                    <DreamLink
+                    <a
                         href={githubDocUrl}
-                        isExternal
+                        rel="noreferrer"
+                        target="_blank"
                     />
                 }
                 fontWeight={500}
@@ -177,7 +178,7 @@ function ActionButtons() {
                 onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
                 opacity={hasScrolled ? 1 : 0}
                 rightIcon={<Icon as={BiChevronUp} />}
-                transition={"opacity 0.2s"}
+                transition={"opacity 0.2s, color 0.2s"}
                 transitionTimingFunction={"ease-in-out"}
                 variant={"link"}
             >

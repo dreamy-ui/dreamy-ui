@@ -13,16 +13,19 @@ import { useSections } from "~/src/hooks/useSections";
 import { ReactRouterLink } from "~/src/ui/global/Link";
 
 const newComponents = [
-    "toast",
-    "progress circular",
-    "group",
     "radio card",
     "action bar",
     "empty state",
     "range slider",
-    "date picker"
+    "date picker",
+    "autocomplete",
+    "fieldset",
+    "file upload",
+    "hover card",
+    "pagination",
+    "stepper"
 ];
-const updatedComponents = ["menu"];
+const updatedComponents = ["menu", "tabs"];
 
 export default function SectionsNav() {
     const { sections } = useSections();

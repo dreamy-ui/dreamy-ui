@@ -3,7 +3,13 @@ import { defineSlotRecipe } from "@pandacss/dev";
 
 export const autocomplete = defineSlotRecipe({
     className: "autocomplete",
-    jsx: ["Autocomplete.Root", "Autocomplete.Input", "Autocomplete.Content", "Autocomplete.VirtualContent", "Autocomplete.Item"],
+    jsx: [
+        "Autocomplete.Root",
+        "Autocomplete.Input",
+        "Autocomplete.Content",
+        "Autocomplete.VirtualContent",
+        "Autocomplete.Item"
+    ],
     slots: [
         "root",
         "control",
@@ -96,7 +102,9 @@ export const autocomplete = defineSlotRecipe({
             borderRadius: "0",
             width: "full",
             _hover: {
-                bg: "alpha.50"
+                "&:not([data-selected])": {
+                    bg: "alpha.50"
+                }
             },
             "&[data-focused]": {
                 bg: "alpha.50"

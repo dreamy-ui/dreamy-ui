@@ -18,6 +18,10 @@ export const pagination = defineSlotRecipe({
             gap: 1
         },
         item: {
+            transition: "none!",
+            "&[data-selected]": {
+                color: "primary.fg"
+            },
             "& [data-part='indicator']": {
                 position: "absolute",
                 inset: 0,
@@ -34,5 +38,27 @@ export const pagination = defineSlotRecipe({
         },
         prevTrigger: {},
         nextTrigger: {}
+    },
+    variants: {
+        size: {
+            sm: {
+                ellipsis: {
+                    boxSize: "8"
+                }
+            },
+            md: {
+                ellipsis: {
+                    boxSize: "10"
+                }
+            },
+            lg: {
+                ellipsis: {
+                    boxSize: "12"
+                }
+            }
+        }
+    },
+    defaultVariants: {
+        size: "md"
     }
 });

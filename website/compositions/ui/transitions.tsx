@@ -75,9 +75,7 @@ export const Collapse = forwardRef<HTMLDivElement, CollapseProps>((props, ref) =
         [startingHeight, endingHeight, animateOpacity, transition, transitionEnd, unmountOnExit]
     );
 
-    const {
-        collapse: { default: variants }
-    } = useMotionVariants();
+    const { collapse: variants } = useMotionVariants();
 
     const show = useMemo(() => (unmountOnExit ? isOpen : true), [unmountOnExit, isOpen]);
     const animate = useMemo(

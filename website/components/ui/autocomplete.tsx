@@ -1,5 +1,12 @@
 "use client";
 
+import {
+    type AutocompleteItem,
+    AutocompleteProvider,
+    type UseAutocompleteProps,
+    useAutocomplete,
+    useAutocompleteContext
+} from "@dreamy-ui/react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import type React from "react";
 import { type ReactNode, type SVGProps, forwardRef, useEffect, useRef } from "react";
@@ -13,13 +20,6 @@ import {
     type PopoverContentProps,
     Root as PopoverRoot
 } from "./popover";
-import {
-    type AutocompleteItem,
-    AutocompleteProvider,
-    type UseAutocompleteProps,
-    useAutocomplete,
-    useAutocompleteContext
-} from "./use-autocomplete";
 
 export type { AutocompleteItem };
 
@@ -145,7 +145,12 @@ export interface AutocompleteProps
  * @See Docs https://dreamy-ui.com/docs/components/autocomplete
  */
 export const Root: (props: AutocompleteProps) => React.JSX.Element = withProvider(
-    function AutocompleteRoot({ children, size = "md", variant = "outline", ...props }: AutocompleteProps) {
+    function AutocompleteRoot({
+        children,
+        size = "md",
+        variant = "outline",
+        ...props
+    }: AutocompleteProps) {
         const [cssProps, restProps] = splitCssProps(props);
         const ctx = useAutocomplete(restProps);
 
@@ -236,13 +241,7 @@ export interface AutocompleteContentProps extends Omit<PopoverContentProps, "chi
 
 export const Content = withContext(
     forwardRef<HTMLDivElement, AutocompleteContentProps>(function AutocompleteContent(
-        {
-            noResultsText = "No results found",
-            noResultsContent,
-            renderItem,
-            className,
-            ...rest
-        },
+        { noResultsText = "No results found", noResultsContent, renderItem, className, ...rest },
         ref
     ) {
         const { filteredItems, getContentProps } = useAutocompleteContext();
@@ -252,25 +251,23 @@ export const Content = withContext(
                 className={className}
                 {...(getContentProps(rest as any, ref as any) as any)}
             >
-                {filteredItems.length === 0 ? (
-                    noResultsContent ?? (
-                        <AutocompleteNoResults>{noResultsText}</AutocompleteNoResults>
-                    )
-                ) : (
-                    filteredItems.map((item, index) =>
-                        renderItem ? (
-                            renderItem(item)
-                        ) : (
-                            <Item
-                                index={index}
-                                key={item.value}
-                                value={item.value}
-                            >
-                                {item.label}
-                            </Item>
-                        )
-                    )
-                )}
+                {filteredItems.length === 0
+                    ? (noResultsContent ?? (
+                          <AutocompleteNoResults>{noResultsText}</AutocompleteNoResults>
+                      ))
+                    : filteredItems.map((item: AutocompleteItem, index: number) =>
+                          renderItem ? (
+                              renderItem(item)
+                          ) : (
+                              <Item
+                                  index={index}
+                                  key={item.value}
+                                  value={item.value}
+                              >
+                                  {item.label}
+                              </Item>
+                          )
+                      )}
             </PopoverContent>
         );
     }),
@@ -311,45 +308,43 @@ export interface AutocompleteVirtualContentProps extends Omit<PopoverContentProp
 }
 
 export const VirtualContent = withContext(
-    forwardRef<HTMLDivElement, AutocompleteVirtualContentProps>(
-        function AutocompleteVirtualContent(
-            {
-                estimatedItemHeight = 32,
-                overscan = 5,
-                maxHeight = 300,
-                noResultsText = "No results found",
-                noResultsContent,
-                renderItem,
-                className,
-                ...rest
-            },
-            ref
-        ) {
-            const { filteredItems, getContentProps, isOpen } = useAutocompleteContext();
+    forwardRef<HTMLDivElement, AutocompleteVirtualContentProps>(function AutocompleteVirtualContent(
+        {
+            estimatedItemHeight = 32,
+            overscan = 5,
+            maxHeight = 300,
+            noResultsText = "No results found",
+            noResultsContent,
+            renderItem,
+            className,
+            ...rest
+        },
+        ref
+    ) {
+        const { filteredItems, getContentProps, isOpen } = useAutocompleteContext();
 
-            return (
-                <PopoverContent
-                    className={className}
-                    {...(getContentProps(rest as any, ref as any) as any)}
-                >
-                    {filteredItems.length === 0 ? (
-                        noResultsContent ?? (
-                            <AutocompleteNoResults>{noResultsText}</AutocompleteNoResults>
-                        )
-                    ) : (
-                        <AutocompleteVirtualizedList
-                            estimatedItemHeight={estimatedItemHeight}
-                            filteredItems={filteredItems}
-                            isOpen={isOpen}
-                            maxHeight={maxHeight}
-                            overscan={overscan}
-                            renderItem={renderItem}
-                        />
-                    )}
-                </PopoverContent>
-            );
-        }
-    ),
+        return (
+            <PopoverContent
+                className={className}
+                {...(getContentProps(rest as any, ref as any) as any)}
+            >
+                {filteredItems.length === 0 ? (
+                    (noResultsContent ?? (
+                        <AutocompleteNoResults>{noResultsText}</AutocompleteNoResults>
+                    ))
+                ) : (
+                    <AutocompleteVirtualizedList
+                        estimatedItemHeight={estimatedItemHeight}
+                        filteredItems={filteredItems}
+                        isOpen={isOpen}
+                        maxHeight={maxHeight}
+                        overscan={overscan}
+                        renderItem={renderItem}
+                    />
+                )}
+            </PopoverContent>
+        );
+    }),
     "content"
 );
 

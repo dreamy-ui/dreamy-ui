@@ -174,50 +174,6 @@ Pagination comes with three sizes: `sm`, `md` (default), and `lg`.
 </Pagination.Root>
 ```
 
-### Variants
-
-Pagination supports different variants: `solid` (default), `outline`, and `ghost`.
-
-<Wrapper>
-    <Pagination.Root count={100} pageSize={10} defaultPage={2} variant="solid">
-        <Pagination.PrevTrigger />
-        <Pagination.Items />
-        <Pagination.NextTrigger />
-    </Pagination.Root>
-
-    <Pagination.Root count={100} pageSize={10} defaultPage={2} variant="outline">
-        <Pagination.PrevTrigger />
-        <Pagination.Items />
-        <Pagination.NextTrigger />
-    </Pagination.Root>
-
-    <Pagination.Root count={100} pageSize={10} defaultPage={2} variant="ghost">
-        <Pagination.PrevTrigger />
-        <Pagination.Items />
-        <Pagination.NextTrigger />
-    </Pagination.Root>
-</Wrapper>
-
-```tsx
-<Pagination.Root count={100} pageSize={10} defaultPage={2} variant="solid">
-    <Pagination.PrevTrigger />
-    <Pagination.Items />
-    <Pagination.NextTrigger />
-</Pagination.Root>
-
-<Pagination.Root count={100} pageSize={10} defaultPage={2} variant="outline">
-    <Pagination.PrevTrigger />
-    <Pagination.Items />
-    <Pagination.NextTrigger />
-</Pagination.Root>
-
-<Pagination.Root count={100} pageSize={10} defaultPage={2} variant="ghost">
-    <Pagination.PrevTrigger />
-    <Pagination.Items />
-    <Pagination.NextTrigger />
-</Pagination.Root>
-```
-
 ### Custom Trigger Content
 
 You can customize the content of the prev and next triggers.
@@ -291,83 +247,6 @@ The `PageText` component supports three different formats.
 </Pagination.Root>
 ```
 
-### Custom Item Rendering
-
-The `Items` component accepts a `render` prop for custom rendering of each page item. This is useful when you want to wrap items in custom components or add additional styling.
-
-<Wrapper>
-    <CustomItemPagination />
-</Wrapper>
-
-```tsx
-<Pagination.Root count={200} pageSize={10} defaultPage={5}>
-    <Pagination.PrevTrigger />
-    <Pagination.Items
-        render={(page) => (
-            <Button variant={{ base: "ghost", _selected: "outline" }}>
-                Page {page.value}
-            </Button>
-        )}
-    />
-    <Pagination.NextTrigger />
-</Pagination.Root>
-```
-
-## Props
-
-### Root
-
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| count | `number` | - | Total number of items (required) |
-| page | `number` | `1` | Current page (1-indexed) |
-| pageSize | `number` | `10` | Number of items per page |
-| siblingCount | `number` | `1` | Number of siblings to show on each side of current page |
-| size | `'sm' \| 'md' \| 'lg'` | `md` | Size of pagination controls |
-| variant | `'solid' \| 'outline' \| 'ghost'` | `solid` | Visual variant |
-| onPageChange | `(details: { page: number }) => void` | - | Callback when page changes |
-
-### Item
-
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| value | `number` | - | The page number (required) |
-
-### Items
-
-The `Items` component is a shortcut that automatically renders pagination items with ellipsis based on the current page and sibling count.
-
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| render | `(page: PageItem) => React.ReactNode` | - | Optional custom render function for each page item |
-
-The `PageItem` type has the following shape:
-
-```tsx
-interface PageItem {
-    value: number;
-    type: "page" | "ellipsis";
-}
-```
-
-### PrevTrigger
-
-Standard HTML button element props. Used to navigate to the previous page.
-
-### NextTrigger
-
-Standard HTML button element props. Used to navigate to the next page.
-
-### Ellipsis
-
-Standard HTML span element props. Used to indicate skipped pages.
-
-### PageText
-
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| format | `'short' \| 'compact' \| 'long'` | `compact` | Format of the page text |
-
 ## Hooks
 
 ### usePaginationRange
@@ -392,11 +271,3 @@ const pages = usePaginationRange({
 //   { type: 'page', value: 10 }
 // ]
 ```
-
-#### Parameters
-
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| page | `number` | - | Current page (1-indexed) |
-| totalPages | `number` | - | Total number of pages |
-| siblingCount | `number` | `1` | Number of siblings to show on each side |

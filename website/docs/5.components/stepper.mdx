@@ -1,0 +1,356 @@
+---
+title: Stepper
+description: Stepper is used to guide users through multi-step processes like registration flows, checkout, or onboarding.
+isServerComponent: false
+source: /packages/react/src/components/stepper/use-stepper.ts
+themeSource: /website/components/recipes/stepper.ts
+---
+
+## Installation
+
+```bash	
+pnpm dreamy add stepper
+```
+
+## Usage
+
+Stepper guides users through a sequence of steps.
+
+<Wrapper>
+    <Stepper.Root count={3}>
+        <Stepper.List>
+            {["Account", "Profile", "Done"].map((title, index) => (
+                <Stepper.Item key={index} index={index}>
+                    <Stepper.Trigger index={index}>
+                        <Stepper.Indicator index={index} />
+                        <Stepper.Title>{title}</Stepper.Title>
+                    </Stepper.Trigger>
+                    <Stepper.Separator index={index} />
+                </Stepper.Item>
+            ))}
+        </Stepper.List>
+        {["Account", "Profile", "Done"].map((title, index) => (
+            <Stepper.Content key={index} index={index}>
+                Step {index + 1}: {title}
+            </Stepper.Content>
+        ))}
+        <Stepper.CompletedContent>All steps complete!</Stepper.CompletedContent>
+        <HStack mt={4}>
+            <Stepper.PrevTrigger asChild>
+                <Button variant="outline" size="sm">Prev</Button>
+            </Stepper.PrevTrigger>
+            <Stepper.NextTrigger asChild>
+                <Button size="sm">Next</Button>
+            </Stepper.NextTrigger>
+        </HStack>
+    </Stepper.Root>
+</Wrapper>
+
+```tsx
+<Stepper.Root count={3}>
+    <Stepper.List>
+        {["Account", "Profile", "Done"].map((title, index) => (
+            <Stepper.Item key={index} index={index}>
+                <Stepper.Trigger index={index}>
+                    <Stepper.Indicator index={index} />
+                    <Stepper.Title>{title}</Stepper.Title>
+                </Stepper.Trigger>
+                <Stepper.Separator index={index} />
+            </Stepper.Item>
+        ))}
+    </Stepper.List>
+    {["Account", "Profile", "Done"].map((title, index) => (
+        <Stepper.Content key={index} index={index}>
+            Step {index + 1}: {title}
+        </Stepper.Content>
+    ))}
+    <Stepper.CompletedContent>All steps complete!</Stepper.CompletedContent>
+    <HStack mt={4}>
+        <Stepper.PrevTrigger asChild>
+            <Button variant="outline" size="sm">Prev</Button>
+        </Stepper.PrevTrigger>
+        <Stepper.NextTrigger asChild>
+            <Button size="sm">Next</Button>
+        </Stepper.NextTrigger>
+    </HStack>
+</Stepper.Root>
+```
+
+### Variants
+
+Use the `variant` prop to change the appearance of the stepper.
+
+<Wrapper>
+    <VStack w="full" gap={8}>
+        <Flex col gap={2} full>
+            <Text bold>Solid</Text>
+            <Stepper.Root count={3} variant="solid" defaultStep={1}>
+                <Stepper.List>
+                    {["Account", "Profile", "Done"].map((title, index) => (
+                        <Stepper.Item key={index} index={index}>
+                            <Stepper.Trigger index={index}>
+                                <Stepper.Indicator index={index} />
+                                <Stepper.Title>{title}</Stepper.Title>
+                            </Stepper.Trigger>
+                            <Stepper.Separator index={index} />
+                        </Stepper.Item>
+                    ))}
+                </Stepper.List>
+            </Stepper.Root>
+        </Flex>
+        <Flex col gap={2} full>
+            <Text bold>Subtle</Text>
+            <Stepper.Root count={3} variant="subtle" defaultStep={1}>
+                <Stepper.List>
+                    {["Account", "Profile", "Done"].map((title, index) => (
+                        <Stepper.Item key={index} index={index}>
+                            <Stepper.Trigger index={index}>
+                                <Stepper.Indicator index={index} />
+                                <Stepper.Title>{title}</Stepper.Title>
+                            </Stepper.Trigger>
+                            <Stepper.Separator index={index} />
+                        </Stepper.Item>
+                    ))}
+                </Stepper.List>
+            </Stepper.Root>
+        </Flex>
+    </VStack>
+</Wrapper>
+
+```tsx
+<Stepper.Root count={3} variant="solid">...</Stepper.Root>
+<Stepper.Root count={3} variant="subtle">...</Stepper.Root>
+```
+
+### Sizes
+
+Use the `size` prop to change the size of the stepper.
+
+<Wrapper>
+    <VStack w="full" gap={8}>
+        {["sm", "md", "lg"].map((size) => (
+            <Flex col gap={2} full key={size}>
+                <Text bold capitalize>{size}</Text>
+                <Stepper.Root count={3} size={size} defaultStep={1}>
+                    <Stepper.List>
+                        {["Account", "Profile", "Done"].map((title, index) => (
+                            <Stepper.Item key={index} index={index}>
+                                <Stepper.Trigger index={index}>
+                                    <Stepper.Indicator index={index} />
+                                    <Stepper.Title>{title}</Stepper.Title>
+                                </Stepper.Trigger>
+                                <Stepper.Separator index={index} />
+                            </Stepper.Item>
+                        ))}
+                    </Stepper.List>
+                </Stepper.Root>
+            </Flex>
+        ))}
+    </VStack>
+</Wrapper>
+
+```tsx
+<Stepper.Root count={3} size="sm">...</Stepper.Root>
+<Stepper.Root count={3} size="md">...</Stepper.Root>
+<Stepper.Root count={3} size="lg">...</Stepper.Root>
+```
+
+### Vertical
+
+Use the `orientation="vertical"` prop to render the stepper vertically.
+
+<Wrapper>
+    <Stepper.Root count={3} orientation="vertical" h="300px">
+        <Stepper.List>
+            {["Account", "Profile", "Done"].map((title, index) => (
+                <Stepper.Item key={index} index={index}>
+                    <Stepper.Trigger index={index}>
+                        <Stepper.Indicator index={index} />
+                        <Stepper.Title>{title}</Stepper.Title>
+                    </Stepper.Trigger>
+                    <Stepper.Separator index={index} />
+                </Stepper.Item>
+            ))}
+        </Stepper.List>
+        <VStack align="flex-start">
+            {["Account", "Profile", "Done"].map((title, index) => (
+                <Stepper.Content key={index} index={index}>
+                    Step {index + 1}: {title}
+                </Stepper.Content>
+            ))}
+            <Stepper.CompletedContent>All steps complete!</Stepper.CompletedContent>
+            <HStack>
+                <Stepper.PrevTrigger asChild>
+                    <Button variant="outline" size="sm">Prev</Button>
+                </Stepper.PrevTrigger>
+                <Stepper.NextTrigger asChild>
+                    <Button size="sm">Next</Button>
+                </Stepper.NextTrigger>
+            </HStack>
+        </VStack>
+    </Stepper.Root>
+</Wrapper>
+
+```tsx
+<Stepper.Root count={3} orientation="vertical" h="300px">
+    <Stepper.List>
+        {["Account", "Profile", "Done"].map((title, index) => (
+            <Stepper.Item key={index} index={index}>
+                <Stepper.Trigger index={index}>
+                    <Stepper.Indicator index={index} />
+                    <Stepper.Title>{title}</Stepper.Title>
+                </Stepper.Trigger>
+                <Stepper.Separator index={index} />
+            </Stepper.Item>
+        ))}
+    </Stepper.List>
+    <VStack align="flex-start">
+        {steps.map((step, index) => (
+            <Stepper.Content key={index} index={index}>{step.content}</Stepper.Content>
+        ))}
+        <Stepper.CompletedContent>All steps complete!</Stepper.CompletedContent>
+    </VStack>
+</Stepper.Root>
+```
+
+### With Description
+
+Add a `Stepper.Description` inside each step for more detail.
+
+<Wrapper>
+    <Stepper.Root count={3} defaultStep={1}>
+        <Stepper.List>
+            {[
+                { title: "Account", desc: "Enter your email" },
+                { title: "Profile", desc: "Set up your profile" },
+                { title: "Done", desc: "You're all set!" }
+            ].map((step, index) => (
+                <Stepper.Item key={index} index={index}>
+                    <Stepper.Trigger index={index}>
+                        <Stepper.Indicator index={index} />
+                        <Box>
+                            <Stepper.Title>{step.title}</Stepper.Title>
+                            <Stepper.Description>{step.desc}</Stepper.Description>
+                        </Box>
+                    </Stepper.Trigger>
+                    <Stepper.Separator index={index} />
+                </Stepper.Item>
+            ))}
+        </Stepper.List>
+    </Stepper.Root>
+</Wrapper>
+
+```tsx
+<Stepper.Root count={3}>
+    <Stepper.List>
+        {steps.map((step, index) => (
+            <Stepper.Item key={index} index={index}>
+                <Stepper.Trigger index={index}>
+                    <Stepper.Indicator index={index} />
+                    <Box>
+                        <Stepper.Title>{step.title}</Stepper.Title>
+                        <Stepper.Description>{step.description}</Stepper.Description>
+                    </Box>
+                </Stepper.Trigger>
+                <Stepper.Separator index={index} />
+            </Stepper.Item>
+        ))}
+    </Stepper.List>
+</Stepper.Root>
+```
+
+### Controlled
+
+Use the `step` and `onStepChange` props to control the current step.
+
+<Wrapper>
+    <ControlledStepper />
+</Wrapper>
+
+```tsx
+export function ControlledStepper() {
+    const [step, setStep] = useState(0);
+
+    return (
+        <Stepper.Root count={3} step={step} onStepChange={setStep}>
+            <Stepper.List>
+                {["Account", "Profile", "Done"].map((title, index) => (
+                    <Stepper.Item key={index} index={index}>
+                        <Stepper.Trigger index={index}>
+                            <Stepper.Indicator index={index} />
+                            <Stepper.Title>{title}</Stepper.Title>
+                        </Stepper.Trigger>
+                        <Stepper.Separator index={index} />
+                    </Stepper.Item>
+                ))}
+            </Stepper.List>
+            {["Account", "Profile", "Done"].map((title, index) => (
+                <Stepper.Content key={index} index={index}>
+                    Step {index + 1}: {title}
+                </Stepper.Content>
+            ))}
+            <Stepper.CompletedContent>All done!</Stepper.CompletedContent>
+            <HStack mt={4}>
+                <Stepper.PrevTrigger asChild>
+                    <Button variant="outline" size="sm">Prev</Button>
+                </Stepper.PrevTrigger>
+                <Stepper.NextTrigger asChild>
+                    <Button size="sm">Next</Button>
+                </Stepper.NextTrigger>
+            </HStack>
+        </Stepper.Root>
+    );
+}
+```
+
+### Context
+
+Use `Stepper.Context` to access the stepper state from within any child component.
+
+<Wrapper>
+    <Stepper.Root count={3}>
+        <Stepper.Context>
+            {({ step, count }) => (
+                <Text mb={2} color="fg.medium" fontSize="sm">
+                    Step {Math.min(step + 1, count)} of {count}
+                </Text>
+            )}
+        </Stepper.Context>
+        <Stepper.List>
+            {["Account", "Profile", "Done"].map((title, index) => (
+                <Stepper.Item key={index} index={index}>
+                    <Stepper.Trigger index={index}>
+                        <Stepper.Indicator index={index} />
+                        <Stepper.Title>{title}</Stepper.Title>
+                    </Stepper.Trigger>
+                    <Stepper.Separator index={index} />
+                </Stepper.Item>
+            ))}
+        </Stepper.List>
+        {["Account", "Profile", "Done"].map((title, index) => (
+            <Stepper.Content key={index} index={index}>
+                Step {index + 1}: {title}
+            </Stepper.Content>
+        ))}
+        <Stepper.CompletedContent>All steps complete!</Stepper.CompletedContent>
+        <HStack mt={4}>
+            <Stepper.PrevTrigger asChild>
+                <Button variant="outline" size="sm">Prev</Button>
+            </Stepper.PrevTrigger>
+            <Stepper.NextTrigger asChild>
+                <Button size="sm">Next</Button>
+            </Stepper.NextTrigger>
+        </HStack>
+    </Stepper.Root>
+</Wrapper>
+
+```tsx
+<Stepper.Root count={3}>
+    <Stepper.Context>
+        {({ step, count }) => (
+            <Text>Step {step + 1} of {count}</Text>
+        )}
+    </Stepper.Context>
+    ...
+</Stepper.Root>
+```

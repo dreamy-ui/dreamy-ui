@@ -60,8 +60,7 @@
     "fileDependencies": [
       "./box",
       "./input",
-      "./popover",
-      "./use-autocomplete"
+      "./popover"
     ],
     "hasRecipe": true,
     "hasPattern": false,
@@ -387,6 +386,23 @@
   },
   {
     "type": "component",
+    "id": "hover-card",
+    "file": "hover-card.tsx",
+    "component": "HoverCard",
+    "npmDependencies": [],
+    "fileDependencies": [
+      "./box",
+      "./heading",
+      "./motion"
+    ],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "hover-card"
+    ]
+  },
+  {
+    "type": "component",
     "id": "icon-button",
     "file": "icon-button.tsx",
     "component": "IconButton",
@@ -538,6 +554,7 @@
     "component": "Pagination",
     "npmDependencies": [],
     "fileDependencies": [
+      "./icon",
       "./icon-button"
     ],
     "hasRecipe": true,
@@ -786,6 +803,19 @@
   },
   {
     "type": "component",
+    "id": "stepper",
+    "file": "stepper.tsx",
+    "component": "Stepper",
+    "npmDependencies": [],
+    "fileDependencies": [],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "stepper"
+    ]
+  },
+  {
+    "type": "component",
     "id": "switch",
     "file": "switch.tsx",
     "component": "Switch",
@@ -927,18 +957,6 @@
     "npmDependencies": [],
     "fileDependencies": [
       "./motion"
-    ],
-    "hasRecipe": false,
-    "hasPattern": false
-  },
-  {
-    "type": "component",
-    "id": "use-autocomplete",
-    "file": "use-autocomplete.ts",
-    "component": "UseAutocomplete",
-    "npmDependencies": [],
-    "fileDependencies": [
-      "./popover"
     ],
     "hasRecipe": false,
     "hasPattern": false

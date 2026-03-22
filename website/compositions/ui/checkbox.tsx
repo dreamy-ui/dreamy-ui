@@ -97,7 +97,7 @@ function CheckIcon(props: CheckboxIconProps) {
 				custom={{ isChecked, active, animationTime }}
 				d="M20 6 9 17l-5-5"
 				initial={false}
-				variants={variants.checkboxCheckIcon.default}
+				variants={variants.checkboxCheckIcon}
 				{...pathProps}
 			/>
 		</svg>

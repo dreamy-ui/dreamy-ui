@@ -96,6 +96,11 @@
   },
   {
     "type": "recipe",
+    "id": "hover-card",
+    "file": "hover-card.ts"
+  },
+  {
+    "type": "recipe",
     "id": "icon",
     "file": "icon.ts"
   },

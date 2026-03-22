@@ -128,7 +128,7 @@ export const Overlay = withContext(
                         exit="exit"
                         initial="initial"
                         ref={ref}
-                        variants={overlay.default}
+                        variants={overlay}
                         {...props}
                     />
                 )}
@@ -166,7 +166,7 @@ export const Content = withContext(
                             exit="exit"
                             initial="initial"
                             transition={transition}
-                            variants={modal.default}
+                            variants={modal}
                             {...getDialogProps(props, ref)}
                         >
                             {children}

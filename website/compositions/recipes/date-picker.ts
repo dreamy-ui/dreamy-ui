@@ -212,7 +212,10 @@ export const datePicker = defineSlotRecipe({
                     px: 3
                 },
                 calendar: {
-                    px: 3
+                    px: 3,
+                    "&[data-no-footer]": {
+                        pb: 3
+                    }
                 },
                 calendarTitle: {
                     fontSize: "sm"
@@ -239,7 +242,10 @@ export const datePicker = defineSlotRecipe({
                     px: 4
                 },
                 calendar: {
-                    px: 4
+                    px: 4,
+                    "&[data-no-footer]": {
+                        pb: 4
+                    }
                 },
                 calendarTitle: {
                     fontSize: "md"
@@ -266,7 +272,10 @@ export const datePicker = defineSlotRecipe({
                     px: 5
                 },
                 calendar: {
-                    px: 5
+                    px: 5,
+                    "&[data-no-footer]": {
+                        pb: 5
+                    }
                 },
                 calendarTitle: {
                     fontSize: "lg"

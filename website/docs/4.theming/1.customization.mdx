@@ -9,7 +9,7 @@ That means every customization related to styling should be done in panda config
 
 ## Theming
 
-Dream Preset contains only most basic styling options like background color, fonts, etc. If you want to customize more, you can extend the theme in panda config.
+Dreamy UI Preset contains only most basic styling options like background color, fonts, etc. If you want to customize more, you can extend the theme in panda config.
 
 Most basic panda config would look like this. You can extend any theme property you want in `theme.extend` object.
 
@@ -22,22 +22,27 @@ export default defineConfig({
     include: [
         "./app/**/*.{js,jsx,ts,tsx}",
     ],
-    importMap: "@dreamy-ui/system",
     presets: [
-        pandaPreset,
         createDreamPreset()
     ],
+    plugins: [dreamyPlugin],
     theme: {
         extend: {
 			/**
 			 * Extend theme properties here
 			*/
         }
-    } 
+    },
+    globalCss: {
+		extend: {}
+	},
+	staticCss: {
+		extend: {}
+	}
 })
 ```
 
-> info: Tip: If body font is provided and heading font is not, Dream will automatically use body font for headings.
+> info: Tip: If body font is provided and heading font is not, Dreamy UI will automatically use body font for headings.
 
 ## Customizing Components
 
@@ -47,4 +52,107 @@ Do not forget to generate panda styled-system after changing the recipe or patte
 
 ```bash
 pnpm panda codegen
+```
+
+## Motion Variants
+
+Dreamy UI uses [Motion](https://motion.dev) under the hood for animations. You can customize how every animated component enters and exits by passing a `motionVariants` object to `DreamyProvider`. Each key corresponds to a component and holds a `Variants` object from Motion.
+
+By default, Dreamy UI uses `defaultMotionVariants`, a set of smooth, subtle animations that feel just right in any app.
+
+Use the exported `MotionVariants` type for full type safety when writing your own variants object:
+
+```tsx
+import { DreamyProvider, type MotionVariants } from "@dreamy-ui/react";
+
+const myMotionVariants: MotionVariants = {
+    modal: {
+        initial: { opacity: 0, scale: 0.9 },
+        animate: { opacity: 1, scale: 1 },
+        exit: { opacity: 0, scale: 0.9 }
+    },
+    overlay: {
+        initial: { opacity: 0 },
+        animate: { opacity: 1 },
+        exit: { opacity: 0 }
+    },
+    tooltip: { ... },
+    popover: { ... },
+    collapse: { ... },
+    checkboxCheckIcon: { ... },
+    actionBar: { ... }
+};
+
+export default function App() {
+    return (
+        <DreamyProvider motionVariants={myMotionVariants}>
+            {children}
+        </DreamyProvider>
+    );
+}
+```
+
+> info: All keys are required. You must provide variants for every component listed above, otherwise components with a missing key will have no animation.
+
+If you only want to tweak one or two components and keep the rest as-is, spread `defaultMotionVariants` and override just the keys you need:
+
+```tsx
+import { DreamyProvider, defaultMotionVariants, type MotionVariants } from "@dreamy-ui/react";
+
+const myMotionVariants: MotionVariants = {
+    ...defaultMotionVariants,
+    modal: {
+        initial: { opacity: 0, y: -20 },
+        animate: { opacity: 1, y: 0 },
+        exit: { opacity: 0, y: -20 }
+    }
+};
+```
+
+Dreamy UI also ships a ready-to-use `bouncyMotionVariants` preset that gives all components a springy, playful feel:
+
+```tsx
+import { DreamyProvider, bouncyMotionVariants } from "@dreamy-ui/react";
+
+<DreamyProvider motionVariants={bouncyMotionVariants}>
+    {children}
+</DreamyProvider>
+```
+
+There's the comparison of default and bouncy motion variants and transition:
+
+<Wrapper>
+    <Switch defaultChecked>Default</Switch>
+    <Switch defaultChecked thumbProps={{ transition: { type: "spring", stiffness: 380, damping: 18 } }}>Bouncy</Switch>
+</Wrapper>
+
+## Default Transition
+
+The `defaultTransition` prop sets the base Motion transition that is passed to `MotionConfig` and applied globally to all animated elements that don't define their own transition.
+
+```tsx
+import { DreamyProvider } from "@dreamy-ui/react";
+
+<DreamyProvider
+    defaultTransition={{
+        type: "spring",
+        stiffness: 300,
+        damping: 20
+    }}
+>
+    {children}
+</DreamyProvider>
+```
+
+A matching `bouncyDefaultTransition` is also exported for use alongside `bouncyMotionVariants`:
+
+```tsx
+import { DreamyProvider, bouncyMotionVariants, bouncyDefaultTransition } from "@dreamy-ui/react";
+
+<DreamyProvider
+    motionVariants={bouncyMotionVariants}
+    defaultTransition={bouncyDefaultTransition}
+>
+    {children}
+</DreamyProvider>
 ```

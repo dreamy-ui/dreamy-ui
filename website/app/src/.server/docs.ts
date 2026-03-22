@@ -17,6 +17,7 @@ import { remarkDreamyPMTabs } from "./remark-tabs";
 import { cursorDarkTheme } from "./theme";
 
 export class Docs {
+    // private static shouldFetchGithubDocs = process.env.NODE_ENV === "production" ; // make it `true` to fetch github docs instead from disk in development mode
     private static shouldFetchGithubDocs = false; // make it `true` to fetch github docs instead from disk in development mode
     private static shouldCacheDocs =
         process.env.NODE_ENV === "production" || Docs.shouldFetchGithubDocs;
@@ -365,7 +366,7 @@ export class Docs {
     }
 
     private static async fetchFreshDocsStructure(fetchFileContents = false): Promise<Sections> {
-        if (process.env.NODE_ENV === "production" || Docs.shouldFetchGithubDocs) {
+        if (Docs.shouldFetchGithubDocs) {
             return Docs.fetchGithubDocsFolder();
         }
 
@@ -373,7 +374,7 @@ export class Docs {
     }
 
     private static async fetchFreshDoc(filepath: string) {
-        if (process.env.NODE_ENV === "production" || Docs.shouldFetchGithubDocs) {
+        if (Docs.shouldFetchGithubDocs) {
             return Docs.fetchGithubDoc(filepath);
         }
 

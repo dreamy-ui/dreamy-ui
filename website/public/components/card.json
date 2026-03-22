@@ -5,7 +5,7 @@
   "id": "card",
   "file": {
     "name": "card.tsx",
-    "content": "\"use client\";\r\n\r\nimport { createStyleContext, dreamy } from \"styled-system/jsx\";\r\nimport { card } from \"styled-system/recipes\";\r\n\r\nconst { withProvider, withContext } = createStyleContext(card);\r\n\r\n/**\r\n * Card component\r\n *\r\n * @See Docs https://dreamy-ui.com/docs/components/card\r\n */\r\nexport const Root = withProvider(dreamy.div, \"root\");\r\nexport const Header = withContext(dreamy.div, \"header\");\r\nexport const Body = withContext(dreamy.div, \"body\");\r\nexport const Footer = withContext(dreamy.div, \"footer\");\r\nexport const Title = withContext(dreamy.h3, \"title\");\r\nexport const Description = withContext(dreamy.p, \"description\");\r\n\r\n\r\n"
+    "content": "\"use client\";\n\nimport { createStyleContext, dreamy } from \"styled-system/jsx\";\nimport { card } from \"styled-system/recipes\";\n\nconst { withProvider, withContext } = createStyleContext(card);\n\n/**\n * Card component\n *\n * @See Docs https://dreamy-ui.com/docs/components/card\n */\nexport const Root = withProvider(dreamy.div, \"root\");\nexport const Header = withContext(dreamy.div, \"header\");\nexport const Body = withContext(dreamy.div, \"body\");\nexport const Footer = withContext(dreamy.div, \"footer\");\nexport const Title = withContext(dreamy.h3, \"title\");\nexport const Description = withContext(dreamy.p, \"description\");\n\n\n"
   },
   "component": "Card",
   "hasRecipe": true,

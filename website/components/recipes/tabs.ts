@@ -28,18 +28,13 @@ export const tabs = defineSlotRecipe({
         tab: {
             zIndex: 0,
             minWidth: 20,
-            paddingInline: 4,
-            paddingTop: 1,
-            paddingBottom: 1,
             borderRadius: "none",
             WebkitTapHighlightColor: "transparent",
             "&[data-unselected=true]": {
                 opacity: 1
             }
         },
-        tabPanels: {
-            padding: 4
-        },
+        tabPanels: {},
         tabPanel: {},
         tabIndicator: {
             position: "absolute",
@@ -118,6 +113,38 @@ export const tabs = defineSlotRecipe({
                 }
             }
         },
+        size: {
+            sm: {
+                tab: {
+                    paddingInline: 3,
+                    paddingBlock: 0.5,
+                    fontSize: "sm"
+                },
+                tabPanel: {
+                    paddingTop: 2
+                }
+            },
+            md: {
+                tab: {
+                    paddingInline: 4,
+                    paddingBlock: 1,
+                    fontSize: "md"
+                },
+                tabPanel: {
+                    paddingTop: 3
+                }
+            },
+            lg: {
+                tab: {
+                    paddingInline: 5,
+                    paddingBlock: 1.5,
+                    fontSize: "lg"
+                },
+                tabPanel: {
+                    paddingTop: 4
+                }
+            }
+        },
         orientation: {
             vertical: {
                 root: {
@@ -141,7 +168,8 @@ export const tabs = defineSlotRecipe({
     },
     defaultVariants: {
         variant: "filled",
-        orientation: "horizontal"
+        orientation: "horizontal",
+        size: "md"
     },
     compoundVariants: [
         {

@@ -6,7 +6,6 @@ export async function removeFactoryFromStyleContext(jsxFolder: string) {
         .readdir(jsxFolder)
         .then((files) => files.filter((file) => !file.endsWith("d.ts")));
     const styleContextFile = files.find((file) => file.startsWith("create-style-context"));
-    console.log("styleContextFile", styleContextFile);
 
     if (!styleContextFile) {
         throw new Error(`create-style-context.js file not found in ${jsxFolder}`);
