@@ -83,7 +83,7 @@ export const lru: LruCache = {
         const start = performance.now();
         const redisValue = await redisInstance?.get(key);
         const end = performance.now();
-        Logger.debug(`Redis get ${key} took ${end - start}ms`);
+        // Logger.debug(`Redis get ${key} took ${end - start}ms`);
         if (!redisValue) {
             return null;
         }

@@ -36,7 +36,7 @@ Fieldset is a component that groups related form controls under a common name, m
                 <Input name="email" type="email" placeholder="Enter your email" />
             </Field.Root>
 
-            <Field.Root>
+            <Field.Root name="country">
                 <Field.Label><>Country</></Field.Label>
                 <Select.Root>
                     <Select.Trigger placeholder="Select a country" />
@@ -44,6 +44,7 @@ Fieldset is a component that groups related form controls under a common name, m
                         <Select.Item value="uk"><>United Kingdom</></Select.Item>
                         <Select.Item value="ca"><>Canada</></Select.Item>
                         <Select.Item value="us"><>United States</></Select.Item>
+                        <Select.Item value="pl"><>Poland</></Select.Item>
                     </Select.Content>
                 </Select.Root>
             </Field.Root>

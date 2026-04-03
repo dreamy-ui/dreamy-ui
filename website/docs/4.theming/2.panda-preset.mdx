@@ -55,34 +55,7 @@ interface PresetOptions {
 }
 ```
 
-Here's a preset configuration in `panda.config.ts` of Dreamy UI Docs:
-
-```ts {2, 7-22}
-import createDreamyPreset, { dreamyPlugin } from "@dreamy-ui/panda-preset";
-import { defineConfig } from "@pandacss/dev";
-
-export default defineConfig({
-    ...
-    presets: [
-        createDreamyPreset({
-            backgrounds: {
-                light: "#FFF"
-                dark: "#080808",
-            },
-            fonts: {
-                body: "Geist",
-                heading: "Manrope"
-            },
-            primaryColor: "#6056aa",
-            secondaryColor: "#d193bb",
-            rounded: "md"
-        })
-    ],
-    plugins: [dreamyPlugin()]
-});
-```
-
-In other words, that's how default preset args look like:
+Here's how default preset args look like:
 
 ```ts {2, 7-29}
 import createDreamyPreset, { dreamyPlugin } from "@dreamy-ui/panda-preset";
@@ -115,3 +88,62 @@ export default defineConfig({
     plugins: [dreamyPlugin()]
 });
 ```
+
+## Color Generation
+
+By default, Dreamy UI generates a foreground and border color based on your background colors to provide best looking visuals. You can modify the working of the generator, or just provide your own colors.
+
+Dreamy UI takes your background chroma for light and dark modes and generates tokens with just a little of their chroma for natural look.
+
+To modify the generator, use `colorTuning` option in dreamy preset:
+
+```ts
+export default defineConfig({
+    ...
+    presets: [
+        createDreamyPreset({
+            colorTuning: {
+                fgChromaScale: 1.1, // 10% more chroma for foreground colors
+                fgLightnessOffset: {
+                    max: 0,
+                    normal: 0,
+                    medium: -10, // .1 less lightness for both color modes
+                    disabled: -20 // .2 less lightness for both color modes
+                }
+            },
+        })
+    ]
+});
+```
+
+If you want to use your own colors, you can just simply replace tokens as you would do with any other.
+
+```ts
+export default defineConfig({
+    ...,
+    theme: {
+        extend: {
+            recipes,
+            semanticTokens: {
+                colors: {
+                    fg: {
+                        DEFAULT: {
+                            value: {
+                                _light: "#000",
+                                _dark: "#fff"
+                            }
+                        },
+                        medium: {
+                            value: {
+                                _light: "#000",
+                                _dark: "#fff"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+});
+```
+
