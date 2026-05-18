@@ -4,7 +4,15 @@ import { createContext, cx, dataAttr, useUpdateEffect } from "@dreamy-ui/react";
 import { useControllableState } from "@dreamy-ui/react";
 import dayjs, { type Dayjs } from "dayjs";
 import * as m from "motion/react-m";
-import { forwardRef, useCallback, useEffect, useMemo, useState } from "react";
+import {
+    type ComponentType,
+    forwardRef,
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState
+} from "react";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import { LuCalendar } from "react-icons/lu";
 import { createStyleContext, dreamy } from "styled-system/jsx";
@@ -100,6 +108,8 @@ interface DatePickerContextValue {
     setYearPageStart: React.Dispatch<React.SetStateAction<number>>;
     onApply?: () => void;
     onCancel?: () => void;
+    openPicker: () => void;
+    isOpen: boolean;
 }
 
 const [DatePickerProvider, useDatePickerContext] = createContext<DatePickerContextValue>({
@@ -173,9 +183,13 @@ export interface DatePickerRootProps
      * @default 1
      */
     weekStartsOn?: WeekStartsOn;
+    /**
+     * Props to pass to the popover
+     */
+    popoverProps?: Popover.PopoverProps;
 }
 
-export const Root = withProvider(
+export const Root: ComponentType<DatePickerRootProps & DatePickerVariantProps> = withProvider(
     forwardRef<HTMLDivElement, DatePickerRootProps>(function DatePickerRoot(props, ref) {
         const {
             value: valueProp,
@@ -189,6 +203,7 @@ export const Root = withProvider(
             maxDate,
             weekStartsOn = 1,
             children,
+            popoverProps,
             ...rest
         } = props;
         const calendarSize = props.size;
@@ -273,7 +288,9 @@ export const Root = withProvider(
                     yearPageStart,
                     setYearPageStart,
                     onApply: handleApply,
-                    onCancel: handleCancel
+                    onCancel: handleCancel,
+                    openPicker: handleOpen,
+                    isOpen
                 };
             },
             [
@@ -290,7 +307,9 @@ export const Root = withProvider(
                 hasFooter,
                 yearPageStart,
                 handleApply,
-                handleCancel
+                handleCancel,
+                handleOpen,
+                isOpen
             ]
         );
 
@@ -300,6 +319,8 @@ export const Root = withProvider(
                     isOpen={isOpen}
                     onClose={handleClose}
                     onOpen={handleOpen}
+                    usePortal={false}
+                    {...popoverProps}
                 >
                     <Box
                         ref={ref}
@@ -322,6 +343,34 @@ export const Trigger = withContext(
         const context = useDatePickerContext();
         const size = getInheritedButtonSize(context.size);
 
+        const isPointerDownRef = useRef(false);
+
+        const handlePointerDown = useCallback(
+            function handleTriggerPointerDown(event: React.PointerEvent<HTMLButtonElement>) {
+                isPointerDownRef.current = true;
+                // Reset after focus events have had time to fire
+                setTimeout(() => {
+                    isPointerDownRef.current = false;
+                }, 100);
+                props.onPointerDown?.(event);
+            },
+            [props]
+        );
+
+        const handleFocus = useCallback(
+            function handleTriggerFocus(event: React.FocusEvent<HTMLButtonElement>) {
+                if (
+                    !context.isOpen &&
+                    !isPointerDownRef.current &&
+                    event.target.matches(":focus-visible")
+                ) {
+                    context.openPicker();
+                }
+                props.onFocus?.(event);
+            },
+            [context, props]
+        );
+
         return (
             <Popover.Trigger>
                 <Button
@@ -329,6 +378,8 @@ export const Trigger = withContext(
                     size={size}
                     variant="outline"
                     {...props}
+                    onFocus={handleFocus}
+                    onPointerDown={handlePointerDown}
                 />
             </Popover.Trigger>
         );
@@ -350,6 +401,33 @@ export const Input = withContext(
 
         const size = getInheritedButtonSize(context.size);
 
+        const isPointerDownRef = useRef(false);
+
+        const handlePointerDown = useCallback(
+            function handleInputPointerDown(event: React.PointerEvent<HTMLInputElement>) {
+                isPointerDownRef.current = true;
+                setTimeout(() => {
+                    isPointerDownRef.current = false;
+                }, 100);
+                props.onPointerDown?.(event);
+            },
+            [props]
+        );
+
+        const handleFocus = useCallback(
+            function handleInputFocus(event: React.FocusEvent<HTMLInputElement>) {
+                if (
+                    !context.isOpen &&
+                    !isPointerDownRef.current &&
+                    event.target.matches(":focus-visible")
+                ) {
+                    context.openPicker();
+                }
+                props.onFocus?.(event);
+            },
+            [context, props]
+        );
+
         return (
             <Popover.Trigger>
                 <InputGroup
@@ -357,6 +435,8 @@ export const Input = withContext(
                     size={size}
                 >
                     <InputComponent
+                        onFocus={handleFocus}
+                        onPointerDown={handlePointerDown}
                         placeholder={context.placeholder}
                         readOnly
                         value={formattedDate}
@@ -1073,6 +1153,7 @@ export const CalendarCellButton = withContext(
                     {props.isSelected && (
                         <m.div
                             data-part="indicator"
+                            initial={false}
                             layout={"position"}
                             layoutId={`date-picker-cell-button-indicator-${viewMonthKey}`}
                         />

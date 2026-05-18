@@ -68,16 +68,16 @@ export function createColorTokens() {
     const fgLight = genForegroundTokens(lightBackground, fgChromaScaleLight, fgOffsets("light"));
     const fgDark = genForegroundTokens(darkBackground, fgChromaScaleDark, fgOffsets("dark"));
 
-    const borderLight = genBorderTokens(
-        lightBackground,
-        borderChromaScaleLight,
-        borderOffsets("light")
-    );
-    const borderDark = genBorderTokens(
-        darkBackground,
-        borderChromaScaleDark,
-        borderOffsets("dark")
-    );
+    // const borderLight = genBorderTokens(
+    //     lightBackground,
+    //     borderChromaScaleLight,
+    //     borderOffsets("light")
+    // );
+    // const borderDark = genBorderTokens(
+    //     darkBackground,
+    //     borderChromaScaleDark,
+    //     borderOffsets("dark")
+    // );
 
     return defineSemanticTokens.colors({
         primary: {
@@ -254,20 +254,20 @@ export function createColorTokens() {
         border: {
             DEFAULT: {
                 value: {
-                    _light: borderLight.default,
-                    _dark: borderDark.default
+                    _light: '{colors.alpha.200}',
+                    _dark: '{colors.alpha.200}'
                 }
             },
             muted: {
                 value: {
-                    _light: borderLight.muted,
-                    _dark: borderDark.muted
+                    _light: '{colors.alpha.50}',
+                    _dark: '{colors.alpha.50}'
                 }
             },
             hover: {
                 value: {
-                    _light: borderLight.hover,
-                    _dark: borderDark.hover
+                    _light: '{colors.alpha.300}',
+                    _dark: '{colors.alpha.300}'
                 }
             }
         },

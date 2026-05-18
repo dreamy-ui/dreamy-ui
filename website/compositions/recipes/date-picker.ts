@@ -42,7 +42,8 @@ export const datePicker = defineSlotRecipe({
         "CalendarCell",
         "CalendarCellButton",
         "Footer",
-        "FooterButton"
+        "FooterButton",
+        "AIO"
     ]),
     base: {
         root: {

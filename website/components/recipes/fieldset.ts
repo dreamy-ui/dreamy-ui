@@ -24,7 +24,7 @@ export const fieldset = defineSlotRecipe({
             display: "flex",
             flexDirection: "column",
             width: "full",
-            _notFirst: {
+            "&:not(:first-child)": {
                 marginTop: 4
             }
         },
@@ -32,7 +32,7 @@ export const fieldset = defineSlotRecipe({
             display: "flex",
             flexDirection: "column",
             width: "full",
-            _notFirst: {
+            "&:not(:first-child)": {
                 marginTop: 4
             }
         },
@@ -40,7 +40,7 @@ export const fieldset = defineSlotRecipe({
             display: "flex",
             flexDirection: "column",
             width: "full",
-            _notFirst: {
+            "&:not(:first-child)": {
                 marginTop: 4
             }
         },
@@ -68,19 +68,20 @@ export const fieldset = defineSlotRecipe({
         size: {
             sm: {
                 header: {
-                    _notFirst: {
+                    gap: 0.5,
+                    "&:not(:first-child)": {
                         marginTop: 2
                     }
                 },
                 content: {
                     gap: 3,
-                    _notFirst: {
+                    "&:not(:first-child)": {
                         marginTop: 2
                     }
                 },
                 footer: {
                     gap: 1.5,
-                    _notFirst: {
+                    "&:not(:first-child)": {
                         marginTop: 2
                     }
                 },
@@ -90,19 +91,20 @@ export const fieldset = defineSlotRecipe({
             },
             md: {
                 header: {
-                    _notFirst: {
+                    gap: 1,
+                    "&:not(:first-child)": {
                         marginTop: 4
                     }
                 },
                 content: {
                     gap: 4,
-                    _notFirst: {
+                    "&:not(:first-child)": {
                         marginTop: 4
                     }
                 },
                 footer: {
                     gap: 2,
-                    _notFirst: {
+                    "&:not(:first-child)": {
                         marginTop: 4
                     }
                 },
@@ -112,19 +114,20 @@ export const fieldset = defineSlotRecipe({
             },
             lg: {
                 header: {
-                    _notFirst: {
+                    gap: 1.5,
+                    "&:not(:first-child)": {
                         marginTop: 6
                     }
                 },
                 content: {
                     gap: 5,
-                    _notFirst: {
+                    "&:not(:first-child)": {
                         marginTop: 6
                     }
                 },
                 footer: {
                     gap: 4,
-                    _notFirst: {
+                    "&:not(:first-child)": {
                         marginTop: 6
                     }
                 },
