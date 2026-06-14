@@ -1,4 +1,4 @@
-import { definePlugin } from "@pandacss/dev";
+import { type Config, definePlugin } from "@pandacss/dev";
 import chalk from "chalk";
 import { updateFactory } from "./factory";
 import { removeJsxElements } from "./remove-jsx-elements";
@@ -44,11 +44,16 @@ export function dreamyPlugin(options?: DreamyPluginOptions) {
         cwd = process.cwd()
     } = options ?? {};
 
+    let logLevel: Config["logLevel"] = "info";
+
     return definePlugin({
         name: "dreamy-plugin",
         hooks: {
+            "config:resolved": ({ config }) => {
+                logLevel = config.logLevel;
+            },
             "codegen:done": async () => {
-                const isSilent = process.argv.includes("--silent");
+                const isSilent = logLevel === "silent";
 
                 const start = performance.now();
 

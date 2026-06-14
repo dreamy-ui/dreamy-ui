@@ -1,6 +1,7 @@
 {
 	"include": ["./src/**/*.ts"],
 	"compilerOptions": {
+		"types": ["node"],
 		"lib": ["DOM", "DOM.Iterable", "ESNext"],
 		"outDir": "dist",
 		"isolatedModules": true,
@@ -15,7 +16,6 @@
 		"skipLibCheck": true,
 		"forceConsistentCasingInFileNames": true,
 		"rootDir": "./",
-		"baseUrl": ".",
 		"paths": {
 			"@/*": ["./src/*"]
 		}
