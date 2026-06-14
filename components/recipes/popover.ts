@@ -8,7 +8,7 @@ export const popover = defineSlotRecipe({
     jsx: [
         ...mapJsx("Popover", ["Root", "Content", "Body", "Header", "Footer", "CloseButton"]),
         ...mapJsx("Menu", ["Root", "Trigger", "Content", "Item"]),
-        ...mapJsx("Select", ["Root", "Trigger", "Content", "VirtualContent", "Item"]),
+        ...mapJsx("Select", ["Root", "Trigger", "Content", "VirtualContent"]),
         ...mapJsx("DatePicker", [
             "Root",
             "Trigger",

@@ -1,6 +1,6 @@
 import { useCallbackRef } from "@/hooks";
 import { mergeRefs } from "@/hooks/use-merge-refs";
-import { useReducedMotion } from "@/provider";
+import { createContext, useReducedMotion } from "@/provider";
 import { type PropGetter, callAllHandlers, cx } from "@/utils";
 import { dataAttr } from "@/utils/attr";
 import { objectToDeps } from "@/utils/object";
@@ -308,3 +308,8 @@ export function useRadio(props: UseRadioProps = {}) {
 }
 
 export type UseRadioReturn = ReturnType<typeof useRadio>;
+
+export const [RadioCardProvider, useRadioCardContext] = createContext<UseRadioReturn>({
+    name: "RadioCardContext",
+    strict: false
+});

@@ -1,0 +1,34 @@
+{
+  "name": "@dreamy-ui/registry",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsx scripts/components.ts",
+    "watch": "tsx scripts/components.watch.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@dreamy-ui/panda-preset": "workspace:*",
+    "@dreamy-ui/react": "workspace:*",
+    "@tanstack/react-virtual": "^3.13.18",
+    "dayjs": "^1.11.19",
+    "motion": "^12.23.22",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "react-icons": "^5.5.0",
+    "react-textarea-autosize": "^8.5.9"
+  },
+  "devDependencies": {
+    "@pandacss/dev": "^1.7.1",
+    "@types/fs-extra": "11.0.4",
+    "@types/node": "^22.10.5",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "chokidar": "^4.0.3",
+    "consola": "^3.4.2",
+    "fs-extra": "11.2.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.9.2"
+  }
+}

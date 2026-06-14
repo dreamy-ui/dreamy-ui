@@ -869,18 +869,26 @@ export default function playground() {
                 <Category name="Basic">
                     <RadioGroup defaultValue="card1">
                         <Group>
-                            <RadioCard
-                                description="Description for option 1"
-                                title="Option 1"
+                            <RadioCard.Root
                                 value="card1"
                                 w="xs"
-                            />
-                            <RadioCard
-                                description="Description for option 2"
-                                title="Option 2"
+                            >
+                                <RadioCard.Header>
+                                    <RadioCard.Title>Option 1</RadioCard.Title>
+                                    <RadioCard.Radio />
+                                </RadioCard.Header>
+                                <RadioCard.Description>Description for option 1</RadioCard.Description>
+                            </RadioCard.Root>
+                            <RadioCard.Root
                                 value="card2"
                                 w="xs"
-                            />
+                            >
+                                <RadioCard.Header>
+                                    <RadioCard.Title>Option 2</RadioCard.Title>
+                                    <RadioCard.Radio />
+                                </RadioCard.Header>
+                                <RadioCard.Description>Description for option 2</RadioCard.Description>
+                            </RadioCard.Root>
                         </Group>
                     </RadioGroup>
                 </Category>
@@ -912,13 +920,14 @@ export default function playground() {
                     <Select.Root
                         size="sm"
                         w="xs"
+                        items={[
+                            { value: "option1", label: "Option 1" },
+                            { value: "option2", label: "Option 2" },
+                            { value: "option3", label: "Option 3" },
+                        ]}
                     >
                         <Select.Trigger placeholder="Select an option" />
-                        <Select.Content>
-                            <Select.Item value="option1">Option 1</Select.Item>
-                            <Select.Item value="option2">Option 2</Select.Item>
-                            <Select.Item value="option3">Option 3</Select.Item>
-                        </Select.Content>
+                        <Select.Content />
                     </Select.Root>
                 </Category>
             </Component>

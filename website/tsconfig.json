@@ -2,7 +2,6 @@
 	"include": [
 		"app/**/*",
 		"components/**/*",
-		"compositions/**/*",
 		"app/**/.server/**/*",
 		"app/**/.client/**/*",
 		"styled-system/*",
@@ -27,9 +26,10 @@
 		"forceConsistentCasingInFileNames": true,
 		"paths": {
 			"@/ui": ["./components/ui/index"],
+			"styled-system/*": ["./styled-system/*"],
 			"~/*": ["./app/*"]
 		},
-		"baseUrl": ".",
+		// "baseUrl": ".",
 		// Vite takes care of building everything, not tsc.
 		"noEmit": true
 	}

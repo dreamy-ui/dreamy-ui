@@ -2,41 +2,14 @@ import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { writeFile } from "node:fs/promises";
 import { basename, extname, join } from "node:path";
 import { consola } from "consola";
-import { findUpSync } from "find-up";
 import { ensureDirSync } from "fs-extra";
-
-function getBaseDirectory() {
-    const dir = findUpSync("compositions", { type: "directory" });
-    if (!dir) throw new ReferenceError("Could not find compositions directory");
-    return dir;
-}
-
-function getComponentsDirectory() {
-    const baseDir = findUpSync("compositions", { type: "directory" });
-    if (!baseDir) throw new ReferenceError("Could not find base directory");
-    const componentsDir = join(baseDir, "ui");
-    return componentsDir;
-}
-
-function getRecipesDirectory() {
-    const baseDir = findUpSync("compositions", { type: "directory" });
-    if (!baseDir) throw new ReferenceError("Could not find base directory");
-    const recipesDir = join(baseDir, "recipes");
-    return recipesDir;
-}
-
-function getPatternsDirectory() {
-    const baseDir = findUpSync("compositions", { type: "directory" });
-    if (!baseDir) throw new ReferenceError("Could not find base directory");
-    const patternsDir = join(baseDir, "patterns");
-    return patternsDir;
-}
-
-function getWwwOutput() {
-    const dir = findUpSync("public", { type: "directory" });
-    if (!dir) throw new ReferenceError("Could not find public directory");
-    return dir;
-}
+import {
+    WEBSITE_DIR,
+    getPatternsDirectory,
+    getPublicDirectory,
+    getRecipesDirectory,
+    getUiDirectory
+} from "./paths";
 
 function getImports(content: string) {
     const imports = new Set<string>();
@@ -88,20 +61,16 @@ function camelToKebabCase(str: string): string {
 function parseRecipeId(content: string): string[] {
     const recipeIds: string[] = [];
 
-    // Look for destructured imports from "styled-system/recipes"
     const importMatch = content.match(
         /import\s+\{([^}]+)\}\s+from\s+["']styled-system\/recipes["']/
     );
     if (importMatch) {
         const imports = importMatch[1];
-        // Split by comma and find the non-type imports
         const importList = imports.split(",").map((item) => item.trim());
         for (const item of importList) {
-            // Skip type imports
             if (item.startsWith("type ")) {
                 continue;
             }
-            // Extract the import name (handle "import as alias" cases)
             const match = item.match(/^(\w+)/);
             if (match) {
                 recipeIds.push(camelToKebabCase(match[1]));
@@ -109,7 +78,6 @@ function parseRecipeId(content: string): string[] {
         }
     }
 
-    // Look for simple imports from "styled-system/recipes"
     const simpleImportMatch = content.match(
         /import\s+(\w+)\s+from\s+["']styled-system\/recipes["']/
     );
@@ -123,20 +91,16 @@ function parseRecipeId(content: string): string[] {
 function parsePatternId(content: string): string[] {
     const patternIds: string[] = [];
 
-    // Look for destructured imports from "styled-system/patterns"
     const importMatch = content.match(
         /import\s+\{([^}]+)\}\s+from\s+["']styled-system\/patterns["']/
     );
     if (importMatch) {
         const imports = importMatch[1];
-        // Split by comma and find the non-type imports
         const importList = imports.split(",").map((item) => item.trim());
         for (const item of importList) {
-            // Skip type imports
             if (item.startsWith("type ")) {
                 continue;
             }
-            // Extract the import name (handle "import as alias" cases)
             const match = item.match(/^(\w+)/);
             if (match) {
                 patternIds.push(camelToKebabCase(match[1]));
@@ -144,7 +108,6 @@ function parsePatternId(content: string): string[] {
         }
     }
 
-    // Look for simple imports from "styled-system/patterns"
     const simpleImportMatch = content.match(
         /import\s+(\w+)\s+from\s+["']styled-system\/patterns["']/
     );
@@ -152,7 +115,6 @@ function parsePatternId(content: string): string[] {
         patternIds.push(camelToKebabCase(simpleImportMatch[1]));
     }
 
-    // Look for imports from specific pattern files like "styled-system/patterns/wrap"
     const specificPatternMatch = content.match(
         /import\s+\{([^}]+)\}\s+from\s+["']styled-system\/patterns\/(\w+)["']/
     );
@@ -211,7 +173,6 @@ function generateRecipes(recipesDir: string, publicDir: string) {
         };
     });
 
-    // Create recipes index
     recipes.push({
         path: join(publicDir, "recipes", "index.json"),
         // @ts-expect-error
@@ -253,7 +214,6 @@ function generatePatterns(patternsDir: string, publicDir: string) {
         };
     });
 
-    // Create patterns index
     patterns.push({
         path: join(publicDir, "patterns", "index.json"),
         // @ts-expect-error
@@ -275,13 +235,12 @@ function checkForRecipesOrPatterns(recipeIds: string[], patternIds: string[]) {
 }
 
 export async function main() {
-    const compositionsDir = getBaseDirectory();
-    const componentsDir = getComponentsDirectory();
+    const componentsDir = getUiDirectory();
     const recipesDir = getRecipesDirectory();
     const patternsDir = getPatternsDirectory();
-    const publicDir = getWwwOutput();
+    const publicDir = getPublicDirectory();
 
-    const pkgJson = readFileSync(join(compositionsDir, "..", "package.json"), "utf-8");
+    const pkgJson = readFileSync(join(WEBSITE_DIR, "package.json"), "utf-8");
 
     const dependencies = Object.keys(JSON.parse(pkgJson).dependencies || {}).filter(
         (dep) => !excludedDependencies.includes(dep)
@@ -304,11 +263,9 @@ export async function main() {
         );
         const componentId = getFileName(file);
 
-        // Parse actual recipe and pattern IDs from imports
         const recipeIds = parseRecipeId(content);
         const patternIds = parsePatternId(content);
 
-        // Check if any recipes or patterns exist
         const { hasRecipe, hasPattern } = checkForRecipesOrPatterns(recipeIds, patternIds);
 
         return {
@@ -348,16 +305,13 @@ export async function main() {
         }))
     });
 
-    // Generate recipes and patterns from their respective directories
     const recipes = generateRecipes(recipesDir, publicDir);
     const patterns = generatePatterns(patternsDir, publicDir);
 
-    // Ensure directories exist
     ensureDirSync(join(publicDir, "components"));
     ensureDirSync(join(publicDir, "recipes"));
     ensureDirSync(join(publicDir, "patterns"));
 
-    // Write all files
     const allFiles = [...components, ...recipes, ...patterns];
     const promises = allFiles.map(({ path, data }) => {
         const content = JSON.stringify(data, null, 2);

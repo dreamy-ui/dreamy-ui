@@ -1,31 +1,20 @@
 import { getColorSchemes } from "@dreamy-ui/panda-preset";
-import { defineParts, defineRecipe } from "@pandacss/dev";
+import { defineSlotRecipe } from "@pandacss/dev";
 
-const parts = defineParts({
-    root: { selector: "&" },
-    header: { selector: "& [data-part='header']" },
-    title: { selector: "& [data-part='title']" },
-    description: { selector: "& [data-part='description']" },
-    radioRoot: {
-        selector: "& [data-part='radio-root']"
-    },
-    wrapper: {
-        selector: '& [data-part="wrapper"]'
-    },
-    control: {
-        selector: '& [data-part="control"]'
-    },
-    label: {
-        selector: '& [data-part="label"]'
-    }
-});
-
-export { parts as radioCardParts };
-
-export const radioCard = defineRecipe({
+export const radioCard = defineSlotRecipe({
     className: "radio-card",
-    jsx: ["RadioCard"],
-    base: parts({
+    description: "Dreamy UI Radio Card component",
+    slots: ["root", "header", "title", "description", "radio", "label"],
+    jsx: [
+        "RadioCard.Root",
+        "RadioCard.RootProvider",
+        "RadioCard.Header",
+        "RadioCard.Title",
+        "RadioCard.Description",
+        "RadioCard.Radio",
+        "RadioCard.Label"
+    ],
+    base: {
         root: {
             position: "relative",
             display: "flex",
@@ -45,6 +34,19 @@ export const radioCard = defineRecipe({
             },
             _hover: {
                 borderColor: "border.hover"
+            },
+            "&:hover [data-part=wrapper]": {
+                bg: "{colors.alpha.50}"
+            },
+            "&[data-checked] [data-part=wrapper]": {
+                borderColor: "var(--radio-bg)"
+            },
+            "&[data-checked] [data-part=control]": {
+                opacity: 1,
+                scale: 1
+            },
+            "&:not(:has([data-slot=description])) [data-slot=header]": {
+                alignItems: "center"
             }
         },
         header: {
@@ -53,11 +55,7 @@ export const radioCard = defineRecipe({
             alignItems: "flex-start",
             w: "full",
             justifyContent: "space-between",
-            gap: 6,
-            // pr: 10,
-            ".group:is([data-center])&": {
-                alignItems: "center"
-            }
+            gap: 6
         },
         title: {
             color: "fg",
@@ -67,58 +65,47 @@ export const radioCard = defineRecipe({
         description: {
             color: "fg.medium"
         },
-        radioRoot: {
+        radio: {
             position: "relative",
-            // top: 3,
-            // right: 3,
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "start",
             cursor: "pointer",
             WebkitTapHighlightColor: "transparent",
             maxWidth: "fit-content",
+            flexShrink: 0,
             _disabled: {
                 cursor: "not-allowed",
                 opacity: 0.6
-            }
-        },
-        wrapper: {
-            position: "relative",
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexShrink: 0,
-            overflow: "hidden",
-            borderWidth: "2px",
-            borderStyle: "solid",
-            borderColor: "{colors.border}",
-            borderRadius: "full",
-            transition: "border-color 0.1s, background-color 0.1s",
-            _focusVisible: {
-                bg: "{colors.border}",
-                boxShadow: "0 0 0 1.5px {colors.primary}"
             },
-            ".group:is(:hover)&": {
-                bg: "{colors.alpha.50}"
+            "& [data-part=wrapper]": {
+                position: "relative",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+                overflow: "hidden",
+                borderWidth: "2px",
+                borderStyle: "solid",
+                borderColor: "{colors.border}",
+                borderRadius: "full",
+                transition: "border-color 0.1s, background-color 0.1s",
+                _focusVisible: {
+                    bg: "{colors.border}",
+                    boxShadow: "0 0 0 1.5px {colors.primary}"
+                }
             },
-            ".group:is([data-checked])&": {
-                borderColor: "var(--radio-bg)"
-            }
-        },
-        control: {
-            zIndex: 10,
-            opacity: 0,
-            scale: 0,
-            transformOrigin: "center",
-            borderRadius: "full",
-            transition: "opacity 0.1s, scale 0.2s",
-            transitionTimingFunction: "ease-in-out",
-            ".group:is([data-checked])&": {
-                opacity: 1,
-                scale: 1
+            "& [data-part=control]": {
+                zIndex: 10,
+                opacity: 0,
+                scale: 0,
+                transformOrigin: "center",
+                borderRadius: "full",
+                transition: "opacity 0.1s, scale 0.2s",
+                transitionTimingFunction: "ease-in-out"
             }
         }
-    }),
+    },
     defaultVariants: {
         size: "md",
         radioVariant: "solid",
@@ -127,7 +114,7 @@ export const radioCard = defineRecipe({
     },
     variants: {
         size: {
-            sm: parts({
+            sm: {
                 root: {
                     padding: "3",
                     gap: "0.5"
@@ -138,16 +125,18 @@ export const radioCard = defineRecipe({
                 description: {
                     textStyle: "xs"
                 },
-                wrapper: {
-                    width: "4",
-                    height: "4"
-                },
-                control: {
-                    width: "1.5",
-                    height: "1.5"
+                radio: {
+                    "& [data-part=wrapper]": {
+                        width: "4",
+                        height: "4"
+                    },
+                    "& [data-part=control]": {
+                        width: "1.5",
+                        height: "1.5"
+                    }
                 }
-            }),
-            md: parts({
+            },
+            md: {
                 root: {
                     padding: "4",
                     gap: "1.5"
@@ -158,16 +147,18 @@ export const radioCard = defineRecipe({
                 description: {
                     textStyle: "sm"
                 },
-                wrapper: {
-                    width: "5",
-                    height: "5"
-                },
-                control: {
-                    width: "2",
-                    height: "2"
+                radio: {
+                    "& [data-part=wrapper]": {
+                        width: "5",
+                        height: "5"
+                    },
+                    "& [data-part=control]": {
+                        width: "2",
+                        height: "2"
+                    }
                 }
-            }),
-            lg: parts({
+            },
+            lg: {
                 root: {
                     padding: "5",
                     gap: "1.5"
@@ -178,18 +169,20 @@ export const radioCard = defineRecipe({
                 description: {
                     textStyle: "md"
                 },
-                wrapper: {
-                    width: "6",
-                    height: "6"
-                },
-                control: {
-                    width: "2.5",
-                    height: "2.5"
+                radio: {
+                    "& [data-part=wrapper]": {
+                        width: "6",
+                        height: "6"
+                    },
+                    "& [data-part=control]": {
+                        width: "2.5",
+                        height: "2.5"
+                    }
                 }
-            })
+            }
         },
         variant: {
-            outline: parts({
+            outline: {
                 root: {
                     borderWidth: "1px",
                     borderColor: "border",
@@ -209,8 +202,8 @@ export const radioCard = defineRecipe({
                         boxShadow: "0 0 0 1.5px {colors.primary}"
                     }
                 }
-            }),
-            subtle: parts({
+            },
+            subtle: {
                 root: {
                     borderWidth: "0px",
                     _checked: {
@@ -220,34 +213,32 @@ export const radioCard = defineRecipe({
                         bg: "var(--radio-bg)/18"
                     }
                 }
-            })
+            }
         },
         radioVariant: {
-            solid: parts({
-                control: {
-                    background: "var(--radio-bg)",
-                    ".group:is([data-checked])&": {
-                        ".group:is(:active, [data-active])&": {
-                            opacity: 1
-                        }
-                    },
-                    ".group:is(:active, [data-active])&": {
-                        scale: 0.5,
-                        opacity: 0.5,
+            solid: {
+                radio: {
+                    "& [data-part=control]": {
                         background: "var(--radio-bg)"
                     }
                 },
-                wrapper: {
-                    ".group:is([data-checked])&": {
-                        ".group:is(:active, [data-active])&": {
-                            borderColor: "var(--radio-bg)"
-                        }
+                root: {
+                    "&[data-checked]:is(:active, [data-active]) [data-part=control]": {
+                        opacity: 1
                     },
-                    ".group:is(:active, [data-active])&": {
+                    "&:is(:active, [data-active]) [data-part=control]": {
+                        scale: 0.5,
+                        opacity: 0.5,
+                        background: "var(--radio-bg)"
+                    },
+                    "&[data-checked]:is(:active, [data-active]) [data-part=wrapper]": {
+                        borderColor: "var(--radio-bg)"
+                    },
+                    "&:is(:active, [data-active]) [data-part=wrapper]": {
                         borderColor: "var(--radio-bg)/50"
                     }
                 }
-            })
+            }
         },
         scheme: getColorSchemes(
             "--radio-bg",

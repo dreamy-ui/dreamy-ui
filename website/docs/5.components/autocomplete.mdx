@@ -328,6 +328,71 @@ export function AsyncAutocomplete() {
 }
 ```
 
+### Async search
+
+Read the input text with `onChangeValue` on `Autocomplete.Input`, then fetch matching items as the user types. Debounce requests so you do not hit the API on every keystroke. Pass `filterFn={() => true}` when the server already returns filtered results.
+
+<Wrapper>
+    <AsyncSearchAutocomplete />
+</Wrapper>
+
+```tsx
+export function AsyncSearchAutocomplete() {
+    const [value, setValue] = useState("");
+    const [items, setItems] = useState<AutocompleteItem[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        if (!value) {
+            setItems([]);
+            setIsLoading(false);
+            return;
+        }
+
+        setIsLoading(true);
+
+        const timeoutId = setTimeout(() => {
+            fetch("/api/fake-select-data")
+                .then((res) => res.json())
+                .then((data: string[]) => {
+                    setItems(
+                        data
+                            .filter((item) => item.toLowerCase().includes(value.toLowerCase()))
+                            .map((item) => ({
+                                value: item,
+                                label: item.charAt(0).toUpperCase() + item.slice(1)
+                            }))
+                    );
+                })
+                .finally(() => setIsLoading(false));
+        }, 300);
+
+        return () => clearTimeout(timeoutId);
+    }, [value]);
+
+    return (
+        <Autocomplete.Root items={items} filterFn={() => true}>
+            <Autocomplete.Input
+                placeholder="Search fruits..."
+                onChangeValue={setValue}
+            />
+            <Autocomplete.Content
+                noResultsContent={
+                    isLoading ? (
+                        <Spinner color="primary" py={4} />
+                    ) : value ? undefined : (
+                        <Text color="fg.medium" px={3} py={2}>
+                            Type to search...
+                        </Text>
+                    )
+                }
+                noResultsText="No fruits found"
+            />
+        </Autocomplete.Root>
+    );
+}
+```
+
 ### Virtualized
 
 For large lists (100+ items), use `Autocomplete.VirtualContent` instead of `Autocomplete.Content`. It uses windowed rendering — only visible items are in the DOM — which significantly improves performance and reduces memory usage.

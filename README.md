@@ -35,15 +35,15 @@ pnpm dev
 
 ### Editing registry components
 
-Registry components are located in `website/compositions`, where all patterns, recipes and ui components are stored.
+Registry source files live in the root `components/` folder (`ui/`, `recipes/`, `patterns/`).
 
-To transform them into addable files (json) and add them into website components folder you can run this:
+To transform them into addable JSON files and sync them into `website/components/` (used by the website), run:
 
 ```bash
 pnpm components:watch
 ```
 
-This will listen to any changes under "website/compositions" folder and the changed files into "website/components" folder, which are used by the website to display the components.
+This watches the root `components/` folder, writes JSON to `website/public/`, and syncs generated files into `website/components/`.
 
 ### Running Storybook
 

@@ -260,6 +260,11 @@ const ControlledActionBar = wrapLazy(
 const AsyncAutocomplete = wrapLazy(
     lazy(() => import("./components/autocompletes").then((m) => ({ default: m.AsyncAutocomplete })))
 );
+const AsyncSearchAutocomplete = wrapLazy(
+    lazy(() =>
+        import("./components/autocompletes").then((m) => ({ default: m.AsyncSearchAutocomplete }))
+    )
+);
 const AutocompleteWithIcon = wrapLazy(
     lazy(() =>
         import("./components/autocompletes").then((m) => ({ default: m.AutocompleteWithIcon }))
@@ -400,6 +405,12 @@ const AsyncSelect = wrapLazy(
 );
 const ControlledSelect = wrapLazy(
     lazy(() => import("./components/selects").then((m) => ({ default: m.ControlledSelect })))
+);
+const ItemsSelect = wrapLazy(
+    lazy(() => import("./components/selects").then((m) => ({ default: m.ItemsSelect })))
+);
+const SelectInModal = wrapLazy(
+    lazy(() => import("./components/selects").then((m) => ({ default: m.SelectInModal })))
 );
 
 const ControlledSlider = wrapLazy(
@@ -544,6 +555,8 @@ const DreamComponents = {
     Select,
     AsyncSelect,
     ControlledSelect,
+    ItemsSelect,
+    SelectInModal,
     Popover,
     Collapsed,
     Scaled,
@@ -602,6 +615,7 @@ const DreamComponents = {
     ControlledAutocomplete,
     AutocompleteWithIcon,
     AsyncAutocomplete,
+    AsyncSearchAutocomplete,
     VirtualAutocomplete,
     HoverCard,
     ControlledHoverCard,

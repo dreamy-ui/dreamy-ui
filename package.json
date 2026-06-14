@@ -18,7 +18,7 @@
     "build:react": "cd packages/react && pnpm run build",
     "build:cli": "cd packages/cli && pnpm run build",
     "build:lib": "pnpm run build:panda-preset && pnpm run build:react && pnpm run build:cli",
-    "typecheck": "concurrently \"cd packages/panda-preset && pnpm run typecheck\" \"cd packages/react && pnpm run typecheck\" \"cd website && pnpm run typecheck\"",
+    "typecheck": "concurrently \"cd packages/panda-preset && pnpm run typecheck\" \"cd packages/react && pnpm run typecheck\" \"cd website && pnpm run typecheck\" \"pnpm --filter @dreamy-ui/registry typecheck\"",
     "dev": "turbo dev",
     "start": "cd website && pnpm run start",
     "build": "turbo build",
@@ -28,8 +28,8 @@
     "story": "cd website && pnpm run story",
     "sync": "git pull && pnpm i && pnpm run build",
     "kill-ports": "kill-port 3000 && kill-port 3001 && kill-port 3002",
-    "components": "cd website && pnpm run components",
-    "components:watch": "cd website && pnpm run components:watch"
+    "components": "pnpm --filter @dreamy-ui/registry build",
+    "components:watch": "pnpm --filter @dreamy-ui/registry watch"
   },
   "keywords": [],
   "author": "imexoodeex",

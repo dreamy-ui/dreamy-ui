@@ -14,14 +14,29 @@ pnpm dreamy add radio-card
 
 ## Usage
 
-Base usage of the Radio card.
+Radio Card is a multipart component. The hidden radio input is rendered automatically inside `RadioCard.Root` — pass all radio props to `Root`.
 
 <Wrapper>
 	<RadioGroup full defaultValue="rr">
 		<Group full wrapped>
-			<RadioCard title="React Router" full value="rr" />
-			<RadioCard title="Next.js" full value="next" />
-			<RadioCard title="Vue.js" full value="vue" />
+			<RadioCard.Root full value="rr">
+				<RadioCard.Header>
+					<RadioCard.Title>React Router</RadioCard.Title>
+					<RadioCard.Radio />
+				</RadioCard.Header>
+			</RadioCard.Root>
+			<RadioCard.Root full value="next">
+				<RadioCard.Header>
+					<RadioCard.Title>Next.js</RadioCard.Title>
+					<RadioCard.Radio />
+				</RadioCard.Header>
+			</RadioCard.Root>
+			<RadioCard.Root full value="vue">
+				<RadioCard.Header>
+					<RadioCard.Title>Vue.js</RadioCard.Title>
+					<RadioCard.Radio />
+				</RadioCard.Header>
+			</RadioCard.Root>
 		</Group>
 	</RadioGroup>
 </Wrapper>
@@ -29,33 +44,68 @@ Base usage of the Radio card.
 ```tsx
 <RadioGroup full defaultValue="rr">
 	<Group full>
-		<RadioCard title="React Router" full value="rr" />
-		<RadioCard title="Next.js" full value="next" />
-		<RadioCard title="Vue.js" full value="vue" />
+		<RadioCard.Root full value="rr">
+			<RadioCard.Header>
+				<RadioCard.Title>React Router</RadioCard.Title>
+				<RadioCard.Radio />
+			</RadioCard.Header>
+		</RadioCard.Root>
+		<RadioCard.Root full value="next">
+			<RadioCard.Header>
+				<RadioCard.Title>Next.js</RadioCard.Title>
+				<RadioCard.Radio />
+			</RadioCard.Header>
+		</RadioCard.Root>
+		<RadioCard.Root full value="vue">
+			<RadioCard.Header>
+				<RadioCard.Title>Vue.js</RadioCard.Title>
+				<RadioCard.Radio />
+			</RadioCard.Header>
+		</RadioCard.Root>
 	</Group>
 </RadioGroup>
 ```
 
 ### With description
 
+Add `RadioCard.Description` below the header for supporting text.
+
 <Wrapper>
 	<RadioGroup full defaultValue="rr">
 		<Group full wrapped>
-			<RadioCard title="React Router" full value="rr" description="Description for React Router" />
-			<RadioCard title="Next.js" full value="next" description="Description for Next.js" />
-			<RadioCard title="Vue.js" full value="vue" description="Description for Vue.js" />
+			<RadioCard.Root full value="rr">
+				<RadioCard.Header>
+					<RadioCard.Title>React Router</RadioCard.Title>
+					<RadioCard.Radio />
+				</RadioCard.Header>
+				<RadioCard.Description>Description for React Router</RadioCard.Description>
+			</RadioCard.Root>
+			<RadioCard.Root full value="next">
+				<RadioCard.Header>
+					<RadioCard.Title>Next.js</RadioCard.Title>
+					<RadioCard.Radio />
+				</RadioCard.Header>
+				<RadioCard.Description>Description for Next.js</RadioCard.Description>
+			</RadioCard.Root>
+			<RadioCard.Root full value="vue">
+				<RadioCard.Header>
+					<RadioCard.Title>Vue.js</RadioCard.Title>
+					<RadioCard.Radio />
+				</RadioCard.Header>
+				<RadioCard.Description>Description for Vue.js</RadioCard.Description>
+			</RadioCard.Root>
 		</Group>
 	</RadioGroup>
 </Wrapper>
 
 ```tsx
-<RadioGroup full defaultValue="rr">
-	<Group full>
-		<RadioCard title="React Router" full value="rr" description="Description for React Router" />
-		<RadioCard title="Next.js" full value="next" description="Description for Next.js" />
-		<RadioCard title="Vue.js" full value="vue" description="Description for Vue.js" />
-	</Group>
-</RadioGroup>
+<RadioCard.Root full value="rr">
+	<RadioCard.Header>
+		<RadioCard.Title>React Router</RadioCard.Title>
+		<RadioCard.Radio />
+	</RadioCard.Header>
+	<RadioCard.Description>Description for React Router</RadioCard.Description>
+</RadioCard.Root>
 ```
 
 ### Radio variant
@@ -65,19 +115,32 @@ Change the Radio variant of the Radio card.
 <Wrapper>
 	<RadioGroup full defaultValue="outline">
 		<Group full>
-			<RadioCard title="Outline" full value="outline" description="Description for Outline" variant={"outline"} />
-			<RadioCard title="Subtle" full value="subtle" description="Description for Subtle" variant={"subtle"} />
+			<RadioCard.Root full value="outline" variant={"outline"}>
+				<RadioCard.Header>
+					<RadioCard.Title>Outline</RadioCard.Title>
+					<RadioCard.Radio />
+				</RadioCard.Header>
+				<RadioCard.Description>Description for Outline</RadioCard.Description>
+			</RadioCard.Root>
+			<RadioCard.Root full value="subtle" variant={"subtle"}>
+				<RadioCard.Header>
+					<RadioCard.Title>Subtle</RadioCard.Title>
+					<RadioCard.Radio />
+				</RadioCard.Header>
+				<RadioCard.Description>Description for Subtle</RadioCard.Description>
+			</RadioCard.Root>
 		</Group>
 	</RadioGroup>
 </Wrapper>
 
 ```tsx
-<RadioGroup full defaultValue="outline">
-	<Group full>
-		<RadioCard title="Outline" full value="outline" description="Description for Outline" variant={"outline"} />
-		<RadioCard title="Subtle" full value="subtle" description="Description for Subtle" variant={"subtle"} />
-	</Group>
-</RadioGroup>
+<RadioCard.Root full value="outline" variant="outline">
+	<RadioCard.Header>
+		<RadioCard.Title>Outline</RadioCard.Title>
+		<RadioCard.Radio />
+	</RadioCard.Header>
+	<RadioCard.Description>Description for Outline</RadioCard.Description>
+</RadioCard.Root>
 ```
 
 ### Scheme
@@ -87,29 +150,67 @@ Change the color scheme of the Radio card.
 <Wrapper>
 	<RadioGroup full defaultValue="primary">
 		<Grid columns={2} full>
-			<RadioCard title="Primary" full value="primary" description="Description for Primary" scheme={"primary"} />
-			<RadioCard title="Secondary" full value="secondary" description="Description for Secondary" scheme={"secondary"} />
-			<RadioCard title="Success" full value="success" description="Description for Success" scheme={"success"} />
-			<RadioCard title="Warning" full value="warning" description="Description for Warning" scheme={"warning"} />
-			<RadioCard title="Error" full value="error" description="Description for Error" scheme={"error"} />
-			<RadioCard title="Info" full value="info" description="Description for Info" scheme={"info"} />
-			<RadioCard title="None" full value="none" description="Description for None" scheme={"none"} />
+			<RadioCard.Root full value="primary" scheme={"primary"}>
+				<RadioCard.Header>
+					<RadioCard.Title>Primary</RadioCard.Title>
+					<RadioCard.Radio />
+				</RadioCard.Header>
+				<RadioCard.Description>Description for Primary</RadioCard.Description>
+			</RadioCard.Root>
+			<RadioCard.Root full value="secondary" scheme={"secondary"}>
+				<RadioCard.Header>
+					<RadioCard.Title>Secondary</RadioCard.Title>
+					<RadioCard.Radio />
+				</RadioCard.Header>
+				<RadioCard.Description>Description for Secondary</RadioCard.Description>
+			</RadioCard.Root>
+			<RadioCard.Root full value="success" scheme={"success"}>
+				<RadioCard.Header>
+					<RadioCard.Title>Success</RadioCard.Title>
+					<RadioCard.Radio />
+				</RadioCard.Header>
+				<RadioCard.Description>Description for Success</RadioCard.Description>
+			</RadioCard.Root>
+			<RadioCard.Root full value="warning" scheme={"warning"}>
+				<RadioCard.Header>
+					<RadioCard.Title>Warning</RadioCard.Title>
+					<RadioCard.Radio />
+				</RadioCard.Header>
+				<RadioCard.Description>Description for Warning</RadioCard.Description>
+			</RadioCard.Root>
+			<RadioCard.Root full value="error" scheme={"error"}>
+				<RadioCard.Header>
+					<RadioCard.Title>Error</RadioCard.Title>
+					<RadioCard.Radio />
+				</RadioCard.Header>
+				<RadioCard.Description>Description for Error</RadioCard.Description>
+			</RadioCard.Root>
+			<RadioCard.Root full value="info" scheme={"info"}>
+				<RadioCard.Header>
+					<RadioCard.Title>Info</RadioCard.Title>
+					<RadioCard.Radio />
+				</RadioCard.Header>
+				<RadioCard.Description>Description for Info</RadioCard.Description>
+			</RadioCard.Root>
+			<RadioCard.Root full value="none" scheme={"none"}>
+				<RadioCard.Header>
+					<RadioCard.Title>None</RadioCard.Title>
+					<RadioCard.Radio />
+				</RadioCard.Header>
+				<RadioCard.Description>Description for None</RadioCard.Description>
+			</RadioCard.Root>
 		</Grid>
 	</RadioGroup>
 </Wrapper>
 
 ```tsx
-<RadioGroup full defaultValue="primary">
-	<Group full orientation="vertical">
-		<RadioCard title="Primary" full value="primary" description="Description for Primary" scheme={"primary"} />
-		<RadioCard title="Secondary" full value="secondary" description="Description for Secondary" scheme={"secondary"} />
-		<RadioCard title="Success" full value="success" description="Description for Success" scheme={"success"} />
-		<RadioCard title="Warning" full value="warning" description="Description for Warning" scheme={"warning"} />
-		<RadioCard title="Error" full value="error" description="Description for Error" scheme={"error"} />
-		<RadioCard title="Info" full value="info" description="Description for Info" scheme={"info"} />
-		<RadioCard title="None" full value="none" description="Description for None" scheme={"none"} />
-	</Group>
-</RadioGroup>
+<RadioCard.Root full value="primary" scheme="primary">
+	<RadioCard.Header>
+		<RadioCard.Title>Primary</RadioCard.Title>
+		<RadioCard.Radio />
+	</RadioCard.Header>
+	<RadioCard.Description>Description for Primary</RadioCard.Description>
+</RadioCard.Root>
 ```
 
 ### Size
@@ -119,21 +220,39 @@ Change the Radio card size.
 <Wrapper>
 	<RadioGroup full defaultValue="sm">
 		<Group full alignItems="start" wrapped>
-			<RadioCard title="Small" full value="sm" description="Description for Small" size={"sm"} />
-			<RadioCard title="Medium" full value="md" description="Description for Medium" size={"md"} />
-			<RadioCard title="Large" full value="lg" description="Description for Large" size={"lg"} />
+			<RadioCard.Root full value="sm" size={"sm"}>
+				<RadioCard.Header>
+					<RadioCard.Title>Small</RadioCard.Title>
+					<RadioCard.Radio />
+				</RadioCard.Header>
+				<RadioCard.Description>Description for Small</RadioCard.Description>
+			</RadioCard.Root>
+			<RadioCard.Root full value="md" size={"md"}>
+				<RadioCard.Header>
+					<RadioCard.Title>Medium</RadioCard.Title>
+					<RadioCard.Radio />
+				</RadioCard.Header>
+				<RadioCard.Description>Description for Medium</RadioCard.Description>
+			</RadioCard.Root>
+			<RadioCard.Root full value="lg" size={"lg"}>
+				<RadioCard.Header>
+					<RadioCard.Title>Large</RadioCard.Title>
+					<RadioCard.Radio />
+				</RadioCard.Header>
+				<RadioCard.Description>Description for Large</RadioCard.Description>
+			</RadioCard.Root>
 		</Group>
 	</RadioGroup>
 </Wrapper>
 
 ```tsx
-<RadioGroup full defaultValue="sm">
-	<Group full wrapped>
-		<RadioCard title="Small" full value="sm" description="Description for Small" size={"sm"} />
-		<RadioCard title="Medium" full value="md" description="Description for Medium" size={"md"} />
-		<RadioCard title="Large" full value="lg" description="Description for Large" size={"lg"} />
-	</Group>
-</RadioGroup>
+<RadioCard.Root full value="sm" size="sm">
+	<RadioCard.Header>
+		<RadioCard.Title>Small</RadioCard.Title>
+		<RadioCard.Radio />
+	</RadioCard.Header>
+	<RadioCard.Description>Description for Small</RadioCard.Description>
+</RadioCard.Root>
 ```
 
 ### Radio Group
@@ -157,21 +276,16 @@ export function ControlledRadioCards() {
                 full
                 wrapped
             >
-                <RadioCard
+                <RadioCard.Root
                     value="rr"
-                    title="React Router"
-                    description="Description for React Router"
-                />
-                <RadioCard
-                    value="next"
-                    title="Next.js"
-                    description="Description for Next.js"
-                />
-                <RadioCard
-                    value="vue"
-                    title="Vue.js"
-                    description="Description for Vue.js"
-                />
+                    full
+                >
+                    <RadioCard.Header>
+                        <RadioCard.Title>React Router</RadioCard.Title>
+                        <RadioCard.Radio />
+                    </RadioCard.Header>
+                    <RadioCard.Description>Description for React Router</RadioCard.Description>
+                </RadioCard.Root>
             </Group>
         </RadioGroup>
     );
@@ -180,168 +294,116 @@ export function ControlledRadioCards() {
 
 ### With icon
 
-You can use custom children in the `title` or `description`, to create a more complex and flexible Radio card.
+Use custom content inside `RadioCard.Title` or `RadioCard.Description` for richer layouts.
 
 <Wrapper>
 	<RadioGroup full defaultValue="rr">
 		<Group full wrapped>
-			<RadioCard 
-				title={(
-					<Flex col gap={2}> 
-						<Icon as={<SiReactrouter />} boxSize={"5"} color="fg.medium" />
-						<Text>React Router</Text>
-					</Flex>
-				)} 
-				description="Description for React Router" 
-				full 
-				value="rr"
-			/>
-			<RadioCard 
-				title={(
-					<Flex col gap={2}> 
-						<Icon as={<RiNextjsLine />} boxSize={"5"} color="fg.medium" />
-						<Text>Next.js</Text>
-					</Flex>
-				)} 
-				description="Description for Next.js" 
-				full 
-				value="next"
-			/>
-			<RadioCard 
-				title={(
-					<Flex col gap={2}> 
-						<Icon as={<FaVuejs />} boxSize={"5"} color="fg.medium" />
-						<Text>Vue.js</Text>
-					</Flex>
-				)} 
-				description="Description for Vue.js"
-				full
-				value="vue"
-			/>
+			<RadioCard.Root full value="rr">
+				<RadioCard.Header>
+					<RadioCard.Title>
+						<Flex col gap={2}> 
+							<Icon as={<SiReactrouter />} boxSize={"5"} color="fg.medium" />
+							<Text>React Router</Text>
+						</Flex>
+					</RadioCard.Title>
+					<RadioCard.Radio />
+				</RadioCard.Header>
+				<RadioCard.Description>Description for React Router</RadioCard.Description>
+			</RadioCard.Root>
+			<RadioCard.Root full value="next">
+				<RadioCard.Header>
+					<RadioCard.Title>
+						<Flex col gap={2}> 
+							<Icon as={<RiNextjsLine />} boxSize={"5"} color="fg.medium" />
+							<Text>Next.js</Text>
+						</Flex>
+					</RadioCard.Title>
+					<RadioCard.Radio />
+				</RadioCard.Header>
+				<RadioCard.Description>Description for Next.js</RadioCard.Description>
+			</RadioCard.Root>
+			<RadioCard.Root full value="vue">
+				<RadioCard.Header>
+					<RadioCard.Title>
+						<Flex col gap={2}> 
+							<Icon as={<FaVuejs />} boxSize={"5"} color="fg.medium" />
+							<Text>Vue.js</Text>
+						</Flex>
+					</RadioCard.Title>
+					<RadioCard.Radio />
+				</RadioCard.Header>
+				<RadioCard.Description>Description for Vue.js</RadioCard.Description>
+			</RadioCard.Root>
 		</Group>
 	</RadioGroup>
 </Wrapper>
 
 ```tsx
-<RadioGroup full defaultValue="rr">
-	<Group full wrapped>
-		<RadioCard 
-			title={(
-				<Flex col gap={2}> 
-					<Icon as={<SiReactrouter />} boxSize={"5"} color="fg.medium" />
-					<Text>React Router</Text>
-				</Flex>
-			)} 
-			description="Description for React Router" 
-			full 
-			value="rr"
-		/>
-		<RadioCard 
-			title={(
-				<Flex col gap={2}> 
-					<Icon as={<RiNextjsLine />} boxSize={"5"} color="fg.medium" />
-					<Text>Next.js</Text>
-				</Flex>
-			)} 
-			description="Description for Next.js" 
-			full 
-			value="next"
-		/>
-		<RadioCard 
-			title={(
-				<Flex col gap={2}> 
-					<Icon as={<FaVuejs />} boxSize={"5"} color="fg.medium" />
-					<Text>Vue.js</Text>
-				</Flex>
-			)} 
-			description="Description for Vue.js"
-			full
-			value="vue"
-		/>
-	</Group>
-</RadioGroup>
+<RadioCard.Root full value="rr">
+	<RadioCard.Header>
+		<RadioCard.Title>
+			<Flex col gap={2}> 
+				<Icon as={<SiReactrouter />} boxSize="5" color="fg.medium" />
+				<Text>React Router</Text>
+			</Flex>
+		</RadioCard.Title>
+		<RadioCard.Radio />
+	</RadioCard.Header>
+	<RadioCard.Description>Description for React Router</RadioCard.Description>
+</RadioCard.Root>
 ```
 
 ### Hide radio indicator
 
-You can hide the radio indicator by using the `hideRadio` prop.
+Omit `RadioCard.Radio` to hide the radio indicator.
 
 <Wrapper>
 	<RadioGroup full defaultValue="paypal">
 		<Group full wrapped>
-			<RadioCard 
-				title={(
-					<Flex full gap={2} row center>
-						<Icon as={<FaPaypal />} boxSize={"5"} color="fg.medium" />
-						<Text>Paypal</Text>
-					</Flex>
-				)} 
-				value="paypal" 
-				full 
-				hideRadio 
-			/>
-			<RadioCard 
-				title={(
-					<Flex full gap={2} row center>
-						<Icon as={<FiCreditCard />} boxSize={"5"} color="fg.medium" />
-						<Text>Credit Card</Text>
-					</Flex>
-				)} 
-				full 
-				value="cc" 
-				hideRadio 
-			/>
-			<RadioCard 
-				title={(
-					<Flex full gap={2} row center>
-						<Icon as={<SiApple />} boxSize={"5"} color="fg.medium" />
-						<Text>Apple</Text>
-					</Flex>
-				)} 
-				full 
-				value="apple" 
-				hideRadio 
-			/>
+			<RadioCard.Root full value="paypal">
+				<RadioCard.Header>
+					<RadioCard.Title>
+						<Flex full gap={2} row center>
+							<Icon as={<FaPaypal />} boxSize={"5"} color="fg.medium" />
+							<Text>Paypal</Text>
+						</Flex>
+					</RadioCard.Title>
+				</RadioCard.Header>
+			</RadioCard.Root>
+			<RadioCard.Root full value="cc">
+				<RadioCard.Header>
+					<RadioCard.Title>
+						<Flex full gap={2} row center>
+							<Icon as={<FiCreditCard />} boxSize={"5"} color="fg.medium" />
+							<Text>Credit Card</Text>
+						</Flex>
+					</RadioCard.Title>
+				</RadioCard.Header>
+			</RadioCard.Root>
+			<RadioCard.Root full value="apple">
+				<RadioCard.Header>
+					<RadioCard.Title>
+						<Flex full gap={2} row center>
+							<Icon as={<SiApple />} boxSize={"5"} color="fg.medium" />
+							<Text>Apple</Text>
+						</Flex>
+					</RadioCard.Title>
+				</RadioCard.Header>
+			</RadioCard.Root>
 		</Group>
 	</RadioGroup>
 </Wrapper>
 
 ```tsx
-<RadioGroup full defaultValue="paypal">
-	<Group full wrapped>
-		<RadioCard 
-			title={(
-				<Flex full gap={2} row center>
-					<Icon as={<FaPaypal />} boxSize={"5"} color="fg.medium" />
-					<Text>Paypal</Text>
-				</Flex>
-			)} 
-			value="paypal" 
-			full 
-			hideRadio 
-		/>
-		<RadioCard 
-			title={(
-				<Flex full gap={2} row center>
-					<Icon as={<FiCreditCard />} boxSize={"5"} color="fg.medium" />
-					<Text>Credit Card</Text>
-				</Flex>
-			)} 
-			full 
-			value="cc" 
-			hideRadio 
-		/>
-		<RadioCard 
-			title={(
-				<Flex full gap={2} row center>
-					<Icon as={<SiApple />} boxSize={"5"} color="fg.medium" />
-					<Text>Apple</Text>
-				</Flex>
-			)} 
-			full 
-			value="apple" 
-			hideRadio 
-		/>
-	</Group>
-</RadioGroup>
+<RadioCard.Root full value="paypal">
+	<RadioCard.Header>
+		<RadioCard.Title>
+			<Flex full gap={2} row center>
+				<Icon as={<FaPaypal />} boxSize="5" color="fg.medium" />
+				<Text>Paypal</Text>
+			</Flex>
+		</RadioCard.Title>
+	</RadioCard.Header>
+</RadioCard.Root>
 ```

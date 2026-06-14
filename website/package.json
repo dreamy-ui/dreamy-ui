@@ -11,8 +11,6 @@
     "dev": "cross-env NODE_ENV=development node ./build/server/index.js",
     "start": "cross-env NODE_ENV=production node --env-file .env ./build/server/index2.js",
     "typecheck": "react-router typegen && tsc",
-    "components": "tsx scripts/components.ts",
-    "components:watch": "tsx scripts/components.watch.ts",
     "compositions:host": "tsx reserve-compositions-host/server.ts",
     "test": "tsx tests/render.test.tsx",
     "story": "storybook dev -p 6006"

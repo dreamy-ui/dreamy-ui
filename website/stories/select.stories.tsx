@@ -1,7 +1,19 @@
-import { HStack, Select, Spinner, Text } from "@/ui";
+import { Box, HStack, Select, Spinner, Text } from "@/ui";
 import type { Meta } from "@storybook/react-vite";
 import { useState } from "react";
 import { LuBanana, LuCherry, LuCitrus } from "react-icons/lu";
+
+const fruits = [
+    { value: "strawberry", label: "Strawberry" },
+    { value: "banana", label: "Banana" },
+    { value: "orange", label: "Orange" }
+];
+
+const fruitsWithIcons = [
+    { value: "cherry", label: "Cherry", icon: <LuCherry /> },
+    { value: "banana", label: "Banana", icon: <LuBanana /> },
+    { value: "orange", label: "Orange", icon: <LuCitrus /> }
+];
 
 export default {
     title: "Select"
@@ -9,13 +21,12 @@ export default {
 
 export function Base() {
     return (
-        <Select.Root width="xs">
+        <Select.Root
+            items={fruits}
+            width="xs"
+        >
             <Select.Trigger placeholder="Select a favorite fruit" />
-            <Select.Content>
-                <Select.Item value="strawberry">Strawberry</Select.Item>
-                <Select.Item value="banana">Banana</Select.Item>
-                <Select.Item value="orange">Orange</Select.Item>
-            </Select.Content>
+            <Select.Content />
         </Select.Root>
     );
 }
@@ -23,50 +34,17 @@ export function Base() {
 export function Size() {
     return (
         <HStack>
-            <Select.Root
-                size="xs"
-                width="xs"
-            >
-                <Select.Trigger placeholder="Select a favorite fruit" />
-                <Select.Content>
-                    <Select.Item value="strawberry">Strawberry</Select.Item>
-                    <Select.Item value="banana">Banana</Select.Item>
-                    <Select.Item value="orange">Orange</Select.Item>
-                </Select.Content>
-            </Select.Root>
-            <Select.Root
-                size="sm"
-                width="xs"
-            >
-                <Select.Trigger placeholder="Select a favorite fruit" />
-                <Select.Content>
-                    <Select.Item value="strawberry">Strawberry</Select.Item>
-                    <Select.Item value="banana">Banana</Select.Item>
-                    <Select.Item value="orange">Orange</Select.Item>
-                </Select.Content>
-            </Select.Root>
-            <Select.Root
-                size="md"
-                width="xs"
-            >
-                <Select.Trigger placeholder="Select a favorite fruit" />
-                <Select.Content>
-                    <Select.Item value="strawberry">Strawberry</Select.Item>
-                    <Select.Item value="banana">Banana</Select.Item>
-                    <Select.Item value="orange">Orange</Select.Item>
-                </Select.Content>
-            </Select.Root>
-            <Select.Root
-                size="lg"
-                width="xs"
-            >
-                <Select.Trigger placeholder="Select a favorite fruit" />
-                <Select.Content>
-                    <Select.Item value="strawberry">Strawberry</Select.Item>
-                    <Select.Item value="banana">Banana</Select.Item>
-                    <Select.Item value="orange">Orange</Select.Item>
-                </Select.Content>
-            </Select.Root>
+            {(["xs", "sm", "md", "lg"] as const).map((size) => (
+                <Select.Root
+                    items={fruits}
+                    key={size}
+                    size={size}
+                    width="xs"
+                >
+                    <Select.Trigger placeholder="Select a favorite fruit" />
+                    <Select.Content />
+                </Select.Root>
+            ))}
         </HStack>
     );
 }
@@ -74,28 +52,17 @@ export function Size() {
 export function Variant() {
     return (
         <HStack>
-            <Select.Root
-                variant="outline"
-                width="xs"
-            >
-                <Select.Trigger placeholder="Select a favorite fruit" />
-                <Select.Content>
-                    <Select.Item value="strawberry">Strawberry</Select.Item>
-                    <Select.Item value="banana">Banana</Select.Item>
-                    <Select.Item value="orange">Orange</Select.Item>
-                </Select.Content>
-            </Select.Root>
-            <Select.Root
-                variant="solid"
-                width="xs"
-            >
-                <Select.Trigger placeholder="Select a favorite fruit" />
-                <Select.Content>
-                    <Select.Item value="strawberry">Strawberry</Select.Item>
-                    <Select.Item value="banana">Banana</Select.Item>
-                    <Select.Item value="orange">Orange</Select.Item>
-                </Select.Content>
-            </Select.Root>
+            {(["outline", "solid"] as const).map((variant) => (
+                <Select.Root
+                    items={fruits}
+                    key={variant}
+                    variant={variant}
+                    width="xs"
+                >
+                    <Select.Trigger placeholder="Select a favorite fruit" />
+                    <Select.Content />
+                </Select.Root>
+            ))}
         </HStack>
     );
 }
@@ -105,60 +72,46 @@ export function Controlled() {
 
     return (
         <Select.Root
+            items={fruits}
             onChangeValue={setValue}
             value={value}
             width="xs"
         >
             <Select.Trigger placeholder="Select a favorite fruit" />
-            <Select.Content>
-                <Select.Item value="strawberry">Strawberry</Select.Item>
-                <Select.Item value="banana">Banana</Select.Item>
-                <Select.Item value="orange">Orange</Select.Item>
-            </Select.Content>
+            <Select.Content />
         </Select.Root>
     );
 }
 
-export function WithOptionIcons() {
+export function WithItems() {
     return (
-        <Select.Root width="xs">
+        <Select.Root
+            items={fruitsWithIcons}
+            renderItem={(item) => (
+                <HStack>
+                    {item.icon}
+                    <Text>{item.label}</Text>
+                </HStack>
+            )}
+            width="xs"
+        >
             <Select.Trigger placeholder="Select a favorite fruit" />
-            <Select.Content>
-                <Select.Item value="cherry">
-                    <HStack>
-                        <LuCherry />
-                        <Text>Cherry</Text>
-                    </HStack>
-                </Select.Item>
-                <Select.Item value="banana">
-                    <HStack>
-                        <LuBanana />
-                        <Text>Banana</Text>
-                    </HStack>
-                </Select.Item>
-                <Select.Item value="orange">
-                    <HStack>
-                        <LuCitrus />
-                        <Text>Orange</Text>
-                    </HStack>
-                </Select.Item>
-            </Select.Content>
+            <Select.Content />
         </Select.Root>
     );
 }
 
 export function WithOneIcon() {
     return (
-        <Select.Root width="xs">
+        <Select.Root
+            items={fruitsWithIcons}
+            width="xs"
+        >
             <Select.Trigger
                 icon={<LuCherry />}
                 placeholder="Select a favorite fruit"
             />
-            <Select.Content>
-                <Select.Item value="cherry">Cherry</Select.Item>
-                <Select.Item value="banana">Banana</Select.Item>
-                <Select.Item value="orange">Orange</Select.Item>
-            </Select.Content>
+            <Select.Content />
         </Select.Root>
     );
 }
@@ -167,14 +120,11 @@ export function Clearable() {
     return (
         <Select.Root
             isClearable
+            items={fruitsWithIcons}
             width="xs"
         >
             <Select.Trigger placeholder="Select a favorite fruit" />
-            <Select.Content>
-                <Select.Item value="cherry">Cherry</Select.Item>
-                <Select.Item value="banana">Banana</Select.Item>
-                <Select.Item value="orange">Orange</Select.Item>
-            </Select.Content>
+            <Select.Content />
         </Select.Root>
     );
 }
@@ -183,71 +133,82 @@ export function Multiple() {
     return (
         <Select.Root
             isMultiple
+            items={fruits}
             width="xs"
         >
             <Select.Trigger placeholder="Select a favorite fruit" />
-            <Select.Content>
-                <Select.Item value="strawberry">Strawberry</Select.Item>
-                <Select.Item value="banana">Banana</Select.Item>
-                <Select.Item value="orange">Orange</Select.Item>
-            </Select.Content>
+            <Select.Content />
+        </Select.Root>
+    );
+}
+
+export function CustomMultipleSelectedText() {
+    return (
+        <Select.Root
+            isMultiple
+            items={fruits}
+            width="xs"
+        >
+            <Select.Trigger
+                multipleSelectedText={(selected) => `${selected.length} selected`}
+                placeholder="Select a favorite fruit"
+            />
+            <Select.Content />
         </Select.Root>
     );
 }
 
 export function AsyncLoading() {
-    const [isLoading, setIsLoading] = useState(true);
-    const [fruits, setFruits] = useState<string[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [items, setItems] = useState<{ value: string; label: string }[]>([]);
 
     function fetchFruits() {
-        if (fruits.length > 0) return;
+        if (items.length > 0) return;
 
+        setIsLoading(true);
         setTimeout(() => {
-            setFruits(["Cherry", "Banana", "Orange"]);
+            setItems([
+                { value: "Cherry", label: "Cherry" },
+                { value: "Banana", label: "Banana" },
+                { value: "Orange", label: "Orange" }
+            ]);
             setIsLoading(false);
         }, 1000);
     }
 
     return (
-        <Select.Root
-            onOpen={fetchFruits}
-            width="xs"
-        >
-            <Select.Trigger placeholder="Select a favorite fruit" />
-            <Select.Content>
-                {isLoading && (
-                    <Spinner
-                        color="primary"
-                        py={4}
-                    />
-                )}
-                {fruits.map((fruit) => (
-                    <Select.Item
-                        key={fruit}
-                        value={fruit}
-                    >
-                        {fruit}
-                    </Select.Item>
-                ))}
-            </Select.Content>
-        </Select.Root>
+        <Box>
+            <Select.Root
+                items={items}
+                onOpen={fetchFruits}
+                width="xs"
+            >
+                <Select.Trigger placeholder="Select a favorite fruit" />
+                <Select.Content />
+            </Select.Root>
+            {isLoading && (
+                <Spinner
+                    color="primary"
+                    py={4}
+                />
+            )}
+        </Box>
     );
 }
 
 export function Virtualized() {
+    const manyItems = Array.from({ length: 250 }, (_, index) => ({
+        value: index.toString(),
+        label: `Item ${index + 1}`
+    }));
+
     return (
-        <Select.Root width="xs">
+        <Select.Root
+            items={manyItems}
+            width="xs"
+        >
             <Select.Trigger placeholder="Select a number" />
-            <Select.VirtualContent>
-                {Array.from({ length: 250 }).map((_, index) => (
-                    <Select.Item
-                        key={index}
-                        value={index.toString()}
-                    >
-                        Item {index + 1}
-                    </Select.Item>
-                ))}
-            </Select.VirtualContent>
+            <Select.VirtualContent />
         </Select.Root>
     );
 }
@@ -256,14 +217,11 @@ export function CloseOnSelect() {
     return (
         <Select.Root
             closeOnSelect={false}
+            items={fruits}
             width="xs"
         >
             <Select.Trigger placeholder="Select a favorite fruit" />
-            <Select.Content>
-                <Select.Item value="strawberry">Strawberry</Select.Item>
-                <Select.Item value="banana">Banana</Select.Item>
-                <Select.Item value="orange">Orange</Select.Item>
-            </Select.Content>
+            <Select.Content />
         </Select.Root>
     );
 }

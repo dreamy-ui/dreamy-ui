@@ -630,8 +630,6 @@
     "component": "RadioCard",
     "npmDependencies": [],
     "fileDependencies": [
-      "./box",
-      "./text",
       "./visually-hidden"
     ],
     "hasRecipe": true,

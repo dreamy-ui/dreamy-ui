@@ -3,7 +3,13 @@ import { defineSlotRecipe } from "@pandacss/dev";
 
 export const select = defineSlotRecipe({
     className: "select",
-    jsx: ["Select.Root", "Select.Input", "Select.Content", "Select.Option"],
+    jsx: [
+        "Select.Root",
+        "Select.Trigger",
+        "Select.Content",
+        "Select.VirtualContent",
+        "Select.Item"
+    ],
     slots: [
         "root",
         "trigger",
@@ -28,9 +34,10 @@ export const select = defineSlotRecipe({
             display: "flex",
             alignItems: "center",
             cursor: "pointer",
-            justifyContent: "start",
+            justifyContent: "flex-start",
             gap: 4,
             width: "full",
+            h: "var(--select-trigger-height)",
             minH: "var(--select-trigger-height)",
             px: "var(--select-trigger-padding-x)",
             borderRadius: "l2",
@@ -49,11 +56,9 @@ export const select = defineSlotRecipe({
             display: "flex",
             alignItems: "center",
             gap: "1",
-            pos: "absolute",
-            right: "0",
-            top: "0",
-            bottom: "0",
-            px: "var(--select-trigger-padding-x)",
+            flexShrink: 0,
+            ml: "auto",
+            pl: "2",
             pointerEvents: "none"
         },
         indicator: {
@@ -114,7 +119,7 @@ export const select = defineSlotRecipe({
             "&[data-focused]": {
                 bg: "alpha.50"
             },
-            ".group[data-selected-strategy='both'] &[data-selected], .group[data-selected-strategy='background'] &[data-selected]":
+            "&:is([data-selected-strategy='both'][data-selected], [data-selected-strategy='background'][data-selected])":
                 {
                     bg: "var(--selected-item-background)",
                     color: "var(--selected-item-color)"
@@ -217,7 +222,7 @@ export const select = defineSlotRecipe({
             },
             sm: {
                 root: {
-                    "--select-trigger-height": "{sizes.9}",
+                    "--select-trigger-height": "{sizes.8}",
                     "--select-trigger-padding-x": "{spacing.2.5}"
                 },
                 content: {
@@ -225,7 +230,7 @@ export const select = defineSlotRecipe({
                 },
                 trigger: {
                     textStyle: "sm",
-                    gap: "1"
+                    gap: "1.5"
                 },
                 indicator: {
                     width: "4",
@@ -262,7 +267,7 @@ export const select = defineSlotRecipe({
                     right: "2"
                 },
                 trigger: {
-                    textStyle: "sm",
+                    textStyle: "md",
                     gap: "2"
                 },
                 indicator: {
@@ -290,9 +295,8 @@ export const select = defineSlotRecipe({
                     px: "3"
                 },
                 trigger: {
-                    textStyle: "md",
-                    py: "3",
-                    gap: "2"
+                    textStyle: "lg",
+                    gap: "3"
                 },
                 itemIndicator: {
                     right: "3"
@@ -326,7 +330,7 @@ export const select = defineSlotRecipe({
                                   : "color-mix(in srgb, white 87%, transparent)"
                 } as Record<any, any>;
             },
-            "root"
+            "content"
         )
     },
     defaultVariants: {

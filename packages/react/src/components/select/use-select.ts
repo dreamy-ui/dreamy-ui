@@ -1,4 +1,3 @@
-import { createDescendantContext } from "@/components/descendant";
 import { useControllable, type useControllableProps, useSafeLayoutEffect } from "@/hooks";
 import { type ReactRef, mergeRefs } from "@/hooks/use-merge-refs";
 import { createContext, useReducedMotion } from "@/provider";
@@ -28,10 +27,20 @@ export const [SelectProvider, useSelectContext] = createContext<SelectContext>({
     providerName: "Select"
 });
 
+export interface SelectOption {
+    value: string;
+    label: string;
+    disabled?: boolean;
+}
+
 export interface UseSelectProps<T extends boolean, P extends Record<string, any>>
     extends UserFeedbackProps,
         useControllableProps {
     children?: ReactNode;
+    /**
+     * Options to display in the select.
+     */
+    items: SelectOption[];
     /**
      * Ref to the DOM node.
      */
@@ -98,6 +107,12 @@ export interface UseSelectProps<T extends boolean, P extends Record<string, any>
      * @default false
      */
     isClearable?: boolean;
+    /**
+     * Z-index applied to the select dropdown content positioner.
+     * Accepts a CSS value such as `var(--z-index-popover)`.
+     * @default "var(--z-index-dropdown)"
+     */
+    contentZIndex?: string;
 }
 
 export function useSelect<T extends boolean, P extends Record<string, any>>(
@@ -112,6 +127,7 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
         onClose: onCloseProp,
         defaultIsOpen: defaultIsOpenProp,
         ref,
+        items,
         isMultiple = false,
         name,
         closeOnSelect = !isMultiple,
@@ -126,10 +142,9 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
         value,
         autoComplete = "off",
         isClearable,
+        contentZIndex = "var(--z-index-dropdown)",
         ...rest
     } = props;
-
-    const descendants = useSelectDescendants();
 
     const { isOpen, onOpen, onClose, onToggle } = useControllable({
         isOpen: isOpenProp,
@@ -138,9 +153,6 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
         onClose: onCloseProp
     });
 
-    /**
-     * Id for the hidden select key mapping.
-     */
     const id = useId();
 
     const domRef = useDOMRef(ref);
@@ -168,7 +180,6 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
 
     const [contentWidth, setContentWidth] = useState(0);
 
-    // apply the same with to the popover as the select
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
         function updateContentWidth() {
@@ -194,31 +205,52 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
     }, [isOpen]);
 
     const handleItemChange = useCallback(
-        (value: string) => {
+        (itemValue: string) => {
             if (domRef.current) {
                 const newValues = isMultiple
-                    ? selectedKeys.includes(value)
-                        ? selectedKeys.filter((v) => v !== value)
-                        : [...selectedKeys, value]
-                    : [value];
+                    ? selectedKeys.includes(itemValue)
+                        ? selectedKeys.filter((v) => v !== itemValue)
+                        : [...selectedKeys, itemValue]
+                    : [itemValue];
 
                 if (isMultiple) {
                     flushSync(() => {
                         setSelectedKeys(newValues);
                     });
+                } else {
+                    setSelectedKeys(newValues);
                 }
 
                 if (!isMultiple) {
                     domRef.current.value = newValues[0];
                 }
                 domRef.current?.dispatchEvent(new Event("change", { bubbles: true }));
+
+                onChangeValue?.((isMultiple ? newValues : newValues[0]) as any);
+            } else {
+                const newValues = isMultiple
+                    ? selectedKeys.includes(itemValue)
+                        ? selectedKeys.filter((v) => v !== itemValue)
+                        : [...selectedKeys, itemValue]
+                    : [itemValue];
+
+                setSelectedKeys(newValues);
+                onChangeValue?.((isMultiple ? newValues : newValues[0]) as any);
             }
+
             if (closeOnSelect) {
                 onClose();
             }
         },
-        [closeOnSelect, onClose, domRef.current, isMultiple, selectedKeys]
+        [closeOnSelect, onClose, domRef, isMultiple, selectedKeys, onChangeValue]
     );
+
+    const scrollToFocusedItem = useCallback((index: number) => {
+        if (index === -1 || !popoverRef.current) return;
+
+        const itemEl = popoverRef.current.querySelector(`[data-index="${index}"]`);
+        itemEl?.scrollIntoView({ block: "nearest" });
+    }, []);
 
     const getRootProps: PropGetter = useCallback(
         (props, ref) => {
@@ -241,39 +273,34 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
             const onKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
                 if (!isOpen || !isTriggerFocused) return;
 
-                function scrollToFocusedItem(index: number) {
-                    if (index === -1) return;
-                    const item = descendants.item(index);
-                    if (!item) return;
-                    item.node.scrollIntoView({ block: "nearest" });
-                }
+                const lastIndex = items.length - 1;
 
                 switch (e.key) {
                     case "ArrowUp":
                         e.preventDefault();
                         if (focusedIndex === -1) {
                             setFocusedIndex(0);
+                            scrollToFocusedItem(0);
                         } else {
                             setFocusedIndex((prev) => {
-                                scrollToFocusedItem(prev - 1);
-                                return prev - 1;
+                                const next = Math.max(0, prev - 1);
+                                scrollToFocusedItem(next);
+                                return next;
                             });
                         }
                         break;
                     case "ArrowDown":
                         e.preventDefault();
                         setFocusedIndex((prev) => {
-                            const val = prev + 1 >= descendants.count() ? prev : prev + 1;
-                            scrollToFocusedItem(val);
-                            return val;
+                            const next = prev + 1 > lastIndex ? prev : prev + 1;
+                            scrollToFocusedItem(next);
+                            return next;
                         });
                         break;
                     case "Enter":
                         if (focusedIndex === -1) return;
                         e.preventDefault();
-                        // biome-ignore lint/correctness/noSwitchDeclarations: <explanation>
-                        const value = (descendants.item(focusedIndex) as any).node.value;
-                        handleItemChange(value);
+                        handleItemChange(items[focusedIndex].value);
                         break;
                     case "Escape":
                         if (popoverProps?.closeOnEsc ?? true) {
@@ -305,13 +332,14 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
             isInvalid,
             selectedKeys.length,
             focusedIndex,
-            descendants,
+            items,
             isOpen,
             isDisabled,
             isTriggerFocused,
             popoverProps,
             onClose,
-            handleItemChange
+            handleItemChange,
+            scrollToFocusedItem
         ]
     );
 
@@ -326,24 +354,37 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
                 },
                 rootProps: {
                     style: {
-                        zIndex: "var(--z-index-dropdown)"
+                        zIndex: contentZIndex
                     }
                 }
             } as const;
         },
-        [contentWidth]
+        [contentWidth, contentZIndex]
     );
 
-    const getItemProps: PropGetter = useCallback(
-        (props, ref) => {
+    const getItemProps = useCallback(
+        (
+            props: Record<string, any> = {},
+            ref: React.Ref<HTMLButtonElement> | null = null
+        ) => {
+            const { value, index, disabled, onPointerEnter, onClick, ...rest } = props;
+
             return {
+                ...rest,
                 ref: mergeRefs(ref),
                 "data-slot": "item",
-                ...props,
+                "data-index": index,
+                value,
+                disabled,
                 type: "button",
                 "data-selected-strategy": selectedStrategy,
-                onClick: callAllHandlers(props?.onClick, () => {
-                    const value = props!.value;
+                "data-focused": dataAttr(focusedIndex === index),
+                "data-selected": dataAttr(selectedKeys.includes(value)),
+                onPointerEnter: callAllHandlers(onPointerEnter, () => {
+                    setFocusedIndex(index);
+                }),
+                onClick: callAllHandlers(onClick, () => {
+                    if (disabled) return;
                     handleItemChange(value);
 
                     if (triggerRef.current) {
@@ -354,7 +395,7 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
                 })
             };
         },
-        [handleItemChange, selectedStrategy]
+        [handleItemChange, selectedStrategy, focusedIndex, selectedKeys]
     );
 
     const getHiddenSelectProps = useCallback(
@@ -395,12 +436,14 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
                 e.preventDefault();
                 e.stopPropagation();
                 setSelectedKeys([]);
+                onChangeValue?.((isMultiple ? [] : "") as any);
             })
         };
-    }, []);
+    }, [isMultiple, onChangeValue]);
 
     return {
         name,
+        items,
         triggerRef,
         reduceMotion,
         isInvalid,
@@ -428,54 +471,11 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
         getItemProps,
         getClearButtonProps,
         popoverRef,
-        descendants,
         rest
     };
 }
 
 export type UseSelectReturn = ReturnType<typeof useSelect<false, any>>;
-
-export const [
-    SelectDescendantsProvider,
-    useSelectDescendantsContext,
-    useSelectDescendants,
-    useSelectDescendant
-] = createDescendantContext<HTMLButtonElement>();
-
-export interface UseSelectItemProps {
-    isDisabled?: boolean;
-    children?: ReactNode;
-    disabled?: boolean;
-    value: string;
-    textValue?: ReactNode;
-    onPointerEnter?: (e: React.PointerEvent<HTMLButtonElement>) => void;
-}
-
-/**
- * @internal
- */
-export function useSelectItem(props: UseSelectItemProps, ref: React.Ref<any> = null): any {
-    const { getItemProps, focusedIndex, setFocusedIndex, selectedKeys } = useSelectContext();
-    const { index, register } = useSelectDescendant(
-        {
-            disabled: props?.isDisabled || props?.disabled || false
-        },
-        {
-            textValue: props.children
-        }
-    );
-
-    return getItemProps({
-        ...props,
-        ref: mergeRefs(register, ref),
-        index,
-        "data-focused": dataAttr(focusedIndex === index),
-        "data-selected": dataAttr(selectedKeys.includes(props.value)),
-        onPointerEnter: callAllHandlers(props?.onPointerEnter, () => {
-            setFocusedIndex(index);
-        })
-    });
-}
 
 export interface HiddenSelectProps {
     placeholder: string;
@@ -497,7 +497,7 @@ export function useHiddenSelect(props: HiddenSelectProps) {
         selectedKeys,
         setSelectedKeys,
         defaultValue,
-        descendants,
+        items,
         name,
         isDisabled,
         isRequired,
@@ -526,7 +526,7 @@ export function useHiddenSelect(props: HiddenSelectProps) {
     }, []);
 
     return {
-        descendants,
+        items,
         selectedKeys,
         id,
         containerProps: {

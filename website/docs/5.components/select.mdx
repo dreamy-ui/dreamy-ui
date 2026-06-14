@@ -2,8 +2,8 @@
 title: Select
 description: Select allows to create a dropdown list of options.
 isServerComponent: false
-source: /packages/react/src/components/select/select.tsx
-themeSource: /packages/system/src/recipes/select.ts
+source: /components/ui/select.tsx
+themeSource: /components/recipes/select.ts
 ---
 
 ## Installation
@@ -14,27 +14,61 @@ pnpm dreamy add select
 
 ## Usage
 
-Basic usage of Select.
+Pass options as an `items` array on `Select.Root`. Each item requires `value` and `label`.
 
 <Wrapper>
-	<Select.Root width="xs">
+	<Select.Root
+        width="xs"
+        items={[
+            { value: "strawberry", label: "Strawberry" },
+            { value: "banana", label: "Banana" },
+            { value: "orange", label: "Orange" },
+        ]}
+    >
         <Select.Trigger placeholder="Select a favorite fruit" />
-        <Select.Content>
-            <Select.Item value="strawberry">Strawberry</Select.Item>
-            <Select.Item value="banana">Banana</Select.Item>
-            <Select.Item value="orange">Orange</Select.Item>
-        </Select.Content>
+        <Select.Content />
     </Select.Root>
 </Wrapper>
 
 ```tsx
-<Select.Root>
+const fruits = [
+    { value: "strawberry", label: "Strawberry" },
+    { value: "banana", label: "Banana" },
+    { value: "orange", label: "Orange" },
+];
+
+<Select.Root items={fruits}>
     <Select.Trigger placeholder="Select a favorite fruit" />
-    <Select.Content>
-        <Select.Item value="strawberry">Strawberry</Select.Item>
-        <Select.Item value="banana">Banana</Select.Item>
-        <Select.Item value="orange">Orange</Select.Item>
-    </Select.Content>
+    <Select.Content />
+</Select.Root>
+```
+
+### Custom item rendering
+
+Use the `renderItem` prop on `Select.Root` to customise how each option is displayed. The render function receives the full item type from your `items` array, so extra fields such as `icon` are type-safe.
+
+<Wrapper>
+    <ItemsSelect />
+</Wrapper>
+
+```tsx
+const fruits = [
+    { value: "cherry", label: "Cherry", icon: <LuCherry /> },
+    { value: "banana", label: "Banana", icon: <LuBanana /> },
+    { value: "orange", label: "Orange", icon: <LuCitrus /> },
+];
+
+<Select.Root
+    items={fruits}
+    renderItem={(item) => (
+        <HStack gap={2}>
+            {item.icon}
+            <Text>{item.label}</Text>
+        </HStack>
+    )}
+>
+    <Select.Trigger placeholder="Select a favorite fruit" />
+    <Select.Content />
 </Select.Root>
 ```
 
@@ -43,72 +77,44 @@ Basic usage of Select.
 Select comes with 4 different sizes.
 
 <Wrapper>
-    <Select.Root width="xs" size={"xs"}>
+    <Select.Root width="xs" size={"xs"} items={[
+        { value: "strawberry", label: "Strawberry" },
+        { value: "banana", label: "Banana" },
+        { value: "orange", label: "Orange" },
+    ]}>
         <Select.Trigger placeholder="Select a favorite fruit" />
-        <Select.Content>
-            <Select.Item value="strawberry">Strawberry</Select.Item>
-            <Select.Item value="banana">Banana</Select.Item>
-            <Select.Item value="orange">Orange</Select.Item>
-        </Select.Content>
+        <Select.Content />
     </Select.Root>
-    <Select.Root width="xs" size={"sm"}>
+    <Select.Root width="xs" size={"sm"} items={[
+        { value: "strawberry", label: "Strawberry" },
+        { value: "banana", label: "Banana" },
+        { value: "orange", label: "Orange" },
+    ]}>
         <Select.Trigger placeholder="Select a favorite fruit" />
-        <Select.Content>
-            <Select.Item value="strawberry">Strawberry</Select.Item>
-            <Select.Item value="banana">Banana</Select.Item>
-            <Select.Item value="orange">Orange</Select.Item>
-        </Select.Content>
+        <Select.Content />
     </Select.Root>
-    <Select.Root width="xs" size={"md"}>
+    <Select.Root width="xs" size={"md"} items={[
+        { value: "strawberry", label: "Strawberry" },
+        { value: "banana", label: "Banana" },
+        { value: "orange", label: "Orange" },
+    ]}>
         <Select.Trigger placeholder="Select a favorite fruit" />
-        <Select.Content>
-            <Select.Item value="strawberry">Strawberry</Select.Item>
-            <Select.Item value="banana">Banana</Select.Item>
-            <Select.Item value="orange">Orange</Select.Item>
-        </Select.Content>
+        <Select.Content />
     </Select.Root>
-    <Select.Root width="xs" size={"lg"}>
+    <Select.Root width="xs" size={"lg"} items={[
+        { value: "strawberry", label: "Strawberry" },
+        { value: "banana", label: "Banana" },
+        { value: "orange", label: "Orange" },
+    ]}>
         <Select.Trigger placeholder="Select a favorite fruit" />
-        <Select.Content>
-            <Select.Item value="strawberry">Strawberry</Select.Item>
-            <Select.Item value="banana">Banana</Select.Item>
-            <Select.Item value="orange">Orange</Select.Item>
-        </Select.Content>
+        <Select.Content />
     </Select.Root>
 </Wrapper>
 
 ```tsx
-<Select.Root width="xs" size={"xs"}>
+<Select.Root size="md" items={fruits}>
     <Select.Trigger placeholder="Select a favorite fruit" />
-    <Select.Content>
-        <Select.Item value="strawberry">Strawberry</Select.Item>
-        <Select.Item value="banana">Banana</Select.Item>
-        <Select.Item value="orange">Orange</Select.Item>
-    </Select.Content>
-</Select.Root>
-<Select.Root width="xs" size={"sm"}>
-    <Select.Trigger placeholder="Select a favorite fruit" />
-    <Select.Content>
-        <Select.Item value="strawberry">Strawberry</Select.Item>
-        <Select.Item value="banana">Banana</Select.Item>
-        <Select.Item value="orange">Orange</Select.Item>
-    </Select.Content>
-</Select.Root>
-<Select.Root width="xs" size={"md"}>
-    <Select.Trigger placeholder="Select a favorite fruit" />
-    <Select.Content>
-        <Select.Item value="strawberry">Strawberry</Select.Item>
-        <Select.Item value="banana">Banana</Select.Item>
-        <Select.Item value="orange">Orange</Select.Item>
-    </Select.Content>
-</Select.Root>
-<Select.Root width="xs" size={"lg"}>
-    <Select.Trigger placeholder="Select a favorite fruit" />
-    <Select.Content>
-        <Select.Item value="strawberry">Strawberry</Select.Item>
-        <Select.Item value="banana">Banana</Select.Item>
-        <Select.Item value="orange">Orange</Select.Item>
-    </Select.Content>
+    <Select.Content />
 </Select.Root>
 ```
 
@@ -117,40 +123,28 @@ Select comes with 4 different sizes.
 Select can be used in `outline` or `solid` variant.
 
 <Wrapper>
-    <Select.Root width="xs" variant={"outline"}>
+    <Select.Root width="xs" variant={"outline"} items={[
+        { value: "strawberry", label: "Strawberry" },
+        { value: "banana", label: "Banana" },
+        { value: "orange", label: "Orange" },
+    ]}>
         <Select.Trigger placeholder="Select a favorite fruit" />
-        <Select.Content>
-            <Select.Item value="strawberry">Strawberry</Select.Item>
-            <Select.Item value="banana">Banana</Select.Item>
-            <Select.Item value="orange">Orange</Select.Item>
-        </Select.Content>
+        <Select.Content />
     </Select.Root>
-    <Select.Root width="xs" variant={"solid"}>
+    <Select.Root width="xs" variant={"solid"} items={[
+        { value: "strawberry", label: "Strawberry" },
+        { value: "banana", label: "Banana" },
+        { value: "orange", label: "Orange" },
+    ]}>
         <Select.Trigger placeholder="Select a favorite fruit" />
-        <Select.Content>
-            <Select.Item value="strawberry">Strawberry</Select.Item>
-            <Select.Item value="banana">Banana</Select.Item>
-            <Select.Item value="orange">Orange</Select.Item>
-        </Select.Content>
+        <Select.Content />
     </Select.Root>
 </Wrapper>
 
 ```tsx
-<Select.Root width="xs" variant={"outline"}>
+<Select.Root variant="outline" items={fruits}>
     <Select.Trigger placeholder="Select a favorite fruit" />
-    <Select.Content>
-        <Select.Item value="strawberry">Strawberry</Select.Item>
-        <Select.Item value="banana">Banana</Select.Item>
-        <Select.Item value="orange">Orange</Select.Item>
-    </Select.Content>
-</Select.Root>
-<Select.Root width="xs" variant={"solid"}>
-    <Select.Trigger placeholder="Select a favorite fruit" />
-    <Select.Content>
-        <Select.Item value="strawberry">Strawberry</Select.Item>
-        <Select.Item value="banana">Banana</Select.Item>
-        <Select.Item value="orange">Orange</Select.Item>
-    </Select.Content>
+    <Select.Content />
 </Select.Root>
 ```
 
@@ -162,33 +156,22 @@ You can customize the background color of the selected item. This will only appl
     {["primary", "success", "warning", "info", "error", "none"].map((scheme) => (
         <>
             <Text>{scheme}</Text>
-            <Select.Root width="xs" selectedItemBackgroundScheme={scheme} defaultValue="strawberry">
+            <Select.Root
+                width="xs"
+                selectedItemBackgroundScheme={scheme}
+                defaultValue="strawberry"
+                items={[
+                    { value: "strawberry", label: "Strawberry" },
+                    { value: "banana", label: "Banana" },
+                    { value: "orange", label: "Orange" },
+                ]}
+            >
                 <Select.Trigger placeholder="Select a favorite fruit" />
-                <Select.Content>
-                    <Select.Item value="strawberry">Strawberry</Select.Item>
-                    <Select.Item value="banana">Banana</Select.Item>
-                    <Select.Item value="orange">Orange</Select.Item>
-                </Select.Content>
+                <Select.Content />
             </Select.Root>
         </>
     ))}
 </Wrapper>
-
-```tsx
-{["primary", "success", "warning", "info", "error", "none"].map((scheme) => (
-    <>
-        <Text>{scheme}</Text>
-        <Select.Root width="xs" selectedItemBackgroundScheme={scheme} defaultValue="strawberry">
-            <Select.Trigger placeholder="Select a favorite fruit" />
-            <Select.Content>
-                <Select.Item value="strawberry">Strawberry</Select.Item>
-                <Select.Item value="banana">Banana</Select.Item>
-                <Select.Item value="orange">Orange</Select.Item>
-            </Select.Content>
-        </Select.Root>
-    </>
-))}
-```
 
 ### Controlled
 
@@ -200,20 +183,21 @@ You can customize the background color of the selected item. This will only appl
 export function ControlledSelect() {
     const [value, setValue] = useState<string>("strawberry");
 
+    const fruits = [
+        { value: "strawberry", label: "Strawberry" },
+        { value: "banana", label: "Banana" },
+        { value: "orange", label: "Orange" },
+    ];
+
     return (
         <Select.Root
+            items={fruits}
             value={value}
             onChangeValue={setValue}
             width="xs"
         >
-            <Select.Trigger
-                placeholder="Select a favorite fruit"
-            />
-            <Select.Content>
-                <Select.Item value="strawberry">Strawberry</Select.Item>
-                <Select.Item value="banana">Banana</Select.Item>
-                <Select.Item value="orange">Orange</Select.Item>
-            </Select.Content>
+            <Select.Trigger placeholder="Select a favorite fruit" />
+            <Select.Content />
         </Select.Root>
     );
 }
@@ -231,119 +215,38 @@ You can customize how the selected value is marked as selected.
                 key={strategy}
                 selectedStrategy={strategy}
                 width="xs"
+                items={[
+                    { value: "strawberry", label: "Strawberry" },
+                    { value: "banana", label: "Banana" },
+                    { value: "orange", label: "Orange" },
+                ]}
             >
                 <Select.Trigger placeholder="Select a favorite fruit" />
-                <Select.Content>
-                    <Select.Item value="strawberry">Strawberry</Select.Item>
-                    <Select.Item value="banana">Banana</Select.Item>
-                    <Select.Item value="orange">Orange</Select.Item>
-                </Select.Content>
+                <Select.Content />
             </Select.Root>
         </>
     ))}
 </Wrapper>
-
-```tsx
-<Wrapper>
-    {["both", "checkmark", "background"].map((strategy) => (
-        <>
-            <Text>{strategy}</Text>
-            <Select.Root
-                key={strategy}
-                selectedStrategy={strategy}
-                width="xs"
-            >
-                <Select.Trigger placeholder="Select a favorite fruit" />
-                <Select.Content>
-                    <Select.Item value="strawberry">Strawberry</Select.Item>
-                    <Select.Item value="banana">Banana</Select.Item>
-                    <Select.Item value="orange">Orange</Select.Item>
-                </Select.Content>
-            </Select.Root>
-        </>
-    ))}
-</Wrapper>
-```
-
-### With option icons
-
-You can place icons, custom children in the `Select.Item` to indicate the type of the option.
-
-<Wrapper>
-    <Select.Root width="xs">
-        <Select.Trigger placeholder="Select a favorite fruit" />
-        <Select.Content>
-            <Select.Item value="cherry">
-                <HStack>
-                    <LuCherry />
-                    <Text>Cherry</Text>
-                </HStack>
-            </Select.Item>
-            <Select.Item value="banana">
-                <HStack>
-                    <LuBanana />
-                    <Text>Banana</Text>
-                </HStack>
-            </Select.Item>
-            <Select.Item value="orange">
-                <HStack>
-                    <LuCitrus />
-                    <Text>Orange</Text>
-                </HStack>
-            </Select.Item>
-        </Select.Content>
-    </Select.Root>
-</Wrapper>
-
-```tsx
-<Select.Root width="xs">
-    <Select.Trigger placeholder="Select a favorite fruit" />
-    <Select.Content>
-        <Select.Item value="cherry">
-            <HStack>
-                <LuCherry />
-                <Text>Cherry</Text>
-            </HStack>
-        </Select.Item>
-        <Select.Item value="banana">
-            <HStack>
-                <LuBanana />
-                <Text>Banana</Text>
-            </HStack>
-        </Select.Item>
-        <Select.Item value="orange">
-            <HStack>
-                <LuCitrus />
-                <Text>Orange</Text>
-            </HStack>
-        </Select.Item>
-    </Select.Content>
-</Select.Root>
-```
 
 ### With one icon
 
-Single icon is useful if you want to have global icon for a trigger, instead of having it on each item.
+Single icon is useful if you want to have a global icon for the trigger, instead of having it on each item.
 
 <Wrapper>
-    <Select.Root width="xs">
+    <Select.Root width="xs" items={[
+        { value: "cherry", label: "Cherry" },
+        { value: "banana", label: "Banana" },
+        { value: "orange", label: "Orange" },
+    ]}>
         <Select.Trigger placeholder="Select a favorite fruit" icon={<LuCherry />} />
-        <Select.Content>
-            <Select.Item value="cherry">Cherry</Select.Item>
-            <Select.Item value="banana">Banana</Select.Item>
-            <Select.Item value="orange">Orange</Select.Item>
-        </Select.Content>
+        <Select.Content />
     </Select.Root>
 </Wrapper>
 
 ```tsx
-<Select.Root width="xs">
+<Select.Root items={fruits}>
     <Select.Trigger placeholder="Select a favorite fruit" icon={<LuCherry />} />
-    <Select.Content>
-        <Select.Item value="cherry">Cherry</Select.Item>
-        <Select.Item value="banana">Banana</Select.Item>
-        <Select.Item value="orange">Orange</Select.Item>
-    </Select.Content>
+    <Select.Content />
 </Select.Root>
 ```
 
@@ -352,97 +255,67 @@ Single icon is useful if you want to have global icon for a trigger, instead of 
 Pass `isClearable` prop to enable clear button.
 
 <Wrapper>
-    <Select.Root width="xs" isClearable>
+    <Select.Root width="xs" isClearable items={[
+        { value: "cherry", label: "Cherry" },
+        { value: "banana", label: "Banana" },
+        { value: "orange", label: "Orange" },
+    ]}>
         <Select.Trigger placeholder="Select a favorite fruit" />
-        <Select.Content>
-            <Select.Item value="cherry">Cherry</Select.Item>
-            <Select.Item value="banana">Banana</Select.Item>
-            <Select.Item value="orange">Orange</Select.Item>
-        </Select.Content>
+        <Select.Content />
     </Select.Root>
 </Wrapper>
-
-```tsx
-<Select.Root width="xs" isClearable>
-    <Select.Trigger placeholder="Select a favorite fruit" />
-    <Select.Content>
-        <Select.Item value="cherry">Cherry</Select.Item>
-        <Select.Item value="banana">Banana</Select.Item>
-        <Select.Item value="orange">Orange</Select.Item>
-    </Select.Content>
-</Select.Root>
-```
 
 ### Multiple
 
-You can use the `isMultiple` prop to allow multiple selection. Now `onChangeValue` will return an array of values, instead of a single string value.
+You can use the `isMultiple` prop to allow multiple selections. `onChangeValue` returns an array of values. By default, the trigger shows selected labels joined with commas (truncated when they overflow).
 
 <Wrapper>
-    <Select.Root width="xs" isMultiple>
+    <Select.Root width="xs" isMultiple items={[
+        { value: "strawberry", label: "Strawberry" },
+        { value: "banana", label: "Banana" },
+        { value: "orange", label: "Orange" },
+    ]}>
         <Select.Trigger placeholder="Select a favorite fruit" />
-        <Select.Content>
-            <Select.Item value="strawberry">Strawberry</Select.Item>
-            <Select.Item value="banana">Banana</Select.Item>
-            <Select.Item value="orange">Orange</Select.Item>
-        </Select.Content>
+        <Select.Content />
     </Select.Root>
 </Wrapper>
 
 ```tsx
-export function MultipleSelect() {
-    return (
-        <Select.Root width="xs" isMultiple>
-            <Select.Trigger placeholder="Select a favorite fruit" />
-            <Select.Content>
-                <Select.Item value="strawberry">Strawberry</Select.Item>
-                <Select.Item value="banana">Banana</Select.Item>
-                <Select.Item value="orange">Orange</Select.Item>
-            </Select.Content>
-        </Select.Root>
-    );
-}
+<Select.Root isMultiple items={fruits}>
+    <Select.Trigger placeholder="Select a favorite fruit" />
+    <Select.Content />
+</Select.Root>
+// Trigger shows: "Strawberry, Banana" (truncated with ellipsis when too long)
 ```
-
 
 ### Custom Multiple Selected Text
 
-You can change the text that Select displays when multiple keys are selected by using `multipleSelectedText` prop in `Select.Trigger`.
+Use `multipleSelectedText` on `Select.Trigger` to override the default comma-separated labels.
 
 <Wrapper>
-    <Select.Root width="xs" isMultiple>
+    <Select.Root width="xs" isMultiple items={[
+        { value: "strawberry", label: "Strawberry" },
+        { value: "banana", label: "Banana" },
+        { value: "orange", label: "Orange" },
+    ]}>
         <Select.Trigger
             placeholder="Select a favorite fruit"
-            multipleSelectedText={(selectedKeys) => `${selectedKeys.join(", ")}`}
+            multipleSelectedText={(selected) => `${selected.length} selected`}
         />
-        <Select.Content>
-            <Select.Item value="strawberry">Strawberry</Select.Item>
-            <Select.Item value="banana">Banana</Select.Item>
-            <Select.Item value="orange">Orange</Select.Item>
-        </Select.Content>
+        <Select.Content />
     </Select.Root>
 </Wrapper>
 
 ```tsx
-export function MultipleSelect() {
-    return (
-        <Select.Root width="xs" isMultiple>
-            <Select.Trigger
-                placeholder="Select a favorite fruit"
-                multipleSelectedText={(selectedKeys) => `${selectedKeys.join(", ")}`}
-            />
-            <Select.Content>
-                <Select.Item value="strawberry">Strawberry</Select.Item>
-                <Select.Item value="banana">Banana</Select.Item>
-                <Select.Item value="orange">Orange</Select.Item>
-            </Select.Content>
-        </Select.Root>
-    );
-}
+<Select.Trigger
+    placeholder="Select a favorite fruit"
+    multipleSelectedText={(selected) => `${selected.length} selected`}
+/>
 ```
 
 ### Async loading
 
-You can fetch data when the Select is opened.
+You can fetch data when the Select is opened and update the `items` array.
 
 <Wrapper>
     <AsyncSelect />
@@ -450,37 +323,27 @@ You can fetch data when the Select is opened.
 
 ```tsx
 export function AsyncSelect() {
-    const [isLoading, setIsLoading] = useState(true);
-    const [fruits, setFruits] = useState<string[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [items, setItems] = useState<{ value: string; label: string }[]>([]);
 
     function fetchFruits() {
-        if (fruits.length > 0) return;
+        if (items.length > 0) return;
 
-        fetch("/api/fake-select-data") // slowed by 1 second
+        setIsLoading(true);
+        fetch("/api/fake-select-data")
             .then((res) => res.json())
-            .then(setFruits)
+            .then((data: string[]) =>
+                setItems(data.map((fruit) => ({ value: fruit, label: fruit })))
+            )
             .finally(() => setIsLoading(false));
     }
 
     return (
-        <Select.Root width="xs" onOpen={fetchFruits}>
-            <Select.Trigger placeholder="Select a favorite fruit" />
-            <Select.Content>
-                {isLoading && (
-                    <Spinner
-                        color="primary"
-                        py={4}
-                    />
-                )}
-                {fruits.map((fruit) => (
-                    <Select.Item
-                        key={fruit}
-                        value={fruit}
-                    >
-                        {fruit}
-                    </Select.Item>
-                ))}
-            </Select.Content>
+        <Select.Root items={items} onOpen={fetchFruits} width="xs">
+            <Select.Trigger
+                placeholder={isLoading ? "Loading..." : "Select a favorite fruit"}
+            />
+            <Select.Content />
         </Select.Root>
     );
 }
@@ -488,117 +351,80 @@ export function AsyncSelect() {
 
 ### Virtualized
 
-For better performance with large lists (100+ items), use `Select.VirtualContent` instead of `Select.Content`. It only renders visible items, significantly improving rendering performance and reducing memory usage.
+For better performance with large lists (100+ items), use `Select.VirtualContent` instead of `Select.Content`. It only renders visible items.
 
 <Wrapper>
-    <Select.Root width="xs">
+    <Select.Root
+        width="xs"
+        items={Array.from({ length: 250 }, (_, index) => ({
+            value: index.toString(),
+            label: `Item ${index + 1}`,
+        }))}
+    >
         <Select.Trigger placeholder="Select a number" />
-        <Select.VirtualContent>
-            {Array.from({ length: 250 }).map((_, index) => (
-                <Select.Item
-                    key={index}
-                    value={index.toString()}
-                >
-                    Item {index + 1}
-                </Select.Item>
-            ))}
-        </Select.VirtualContent>
+        <Select.VirtualContent />
     </Select.Root>
 </Wrapper>
 
 ```tsx
-<Select.Root width="xs">
+const manyItems = Array.from({ length: 250 }, (_, index) => ({
+    value: index.toString(),
+    label: `Item ${index + 1}`,
+}));
+
+<Select.Root items={manyItems}>
     <Select.Trigger placeholder="Select a number" />
-    <Select.VirtualContent>
-        {Array.from({ length: 250 }).map((_, index) => (
-            <Select.Item
-                key={index}
-                value={index.toString()}
-            >
-                Item {index + 1}
-            </Select.Item>
-        ))}
-    </Select.VirtualContent>
+    <Select.VirtualContent />
 </Select.Root>
 ```
 
 #### Props
 
-- `estimatedItemHeight` - Estimated height of each item in pixels. Used for virtualization calculations. For different select sizes the values will be: `xs`: `26`, `sm`: `28`, `md`: `32`, `lg`: `40`. Default: `32`
-- `overscan` - Number of items to render outside the visible area. Higher values reduce flickering during fast scrolling but increase initial render cost. Default: `5`
+- `estimatedItemHeight` - Estimated height of each item in pixels. For different select sizes: `xs`: `26`, `sm`: `28`, `md`: `32`, `lg`: `40`. Default: `32`
+- `overscan` - Number of items to render outside the visible area. Default: `5`
 - `maxHeight` - Maximum height of the virtualized list container in pixels. Default: `300`
 
+### Inside modals and popovers
+
+By default, the select dropdown uses the `dropdown` z-index layer. When rendered inside a modal or popover, `Select.Root` automatically raises the z-index. You can also set it explicitly with `layer` or `contentZIndex`.
+
+<Wrapper>
+    <SelectInModal />
+</Wrapper>
+
 ```tsx
-<Select.Root width="xs">
-    <Select.Trigger placeholder="Select a number" />
-    <Select.VirtualContent
-        maxHeight={400}
-        estimatedItemHeight={36}
-        overscan={10}
-    >
-        {largeItemsList.map((item) => (
-            <Select.Item
-                key={item.value}
-                value={item.value}
-            >
-                {item.label}
-            </Select.Item>
-        ))}
-    </Select.VirtualContent>
+<Select.Root items={fruits} layer="popover">
+    <Select.Trigger placeholder="Select a favorite fruit" />
+    <Select.Content />
 </Select.Root>
 ```
-
-**Note:** Selected items are always rendered (even when scrolled out of view) to ensure the trigger can display the selected value correctly.
 
 ### Close on select
 
-You can customize whether the Select should close when an item is selected. Defalult is `true` for non-multiple select, `false` for multiple select.
+You can customize whether the Select should close when an item is selected. Default is `true` for non-multiple select, `false` for multiple select.
 
 <Wrapper>
-    <Select.Root width="xs" closeOnSelect={false}>
+    <Select.Root width="xs" closeOnSelect={false} items={[
+        { value: "strawberry", label: "Strawberry" },
+        { value: "banana", label: "Banana" },
+        { value: "orange", label: "Orange" },
+    ]}>
         <Select.Trigger placeholder="Select a favorite fruit" />
-        <Select.Content>
-            <Select.Item value="strawberry">Strawberry</Select.Item>
-            <Select.Item value="banana">Banana</Select.Item>
-            <Select.Item value="orange">Orange</Select.Item>
-        </Select.Content>
+        <Select.Content />
     </Select.Root>
 </Wrapper>
-
-```tsx
-<Select.Root width="xs" closeOnSelect={false}>
-    <Select.Trigger placeholder="Select a favorite fruit" />
-    <Select.Content>
-        <Select.Item value="strawberry">Strawberry</Select.Item>
-        <Select.Item value="banana">Banana</Select.Item>
-        <Select.Item value="orange">Orange</Select.Item>
-    </Select.Content>
-</Select.Root>
-```
 
 ### Reduce motion
 
-You can disable the animation of the Select by setting the `reduceMotion` prop to `true`. You'll see no difference now if your device has currently reduced motion enabled globally.
+You can disable the animation of the Select by setting the `reduceMotion` prop to `true`.
 
 <Wrapper>
-    <Select.Root width="xs" reduceMotion>
+    <Select.Root width="xs" reduceMotion items={[
+        { value: "strawberry", label: "Strawberry" },
+        { value: "banana", label: "Banana" },
+        { value: "orange", label: "Orange" },
+    ]}>
         <Select.Trigger placeholder="Select a favorite fruit" />
-        <Select.Content>
-            <Select.Item value="strawberry">Strawberry</Select.Item>
-            <Select.Item value="banana">Banana</Select.Item>
-            <Select.Item value="orange">Orange</Select.Item>
-        </Select.Content>
+        <Select.Content />
     </Select.Root>
 </Wrapper>
-
-
-```tsx
-<Select.Root width="xs" reduceMotion>
-    <Select.Trigger placeholder="Select a favorite fruit" />
-    <Select.Content>
-        <Select.Item value="strawberry">Strawberry</Select.Item>
-        <Select.Item value="banana">Banana</Select.Item>
-        <Select.Item value="orange">Orange</Select.Item>
-    </Select.Content>
-</Select.Root>
-```

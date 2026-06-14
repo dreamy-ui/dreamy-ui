@@ -39,7 +39,7 @@ export * as PinInput from "./pin-input";
 export * as Popover from "./popover";
 export * from "./progress-circular";
 export * from "./progress";
-export * from "./radio-card";
+export * as RadioCard from "./radio-card";
 export * from "./radio";
 export * as RangeSlider from "./range-slider";
 export * from "./ripple";
