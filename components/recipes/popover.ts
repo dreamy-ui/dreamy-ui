@@ -26,7 +26,8 @@ export const popover = defineSlotRecipe({
             "CalendarCell",
             "CalendarCellButton",
             "Footer",
-            "FooterButton"
+            "FooterButton",
+            "AIO"
         ])
     ],
     base: {

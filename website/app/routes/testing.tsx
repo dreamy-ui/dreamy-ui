@@ -1,4 +1,4 @@
-import { Autocomplete, Button, Menu, Pagination } from "@/ui";
+import { Autocomplete, Button, DatePicker, Menu, Pagination } from "@/ui";
 import { Flex } from "@/ui";
 import { MotionFlex } from "@/ui";
 import { Select } from "@/ui";
@@ -183,6 +183,10 @@ export default function Test() {
                     </Menu.TriggerItem>
                 </Menu.Content>
             </Menu.Root>
+
+            <DatePicker.Root>
+                <DatePicker.Calendar></DatePicker.Calendar>
+            </DatePicker.Root>
         </Flex>
     );
 }
