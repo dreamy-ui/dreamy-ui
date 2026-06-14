@@ -342,8 +342,8 @@ export function usePopover(props: UsePopoverProps = {}) {
             const triggerProps: DOMAttributes = {
                 ...props,
                 ref: mergeRefs(triggerRef, _ref, maybeReferenceRef),
-                id: triggerId,
-                "aria-haspopup": "dialog",
+                id: props.id ?? triggerId,
+                "aria-haspopup": props["aria-haspopup"] ?? "dialog",
                 "aria-expanded": isOpen,
                 "aria-controls": popoverId
             };

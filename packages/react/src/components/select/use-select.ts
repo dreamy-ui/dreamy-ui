@@ -6,6 +6,7 @@ import { ariaAttr, dataAttr } from "@/utils/attr";
 import { useDOMRef } from "@/utils/dom";
 import { nextTick } from "@/utils/ticks";
 import {
+    type ComponentPropsWithoutRef,
     type KeyboardEvent,
     type ReactNode,
     type RefObject,
@@ -16,7 +17,7 @@ import {
     useState
 } from "react";
 import { flushSync } from "react-dom";
-import type { UserFeedbackProps } from "../field";
+import { type UserFeedbackProps, useField } from "../field";
 import type { FocusableElement } from "../modal";
 
 interface SelectContext extends Omit<UseSelectReturn, "rest"> {}
@@ -113,6 +114,10 @@ export interface UseSelectProps<T extends boolean, P extends Record<string, any>
      * @default "var(--z-index-dropdown)"
      */
     contentZIndex?: string;
+    /**
+     * Props forwarded to the hidden native `<select>` element used for form submission and autofill.
+     */
+    hiddenSelectProps?: ComponentPropsWithoutRef<"select">;
 }
 
 export function useSelect<T extends boolean, P extends Record<string, any>>(
@@ -143,8 +148,21 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
         autoComplete = "off",
         isClearable,
         contentZIndex = "var(--z-index-dropdown)",
+        hiddenSelectProps,
         ...rest
     } = props;
+
+    const {
+        disabled: isDisabledField = false,
+        required: isRequiredField = false,
+        id: fieldId,
+        onBlur: onBlurField,
+        onFocus: onFocusField,
+        "aria-describedby": ariaDescribedByField
+    } = useField(props);
+
+    const resolvedIsDisabled = isDisabled ?? isDisabledField;
+    const resolvedIsRequired = isRequired ?? isRequiredField;
 
     const { isOpen, onOpen, onClose, onToggle } = useControllable({
         isOpen: isOpenProp,
@@ -311,18 +329,23 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
             };
 
             return {
+                ...props,
                 "data-slot": "trigger",
+                id: props?.id ?? fieldId,
                 "aria-invalid": ariaAttr(isInvalid),
+                "aria-required": ariaAttr(resolvedIsRequired),
+                "aria-describedby": ariaDescribedByField,
+                "aria-expanded": isOpen,
+                "aria-haspopup": "listbox",
                 "data-invalid": dataAttr(isInvalid),
                 ref: mergeRefs(triggerRef, ref),
                 "data-placeholder-shown": dataAttr(selectedKeys.length === 0),
-                disabled: isDisabled,
+                disabled: resolvedIsDisabled,
                 type: "button",
-                ...props,
-                onFocus: callAllHandlers(props?.onFocus, () => {
+                onFocus: callAllHandlers(props?.onFocus, onFocusField, () => {
                     setIsTriggerFocused(true);
                 }),
-                onBlur: callAllHandlers(props?.onBlur, () => {
+                onBlur: callAllHandlers(props?.onBlur, onBlurField, () => {
                     setIsTriggerFocused(false);
                 }),
                 onKeyDown: callAllHandlers(props?.onKeyDown, onKeyDown)
@@ -330,14 +353,19 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
         },
         [
             isInvalid,
+            resolvedIsRequired,
+            ariaDescribedByField,
+            fieldId,
             selectedKeys.length,
             focusedIndex,
             items,
             isOpen,
-            isDisabled,
+            resolvedIsDisabled,
             isTriggerFocused,
             popoverProps,
             onClose,
+            onFocusField,
+            onBlurField,
             handleItemChange,
             scrollToFocusedItem
         ]
@@ -405,9 +433,10 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
                 domRef,
                 placeholder: props.placeholder,
                 name,
-                isRequired,
+                isRequired: resolvedIsRequired,
                 autoComplete,
-                isDisabled,
+                isDisabled: resolvedIsDisabled,
+                hiddenSelectProps,
                 selectedKeys,
                 onChangeValue: onChangeValue as unknown as (value: string | string[]) => void,
                 onChange,
@@ -417,9 +446,10 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
         [
             domRef,
             name,
-            isRequired,
+            resolvedIsRequired,
             autoComplete,
-            isDisabled,
+            resolvedIsDisabled,
+            hiddenSelectProps,
             selectedKeys,
             isMultiple,
             onChangeValue,
@@ -447,8 +477,9 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
         triggerRef,
         reduceMotion,
         isInvalid,
-        isDisabled,
-        isRequired,
+        isDisabled: resolvedIsDisabled,
+        isRequired: resolvedIsRequired,
+        hiddenSelectProps,
         selectedKeys,
         focusedIndex,
         selectedStrategy,
@@ -483,6 +514,7 @@ export interface HiddenSelectProps {
     autoComplete: string;
     triggerRef: RefObject<FocusableElement | null>;
     domRef: RefObject<HTMLSelectElement | null>;
+    hiddenSelectProps?: ComponentPropsWithoutRef<"select">;
     onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
     onChangeValue?: (value: string | string[]) => void;
 }
@@ -507,7 +539,7 @@ export function useHiddenSelect(props: HiddenSelectProps) {
         isMultiple,
         id
     } = useSelectContext();
-    const { autoComplete, domRef } = props;
+    const { autoComplete, domRef, hiddenSelectProps } = props;
 
     useSafeLayoutEffect(() => {
         const el = domRef.current;
@@ -534,6 +566,7 @@ export function useHiddenSelect(props: HiddenSelectProps) {
             "data-a11y-ignore": "aria-hidden-focus"
         },
         selectProps: {
+            ...hiddenSelectProps,
             name,
             tabIndex: -1,
             autoComplete,

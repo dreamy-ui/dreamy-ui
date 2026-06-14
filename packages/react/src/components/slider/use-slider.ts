@@ -124,6 +124,10 @@ export interface UseSliderProps
 	 * ID of the element that serves as label for the slider
 	 */
 	"aria-labelledby"?: string;
+	/**
+	 * Props forwarded to the hidden native `input` element.
+	 */
+	inputProps?: ComponentPropsWithoutRef<"input">;
 }
 
 export interface SliderActions {
@@ -158,6 +162,7 @@ export function useSlider(props: UseSliderProps) {
 		"aria-valuetext": ariaValueText,
 		"aria-label": ariaLabel,
 		"aria-labelledby": ariaLabelledBy,
+		inputProps,
 		...htmlProps
 	} = props;
 
@@ -536,6 +541,7 @@ export function useSlider(props: UseSliderProps) {
 	const getInputProps: PropGetter = useCallback(
 		(props = {}, ref = null) => {
 			return {
+				...inputProps,
 				...props,
 				ref,
 				value,
@@ -551,13 +557,12 @@ export function useSlider(props: UseSliderProps) {
 				readOnly: isReadOnly,
 				"data-readonly": dataAttr(isReadOnly),
 				onChange: callAllHandlers(props.onChange, onChange, (e) => {
-					console.log("input on change", e);
 					const val = Number.parseFloat(e.target.value);
 					setValue(val);
 				})
 			};
 		},
-		[value, name, id, isInvalid, isDisabled, isReadOnly, onChange, setValue]
+		[value, name, id, isInvalid, isDisabled, isReadOnly, onChange, setValue, inputProps]
 	);
 
 	return {
