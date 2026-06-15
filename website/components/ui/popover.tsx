@@ -13,7 +13,7 @@ import {
     usePopover,
     usePopoverContext
 } from "@dreamy-ui/react";
-import { Children, cloneElement, forwardRef } from "react";
+import { Children, cloneElement } from "react";
 import { type HTMLDreamyProps, createStyleContext } from "styled-system/jsx";
 import { popover } from "styled-system/recipes";
 import { Box, type BoxProps } from "./box";
@@ -98,11 +98,8 @@ export interface PopoverTransitionProps extends Omit<MotionBoxProps, "children">
     arrowProps?: PopoverArrowProps;
 }
 
-const Transition = forwardRef(function PopoverTransition(
-    props: PopoverTransitionProps,
-    ref: React.Ref<any>
-) {
-    const { children, arrowProps, ...rest } = props;
+function Transition(props: PopoverTransitionProps) {
+    const { ref, children, arrowProps, ...rest } = props;
 
     const { isOpen, hasArrow, reduceMotion } = usePopoverContext();
     const { popover } = useMotionVariants();
@@ -111,7 +108,6 @@ const Transition = forwardRef(function PopoverTransition(
         <MotionBox
             animate={isOpen ? "initial" : "exit"}
             initial={false}
-            ref={ref}
             variants={transformReducedMotion(popover, reduceMotion)}
             {...rest}
         >
@@ -119,110 +115,96 @@ const Transition = forwardRef(function PopoverTransition(
             {children}
         </MotionBox>
     );
-});
+}
 
 export interface PopoverContentProps extends PopoverTransitionProps {
     rootProps?: HTMLDreamyProps<"div">;
     motionProps?: Omit<MotionBoxProps, "children">;
 }
 
-export const Content = withContext(
-    forwardRef<HTMLElement, PopoverContentProps>(function PopoverContent(props, ref) {
-        const { rootProps, motionProps, ...contentProps } = props;
+export const Content = withContext(function PopoverContent(props: PopoverContentProps) {
+    const { ref } = props;
+    const { rootProps, motionProps, ...contentProps } = props;
 
-        const { getPopoverProps, getPopoverPositionerProps, onAnimationComplete, usePortal } =
-            usePopoverContext();
+    const { getPopoverProps, getPopoverPositionerProps, onAnimationComplete, usePortal } =
+        usePopoverContext();
 
-        if (typeof document === "undefined") return null;
+    if (typeof document === "undefined") return null;
 
-        const content = (
-            <div {...getPopoverPositionerProps(rootProps)}>
-                <Transition
-                    {...getPopoverProps({ ...motionProps, ...contentProps }, ref)}
-                    onAnimationComplete={callAll(
-                        onAnimationComplete,
-                        contentProps.onAnimationComplete
-                    )}
-                />
-            </div>
-        );
+    const content = (
+        <div {...getPopoverPositionerProps(rootProps)}>
+            <Transition
+                {...getPopoverProps(
+                    { ...motionProps, ...contentProps },
+                    ref as React.Ref<HTMLElement>
+                )}
+                onAnimationComplete={callAll(onAnimationComplete, contentProps.onAnimationComplete)}
+            />
+        </div>
+    );
 
-        return usePortal ? <Portal>{content}</Portal> : content;
-    }),
-    "content"
-);
+    return usePortal ? <Portal>{content}</Portal> : content;
+}, "content");
 
 export interface PopoverHeaderProps extends HTMLDreamyProps<"header"> {}
 
-export const Header = withContext(
-    forwardRef<HTMLDivElement, PopoverHeaderProps>(function PopoverHeader(props, ref) {
-        const { children, ...rest } = props;
-        const { getHeaderProps } = usePopoverContext();
+export const Header = withContext(function PopoverHeader(props: PopoverHeaderProps) {
+    const { ref } = props;
+    const { children, ...rest } = props;
+    const { getHeaderProps } = usePopoverContext();
 
-        return (
-            <Box
-                as={"header"}
-                {...getHeaderProps(rest, ref)}
-            >
-                {typeof children === "string" ? (
-                    <Heading
-                        size="md"
-                        variant={"heading"}
-                    >
-                        {children}
-                    </Heading>
-                ) : (
-                    children
-                )}
-            </Box>
-        );
-    }),
-    "header"
-);
+    return (
+        <Box
+            as={"header"}
+            {...getHeaderProps(rest, ref)}
+        >
+            {typeof children === "string" ? (
+                <Heading
+                    size="md"
+                    variant={"heading"}
+                >
+                    {children}
+                </Heading>
+            ) : (
+                children
+            )}
+        </Box>
+    );
+}, "header");
 
 export interface PopoverBodyProps extends HTMLDreamyProps<"div"> {}
 
-export const Body = withContext(
-    forwardRef<HTMLDivElement, PopoverBodyProps>(function PopoverHeader(props, ref) {
-        const { getBodyProps } = usePopoverContext();
+export const Body = withContext(function PopoverHeader(props: PopoverBodyProps) {
+    const { ref } = props;
+    const { getBodyProps } = usePopoverContext();
 
-        return <Box {...getBodyProps(props, ref)} />;
-    }),
-    "body"
-);
+    return <Box {...getBodyProps(props, ref)} />;
+}, "body");
 
 export interface PopoverFooterProps extends BoxProps {}
 
-export const Footer = withContext(
-    forwardRef<HTMLDivElement, PopoverFooterProps>(function PopoverFooter(props, ref) {
-        return (
-            <Box
-                as={"footer"}
-                {...props}
-                ref={ref}
-            />
-        );
-    }),
-    "footer"
-);
+export const Footer = withContext(function PopoverFooter(props: PopoverFooterProps) {
+    return (
+        <Box
+            as={"footer"}
+            {...props}
+        />
+    );
+}, "footer");
 
 export interface PopoverCloseButtonProps extends CloseButtonProps {}
 
-export const CloseButton = withContext(
-    forwardRef<HTMLButtonElement, PopoverCloseButtonProps>(function PopoverCloseButton(props, ref) {
-        const { onClose } = usePopoverContext();
+export const CloseButton = withContext(function PopoverCloseButton(props: PopoverCloseButtonProps) {
+    const { onClose } = usePopoverContext();
 
-        return (
-            <CloseButtonComponent
-                {...props}
-                onClick={callAllHandlers(props.onClick, onClose)}
-                ref={ref}
-                size={"sm"}
-            />
-        );
-    }),
-    "close"
-);
+    return (
+        <CloseButtonComponent
+            {...props}
+            onClick={callAllHandlers(props.onClick, onClose)}
+            size={"sm"}
+        />
+    );
+}, "close");
 
 /**
  * PopoverAnchor is element that is used as the positioning reference

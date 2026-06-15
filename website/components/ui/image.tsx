@@ -1,7 +1,7 @@
 "use client";
 
 import { ariaAttr, callAllHandlers, objectToDeps, omit } from "@dreamy-ui/react";
-import { cloneElement, forwardRef, useMemo, useRef } from "react";
+import { cloneElement, useMemo, useRef } from "react";
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { image } from "styled-system/recipes";
 import type { SystemProperties } from "styled-system/types";
@@ -52,7 +52,8 @@ const StyledImage = dreamy("img", image);
  *
  * @See Docs https://dreamy-ui.com/docs/components/image
  */
-export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(props, ref) {
+export function Image(props: ImageProps) {
+    const { ref } = props;
     const {
         fallbackSrc,
         src,
@@ -139,4 +140,4 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(function Image(pro
     }
 
     return img;
-});
+}

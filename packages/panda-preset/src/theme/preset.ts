@@ -84,6 +84,65 @@ interface ColorTuning {
      * fg offsets: `default` ← `fg.normal`, `muted` ← `fg.disabled`, `hover` ← `fg.normal`.
      */
     borderLightnessOffset?: BorderLightnessOffset;
+    /**
+     * Tint applied to generated alpha overlays (`colors.alpha.*`, `blackAlpha`, `whiteAlpha`).
+     * Uses OKLCH chroma on near-black (light mode) and near-white (dark mode) bases.
+     */
+    alphaChroma?: AlphaChroma;
+}
+
+/**
+ * OKLCH tint for auto-generated alpha color tokens.
+ */
+export interface AlphaChroma {
+    /**
+     * OKLCH hue (0–360°) — which color the alpha overlay is tinted toward.
+     * Only visible when {@link chroma} is greater than `0`.
+     *
+     * **Hue guide (OKLCH degrees):**
+     * - `0` / `360` — red
+     * - `30` — orange
+     * - `60` — yellow
+     * - `90` — lime / yellow-green
+     * - `120` — green
+     * - `150` — teal
+     * - `180` — cyan
+     * - `210` — sky blue
+     * - `240` — blue
+     * - `270` — indigo / violet
+     * - `300` — magenta / fuchsia
+     * - `330` — pink / rose
+     *
+     * @default 245
+     */
+    hue?: number | LightDarkNumber;
+    /**
+     * OKLCH chroma (0–0.4) — how much color is mixed into alpha overlays.
+     * `0` keeps neutral grayscale overlays (default).
+     *
+     * Pair with {@link hue} to control tint direction and strength.
+     *
+     * **Hue guide (set on {@link hue}, OKLCH degrees):**
+     * - `25` — red
+     * - `60` — yellow
+     * - `120` — green
+     * - `180` — cyan
+     * - `240` — blue
+     * - `300` — magenta
+     *
+     * **Chroma intensity guide:**
+     * - `0` — neutral black/white alpha (no tint)
+     * - `0.005`–`0.01` — barely perceptible tint
+     * - `0.01`–`0.02` — subtle UI tint (borders, muted fills)
+     * - `0.02`–`0.04` — noticeable brand-colored overlays
+     * - `0.04`+ — strong accent tint (use sparingly)
+     *
+     * @example Subtle blue-tinted borders in light mode:
+     * `{ hue: 240, chroma: 0.02 }`
+     *
+     * @default 0
+     */
+    chroma?: number | LightDarkNumber;
 }
 
 export interface PresetOptions {

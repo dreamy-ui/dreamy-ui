@@ -3,7 +3,7 @@
 import { splitProps } from "@dreamy-ui/react";
 import type { MotionProps } from "motion/react";
 import * as m from "motion/react-m";
-import { forwardRef } from "react";
+
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type FlexProperties, flex } from "styled-system/patterns";
 import type { SystemStyleObject } from "styled-system/types";
@@ -19,14 +19,9 @@ export interface MotionBoxProps
  *
  * @See Docs https://dreamy-ui.com/docs/components/motion
  */
-export const MotionBox = forwardRef<HTMLDivElement, MotionBoxProps>((props, ref) => {
-    return (
-        <StyledMotionBox
-            ref={ref}
-            {...props}
-        />
-    );
-});
+export function MotionBox(props: MotionBoxProps) {
+    return <StyledMotionBox {...props} />;
+}
 
 export interface MotionFlexProps extends Omit<MotionBoxProps, "direction">, FlexProperties {}
 
@@ -35,7 +30,7 @@ export interface MotionFlexProps extends Omit<MotionBoxProps, "direction">, Flex
  *
  * @See Docs https://dreamy-ui.com/docs/components/motion
  */
-export const MotionFlex = forwardRef<HTMLDivElement, MotionFlexProps>((props, ref) => {
+export function MotionFlex(props: MotionFlexProps) {
     const [patternProps, restProps] = splitProps(props, [
         "align",
         "justify",
@@ -50,9 +45,8 @@ export const MotionFlex = forwardRef<HTMLDivElement, MotionFlexProps>((props, re
 
     return (
         <StyledMotionBox
-            ref={ref}
             {...styles}
             {...restProps}
         />
     );
-});
+}

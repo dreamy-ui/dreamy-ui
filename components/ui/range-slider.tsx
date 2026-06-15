@@ -6,7 +6,7 @@ import {
     useRangeSlider,
     useRangeSliderContext
 } from "@dreamy-ui/react";
-import { forwardRef } from "react";
+
 import { type HTMLDreamyProps, createStyleContext } from "styled-system/jsx";
 import { rangeSlider } from "styled-system/recipes";
 import { Box } from "./box";
@@ -44,67 +44,56 @@ const SIZE_CONFIG = {
  *
  * @See Docs https://dreamy-ui.com/docs/components/range-slider
  */
-export const Root = withProvider(
-    forwardRef<HTMLDivElement, RangeSliderProps>((props, ref) => {
-        const { size = "md", orientation = "horizontal", focusThumbOnChange, ...restProps } = props;
-        const config = SIZE_CONFIG[size];
-        const { getRootProps, getInputProps, ...rest } = useRangeSlider({
-            ...restProps,
-            orientation,
-            thumbSize: config.thumbSize,
-            focusThumbOnChange
-        });
+export const Root = withProvider(function Component(props: RangeSliderProps) {
+    const { ref } = props;
+    const { size = "md", orientation = "horizontal", focusThumbOnChange, ...restProps } = props;
+    const config = SIZE_CONFIG[size];
+    const { getRootProps, getInputProps, ...rest } = useRangeSlider({
+        ...restProps,
+        orientation,
+        thumbSize: config.thumbSize,
+        focusThumbOnChange
+    });
 
-        const rootProps = getRootProps(undefined, ref);
+    const rootProps = getRootProps(undefined, ref);
 
-        return (
-            <RangeSliderProvider value={rest}>
-                <VisuallyHiddenInput {...getInputProps(0)(undefined, ref)} />
-                <VisuallyHiddenInput {...getInputProps(1)(undefined, ref)} />
-                <Box
-                    {...rootProps}
-                    style={
-                        {
-                            ...rootProps.style,
-                            // @ts-expect-error
-                            "--range-slider-thumb-size": `${config.thumbSize}px`,
-                            ...(orientation === "horizontal"
-                                ? { height: config.trackSize }
-                                : { width: config.trackSize })
-                        } as React.CSSProperties
-                    }
-                />
-            </RangeSliderProvider>
-        );
-    }),
-    "root"
-);
+    return (
+        <RangeSliderProvider value={rest}>
+            <VisuallyHiddenInput {...getInputProps(0)(undefined, ref)} />
+            <VisuallyHiddenInput {...getInputProps(1)(undefined, ref)} />
+            <Box
+                {...rootProps}
+                style={
+                    {
+                        ...rootProps.style,
+                        // @ts-expect-error
+                        "--range-slider-thumb-size": `${config.thumbSize}px`,
+                        ...(orientation === "horizontal"
+                            ? { height: config.trackSize }
+                            : { width: config.trackSize })
+                    } as React.CSSProperties
+                }
+            />
+        </RangeSliderProvider>
+    );
+}, "root");
 
 export interface RangeSliderTrackProps extends HTMLDreamyProps<"div"> {}
 
-export const Track = withContext(
-    forwardRef<HTMLDivElement, RangeSliderTrackProps>((props, ref) => {
-        const { getTrackProps } = useRangeSliderContext();
+export const Track = withContext(function Component(props: RangeSliderTrackProps) {
+    const { ref } = props;
+    const { getTrackProps } = useRangeSliderContext();
 
-        return <Box {...getTrackProps(props, ref)} />;
-    }),
-    "track"
-);
+    return <Box {...getTrackProps(props, ref)} />;
+}, "track");
 
 export interface RangeSliderFilledTrackProps extends HTMLDreamyProps<"div"> {}
 
-export const FilledTrack = withContext(
-    forwardRef<HTMLDivElement, RangeSliderFilledTrackProps>((props, ref) => {
-        const { getInnerTrackProps } = useRangeSliderContext();
-        return (
-            <Box
-                ref={ref}
-                {...getInnerTrackProps(props, ref)}
-            />
-        );
-    }),
-    "trackFilled"
-);
+export const FilledTrack = withContext(function Component(props: RangeSliderFilledTrackProps) {
+    const { ref } = props;
+    const { getInnerTrackProps } = useRangeSliderContext();
+    return <Box {...getInnerTrackProps(props, ref)} />;
+}, "trackFilled");
 
 export interface RangeSliderThumbProps extends HTMLDreamyProps<"div"> {
     /**
@@ -113,25 +102,21 @@ export interface RangeSliderThumbProps extends HTMLDreamyProps<"div"> {
     index: 0 | 1;
 }
 
-export const Thumb = withContext(
-    forwardRef<HTMLDivElement, RangeSliderThumbProps>((props, ref) => {
-        const { index, ...rest } = props;
-        const { getThumbProps } = useRangeSliderContext();
+export const Thumb = withContext(function Component(props: RangeSliderThumbProps) {
+    const { ref } = props;
+    const { index, ...rest } = props;
+    const { getThumbProps } = useRangeSliderContext();
 
-        return <Box {...getThumbProps(index)(rest, ref)} />;
-    }),
-    "thumb"
-);
+    return <Box {...getThumbProps(index)(rest, ref)} />;
+}, "thumb");
 
 export interface RangeSliderMarkProps extends HTMLDreamyProps<"div"> {
     value: number;
 }
 
-export const Mark = withContext(
-    forwardRef<HTMLDivElement, RangeSliderMarkProps>((props, ref) => {
-        const { getMarkerProps } = useRangeSliderContext();
+export const Mark = withContext(function Component(props: RangeSliderMarkProps) {
+    const { ref } = props;
+    const { getMarkerProps } = useRangeSliderContext();
 
-        return <Box {...getMarkerProps(props, ref)} />;
-    }),
-    "marker"
-);
+    return <Box {...getMarkerProps(props, ref)} />;
+}, "marker");

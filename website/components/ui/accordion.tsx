@@ -12,7 +12,7 @@ import {
     useAccordionItem,
     useAccordionItemContext
 } from "@dreamy-ui/react";
-import { forwardRef, useMemo } from "react";
+import { useMemo } from "react";
 import { type HTMLDreamyProps, createStyleContext, dreamy } from "styled-system/jsx";
 import type { AccordionVariantProps } from "styled-system/recipes";
 import { accordion } from "styled-system/recipes";
@@ -39,28 +39,22 @@ export interface AccordionProps
  *
  * @See Docs https://dreamy-ui.com/docs/components/accordion
  */
-export const Root = withProvider(
-    forwardRef<HTMLDivElement, AccordionProps>(function AccordionRoot(ownProps, ref) {
-        const { htmlProps, descendants, ...context } = useAccordion(ownProps);
+export const Root = withProvider(function AccordionRoot(ownProps: AccordionProps) {
+    const { htmlProps, descendants, ...context } = useAccordion(ownProps);
 
-        const ctx = useMemo(
-            () => ({ ...context, reduceMotion: !!ownProps.reduceMotion }),
-            [...objectToDeps(context), ownProps.reduceMotion]
-        );
+    const ctx = useMemo(
+        () => ({ ...context, reduceMotion: !!ownProps.reduceMotion }),
+        [...objectToDeps(context), ownProps.reduceMotion]
+    );
 
-        return (
-            <AccordionDescendantsProvider value={descendants}>
-                <AccordionProvider value={ctx}>
-                    <Box
-                        ref={ref}
-                        {...htmlProps}
-                    />
-                </AccordionProvider>
-            </AccordionDescendantsProvider>
-        );
-    }),
-    "root"
-);
+    return (
+        <AccordionDescendantsProvider value={descendants}>
+            <AccordionProvider value={ctx}>
+                <Box {...htmlProps} />
+            </AccordionProvider>
+        </AccordionDescendantsProvider>
+    );
+}, "root");
 
 export interface AccordionItemProps
     extends Omit<HTMLDreamyProps<"div">, keyof UseAccordionItemProps | "children">,
@@ -73,29 +67,23 @@ export interface AccordionItemProps
           }) => React.ReactNode);
 }
 
-export const Item = withContext(
-    forwardRef<HTMLDivElement, AccordionItemProps>(function AccordionItem(props, ref) {
-        const { children } = props;
-        const { htmlProps, ...ctx } = useAccordionItem(props);
+export const Item = withContext(function AccordionItem(props: AccordionItemProps) {
+    const { children } = props;
+    const { htmlProps, ...ctx } = useAccordionItem(props);
 
-        return (
-            <AccordionItemProvider value={ctx}>
-                <Box
-                    ref={ref}
-                    {...htmlProps}
-                >
-                    {typeof children === "function"
-                        ? children({
-                              isExpanded: !!ctx.isOpen,
-                              isDisabled: !!ctx.isDisabled
-                          })
-                        : children}
-                </Box>
-            </AccordionItemProvider>
-        );
-    }),
-    "item"
-);
+    return (
+        <AccordionItemProvider value={ctx}>
+            <Box {...htmlProps}>
+                {typeof children === "function"
+                    ? children({
+                          isExpanded: !!ctx.isOpen,
+                          isDisabled: !!ctx.isDisabled
+                      })
+                    : children}
+            </Box>
+        </AccordionItemProvider>
+    );
+}, "item");
 
 export interface AccordionContentProps extends HTMLDreamyProps<"div"> {
     /**
@@ -104,36 +92,34 @@ export interface AccordionContentProps extends HTMLDreamyProps<"div"> {
     collapseProps?: CollapseProps;
 }
 
-export const Content = withContext(
-    forwardRef<HTMLDivElement, AccordionContentProps>(function AccordionContent(props, ref) {
-        const { collapseProps, ...rest } = props;
+export const Content = withContext(function AccordionContent(props: AccordionContentProps) {
+    const { ref } = props;
+    const { collapseProps, ...rest } = props;
 
-        const { reduceMotion } = useAccordionContext();
-        const { getContentProps, isOpen } = useAccordionItemContext();
+    const { reduceMotion } = useAccordionContext();
+    const { getContentProps, isOpen } = useAccordionItemContext();
 
-        const panelProps = getContentProps(rest, ref) as any;
+    const panelProps = getContentProps(rest, ref) as any;
 
-        if (!reduceMotion) {
-            panelProps.hidden = undefined;
-        }
+    if (!reduceMotion) {
+        panelProps.hidden = undefined;
+    }
 
-        const child = <Box {...panelProps} />;
+    const child = <Box {...panelProps} />;
 
-        if (!reduceMotion) {
-            return (
-                <Collapse
-                    isOpen={isOpen}
-                    {...collapseProps}
-                >
-                    {child}
-                </Collapse>
-            );
-        }
+    if (!reduceMotion) {
+        return (
+            <Collapse
+                isOpen={isOpen}
+                {...collapseProps}
+            >
+                {child}
+            </Collapse>
+        );
+    }
 
-        return child;
-    }),
-    "content"
-);
+    return child;
+}, "content");
 
 export interface AccordionTriggerProps extends HTMLDreamyProps<"button"> {
     /**
@@ -151,53 +137,50 @@ export interface AccordionTriggerProps extends HTMLDreamyProps<"button"> {
     iconProps?: IconProps;
 }
 
-export const Trigger = withContext(
-    forwardRef<HTMLButtonElement, AccordionTriggerProps>(function AccordionTrigger(
-        { headingTag: HeadingTag = "h2", children, icon, iconProps, ...props },
-        ref
-    ) {
-        const { getTriggerProps } = useAccordionItemContext();
+export const Trigger = withContext(function AccordionTrigger({
+    headingTag: HeadingTag = "h2",
+    children,
+    icon,
+    iconProps,
+    ref,
+    ...props
+}: AccordionTriggerProps) {
+    const { getTriggerProps } = useAccordionItemContext();
 
-        return (
-            <HeadingTag>
-                <dreamy.button {...(getTriggerProps(props, ref) as any)}>
-                    {children}
-                    {icon ?? <AccordionIcon {...iconProps} />}
-                </dreamy.button>
-            </HeadingTag>
-        );
-    }),
-    "trigger"
-);
+    return (
+        <HeadingTag>
+            <dreamy.button {...(getTriggerProps(props, ref) as any)}>
+                {children}
+                {icon ?? <AccordionIcon {...iconProps} />}
+            </dreamy.button>
+        </HeadingTag>
+    );
+}, "trigger");
 
 export interface AccordionIconProps extends HTMLDreamyProps<"svg"> {}
 
 /**
  * @internal
  */
-const AccordionIcon = withContext(
-    forwardRef<SVGSVGElement, AccordionIconProps>(function AccordionIcon(props, ref) {
-        return (
-            <dreamy.svg
+const AccordionIcon = withContext(function AccordionIcon(props: AccordionIconProps) {
+    return (
+        <dreamy.svg
+            aria-hidden="true"
+            asChild
+            {...props}
+        >
+            <svg
                 aria-hidden="true"
-                asChild
-                ref={ref}
-                {...props}
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
             >
-                <svg
-                    aria-hidden="true"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <path d="m6 9 6 6 6-6" />
-                </svg>
-            </dreamy.svg>
-        );
-    }),
-    "icon"
-);
+                <path d="m6 9 6 6 6-6" />
+            </svg>
+        </dreamy.svg>
+    );
+}, "icon");

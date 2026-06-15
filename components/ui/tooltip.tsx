@@ -12,7 +12,7 @@ import {
     useTooltip
 } from "@dreamy-ui/react";
 import { AnimatePresence, type HTMLMotionProps, m } from "motion/react";
-import { Children, Fragment, cloneElement, forwardRef, useMemo } from "react";
+import { Children, Fragment, cloneElement, useMemo } from "react";
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { tooltip } from "styled-system/recipes";
 import { Box } from "./box";
@@ -70,7 +70,8 @@ const StyledTooltip = m.create(dreamy("div", tooltip));
  *
  * @see Docs https://dreamy-ui.com/docs/components/tooltip
  */
-export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>((props, ref) => {
+export function Tooltip(props: TooltipProps) {
+    const { ref } = props;
     const {
         children,
         content,
@@ -176,4 +177,4 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>((props, ref) => 
             </AnimatePresence>
         </>
     );
-});
+}

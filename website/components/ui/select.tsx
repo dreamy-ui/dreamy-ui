@@ -11,7 +11,7 @@ import {
 } from "@dreamy-ui/react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import type React from "react";
-import { type ReactNode, type RefObject, type SVGProps, forwardRef, useRef, useState } from "react";
+import { type ReactNode, type RefObject, type SVGProps, useRef, useState } from "react";
 import { type HTMLDreamyProps, createStyleContext, dreamy, splitCssProps } from "styled-system/jsx";
 import { type SelectVariantProps, select } from "styled-system/recipes";
 import { Box } from "./box";
@@ -201,77 +201,76 @@ export interface SelectTriggerProps extends HTMLDreamyProps<"button"> {
     children?: ReactNode;
 }
 
-export const Trigger = withContext(
-    forwardRef<HTMLButtonElement, SelectTriggerProps>(function SelectTrigger(
-        { children, placeholder, icon, multipleSelectedText, ...rest },
-        ref
-    ) {
-        const { getTriggerProps, selectedKeys, items, isClearable } = useSelectContext();
+export const Trigger = withContext(function SelectTrigger({
+    children,
+    placeholder,
+    icon,
+    multipleSelectedText,
+    ref,
+    ...rest
+}: SelectTriggerProps) {
+    const { getTriggerProps, selectedKeys, items, isClearable } = useSelectContext();
 
-        const selectedNames = selectedKeys
-            .map((key) => items.find((item: SelectItemData) => item.value === key)?.label)
-            .filter((name): name is string => name != null);
+    const selectedNames = selectedKeys
+        .map((key) => items.find((item: SelectItemData) => item.value === key)?.label)
+        .filter((name): name is string => name != null);
 
-        function getDisplayText() {
-            if (selectedNames.length === 0) return placeholder;
-            if (selectedNames.length === 1) return selectedNames[0];
-            return multipleSelectedText?.(selectedNames) ?? selectedNames.join(", ");
-        }
+    function getDisplayText() {
+        if (selectedNames.length === 0) return placeholder;
+        if (selectedNames.length === 1) return selectedNames[0];
+        return multipleSelectedText?.(selectedNames) ?? selectedNames.join(", ");
+    }
 
-        return (
-            <PopoverTrigger>
-                <dreamy.button {...(getTriggerProps(rest, ref) as any)}>
-                    {icon && icon}
+    return (
+        <PopoverTrigger>
+            <dreamy.button {...(getTriggerProps(rest, ref) as any)}>
+                {icon && icon}
 
-                    <dreamy.span
-                        css={{
-                            flex: "1",
-                            minW: "0",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            whiteSpace: "nowrap"
-                        }}
-                    >
-                        {children ?? getDisplayText()}
-                    </dreamy.span>
-                    <SelectIndicatorGroup>
-                        {isClearable && selectedKeys.length > 0 && <SelectClearButton />}
-                        <SelectIndicator />
-                    </SelectIndicatorGroup>
-                </dreamy.button>
-            </PopoverTrigger>
-        );
-    }),
-    "trigger"
-);
+                <dreamy.span
+                    css={{
+                        flex: "1",
+                        minW: "0",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap"
+                    }}
+                >
+                    {children ?? getDisplayText()}
+                </dreamy.span>
+                <SelectIndicatorGroup>
+                    {isClearable && selectedKeys.length > 0 && <SelectClearButton />}
+                    <SelectIndicator />
+                </SelectIndicatorGroup>
+            </dreamy.button>
+        </PopoverTrigger>
+    );
+}, "trigger");
 
 export interface SelectContentProps extends PopoverContentProps {}
 
-export const Content = withContext(
-    forwardRef<HTMLDivElement, SelectContentProps>(function SelectContent(props, ref) {
-        const { ...rest } = props;
-        const { getContentProps, items, renderItem } = useSelectContext() as ReturnType<
-            typeof useSelect
-        > & {
-            renderItem?: (item: SelectItemData) => ReactNode;
-        };
-        const contentPropsResult = getContentProps(rest, ref);
+export const Content = withContext(function SelectContent(props: SelectContentProps) {
+    const { ref } = props;
+    const { ...rest } = props;
+    const { getContentProps, items, renderItem } = useSelectContext() as ReturnType<
+        typeof useSelect
+    > & {
+        renderItem?: (item: SelectItemData) => ReactNode;
+    };
+    const contentPropsResult = getContentProps(rest, ref);
 
-        return (
-            <PopoverContent {...contentPropsResult}>
-                {items.map((item: SelectItemData, index: number) => (
-                    <SelectListItem
-                        index={index}
-                        item={item}
-                        key={item.value}
-                        renderItem={renderItem}
-                    />
-                ))}
-            </PopoverContent>
-        );
-    }),
-    "content"
-);
+    return (
+        <PopoverContent {...contentPropsResult}>
+            {items.map((item: SelectItemData, index: number) => (
+                <SelectListItem
+                    index={index}
+                    item={item}
+                    key={item.value}
+                    renderItem={renderItem}
+                />
+            ))}
+        </PopoverContent>
+    );
+}, "content");
 
 export interface SelectVirtualContentProps extends PopoverContentProps {
     estimatedItemHeight?: number;
@@ -279,34 +278,32 @@ export interface SelectVirtualContentProps extends PopoverContentProps {
     maxHeight?: number;
 }
 
-export const VirtualContent = withContext(
-    forwardRef<HTMLDivElement, SelectVirtualContentProps>(
-        function SelectVirtualContent(props, ref) {
-            const { estimatedItemHeight = 32, overscan = 5, maxHeight = 300, ...rest } = props;
+export const VirtualContent = withContext(function SelectVirtualContent(
+    props: SelectVirtualContentProps
+) {
+    const { ref } = props;
+    const { estimatedItemHeight = 32, overscan = 5, maxHeight = 300, ...rest } = props;
 
-            const { getContentProps, isOpen, items, renderItem } = useSelectContext() as ReturnType<
-                typeof useSelect
-            > & {
-                renderItem?: (item: SelectItemData) => ReactNode;
-            };
-            const contentPropsResult = getContentProps(rest, ref);
+    const { getContentProps, isOpen, items, renderItem } = useSelectContext() as ReturnType<
+        typeof useSelect
+    > & {
+        renderItem?: (item: SelectItemData) => ReactNode;
+    };
+    const contentPropsResult = getContentProps(rest, ref);
 
-            return (
-                <PopoverContent {...contentPropsResult}>
-                    <VirtualizedList
-                        estimatedItemHeight={estimatedItemHeight}
-                        isOpen={isOpen}
-                        items={items}
-                        maxHeight={maxHeight}
-                        overscan={overscan}
-                        renderItem={renderItem}
-                    />
-                </PopoverContent>
-            );
-        }
-    ),
-    "content"
-);
+    return (
+        <PopoverContent {...contentPropsResult}>
+            <VirtualizedList
+                estimatedItemHeight={estimatedItemHeight}
+                isOpen={isOpen}
+                items={items}
+                maxHeight={maxHeight}
+                overscan={overscan}
+                renderItem={renderItem}
+            />
+        </PopoverContent>
+    );
+}, "content");
 
 interface SelectListItemProps<Item extends SelectItemData>
     extends Omit<HTMLDreamyProps<"button">, "children" | "value"> {
@@ -315,33 +312,33 @@ interface SelectListItemProps<Item extends SelectItemData>
     renderItem?: (item: Item) => ReactNode;
 }
 
-const SelectListItem = withContext(
-    forwardRef<HTMLButtonElement, SelectListItemProps<SelectItemData>>(function SelectListItem(
-        { item, index, renderItem, ...rest },
-        ref
-    ) {
-        const { getItemProps, selectedStrategy, selectedKeys } = useSelectContext();
+const SelectListItem = withContext(function SelectListItem({
+    item,
+    index,
+    renderItem,
+    ref,
+    ...rest
+}: SelectListItemProps<SelectItemData>) {
+    const { getItemProps, selectedStrategy, selectedKeys } = useSelectContext();
 
-        return (
-            <dreamy.button
-                {...(getItemProps(
-                    {
-                        value: item.value,
-                        index,
-                        disabled: item.disabled,
-                        ...rest
-                    },
-                    ref
-                ) as any)}
-            >
-                {renderItem ? renderItem(item) : item.label}
-                {(selectedStrategy === "checkmark" || selectedStrategy === "both") &&
-                    selectedKeys.includes(item.value) && <SelectItemIndicator />}
-            </dreamy.button>
-        );
-    }),
-    "item"
-);
+    return (
+        <dreamy.button
+            {...(getItemProps(
+                {
+                    value: item.value,
+                    index,
+                    disabled: item.disabled,
+                    ...rest
+                },
+                ref
+            ) as any)}
+        >
+            {renderItem ? renderItem(item) : item.label}
+            {(selectedStrategy === "checkmark" || selectedStrategy === "both") &&
+                selectedKeys.includes(item.value) && <SelectItemIndicator />}
+        </dreamy.button>
+    );
+}, "item");
 
 /** @internal Recipe slot target — items are rendered automatically from `items`. */
 export const Item = SelectListItem;
@@ -453,78 +450,70 @@ function VirtualizedList({
 
 const SelectIndicatorGroup = withContext(Box, "indicatorGroup");
 
-const CheckIcon = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
-    function CheckIcon(props, ref) {
-        return (
-            <svg
-                aria-hidden="true"
-                fill="none"
-                height="16"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-                width="16"
-                {...props}
-                ref={ref}
-            >
-                <path d="M20 6 9 17l-5-5" />
-            </svg>
-        );
-    }
-);
+function CheckIcon(props: SVGProps<SVGSVGElement>) {
+    return (
+        <svg
+            aria-hidden="true"
+            fill="none"
+            height="16"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+            width="16"
+            {...props}
+        >
+            <path d="M20 6 9 17l-5-5" />
+        </svg>
+    );
+}
 
 const SelectItemIndicator = withContext(CheckIcon, "itemIndicator");
 
-const SelectIndicatorBase = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
-    function SelectIndicator(props, ref) {
-        return (
-            <svg
-                aria-hidden="true"
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-                {...props}
-                ref={ref}
-            >
-                <path d="m6 9 6 6 6-6" />
-            </svg>
-        );
-    }
-);
+function SelectIndicatorBase(props: SVGProps<SVGSVGElement>) {
+    return (
+        <svg
+            aria-hidden="true"
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            {...props}
+        >
+            <path d="m6 9 6 6 6-6" />
+        </svg>
+    );
+}
 
 const SelectIndicator = withContext(SelectIndicatorBase, "indicator");
 
 export interface SelectClearButtonProps extends HTMLDreamyProps<"button"> {}
 
-const SelectClearButton = withContext(
-    forwardRef<HTMLButtonElement, SelectClearButtonProps>(function SelectClearButton(props, ref) {
-        const { getClearButtonProps } = useSelectContext();
+const SelectClearButton = withContext(function SelectClearButton(props: SelectClearButtonProps) {
+    const { ref } = props;
+    const { getClearButtonProps } = useSelectContext();
 
-        return (
-            <dreamy.button {...getClearButtonProps(props, ref)}>
-                <dreamy.svg asChild>
-                    <svg
-                        aria-hidden="true"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <path d="M18 6 6 18" />
-                        <path d="m6 6 12 12" />
-                    </svg>
-                </dreamy.svg>
-            </dreamy.button>
-        );
-    }),
-    "clearButton"
-);
+    return (
+        <dreamy.button {...getClearButtonProps(props, ref)}>
+            <dreamy.svg asChild>
+                <svg
+                    aria-hidden="true"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path d="M18 6 6 18" />
+                    <path d="m6 6 12 12" />
+                </svg>
+            </dreamy.svg>
+        </dreamy.button>
+    );
+}, "clearButton");

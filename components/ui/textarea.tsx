@@ -1,7 +1,7 @@
 "use client";
 
 import { type UserFeedbackProps, callAllHandlers, useField } from "@dreamy-ui/react";
-import { type ComponentType, forwardRef } from "react";
+
 import TextareaAutosize, { type TextareaAutosizeProps } from "react-textarea-autosize";
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type TextareaVariantProps, textarea } from "styled-system/recipes";
@@ -24,19 +24,18 @@ const StyledTextarea = dreamy(TextareaAutosize, textarea);
  *
  * @See Docs https://dreamy-ui.com/docs/components/textarea
  */
-export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>((props, ref) => {
+export function Textarea(props: TextareaProps) {
     const field = useField(props);
 
     return (
         <StyledTextarea
-            ref={ref}
             {...field}
             onChange={callAllHandlers(props.onChange, (e: React.ChangeEvent<HTMLTextAreaElement>) =>
                 props.onChangeValue?.(e.target.value)
             )}
         />
     );
-});
+}
 
 const StyledTextareaNoAutoSize = dreamy("textarea", textarea);
 
@@ -54,19 +53,15 @@ export type TextareaNoAutoSizeProps = HTMLDreamyProps<"textarea"> &
  *
  * @See Docs https://dreamy-ui.com/docs/components/textarea
  */
-export const TextareaNoAutoSize: ComponentType<TextareaNoAutoSizeProps> = forwardRef<
-    HTMLTextAreaElement,
-    TextareaNoAutoSizeProps
->((props, ref) => {
+export function TextareaNoAutoSize(props: TextareaNoAutoSizeProps) {
     const field = useField(props);
 
     return (
         <StyledTextareaNoAutoSize
-            ref={ref}
             {...field}
             onChange={callAllHandlers(props.onChange, (e: React.ChangeEvent<HTMLTextAreaElement>) =>
                 props.onChangeValue?.(e.target.value)
             )}
         />
     );
-});
+}

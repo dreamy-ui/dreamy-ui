@@ -2,7 +2,7 @@
 
 import { type UserFeedbackProps, callAllHandlers, createContext, useField } from "@dreamy-ui/react";
 import type React from "react";
-import { forwardRef, useMemo } from "react";
+import { useMemo } from "react";
 import { type HTMLDreamyProps, dreamy, splitCssProps } from "styled-system/jsx";
 import { type InputVariantProps, input } from "styled-system/recipes";
 import { Box, type BoxProps } from "./box";
@@ -10,8 +10,8 @@ import { Flex, type FlexProps } from "./flex";
 
 export interface InputProps
     extends Omit<HTMLDreamyProps<"input">, "size">,
-    InputVariantProps,
-    UserFeedbackProps {
+        InputVariantProps,
+        UserFeedbackProps {
     /**
      * The callback function that is called when the input value changes.
      */
@@ -30,7 +30,7 @@ const [InputGroupProvider, useInputGroup] = createContext<InputGroupProviderCont
  *
  * @See Docs https://dreamy-ui.com/docs/components/input
  */
-export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
+export function Input(props: InputProps) {
     const inputGroup = useInputGroup();
     const field = useField(
         useMemo(() => {
@@ -43,86 +43,78 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 
     return (
         <StyledInput
-            ref={ref}
             {...field}
             onChange={callAllHandlers(props.onChange, (e: React.ChangeEvent<HTMLInputElement>) =>
                 props.onChangeValue?.(e.target.value)
             )}
         />
     );
-});
+}
 
-interface InputGroupProviderContext extends InputVariantProps, UserFeedbackProps { }
+interface InputGroupProviderContext extends InputVariantProps, UserFeedbackProps {}
 
-export const InputElement = forwardRef<HTMLDivElement, FlexProps>(
-    function InputElement(props, ref) {
-        return (
-            <Flex
-                bg={"alpha.50"}
-                border="1px solid"
-                borderColor="border"
-                flex={1}
-                center
-                px={4}
-                ref={ref}
-                {...props}
-            />
-        );
-    }
-);
+export function InputElement(props: FlexProps) {
+    return (
+        <Flex
+            bg={"alpha.50"}
+            border="1px solid"
+            borderColor="border"
+            center
+            flex={1}
+            px={4}
+            {...props}
+        />
+    );
+}
 
 export interface InputGroupProps extends InputGroupProviderContext, BoxProps {
     leftElement?: React.ReactNode;
     rightElement?: React.ReactNode;
 }
 
-export const InputGroup = forwardRef<HTMLDivElement, InputGroupProps>(
-    function InputGroup(props, ref) {
-        const [cssProps, { children, ...rest }] = splitCssProps(props);
+export function InputGroup(props: InputGroupProps) {
+    const [cssProps, { children, ...rest }] = splitCssProps(props);
 
-        return (
-            <InputGroupProvider value={rest}>
-                <Box
-                    data-input-group={"true"}
-                    ref={ref}
-                    {...cssProps}
-                    css={{
-                        "& > input, & > textarea": {
-                            ...(props.leftElement ? { borderStartRadius: "none" } : {}),
-                            ...(props.rightElement ? { borderEndRadius: "none" } : {})
-                        },
-                        ...cssProps.css
-                    }}
-                >
-                    {props.leftElement && (
-                        <InputElement
-                            borderRight={"none"}
-                            borderStartRadius="l2"
-                        >
-                            {props.leftElement}
-                        </InputElement>
-                    )}
-                    {props.children}
-                    {props.rightElement && (
-                        <InputElement
-                            borderEndRadius="l2"
-                            borderLeft={"none"}
-                        >
-                            {props.rightElement}
-                        </InputElement>
-                    )}
-                </Box>
-            </InputGroupProvider>
-        );
-    }
-);
+    return (
+        <InputGroupProvider value={rest}>
+            <Box
+                data-input-group={"true"}
+                {...cssProps}
+                css={{
+                    "& > input, & > textarea": {
+                        ...(props.leftElement ? { borderStartRadius: "none" } : {}),
+                        ...(props.rightElement ? { borderEndRadius: "none" } : {})
+                    },
+                    ...cssProps.css
+                }}
+            >
+                {props.leftElement && (
+                    <InputElement
+                        borderRight={"none"}
+                        borderStartRadius="l2"
+                    >
+                        {props.leftElement}
+                    </InputElement>
+                )}
+                {props.children}
+                {props.rightElement && (
+                    <InputElement
+                        borderEndRadius="l2"
+                        borderLeft={"none"}
+                    >
+                        {props.rightElement}
+                    </InputElement>
+                )}
+            </Box>
+        </InputGroupProvider>
+    );
+}
 
-export interface InputAddonProps extends FlexProps { }
+export interface InputAddonProps extends FlexProps {}
 
-const InputAddon = forwardRef<HTMLDivElement, InputAddonProps>(function InputAddon(props, ref) {
+function InputAddon(props: InputAddonProps) {
     return (
         <Flex
-            ref={ref}
             {...props}
             style={{
                 position: "absolute",
@@ -138,28 +130,22 @@ const InputAddon = forwardRef<HTMLDivElement, InputAddonProps>(function InputAdd
             }}
         />
     );
-});
+}
 
-export const InputLeftAddon = forwardRef<HTMLDivElement, InputAddonProps>(
-    function InputLeftAddon(props, ref) {
-        return (
-            <InputAddon
-                left={0}
-                ref={ref}
-                {...props}
-            />
-        );
-    }
-);
+export function InputLeftAddon(props: InputAddonProps) {
+    return (
+        <InputAddon
+            left={0}
+            {...props}
+        />
+    );
+}
 
-export const InputRightAddon = forwardRef<HTMLDivElement, InputAddonProps>(
-    function InputRightAddon(props, ref) {
-        return (
-            <InputAddon
-                ref={ref}
-                right={0}
-                {...props}
-            />
-        );
-    }
-);
+export function InputRightAddon(props: InputAddonProps) {
+    return (
+        <InputAddon
+            right={0}
+            {...props}
+        />
+    );
+}

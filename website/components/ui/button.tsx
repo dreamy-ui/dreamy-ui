@@ -1,7 +1,7 @@
 "use client";
 
 import { dataAttr, isMobile, nextTick, useRipple } from "@dreamy-ui/react";
-import { cloneElement, forwardRef, isValidElement, useCallback, useMemo } from "react";
+import { cloneElement, isValidElement, useCallback, useMemo } from "react";
 import { css, cx } from "styled-system/css";
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type ButtonVariantProps, button } from "styled-system/recipes";
@@ -54,147 +54,136 @@ const StyledButton = dreamy("button", button);
  *
  * @See Docs https://dreamy-ui.com/docs/components/button
  */
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-    (
-        {
-            isLoading,
-            loadingText,
-            isDisabled,
-            rightIcon,
-            leftIcon,
-            children,
-            disableRipple,
-            spinner,
-            spinnerPlacement,
-            disabled,
-            ...rest
-        },
-        ref
-    ) => {
-        const {
-            onClick: onRippleClickHandler,
-            onClear: onClearRipple,
-            ripples,
-            currentRipple,
-            onPointerDown: onPointerDownRipple,
-            isDisabled: isDisabledRipple
-        } = useRipple();
+export function Button({
+    isLoading,
+    loadingText,
+    isDisabled,
+    rightIcon,
+    leftIcon,
+    children,
+    disableRipple,
+    spinner,
+    spinnerPlacement,
+    disabled,
+    ...rest
+}: ButtonProps) {
+    const {
+        onClick: onRippleClickHandler,
+        onClear: onClearRipple,
+        ripples,
+        currentRipple,
+        onPointerDown: onPointerDownRipple,
+        isDisabled: isDisabledRipple
+    } = useRipple();
 
-        isDisabled = isDisabled || disabled;
+    isDisabled = isDisabled || disabled;
 
-        const handleClick = useCallback(
-            (e: React.MouseEvent<HTMLButtonElement>) => {
-                rest.onClick?.(e);
-                if (disableRipple || isDisabled || isDisabledRipple) return;
+    const handleClick = useCallback(
+        (e: React.MouseEvent<HTMLButtonElement>) => {
+            rest.onClick?.(e);
+            if (disableRipple || isDisabled || isDisabledRipple) return;
 
-                if (isLoading) return;
-                if (isMobile()) {
-                    onPointerDownRipple(e);
-                    nextTick(() => {
-                        nextTick(() => {
-                            onRippleClickHandler(e);
-                        });
-                    });
-                } else {
-                    onRippleClickHandler(e);
-                }
-            },
-            [
-                disableRipple,
-                isDisabled,
-                onRippleClickHandler,
-                isDisabledRipple,
-                rest.onClick,
-                onPointerDownRipple,
-                isLoading
-            ]
-        );
-
-        const onPointerDown = useCallback(
-            (e: React.PointerEvent<HTMLButtonElement>) => {
-                rest.onPointerDown?.(e);
-                if (disableRipple || isDisabled || isDisabledRipple || isMobile() || isLoading)
-                    return;
+            if (isLoading) return;
+            if (isMobile()) {
                 onPointerDownRipple(e);
-            },
-            [
-                disableRipple,
-                isDisabled,
-                onPointerDownRipple,
-                isDisabledRipple,
-                rest.onPointerDown,
-                isLoading
-            ]
-        );
+                nextTick(() => {
+                    nextTick(() => {
+                        onRippleClickHandler(e);
+                    });
+                });
+            } else {
+                onRippleClickHandler(e);
+            }
+        },
+        [
+            disableRipple,
+            isDisabled,
+            onRippleClickHandler,
+            isDisabledRipple,
+            rest.onClick,
+            onPointerDownRipple,
+            isLoading
+        ]
+    );
 
-        const LeftIcon = useMemo(
-            () => (leftIcon ? <ButtonIcon data-part="icon-left">{leftIcon}</ButtonIcon> : null),
-            [leftIcon]
-        );
-        const RightIcon = useMemo(
-            () => (rightIcon ? <ButtonIcon data-part="icon-right">{rightIcon}</ButtonIcon> : null),
-            [rightIcon]
-        );
+    const onPointerDown = useCallback(
+        (e: React.PointerEvent<HTMLButtonElement>) => {
+            rest.onPointerDown?.(e);
+            if (disableRipple || isDisabled || isDisabledRipple || isMobile() || isLoading) return;
+            onPointerDownRipple(e);
+        },
+        [
+            disableRipple,
+            isDisabled,
+            onPointerDownRipple,
+            isDisabledRipple,
+            rest.onPointerDown,
+            isLoading
+        ]
+    );
 
-        return (
-            <StyledButton
-                data-disabled={dataAttr(isDisabled)}
-                data-loading={dataAttr(isLoading)}
-                disabled={isDisabled || isLoading}
-                ref={ref}
-                {...rest}
-                onClick={handleClick}
-                onPointerDown={onPointerDown}
-                type={rest.type || "button"}
-            >
-                {leftIcon &&
-                    (isLoading ? <span style={{ opacity: 0 }}>{LeftIcon}</span> : LeftIcon)}
+    const LeftIcon = useMemo(
+        () => (leftIcon ? <ButtonIcon data-part="icon-left">{leftIcon}</ButtonIcon> : null),
+        [leftIcon]
+    );
+    const RightIcon = useMemo(
+        () => (rightIcon ? <ButtonIcon data-part="icon-right">{rightIcon}</ButtonIcon> : null),
+        [rightIcon]
+    );
 
-                {isLoading && spinnerPlacement !== "end" && (
-                    <ButtonSpinner
-                        loadingText={loadingText}
-                        spinnerPlacement={spinnerPlacement}
+    return (
+        <StyledButton
+            data-disabled={dataAttr(isDisabled)}
+            data-loading={dataAttr(isLoading)}
+            disabled={isDisabled || isLoading}
+            {...rest}
+            onClick={handleClick}
+            onPointerDown={onPointerDown}
+            type={rest.type || "button"}
+        >
+            {leftIcon && (isLoading ? <span style={{ opacity: 0 }}>{LeftIcon}</span> : LeftIcon)}
+
+            {isLoading && spinnerPlacement !== "end" && (
+                <ButtonSpinner
+                    loadingText={loadingText}
+                    spinnerPlacement={spinnerPlacement}
+                >
+                    {spinner}
+                </ButtonSpinner>
+            )}
+
+            {isLoading ? loadingText || <span style={{ opacity: 0 }}>{children}</span> : children}
+
+            {isLoading && spinnerPlacement === "end" && (
+                <ButtonSpinner
+                    loadingText={loadingText}
+                    spinnerPlacement={"end"}
+                >
+                    {spinner}
+                </ButtonSpinner>
+            )}
+            {rightIcon && (isLoading ? <span style={{ opacity: 0 }}>{RightIcon}</span> : RightIcon)}
+
+            {!disableRipple && (
+                <div data-part="ripple-container">
+                    <div
+                        style={{
+                            width: "100%",
+                            height: "100%",
+                            position: "relative"
+                        }}
                     >
-                        {spinner}
-                    </ButtonSpinner>
-                )}
-
-                {isLoading
-                    ? loadingText || <span style={{ opacity: 0 }}>{children}</span>
-                    : children}
-
-                {isLoading && spinnerPlacement === "end" && (
-                    <ButtonSpinner
-                        loadingText={loadingText}
-                        spinnerPlacement={"end"}
-                    >
-                        {spinner}
-                    </ButtonSpinner>
-                )}
-                {rightIcon &&
-                    (isLoading ? <span style={{ opacity: 0 }}>{RightIcon}</span> : RightIcon)}
-
-                {!disableRipple && (
-                    <div data-part="ripple-container">
-                        <div
-                            style={{
-                                width: "100%",
-                                height: "100%",
-                                position: "relative"
-                            }}
-                        >
-                            <Ripple
-                                currentRipple={currentRipple}
-                                onClear={onClearRipple}
-                                ripples={ripples}
-                            />
-                        </div>
+                        <Ripple
+                            currentRipple={currentRipple}
+                            onClear={onClearRipple}
+                            ripples={ripples}
+                        />
                     </div>
-                )}
-            </StyledButton>
-        );
-    }
-);
+                </div>
+            )}
+        </StyledButton>
+    );
+}
 
 interface ButtonSpinnerOptions {
     loadingText?: React.ReactNode;

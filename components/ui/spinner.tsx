@@ -1,4 +1,3 @@
-import { forwardRef } from "react";
 import { dreamy } from "styled-system/jsx";
 import { type SpinnerVariantProps, spinner } from "styled-system/recipes";
 import { Box, type BoxProps } from "./box";
@@ -37,12 +36,11 @@ const StyledSpinner = dreamy("div", spinner);
  *
  * @See Docs https://dreamy-ui.com/docs/components/spinner
  */
-export const Spinner = forwardRef<HTMLDivElement, SpinnerProps>((props, ref) => {
+export function Spinner(props: SpinnerProps) {
     const { label, labelProps, speed, style, ...rest } = props;
 
     return (
         <StyledSpinner
-            ref={ref}
             {...rest}
             data-part="root"
             style={{
@@ -66,4 +64,4 @@ export const Spinner = forwardRef<HTMLDivElement, SpinnerProps>((props, ref) => 
             )}
         </StyledSpinner>
     );
-});
+}

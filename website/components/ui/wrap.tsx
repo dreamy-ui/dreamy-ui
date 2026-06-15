@@ -1,5 +1,5 @@
 import { splitProps } from "@dreamy-ui/react/rsc";
-import { forwardRef } from "react";
+
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import type { WrapProperties } from "styled-system/patterns";
 import { wrap } from "styled-system/patterns/wrap";
@@ -13,7 +13,7 @@ export interface WrapProps
  *
  * @See Docs https://dreamy-ui.com/docs/components/wrap
  */
-export const Wrap = forwardRef<HTMLDivElement, WrapProps>((props, ref) => {
+export function Wrap(props: WrapProps) {
     const [patternProps, restProps] = splitProps(props, [
         "gap",
         "rowGap",
@@ -26,9 +26,8 @@ export const Wrap = forwardRef<HTMLDivElement, WrapProps>((props, ref) => {
 
     return (
         <dreamy.div
-            ref={ref}
             {...styles}
             {...restProps}
         />
     );
-});
+}

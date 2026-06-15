@@ -116,5 +116,8 @@ function runAddComponents(componentIds: string[], changeKind: RegistryChange["ki
 }
 
 function runAddAllComponents() {
-    execSync("pnpm dreamy add --all --force --skip-install", { stdio: "inherit", cwd: WEBSITE_DIR });
+    execSync("pnpm dreamy add --all --force --skip-install", {
+        stdio: "inherit",
+        cwd: WEBSITE_DIR
+    });
 }

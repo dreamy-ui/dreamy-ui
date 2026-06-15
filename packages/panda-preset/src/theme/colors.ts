@@ -232,3 +232,59 @@ export function alpha(color: string, amount: number) {
 
     return normal.toString({ format: "oklch" });
 }
+
+const ALPHA_OPACITIES = {
+    50: 0.04,
+    100: 0.08,
+    200: 0.12,
+    300: 0.16,
+    400: 0.24,
+    500: 0.32,
+    600: 0.4,
+    700: 0.48,
+    800: 0.56,
+    900: 0.64,
+    950: 0.72
+} as const;
+
+const ALPHA_STEPS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950] as const;
+
+export type AlphaStep = (typeof ALPHA_STEPS)[number];
+
+export function resolveModeNumber(
+    val: number | { light: number; dark: number } | undefined,
+    mode: "light" | "dark",
+    fallback: number
+): number {
+    if (val === undefined) return fallback;
+    if (typeof val === "number") return val;
+    return val[mode];
+}
+
+function genNeutralAlpha(variant: "black" | "white", opacity: number): string {
+    return variant === "black" ? `rgba(0, 0, 0, ${opacity})` : `rgba(255, 255, 255, ${opacity})`;
+}
+
+export function genAlphaTokens(
+    variant: "black" | "white",
+    chroma: number,
+    hue: number
+): Record<AlphaStep, { value: string }> {
+    const lightness = variant === "black" ? 0 : 1;
+    const tokens = {} as Record<AlphaStep, { value: string }>;
+
+    for (const step of ALPHA_STEPS) {
+        const opacity = ALPHA_OPACITIES[step];
+
+        if (chroma <= 0) {
+            tokens[step] = { value: genNeutralAlpha(variant, opacity) };
+            continue;
+        }
+
+        const color = new Color("oklch", [lightness, Math.min(chroma, 0.4), hue]);
+        color.alpha = opacity;
+        tokens[step] = { value: color.toString({ format: "oklch" }) };
+    }
+
+    return tokens;
+}

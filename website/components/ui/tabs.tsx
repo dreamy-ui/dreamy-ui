@@ -15,7 +15,7 @@ import {
     useTabs,
     useTabsContext
 } from "@dreamy-ui/react";
-import { forwardRef } from "react";
+
 import { type HTMLDreamyProps, createStyleContext } from "styled-system/jsx";
 import { tabs } from "styled-system/recipes";
 import { Box } from "./box";
@@ -36,93 +36,66 @@ export interface TabsProps
  *
  * @See Docs https://dreamy-ui.com/docs/components/tabs
  */
-export const Root = withProvider(
-    forwardRef<HTMLDivElement, TabsProps>(function Tabs(props, ref) {
-        const { children, ...rest } = props;
+export const Root = withProvider(function Tabs(props: TabsProps) {
+    const { children, ...rest } = props;
 
-        const { htmlProps, descendants, ...ctx } = useTabs(rest);
+    const { htmlProps, descendants, ...ctx } = useTabs(rest);
 
-        return (
-            <TabsDescendantsProvider value={descendants}>
-                <TabsProvider value={ctx}>
-                    <Box
-                        ref={ref}
-                        {...htmlProps}
-                    >
-                        {children}
-                    </Box>
-                </TabsProvider>
-            </TabsDescendantsProvider>
-        );
-    }),
-    "root"
-);
+    return (
+        <TabsDescendantsProvider value={descendants}>
+            <TabsProvider value={ctx}>
+                <Box {...htmlProps}>{children}</Box>
+            </TabsProvider>
+        </TabsDescendantsProvider>
+    );
+}, "root");
 
 export interface TabListProps extends UseTabListProps, Omit<FlexProps, "onKeyDown" | "ref"> {}
 
-export const List = withContext(
-    forwardRef<HTMLDivElement, TabListProps>(function TabList(props, ref) {
-        const tablistProps = useTabList({ ...props, ref });
+export const List = withContext(function TabList(props: TabListProps) {
+    const { ref } = props;
+    const tablistProps = useTabList({ ...props, ref });
 
-        return <Flex {...tablistProps} />;
-    }),
-    "tabList"
-);
+    return <Flex {...tablistProps} />;
+}, "tabList");
 
 export interface TabProps extends UseTabOptions, ButtonProps {}
 
-export const Tab = withContext(
-    forwardRef<HTMLButtonElement, TabProps>(function Tab(props, ref) {
-        const { children, ...rest } = props;
+export const Tab = withContext(function Tab(props: TabProps) {
+    const { ref } = props;
+    const { children, ...rest } = props;
 
-        const { isSelected, props: tabProps } = useTab({ ...rest, ref });
+    const { isSelected, props: tabProps } = useTab({ ...rest, ref });
 
-        return (
-            <Button
-                disableRipple
-                size={"sm"}
-                variant={"ghost"}
-                {...tabProps}
-            >
-                {children}
-                {isSelected && <Indicator />}
-            </Button>
-        );
-    }),
-    "tab"
-);
+    return (
+        <Button
+            disableRipple
+            size={"sm"}
+            variant={"ghost"}
+            {...tabProps}
+        >
+            {children}
+            {isSelected && <Indicator />}
+        </Button>
+    );
+}, "tab");
 
 export interface TabPanelsProps extends FlexProps {}
 
-export const Panels = withContext(
-    forwardRef<HTMLDivElement, TabPanelsProps>(function TabPanels(props, ref) {
-        const panelsProps = useTabPanels(props);
+export const Panels = withContext(function TabPanels(props: TabPanelsProps) {
+    const panelsProps = useTabPanels(props);
 
-        return (
-            <Flex
-                {...panelsProps}
-                ref={ref}
-            />
-        );
-    }),
-    "tabPanels"
-);
+    return <Flex {...panelsProps} />;
+}, "tabPanels");
 
 export interface TabPanelProps extends HTMLDreamyProps<"div"> {}
 
-export const Panel = withContext(
-    forwardRef<HTMLDivElement, TabPanelProps>(function TabPanel(props, ref) {
-        const panelProps = useTabPanel({ ...props, ref });
+export const Panel = withContext(function TabPanel(props: TabPanelProps) {
+    const { ref } = props;
+    const panelProps = useTabPanel({ ...props, ref });
 
-        return (
-            <Flex
-                {...panelProps}
-                ref={ref}
-            />
-        );
-    }),
-    "tabPanel"
-);
+    return <Flex {...panelProps} />;
+}, "tabPanel");
 
 export interface TabIndicatorProps extends MotionFlexProps {}
 
@@ -130,28 +103,24 @@ export interface TabIndicatorProps extends MotionFlexProps {}
  * Used inside Tab components
  * @internal
  */
-const Indicator = withContext(
-    forwardRef<HTMLDivElement, TabIndicatorProps>(function TabIndicator(props, ref) {
-        const { id } = useTabsContext();
-        const transition = useDefaultTransition();
-        const domAvailable = useCanUseDOM();
+const Indicator = withContext(function TabIndicator(props: TabIndicatorProps) {
+    const { id } = useTabsContext();
+    const transition = useDefaultTransition();
+    const domAvailable = useCanUseDOM();
 
-        return (
-            <MotionFlex
-                ref={ref}
-                {...props}
-                animate={{ opacity: 1, scale: 1 }}
-                initial={!domAvailable ? { opacity: 0, scale: 0.95 } : undefined}
-                layout
-                layoutDependency={false}
-                layoutId={`${id}-indicator`}
-                rounded={"inherit"}
-                transition={{
-                    ...transition,
-                    duration: (transition?.duration ?? 0.2) * 1.5
-                }}
-            />
-        );
-    }),
-    "tabIndicator"
-);
+    return (
+        <MotionFlex
+            {...props}
+            animate={{ opacity: 1, scale: 1 }}
+            initial={!domAvailable ? { opacity: 0, scale: 0.95 } : undefined}
+            layout
+            layoutDependency={false}
+            layoutId={`${id}-indicator`}
+            rounded={"inherit"}
+            transition={{
+                ...transition,
+                duration: (transition?.duration ?? 0.2) * 1.5
+            }}
+        />
+    );
+}, "tabIndicator");

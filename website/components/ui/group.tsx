@@ -1,5 +1,5 @@
 import { dataAttr, splitProps } from "@dreamy-ui/react";
-import { Children, cloneElement, forwardRef, isValidElement, useMemo } from "react";
+import { Children, cloneElement, isValidElement, useMemo } from "react";
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type FlexProperties, flex } from "styled-system/patterns";
 import { type GroupVariantProps, group } from "styled-system/recipes";
@@ -21,7 +21,7 @@ const StyledGroup = dreamy("div", group);
  *
  * @See Docs https://dreamy-ui.com/docs/components/group
  */
-export const Group = forwardRef<HTMLDivElement, GroupProps>(({ children, skip, ...props }, ref) => {
+export function Group({ children, skip, ...props }: GroupProps) {
     const [patternProps, restProps] = splitProps(props, [
         "align",
         "justify",
@@ -62,11 +62,10 @@ export const Group = forwardRef<HTMLDivElement, GroupProps>(({ children, skip, .
 
     return (
         <StyledGroup
-            ref={ref}
             {...styles}
             {...restProps}
         >
             {_children}
         </StyledGroup>
     );
-});
+}

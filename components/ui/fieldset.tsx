@@ -1,6 +1,5 @@
 "use client";
 
-import { forwardRef } from "react";
 import { createStyleContext, type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { fieldset } from "styled-system/recipes";
 
@@ -22,22 +21,18 @@ export interface FieldsetRootProps extends HTMLDreamyProps<"fieldset"> {
  *
  * @See Docs https://dreamy-ui.com/docs/components/fieldset
  */
-export const Root = withProvider(
-    forwardRef<HTMLFieldSetElement, FieldsetRootProps>(function FieldsetRoot(props, ref) {
-        const { disabled, invalid, ...rest } = props;
-        return (
-            <dreamy.fieldset
-                ref={ref}
-                disabled={disabled}
-                aria-invalid={invalid}
-                data-invalid={invalid ? "" : undefined}
-                data-disabled={disabled ? "" : undefined}
-                {...rest}
-            />
-        );
-    }),
-    "root"
-);
+export const Root = withProvider(function FieldsetRoot(props: FieldsetRootProps) {
+    const { disabled, invalid, ...rest } = props;
+    return (
+        <dreamy.fieldset
+            disabled={disabled}
+            aria-invalid={invalid}
+            data-invalid={invalid ? "" : undefined}
+            data-disabled={disabled ? "" : undefined}
+            {...rest}
+        />
+    );
+}, "root");
 
 export interface FieldsetLegendProps extends HTMLDreamyProps<"legend"> {}
 

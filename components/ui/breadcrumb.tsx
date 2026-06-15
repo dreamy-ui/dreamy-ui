@@ -1,7 +1,7 @@
 "use client";
 
 import { ariaAttr } from "@dreamy-ui/react";
-import { forwardRef } from "react";
+
 import { createStyleContext, dreamy, type HTMLDreamyProps } from "styled-system/jsx";
 import { type BreadcrumbVariantProps, breadcrumb } from "styled-system/recipes";
 
@@ -27,37 +27,27 @@ export const CurrentLink = withContext(dreamy.span, "currentLink", {
 });
 
 export interface BreadcrumbSeparatorProps extends HTMLDreamyProps<"li"> {}
-export const Separator = withContext(
-    forwardRef<HTMLLIElement, BreadcrumbSeparatorProps>((props, ref) => {
-        return (
-            <dreamy.li
-                ref={ref}
-                {...props}
-                role="presentation"
-                aria-hidden={ariaAttr(true)}
-            >
-                {props.children ?? "/"}
-            </dreamy.li>
-        );
-    }),
-    "separator"
-);
+export const Separator = withContext(function Component(props: BreadcrumbSeparatorProps) {
+    return (
+        <dreamy.li
+            {...props}
+            role="presentation"
+            aria-hidden={ariaAttr(true)}
+        >
+            {props.children ?? "/"}
+        </dreamy.li>
+    );
+}, "separator");
 
 export interface BreadcrumbEllipsisProps extends HTMLDreamyProps<"li"> {}
-export const Ellipsis = withContext(
-    forwardRef<HTMLLIElement, BreadcrumbEllipsisProps>((props, ref) => {
-        return (
-            <dreamy.li
-                ref={ref}
-                {...props}
-                role="presentation"
-                aria-hidden={ariaAttr(true)}
-            >
-                {props.children ?? "..."}
-            </dreamy.li>
-        );
-    }),
-    "ellipsis"
-);
-
-
+export const Ellipsis = withContext(function Component(props: BreadcrumbEllipsisProps) {
+    return (
+        <dreamy.li
+            {...props}
+            role="presentation"
+            aria-hidden={ariaAttr(true)}
+        >
+            {props.children ?? "..."}
+        </dreamy.li>
+    );
+}, "ellipsis");

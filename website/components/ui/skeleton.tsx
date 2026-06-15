@@ -1,4 +1,3 @@
-import { forwardRef } from "react";
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type SkeletonVariantProps, skeleton } from "styled-system/recipes";
 
@@ -11,14 +10,9 @@ const StyledSkeleton = dreamy("div", skeleton);
  *
  * @See Docs https://dreamy-ui.com/docs/components/skeleton
  */
-export const Skeleton = forwardRef<HTMLDivElement, SkeletonProps>((props, ref) => {
-    return (
-        <StyledSkeleton
-            ref={ref}
-            {...props}
-        />
-    );
-});
+export function Skeleton(props: SkeletonProps) {
+    return <StyledSkeleton {...props} />;
+}
 
 export interface SkeletonTextProps extends SkeletonProps {
     /**
@@ -33,7 +27,7 @@ export interface SkeletonTextProps extends SkeletonProps {
  *
  * @See Docs https://dreamy-ui.com/docs/components/skeleton
  */
-export const SkeletonText = forwardRef<HTMLDivElement, SkeletonTextProps>((props, ref) => {
+export function SkeletonText(props: SkeletonTextProps) {
     const { lines = 1, ...rest } = props;
 
     return (
@@ -42,10 +36,9 @@ export const SkeletonText = forwardRef<HTMLDivElement, SkeletonTextProps>((props
                 <StyledSkeleton
                     data-skeleton-text
                     key={index}
-                    ref={ref}
                     {...rest}
                 />
             ))}
         </div>
     );
-});
+}

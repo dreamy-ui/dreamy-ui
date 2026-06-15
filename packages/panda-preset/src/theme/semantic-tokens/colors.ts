@@ -5,18 +5,9 @@ import {
     type ResolvedFgOffsets,
     alpha,
     genBorderTokens,
-    genForegroundTokens
+    genForegroundTokens,
+    resolveModeNumber
 } from "../colors";
-
-function resolveNumber(
-    val: number | { light: number; dark: number } | undefined,
-    mode: "light" | "dark",
-    fallback: number
-): number {
-    if (val === undefined) return fallback;
-    if (typeof val === "number") return val;
-    return val[mode];
-}
 
 export function createColorTokens() {
     const {
@@ -29,15 +20,15 @@ export function createColorTokens() {
     } = getPresetOptions();
 
     // ── Chroma scales ──────────────────────────────────────────────────────────
-    const fgChromaScaleLight = resolveNumber(colorTuning?.fgChromaScale, "light", 1);
-    const fgChromaScaleDark = resolveNumber(colorTuning?.fgChromaScale, "dark", 1);
+    const fgChromaScaleLight = resolveModeNumber(colorTuning?.fgChromaScale, "light", 1);
+    const fgChromaScaleDark = resolveModeNumber(colorTuning?.fgChromaScale, "dark", 1);
 
-    const borderChromaScaleLight = resolveNumber(
+    const borderChromaScaleLight = resolveModeNumber(
         colorTuning?.borderChromaScale,
         "light",
         fgChromaScaleLight
     );
-    const borderChromaScaleDark = resolveNumber(
+    const borderChromaScaleDark = resolveModeNumber(
         colorTuning?.borderChromaScale,
         "dark",
         fgChromaScaleDark
@@ -45,10 +36,10 @@ export function createColorTokens() {
 
     // ── Fg lightness offsets (per token, per mode) ─────────────────────────────
     const fgOffsets = (mode: "light" | "dark"): ResolvedFgOffsets => ({
-        max: resolveNumber(colorTuning?.fgLightnessOffset?.max, mode, 0),
-        normal: resolveNumber(colorTuning?.fgLightnessOffset?.normal, mode, 0),
-        medium: resolveNumber(colorTuning?.fgLightnessOffset?.medium, mode, 0),
-        disabled: resolveNumber(colorTuning?.fgLightnessOffset?.disabled, mode, 0)
+        max: resolveModeNumber(colorTuning?.fgLightnessOffset?.max, mode, 0),
+        normal: resolveModeNumber(colorTuning?.fgLightnessOffset?.normal, mode, 0),
+        medium: resolveModeNumber(colorTuning?.fgLightnessOffset?.medium, mode, 0),
+        disabled: resolveModeNumber(colorTuning?.fgLightnessOffset?.disabled, mode, 0)
     });
 
     // ── Border lightness offsets (per token, per mode) ─────────────────────────
@@ -59,9 +50,9 @@ export function createColorTokens() {
         const bo = colorTuning?.borderLightnessOffset;
         const isBorderDefined = bo !== undefined;
         return {
-            default: resolveNumber(bo?.default, mode, isBorderDefined ? 0 : fg.normal),
-            muted: resolveNumber(bo?.muted, mode, isBorderDefined ? 0 : fg.disabled),
-            hover: resolveNumber(bo?.hover, mode, isBorderDefined ? 0 : fg.normal)
+            default: resolveModeNumber(bo?.default, mode, isBorderDefined ? 0 : fg.normal),
+            muted: resolveModeNumber(bo?.muted, mode, isBorderDefined ? 0 : fg.disabled),
+            hover: resolveModeNumber(bo?.hover, mode, isBorderDefined ? 0 : fg.normal)
         };
     };
 

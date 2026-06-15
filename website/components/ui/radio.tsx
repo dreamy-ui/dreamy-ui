@@ -8,7 +8,7 @@ import {
     useRadio,
     useRadioGroup
 } from "@dreamy-ui/react";
-import { forwardRef, useMemo } from "react";
+import { useMemo } from "react";
 import { cx } from "styled-system/css";
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type RadioVariantProps, radio } from "styled-system/recipes";
@@ -27,7 +27,8 @@ const StyledRadio = dreamy("div", radio);
  *
  * @See Docs https://dreamy-ui.com/docs/components/radio
  */
-export const Radio = forwardRef<HTMLInputElement, RadioProps>((props, ref) => {
+export function Radio(props: RadioProps) {
+    const { ref } = props;
     const {
         children,
         getRootProps,
@@ -46,7 +47,7 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>((props, ref) => {
             {children && <span {...getLabelProps()}>{children}</span>}
         </StyledRadio>
     );
-});
+}
 
 export interface RadioGroupContext
     extends Pick<

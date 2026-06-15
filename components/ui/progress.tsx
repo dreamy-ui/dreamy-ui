@@ -1,12 +1,12 @@
 import { valueToPercent } from "@dreamy-ui/react";
-import { forwardRef, useMemo } from "react";
+import { useMemo } from "react";
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type ProgressVariantProps, progress } from "styled-system/recipes";
 import { Box } from "./box";
 
 interface ProgressFilledTrackProps extends HTMLDreamyProps<"div">, GetProgressPropsOptions {}
 
-const ProgressFilledTrack = forwardRef<HTMLDivElement, ProgressFilledTrackProps>((props, ref) => {
+function ProgressFilledTrack(props: ProgressFilledTrackProps) {
     const { min, max, value, isIndeterminate, role, ...rest } = props;
     const progress = useMemo(
         () => getProgressProps({ value, min, max, isIndeterminate, role }),
@@ -16,13 +16,12 @@ const ProgressFilledTrack = forwardRef<HTMLDivElement, ProgressFilledTrackProps>
     return (
         <Box
             data-part="filled-track"
-            ref={ref}
             {...rest}
             style={{ width: `${progress.percent}%`, ...rest.style }}
             {...progress.bind}
         />
     );
-});
+}
 
 interface ProgressOptions {
     /**
@@ -61,7 +60,7 @@ const StyledProgress = dreamy("div", progress);
  *
  * @See Docs https://dreamy-ui.com/docs/components/progress
  */
-export const Progress = forwardRef<HTMLDivElement, ProgressProps>((props, ref) => {
+export function Progress(props: ProgressProps) {
     const {
         value,
         min = 0,
@@ -79,7 +78,6 @@ export const Progress = forwardRef<HTMLDivElement, ProgressProps>((props, ref) =
 
     return (
         <StyledProgress
-            ref={ref}
             {...rest}
             data-speed={speed}
             style={{
@@ -101,7 +99,7 @@ export const Progress = forwardRef<HTMLDivElement, ProgressProps>((props, ref) =
             {children}
         </StyledProgress>
     );
-});
+}
 
 interface GetProgressPropsOptions {
     value?: number;

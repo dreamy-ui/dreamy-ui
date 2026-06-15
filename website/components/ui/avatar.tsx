@@ -8,7 +8,7 @@ import {
     initials,
     useAvatarImage
 } from "@dreamy-ui/react";
-import { cloneElement, forwardRef, useMemo, useState } from "react";
+import { cloneElement, useMemo, useState } from "react";
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type AvatarVariantProps, avatar } from "styled-system/recipes";
 import type { SystemProperties, SystemStyleObject } from "styled-system/types";
@@ -192,29 +192,25 @@ const StyledBase = dreamy("span", avatar);
  *
  * @See Docs https://dreamy-ui.com/docs/components/avatar
  */
-export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(
-    {
-        src,
-        srcSet,
-        name,
-        onError,
-        onLoad: onLoadProp,
-        getInitials = initials,
-        icon = <GenericAvatarIcon />,
-        iconLabel = " avatar",
-        loading,
-        children,
-        crossOrigin,
-        referrerPolicy,
-        ...rest
-    },
-    ref
-) {
+export function Avatar({
+    src,
+    srcSet,
+    name,
+    onError,
+    onLoad: onLoadProp,
+    getInitials = initials,
+    icon = <GenericAvatarIcon />,
+    iconLabel = " avatar",
+    loading,
+    children,
+    crossOrigin,
+    referrerPolicy,
+    ...rest
+}: AvatarProps) {
     const [isLoaded, setIsLoaded] = useState(false);
 
     return (
         <StyledBase
-            ref={ref}
             {...rest}
             data-loaded={dataAttr(isLoaded)}
             data-part="root"
@@ -237,7 +233,7 @@ export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(
             {children}
         </StyledBase>
     );
-});
+}
 
 interface AvatarGroupOptions {
     /**
@@ -262,55 +258,52 @@ export interface AvatarGroupProps extends AvatarGroupOptions, Omit<FlexProps, "c
 /**
  * AvatarGroup displays a number of avatars grouped together in a stack.
  */
-export const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
-    function AvatarGroup(props, ref) {
-        const { children, maxAvatars, spacing = "-0.75rem", ...rest } = props;
+export function AvatarGroup(props: AvatarGroupProps) {
+    const { children, maxAvatars, spacing = "-0.75rem", ...rest } = props;
 
-        const validChildren = getValidChildren(children);
+    const validChildren = getValidChildren(children);
 
-        /**
-         * get the avatars within the max
-         */
-        const childrenWithinMax =
-            maxAvatars != null ? validChildren.slice(0, maxAvatars) : validChildren;
+    /**
+     * get the avatars within the max
+     */
+    const childrenWithinMax =
+        maxAvatars != null ? validChildren.slice(0, maxAvatars) : validChildren;
 
-        /**
-         * get the remaining avatar count
-         */
-        const excess = maxAvatars != null ? validChildren.length - maxAvatars : 0;
+    /**
+     * get the remaining avatar count
+     */
+    const excess = maxAvatars != null ? validChildren.length - maxAvatars : 0;
 
-        /**
-         * Reversing the children is a great way to avoid using zIndex
-         * to overlap the avatars
-         */
-        const reversedChildren = childrenWithinMax.reverse();
+    /**
+     * Reversing the children is a great way to avoid using zIndex
+     * to overlap the avatars
+     */
+    const reversedChildren = childrenWithinMax.reverse();
 
-        const clones = reversedChildren.map((child, index) => {
-            const isFirstAvatar = index === 0;
+    const clones = reversedChildren.map((child, index) => {
+        const isFirstAvatar = index === 0;
 
-            const childProps = {
-                style: { marginInlineEnd: isFirstAvatar ? 0 : spacing },
-                showBorder: true
-            } satisfies AvatarProps;
+        const childProps = {
+            style: { marginInlineEnd: isFirstAvatar ? 0 : spacing },
+            showBorder: true
+        } satisfies AvatarProps;
 
-            return cloneElement(child, compact(childProps));
-        });
+        return cloneElement(child, compact(childProps));
+    });
 
-        return (
-            <Flex
-                data-part="group"
-                ref={ref}
-                role="group"
-                {...rest}
-            >
-                {excess > 0 && (
-                    <Box
-                        data-part="excess"
-                        style={{ marginInlineStart: spacing }}
-                    >{`+${excess}`}</Box>
-                )}
-                {clones}
-            </Flex>
-        );
-    }
-);
+    return (
+        <Flex
+            data-part="group"
+            role="group"
+            {...rest}
+        >
+            {excess > 0 && (
+                <Box
+                    data-part="excess"
+                    style={{ marginInlineStart: spacing }}
+                >{`+${excess}`}</Box>
+            )}
+            {clones}
+        </Flex>
+    );
+}

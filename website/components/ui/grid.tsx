@@ -1,5 +1,5 @@
 import { splitProps } from "@dreamy-ui/react/rsc";
-import { forwardRef } from "react";
+
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import {
     type GridItemProperties,
@@ -17,7 +17,7 @@ export interface GridProps
  *
  * @See Docs https://dreamy-ui.com/docs/components/grid
  */
-export const Grid = forwardRef<HTMLDivElement, GridProps>((props, ref) => {
+export function Grid(props: GridProps) {
     const [patternProps, restProps] = splitProps(props, [
         "gap",
         "columnGap",
@@ -30,12 +30,11 @@ export const Grid = forwardRef<HTMLDivElement, GridProps>((props, ref) => {
 
     return (
         <dreamy.div
-            ref={ref}
             {...styles}
             {...restProps}
         />
     );
-});
+}
 
 export interface GridItemProps
     extends Omit<HTMLDreamyProps<"div">, keyof GridItemProperties>,
@@ -46,7 +45,7 @@ export interface GridItemProps
  *
  * @See Docs https://dreamy-ui.com/docs/components/grid
  */
-export const GridItem = forwardRef<HTMLDivElement, GridItemProps>((props, ref) => {
+export function GridItem(props: GridItemProps) {
     const [patternProps, restProps] = splitProps(props, [
         "colSpan",
         "rowSpan",
@@ -60,9 +59,8 @@ export const GridItem = forwardRef<HTMLDivElement, GridItemProps>((props, ref) =
 
     return (
         <dreamy.div
-            ref={ref}
             {...styles}
             {...restProps}
         />
     );
-});
+}

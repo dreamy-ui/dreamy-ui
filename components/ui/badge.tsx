@@ -1,4 +1,3 @@
-import { forwardRef } from "react";
 import { type BadgeVariantProps, badge } from "styled-system/recipes";
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 
@@ -11,11 +10,6 @@ const DreamyBadge = dreamy("div", badge);
  *
  * @See Docs https://dreamy-ui.com/docs/components/badge
  */
-export const Badge = forwardRef<HTMLDivElement, BadgeProps>((props, ref) => {
-    return (
-        <DreamyBadge
-            ref={ref}
-            {...props}
-        />
-    );
-});
+export function Badge(props: BadgeProps) {
+    return <DreamyBadge {...props} />;
+}

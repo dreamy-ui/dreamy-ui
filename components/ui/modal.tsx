@@ -15,7 +15,7 @@ import {
     useMotionVariants
 } from "@dreamy-ui/react";
 import { AnimatePresence, usePresence } from "motion/react";
-import { forwardRef, useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { createStyleContext } from "styled-system/jsx";
 import { modal } from "styled-system/recipes";
 import { Box, type BoxProps } from "./box";
@@ -113,154 +113,132 @@ export const Root = withRootProvider(function ModalRoot(props: ModalProps) {
     );
 });
 
-export interface ModalOverlayProps extends MotionBoxProps { }
+export interface ModalOverlayProps extends MotionBoxProps {}
 
-export const Overlay = withContext(
-    forwardRef<HTMLDivElement, ModalOverlayProps>((props, ref) => {
-        const { isOpen } = useModalContext();
-        const { overlay } = useMotionVariants();
+export const Overlay = withContext(function Component(props: ModalOverlayProps) {
+    const { isOpen } = useModalContext();
+    const { overlay } = useMotionVariants();
 
-        return (
-            <AnimatePresence>
-                {isOpen && (
-                    <MotionBox
+    return (
+        <AnimatePresence>
+            {isOpen && (
+                <MotionBox
+                    animate="animate"
+                    exit="exit"
+                    initial="initial"
+                    variants={overlay}
+                    {...props}
+                />
+            )}
+        </AnimatePresence>
+    );
+}, "overlay");
+
+interface ModalContainerProps extends BoxProps {}
+
+const Container = withContext(function Component({ children, ref, ...props }: ModalContainerProps) {
+    const { getDialogContainerProps } = useModalContext();
+
+    return <Box {...getDialogContainerProps(props, ref)}>{children}</Box>;
+}, "container");
+
+export interface ModalContentProps extends MotionFlexProps {}
+
+export const Content = withContext(function Component({
+    children,
+    ref,
+    ...props
+}: ModalContentProps) {
+    const { getDialogProps } = useModalContext();
+    const { modal } = useMotionVariants();
+    const transition = useDefaultTransition();
+
+    return (
+        <>
+            <ModalFocusScope>
+                <Container>
+                    <MotionFlex
                         animate="animate"
                         exit="exit"
                         initial="initial"
-                        ref={ref}
-                        variants={overlay}
-                        {...props}
-                    />
-                )}
-            </AnimatePresence>
-        );
-    }),
-    "overlay"
-);
-
-interface ModalContainerProps extends BoxProps { }
-
-const Container = withContext(
-    forwardRef<HTMLDivElement, ModalContainerProps>(({ children, ...props }, ref) => {
-        const { getDialogContainerProps } = useModalContext();
-
-        return <Box {...getDialogContainerProps(props, ref)}>{children}</Box>;
-    }),
-    "container"
-);
-
-export interface ModalContentProps extends MotionFlexProps { }
-
-export const Content = withContext(
-    forwardRef<HTMLDivElement, ModalContentProps>(({ children, ...props }, ref) => {
-        const { getDialogProps } = useModalContext();
-        const { modal } = useMotionVariants();
-        const transition = useDefaultTransition();
-
-        return (
-            <>
-                <ModalFocusScope>
-                    <Container>
-                        <MotionFlex
-                            animate="animate"
-                            exit="exit"
-                            initial="initial"
-                            transition={transition}
-                            variants={modal}
-                            {...getDialogProps(props, ref)}
-                        >
-                            {children}
-                        </MotionFlex>
-                    </Container>
-                </ModalFocusScope>
-            </>
-        );
-    }),
-    "content"
-);
-
-export interface ModalHeaderProps extends FlexProps { }
-
-export const Header = withContext(
-    forwardRef<HTMLDivElement, ModalHeaderProps>(({ children, ...props }, ref) => {
-        return (
-            <Flex
-                as={"header"}
-                {...props}
-                ref={ref}
-            >
-                {typeof children === "string" ? (
-                    <Heading
-                        size="lg"
-                        variant={"heading"}
+                        transition={transition}
+                        variants={modal}
+                        {...getDialogProps(props, ref)}
                     >
                         {children}
-                    </Heading>
-                ) : (
-                    children
-                )}
-            </Flex>
-        );
-    }),
-    "header"
-);
+                    </MotionFlex>
+                </Container>
+            </ModalFocusScope>
+        </>
+    );
+}, "content");
 
-export interface ModalBodyProps extends FlexProps { }
+export interface ModalHeaderProps extends FlexProps {}
 
-export const Body = withContext(
-    forwardRef<HTMLDivElement, ModalBodyProps>(({ children, style, ...props }, ref) => {
-        const { scrollBehavior } = useModalContext();
+export const Header = withContext(function Component({ children, ...props }: ModalHeaderProps) {
+    return (
+        <Flex
+            as={"header"}
+            {...props}
+        >
+            {typeof children === "string" ? (
+                <Heading
+                    size="lg"
+                    variant={"heading"}
+                >
+                    {children}
+                </Heading>
+            ) : (
+                children
+            )}
+        </Flex>
+    );
+}, "header");
 
-        return (
-            <Flex
-                ref={ref}
-                {...props}
-                style={{
-                    maxHeight: scrollBehavior === "inside" ? "calc(100vh - 10rem)" : undefined,
-                    overflow: scrollBehavior === "inside" ? "auto" : undefined,
-                    ...style
-                }}
-            >
-                {children}
-            </Flex>
-        );
-    }),
-    "body"
-);
+export interface ModalBodyProps extends FlexProps {}
 
-export interface ModalFooterProps extends FlexProps { }
+export const Body = withContext(function Component({ children, style, ...props }: ModalBodyProps) {
+    const { scrollBehavior } = useModalContext();
 
-export const Footer = withContext(
-    forwardRef<HTMLDivElement, ModalFooterProps>(({ children, ...props }, ref) => {
-        return (
-            <Flex
-                as={"footer"}
-                {...props}
-                ref={ref}
-            >
-                {children}
-            </Flex>
-        );
-    }),
-    "footer"
-);
+    return (
+        <Flex
+            {...props}
+            style={{
+                maxHeight: scrollBehavior === "inside" ? "calc(100vh - 10rem)" : undefined,
+                overflow: scrollBehavior === "inside" ? "auto" : undefined,
+                ...style
+            }}
+        >
+            {children}
+        </Flex>
+    );
+}, "body");
 
-export interface ModalCloseButtonProps extends CloseButtonProps { }
+export interface ModalFooterProps extends FlexProps {}
 
-export const CloseButton = withContext(
-    forwardRef<HTMLButtonElement, ModalCloseButtonProps>(({ ...props }, ref) => {
-        const { onClose } = useModalContext();
+export const Footer = withContext(function Component({ children, ...props }: ModalFooterProps) {
+    return (
+        <Flex
+            as={"footer"}
+            {...props}
+        >
+            {children}
+        </Flex>
+    );
+}, "footer");
 
-        return (
-            <CloseButtonComponent
-                onClick={onClose}
-                ref={ref}
-                {...props}
-            />
-        );
-    }),
-    "close"
-);
+export interface ModalCloseButtonProps extends CloseButtonProps {}
+
+export const CloseButton = withContext(function Component({ ...props }: ModalCloseButtonProps) {
+    const { onClose } = useModalContext();
+
+    return (
+        <CloseButtonComponent
+            onClick={onClose}
+            {...props}
+        />
+    );
+}, "close");
 
 interface ModalFocusScopeProps {
     children: React.ReactElement;

@@ -1,7 +1,7 @@
 "use client";
 
 import { type UseSnippetProps, useSnippet } from "@dreamy-ui/react";
-import { type SVGProps, cloneElement, forwardRef, useMemo } from "react";
+import { type SVGProps, cloneElement, useMemo } from "react";
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type SnippetVariantProps, snippet } from "styled-system/recipes";
 import { IconButton, type IconButtonProps } from "./icon-button";
@@ -19,7 +19,8 @@ const StyledSnippet = dreamy("div", snippet);
  *
  * @See Docs https://dreamy-ui.com/docs/components/snippet
  */
-export const Snippet = forwardRef<HTMLDivElement, SnippetProps>((props, ref) => {
+export function Snippet(props: SnippetProps) {
+    const { ref } = props;
     const {
         preRef,
         children,
@@ -107,7 +108,7 @@ export const Snippet = forwardRef<HTMLDivElement, SnippetProps>((props, ref) => 
             {contents}
         </StyledSnippet>
     );
-});
+}
 
 export function CheckIcon(props: SVGProps<SVGSVGElement>) {
     return (

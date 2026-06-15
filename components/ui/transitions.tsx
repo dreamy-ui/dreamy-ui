@@ -13,7 +13,7 @@ import {
     type HTMLMotionProps,
     type Variants
 } from "motion/react";
-import { forwardRef, useMemo } from "react";
+import { useMemo } from "react";
 import { css, cx } from "styled-system/css";
 import { MotionBox, type MotionBoxProps } from "./motion";
 
@@ -46,7 +46,7 @@ export interface CollapseProps extends WithTransitionConfig<MotionBoxProps>, Col
  *
  * @See Docs https://dreamy-ui.com/docs/components/transitions
  */
-export const Collapse = forwardRef<HTMLDivElement, CollapseProps>((props, ref) => {
+export function Collapse(props: CollapseProps) {
     const {
         isOpen,
         unmountOnExit,
@@ -97,7 +97,6 @@ export const Collapse = forwardRef<HTMLDivElement, CollapseProps>((props, ref) =
                     custom={custom}
                     exit="exit"
                     initial={unmountOnExit ? "exit" : false}
-                    ref={ref}
                     variants={transformReducedMotion(variants, reducedMotion)}
                     {...rest}
                     className={cx(
@@ -111,7 +110,7 @@ export const Collapse = forwardRef<HTMLDivElement, CollapseProps>((props, ref) =
             )}
         </AnimatePresence>
     );
-});
+}
 
 interface ScaleOptions {
     /**
@@ -150,7 +149,7 @@ const variants: Variants = {
 
 export interface ScaleProps extends ScaleOptions, WithTransitionConfig<MotionBoxProps> {}
 
-export const Scale = forwardRef<HTMLDivElement, ScaleProps>(function Scale(props, ref) {
+export function Scale(props: ScaleProps) {
     const {
         unmountOnExit,
         isOpen,
@@ -179,11 +178,10 @@ export const Scale = forwardRef<HTMLDivElement, ScaleProps>(function Scale(props
                 <MotionBox
                     animate={animate}
                     custom={custom}
-                    ref={ref}
                     variants={transformReducedMotion(variants, reducedMotion)}
                     {...rest}
                 />
             )}
         </AnimatePresence>
     );
-});
+}

@@ -1,4 +1,3 @@
-import { forwardRef } from "react";
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type IconVariantProps, icon } from "styled-system/recipes";
 
@@ -11,11 +10,6 @@ const StyledIcon = dreamy("svg", icon);
  *
  * @See Docs https://dreamy-ui.com/docs/components/icon
  */
-export const Icon = forwardRef<SVGSVGElement, IconProps>(({ ...props }, ref) => {
-    return (
-        <StyledIcon
-            ref={ref}
-            {...props}
-        />
-    );
-});
+export function Icon({ ...props }: IconProps) {
+    return <StyledIcon {...props} />;
+}

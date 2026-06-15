@@ -1,34 +1,20 @@
+import { genAlphaTokens, resolveModeNumber } from "@/theme/colors";
+import { getPresetOptions } from "@/theme/preset";
 import { defineTokens } from "@pandacss/dev";
 
 export function defineColorTokens() {
+	const { colorTuning } = getPresetOptions();
+	const alphaChroma = colorTuning?.alphaChroma;
+
+	const blackAlphaHue = resolveModeNumber(alphaChroma?.hue, "light", 245);
+	const whiteAlphaHue = resolveModeNumber(alphaChroma?.hue, "dark", 245);
+	const blackAlphaChroma = resolveModeNumber(alphaChroma?.chroma, "light", 0);
+	const whiteAlphaChroma = resolveModeNumber(alphaChroma?.chroma, "dark", 0);
+
 	return defineTokens.colors({
 		current: { value: "currentColor" },
-		blackAlpha: {
-			50: { value: "rgba(0, 0, 0, 0.04)" },
-			100: { value: "rgba(0, 0, 0, 0.08)" },
-			200: { value: "rgba(0, 0, 0, 0.12)" },
-			300: { value: "rgba(0, 0, 0, 0.16)" },
-			400: { value: "rgba(0, 0, 0, 0.24)" },
-			500: { value: "rgba(0, 0, 0, 0.32)" },
-			600: { value: "rgba(0, 0, 0, 0.40)" },
-			700: { value: "rgba(0, 0, 0, 0.48)" },
-			800: { value: "rgba(0, 0, 0, 0.56)" },
-			900: { value: "rgba(0, 0, 0, 0.64)" },
-			950: { value: "rgba(0, 0, 0, 0.72)" }
-		},
-		whiteAlpha: {
-			50: { value: "rgba(255, 255, 255, 0.04)" },
-			100: { value: "rgba(255, 255, 255, 0.08)" },
-			200: { value: "rgba(255, 255, 255, 0.12)" },
-			300: { value: "rgba(255, 255, 255, 0.16)" },
-			400: { value: "rgba(255, 255, 255, 0.24)" },
-			500: { value: "rgba(255, 255, 255, 0.32)" },
-			600: { value: "rgba(255, 255, 255, 0.40)" },
-			700: { value: "rgba(255, 255, 255, 0.48)" },
-			800: { value: "rgba(255, 255, 255, 0.56)" },
-			900: { value: "rgba(255, 255, 255, 0.64)" },
-			950: { value: "rgba(255, 255, 255, 0.72)" }
-		},
+		blackAlpha: genAlphaTokens("black", blackAlphaChroma, blackAlphaHue),
+		whiteAlpha: genAlphaTokens("white", whiteAlphaChroma, whiteAlphaHue),
 		transparent: { value: "rgb(0 0 0 / 0)" },
 		black: { value: "#000" },
 		white: { value: "#fff" },

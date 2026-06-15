@@ -12,7 +12,7 @@ import {
     usePaginationRange
 } from "@dreamy-ui/react";
 import * as m from "motion/react-m";
-import { forwardRef, useMemo } from "react";
+import { useMemo } from "react";
 import { type HTMLDreamyProps, createStyleContext, dreamy } from "styled-system/jsx";
 import { type PaginationVariantProps, pagination } from "styled-system/recipes";
 import { Icon } from "./icon";
@@ -32,43 +32,35 @@ export interface PaginationRootProps
  *
  * @See Docs https://dreamy-ui.com/docs/components/pagination
  */
-export const Root = withProvider(
-    forwardRef<HTMLElement, PaginationRootProps>(function PaginationRoot(props, ref) {
-        const {
-            children,
-            count,
-            page,
-            defaultPage,
-            pageSize,
-            siblingCount,
-            onPageChange,
-            size = "md",
-            ...rest
-        } = props;
+export const Root = withProvider(function PaginationRoot(props: PaginationRootProps) {
+    const {
+        children,
+        count,
+        page,
+        defaultPage,
+        pageSize,
+        siblingCount,
+        onPageChange,
+        size = "md",
+        ...rest
+    } = props;
 
-        const context = usePagination({
-            count,
-            page,
-            defaultPage,
-            pageSize,
-            siblingCount,
-            onPageChange,
-            size: size as any
-        });
+    const context = usePagination({
+        count,
+        page,
+        defaultPage,
+        pageSize,
+        siblingCount,
+        onPageChange,
+        size: size as any
+    });
 
-        return (
-            <PaginationProvider value={context}>
-                <dreamy.nav
-                    ref={ref}
-                    {...rest}
-                >
-                    {children}
-                </dreamy.nav>
-            </PaginationProvider>
-        );
-    }),
-    "root"
-);
+    return (
+        <PaginationProvider value={context}>
+            <dreamy.nav {...rest}>{children}</dreamy.nav>
+        </PaginationProvider>
+    );
+}, "root");
 
 export interface PaginationItemProps extends Omit<Partial<IconButtonProps>, "value"> {
     /**
@@ -80,105 +72,95 @@ export interface PaginationItemProps extends Omit<Partial<IconButtonProps>, "val
 /**
  * Pagination Item component - represents a single page number
  */
-export const Item = withContext(
-    forwardRef<HTMLButtonElement, PaginationItemProps>(function PaginationItem(props, ref) {
-        const { value, children, ...rest } = props;
-        const itemProps = usePaginationItem({ value, ref });
-        const indicatorProps = usePaginationIndicator();
+export const Item = withContext(function PaginationItem(props: PaginationItemProps) {
+    const { ref } = props;
+    const { value, children, ...rest } = props;
+    const itemProps = usePaginationItem({ value, ref });
+    const indicatorProps = usePaginationIndicator();
 
-        const { page, size } = usePaginationContext();
+    const { page, size } = usePaginationContext();
 
-        return (
-            <IconButton
-                size={size}
-                variant="ghost"
-                {...itemProps}
-                {...rest}
-            >
-                {children ?? value}
-                {page === value && <m.div {...indicatorProps} />}
-            </IconButton>
-        );
-    }),
-    "item"
-);
+    return (
+        <IconButton
+            size={size}
+            variant="ghost"
+            {...itemProps}
+            {...rest}
+        >
+            {children ?? value}
+            {page === value && <m.div {...indicatorProps} />}
+        </IconButton>
+    );
+}, "item");
 
 export interface PaginationEllipsisProps extends HTMLDreamyProps<"span"> {}
 
 /**
  * Pagination Ellipsis component - indicates skipped pages
  */
-export const Ellipsis = withContext(
-    forwardRef<HTMLSpanElement, PaginationEllipsisProps>(function PaginationEllipsis(props, ref) {
-        const { children = "...", ...rest } = props;
-        return (
-            <dreamy.span
-                aria-hidden="true"
-                ref={ref}
-                {...rest}
-            >
-                {children}
-            </dreamy.span>
-        );
-    }),
-    "ellipsis"
-);
+export const Ellipsis = withContext(function PaginationEllipsis(props: PaginationEllipsisProps) {
+    const { children = "...", ...rest } = props;
+    return (
+        <dreamy.span
+            aria-hidden="true"
+            {...rest}
+        >
+            {children}
+        </dreamy.span>
+    );
+}, "ellipsis");
 
 export interface PaginationPrevTriggerProps extends Partial<IconButtonProps> {}
 
 /**
  * Pagination Prev Trigger component - navigates to previous page
  */
-export const PrevTrigger = withContext(
-    forwardRef<HTMLButtonElement, PaginationPrevTriggerProps>(
-        function PaginationPrevTrigger(props, ref) {
-            const { children, ...rest } = props;
-            const prevProps = usePaginationPrevTrigger({ ref });
+export const PrevTrigger = withContext(function PaginationPrevTrigger(
+    props: PaginationPrevTriggerProps
+) {
+    const { ref } = props;
+    const { children, ...rest } = props;
+    const prevProps = usePaginationPrevTrigger({ ref });
 
-            const { size } = usePaginationContext();
+    const { size } = usePaginationContext();
 
-            return (
-                <IconButton
-                    size={size}
-                    variant="ghost"
-                    {...prevProps}
-                    {...rest}
-                >
-                    {children ?? <ChevronLeftIcon />}
-                </IconButton>
-            );
-        }
-    ),
-    "prevTrigger"
-);
+    return (
+        <IconButton
+            size={size}
+            variant="ghost"
+            {...prevProps}
+            {...rest}
+        >
+            {children ?? <ChevronLeftIcon />}
+        </IconButton>
+    );
+}, "prevTrigger");
 
 export interface PaginationNextTriggerProps extends Partial<IconButtonProps> {}
 
 /**
  * Pagination Next Trigger component - navigates to next page
  */
-export const NextTrigger = withContext(
-    forwardRef<HTMLButtonElement, PaginationNextTriggerProps>(
-        function PaginationNextTrigger(props, ref) {
-            const { children, ...rest } = props;
-            const nextProps = usePaginationNextTrigger({ ref });
+export const NextTrigger = withContext(function PaginationNextTrigger(
+    props: PaginationNextTriggerProps
+) {
+    const { ref } = props;
+    const { children, ...rest } = props;
+    const nextProps = usePaginationNextTrigger({ ref });
 
-            const { size } = usePaginationContext();
+    const { size } = usePaginationContext();
 
-            return (
-                <IconButton
-                    size={size}
-                    variant="ghost"
-                    {...nextProps}
-                    {...rest}
-                >
-                    {children ?? <ChevronRightIcon />}
-                </IconButton>
-            );
-        }
-    ),
-    "nextTrigger"
-);
+    return (
+        <IconButton
+            size={size}
+            variant="ghost"
+            {...nextProps}
+            {...rest}
+        >
+            {children ?? <ChevronRightIcon />}
+        </IconButton>
+    );
+}, "nextTrigger");
 
 function ChevronLeftIcon() {
     return (
@@ -230,34 +212,25 @@ export interface PaginationPageTextProps extends HTMLDreamyProps<"span"> {
 /**
  * Pagination Page Text component - displays current page information
  */
-export const PageText = forwardRef<HTMLSpanElement, PaginationPageTextProps>(
-    function PaginationPageText(props, ref) {
-        const { format = "compact", ...rest } = props;
-        const context = usePaginationContext();
-        const { page, totalPages, pageSize, count } = context;
+export function PageText(props: PaginationPageTextProps) {
+    const { format = "compact", ...rest } = props;
+    const context = usePaginationContext();
+    const { page, totalPages, pageSize, count } = context;
 
-        const content = useMemo(() => {
-            if (format === "short") {
-                return `${page} / ${totalPages}`;
-            }
-            if (format === "compact") {
-                return `${page} of ${totalPages}`;
-            }
-            const start = (page - 1) * pageSize + 1;
-            const end = Math.min(page * pageSize, count);
-            return `${start}-${end} of ${count}`;
-        }, [format, page, totalPages, pageSize, count]);
+    const content = useMemo(() => {
+        if (format === "short") {
+            return `${page} / ${totalPages}`;
+        }
+        if (format === "compact") {
+            return `${page} of ${totalPages}`;
+        }
+        const start = (page - 1) * pageSize + 1;
+        const end = Math.min(page * pageSize, count);
+        return `${start}-${end} of ${count}`;
+    }, [format, page, totalPages, pageSize, count]);
 
-        return (
-            <dreamy.span
-                ref={ref}
-                {...rest}
-            >
-                {content}
-            </dreamy.span>
-        );
-    }
-);
+    return <dreamy.span {...rest}>{content}</dreamy.span>;
+}
 
 export interface PageItem {
     /**

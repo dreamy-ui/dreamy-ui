@@ -8,7 +8,7 @@ import {
     useMotionVariants
 } from "@dreamy-ui/react";
 import { AnimatePresence } from "motion/react";
-import { createContext, forwardRef, useCallback, useContext } from "react";
+import { createContext, useCallback, useContext } from "react";
 import { type HTMLDreamyProps, createStyleContext, dreamy } from "styled-system/jsx";
 import type { ActionBarVariantProps } from "styled-system/recipes";
 import { actionBar } from "styled-system/recipes";
@@ -30,132 +30,112 @@ function useActionBarContext() {
 
 export interface ActionBarRootProps extends BoxProps, ActionBarVariantProps, useControllableProps {}
 
-export const Root = withProvider(
-    forwardRef<HTMLDivElement, ActionBarRootProps>(function ActionBarRoot(props, ref) {
-        const { children, isOpen, defaultIsOpen, onOpen, onClose, ...rest } = props;
-        const actionBarProps = useControllable({
-            isOpen,
-            defaultIsOpen,
-            onOpen,
-            onClose
-        });
+export const Root = withProvider(function ActionBarRoot(props: ActionBarRootProps) {
+    const { children, isOpen, defaultIsOpen, onOpen, onClose, ...rest } = props;
+    const actionBarProps = useControllable({
+        isOpen,
+        defaultIsOpen,
+        onOpen,
+        onClose
+    });
 
-        return (
-            <ActionBarContext.Provider value={actionBarProps}>
-                <Portal>
-                    <AnimatePresence>
-                        {isOpen && (
-                            <Box
-                                data-state={actionBarProps.isOpen ? "open" : "closed"}
-                                ref={ref}
-                                {...rest}
-                            >
-                                {children}
-                            </Box>
-                        )}
-                    </AnimatePresence>
-                </Portal>
-            </ActionBarContext.Provider>
-        );
-    }),
-    "root"
-);
+    return (
+        <ActionBarContext.Provider value={actionBarProps}>
+            <Portal>
+                <AnimatePresence>
+                    {isOpen && (
+                        <Box
+                            data-state={actionBarProps.isOpen ? "open" : "closed"}
+                            {...rest}
+                        >
+                            {children}
+                        </Box>
+                    )}
+                </AnimatePresence>
+            </Portal>
+        </ActionBarContext.Provider>
+    );
+}, "root");
 
 export interface ActionBarContentProps extends MotionBoxProps {}
 
-export const Content = withContext(
-    forwardRef<HTMLDivElement, ActionBarContentProps>(function ActionBarContent(props, ref) {
-        const { children, ...rest } = props;
-        const { isOpen } = useActionBarContext();
+export const Content = withContext(function ActionBarContent(props: ActionBarContentProps) {
+    const { children, ...rest } = props;
+    const { isOpen } = useActionBarContext();
 
-        const { actionBar: variants } = useMotionVariants();
+    const { actionBar: variants } = useMotionVariants();
 
-        return (
-            <AnimatePresence propagate>
-                {isOpen && (
-                    <MotionBox
-                        animate="animate"
-                        aria-label="Action bar"
-                        data-state={isOpen ? "open" : "closed"}
-                        exit="exit"
-                        initial="initial"
-                        ref={ref}
-                        role="dialog"
-                        variants={variants}
-                        {...rest}
-                    >
-                        {children}
-                    </MotionBox>
-                )}
-            </AnimatePresence>
-        );
-    }),
-    "content"
-);
-
-export interface ActionBarSelectionTriggerProps extends HTMLDreamyProps<"span"> {}
-
-export const SelectionTrigger = withContext(
-    forwardRef<HTMLSpanElement, ActionBarSelectionTriggerProps>(
-        function ActionBarSelectionTrigger(props, ref) {
-            const { children, ...rest } = props;
-            const { isOpen } = useActionBarContext();
-
-            return (
-                <dreamy.span
+    return (
+        <AnimatePresence propagate>
+            {isOpen && (
+                <MotionBox
+                    animate="animate"
+                    aria-label="Action bar"
                     data-state={isOpen ? "open" : "closed"}
-                    ref={ref}
+                    exit="exit"
+                    initial="initial"
+                    role="dialog"
+                    variants={variants}
                     {...rest}
                 >
                     {children}
-                </dreamy.span>
-            );
-        }
-    ),
-    "selectionTrigger"
-);
+                </MotionBox>
+            )}
+        </AnimatePresence>
+    );
+}, "content");
+
+export interface ActionBarSelectionTriggerProps extends HTMLDreamyProps<"span"> {}
+
+export const SelectionTrigger = withContext(function ActionBarSelectionTrigger(
+    props: ActionBarSelectionTriggerProps
+) {
+    const { children, ...rest } = props;
+    const { isOpen } = useActionBarContext();
+
+    return (
+        <dreamy.span
+            data-state={isOpen ? "open" : "closed"}
+            {...rest}
+        >
+            {children}
+        </dreamy.span>
+    );
+}, "selectionTrigger");
 
 export interface ActionBarSeparatorProps extends HTMLDreamyProps<"div"> {}
 
-export const Separator = withContext(
-    forwardRef<HTMLDivElement, ActionBarSeparatorProps>(function ActionBarSeparator(props, ref) {
-        return (
-            <Box
-                aria-orientation="vertical"
-                ref={ref}
-                role="separator"
-                {...props}
-            />
-        );
-    }),
-    "separator"
-);
+export const Separator = withContext(function ActionBarSeparator(props: ActionBarSeparatorProps) {
+    return (
+        <Box
+            aria-orientation="vertical"
+            role="separator"
+            {...props}
+        />
+    );
+}, "separator");
 
 export interface ActionBarCloseTriggerProps extends CloseButtonProps {}
 
-export const CloseTrigger = withContext(
-    forwardRef<HTMLButtonElement, ActionBarCloseTriggerProps>(
-        function ActionBarCloseTrigger(props, ref) {
-            const { children, onClick, ...rest } = props;
-            const { onClose } = useActionBarContext();
+export const CloseTrigger = withContext(function ActionBarCloseTrigger(
+    props: ActionBarCloseTriggerProps
+) {
+    const { children, onClick, ...rest } = props;
+    const { onClose } = useActionBarContext();
 
-            const handleClick = useCallback(
-                (event: React.MouseEvent<HTMLButtonElement>) => {
-                    onClick?.(event);
-                    onClose();
-                },
-                [onClick, onClose]
-            );
+    const handleClick = useCallback(
+        (event: React.MouseEvent<HTMLButtonElement>) => {
+            onClick?.(event);
+            onClose();
+        },
+        [onClick, onClose]
+    );
 
-            return (
-                <CloseButton
-                    aria-label="Close action bar"
-                    onClick={handleClick}
-                    ref={ref}
-                    {...rest}
-                />
-            );
-        }
-    ),
-    "closeTrigger"
-);
+    return (
+        <CloseButton
+            aria-label="Close action bar"
+            onClick={handleClick}
+            {...rest}
+        />
+    );
+}, "closeTrigger");

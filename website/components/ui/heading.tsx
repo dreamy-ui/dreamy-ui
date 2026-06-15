@@ -1,5 +1,5 @@
 import { splitProps } from "@dreamy-ui/react/rsc";
-import { forwardRef } from "react";
+
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type TextProperties, text } from "styled-system/patterns";
 
@@ -10,7 +10,7 @@ export interface HeadingProps extends HTMLDreamyProps<"h3">, TextProperties {}
  *
  * @See Docs https://dreamy-ui.com/docs/components/heading
  */
-export const Heading = forwardRef<HTMLParagraphElement, HeadingProps>((props, ref) => {
+export function Heading(props: HeadingProps) {
     const [patternProps, restProps] = splitProps(props, ["variant", "size"]);
 
     const styleProps = text.raw({
@@ -20,9 +20,8 @@ export const Heading = forwardRef<HTMLParagraphElement, HeadingProps>((props, re
 
     return (
         <dreamy.h3
-            ref={ref}
             {...styleProps}
             {...restProps}
         />
     );
-});
+}

@@ -1,5 +1,5 @@
 import { splitProps } from "@dreamy-ui/react/rsc";
-import { forwardRef } from "react";
+
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { visuallyHidden } from "styled-system/patterns";
 
@@ -10,19 +10,18 @@ export interface VisuallyHiddenProps extends HTMLDreamyProps<"span"> {}
  *
  * @See Docs https://dreamy-ui.com/docs/components/visually-hidden
  */
-export const VisuallyHidden = forwardRef<HTMLSpanElement, VisuallyHiddenProps>((props, ref) => {
+export function VisuallyHidden(props: VisuallyHiddenProps) {
     const [patternProps, restProps] = splitProps(props, []);
 
     const styleProps = visuallyHidden.raw(patternProps);
 
     return (
         <dreamy.span
-            ref={ref}
             {...styleProps}
             {...restProps}
         />
     );
-});
+}
 
 export interface VisuallyHiddenInputProps extends HTMLDreamyProps<"input"> {}
 
@@ -31,19 +30,16 @@ export interface VisuallyHiddenInputProps extends HTMLDreamyProps<"input"> {}
  *
  * @See Docs https://dreamy-ui.com/docs/components/visually-hidden
  */
-export const VisuallyHiddenInput = forwardRef<HTMLInputElement, VisuallyHiddenInputProps>(
-    (props, ref) => {
-        const [patternProps, restProps] = splitProps(props, []);
+export function VisuallyHiddenInput(props: VisuallyHiddenInputProps) {
+    const [patternProps, restProps] = splitProps(props, []);
 
-        const styleProps = visuallyHidden.raw(patternProps);
+    const styleProps = visuallyHidden.raw(patternProps);
 
-        return (
-            <dreamy.input
-                readOnly
-                ref={ref}
-                {...styleProps}
-                {...restProps}
-            />
-        );
-    }
-);
+    return (
+        <dreamy.input
+            readOnly
+            {...styleProps}
+            {...restProps}
+        />
+    );
+}

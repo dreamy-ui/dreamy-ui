@@ -1,5 +1,5 @@
 import { splitProps } from "@dreamy-ui/react/rsc";
-import { forwardRef } from "react";
+
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type TextProperties, text } from "styled-system/patterns";
 
@@ -16,7 +16,7 @@ export interface LinkProps extends HTMLDreamyProps<"a">, TextProperties {
  *
  * @See Docs https://dreamy-ui.com/docs/components/link
  */
-export const Link = forwardRef<HTMLAnchorElement, LinkProps>((props, ref) => {
+export function Link(props: LinkProps) {
     const { isExternal, ...rest } = props;
 
     const [patternProps, restProps] = splitProps(rest, ["variant", "size"]);
@@ -28,10 +28,9 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>((props, ref) => {
 
     return (
         <dreamy.a
-            ref={ref}
             target={isExternal ? "_blank" : undefined}
             {...styleProps}
             {...restProps}
         />
     );
-});
+}

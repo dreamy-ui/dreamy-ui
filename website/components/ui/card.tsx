@@ -16,5 +16,3 @@ export const Body = withContext(dreamy.div, "body");
 export const Footer = withContext(dreamy.div, "footer");
 export const Title = withContext(dreamy.h3, "title");
 export const Description = withContext(dreamy.p, "description");
-
-

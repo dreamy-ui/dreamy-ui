@@ -8,7 +8,7 @@ import {
     useFileUpload,
     useFileUploadContext
 } from "@dreamy-ui/react";
-import { forwardRef, useMemo } from "react";
+import { useMemo } from "react";
 import { type HTMLDreamyProps, createStyleContext, dreamy } from "styled-system/jsx";
 import { fileUpload } from "styled-system/recipes";
 
@@ -28,64 +28,61 @@ const StyledRoot = withProvider(dreamy.div, "root");
  *
  * @See Docs https://dreamy-ui.com/docs/components/file-upload
  */
-export const Root = forwardRef<HTMLDivElement, RootBaseProps & HTMLDreamyProps<"div">>(
-    function FileUploadRoot(props, ref) {
-        const {
-            accept,
-            maxFiles,
-            maxFileSize,
-            minFileSize,
-            allowDrop,
-            directory,
-            capture,
-            disabled,
-            required,
-            invalid,
-            name,
-            onFileAccept,
-            onFileReject,
-            onFileChange,
-            validate,
-            preventDocumentDrop,
-            locale,
-            children,
-            ...rest
-        } = props;
+export function Root(props: RootBaseProps & HTMLDreamyProps<"div">) {
+    const {
+        accept,
+        maxFiles,
+        maxFileSize,
+        minFileSize,
+        allowDrop,
+        directory,
+        capture,
+        disabled,
+        required,
+        invalid,
+        name,
+        onFileAccept,
+        onFileReject,
+        onFileChange,
+        validate,
+        preventDocumentDrop,
+        locale,
+        children,
+        ...rest
+    } = props;
 
-        const fileUpload = useFileUpload({
-            accept,
-            maxFiles,
-            maxFileSize,
-            minFileSize,
-            allowDrop,
-            directory,
-            capture,
-            disabled,
-            required,
-            invalid,
-            name,
-            onFileAccept,
-            onFileReject,
-            onFileChange,
-            validate,
-            preventDocumentDrop,
-            locale
-        });
+    const fileUpload = useFileUpload({
+        accept,
+        maxFiles,
+        maxFileSize,
+        minFileSize,
+        allowDrop,
+        directory,
+        capture,
+        disabled,
+        required,
+        invalid,
+        name,
+        onFileAccept,
+        onFileReject,
+        onFileChange,
+        validate,
+        preventDocumentDrop,
+        locale
+    });
 
-        return (
-            <FileUploadProvider value={fileUpload}>
-                <StyledRoot
-                    ref={ref}
-                    {...fileUpload.getRootProps()}
-                    {...rest}
-                >
-                    <input {...fileUpload.getInputProps()} />
-                    {children}
-                </StyledRoot>
-            </FileUploadProvider>
-        );
-    }
-);
+    return (
+        <FileUploadProvider value={fileUpload}>
+            <StyledRoot
+                {...fileUpload.getRootProps()}
+                {...rest}
+            >
+                <input {...fileUpload.getInputProps()} />
+                {children}
+            </StyledRoot>
+        </FileUploadProvider>
+    );
+}
 
 // ─── RootProvider ────────────────────────────────────────────────────────────
 
@@ -102,24 +99,21 @@ const StyledRootProvider = withProvider(dreamy.div, "root");
  * Use this when you want to control the file upload externally
  * via the useFileUpload hook.
  */
-export const RootProvider = forwardRef<HTMLDivElement, RootProviderProps & HTMLDreamyProps<"div">>(
-    function FileUploadRootProvider(props, ref) {
-        const { value, children, ...rest } = props;
+export function RootProvider(props: RootProviderProps & HTMLDreamyProps<"div">) {
+    const { value, children, ...rest } = props;
 
-        return (
-            <FileUploadProvider value={value}>
-                <StyledRootProvider
-                    ref={ref}
-                    {...value.getRootProps()}
-                    {...rest}
-                >
-                    <input {...value.getInputProps()} />
-                    {children}
-                </StyledRootProvider>
-            </FileUploadProvider>
-        );
-    }
-);
+    return (
+        <FileUploadProvider value={value}>
+            <StyledRootProvider
+                {...value.getRootProps()}
+                {...rest}
+            >
+                <input {...value.getInputProps()} />
+                {children}
+            </StyledRootProvider>
+        </FileUploadProvider>
+    );
+}
 
 // ─── Label ───────────────────────────────────────────────────────────────────
 
@@ -134,22 +128,19 @@ const StyledDropzone = withContext(dreamy.div, "dropzone");
  *
  * A drag-and-drop area for uploading files.
  */
-export const Dropzone = forwardRef<HTMLDivElement, HTMLDreamyProps<"div">>(
-    function FileUploadDropzone(props, ref) {
-        const { children, ...rest } = props;
-        const ctx = useFileUploadContext();
+export function Dropzone(props: HTMLDreamyProps<"div">) {
+    const { children, ...rest } = props;
+    const ctx = useFileUploadContext();
 
-        return (
-            <StyledDropzone
-                ref={ref}
-                {...ctx.getDropzoneProps()}
-                {...rest}
-            >
-                {children}
-            </StyledDropzone>
-        );
-    }
-);
+    return (
+        <StyledDropzone
+            {...ctx.getDropzoneProps()}
+            {...rest}
+        >
+            {children}
+        </StyledDropzone>
+    );
+}
 
 // ─── DropzoneContent ─────────────────────────────────────────────────────────
 
@@ -164,22 +155,19 @@ const StyledTrigger = withContext(dreamy.button, "trigger");
  *
  * A button that opens the file picker dialog.
  */
-export const Trigger = forwardRef<HTMLButtonElement, HTMLDreamyProps<"button">>(
-    function FileUploadTrigger(props, ref) {
-        const { children, ...rest } = props;
-        const ctx = useFileUploadContext();
+export function Trigger(props: HTMLDreamyProps<"button">) {
+    const { children, ...rest } = props;
+    const ctx = useFileUploadContext();
 
-        return (
-            <StyledTrigger
-                ref={ref}
-                {...ctx.getTriggerProps()}
-                {...rest}
-            >
-                {children}
-            </StyledTrigger>
-        );
-    }
-);
+    return (
+        <StyledTrigger
+            {...ctx.getTriggerProps()}
+            {...rest}
+        >
+            {children}
+        </StyledTrigger>
+    );
+}
 
 // ─── ItemGroup ───────────────────────────────────────────────────────────────
 
@@ -199,21 +187,18 @@ const StyledItem = withContext(dreamy.li, "item");
  *
  * Represents a single uploaded file in the list.
  */
-export const Item = forwardRef<HTMLLIElement, ItemProps & HTMLDreamyProps<"li">>(
-    function FileUploadItem(props, ref) {
-        const { file, children, ...rest } = props;
+export function Item(props: ItemProps & HTMLDreamyProps<"li">) {
+    const { file, children, ...rest } = props;
 
-        return (
-            <StyledItem
-                data-file={file.name}
-                ref={ref}
-                {...rest}
-            >
-                {children}
-            </StyledItem>
-        );
-    }
-);
+    return (
+        <StyledItem
+            data-file={file.name}
+            {...rest}
+        >
+            {children}
+        </StyledItem>
+    );
+}
 
 // ─── ItemPreview ─────────────────────────────────────────────────────────────
 
@@ -230,20 +215,11 @@ const StyledItemPreview = withContext(dreamy.div, "itemPreview");
  * Displays a preview icon for the uploaded file.
  * If no children are provided, displays a default file icon.
  */
-export const ItemPreview = forwardRef<HTMLDivElement, ItemPreviewProps & HTMLDreamyProps<"div">>(
-    function FileUploadItemPreview(props, ref) {
-        const { children, ...rest } = props;
+export function ItemPreview(props: ItemPreviewProps & HTMLDreamyProps<"div">) {
+    const { children, ...rest } = props;
 
-        return (
-            <StyledItemPreview
-                ref={ref}
-                {...rest}
-            >
-                {children || <DefaultFileIcon />}
-            </StyledItemPreview>
-        );
-    }
-);
+    return <StyledItemPreview {...rest}>{children || <DefaultFileIcon />}</StyledItemPreview>;
+}
 
 // ─── ItemPreviewImage ────────────────────────────────────────────────────────
 
@@ -258,22 +234,18 @@ const StyledItemPreviewImage = withContext(dreamy.img, "itemPreviewImage");
  *
  * Displays an image preview for image files.
  */
-export const ItemPreviewImage = forwardRef<
-    HTMLImageElement,
-    ItemPreviewImageProps & HTMLDreamyProps<"img">
->(function FileUploadItemPreviewImage(props, ref) {
+export function ItemPreviewImage(props: ItemPreviewImageProps & HTMLDreamyProps<"img">) {
     const { file, ...rest } = props;
     const src = useMemo(() => URL.createObjectURL(file), [file]);
 
     return (
         <StyledItemPreviewImage
             alt={file.name}
-            ref={ref}
             src={src}
             {...rest}
         />
     );
-});
+}
 
 // ─── ItemContent ─────────────────────────────────────────────────────────────
 
@@ -293,20 +265,11 @@ const StyledItemName = withContext(dreamy.span, "itemName");
  *
  * Displays the name of the uploaded file.
  */
-export const ItemName = forwardRef<HTMLSpanElement, ItemNameProps & HTMLDreamyProps<"span">>(
-    function FileUploadItemName(props, ref) {
-        const { file, children, ...rest } = props;
+export function ItemName(props: ItemNameProps & HTMLDreamyProps<"span">) {
+    const { file, children, ...rest } = props;
 
-        return (
-            <StyledItemName
-                ref={ref}
-                {...rest}
-            >
-                {children || file.name}
-            </StyledItemName>
-        );
-    }
-);
+    return <StyledItemName {...rest}>{children || file.name}</StyledItemName>;
+}
 
 // ─── ItemSizeText ────────────────────────────────────────────────────────────
 
@@ -322,23 +285,13 @@ const StyledItemSizeText = withContext(dreamy.span, "itemSizeText");
  *
  * Displays the file size in a human-readable format.
  */
-export const ItemSizeText = forwardRef<
-    HTMLSpanElement,
-    ItemSizeTextProps & HTMLDreamyProps<"span">
->(function FileUploadItemSizeText(props, ref) {
+export function ItemSizeText(props: ItemSizeTextProps & HTMLDreamyProps<"span">) {
     const { file, children, ...rest } = props;
     const ctx = useFileUploadContext();
     const sizeText = useMemo(() => formatFileSize(file.size, ctx.locale), [file.size, ctx.locale]);
 
-    return (
-        <StyledItemSizeText
-            ref={ref}
-            {...rest}
-        >
-            {children || sizeText}
-        </StyledItemSizeText>
-    );
-});
+    return <StyledItemSizeText {...rest}>{children || sizeText}</StyledItemSizeText>;
+}
 
 // ─── ItemDeleteTrigger ───────────────────────────────────────────────────────
 
@@ -354,10 +307,7 @@ const StyledItemDeleteTrigger = withContext(dreamy.button, "itemDeleteTrigger");
  *
  * A button to remove a specific file from the accepted list.
  */
-export const ItemDeleteTrigger = forwardRef<
-    HTMLButtonElement,
-    ItemDeleteTriggerProps & HTMLDreamyProps<"button">
->(function FileUploadItemDeleteTrigger(props, ref) {
+export function ItemDeleteTrigger(props: ItemDeleteTriggerProps & HTMLDreamyProps<"button">) {
     const { file, children, ...rest } = props;
     const ctx = useFileUploadContext();
 
@@ -365,14 +315,13 @@ export const ItemDeleteTrigger = forwardRef<
         <StyledItemDeleteTrigger
             aria-label={`Remove ${file.name}`}
             onClick={() => ctx.removeFile(file)}
-            ref={ref}
             type="button"
             {...rest}
         >
             {children || <DefaultCloseIcon />}
         </StyledItemDeleteTrigger>
     );
-});
+}
 
 // ─── ClearTrigger ────────────────────────────────────────────────────────────
 
@@ -383,24 +332,21 @@ const StyledClearTrigger = withContext(dreamy.button, "itemDeleteTrigger");
  *
  * A button to clear all accepted files.
  */
-export const ClearTrigger = forwardRef<HTMLButtonElement, HTMLDreamyProps<"button">>(
-    function FileUploadClearTrigger(props, ref) {
-        const { children, ...rest } = props;
-        const ctx = useFileUploadContext();
+export function ClearTrigger(props: HTMLDreamyProps<"button">) {
+    const { children, ...rest } = props;
+    const ctx = useFileUploadContext();
 
-        return (
-            <StyledClearTrigger
-                aria-label="Clear all files"
-                onClick={() => ctx.clearFiles()}
-                ref={ref}
-                type="button"
-                {...rest}
-            >
-                {children}
-            </StyledClearTrigger>
-        );
-    }
-);
+    return (
+        <StyledClearTrigger
+            aria-label="Clear all files"
+            onClick={() => ctx.clearFiles()}
+            type="button"
+            {...rest}
+        >
+            {children}
+        </StyledClearTrigger>
+    );
+}
 
 // ─── FileText ────────────────────────────────────────────────────────────────
 
@@ -416,31 +362,28 @@ const StyledFileText = withContext(dreamy.span, "fileText");
  *
  * Displays the selected file name(s), or a fallback text when no files are selected.
  */
-export const FileText = forwardRef<HTMLSpanElement, FileTextProps & HTMLDreamyProps<"span">>(
-    function FileUploadFileText(props, ref) {
-        const { fallback = "Select file(s)", children, ...rest } = props;
-        const ctx = useFileUploadContext();
+export function FileText(props: FileTextProps & HTMLDreamyProps<"span">) {
+    const { fallback = "Select file(s)", children, ...rest } = props;
+    const ctx = useFileUploadContext();
 
-        const fileText = useMemo(() => {
-            const files = ctx.acceptedFiles;
-            if (files.length === 1) return files[0].name;
-            if (files.length > 1) return `${files.length} files`;
-            return fallback;
-        }, [ctx.acceptedFiles, fallback]);
+    const fileText = useMemo(() => {
+        const files = ctx.acceptedFiles;
+        if (files.length === 1) return files[0].name;
+        if (files.length > 1) return `${files.length} files`;
+        return fallback;
+    }, [ctx.acceptedFiles, fallback]);
 
-        const isPlaceholder = fileText === fallback;
+    const isPlaceholder = fileText === fallback;
 
-        return (
-            <StyledFileText
-                data-placeholder={isPlaceholder || undefined}
-                ref={ref}
-                {...rest}
-            >
-                {children || fileText}
-            </StyledFileText>
-        );
-    }
-);
+    return (
+        <StyledFileText
+            data-placeholder={isPlaceholder || undefined}
+            {...rest}
+        >
+            {children || fileText}
+        </StyledFileText>
+    );
+}
 
 // ─── Context ─────────────────────────────────────────────────────────────────
 
@@ -505,26 +448,21 @@ interface ListProps extends ItemsBaseProps {}
  * Shortcut that renders an item group with all accepted files.
  * Equivalent to `<FileUpload.ItemGroup><FileUpload.Items /></FileUpload.ItemGroup>`.
  */
-export const List = forwardRef<HTMLUListElement, ListProps & HTMLDreamyProps<"ul">>(
-    function FileUploadList(props, ref) {
-        const { showSize, clearable, ...rest } = props;
-        const ctx = useFileUploadContext();
+export function List(props: ListProps & HTMLDreamyProps<"ul">) {
+    const { showSize, clearable, ...rest } = props;
+    const ctx = useFileUploadContext();
 
-        if (ctx.acceptedFiles.length === 0) return null;
+    if (ctx.acceptedFiles.length === 0) return null;
 
-        return (
-            <ItemGroup
-                ref={ref}
-                {...rest}
-            >
-                <Items
-                    clearable={clearable}
-                    showSize={showSize}
-                />
-            </ItemGroup>
-        );
-    }
-);
+    return (
+        <ItemGroup {...rest}>
+            <Items
+                clearable={clearable}
+                showSize={showSize}
+            />
+        </ItemGroup>
+    );
+}
 
 // ─── Default Icons ───────────────────────────────────────────────────────────
 

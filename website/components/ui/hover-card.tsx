@@ -12,7 +12,7 @@ import {
     useMotionVariants,
     usePopoverContext
 } from "@dreamy-ui/react";
-import { Children, cloneElement, forwardRef } from "react";
+import { Children, cloneElement } from "react";
 import { type HTMLDreamyProps, createStyleContext } from "styled-system/jsx";
 import { hoverCard } from "styled-system/recipes";
 import { Box, type BoxProps } from "./box";
@@ -108,11 +108,8 @@ export interface HoverCardTransitionProps extends Omit<MotionBoxProps, "children
     arrowProps?: HoverCardArrowProps;
 }
 
-const Transition = forwardRef(function HoverCardTransition(
-    props: HoverCardTransitionProps,
-    ref: React.Ref<any>
-) {
-    const { children, arrowProps, ...rest } = props;
+function Transition(props: HoverCardTransitionProps) {
+    const { ref, children, arrowProps, ...rest } = props;
 
     const { isOpen, hasArrow, reduceMotion } = usePopoverContext();
     const { popover } = useMotionVariants();
@@ -121,7 +118,6 @@ const Transition = forwardRef(function HoverCardTransition(
         <MotionBox
             animate={isOpen ? "initial" : "exit"}
             initial={false}
-            ref={ref}
             variants={transformReducedMotion(popover, reduceMotion)}
             {...rest}
         >
@@ -129,86 +125,76 @@ const Transition = forwardRef(function HoverCardTransition(
             {children}
         </MotionBox>
     );
-});
+}
 
 export interface HoverCardContentProps extends HoverCardTransitionProps {
     rootProps?: HTMLDreamyProps<"div">;
     motionProps?: Omit<MotionBoxProps, "children">;
 }
 
-export const Content = withContext(
-    forwardRef<HTMLElement, HoverCardContentProps>(function HoverCardContent(props, ref) {
-        const { rootProps, motionProps, ...contentProps } = props;
+export const Content = withContext(function HoverCardContent(props: HoverCardContentProps) {
+    const { ref } = props;
+    const { rootProps, motionProps, ...contentProps } = props;
 
-        const { getPopoverProps, getPopoverPositionerProps, onAnimationComplete, usePortal } =
-            usePopoverContext();
+    const { getPopoverProps, getPopoverPositionerProps, onAnimationComplete, usePortal } =
+        usePopoverContext();
 
-        if (typeof document === "undefined") return null;
+    if (typeof document === "undefined") return null;
 
-        const content = (
-            <div {...getPopoverPositionerProps(rootProps)}>
-                <Transition
-                    {...getPopoverProps({ ...motionProps, ...contentProps }, ref)}
-                    onAnimationComplete={callAll(
-                        onAnimationComplete,
-                        contentProps.onAnimationComplete
-                    )}
-                />
-            </div>
-        );
+    const content = (
+        <div {...getPopoverPositionerProps(rootProps)}>
+            <Transition
+                {...getPopoverProps(
+                    { ...motionProps, ...contentProps },
+                    ref as React.Ref<HTMLElement>
+                )}
+                onAnimationComplete={callAll(onAnimationComplete, contentProps.onAnimationComplete)}
+            />
+        </div>
+    );
 
-        return usePortal ? <Portal>{content}</Portal> : content;
-    }),
-    "content"
-);
+    return usePortal ? <Portal>{content}</Portal> : content;
+}, "content");
 
 export interface HoverCardHeaderProps extends HTMLDreamyProps<"header"> {}
 
-export const Header = withContext(
-    forwardRef<HTMLDivElement, HoverCardHeaderProps>(function HoverCardHeader(props, ref) {
-        const { getHeaderProps, size } = usePopoverContext();
+export const Header = withContext(function HoverCardHeader(props: HoverCardHeaderProps) {
+    const { ref } = props;
+    const { getHeaderProps, size } = usePopoverContext();
 
-        return (
-            <Box
-                as={"header"}
-                {...getHeaderProps(props, ref)}
-            >
-                {typeof props.children === "string" ? (
-                    <Heading size={size ?? "md"}>{props.children}</Heading>
-                ) : (
-                    props.children
-                )}
-            </Box>
-        );
-    }),
-    "header"
-);
+    return (
+        <Box
+            as={"header"}
+            {...getHeaderProps(props, ref)}
+        >
+            {typeof props.children === "string" ? (
+                <Heading size={size ?? "md"}>{props.children}</Heading>
+            ) : (
+                props.children
+            )}
+        </Box>
+    );
+}, "header");
 
 export interface HoverCardBodyProps extends HTMLDreamyProps<"div"> {}
 
-export const Body = withContext(
-    forwardRef<HTMLDivElement, HoverCardBodyProps>(function HoverCardBody(props, ref) {
-        const { getBodyProps } = usePopoverContext();
+export const Body = withContext(function HoverCardBody(props: HoverCardBodyProps) {
+    const { ref } = props;
+    const { getBodyProps } = usePopoverContext();
 
-        return <Box {...getBodyProps(props, ref)} />;
-    }),
-    "body"
-);
+    return <Box {...getBodyProps(props, ref)} />;
+}, "body");
 
 export interface HoverCardFooterProps extends BoxProps {}
 
-export const Footer = withContext(
-    forwardRef<HTMLDivElement, HoverCardFooterProps>(function HoverCardFooter(props, ref) {
-        return (
-            <Box
-                as={"footer"}
-                {...props}
-                ref={ref}
-            />
-        );
-    }),
-    "footer"
-);
+export const Footer = withContext(function HoverCardFooter(props: HoverCardFooterProps) {
+    return (
+        <Box
+            as={"footer"}
+            {...props}
+        />
+    );
+}, "footer");
 
 /**
  * HoverCardTrigger wraps the element that triggers the hover card.

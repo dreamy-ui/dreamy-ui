@@ -7,7 +7,7 @@ import {
     useStepper,
     useStepperContext
 } from "@dreamy-ui/react";
-import { forwardRef } from "react";
+
 import { type HTMLDreamyProps, createStyleContext, dreamy } from "styled-system/jsx";
 import type { StepperVariantProps } from "styled-system/recipes";
 import { stepper } from "styled-system/recipes";
@@ -24,103 +24,87 @@ export interface StepperRootProps
  *
  * @See Docs https://dreamy-ui.com/docs/components/stepper
  */
-export const Root = withProvider(
-    forwardRef<HTMLDivElement, StepperRootProps>(function StepperRoot(props, ref) {
-        const {
-            count,
-            defaultStep,
-            step,
-            onStepChange,
-            orientation = "horizontal",
-            id,
-            children,
-            ...rest
-        } = props;
+export const Root = withProvider(function StepperRoot(props: StepperRootProps) {
+    const {
+        count,
+        defaultStep,
+        step,
+        onStepChange,
+        orientation = "horizontal",
+        id,
+        children,
+        ...rest
+    } = props;
 
-        const ctx = useStepper({
-            count,
-            defaultStep,
-            step,
-            onStepChange,
-            orientation,
-            id
-        });
+    const ctx = useStepper({
+        count,
+        defaultStep,
+        step,
+        onStepChange,
+        orientation,
+        id
+    });
 
-        return (
-            <StepperProvider value={ctx}>
-                <dreamy.div
-                    ref={ref}
-                    {...ctx.getRootProps()}
-                    {...rest}
-                >
-                    {children}
-                </dreamy.div>
-            </StepperProvider>
-        );
-    }),
-    "root"
-);
+    return (
+        <StepperProvider value={ctx}>
+            <dreamy.div
+                {...ctx.getRootProps()}
+                {...rest}
+            >
+                {children}
+            </dreamy.div>
+        </StepperProvider>
+    );
+}, "root");
 
 export interface StepperListProps extends HTMLDreamyProps<"ol"> {}
 
-export const List = withContext(
-    forwardRef<HTMLOListElement, StepperListProps>(function StepperList(props, ref) {
-        const { getListProps } = useStepperContext();
+export const List = withContext(function StepperList(props: StepperListProps) {
+    const { getListProps } = useStepperContext();
 
-        return (
-            <dreamy.ol
-                ref={ref}
-                {...getListProps()}
-                {...props}
-            />
-        );
-    }),
-    "list"
-);
+    return (
+        <dreamy.ol
+            {...getListProps()}
+            {...props}
+        />
+    );
+}, "list");
 
 export interface StepperItemProps extends Omit<HTMLDreamyProps<"li">, "title"> {
     index: number;
 }
 
-export const Item = withContext(
-    forwardRef<HTMLLIElement, StepperItemProps>(function StepperItem(props, ref) {
-        const { index, children, ...rest } = props;
-        const { getItemProps } = useStepperContext();
+export const Item = withContext(function StepperItem(props: StepperItemProps) {
+    const { index, children, ...rest } = props;
+    const { getItemProps } = useStepperContext();
 
-        return (
-            <dreamy.li
-                ref={ref}
-                {...getItemProps(index)}
-                {...rest}
-            >
-                {children}
-            </dreamy.li>
-        );
-    }),
-    "item"
-);
+    return (
+        <dreamy.li
+            {...getItemProps(index)}
+            {...rest}
+        >
+            {children}
+        </dreamy.li>
+    );
+}, "item");
 
 export interface StepperTriggerProps extends HTMLDreamyProps<"div"> {
     index: number;
 }
 
-export const Trigger = withContext(
-    forwardRef<HTMLDivElement, StepperTriggerProps>(function StepperTrigger(props, ref) {
-        const { index, children, ...rest } = props;
-        const { getTriggerProps } = useStepperContext();
+export const Trigger = withContext(function StepperTrigger(props: StepperTriggerProps) {
+    const { index, children, ...rest } = props;
+    const { getTriggerProps } = useStepperContext();
 
-        return (
-            <dreamy.div
-                ref={ref}
-                {...getTriggerProps(index)}
-                {...rest}
-            >
-                {children}
-            </dreamy.div>
-        );
-    }),
-    "trigger"
-);
+    return (
+        <dreamy.div
+            {...getTriggerProps(index)}
+            {...rest}
+        >
+            {children}
+        </dreamy.div>
+    );
+}, "trigger");
 
 export interface StepperIndicatorProps extends HTMLDreamyProps<"div"> {
     index: number;
@@ -131,154 +115,108 @@ export interface StepperIndicatorProps extends HTMLDreamyProps<"div"> {
     icon?: React.ReactNode;
 }
 
-export const Indicator = withContext(
-    forwardRef<HTMLDivElement, StepperIndicatorProps>(function StepperIndicator(props, ref) {
-        const { index, icon, children, ...rest } = props;
-        const { getIndicatorProps, step } = useStepperContext();
+export const Indicator = withContext(function StepperIndicator(props: StepperIndicatorProps) {
+    const { index, icon, children, ...rest } = props;
+    const { getIndicatorProps, step } = useStepperContext();
 
-        function renderContent() {
-            if (children) return children;
-            if (icon) return icon;
-            if (index < step) return <CheckIcon />;
-            return index + 1;
-        }
+    function renderContent() {
+        if (children) return children;
+        if (icon) return icon;
+        if (index < step) return <CheckIcon />;
+        return index + 1;
+    }
 
-        return (
-            <dreamy.div
-                ref={ref}
-                {...getIndicatorProps(index)}
-                {...rest}
-            >
-                {renderContent()}
-            </dreamy.div>
-        );
-    }),
-    "indicator"
-);
+    return (
+        <dreamy.div
+            {...getIndicatorProps(index)}
+            {...rest}
+        >
+            {renderContent()}
+        </dreamy.div>
+    );
+}, "indicator");
 
 export interface StepperTitleProps extends HTMLDreamyProps<"p"> {}
 
-export const Title = withContext(
-    forwardRef<HTMLParagraphElement, StepperTitleProps>(function StepperTitle(props, ref) {
-        return (
-            <dreamy.p
-                ref={ref}
-                {...props}
-            />
-        );
-    }),
-    "title"
-);
+export const Title = withContext(function StepperTitle(props: StepperTitleProps) {
+    return <dreamy.p {...props} />;
+}, "title");
 
 export interface StepperDescriptionProps extends HTMLDreamyProps<"p"> {}
 
-export const Description = withContext(
-    forwardRef<HTMLParagraphElement, StepperDescriptionProps>(
-        function StepperDescription(props, ref) {
-            return (
-                <dreamy.p
-                    ref={ref}
-                    {...props}
-                />
-            );
-        }
-    ),
-    "description"
-);
+export const Description = withContext(function StepperDescription(props: StepperDescriptionProps) {
+    return <dreamy.p {...props} />;
+}, "description");
 
 export interface StepperSeparatorProps extends HTMLDreamyProps<"div"> {
     index: number;
 }
 
-export const Separator = withContext(
-    forwardRef<HTMLDivElement, StepperSeparatorProps>(function StepperSeparator(props, ref) {
-        const { index, ...rest } = props;
-        const { getSeparatorProps } = useStepperContext();
+export const Separator = withContext(function StepperSeparator(props: StepperSeparatorProps) {
+    const { index, ...rest } = props;
+    const { getSeparatorProps } = useStepperContext();
 
-        return (
-            <dreamy.div
-                ref={ref}
-                {...getSeparatorProps(index)}
-                {...rest}
-            />
-        );
-    }),
-    "separator"
-);
+    return (
+        <dreamy.div
+            {...getSeparatorProps(index)}
+            {...rest}
+        />
+    );
+}, "separator");
 
 export interface StepperContentProps extends HTMLDreamyProps<"div"> {
     index: number;
 }
 
-export const Content = withContext(
-    forwardRef<HTMLDivElement, StepperContentProps>(function StepperContent(props, ref) {
-        const { index, ...rest } = props;
-        const { getContentProps } = useStepperContext();
+export const Content = withContext(function StepperContent(props: StepperContentProps) {
+    const { index, ...rest } = props;
+    const { getContentProps } = useStepperContext();
 
-        return (
-            <dreamy.div
-                ref={ref}
-                {...getContentProps(index)}
-                {...rest}
-            />
-        );
-    }),
-    "content"
-);
+    return (
+        <dreamy.div
+            {...getContentProps(index)}
+            {...rest}
+        />
+    );
+}, "content");
 
 export interface StepperCompletedContentProps extends HTMLDreamyProps<"div"> {}
 
-export const CompletedContent = withContext(
-    forwardRef<HTMLDivElement, StepperCompletedContentProps>(
-        function StepperCompletedContent(props, ref) {
-            const { isComplete } = useStepperContext();
+export const CompletedContent = withContext(function StepperCompletedContent(
+    props: StepperCompletedContentProps
+) {
+    const { isComplete } = useStepperContext();
 
-            if (!isComplete) return null;
+    if (!isComplete) return null;
 
-            return (
-                <dreamy.div
-                    ref={ref}
-                    {...props}
-                />
-            );
-        }
-    ),
-    "completedContent"
-);
+    return <dreamy.div {...props} />;
+}, "completedContent");
 
 export interface StepperNextTriggerProps extends HTMLDreamyProps<"button"> {}
 
-export const NextTrigger = withContext(
-    forwardRef<HTMLButtonElement, StepperNextTriggerProps>(function StepperNextTrigger(props, ref) {
-        const { getNextTriggerProps } = useStepperContext();
+export const NextTrigger = withContext(function StepperNextTrigger(props: StepperNextTriggerProps) {
+    const { getNextTriggerProps } = useStepperContext();
 
-        return (
-            <dreamy.button
-                ref={ref}
-                {...getNextTriggerProps()}
-                {...props}
-            />
-        );
-    }),
-    "nextTrigger"
-);
+    return (
+        <dreamy.button
+            {...getNextTriggerProps()}
+            {...props}
+        />
+    );
+}, "nextTrigger");
 
 export interface StepperPrevTriggerProps extends HTMLDreamyProps<"button"> {}
 
-export const PrevTrigger = withContext(
-    forwardRef<HTMLButtonElement, StepperPrevTriggerProps>(function StepperPrevTrigger(props, ref) {
-        const { getPrevTriggerProps } = useStepperContext();
+export const PrevTrigger = withContext(function StepperPrevTrigger(props: StepperPrevTriggerProps) {
+    const { getPrevTriggerProps } = useStepperContext();
 
-        return (
-            <dreamy.button
-                ref={ref}
-                {...getPrevTriggerProps()}
-                {...props}
-            />
-        );
-    }),
-    "prevTrigger"
-);
+    return (
+        <dreamy.button
+            {...getPrevTriggerProps()}
+            {...props}
+        />
+    );
+}, "prevTrigger");
 
 export interface StepperContextProps {
     children: (ctx: UseStepperReturn) => React.ReactNode;

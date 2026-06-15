@@ -1,5 +1,5 @@
 import type { Status } from "@dreamy-ui/react";
-import { forwardRef, useMemo } from "react";
+import { useMemo } from "react";
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type AlertVariantProps, alert } from "styled-system/recipes";
 import { Icon } from "./icon";
@@ -32,14 +32,13 @@ const StyledAlert = dreamy("div", alert);
  *
  * @See Docs https://dreamy-ui.com/docs/components/alert
  */
-export const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
+export function Alert(props: AlertProps) {
     const { status = "info", title, description, ...rest } = props;
 
     return (
         <StyledAlert
             data-status={status}
             {...rest}
-            ref={ref}
         >
             <Text
                 as={"h4"}
@@ -51,19 +50,15 @@ export const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(props
             {description && <Text data-part={"description"}>{description}</Text>}
         </StyledAlert>
     );
-});
+}
 
-export const StatusIcon = forwardRef<SVGSVGElement, { status: Status }>(function StatusIcon(
-    { status },
-    ref
-) {
+export function StatusIcon({ status }: { status: Status }) {
     switch (status) {
         case "success":
             return (
                 <svg
                     aria-hidden
                     data-part={"icon"}
-                    ref={ref}
                     role={"img"}
                     viewBox="0 0 512 512"
                 >
@@ -81,7 +76,6 @@ export const StatusIcon = forwardRef<SVGSVGElement, { status: Status }>(function
                 <svg
                     aria-hidden
                     data-part={"icon"}
-                    ref={ref}
                     role={"img"}
                     strokeWidth="0"
                     viewBox="0 0 256 256"
@@ -98,7 +92,6 @@ export const StatusIcon = forwardRef<SVGSVGElement, { status: Status }>(function
                 <svg
                     aria-hidden
                     data-part={"icon"}
-                    ref={ref}
                     role={"img"}
                     viewBox="0 0 256 256"
                 >
@@ -114,7 +107,6 @@ export const StatusIcon = forwardRef<SVGSVGElement, { status: Status }>(function
                 <svg
                     aria-hidden
                     data-part={"icon"}
-                    ref={ref}
                     role={"img"}
                     strokeWidth="0"
                     viewBox="0 0 256 256"
@@ -127,6 +119,6 @@ export const StatusIcon = forwardRef<SVGSVGElement, { status: Status }>(function
                 </svg>
             );
     }
-});
+}
 
 export type StatusIcon = ReturnType<typeof StatusIcon>;

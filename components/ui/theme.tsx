@@ -1,4 +1,3 @@
-import { forwardRef } from "react";
 import { cx } from "styled-system/css";
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type ThemeVariantProps, theme } from "styled-system/recipes";
@@ -14,16 +13,15 @@ const StyledTheme = dreamy("div", theme);
  *
  * @See Docs https://dreamy-ui.com/docs/components/theme
  */
-export const DarkTheme = forwardRef<HTMLDivElement, ThemeProps>((props, ref) => {
+export function DarkTheme(props: ThemeProps) {
     return (
         <StyledTheme
-            ref={ref}
             {...props}
             data-theme="dark"
             className={cx("dark", props.className)}
         />
     );
-});
+}
 
 export interface LightThemeProps extends ThemeProps {}
 
@@ -32,13 +30,12 @@ export interface LightThemeProps extends ThemeProps {}
  *
  * @See Docs https://dreamy-ui.com/docs/components/theme
  */
-export const LightTheme = forwardRef<HTMLDivElement, ThemeProps>((props, ref) => {
+export function LightTheme(props: ThemeProps) {
     return (
         <StyledTheme
-            ref={ref}
             {...props}
             data-theme="light"
             className={cx("light", props.className)}
         />
     );
-});
+}

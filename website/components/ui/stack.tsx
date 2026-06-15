@@ -1,5 +1,5 @@
 import { splitProps } from "@dreamy-ui/react/rsc";
-import React, { forwardRef } from "react";
+import React from "react";
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import {
     type HstackProperties,
@@ -36,28 +36,20 @@ export interface StackProps
  *
  * @See Docs https://dreamy-ui.com/docs/components/stack
  */
-export const Stack = forwardRef<HTMLDivElement, StackProps>(
-    ({ separator, children, ...props }, ref) => {
-        const [patternProps, restProps] = splitProps(props, [
-            "direction",
-            "gap",
-            "align",
-            "justify"
-        ]);
+export function Stack({ separator, children, ...props }: StackProps) {
+    const [patternProps, restProps] = splitProps(props, ["direction", "gap", "align", "justify"]);
 
-        const styles = stack.raw(patternProps);
+    const styles = stack.raw(patternProps);
 
-        return (
-            <dreamy.div
-                ref={ref}
-                {...styles}
-                {...restProps}
-            >
-                {renderSeparator(separator, children)}
-            </dreamy.div>
-        );
-    }
-);
+    return (
+        <dreamy.div
+            {...styles}
+            {...restProps}
+        >
+            {renderSeparator(separator, children)}
+        </dreamy.div>
+    );
+}
 
 export interface HStackProps
     extends Omit<HTMLDreamyProps<"div">, keyof HstackProperties>,
@@ -68,23 +60,20 @@ export interface HStackProps
  *
  * @See Docs https://dreamy-ui.com/docs/components/stack
  */
-export const HStack = forwardRef<HTMLDivElement, HStackProps>(
-    ({ children, separator, ...props }, ref) => {
-        const [patternProps, restProps] = splitProps(props, ["gap", "justify", "align"]);
+export function HStack({ children, separator, ...props }: HStackProps) {
+    const [patternProps, restProps] = splitProps(props, ["gap", "justify", "align"]);
 
-        const styles = hstack.raw(patternProps);
+    const styles = hstack.raw(patternProps);
 
-        return (
-            <dreamy.div
-                ref={ref}
-                {...styles}
-                {...restProps}
-            >
-                {renderSeparator(separator, children)}
-            </dreamy.div>
-        );
-    }
-);
+    return (
+        <dreamy.div
+            {...styles}
+            {...restProps}
+        >
+            {renderSeparator(separator, children)}
+        </dreamy.div>
+    );
+}
 
 export interface VStackProps
     extends Omit<HTMLDreamyProps<"div">, keyof VstackProperties>,
@@ -96,20 +85,17 @@ export interface VStackProps
  *
  * @See Docs https://dreamy-ui.com/docs/components/stack
  */
-export const VStack = forwardRef<HTMLDivElement, VStackProps>(
-    ({ children, separator, ...props }, ref) => {
-        const [patternProps, restProps] = splitProps(props, ["gap", "justify", "align"]);
+export function VStack({ children, separator, ...props }: VStackProps) {
+    const [patternProps, restProps] = splitProps(props, ["gap", "justify", "align"]);
 
-        const styles = vstack.raw(patternProps);
+    const styles = vstack.raw(patternProps);
 
-        return (
-            <dreamy.div
-                ref={ref}
-                {...styles}
-                {...restProps}
-            >
-                {renderSeparator(separator, children)}
-            </dreamy.div>
-        );
-    }
-);
+    return (
+        <dreamy.div
+            {...styles}
+            {...restProps}
+        >
+            {renderSeparator(separator, children)}
+        </dreamy.div>
+    );
+}

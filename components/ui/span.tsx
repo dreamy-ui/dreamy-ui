@@ -1,4 +1,3 @@
-import { forwardRef } from "react";
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 
 export interface SpanProps extends HTMLDreamyProps<"span"> {}
@@ -8,11 +7,6 @@ export interface SpanProps extends HTMLDreamyProps<"span"> {}
  *
  * @See Docs https://dreamy-ui.com/docs/components/span
  */
-export const Span = forwardRef<HTMLSpanElement, SpanProps>((props, ref) => {
-    return (
-        <dreamy.span
-            ref={ref}
-            {...props}
-        />
-    );
-});
+export function Span(props: SpanProps) {
+    return <dreamy.span {...props} />;
+}

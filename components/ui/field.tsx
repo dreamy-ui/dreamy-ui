@@ -6,7 +6,7 @@ import {
     useFieldContext,
     useFieldProvider
 } from "@dreamy-ui/react";
-import { forwardRef } from "react";
+
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type FieldVariantProps, field } from "styled-system/recipes";
 import { Box } from "./box";
@@ -17,7 +17,8 @@ export interface FieldLabelProps extends HTMLDreamyProps<"label"> {
     optionalIndicator?: React.ReactNode;
 }
 
-export const Label = forwardRef<HTMLLabelElement, FieldLabelProps>(function FieldLabel(props, ref) {
+export function Label(props: FieldLabelProps) {
+    const { ref } = props;
     const {
         children,
         requiredIndicator = <RequiredIndicator />,
@@ -38,7 +39,7 @@ export const Label = forwardRef<HTMLLabelElement, FieldLabelProps>(function Fiel
             {field?.isRequired ? requiredIndicator : optionalIndicator}
         </Box>
     );
-});
+}
 
 export interface RequiredIndicatorProps extends HTMLDreamyProps<"span"> {}
 
@@ -46,25 +47,25 @@ export interface RequiredIndicatorProps extends HTMLDreamyProps<"span"> {}
  * Used to show a "required" text or an asterisks (*) to indicate that
  * a field is required.
  */
-export const RequiredIndicator = forwardRef<HTMLSpanElement, RequiredIndicatorProps>(
-    function RequiredIndicator(props, ref) {
-        const field = useFieldContext();
+export function RequiredIndicator(props: RequiredIndicatorProps) {
+    const { ref } = props;
+    const field = useFieldContext();
 
-        if (!field?.isRequired) return null;
+    if (!field?.isRequired) return null;
 
-        return (
-            <Box
-                as={"span"}
-                data-part="requiredIndicator"
-                {...field?.getRequiredIndicatorProps(props, ref)}
-            />
-        );
-    }
-);
+    return (
+        <Box
+            as={"span"}
+            data-part="requiredIndicator"
+            {...field?.getRequiredIndicatorProps(props, ref)}
+        />
+    );
+}
 
 export interface FieldErrorProps extends HTMLDreamyProps<"label"> {}
 
-export const Error = forwardRef<HTMLLabelElement, FieldErrorProps>(function FieldError(props, ref) {
+export function Error(props: FieldErrorProps) {
+    const { ref } = props;
     const field = useFieldContext();
 
     if (!field?.isInvalid) return null;
@@ -75,13 +76,13 @@ export const Error = forwardRef<HTMLLabelElement, FieldErrorProps>(function Fiel
             {...field?.getErrorMessageProps(props, ref)}
         />
     );
-});
+}
 
 /**
  * Used as the visual indicator that a field is invalid or
  * a field has incorrect values.
  */
-export const ErrorIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => {
+export function ErrorIcon(props: IconProps) {
     const field = useFieldContext();
 
     if (!field?.isInvalid) return null;
@@ -90,7 +91,6 @@ export const ErrorIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => {
         <Icon
             aria-hidden
             data-part="errorIcon"
-            ref={ref}
             size={"sm"}
             {...props}
         >
@@ -107,11 +107,12 @@ export const ErrorIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => {
             </svg>
         </Icon>
     );
-});
+}
 
 export interface FieldHintProps extends HTMLDreamyProps<"div"> {}
 
-export const Hint = forwardRef<HTMLDivElement, FieldHintProps>(function FieldHint(props, ref) {
+export function Hint(props: FieldHintProps) {
+    const { ref } = props;
     const field = useFieldContext();
 
     if (field?.isInvalid) return null;
@@ -122,7 +123,7 @@ export const Hint = forwardRef<HTMLDivElement, FieldHintProps>(function FieldHin
             {...field?.getHintProps(props, ref)}
         />
     );
-});
+}
 
 interface FieldContext extends UserFeedbackProps {
     /**
@@ -152,10 +153,7 @@ const StyledField = dreamy("div", field);
  *
  * @See Docs https://dreamy-ui.com/docs/components/field
  */
-export const Root = forwardRef<HTMLDivElement, FieldProps>(function Field(
-    { children, label, hint, error, ...props },
-    ref
-) {
+export function Root({ children, label, hint, error, ref, ...props }: FieldProps) {
     const { getRootProps, htmlProps: _, ...context } = useFieldProvider(props);
 
     return (
@@ -168,4 +166,4 @@ export const Root = forwardRef<HTMLDivElement, FieldProps>(function Field(
             </StyledField>
         </FieldProvider>
     );
-});
+}

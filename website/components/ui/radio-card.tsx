@@ -7,7 +7,7 @@ import {
     useRadio,
     useRadioCardContext
 } from "@dreamy-ui/react";
-import { forwardRef } from "react";
+
 import { type HTMLDreamyProps, createStyleContext, dreamy } from "styled-system/jsx";
 import { type RadioCardVariantProps, radioCard } from "styled-system/recipes";
 import { VisuallyHiddenInput } from "./visually-hidden";
@@ -28,10 +28,8 @@ export interface RadioCardRootProps
  *
  * @See Docs https://dreamy-ui.com/docs/components/radio-card
  */
-export const Root = forwardRef<HTMLInputElement, RadioCardRootProps>(function RadioCardRoot(
-    props,
-    ref
-) {
+export function Root(props: RadioCardRootProps) {
+    const { ref } = props;
     const { children, ...rest } = props;
     const context = useRadio({ ...rest, isCard: true, ref });
     const rootProps = context.getRootProps();
@@ -44,7 +42,7 @@ export const Root = forwardRef<HTMLInputElement, RadioCardRootProps>(function Ra
             </StyledRoot>
         </RadioCardProvider>
     );
-});
+}
 
 export interface RadioCardRootProviderProps extends HTMLDreamyProps<"div"> {
     value: UseRadioReturn;
@@ -55,25 +53,22 @@ export interface RadioCardRootProviderProps extends HTMLDreamyProps<"div"> {
  *
  * Use when controlling the radio card with the `useRadio` hook externally.
  */
-export const RootProvider = forwardRef<HTMLDivElement, RadioCardRootProviderProps>(
-    function RadioCardRootProvider(props, ref) {
-        const { value, children, ...rest } = props;
-        const rootProps = value.getRootProps();
+export function RootProvider(props: RadioCardRootProviderProps) {
+    const { value, children, ...rest } = props;
+    const rootProps = value.getRootProps();
 
-        return (
-            <RadioCardProvider value={value}>
-                <StyledRootProvider
-                    ref={ref}
-                    {...rootProps}
-                    {...rest}
-                >
-                    <VisuallyHiddenInput {...value.getInputProps()} />
-                    {children}
-                </StyledRootProvider>
-            </RadioCardProvider>
-        );
-    }
-);
+    return (
+        <RadioCardProvider value={value}>
+            <StyledRootProvider
+                {...rootProps}
+                {...rest}
+            >
+                <VisuallyHiddenInput {...value.getInputProps()} />
+                {children}
+            </StyledRootProvider>
+        </RadioCardProvider>
+    );
+}
 
 export interface RadioCardHeaderProps extends HTMLDreamyProps<"div"> {}
 export const Header = withContext(dreamy.div, "header");
@@ -94,20 +89,14 @@ export interface RadioCardRadioProps extends HTMLDreamyProps<"div"> {}
  *
  * The radio indicator. Must be used inside `RadioCard.Root`.
  */
-export const Radio = forwardRef<HTMLDivElement, RadioCardRadioProps>(function RadioCardRadio(
-    props,
-    ref
-) {
+export function Radio(props: RadioCardRadioProps) {
     const context = useRadioCardContext();
 
     return (
-        <StyledRadio
-            ref={ref}
-            {...props}
-        >
+        <StyledRadio {...props}>
             <span {...context?.getWrapperProps()}>
                 <span {...context?.getControlProps()} />
             </span>
         </StyledRadio>
     );
-});
+}

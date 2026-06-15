@@ -1,7 +1,7 @@
 "use client";
 
 import { type UseCircularProgressProps, useCircularProgress } from "@dreamy-ui/react";
-import { forwardRef } from "react";
+
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type ProgressCircularVariantProps, progressCircular } from "styled-system/recipes";
 
@@ -17,7 +17,8 @@ const StyledProgressCircular = dreamy("div", progressCircular);
  *
  * @See Docs https://dreamy-ui.com/docs/components/progress-circular
  */
-export const ProgressCircular = forwardRef<HTMLDivElement, ProgressCircularProps>((props, ref) => {
+export function ProgressCircular(props: ProgressCircularProps) {
+    const { ref } = props;
     const {
         label,
         showValueLabel,
@@ -44,4 +45,4 @@ export const ProgressCircular = forwardRef<HTMLDivElement, ProgressCircularProps
             {label && <span {...getLabelProps()}>{label}</span>}
         </StyledProgressCircular>
     );
-});
+}

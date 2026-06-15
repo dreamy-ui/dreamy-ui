@@ -4,15 +4,7 @@ import { createContext, cx, dataAttr, useUpdateEffect } from "@dreamy-ui/react";
 import { useControllableState } from "@dreamy-ui/react";
 import dayjs, { type Dayjs } from "dayjs";
 import * as m from "motion/react-m";
-import {
-    type ComponentType,
-    forwardRef,
-    useCallback,
-    useEffect,
-    useMemo,
-    useRef,
-    useState
-} from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import { LuCalendar } from "react-icons/lu";
 import { createStyleContext, dreamy } from "styled-system/jsx";
@@ -189,8 +181,8 @@ export interface DatePickerRootProps
     popoverProps?: Popover.PopoverProps;
 }
 
-export const Root: ComponentType<DatePickerRootProps & DatePickerVariantProps> = withProvider(
-    forwardRef<HTMLDivElement, DatePickerRootProps>(function DatePickerRoot(props, ref) {
+export const Root = withProvider(
+    function DatePickerRoot(props: DatePickerRootProps) {
         const {
             value: valueProp,
             defaultValue,
@@ -322,311 +314,279 @@ export const Root: ComponentType<DatePickerRootProps & DatePickerVariantProps> =
                     usePortal={false}
                     {...popoverProps}
                 >
-                    <Box
-                        ref={ref}
-                        {...rest}
-                    >
-                        {children}
-                    </Box>
+                    <Box {...rest}>{children}</Box>
                 </Popover.Root>
             </DatePickerProvider>
         );
-    }),
+    },
     "root",
     {}
 );
 
 export interface DatePickerTriggerProps extends ButtonProps {}
 
-export const Trigger = withContext(
-    forwardRef<HTMLButtonElement, DatePickerTriggerProps>(function DatePickerTrigger(props, ref) {
-        const context = useDatePickerContext();
-        const size = getInheritedButtonSize(context.size);
+export const Trigger = withContext(function DatePickerTrigger(props: DatePickerTriggerProps) {
+    const context = useDatePickerContext();
+    const size = getInheritedButtonSize(context.size);
 
-        const isPointerDownRef = useRef(false);
+    const isPointerDownRef = useRef(false);
 
-        const handlePointerDown = useCallback(
-            function handleTriggerPointerDown(event: React.PointerEvent<HTMLButtonElement>) {
-                isPointerDownRef.current = true;
-                // Reset after focus events have had time to fire
-                setTimeout(() => {
-                    isPointerDownRef.current = false;
-                }, 100);
-                props.onPointerDown?.(event);
-            },
-            [props]
-        );
+    const handlePointerDown = useCallback(
+        function handleTriggerPointerDown(event: React.PointerEvent<HTMLButtonElement>) {
+            isPointerDownRef.current = true;
+            // Reset after focus events have had time to fire
+            setTimeout(() => {
+                isPointerDownRef.current = false;
+            }, 100);
+            props.onPointerDown?.(event);
+        },
+        [props]
+    );
 
-        const handleFocus = useCallback(
-            function handleTriggerFocus(event: React.FocusEvent<HTMLButtonElement>) {
-                if (
-                    !context.isOpen &&
-                    !isPointerDownRef.current &&
-                    event.target.matches(":focus-visible")
-                ) {
-                    context.openPicker();
-                }
-                props.onFocus?.(event);
-            },
-            [context, props]
-        );
+    const handleFocus = useCallback(
+        function handleTriggerFocus(event: React.FocusEvent<HTMLButtonElement>) {
+            if (
+                !context.isOpen &&
+                !isPointerDownRef.current &&
+                event.target.matches(":focus-visible")
+            ) {
+                context.openPicker();
+            }
+            props.onFocus?.(event);
+        },
+        [context, props]
+    );
 
-        return (
-            <Popover.Trigger>
-                <Button
-                    ref={ref}
-                    size={size}
-                    variant="outline"
-                    {...props}
-                    onFocus={handleFocus}
-                    onPointerDown={handlePointerDown}
-                />
-            </Popover.Trigger>
-        );
-    }),
-    "trigger"
-);
+    return (
+        <Popover.Trigger>
+            <Button
+                size={size}
+                variant="outline"
+                {...props}
+                onFocus={handleFocus}
+                onPointerDown={handlePointerDown}
+            />
+        </Popover.Trigger>
+    );
+}, "trigger");
 
 export interface DatePickerInputProps extends InputGroupProps {}
 
-export const Input = withContext(
-    forwardRef<HTMLDivElement, DatePickerInputProps>(function DatePickerInput(props, ref) {
-        const context = useDatePickerContext();
-        const formattedDate = useMemo(
-            function formatDate() {
-                return context.value ? dayjs(context.value).format(context.dateFormat) : "";
-            },
-            [context.value, context.dateFormat]
-        );
+export const Input = withContext(function DatePickerInput(props: DatePickerInputProps) {
+    const { ref: _ref, ...inputProps } = props;
+    const context = useDatePickerContext();
+    const formattedDate = useMemo(
+        function formatDate() {
+            return context.value ? dayjs(context.value).format(context.dateFormat) : "";
+        },
+        [context.value, context.dateFormat]
+    );
 
-        const size = getInheritedButtonSize(context.size);
+    const size = getInheritedButtonSize(context.size);
 
-        const isPointerDownRef = useRef(false);
+    const isPointerDownRef = useRef(false);
 
-        const handlePointerDown = useCallback(
-            function handleInputPointerDown(event: React.PointerEvent<HTMLInputElement>) {
-                isPointerDownRef.current = true;
-                setTimeout(() => {
-                    isPointerDownRef.current = false;
-                }, 100);
-                props.onPointerDown?.(event);
-            },
-            [props]
-        );
+    const handlePointerDown = useCallback(
+        function handleInputPointerDown(event: React.PointerEvent<HTMLInputElement>) {
+            isPointerDownRef.current = true;
+            setTimeout(() => {
+                isPointerDownRef.current = false;
+            }, 100);
+            props.onPointerDown?.(event);
+        },
+        [props]
+    );
 
-        const handleFocus = useCallback(
-            function handleInputFocus(event: React.FocusEvent<HTMLInputElement>) {
-                if (
-                    !context.isOpen &&
-                    !isPointerDownRef.current &&
-                    event.target.matches(":focus-visible")
-                ) {
-                    context.openPicker();
-                }
-                props.onFocus?.(event);
-            },
-            [context, props]
-        );
+    const handleFocus = useCallback(
+        function handleInputFocus(event: React.FocusEvent<HTMLInputElement>) {
+            if (
+                !context.isOpen &&
+                !isPointerDownRef.current &&
+                event.target.matches(":focus-visible")
+            ) {
+                context.openPicker();
+            }
+            props.onFocus?.(event);
+        },
+        [context, props]
+    );
 
-        return (
-            <Popover.Trigger>
-                <InputGroup
-                    ref={ref}
-                    size={size}
-                >
-                    <InputComponent
-                        onFocus={handleFocus}
-                        onPointerDown={handlePointerDown}
-                        placeholder={context.placeholder}
-                        readOnly
-                        value={formattedDate}
-                        {...props}
-                    />
-                    <InputRightAddon>
-                        <LuCalendar />
-                    </InputRightAddon>
-                </InputGroup>
-            </Popover.Trigger>
-        );
-    }),
-    "trigger"
-);
+    return (
+        <Popover.Trigger>
+            <InputGroup size={size}>
+                <InputComponent
+                    onFocus={handleFocus}
+                    onPointerDown={handlePointerDown}
+                    placeholder={context.placeholder}
+                    readOnly
+                    value={formattedDate}
+                    {...inputProps}
+                />
+                <InputRightAddon>
+                    <LuCalendar />
+                </InputRightAddon>
+            </InputGroup>
+        </Popover.Trigger>
+    );
+}, "trigger");
 
 export interface DatePickerPopoverProps extends Popover.PopoverContentProps {}
 
-export const PopoverContent = withContext(
-    forwardRef<HTMLElement, DatePickerPopoverProps>(function DatePickerPopover(props, ref) {
-        const { transition: _, ...restProps } = props;
-        return (
-            <Popover.Content
-                ref={ref}
-                {...restProps}
-            />
-        );
-    }),
-    "popover"
-);
+export const PopoverContent = withContext(function DatePickerPopover(
+    props: DatePickerPopoverProps
+) {
+    const { transition: _, ...restProps } = props;
+    return <Popover.Content {...restProps} />;
+}, "popover");
 
 export interface DatePickerControlProps extends FlexProps {
     inputProps?: InputProps;
     todayButtonProps?: ButtonProps;
 }
 
-export const Control = withContext(
-    forwardRef<HTMLDivElement, DatePickerControlProps>(function DatePickerControl(props, ref) {
-        const { inputProps, todayButtonProps, ...rest } = props;
-        const context = useDatePickerContext();
-        const minValue = useMemo(
-            function getMinValue() {
-                return formatDateForInput(context.minDate ?? null);
-            },
-            [context.minDate]
-        );
-        const maxValue = useMemo(
-            function getMaxValue() {
-                return formatDateForInput(context.maxDate ?? null);
-            },
-            [context.maxDate]
-        );
+export const Control = withContext(function DatePickerControl(props: DatePickerControlProps) {
+    const { inputProps, todayButtonProps, ...rest } = props;
+    const context = useDatePickerContext();
+    const minValue = useMemo(
+        function getMinValue() {
+            return formatDateForInput(context.minDate ?? null);
+        },
+        [context.minDate]
+    );
+    const maxValue = useMemo(
+        function getMaxValue() {
+            return formatDateForInput(context.maxDate ?? null);
+        },
+        [context.maxDate]
+    );
 
-        const [inputValue, setInputValue] = useState(formatDateForInput(context.value));
+    const [inputValue, setInputValue] = useState(formatDateForInput(context.value));
 
-        const applyInputValue = useCallback(
-            function applyInputValue(nextValue: string) {
-                if (!nextValue) {
-                    context.setValue(null);
-                    setInputValue("");
-                    return;
-                }
+    const applyInputValue = useCallback(
+        function applyInputValue(nextValue: string) {
+            if (!nextValue) {
+                context.setValue(null);
+                setInputValue("");
+                return;
+            }
 
-                const nextDate = dayjs(nextValue);
-                if (
-                    !nextDate.isValid() ||
-                    !isDateWithinBounds(nextDate, context.minDate, context.maxDate)
-                ) {
-                    return;
-                }
+            const nextDate = dayjs(nextValue);
+            if (
+                !nextDate.isValid() ||
+                !isDateWithinBounds(nextDate, context.minDate, context.maxDate)
+            ) {
+                return;
+            }
 
-                context.setValue(nextDate.toDate());
-                context.setViewDate(nextDate);
-                setInputValue(nextValue);
-            },
-            [context]
-        );
+            context.setValue(nextDate.toDate());
+            context.setViewDate(nextDate);
+            setInputValue(nextValue);
+        },
+        [context]
+    );
 
-        const handleInputChange = useCallback(
-            function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
-                applyInputValue(event.target.value);
-            },
-            [applyInputValue]
-        );
+    const handleInputChange = useCallback(
+        function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
+            applyInputValue(event.target.value);
+        },
+        [applyInputValue]
+    );
 
-        const handleInputValueChange = useCallback(function handleInputValueChange(value: string) {
-            setInputValue(value);
-        }, []);
+    const handleInputValueChange = useCallback(function handleInputValueChange(value: string) {
+        setInputValue(value);
+    }, []);
 
-        const handleInputKeyDown = useCallback(
-            function handleInputKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
-                if (event.key === "Enter") {
-                    event.preventDefault();
-                    applyInputValue(event.currentTarget.value);
-                }
-            },
-            [applyInputValue]
-        );
+    const handleInputKeyDown = useCallback(
+        function handleInputKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                applyInputValue(event.currentTarget.value);
+            }
+        },
+        [applyInputValue]
+    );
 
-        useUpdateEffect(() => {
-            setInputValue(formatDateForInput(context.value));
-        }, [context.value]);
+    useUpdateEffect(() => {
+        setInputValue(formatDateForInput(context.value));
+    }, [context.value]);
 
-        const handleSetToday = useCallback(
-            function handleSetToday() {
-                const today = dayjs();
-                if (!isDateWithinBounds(today, context.minDate, context.maxDate)) {
-                    return;
-                }
+    const handleSetToday = useCallback(
+        function handleSetToday() {
+            const today = dayjs();
+            if (!isDateWithinBounds(today, context.minDate, context.maxDate)) {
+                return;
+            }
 
-                context.setValue(today.toDate());
-                context.setViewDate(today);
-            },
-            [context]
-        );
+            context.setValue(today.toDate());
+            context.setViewDate(today);
+        },
+        [context]
+    );
 
-        const isTodayDisabled = useMemo(
-            function getIsTodayDisabled() {
-                return !isDateWithinBounds(dayjs(), context.minDate, context.maxDate);
-            },
-            [context.minDate, context.maxDate]
-        );
+    const isTodayDisabled = useMemo(
+        function getIsTodayDisabled() {
+            return !isDateWithinBounds(dayjs(), context.minDate, context.maxDate);
+        },
+        [context.minDate, context.maxDate]
+    );
 
-        const size = getInheritedButtonSize(context.size);
+    const size = getInheritedButtonSize(context.size);
 
-        return (
-            <Flex
-                ref={ref}
-                {...rest}
+    return (
+        <Flex {...rest}>
+            <InputComponent
+                max={maxValue ?? undefined}
+                min={minValue ?? undefined}
+                onBlur={handleInputChange}
+                onChangeValue={handleInputValueChange}
+                onKeyDown={handleInputKeyDown}
+                size={size}
+                type="date"
+                value={inputValue}
+                {...inputProps}
+            />
+            <Button
+                isDisabled={isTodayDisabled}
+                onClick={handleSetToday}
+                size={size}
+                type="button"
+                variant="outline"
+                {...todayButtonProps}
             >
-                <InputComponent
-                    max={maxValue ?? undefined}
-                    min={minValue ?? undefined}
-                    onBlur={handleInputChange}
-                    onChangeValue={handleInputValueChange}
-                    onKeyDown={handleInputKeyDown}
-                    size={size}
-                    type="date"
-                    value={inputValue}
-                    {...inputProps}
-                />
-                <Button
-                    isDisabled={isTodayDisabled}
-                    onClick={handleSetToday}
-                    size={size}
-                    type="button"
-                    variant="outline"
-                    {...todayButtonProps}
-                >
-                    {todayButtonProps?.children ?? "Today"}
-                </Button>
-            </Flex>
-        );
-    }),
-    "control"
-);
+                {todayButtonProps?.children ?? "Today"}
+            </Button>
+        </Flex>
+    );
+}, "control");
 
 export interface DatePickerNavProps extends FlexProps {}
 
-export const Nav = withContext(
-    forwardRef<HTMLDivElement, DatePickerNavProps>(function DatePickerNav(props, ref) {
-        const { calendarView, setCalendarView, size: ctxSize } = useDatePickerContext();
-        const inheritedSize = getInheritedButtonSize(ctxSize);
-        const size = sizeMap[inheritedSize ?? "md"];
+export const Nav = withContext(function DatePickerNav(props: DatePickerNavProps) {
+    const { calendarView, setCalendarView, size: ctxSize } = useDatePickerContext();
+    const inheritedSize = getInheritedButtonSize(ctxSize);
+    const size = sizeMap[inheritedSize ?? "md"];
 
-        return (
-            <Flex
-                ref={ref}
-                {...props}
-            >
-                {(["day", "month", "year"] as const).map(function renderNavItem(view) {
-                    return (
-                        <Button
-                            flex={1}
-                            key={view}
-                            onClick={function handleNavClick() {
-                                setCalendarView(view);
-                            }}
-                            size={size}
-                            type="button"
-                            variant={calendarView === view ? "solid" : "ghost"}
-                        >
-                            {view.charAt(0).toUpperCase() + view.slice(1)}
-                        </Button>
-                    );
-                })}
-            </Flex>
-        );
-    }),
-    "nav"
-);
+    return (
+        <Flex {...props}>
+            {(["day", "month", "year"] as const).map(function renderNavItem(view) {
+                return (
+                    <Button
+                        flex={1}
+                        key={view}
+                        onClick={function handleNavClick() {
+                            setCalendarView(view);
+                        }}
+                        size={size}
+                        type="button"
+                        variant={calendarView === view ? "solid" : "ghost"}
+                    >
+                        {view.charAt(0).toUpperCase() + view.slice(1)}
+                    </Button>
+                );
+            })}
+        </Flex>
+    );
+}, "nav");
 
 export interface DatePickerHeaderProps extends FlexProps {
     previousButtonProps?: DatePickerCalendarNavButtonProps;
@@ -634,67 +594,61 @@ export interface DatePickerHeaderProps extends FlexProps {
     titleProps?: DatePickerCalendarTitleProps;
 }
 
-export const Header = withContext(
-    forwardRef<HTMLDivElement, DatePickerHeaderProps>(function DatePickerHeader(props, ref) {
-        const { previousButtonProps, nextButtonProps, titleProps, ...rest } = props;
-        const context = useDatePickerContext();
-        const isYearView = context.calendarView === "year";
+export const Header = withContext(function DatePickerHeader(props: DatePickerHeaderProps) {
+    const { previousButtonProps, nextButtonProps, titleProps, ...rest } = props;
+    const context = useDatePickerContext();
+    const isYearView = context.calendarView === "year";
 
-        const handlePrevious = useCallback(
-            function handlePrevious() {
-                if (isYearView) {
-                    context.setYearPageStart((prev) => prev - YEARS_PER_PAGE);
-                } else {
-                    context.setViewDate(context.viewDate.subtract(1, "month"));
-                }
-            },
-            [isYearView, context]
-        );
+    const handlePrevious = useCallback(
+        function handlePrevious() {
+            if (isYearView) {
+                context.setYearPageStart((prev) => prev - YEARS_PER_PAGE);
+            } else {
+                context.setViewDate(context.viewDate.subtract(1, "month"));
+            }
+        },
+        [isYearView, context]
+    );
 
-        const handleNext = useCallback(
-            function handleNext() {
-                if (isYearView) {
-                    context.setYearPageStart((prev) => prev + YEARS_PER_PAGE);
-                } else {
-                    context.setViewDate(context.viewDate.add(1, "month"));
-                }
-            },
-            [isYearView, context]
-        );
+    const handleNext = useCallback(
+        function handleNext() {
+            if (isYearView) {
+                context.setYearPageStart((prev) => prev + YEARS_PER_PAGE);
+            } else {
+                context.setViewDate(context.viewDate.add(1, "month"));
+            }
+        },
+        [isYearView, context]
+    );
 
-        const title = isYearView
-            ? `${context.yearPageStart} – ${context.yearPageStart + YEARS_PER_PAGE - 1}`
-            : context.viewDate.format("MMMM YYYY");
+    const title = isYearView
+        ? `${context.yearPageStart} – ${context.yearPageStart + YEARS_PER_PAGE - 1}`
+        : context.viewDate.format("MMMM YYYY");
 
-        return (
-            <CalendarHeader
-                ref={ref}
-                {...rest}
-            >
-                <CalendarNav>
-                    <CalendarNavButton
-                        aria-label={isYearView ? "Previous years" : "Previous month"}
-                        onClick={handlePrevious}
-                        type="button"
-                        {...previousButtonProps}
-                    >
-                        <Icon as={BiChevronLeft} />
-                    </CalendarNavButton>
-                    <CalendarTitle {...titleProps}>{title}</CalendarTitle>
-                    <CalendarNavButton
-                        aria-label={isYearView ? "Next years" : "Next month"}
-                        onClick={handleNext}
-                        type="button"
-                        {...nextButtonProps}
-                    >
-                        <Icon as={BiChevronRight} />
-                    </CalendarNavButton>
-                </CalendarNav>
-            </CalendarHeader>
-        );
-    }),
-    "calendarHeader"
-);
+    return (
+        <CalendarHeader {...rest}>
+            <CalendarNav>
+                <CalendarNavButton
+                    aria-label={isYearView ? "Previous years" : "Previous month"}
+                    onClick={handlePrevious}
+                    type="button"
+                    {...previousButtonProps}
+                >
+                    <Icon as={BiChevronLeft} />
+                </CalendarNavButton>
+                <CalendarTitle {...titleProps}>{title}</CalendarTitle>
+                <CalendarNavButton
+                    aria-label={isYearView ? "Next years" : "Next month"}
+                    onClick={handleNext}
+                    type="button"
+                    {...nextButtonProps}
+                >
+                    <Icon as={BiChevronRight} />
+                </CalendarNavButton>
+            </CalendarNav>
+        </CalendarHeader>
+    );
+}, "calendarHeader");
 
 function DayCalendarView() {
     const { value, setValue, viewDate, minDate, maxDate, weekStartsOn } = useDatePickerContext();
@@ -957,72 +911,44 @@ function YearCalendarView() {
 
 export interface DatePickerCalendarProps extends BoxProps {}
 
-export const Calendar = withContext(
-    forwardRef<HTMLDivElement, DatePickerCalendarProps>(function DatePickerCalendar(props, ref) {
-        const { calendarView, hasFooter } = useDatePickerContext();
+export const Calendar = withContext(function DatePickerCalendar(props: DatePickerCalendarProps) {
+    const { calendarView, hasFooter } = useDatePickerContext();
 
-        return (
-            <Box
-                ref={ref}
-                {...props}
-                data-no-footer={dataAttr(!hasFooter)}
-            >
-                {calendarView === "day" && <DayCalendarView />}
-                {calendarView === "month" && <MonthCalendarView />}
-                {calendarView === "year" && <YearCalendarView />}
-            </Box>
-        );
-    }),
-    "calendar"
-);
+    return (
+        <Box
+            {...props}
+            data-no-footer={dataAttr(!hasFooter)}
+        >
+            {calendarView === "day" && <DayCalendarView />}
+            {calendarView === "month" && <MonthCalendarView />}
+            {calendarView === "year" && <YearCalendarView />}
+        </Box>
+    );
+}, "calendar");
 
 export interface DatePickerCalendarHeaderProps extends FlexProps {}
 
-export const CalendarHeader = withContext(
-    forwardRef<HTMLDivElement, DatePickerCalendarHeaderProps>(
-        function DatePickerCalendarHeader(props, ref) {
-            return (
-                <Flex
-                    ref={ref}
-                    {...props}
-                />
-            );
-        }
-    ),
-    "calendarHeader"
-);
+export const CalendarHeader = withContext(function DatePickerCalendarHeader(
+    props: DatePickerCalendarHeaderProps
+) {
+    return <Flex {...props} />;
+}, "calendarHeader");
 
 export interface DatePickerCalendarTitleProps extends BoxProps {}
 
-export const CalendarTitle = withContext(
-    forwardRef<HTMLDivElement, DatePickerCalendarTitleProps>(
-        function DatePickerCalendarTitle(props, ref) {
-            return (
-                <Box
-                    ref={ref}
-                    {...props}
-                />
-            );
-        }
-    ),
-    "calendarTitle"
-);
+export const CalendarTitle = withContext(function DatePickerCalendarTitle(
+    props: DatePickerCalendarTitleProps
+) {
+    return <Box {...props} />;
+}, "calendarTitle");
 
 export interface DatePickerCalendarNavProps extends FlexProps {}
 
-export const CalendarNav = withContext(
-    forwardRef<HTMLDivElement, DatePickerCalendarNavProps>(
-        function DatePickerCalendarNav(props, ref) {
-            return (
-                <Flex
-                    ref={ref}
-                    {...props}
-                />
-            );
-        }
-    ),
-    "calendarNav"
-);
+export const CalendarNav = withContext(function DatePickerCalendarNav(
+    props: DatePickerCalendarNavProps
+) {
+    return <Flex {...props} />;
+}, "calendarNav");
 
 export interface DatePickerCalendarNavButtonProps extends IconButtonProps {}
 
@@ -1032,204 +958,144 @@ const sizeMap = {
     lg: "md"
 } as const;
 
-export const CalendarNavButton = withContext(
-    forwardRef<HTMLButtonElement, DatePickerCalendarNavButtonProps>(
-        function DatePickerCalendarNavButton(props, ref) {
-            const context = useDatePickerContext();
-            const inheritedSize = getInheritedButtonSize(context.size);
+export const CalendarNavButton = withContext(function DatePickerCalendarNavButton(
+    props: DatePickerCalendarNavButtonProps
+) {
+    const context = useDatePickerContext();
+    const inheritedSize = getInheritedButtonSize(context.size);
 
-            return (
-                <IconButton
-                    ref={ref}
-                    size={sizeMap[inheritedSize ?? "md"]}
-                    variant="ghost"
-                    {...props}
-                />
-            );
-        }
-    ),
-    "calendarNavButton"
-);
+    return (
+        <IconButton
+            size={sizeMap[inheritedSize ?? "md"]}
+            variant="ghost"
+            {...props}
+        />
+    );
+}, "calendarNavButton");
 
 export interface DatePickerCalendarGridProps extends BoxProps {}
 
-export const CalendarGrid = withContext(
-    forwardRef<HTMLDivElement, DatePickerCalendarGridProps>(
-        function DatePickerCalendarGrid(props, ref) {
-            return (
-                <Box
-                    ref={ref}
-                    {...props}
-                />
-            );
-        }
-    ),
-    "calendarGrid"
-);
+export const CalendarGrid = withContext(function DatePickerCalendarGrid(
+    props: DatePickerCalendarGridProps
+) {
+    return <Box {...props} />;
+}, "calendarGrid");
 
 export interface DatePickerCalendarGridHeaderProps extends BoxProps {}
 
-export const CalendarGridHeader = withContext(
-    forwardRef<HTMLDivElement, DatePickerCalendarGridHeaderProps>(
-        function DatePickerCalendarGridHeader(props, ref) {
-            return (
-                <Box
-                    ref={ref}
-                    {...props}
-                />
-            );
-        }
-    ),
-    "calendarGridHeader"
-);
+export const CalendarGridHeader = withContext(function DatePickerCalendarGridHeader(
+    props: DatePickerCalendarGridHeaderProps
+) {
+    return <Box {...props} />;
+}, "calendarGridHeader");
 
 export interface DatePickerCalendarGridHeaderCellProps extends BoxProps {}
 
-export const CalendarGridHeaderCell = withContext(
-    forwardRef<HTMLDivElement, DatePickerCalendarGridHeaderCellProps>(
-        function DatePickerCalendarGridHeaderCell(props, ref) {
-            return (
-                <Box
-                    ref={ref}
-                    {...props}
-                />
-            );
-        }
-    ),
-    "calendarGridHeaderCell"
-);
+export const CalendarGridHeaderCell = withContext(function DatePickerCalendarGridHeaderCell(
+    props: DatePickerCalendarGridHeaderCellProps
+) {
+    return <Box {...props} />;
+}, "calendarGridHeaderCell");
 
 export interface DatePickerCalendarGridBodyProps extends BoxProps {}
 
-export const CalendarGridBody = withContext(
-    forwardRef<HTMLDivElement, DatePickerCalendarGridBodyProps>(
-        function DatePickerCalendarGridBody(props, ref) {
-            return (
-                <Box
-                    ref={ref}
-                    {...props}
-                />
-            );
-        }
-    ),
-    "calendarGridBody"
-);
+export const CalendarGridBody = withContext(function DatePickerCalendarGridBody(
+    props: DatePickerCalendarGridBodyProps
+) {
+    return <Box {...props} />;
+}, "calendarGridBody");
 
 export interface DatePickerCalendarCellProps extends BoxProps {}
 
-export const CalendarCell = withContext(
-    forwardRef<HTMLDivElement, DatePickerCalendarCellProps>(
-        function DatePickerCalendarCell(props, ref) {
-            return (
-                <Box
-                    ref={ref}
-                    {...props}
-                />
-            );
-        }
-    ),
-    "calendarCell"
-);
+export const CalendarCell = withContext(function DatePickerCalendarCell(
+    props: DatePickerCalendarCellProps
+) {
+    return <Box {...props} />;
+}, "calendarCell");
 
 export interface DatePickerCalendarCellButtonProps extends ButtonProps {
     isSelected?: boolean;
 }
 
-export const CalendarCellButton = withContext(
-    forwardRef<HTMLButtonElement, DatePickerCalendarCellButtonProps>(
-        function DatePickerCalendarCellButton(props, ref) {
-            const context = useDatePickerContext();
-            const viewMonthKey = useMemo(
-                function getViewMonthKey() {
-                    return context.viewDate.format("MM");
-                },
-                [context.viewDate]
-            );
-            return (
-                <dreamy.button
-                    ref={ref}
-                    {...props}
-                >
-                    {props.isSelected && (
-                        <m.div
-                            data-part="indicator"
-                            initial={false}
-                            layout={"position"}
-                            layoutId={`date-picker-cell-button-indicator-${viewMonthKey}`}
-                        />
-                    )}
-                    {props.children}
-                </dreamy.button>
-            );
-        }
-    ),
-    "calendarCellButton"
-);
+export const CalendarCellButton = withContext(function DatePickerCalendarCellButton(
+    props: DatePickerCalendarCellButtonProps
+) {
+    const context = useDatePickerContext();
+    const viewMonthKey = useMemo(
+        function getViewMonthKey() {
+            return context.viewDate.format("MM");
+        },
+        [context.viewDate]
+    );
+    return (
+        <dreamy.button {...props}>
+            {props.isSelected && (
+                <m.div
+                    data-part="indicator"
+                    initial={false}
+                    layout={"position"}
+                    layoutId={`date-picker-cell-button-indicator-${viewMonthKey}`}
+                />
+            )}
+            {props.children}
+        </dreamy.button>
+    );
+}, "calendarCellButton");
 
 export interface DatePickerFooterProps extends FlexProps {
     cancelButtonProps?: DatePickerFooterButtonProps;
     submitButtonProps?: DatePickerFooterButtonProps;
 }
 
-export const Footer = withContext(
-    forwardRef<HTMLDivElement, DatePickerFooterProps>(function DatePickerFooter(props, ref) {
-        const { cancelButtonProps, submitButtonProps, ...rest } = props;
-        const context = useDatePickerContext();
-        const setHasFooter = context.setHasFooter;
+export const Footer = withContext(function DatePickerFooter(props: DatePickerFooterProps) {
+    const { cancelButtonProps, submitButtonProps, ...rest } = props;
+    const context = useDatePickerContext();
+    const setHasFooter = context.setHasFooter;
 
-        useEffect(
-            function registerFooter() {
-                setHasFooter(true);
-                return function unregisterFooter() {
-                    setHasFooter(false);
-                };
-            },
-            [setHasFooter]
-        );
+    useEffect(
+        function registerFooter() {
+            setHasFooter(true);
+            return function unregisterFooter() {
+                setHasFooter(false);
+            };
+        },
+        [setHasFooter]
+    );
 
-        return (
-            <Flex
-                ref={ref}
-                {...rest}
+    return (
+        <Flex {...rest}>
+            <FooterButton
+                onClick={context.onCancel}
+                variant="outline"
+                {...cancelButtonProps}
             >
-                <FooterButton
-                    onClick={context.onCancel}
-                    variant="outline"
-                    {...cancelButtonProps}
-                >
-                    {cancelButtonProps?.children ?? "Cancel"}
-                </FooterButton>
-                <FooterButton
-                    onClick={context.onApply}
-                    variant="primary"
-                    {...submitButtonProps}
-                >
-                    {submitButtonProps?.children ?? "Apply"}
-                </FooterButton>
-            </Flex>
-        );
-    }),
-    "footer"
-);
+                {cancelButtonProps?.children ?? "Cancel"}
+            </FooterButton>
+            <FooterButton
+                onClick={context.onApply}
+                variant="primary"
+                {...submitButtonProps}
+            >
+                {submitButtonProps?.children ?? "Apply"}
+            </FooterButton>
+        </Flex>
+    );
+}, "footer");
 
 export interface DatePickerFooterButtonProps extends ButtonProps {}
 
-export const FooterButton = withContext(
-    forwardRef<HTMLButtonElement, DatePickerFooterButtonProps>(
-        function DatePickerFooterButton(props, ref) {
-            const context = useDatePickerContext();
-            const inheritedSize = getInheritedButtonSize(context.size);
-            return (
-                <Button
-                    ref={ref}
-                    size={inheritedSize}
-                    {...props}
-                />
-            );
-        }
-    ),
-    "footerButton"
-);
+export const FooterButton = withContext(function DatePickerFooterButton(
+    props: DatePickerFooterButtonProps
+) {
+    const context = useDatePickerContext();
+    const inheritedSize = getInheritedButtonSize(context.size);
+    return (
+        <Button
+            size={inheritedSize}
+            {...props}
+        />
+    );
+}, "footerButton");
 
 export interface DatePickerAIOProps extends DatePickerRootProps {
     inputProps?: DatePickerInputProps;
@@ -1239,29 +1105,24 @@ export interface DatePickerAIOProps extends DatePickerRootProps {
     footerProps?: DatePickerFooterProps;
 }
 
-export const AIO = forwardRef<HTMLDivElement, DatePickerAIOProps>(
-    function DatePickerAIO(props, ref) {
-        const {
-            inputProps,
-            popoverContentProps,
-            headerProps,
-            calendarProps,
-            footerProps,
-            ...rootProps
-        } = props;
+export function AIO(props: DatePickerAIOProps) {
+    const {
+        inputProps,
+        popoverContentProps,
+        headerProps,
+        calendarProps,
+        footerProps,
+        ...rootProps
+    } = props;
 
-        return (
-            <Root
-                ref={ref}
-                {...rootProps}
-            >
-                <Input {...inputProps} />
-                <PopoverContent {...popoverContentProps}>
-                    <Header {...headerProps} />
-                    <Calendar {...calendarProps} />
-                    <Footer {...footerProps} />
-                </PopoverContent>
-            </Root>
-        );
-    }
-);
+    return (
+        <Root {...rootProps}>
+            <Input {...inputProps} />
+            <PopoverContent {...popoverContentProps}>
+                <Header {...headerProps} />
+                <Calendar {...calendarProps} />
+                <Footer {...footerProps} />
+            </PopoverContent>
+        </Root>
+    );
+}
