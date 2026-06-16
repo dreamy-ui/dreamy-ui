@@ -43,7 +43,6 @@ export const select = defineSlotRecipe({
             borderRadius: "l2",
             userSelect: "none",
             textAlign: "start",
-            focusVisibleRing: "inside",
             _placeholderShown: {
                 color: "fg.medium"
             },
@@ -128,10 +127,6 @@ export const select = defineSlotRecipe({
                 pointerEvents: "none",
                 opacity: "0.5"
             }
-            // "& svg": {
-            //     width: "4",
-            //     height: "4"
-            // }
         },
         itemIndicator: {
             position: "absolute"

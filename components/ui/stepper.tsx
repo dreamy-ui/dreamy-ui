@@ -2,12 +2,11 @@
 
 import {
     StepperProvider,
-    type UseStepperReturn,
     type UseStepperProps,
+    type UseStepperReturn,
     useStepper,
     useStepperContext
 } from "@dreamy-ui/react";
-
 import { type HTMLDreamyProps, createStyleContext, dreamy } from "styled-system/jsx";
 import type { StepperVariantProps } from "styled-system/recipes";
 import { stepper } from "styled-system/recipes";

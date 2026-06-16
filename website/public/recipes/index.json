@@ -201,6 +201,11 @@
   },
   {
     "type": "recipe",
+    "id": "stepper",
+    "file": "stepper.ts"
+  },
+  {
+    "type": "recipe",
     "id": "swittch",
     "file": "swittch.ts"
   },

@@ -646,6 +646,42 @@ function Wrapper({ children, ...props }: PropsWithChildren<FlexProps>) {
     );
 }
 
+function MdxTable({ children, ...props }: any) {
+    return (
+        <Table.Root
+            full
+            my={4}
+        >
+            <Table.Table {...props}>{children}</Table.Table>
+        </Table.Root>
+    );
+}
+
+function MdxTableHead(props: any) {
+    return <Table.Header {...props} />;
+}
+
+function MdxTableBody(props: any) {
+    return <Table.Body {...props} />;
+}
+
+function MdxTableRow(props: any) {
+    return <Table.Row {...props} />;
+}
+
+function MdxTableColumnHeader(props: any) {
+    return <Table.ColumnHeader {...props} />;
+}
+
+function MdxTableCell(props: any) {
+    return (
+        <Table.Cell
+            color={"fg.medium"}
+            {...props}
+        />
+    );
+}
+
 const icons = {
     IoClose,
     HiOutlineMail,
@@ -959,6 +995,12 @@ const components: any = {
             {...props}
         />
     ),
+    table: MdxTable,
+    thead: MdxTableHead,
+    tbody: MdxTableBody,
+    tr: MdxTableRow,
+    th: MdxTableColumnHeader,
+    td: MdxTableCell,
     ...DreamComponents,
     ...icons
 };

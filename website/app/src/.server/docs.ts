@@ -2,8 +2,9 @@ import cluster from "node:cluster";
 import fs from "node:fs/promises";
 import type { MDXRemoteSerializeResult } from "next-mdx-remote";
 import { serialize } from "next-mdx-remote/serialize";
-import type { Root } from "node_modules/remark-parse/lib";
+// import type { Root } from "node_modules/remark-parse/lib";
 import rehypePrettyCode, { type Options } from "rehype-pretty-code";
+import remarkGfm from "remark-gfm";
 import remarkParse from "remark-parse";
 import { unified } from "unified";
 import { cachified } from "~/src/.server/cache";
@@ -456,7 +457,7 @@ export class Docs {
                 headings
             },
             mdxOptions: {
-                remarkPlugins: [remarkDreamyPMTabs],
+                remarkPlugins: [remarkGfm, remarkDreamyPMTabs],
                 rehypePlugins: [
                     [
                         rehypePrettyCode,
@@ -567,7 +568,7 @@ export interface LocalSection {
 
 export type Sections = LocalSection[];
 
-function getHeadings(tree: Root) {
+function getHeadings(tree: any) {
     const headings = new Array<Heading>();
 
     for (const node of tree.children) {

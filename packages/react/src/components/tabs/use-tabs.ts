@@ -204,11 +204,19 @@ export function useTabList<P extends UseTabListProps>(props: P) {
 			const ArrowStart = direction === "ltr" ? "ArrowLeft" : "ArrowRight";
 			const ArrowEnd = direction === "ltr" ? "ArrowRight" : "ArrowLeft";
 
-			const keyMap: Record<string, React.KeyboardEventHandler> = {
-				[ArrowStart]: () => isHorizontal && prevTab(),
-				[ArrowEnd]: () => isHorizontal && nextTab(),
-				ArrowDown: () => isVertical && nextTab(),
-				ArrowUp: () => isVertical && prevTab(),
+			const keyMap: Record<string, () => void> = {
+				...(isHorizontal
+					? {
+							[ArrowStart]: prevTab,
+							[ArrowEnd]: nextTab
+						}
+					: {}),
+				...(isVertical
+					? {
+							ArrowDown: nextTab,
+							ArrowUp: prevTab
+						}
+					: {}),
 				Home: firstTab,
 				End: lastTab
 			};
@@ -217,7 +225,7 @@ export function useTabList<P extends UseTabListProps>(props: P) {
 
 			if (action) {
 				event.preventDefault();
-				action(event);
+				action();
 			}
 		},
 		[descendants, focusedIndex, orientation, direction]

@@ -4,7 +4,7 @@ import { createContext } from "@/provider";
 import { callAllHandlers } from "@/utils";
 import { matchSorter } from "match-sorter";
 import type React from "react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 export interface AutocompleteItem {
     value: string;
@@ -103,36 +103,59 @@ export function useAutocomplete(props: UseAutocompleteProps) {
         return items.filter((item) => filterFn(item, searchQuery));
     }, [items, searchQuery, filterFn]);
 
-    // Focus first item whenever the filtered list changes, reset when no results
+    function getDefaultFocusedIndex(
+        list: AutocompleteItem[],
+        value: string | null
+    ): number {
+        if (list.length === 0) return -1;
+
+        if (value != null) {
+            const selectedIndex = list.findIndex((item) => item.value === value);
+            if (selectedIndex >= 0) return selectedIndex;
+        }
+
+        return 0;
+    }
+
+    // Highlight the selected item (or first match) when the query changes while open
     // biome-ignore lint/correctness/useExhaustiveDependencies: intentional reset
     useEffect(() => {
-        setFocusedIndex(filteredItems.length > 0 ? 0 : -1);
+        if (isOpen && filteredItems.length > 0) {
+            setFocusedIndex(getDefaultFocusedIndex(filteredItems, selectedValue));
+        }
     }, [searchQuery]);
 
     // Scroll focused item into view
     useEffect(() => {
-        if (focusedIndex === -1 || !contentRef.current) return;
+        if (focusedIndex < 0 || !contentRef.current) return;
         const options = contentRef.current.querySelectorAll<HTMLElement>('[role="option"]');
         options[focusedIndex]?.scrollIntoView({ block: "nearest" });
     }, [focusedIndex]);
 
     // Keep dropdown width in sync with the control width
-    // biome-ignore lint/correctness/useExhaustiveDependencies: intentional
+    // biome-ignore lint/correctness/useExhaustiveDependencies: remeasure when layout may change
     useEffect(() => {
         function updateWidth() {
-            if (controlRef.current) {
-                setContentWidth(controlRef.current.getBoundingClientRect().width);
+            if (!controlRef.current) return;
+
+            const { width } = controlRef.current.getBoundingClientRect();
+            if (width > 0) {
+                setContentWidth((prev) => (prev !== width ? width : prev));
             }
         }
         updateWidth();
         window.addEventListener("resize", updateWidth);
         return () => window.removeEventListener("resize", updateWidth);
-    }, [isOpen]);
+    }, [isOpen, items]);
 
     const onOpen = useCallback(() => {
         if (!isOpenControlled) setInternalIsOpen(true);
         onOpenProp?.();
-    }, [isOpenControlled, onOpenProp]);
+        const defaultIndex = getDefaultFocusedIndex(filteredItems, selectedValue);
+        if (defaultIndex >= 0) {
+            setFocusedIndex(defaultIndex);
+        }
+    }, [isOpenControlled, onOpenProp, filteredItems, selectedValue]);
 
     const onClose = useCallback(() => {
         if (!isOpenControlled) setInternalIsOpen(false);
@@ -140,6 +163,18 @@ export function useAutocomplete(props: UseAutocompleteProps) {
         setSearchQuery("");
         setFocusedIndex(-1);
     }, [isOpenControlled, onCloseProp]);
+
+    useLayoutEffect(() => {
+        if (!isOpen) {
+            setFocusedIndex(-1);
+            return;
+        }
+
+        const defaultIndex = getDefaultFocusedIndex(filteredItems, selectedValue);
+        if (defaultIndex >= 0) {
+            setFocusedIndex(defaultIndex);
+        }
+    }, [isOpen, filteredItems, selectedValue]);
 
     const selectItem = useCallback(
         (value: string) => {
@@ -194,6 +229,14 @@ export function useAutocomplete(props: UseAutocompleteProps) {
             onKeyDown: callAllHandlers(
                 props.onKeyDown,
                 (e: React.KeyboardEvent<HTMLInputElement>) => {
+                    const lastIndex = filteredItems.length - 1;
+
+                    function getActiveIndex() {
+                        return focusedIndex >= 0
+                            ? focusedIndex
+                            : getDefaultFocusedIndex(filteredItems, selectedValue);
+                    }
+
                     switch (e.key) {
                         case "ArrowDown":
                             e.preventDefault();
@@ -201,24 +244,41 @@ export function useAutocomplete(props: UseAutocompleteProps) {
                                 onOpen();
                                 break;
                             }
-                            setFocusedIndex((prev) =>
-                                prev + 1 >= filteredItems.length ? prev : prev + 1
-                            );
+                            if (filteredItems.length === 0) break;
+                            setFocusedIndex((prev) => {
+                                const start =
+                                    prev < 0
+                                        ? getDefaultFocusedIndex(filteredItems, selectedValue)
+                                        : prev;
+                                const next = start + 1 > lastIndex ? start : start + 1;
+                                return next;
+                            });
                             break;
                         case "ArrowUp":
                             e.preventDefault();
-                            setFocusedIndex((prev) => (prev <= 0 ? 0 : prev - 1));
-                            break;
-                        case "Enter":
-                            e.preventDefault();
-                            if (
-                                focusedIndex >= 0 &&
-                                focusedIndex < filteredItems.length &&
-                                isOpen
-                            ) {
-                                selectItem(filteredItems[focusedIndex].value);
+                            if (!isOpen) {
+                                onOpen();
+                                break;
                             }
+                            if (filteredItems.length === 0) break;
+                            setFocusedIndex((prev) => {
+                                const start =
+                                    prev < 0
+                                        ? getDefaultFocusedIndex(filteredItems, selectedValue)
+                                        : prev;
+                                return Math.max(0, start - 1);
+                            });
                             break;
+                        case "Enter": {
+                            e.preventDefault();
+                            if (!isOpen) {
+                                onOpen();
+                                break;
+                            }
+                            if (filteredItems.length === 0) break;
+                            selectItem(filteredItems[getActiveIndex()].value);
+                            break;
+                        }
                         case "Escape":
                             e.preventDefault();
                             onClose();
@@ -256,7 +316,9 @@ export function useAutocomplete(props: UseAutocompleteProps) {
             },
             style: {
                 ...props?.style,
-                width: contentWidth ? `${contentWidth}px` : undefined
+                ...(contentWidth && contentWidth > 0
+                    ? { width: `${contentWidth}px`, minWidth: `${contentWidth}px` }
+                    : {})
             },
             rootProps: {
                 style: { zIndex: "var(--z-index-dropdown)" }

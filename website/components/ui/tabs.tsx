@@ -17,17 +17,20 @@ import {
 } from "@dreamy-ui/react";
 
 import { type HTMLDreamyProps, createStyleContext } from "styled-system/jsx";
-import { tabs } from "styled-system/recipes";
+import { type TabsVariantProps, tabs } from "styled-system/recipes";
 import { Box } from "./box";
 import { Button, type ButtonProps } from "./button";
 import { Flex, type FlexProps } from "./flex";
 import { MotionFlex, type MotionFlexProps } from "./motion";
 
-const { withProvider, withContext } = createStyleContext(tabs);
+const { withProvider, withContext } = createStyleContext(tabs, {
+    forwardVariants: ["orientation"]
+});
 
 export interface TabsProps
     extends UseTabsProps,
-        Omit<HTMLDreamyProps<"div">, "onChange" | "direction"> {
+        Omit<HTMLDreamyProps<"div">, "onChange" | "direction">,
+        TabsVariantProps {
     children: React.ReactNode;
 }
 

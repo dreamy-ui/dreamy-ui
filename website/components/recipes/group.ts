@@ -67,11 +67,11 @@ export const group = defineRecipe({
                 },
                 "& > *[data-between]": {
                     borderRadius: "0!",
-                    marginStart: "-1px"
+                    borderStartWidth: "0!"
                 },
-                "& > *[data-last]": {
+                "& > *[data-last]:not([data-first])": {
                     borderStartRadius: "0!",
-                    marginStart: "-1px"
+                    borderStartWidth: "0!"
                 }
             }
         },
@@ -84,11 +84,11 @@ export const group = defineRecipe({
                 },
                 "& > *[data-between]": {
                     borderRadius: "0!",
-                    marginBottom: "-0.5px"
+                    borderBlockStartWidth: "0!"
                 },
-                "& > *[data-last]": {
+                "& > *[data-last]:not([data-first])": {
                     borderTopRadius: "0!",
-                    marginBottom: "-0.5px"
+                    borderBlockStartWidth: "0!"
                 }
             }
         }

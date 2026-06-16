@@ -4,12 +4,12 @@ import { defineTokens } from "@pandacss/dev";
 
 export function defineColorTokens() {
 	const { colorTuning } = getPresetOptions();
-	const alphaChroma = colorTuning?.alphaChroma;
+	const alpha = colorTuning?.alpha;
 
-	const blackAlphaHue = resolveModeNumber(alphaChroma?.hue, "light", 245);
-	const whiteAlphaHue = resolveModeNumber(alphaChroma?.hue, "dark", 245);
-	const blackAlphaChroma = resolveModeNumber(alphaChroma?.chroma, "light", 0);
-	const whiteAlphaChroma = resolveModeNumber(alphaChroma?.chroma, "dark", 0);
+	const blackAlphaHue = resolveModeNumber(alpha?.hue, "light", 245);
+	const whiteAlphaHue = resolveModeNumber(alpha?.hue, "dark", 245);
+	const blackAlphaChroma = resolveModeNumber(alpha?.chroma, "light", 0);
+	const whiteAlphaChroma = resolveModeNumber(alpha?.chroma, "dark", 0);
 
 	return defineTokens.colors({
 		current: { value: "currentColor" },

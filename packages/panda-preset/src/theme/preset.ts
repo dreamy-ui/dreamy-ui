@@ -40,61 +40,51 @@ export interface FgLightnessOffset {
 export interface BorderLightnessOffset {
     /**
      * `border` / `border.default` token.
-     * @default fgLightnessOffset.normal when `borderLightnessOffset` is not set
+     * @default `fg.lightness.normal` when `border.lightness` is not set
      */
     default?: number | LightDarkNumber;
     /**
      * `border.muted` token.
-     * @default fgLightnessOffset.disabled when `borderLightnessOffset` is not set
+     * @default `fg.lightness.disabled` when `border.lightness` is not set
      */
     muted?: number | LightDarkNumber;
     /**
      * `border.hover` token.
-     * @default fgLightnessOffset.normal when `borderLightnessOffset` is not set
+     * @default `fg.lightness.normal` when `border.lightness` is not set
      */
     hover?: number | LightDarkNumber;
 }
 
-interface ColorTuning {
+export interface FgColorTuning {
     /**
      * Multiplier applied to the computed foreground token chroma (color tint intensity).
      * Values above `1` increase the color tint of text tokens; values below `1` make them
      * more neutral/grayscale. The result is still clamped to safe bounds.
-     * Provide a `{ light, dark }` object to tune each color mode independently.
      * @default 1
      */
-    fgChromaScale?: number | LightDarkNumber;
-    /**
-     * Multiplier applied to the computed border token chroma (color tint intensity).
-     * Values above `1` increase the color tint of border tokens; values below `1` make them
-     * more neutral/grayscale. The result is still clamped to safe bounds.
-     * Provide a `{ light, dark }` object to tune each color mode independently.
-     * @default fgChromaScale (falls back to 1 if that is also not set)
-     */
-    borderChromaScale?: number | LightDarkNumber;
+    chroma?: number | LightDarkNumber;
     /**
      * Per-token lightness offset for foreground tokens (OKLCH 0–1 scale).
      * Positive values brighten a token; negative values darken it.
-     * Omitted tokens are left at their default lightness.
      */
-    fgLightnessOffset?: FgLightnessOffset;
-    /**
-     * Per-token lightness offset for border tokens (OKLCH 0–1 scale).
-     * When this entire option is omitted, border tokens fall back to corresponding
-     * fg offsets: `default` ← `fg.normal`, `muted` ← `fg.disabled`, `hover` ← `fg.normal`.
-     */
-    borderLightnessOffset?: BorderLightnessOffset;
-    /**
-     * Tint applied to generated alpha overlays (`colors.alpha.*`, `blackAlpha`, `whiteAlpha`).
-     * Uses OKLCH chroma on near-black (light mode) and near-white (dark mode) bases.
-     */
-    alphaChroma?: AlphaChroma;
+    lightness?: FgLightnessOffset;
 }
 
-/**
- * OKLCH tint for auto-generated alpha color tokens.
- */
-export interface AlphaChroma {
+export interface BorderColorTuning {
+    /**
+     * Multiplier applied to the computed border token chroma (color tint intensity).
+     * @default `fg.chroma` (falls back to `1` if that is also not set)
+     */
+    chroma?: number | LightDarkNumber;
+    /**
+     * Per-token lightness offset for border tokens (OKLCH 0–1 scale).
+     * When omitted entirely, border tokens fall back to corresponding fg offsets:
+     * `default` ← `fg.lightness.normal`, `muted` ← `fg.lightness.disabled`, `hover` ← `fg.lightness.normal`.
+     */
+    lightness?: BorderLightnessOffset;
+}
+
+export interface AlphaColorTuning {
     /**
      * OKLCH hue (0–360°) — which color the alpha overlay is tinted toward.
      * Only visible when {@link chroma} is greater than `0`.
@@ -137,12 +127,15 @@ export interface AlphaChroma {
      * - `0.02`–`0.04` — noticeable brand-colored overlays
      * - `0.04`+ — strong accent tint (use sparingly)
      *
-     * @example Subtle blue-tinted borders in light mode:
-     * `{ hue: 240, chroma: 0.02 }`
-     *
      * @default 0
      */
     chroma?: number | LightDarkNumber;
+}
+
+export interface ColorTuning {
+    fg?: FgColorTuning;
+    border?: BorderColorTuning;
+    alpha?: AlphaColorTuning;
 }
 
 export interface PresetOptions {

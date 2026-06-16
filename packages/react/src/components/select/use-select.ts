@@ -8,6 +8,7 @@ import { nextTick } from "@/utils/ticks";
 import {
     type ComponentPropsWithoutRef,
     type KeyboardEvent,
+    type MouseEvent,
     type ReactNode,
     type RefObject,
     useCallback,
@@ -198,20 +199,20 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
 
     const [contentWidth, setContentWidth] = useState(0);
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-    useEffect(() => {
+    useSafeLayoutEffect(() => {
         function updateContentWidth() {
-            if (popoverRef.current && triggerRef.current) {
-                nextTick(() => {
-                    if (!triggerRef.current) return;
+            const trigger = triggerRef.current;
+            if (!trigger) return;
 
-                    const { width } = triggerRef.current.getBoundingClientRect();
+            nextTick(() => {
+                const el = triggerRef.current;
+                if (!el) return;
 
-                    if (width !== contentWidth) {
-                        setContentWidth(width);
-                    }
-                });
-            }
+                const { width } = el.getBoundingClientRect();
+                if (width > 0) {
+                    setContentWidth((prev) => (prev !== width ? width : prev));
+                }
+            });
         }
 
         updateContentWidth();
@@ -220,7 +221,48 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
         return () => {
             window.removeEventListener("resize", updateContentWidth);
         };
-    }, [isOpen]);
+    }, [isOpen, items]);
+
+    const scrollToFocusedItem = useCallback((index: number) => {
+        if (index === -1 || !popoverRef.current) return;
+
+        const itemEl = popoverRef.current.querySelector(`[data-index="${index}"]`);
+        itemEl?.scrollIntoView({ block: "nearest" });
+    }, []);
+
+    const getDefaultFocusedIndex = useCallback(() => {
+        if (items.length === 0) return -1;
+
+        if (selectedKeys.length > 0) {
+            const selectedIndex = items.findIndex(
+                (item) => selectedKeys.includes(item.value) && !item.disabled
+            );
+            if (selectedIndex >= 0) return selectedIndex;
+        }
+
+        return 0;
+    }, [items, selectedKeys]);
+
+    useSafeLayoutEffect(() => {
+        if (!isOpen) {
+            setFocusedIndex(-1);
+            return;
+        }
+
+        const defaultIndex = getDefaultFocusedIndex();
+        if (defaultIndex >= 0) {
+            setFocusedIndex(defaultIndex);
+            nextTick(() => scrollToFocusedItem(defaultIndex));
+        }
+    }, [isOpen, getDefaultFocusedIndex, scrollToFocusedItem]);
+
+    const openSelect = useCallback(() => {
+        onOpen();
+        const defaultIndex = getDefaultFocusedIndex();
+        if (defaultIndex >= 0) {
+            setFocusedIndex(defaultIndex);
+        }
+    }, [onOpen, getDefaultFocusedIndex]);
 
     const handleItemChange = useCallback(
         (itemValue: string) => {
@@ -263,13 +305,6 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
         [closeOnSelect, onClose, domRef, isMultiple, selectedKeys, onChangeValue]
     );
 
-    const scrollToFocusedItem = useCallback((index: number) => {
-        if (index === -1 || !popoverRef.current) return;
-
-        const itemEl = popoverRef.current.querySelector(`[data-index="${index}"]`);
-        itemEl?.scrollIntoView({ block: "nearest" });
-    }, []);
-
     const getRootProps: PropGetter = useCallback(
         (props, ref) => {
             return {
@@ -289,39 +324,72 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
     const getTriggerProps: PropGetter = useCallback(
         (props, ref) => {
             const onKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
-                if (!isOpen || !isTriggerFocused) return;
+                if (resolvedIsDisabled || document.activeElement !== triggerRef.current) return;
 
                 const lastIndex = items.length - 1;
 
+                function getActiveIndex() {
+                    return focusedIndex >= 0 ? focusedIndex : getDefaultFocusedIndex();
+                }
+
                 switch (e.key) {
-                    case "ArrowUp":
+                    case " ":
                         e.preventDefault();
-                        if (focusedIndex === -1) {
-                            setFocusedIndex(0);
-                            scrollToFocusedItem(0);
+                        if (isOpen) {
+                            onClose();
                         } else {
-                            setFocusedIndex((prev) => {
-                                const next = Math.max(0, prev - 1);
-                                scrollToFocusedItem(next);
-                                return next;
-                            });
+                            openSelect();
                         }
                         break;
+                    case "Enter": {
+                        e.preventDefault();
+                        if (!isOpen) {
+                            openSelect();
+                            break;
+                        }
+                        if (items.length === 0) break;
+                        const index = getActiveIndex();
+                        const item = items[index];
+                        if (item && !item.disabled) {
+                            handleItemChange(item.value);
+                        }
+                        break;
+                    }
                     case "ArrowDown":
                         e.preventDefault();
+                        if (!isOpen) {
+                            openSelect();
+                            break;
+                        }
+                        if (lastIndex < 0) break;
                         setFocusedIndex((prev) => {
-                            const next = prev + 1 > lastIndex ? prev : prev + 1;
+                            const start = prev < 0 ? getDefaultFocusedIndex() : prev;
+                            const next = start + 1 > lastIndex ? start : start + 1;
                             scrollToFocusedItem(next);
                             return next;
                         });
                         break;
-                    case "Enter":
-                        if (focusedIndex === -1) return;
+                    case "ArrowUp":
                         e.preventDefault();
-                        handleItemChange(items[focusedIndex].value);
+                        if (!isOpen) {
+                            openSelect();
+                            if (lastIndex >= 0) {
+                                setFocusedIndex(lastIndex);
+                                scrollToFocusedItem(lastIndex);
+                            }
+                            break;
+                        }
+                        if (lastIndex < 0) break;
+                        setFocusedIndex((prev) => {
+                            const start = prev < 0 ? getDefaultFocusedIndex() : prev;
+                            const next = Math.max(0, start - 1);
+                            scrollToFocusedItem(next);
+                            return next;
+                        });
                         break;
                     case "Escape":
-                        if (popoverProps?.closeOnEsc ?? true) {
+                        if (isOpen && (popoverProps?.closeOnEsc ?? true)) {
+                            e.preventDefault();
                             onClose();
                         }
                         break;
@@ -361,13 +429,14 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
             items,
             isOpen,
             resolvedIsDisabled,
-            isTriggerFocused,
             popoverProps,
             onClose,
+            openSelect,
             onFocusField,
             onBlurField,
             handleItemChange,
-            scrollToFocusedItem
+            scrollToFocusedItem,
+            getDefaultFocusedIndex
         ]
     );
 
@@ -376,9 +445,15 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
             return {
                 ref: mergeRefs(popoverRef, ref),
                 ...props,
+                onMouseDown: (e: MouseEvent) => {
+                    e.preventDefault();
+                    props?.onMouseDown?.(e);
+                },
                 style: {
                     ...props?.style,
-                    width: contentWidth + "px"
+                    ...(contentWidth > 0
+                        ? { width: `${contentWidth}px`, minWidth: `${contentWidth}px` }
+                        : {})
                 },
                 rootProps: {
                     style: {
@@ -486,7 +561,7 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
         setSelectedKeys,
         setFocusedIndex,
         isOpen,
-        onOpen,
+        onOpen: openSelect,
         onClose,
         onToggle,
         isMultiple,

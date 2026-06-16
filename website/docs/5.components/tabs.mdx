@@ -152,6 +152,64 @@ function SizeTabs() {
 }
 ```
 
+### Vertical
+
+Use the `orientation="vertical"` prop to render tabs vertically. Arrow up and down move between tabs; left and right are ignored.
+
+<Wrapper>
+  <Tabs.Root orientation="vertical" variant="underline" >
+    <Tabs.List>
+      <Tabs.Tab>
+        <HStack gap={1.5}><LuHouse />Home</HStack>
+      </Tabs.Tab>
+      <Tabs.Tab>
+        <HStack gap={1.5}><LuSettings />Settings</HStack>
+      </Tabs.Tab>
+      <Tabs.Tab>
+        <HStack gap={1.5}><LuBell />Notifications</HStack>
+      </Tabs.Tab>
+    </Tabs.List>
+    <Tabs.Panels>
+      <Tabs.Panel>
+        <p>Home content</p>
+      </Tabs.Panel>
+      <Tabs.Panel>
+        <p>Settings content</p>
+      </Tabs.Panel>
+      <Tabs.Panel>
+        <p>Notifications content</p>
+      </Tabs.Panel>
+    </Tabs.Panels>
+  </Tabs.Root>
+</Wrapper>
+
+```tsx
+<Tabs.Root orientation="vertical" variant="underline" h="48">
+  <Tabs.List>
+    <Tabs.Tab>
+      <HStack gap={1.5}><LuHouse />Home</HStack>
+    </Tabs.Tab>
+    <Tabs.Tab>
+      <HStack gap={1.5}><LuSettings />Settings</HStack>
+    </Tabs.Tab>
+    <Tabs.Tab>
+      <HStack gap={1.5}><LuBell />Notifications</HStack>
+    </Tabs.Tab>
+  </Tabs.List>
+  <Tabs.Panels>
+    <Tabs.Panel>
+      <p>Home content</p>
+    </Tabs.Panel>
+    <Tabs.Panel>
+      <p>Settings content</p>
+    </Tabs.Panel>
+    <Tabs.Panel>
+      <p>Notifications content</p>
+    </Tabs.Panel>
+  </Tabs.Panels>
+</Tabs.Root>
+```
+
 ### Fit Width
 
 Add `fitted` prop, to fit the tabs width to the container.

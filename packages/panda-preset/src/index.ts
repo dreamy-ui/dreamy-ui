@@ -3,7 +3,10 @@ export * from "./recipes";
 export {
 	default,
 	defaultPresetOptions,
-	type AlphaChroma,
+	type AlphaColorTuning,
+	type BorderColorTuning,
+	type ColorTuning,
+	type FgColorTuning,
 	type PresetOptions
 } from "./theme/preset";
 export * from "./types";

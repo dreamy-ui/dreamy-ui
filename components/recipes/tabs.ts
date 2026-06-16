@@ -119,9 +119,6 @@ export const tabs = defineSlotRecipe({
                     paddingInline: 3,
                     paddingBlock: 0.5,
                     fontSize: "sm"
-                },
-                tabPanel: {
-                    paddingTop: 2
                 }
             },
             md: {
@@ -129,9 +126,6 @@ export const tabs = defineSlotRecipe({
                     paddingInline: 4,
                     paddingBlock: 1,
                     fontSize: "md"
-                },
-                tabPanel: {
-                    paddingTop: 3
                 }
             },
             lg: {
@@ -139,9 +133,6 @@ export const tabs = defineSlotRecipe({
                     paddingInline: 5,
                     paddingBlock: 1.5,
                     fontSize: "lg"
-                },
-                tabPanel: {
-                    paddingTop: 4
                 }
             }
         },
@@ -149,7 +140,8 @@ export const tabs = defineSlotRecipe({
             vertical: {
                 root: {
                     width: "fit-content",
-                    flexDirection: "row"
+                    flexDirection: "row",
+                    gap: 4
                 },
                 tabList: {
                     flexDirection: "column"
@@ -192,6 +184,60 @@ export const tabs = defineSlotRecipe({
                     right: "-1px",
                     top: 0,
                     width: "2px"
+                }
+            }
+        },
+        {
+            orientation: "vertical",
+            size: "sm",
+            css: {
+                tabPanel: {
+                    paddingLeft: 2
+                }
+            }
+        },
+        {
+            orientation: "vertical",
+            size: "md",
+            css: {
+                tabPanel: {
+                    paddingLeft: 3
+                }
+            }
+        },
+        {
+            orientation: "vertical",
+            size: "lg",
+            css: {
+                tabPanel: {
+                    paddingLeft: 4
+                }
+            }
+        },
+        {
+            orientation: "horizontal",
+            size: "sm",
+            css: {
+                tabPanel: {
+                    paddingTop: 2
+                }
+            }
+        },
+        {
+            orientation: "horizontal",
+            size: "md",
+            css: {
+                tabPanel: {
+                    paddingTop: 3
+                }
+            }
+        },
+        {
+            orientation: "horizontal",
+            size: "lg",
+            css: {
+                tabPanel: {
+                    paddingTop: 4
                 }
             }
         }

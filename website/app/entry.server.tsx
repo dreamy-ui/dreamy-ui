@@ -1,4 +1,4 @@
-import cluster from "node:cluster";
+// import cluster from "node:cluster";
 import { PassThrough } from "node:stream";
 import { createReadableStreamFromReadable } from "@react-router/node";
 import { initLogger } from "evlog";
@@ -6,7 +6,7 @@ import { isbot } from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
 import type { EntryContext } from "react-router";
 import { ServerRouter } from "react-router";
-import { Docs } from "~/src/.server/docs";
+// import { Docs } from "~/src/.server/docs";
 import { lru } from "./src/.server/cache";
 import { env } from "./src/.server/env";
 
@@ -69,9 +69,9 @@ export default function handleRequest(
     });
 }
 
-if (cluster.isPrimary) {
-    Docs.fetchDocsOnStartup();
-}
+// if (cluster.isPrimary) {
+//     Docs.fetchDocsOnStartup();
+// }
 
 if (process.env.NODE_ENV === "development") {
     lru.clear();

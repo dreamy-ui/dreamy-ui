@@ -34,7 +34,7 @@ export default defineConfig({
                 heading: "Manrope"
             },
             colorTuning: {
-                alphaChroma: {
+                alpha: {
                     chroma: {
                         light: 0.1
                     }

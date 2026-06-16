@@ -4,9 +4,10 @@ import { defineConfig } from "vite";
 // import pandabox from "@pandabox/unplugin";
 // import Inspect from "vite-plugin-inspect";
 import babel from "vite-plugin-babel";
+import circleDependency from "vite-plugin-circular-dependency";
 import tsconfigPaths from "vite-tsconfig-paths";
 
-export default defineConfig(({ isSsrBuild, mode }) => {
+export default defineConfig(({ isSsrBuild }) => {
     return {
         // resolve: {
         //     alias: {
@@ -27,6 +28,7 @@ export default defineConfig(({ isSsrBuild, mode }) => {
             //     build: true
             // }),
             // remixDevTools(),
+            circleDependency(),
             mdx({
                 development: true
             }) as any,

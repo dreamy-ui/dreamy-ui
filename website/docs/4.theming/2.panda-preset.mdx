@@ -52,6 +52,11 @@ interface PresetOptions {
      * @default Dream will automatically resolve contrast to match the `secondaryColor` option.
      */
     buttonSecondaryTextColor: string | LightDarkColor;
+    /**
+     * Fine-tune auto-generated foreground, border, and alpha colors.
+     * See [Color Generation](#color-generation) for all options.
+     */
+    colorTuning?: ColorTuning;
 }
 ```
 
@@ -91,11 +96,159 @@ export default defineConfig({
 
 ## Color Generation
 
-By default, Dreamy UI generates a foreground and border color based on your background colors to provide best looking visuals. You can modify the working of the generator, or just provide your own colors.
+By default, Dreamy UI generates foreground, border, and alpha colors based on your background colors. The generator reads each background's OKLCH chroma and produces tokens with a subtle matching tint for a natural look.
 
-Dreamy UI takes your background chroma for light and dark modes and generates tokens with just a little of their chroma for natural look.
+You can fine-tune this with the `colorTuning` option, or replace generated tokens entirely in your panda config (see [Override generated colors](#override-generated-colors) below).
 
-To modify the generator, use `colorTuning` option in dreamy preset:
+### `colorTuning`
+
+`colorTuning` is grouped by token family: `fg`, `border`, and `alpha`. Most numeric values accept either a single `number` (both modes) or `{ light, dark }`.
+
+```ts
+interface LightDarkNumber {
+    light: number;
+    dark: number;
+}
+
+interface ColorTuning {
+    fg?: {
+        chroma?: number | LightDarkNumber;
+        lightness?: {
+            max?: number | LightDarkNumber;
+            normal?: number | LightDarkNumber;
+            medium?: number | LightDarkNumber;
+            disabled?: number | LightDarkNumber;
+        };
+    };
+    border?: {
+        chroma?: number | LightDarkNumber;
+        lightness?: {
+            default?: number | LightDarkNumber;
+            muted?: number | LightDarkNumber;
+            hover?: number | LightDarkNumber;
+        };
+    };
+    alpha?: {
+        hue?: number | LightDarkNumber;
+        chroma?: number | LightDarkNumber;
+    };
+}
+```
+
+#### `fg`
+
+Tuning for auto-generated foreground text tokens (`fg`, `fg.max`, `fg.medium`, `fg.disabled`).
+
+**`fg.chroma`** — multiplier for text color tint intensity. Above `1` = more colorful; below `1` = more neutral. **Default:** `1`
+
+```ts
+fg: {
+    chroma: 1.1
+}
+
+fg: {
+    chroma: { light: 1.2, dark: 0.9 }
+}
+```
+
+**`fg.lightness`** — per-token lightness offset on the OKLCH 0–1 scale. Positive brightens; negative darkens.
+
+| Key | Token |
+| --- | --- |
+| `max` | `fg.max` — headings and most prominent text |
+| `normal` | `fg` — default body text |
+| `medium` | `fg.medium` — secondary / muted text |
+| `disabled` | `fg.disabled` — disabled state text |
+
+```ts
+fg: {
+    lightness: {
+        max: 0,
+        normal: 0,
+        medium: -0.05,
+        disabled: -0.1
+    }
+}
+```
+
+#### `border`
+
+Tuning for border token generation when derived from background chroma.
+
+**`border.chroma`** — multiplier for border tint intensity. **Default:** falls back to `fg.chroma`, then `1`
+
+```ts
+border: {
+    chroma: 0.8
+}
+```
+
+**`border.lightness`** — per-token lightness offset on the OKLCH 0–1 scale.
+
+| Key | Token |
+| --- | --- |
+| `default` | `border` / `border.default` |
+| `muted` | `border.muted` |
+| `hover` | `border.hover` |
+
+When `border.lightness` is **omitted entirely**, border tokens inherit from fg:
+
+- `default` ← `fg.lightness.normal`
+- `muted` ← `fg.lightness.disabled`
+- `hover` ← `fg.lightness.normal`
+
+```ts
+border: {
+    lightness: {
+        default: -0.02,
+        muted: 0,
+        hover: 0.03
+    }
+}
+```
+
+#### `alpha`
+
+OKLCH tint for generated alpha overlays: `colors.alpha.*`, `colors.blackAlpha.*`, and `colors.whiteAlpha.*`. These power borders, muted fills, and other translucent UI layers.
+
+- `blackAlpha` uses **light** mode values (dark overlays on light backgrounds).
+- `whiteAlpha` uses **dark** mode values (light overlays on dark backgrounds).
+
+```ts
+alpha: {
+    hue: 240,
+    chroma: 0.02
+}
+```
+
+**`alpha.hue`** — OKLCH hue (0–360°). Only visible when `chroma` is greater than `0`. **Default:** `245` (cool blue-gray).
+
+| Hue | Color |
+| --- | --- |
+| `0` / `360` | red |
+| `30` | orange |
+| `60` | yellow |
+| `90` | lime / yellow-green |
+| `120` | green |
+| `150` | teal |
+| `180` | cyan |
+| `210` | sky blue |
+| `240` | blue |
+| `270` | indigo / violet |
+| `300` | magenta / fuchsia |
+| `330` | pink / rose |
+
+**`alpha.chroma`** — how much color is mixed in. **Default:** `0` (neutral black/white alpha).
+
+| Chroma | Effect |
+| --- | --- |
+| `0` | neutral black/white alpha (no tint) |
+| `0.005`–`0.01` | barely perceptible tint |
+| `0.01`–`0.02` | subtle UI tint (borders, muted fills) |
+| `0.02`–`0.04` | noticeable brand-colored overlays |
+| `0.04`+ | strong accent tint (use sparingly) |
+
+### Full example
 
 ```ts
 export default defineConfig({
@@ -103,20 +256,36 @@ export default defineConfig({
     presets: [
         createDreamyPreset({
             colorTuning: {
-                fgChromaScale: 1.1, // 10% more chroma for foreground colors
-                fgLightnessOffset: {
-                    max: 0,
-                    normal: 0,
-                    medium: -10, // .1 less lightness for both color modes
-                    disabled: -20 // .2 less lightness for both color modes
+                fg: {
+                    chroma: { light: 1.1, dark: 1 },
+                    lightness: {
+                        max: 0,
+                        normal: 0,
+                        medium: -0.05,
+                        disabled: -0.1
+                    }
+                },
+                border: {
+                    chroma: 0.9,
+                    lightness: {
+                        default: -0.02,
+                        muted: -0.05,
+                        hover: 0.02
+                    }
+                },
+                alpha: {
+                    hue: 240,
+                    chroma: 0.02
                 }
-            },
+            }
         })
     ]
 });
 ```
 
-If you want to use your own colors, you can just simply replace tokens as you would do with any other.
+### Override generated colors
+
+If you want to use your own colors instead of the generator, replace semantic tokens in your panda config as you would with any other theme extension.
 
 ```ts
 export default defineConfig({
