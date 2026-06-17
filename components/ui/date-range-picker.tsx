@@ -169,8 +169,8 @@ export const Root = withProvider(function DateRangePickerRoot(props: DateRangePi
         >
             <Popover.Root
                 isOpen={isOpen}
-                onOpen={handleApply}
                 onClose={handleCancel}
+                onOpen={handleApply}
             >
                 <Box {...rest}>{children}</Box>
             </Popover.Root>

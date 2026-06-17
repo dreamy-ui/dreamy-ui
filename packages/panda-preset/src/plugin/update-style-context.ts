@@ -158,29 +158,37 @@ export function createStyleContext(recipe, styleContextOptions = {}) {
 export async function updateStyleContextTypes(jsxFolder: string) {
     const dtsPath = path.join(jsxFolder, "create-style-context.d.ts");
     try {
-        const content = await fs.readFile(dtsPath, "utf-8");
-        const withoutJsxStyleProps = content.replace(/, JsxStyleProps/g, "");
+        let content = await fs.readFile(dtsPath, "utf-8");
+
+        // Undo legacy patches that stripped JsxStyleProps and broke prop inference.
+        content = content
+            .replace(/Assign<RecipeVariantProps<R>>/g, "Assign<RecipeVariantProps<R>, JsxStyleProps>")
+            .replace(
+                /JsxHTMLProps<ComponentProps<T> & UnstyledProps & AsProps>(?!\s*,)/g,
+                "JsxHTMLProps<ComponentProps<T> & UnstyledProps & AsProps, JsxStyleProps>"
+            );
 
         const styleContextOptionsInterface = `interface StyleContextOptions {
   forwardVariants?: string[] | undefined
 }
 
 `;
-        const withStyleContextOptionsInterface = withoutJsxStyleProps.includes(
-            "interface StyleContextOptions {"
-        )
-            ? withoutJsxStyleProps
-            : withoutJsxStyleProps.replace(
-                  "type StyleContextConsumer<T extends ElementType> = ComponentType<\n  JsxHTMLProps<ComponentProps<T> & UnstyledProps & AsProps>\n>\n\n",
-                  "type StyleContextConsumer<T extends ElementType> = ComponentType<\n  JsxHTMLProps<ComponentProps<T> & UnstyledProps & AsProps>\n>\n\n" +
-                      styleContextOptionsInterface
-              );
 
-        const newContent = withStyleContextOptionsInterface.replace(
-            /export declare function createStyleContext<R extends SlotRecipe>\(recipe: R\): StyleContext<R>/,
-            "export declare function createStyleContext<R extends SlotRecipe>(recipe: R, options?: StyleContextOptions | undefined): StyleContext<R>"
-        );
-        await fs.writeFile(dtsPath, newContent);
+        if (!content.includes("interface StyleContextOptions {")) {
+            content = content.replace(
+                "export interface StyleContext<R extends SlotRecipe>",
+                `${styleContextOptionsInterface}export interface StyleContext<R extends SlotRecipe>`
+            );
+        }
+
+        if (!content.includes("options?: StyleContextOptions")) {
+            content = content.replace(
+                /export declare function createStyleContext<R extends SlotRecipe>\(recipe: R\): StyleContext<R>/,
+                "export declare function createStyleContext<R extends SlotRecipe>(recipe: R, options?: StyleContextOptions | undefined): StyleContext<R>"
+            );
+        }
+
+        await fs.writeFile(dtsPath, content);
     } catch (error) {
         if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
             throw error;

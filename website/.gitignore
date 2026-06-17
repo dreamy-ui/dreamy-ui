@@ -7,3 +7,7 @@ node_modules
 ## Panda
 styled-system
 styled-system-studio
+
+## Prisma
+prisma/dev.db
+prisma/dev.db-journal

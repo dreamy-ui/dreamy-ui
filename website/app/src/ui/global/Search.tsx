@@ -20,36 +20,42 @@ import { useCallback, useRef, useState } from "react";
 import { BiSearch } from "react-icons/bi";
 import { MdNavigateNext } from "react-icons/md";
 import { useNavigate } from "react-router";
+import type { DocSearchResult } from "~/src/.server/docs";
 import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
-import { capitalize } from "~/src/functions/string";
 import useDebounce from "~/src/hooks/useDebounce";
 import { useRoot } from "~/src/hooks/useRoot";
 import { Link, type LinkProps } from "~/src/ui/global/Link";
-import type { Route } from ".react-router/types/app/routes/+types/api.docs.search";
+
+interface SearchActionData {
+    docs?: DocSearchResult[];
+    error?: string;
+}
 
 interface RecentSearch {
-    filename: string;
+    title: string;
+    description?: string | null;
+    sectionTitle?: string;
     path: string;
     at: number;
 }
 
+interface SearchDocItem {
+    title: string;
+    description?: string | null;
+    sectionTitle?: string;
+    path: string;
+}
+
 export default function Search() {
-    // modal controller
     const { isOpen, onClose, onToggle } = useControllable();
 
-    // query input
     const [query, setQuery] = useState("");
     const inputRef = useRef<HTMLInputElement>(null);
 
-    // debouncing query to match fetcher debounce time
     const [debouncedQuery, setDebouncedQuery] = useState("");
     useDebounce(() => setDebouncedQuery(query), [query], 100);
 
-    // fetcher for fetching docs
-
-    const fetcher = useDebounceFetcher<Route.ComponentProps["actionData"]>();
-
-    // utilize the keyboard shortcut
+    const fetcher = useDebounceFetcher<SearchActionData>();
 
     useEventListener("keydown", (e) => {
         if (e.key === "k" && e[getActionKeyCode()]) {
@@ -58,23 +64,24 @@ export default function Search() {
         }
     });
 
-    // recent searches
-
     const [recentSearches, setRecentSearches] = useState<RecentSearch[]>([]);
 
     useUpdateEffect(() => {
-        const recentSearches = localStorage.getItem("recentSearches");
-        if (!recentSearches) return;
-        setRecentSearches(JSON.parse(recentSearches));
+        const stored = localStorage.getItem("recentSearches");
+        if (!stored) return;
+        setRecentSearches(JSON.parse(stored));
     }, [isOpen]);
 
     const addRecentSearch = useCallback(
-        (search: Omit<RecentSearch, "at">) => {
+        (search: SearchDocItem) => {
             const newSearch = {
                 ...search,
                 at: Date.now()
             } satisfies RecentSearch;
-            const newRecentSearches = [newSearch, ...(recentSearches || [])].slice(0, 5);
+            const newRecentSearches = [
+                newSearch,
+                ...(recentSearches || []).filter((item) => item.path !== search.path)
+            ].slice(0, 5);
 
             setRecentSearches(newRecentSearches);
             localStorage.setItem("recentSearches", JSON.stringify(newRecentSearches));
@@ -82,7 +89,6 @@ export default function Search() {
         [recentSearches]
     );
 
-    // active selection
     const [active, setActive] = useState<number>(0);
 
     const navigate = useNavigate();
@@ -120,13 +126,14 @@ export default function Search() {
                     if (results.length <= 0) {
                         break;
                     }
-                    console.log("results[active].path", results[active].path);
 
                     onClose();
                     navigate(`${results[active].path}`);
                     setQuery("");
                     addRecentSearch({
-                        filename: results[active].filename,
+                        title: results[active].title,
+                        description: results[active].description,
+                        sectionTitle: results[active].sectionTitle,
                         path: results[active].path
                     });
                     break;
@@ -261,28 +268,20 @@ export default function Search() {
                                 opacity={fetcher.state !== "idle" ? 0.5 : 1}
                                 transition={"opacity 0.2s {easings.ease-in-out"}
                             >
-                                {fetcher.data.docs.map((doc, i) => {
+                                {fetcher.data.docs.map((doc: DocSearchResult, i: number) => {
                                     return (
                                         <SearchDoc
                                             doc={doc}
-                                            id={
-                                                "doc-" +
-                                                doc.filename +
-                                                "-" +
-                                                (debouncedQuery.length > 0).toString()
-                                            }
+                                            id={"doc-" + doc.path + "-" + debouncedQuery}
                                             isActive={active === i}
-                                            key={
-                                                "doc-" +
-                                                doc.filename +
-                                                "-" +
-                                                (debouncedQuery.length > 0).toString()
-                                            }
+                                            key={"doc-" + doc.path + "-" + debouncedQuery}
                                             onClick={() => {
                                                 onClose();
                                                 setQuery("");
                                                 addRecentSearch({
-                                                    filename: doc.filename,
+                                                    title: doc.title,
+                                                    description: doc.description,
+                                                    sectionTitle: doc.sectionTitle,
                                                     path: doc.path
                                                 });
                                             }}
@@ -327,7 +326,8 @@ export default function Search() {
                                         <SearchDoc
                                             doc={search}
                                             isActive={active === i}
-                                            key={"recent-search-" + search.filename + "-" + i}
+                                            isRecent
+                                            key={"recent-search-" + search.path + "-" + i}
                                             onClick={() => {
                                                 onClose();
                                                 setQuery("");
@@ -346,14 +346,16 @@ export default function Search() {
 }
 
 interface SearchDocProps extends Partial<LinkProps> {
-    /**
-     * The doc from search or the doc from recent searches
-     */
-    doc: Omit<RecentSearch, "at"> | RecentSearch;
+    doc: SearchDocItem | RecentSearch;
     isActive: boolean;
+    isRecent?: boolean;
 }
 
-function SearchDoc({ doc, isActive, ...rest }: SearchDocProps) {
+function SearchDoc({ doc, isActive, isRecent, ...rest }: SearchDocProps) {
+    const subtitle = isRecent
+        ? new Date((doc as RecentSearch).at).toLocaleString()
+        : doc.description || doc.sectionTitle;
+
     return (
         <Link
             alignItems={"center"}
@@ -361,7 +363,7 @@ function SearchDoc({ doc, isActive, ...rest }: SearchDocProps) {
             contentBetween
             flexbox
             gap={2}
-            key={doc.filename}
+            key={doc.path}
             pos={"relative"}
             prefetch={isActive ? "render" : "intent"}
             px={4}
@@ -375,23 +377,27 @@ function SearchDoc({ doc, isActive, ...rest }: SearchDocProps) {
             <Flex
                 col
                 gap={0}
+                minW={0}
             >
                 <Text
                     color={isActive ? "{colors.white/87}" : "fg"}
                     fontWeight={"semibold"}
                     transition={"color 0.15s {easings.ease-in-out}"}
                 >
-                    {capitalize(doc.filename)}
+                    {doc.title}
                 </Text>
                 <Text
                     color={isActive ? "{colors.white/87}" : "fg.medium"}
+                    css={{
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap"
+                    }}
                     fontSize={"small"}
                     fontWeight={"normal"}
                     transition={"color 0.15s {easings.ease-in-out}"}
                 >
-                    {"at" in doc
-                        ? new Date(doc.at).toLocaleString()
-                        : capitalize(doc.path.split("/")[2])}
+                    {subtitle}
                 </Text>
             </Flex>
 
@@ -399,6 +405,7 @@ function SearchDoc({ doc, isActive, ...rest }: SearchDocProps) {
                 as={MdNavigateNext}
                 boxSize={"5"}
                 color={isActive ? "{colors.white/87}" : "fg.medium"}
+                flexShrink={0}
             />
 
             {isActive && (

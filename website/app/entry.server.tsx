@@ -6,8 +6,6 @@ import { isbot } from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
 import type { EntryContext } from "react-router";
 import { ServerRouter } from "react-router";
-// import { Docs } from "~/src/.server/docs";
-import { lru } from "./src/.server/cache";
 import { env } from "./src/.server/env";
 
 initLogger({
@@ -67,14 +65,6 @@ export default function handleRequest(
             }
         );
     });
-}
-
-// if (cluster.isPrimary) {
-//     Docs.fetchDocsOnStartup();
-// }
-
-if (process.env.NODE_ENV === "development") {
-    lru.clear();
 }
 
 // export const unstable_instrumentations: unstable_ServerInstrumentation[] = [

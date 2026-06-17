@@ -4,14 +4,13 @@ import { Divider } from "@/ui";
 import { Flex, type FlexProps } from "@/ui";
 import { Heading } from "@/ui";
 import { Icon } from "@/ui";
-import { Link as DreamLink } from "@/ui";
 import { useEventListener } from "@dreamy-ui/react";
 import { Fragment, memo, useState } from "react";
 import { BiChevronUp, BiEdit } from "react-icons/bi";
 import { useLocation } from "react-router";
 import { useDoc } from "~/src/hooks/useDoc";
 import { useSections } from "~/src/hooks/useSections";
-import { DreamyLink, Link } from "~/src/ui/global/Link";
+import { Link } from "~/src/ui/global/Link";
 
 export default function OnThisPage() {
     const doc = useDoc();

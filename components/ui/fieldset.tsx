@@ -1,6 +1,6 @@
 "use client";
 
-import { createStyleContext, type HTMLDreamyProps, dreamy } from "styled-system/jsx";
+import { type HTMLDreamyProps, createStyleContext, dreamy } from "styled-system/jsx";
 import { fieldset } from "styled-system/recipes";
 
 const { withProvider, withContext } = createStyleContext(fieldset);
@@ -25,10 +25,10 @@ export const Root = withProvider(function FieldsetRoot(props: FieldsetRootProps)
     const { disabled, invalid, ...rest } = props;
     return (
         <dreamy.fieldset
-            disabled={disabled}
             aria-invalid={invalid}
-            data-invalid={invalid ? "" : undefined}
             data-disabled={disabled ? "" : undefined}
+            data-invalid={invalid ? "" : undefined}
+            disabled={disabled}
             {...rest}
         />
     );

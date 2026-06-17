@@ -2,7 +2,6 @@ import type { Cache, CacheEntry, CachifiedOptions } from "@epic-web/cachified";
 import { cachified as baseCachified, totalTtl } from "@epic-web/cachified";
 import { remember } from "@epic-web/remember";
 import type { HeadersFunction } from "react-router";
-import Redis from "ioredis";
 import { LRUCache } from "lru-cache";
 import { Logger } from "~/src/.server/logger";
 import { minToMs } from "./docs";
@@ -15,7 +14,7 @@ export class CacheHeaders {
     public static cache(
         maxAge: CACHE_DURATION,
         headersInit?: ReturnType<HeadersFunction>,
-        skipVary = false // skip the vary header, mostly used for non-document responses
+        skipVary = false
     ): ReturnType<HeadersFunction> {
         const headers = new Headers(headersInit);
 
@@ -39,27 +38,10 @@ export enum CACHE_DURATION {
     ONE_MONTH = 60 * 60 * 24 * 30
 }
 
-/**
- * LRU for docs
- */
-const useRedis = !!env.REDIS_URL;
-const lruInstance = useRedis
-    ? undefined
-    : remember("lru", () => {
-          Logger.info("Using LRU cache");
-          return new LRUCache<string, CacheEntry>({ max: 1000 });
-      });
-const redisInstance = useRedis
-    ? remember("redis", () => {
-          Logger.info("Using Redis cache");
-          const redis = new Redis(env.REDIS_URL as string);
-          redis.once("ready", () => {
-              Logger.success("Redis is ready");
-          });
-
-          return redis;
-      })
-    : undefined;
+const lruInstance = remember("lru", () => {
+    Logger.info("Using in-memory LRU cache");
+    return new LRUCache<string, CacheEntry>({ max: 1000 });
+});
 
 interface LruCache extends Cache {
     clear(): void;
@@ -68,49 +50,26 @@ interface LruCache extends Cache {
 export const lru: LruCache = {
     async set(key, value) {
         const ttl = totalTtl(value?.metadata);
-        if (lruInstance) {
-            return lruInstance.set(key, value, {
-                ttl: ttl === Number.POSITIVE_INFINITY ? undefined : ttl,
-                start: value?.metadata?.createdTime
-            });
-        }
-        return await redisInstance?.set(key, JSON.stringify(value), "PX", ttl);
+        return lruInstance.set(key, value, {
+            ttl: ttl === Number.POSITIVE_INFINITY ? undefined : ttl,
+            start: value?.metadata?.createdTime
+        });
     },
     async get(key) {
-        if (lruInstance) {
-            return lruInstance.get(key);
-        }
-        const start = performance.now();
-        const redisValue = await redisInstance?.get(key);
-        const end = performance.now();
-        // Logger.debug(`Redis get ${key} took ${end - start}ms`);
-        if (!redisValue) {
-            return null;
-        }
-        try {
-            return JSON.parse(redisValue);
-        } catch (_) {
-            return redisValue;
-        }
+        return lruInstance.get(key) ?? null;
     },
     delete(key) {
-        if (lruInstance) {
-            return lruInstance.delete(key);
-        }
-        return redisInstance?.del(key);
+        return lruInstance.delete(key);
     },
     clear() {
-        if (lruInstance) {
-            lruInstance.clear();
-        }
-        return redisInstance?.flushdb();
+        lruInstance.clear();
     }
 };
 
 export function cachified<Value>(options: Omit<CachifiedOptions<Value>, "cache">) {
     return baseCachified({
         cache: lru,
-        ttl: env.NODE_ENV === "production" ? minToMs(15) : 0, // 15 minutes is the default TTL
+        ttl: env.NODE_ENV === "production" ? minToMs(15) : 0,
         staleWhileRevalidate: env.NODE_ENV === "production" ? minToMs(45) : 0,
         ...options
     });

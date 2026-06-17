@@ -19,7 +19,7 @@ export default defineConfig(({ isSsrBuild }) => {
             target: "esnext",
             rollupOptions: isSsrBuild
                 ? {
-                      input: ["./app/server.ts", "./app/cluster.ts"]
+                      input: ["./app/server.prod.ts", "./app/cluster.ts"]
                   }
                 : undefined
         },
