@@ -20,6 +20,7 @@ import { group } from "./group";
 import { hoverCard } from "./hover-card";
 import { icon } from "./icon";
 import { image } from "./image";
+import { inputGroup } from "./input-group";
 import { input } from "./input";
 import { kbd } from "./kbd";
 import { list } from "./list";
@@ -70,6 +71,7 @@ export const recipes = {
     hoverCard,
     icon,
     image,
+    inputGroup,
     input,
     kbd,
     list,

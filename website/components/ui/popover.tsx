@@ -123,8 +123,7 @@ export interface PopoverContentProps extends PopoverTransitionProps {
 }
 
 export const Content = withContext(function PopoverContent(props: PopoverContentProps) {
-    const { ref } = props;
-    const { rootProps, motionProps, ...contentProps } = props;
+    const { rootProps, motionProps, ref, ...contentProps } = props;
 
     const { getPopoverProps, getPopoverPositionerProps, onAnimationComplete, usePortal } =
         usePopoverContext();
@@ -214,7 +213,7 @@ export function Anchor(props: React.PropsWithChildren<{}>) {
     const child: any = Children.only(props.children);
     const { getAnchorProps } = usePopoverContext();
 
-    return <>{cloneElement(child, getAnchorProps(child.props, child.ref))}</>;
+    return <>{cloneElement(child, getAnchorProps(child.props, child.props.ref))}</>;
 }
 
 /**
@@ -225,5 +224,5 @@ export function Trigger(props: { children: React.ReactNode }) {
     const child: any = Children.only(props.children);
     const { getTriggerProps } = usePopoverContext();
 
-    return <>{cloneElement(child, getTriggerProps(child.props, child.ref))}</>;
+    return <>{cloneElement(child, getTriggerProps(child.props, child.props.ref))}</>;
 }

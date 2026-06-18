@@ -16,10 +16,8 @@ import { Icon } from "./icon";
 import { IconButton, type IconButtonProps } from "./icon-button";
 import {
     Input as InputComponent,
-    InputGroup,
     type InputGroupProps,
-    type InputProps,
-    InputRightAddon
+    type InputProps
 } from "./input";
 import * as Popover from "./popover";
 
@@ -413,19 +411,19 @@ export const Input = withContext(function DatePickerInput(props: DatePickerInput
 
     return (
         <Popover.Trigger>
-            <InputGroup size={size}>
+            <InputComponent.Group size={size}>
                 <InputComponent
                     onFocus={handleFocus}
                     onPointerDown={handlePointerDown}
                     placeholder={context.placeholder}
                     readOnly
                     value={formattedDate}
-                    {...inputProps}
+                    {...(inputProps as InputProps)}
                 />
-                <InputRightAddon>
+                <InputComponent.EndAddon>
                     <LuCalendar />
-                </InputRightAddon>
-            </InputGroup>
+                </InputComponent.EndAddon>
+            </InputComponent.Group>
         </Popover.Trigger>
     );
 }, "trigger");

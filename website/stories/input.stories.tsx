@@ -1,4 +1,4 @@
-import { Field, Icon, Input, InputGroup, InputLeftAddon, InputRightAddon, VStack } from "@/ui";
+import { Field, Icon, Input, VStack } from "@/ui";
 import type { Meta } from "@storybook/react-vite";
 import { BiSearch } from "react-icons/bi";
 
@@ -82,30 +82,30 @@ export function Invalid() {
 export function InputGroup_() {
     return (
         <>
-            <InputGroup>
-                <InputLeftAddon>
+            <Input.Group>
+                <Input.StartAddon>
                     <Icon
                         as={<BiSearch />}
                         boxSize="5"
                         color="fg.medium"
                     />
-                </InputLeftAddon>
+                </Input.StartAddon>
                 <Input
-                    pl="10"
+                    ps="10"
                     placeholder="Search for..."
                 />
-            </InputGroup>
+            </Input.Group>
 
-            <InputGroup leftElement={"$"}>
+            <Input.Group>
+                <Input.Prefix>$</Input.Prefix>
                 <Input placeholder="Product Price" />
-            </InputGroup>
+            </Input.Group>
 
-            <InputGroup
-                leftElement={"https://"}
-                rightElement={".com"}
-            >
+            <Input.Group>
+                <Input.Prefix>https://</Input.Prefix>
                 <Input placeholder="Domain" />
-            </InputGroup>
+                <Input.Suffix>.com</Input.Suffix>
+            </Input.Group>
         </>
     );
 }

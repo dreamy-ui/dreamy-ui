@@ -76,12 +76,58 @@ Autocomplete comes with 4 different sizes.
 ))}
 ```
 
-### Variant
+### Trigger Variant
 
-Autocomplete can be used in `outline` or `solid` variant.
+The input trigger can use any `Input` variant: `outline`, `filled`, `flushed`, or `filledOutline`.
 
 <Wrapper>
-    {["outline", "filled", "flushed", "filledOutline"].map((variant) => (
+    {["outline", "filled", "flushed", "filledOutline"].map((triggerVariant) => (
+        <Autocomplete.Root
+            key={triggerVariant}
+            width="xs"
+            triggerVariant={triggerVariant}
+            items={[
+                { value: "strawberry", label: "Strawberry" },
+                { value: "banana", label: "Banana" },
+                { value: "orange", label: "Orange" },
+                { value: "cherry", label: "Cherry" },
+                { value: "mango", label: "Mango" },
+            ]}
+        >
+            <Autocomplete.Input placeholder={`${triggerVariant} trigger...`} />
+            <Autocomplete.Content />
+        </Autocomplete.Root>
+    ))}
+</Wrapper>
+
+```tsx
+<Autocomplete.Root triggerVariant="outline" items={fruits}>
+    <Autocomplete.Input placeholder="Outline trigger..." />
+    <Autocomplete.Content />
+</Autocomplete.Root>
+
+<Autocomplete.Root triggerVariant="filled" items={fruits}>
+    <Autocomplete.Input placeholder="Filled trigger..." />
+    <Autocomplete.Content />
+</Autocomplete.Root>
+
+<Autocomplete.Root triggerVariant="flushed" items={fruits}>
+    <Autocomplete.Input placeholder="Flushed trigger..." />
+    <Autocomplete.Content />
+</Autocomplete.Root>
+
+<Autocomplete.Root triggerVariant="filledOutline" items={fruits}>
+    <Autocomplete.Input placeholder="FilledOutline trigger..." />
+    <Autocomplete.Content />
+</Autocomplete.Root>
+```
+
+### Variant
+
+The dropdown list can be `plain` (padded, rounded items) or `stretched` (edge-to-edge items).
+
+<Wrapper>
+    {["plain", "stretched"].map((variant) => (
         <Autocomplete.Root
             key={variant}
             width="xs"
@@ -90,8 +136,6 @@ Autocomplete can be used in `outline` or `solid` variant.
                 { value: "strawberry", label: "Strawberry" },
                 { value: "banana", label: "Banana" },
                 { value: "orange", label: "Orange" },
-                { value: "cherry", label: "Cherry" },
-                { value: "mango", label: "Mango" },
             ]}
         >
             <Autocomplete.Input placeholder={`${variant} variant...`} />
@@ -101,23 +145,13 @@ Autocomplete can be used in `outline` or `solid` variant.
 </Wrapper>
 
 ```tsx
-<Autocomplete.Root variant="outline" items={fruits}>
-    <Autocomplete.Input placeholder="Outline variant..." />
+<Autocomplete.Root variant="plain" items={fruits}>
+    <Autocomplete.Input placeholder="Plain variant..." />
     <Autocomplete.Content />
 </Autocomplete.Root>
 
-<Autocomplete.Root variant="filled" items={fruits}>
-    <Autocomplete.Input placeholder="Filled variant..." />
-    <Autocomplete.Content />
-</Autocomplete.Root>
-
-<Autocomplete.Root variant="flushed" items={fruits}>
-    <Autocomplete.Input placeholder="Flushed variant..." />
-    <Autocomplete.Content />
-</Autocomplete.Root>
-
-<Autocomplete.Root variant="filledOutline" items={fruits}>
-    <Autocomplete.Input placeholder="FilledOutline variant..." />
+<Autocomplete.Root variant="stretched" items={fruits}>
+    <Autocomplete.Input placeholder="Stretched variant..." />
     <Autocomplete.Content />
 </Autocomplete.Root>
 ```

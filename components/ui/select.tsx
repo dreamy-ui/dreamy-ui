@@ -209,14 +209,34 @@ export const Trigger = withContext(function SelectTrigger({
     ref,
     ...rest
 }: SelectTriggerProps) {
-    const { getTriggerProps, selectedKeys, items, isClearable } = useSelectContext();
+    const { getTriggerProps, selectedKeys, items, isClearable, renderItem } = useSelectContext() as ReturnType<
+        typeof useSelect
+    > & {
+        renderItem?: (item: SelectItemData) => ReactNode;
+    };
 
-    const selectedNames = selectedKeys
-        .map((key) => items.find((item: SelectItemData) => item.value === key)?.label)
-        .filter((name): name is string => name != null);
+    const selectedItems = selectedKeys
+        .map((key: string) => items.find((item: SelectItemData) => item.value === key))
+        .filter((item: SelectItemData | undefined): item is SelectItemData => item != null);
 
-    function getDisplayText() {
-        if (selectedNames.length === 0) return placeholder;
+    const selectedNames = selectedItems.map((item: SelectItemData) => item.label);
+
+    function getDisplayContent() {
+        if (selectedItems.length === 0) return placeholder;
+
+        if (renderItem) {
+            if (selectedItems.length === 1) {
+                return renderItem(selectedItems[0]);
+            }
+
+            return selectedItems.map((item: SelectItemData, index: number) => (
+                <span key={item.value}>
+                    {index > 0 ? ", " : null}
+                    {renderItem(item)}
+                </span>
+            ));
+        }
+
         if (selectedNames.length === 1) return selectedNames[0];
         return multipleSelectedText?.(selectedNames) ?? selectedNames.join(", ");
     }
@@ -226,17 +246,7 @@ export const Trigger = withContext(function SelectTrigger({
             <dreamy.button {...(getTriggerProps(rest, ref) as any)}>
                 {icon && icon}
 
-                <dreamy.span
-                    css={{
-                        flex: "1",
-                        minW: "0",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap"
-                    }}
-                >
-                    {children ?? getDisplayText()}
-                </dreamy.span>
+                <dreamy.span data-part="value">{children ?? getDisplayContent()}</dreamy.span>
                 <SelectIndicatorGroup>
                     {isClearable && selectedKeys.length > 0 && <SelectClearButton />}
                     <SelectIndicator />
@@ -246,11 +256,17 @@ export const Trigger = withContext(function SelectTrigger({
     );
 }, "trigger");
 
-export interface SelectContentProps extends PopoverContentProps {}
+export interface SelectContentProps extends PopoverContentProps {
+    /**
+     * When `false`, renders `children` instead of the default items list.
+     * Useful for loading or empty states during async fetching.
+     * @default true
+     */
+    showItems?: boolean;
+}
 
 export const Content = withContext(function SelectContent(props: SelectContentProps) {
-    const { ref } = props;
-    const { ...rest } = props;
+    const { ref, showItems = true, children, ...rest } = props;
     const { getContentProps, items, renderItem } = useSelectContext() as ReturnType<
         typeof useSelect
     > & {
@@ -260,14 +276,16 @@ export const Content = withContext(function SelectContent(props: SelectContentPr
 
     return (
         <PopoverContent {...contentPropsResult}>
-            {items.map((item: SelectItemData, index: number) => (
-                <SelectListItem
-                    index={index}
-                    item={item}
-                    key={item.value}
-                    renderItem={renderItem}
-                />
-            ))}
+            {showItems
+                ? items.map((item: SelectItemData, index: number) => (
+                      <SelectListItem
+                          index={index}
+                          item={item}
+                          key={item.value}
+                          renderItem={renderItem}
+                      />
+                  ))
+                : children}
         </PopoverContent>
     );
 }, "content");
@@ -276,13 +294,26 @@ export interface SelectVirtualContentProps extends PopoverContentProps {
     estimatedItemHeight?: number;
     overscan?: number;
     maxHeight?: number;
+    /**
+     * When `false`, renders `children` instead of the default virtualized items list.
+     * Useful for loading or empty states during async fetching.
+     * @default true
+     */
+    showItems?: boolean;
 }
 
 export const VirtualContent = withContext(function SelectVirtualContent(
     props: SelectVirtualContentProps
 ) {
-    const { ref } = props;
-    const { estimatedItemHeight = 32, overscan = 5, maxHeight = 300, ...rest } = props;
+    const {
+        ref,
+        estimatedItemHeight = 32,
+        overscan = 5,
+        maxHeight = 300,
+        showItems = true,
+        children,
+        ...rest
+    } = props;
 
     const { getContentProps, isOpen, items, renderItem } = useSelectContext() as ReturnType<
         typeof useSelect
@@ -293,14 +324,18 @@ export const VirtualContent = withContext(function SelectVirtualContent(
 
     return (
         <PopoverContent {...contentPropsResult}>
-            <VirtualizedList
-                estimatedItemHeight={estimatedItemHeight}
-                isOpen={isOpen}
-                items={items}
-                maxHeight={maxHeight}
-                overscan={overscan}
-                renderItem={renderItem}
-            />
+            {showItems ? (
+                <VirtualizedList
+                    estimatedItemHeight={estimatedItemHeight}
+                    isOpen={isOpen}
+                    items={items}
+                    maxHeight={maxHeight}
+                    overscan={overscan}
+                    renderItem={renderItem}
+                />
+            ) : (
+                children
+            )}
         </PopoverContent>
     );
 }, "content");
@@ -499,21 +534,20 @@ const SelectClearButton = withContext(function SelectClearButton(props: SelectCl
 
     return (
         <dreamy.button {...getClearButtonProps(props, ref)}>
-            <dreamy.svg asChild>
-                <svg
-                    aria-hidden="true"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <path d="M18 6 6 18" />
-                    <path d="m6 6 12 12" />
-                </svg>
-            </dreamy.svg>
+            <svg
+                aria-hidden="true"
+                aria-label="Clear selection"
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+            >
+                <path d="M18 6 6 18" />
+                <path d="m6 6 12 12" />
+            </svg>
         </dreamy.button>
     );
 }, "clearButton");

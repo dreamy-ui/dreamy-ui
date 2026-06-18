@@ -262,7 +262,6 @@ export const TriggerItem = withContext(function MenuTriggerItem(props: MenuTrigg
                 <PopoverAnchor>
                     <dreamy.button
                         {...buttonProps}
-                        ref={mergeRefs(buttonProps.ref, nestedCtx.triggerRef)}
                         onClick={callAllHandlers(userOnClick as any, nestedCtx.onToggle)}
                         onKeyDown={callAllHandlers(
                             buttonProps.onKeyDown as any,
@@ -273,6 +272,7 @@ export const TriggerItem = withContext(function MenuTriggerItem(props: MenuTrigg
                             buttonProps.onPointerEnter as any,
                             nestedCtx.onOpen
                         )}
+                        ref={mergeRefs(buttonProps.ref, nestedCtx.triggerRef)}
                     >
                         <span>
                             {runIfFn(icon)}

@@ -447,10 +447,7 @@
     "file": "input.tsx",
     "component": "Input",
     "npmDependencies": [],
-    "fileDependencies": [
-      "./box",
-      "./flex"
-    ],
+    "fileDependencies": [],
     "hasRecipe": true,
     "hasPattern": false,
     "recipeIds": [

@@ -111,6 +111,11 @@
   },
   {
     "type": "recipe",
+    "id": "input-group",
+    "file": "input-group.ts"
+  },
+  {
+    "type": "recipe",
     "id": "input",
     "file": "input.ts"
   },

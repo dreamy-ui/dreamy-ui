@@ -28,9 +28,6 @@ import {
     IconButton,
     Image,
     Input,
-    InputGroup,
-    InputLeftAddon,
-    InputRightAddon,
     Kbd,
     LightTheme,
     List,
@@ -647,18 +644,18 @@ export default function playground() {
                         placeholder="Basic input"
                         w="xs"
                     />
-                    <InputGroup
-                        leftElement={<Icon as={LuSearch} />}
-                        w="xs"
-                    >
-                        <Input placeholder="With left element" />
-                    </InputGroup>
-                    <InputGroup
-                        rightElement={<Icon as={LuMail} />}
-                        w="xs"
-                    >
-                        <Input placeholder="With right element" />
-                    </InputGroup>
+                    <Input.Group w="xs">
+                        <Input.StartAddon>
+                            <Icon as={LuSearch} />
+                        </Input.StartAddon>
+                        <Input placeholder="With start addon" />
+                    </Input.Group>
+                    <Input.Group w="xs">
+                        <Input placeholder="With end addon" />
+                        <Input.EndAddon>
+                            <Icon as={LuMail} />
+                        </Input.EndAddon>
+                    </Input.Group>
                 </Category>
             </Component>
 

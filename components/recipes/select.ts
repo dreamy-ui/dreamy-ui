@@ -43,6 +43,16 @@ export const select = defineSlotRecipe({
             borderRadius: "l2",
             userSelect: "none",
             textAlign: "start",
+            "& [data-part='value']": {
+                flex: "1",
+                minW: "0",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+                display: "flex",
+                alignItems: "center",
+                gap: "1"
+            },
             _placeholderShown: {
                 color: "fg.medium"
             },
@@ -98,7 +108,6 @@ export const select = defineSlotRecipe({
             borderRadius: "l2!",
             outline: 0,
             maxH: "96",
-            p: "0 !important",
             gap: "0 !important",
             overflowY: "auto",
             boxShadow: "md"
@@ -113,7 +122,6 @@ export const select = defineSlotRecipe({
             justifyContent: "space-between",
             flex: "1",
             textAlign: "start",
-            borderRadius: "0",
             width: "full",
             "&[data-focused]": {
                 bg: "alpha.50"
@@ -137,6 +145,25 @@ export const select = defineSlotRecipe({
     },
     variants: {
         variant: {
+            plain: {
+                content: {
+                    p: "1.5!"
+                },
+                item: {
+                    borderRadius: "l1"
+                }
+            },
+            stretched: {
+                content: {
+                    p: "0!",
+                    py: "1!"
+                },
+                item: {
+                    borderRadius: "0"
+                }
+            }
+        },
+        triggerVariant: {
             outline: {
                 trigger: {
                     bg: "transparent",
@@ -330,7 +357,8 @@ export const select = defineSlotRecipe({
     },
     defaultVariants: {
         size: "md",
-        variant: "outline",
+        variant: "plain",
+        triggerVariant: "outline",
         selectedItemBackgroundScheme: "primary"
     }
 });

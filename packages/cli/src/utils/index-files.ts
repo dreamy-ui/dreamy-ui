@@ -210,7 +210,7 @@ export async function writeComponentsIndexFile(
                 // Export as namespace: export * as ComponentName from "./component-name"
                 exports.push(`export * as ${componentName} from "./${fileName}";`);
             } else {
-                // Regular export: export * from "./component-name"
+                // Regular export (includes compounds like Input with Input.Group attached)
                 exports.push(`export * from "./${fileName}";`);
             }
         } catch (error) {

@@ -1,4 +1,4 @@
-import { Button, HStack, Modal, Select, Text } from "@/ui";import { useState } from "react";
+import { Button, HStack, Modal, Select, Spinner, Text } from "@/ui";import { useState } from "react";
 import { LuBanana, LuCherry, LuCitrus } from "react-icons/lu";
 
 const fruits = [
@@ -65,12 +65,13 @@ export function SelectInModal() {
 }
 
 export function AsyncSelect() {
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [items, setItems] = useState<{ value: string; label: string }[]>([]);
 
     function fetchFruits() {
         if (items.length > 0) return;
 
+        setIsLoading(true);
         fetch("/api/fake-select-data")
             .then((res) => res.json())
             .then((data: string[]) =>
@@ -85,10 +86,13 @@ export function AsyncSelect() {
             onOpen={fetchFruits}
             width={"xs"}
         >
-            <Select.Trigger
-                placeholder={isLoading ? "Loading..." : "Select a favorite fruit"}
-            />
-            <Select.Content />
+            <Select.Trigger placeholder="Select a favorite fruit" />
+            <Select.Content showItems={!isLoading}>
+                <Spinner
+                    color="primary"
+                    py={4}
+                />
+            </Select.Content>
         </Select.Root>
     );
 }

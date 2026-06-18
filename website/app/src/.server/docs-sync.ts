@@ -4,7 +4,14 @@ import path from "node:path";
 import { Logger } from "~/src/.server/logger";
 import { filenameToSlug } from "~/src/functions/string";
 import { prisma } from "./db";
-import { Docs, filenameToTitle, removeIndex, getIndex } from "./docs";
+import {
+    Docs,
+    type LocalSection,
+    type ValidDocsFile,
+    filenameToTitle,
+    getIndex,
+    removeIndex
+} from "./docs";
 
 const DOCS_DIR = path.join(process.cwd(), "docs");
 
@@ -22,6 +29,224 @@ function extractSearchText(content: string) {
 
 function hashContent(content: string) {
     return createHash("sha256").update(content).digest("hex");
+}
+
+function diskFolderName(section: LocalSection) {
+    return `${section.index}.${section.slugified}`;
+}
+
+export function resolveDocFilepath(folder: string, page: string, sections: LocalSection[]) {
+    const normalizedFolder = folder.replaceAll("-", " ").toLowerCase();
+
+    const section = sections.find(
+        (item) =>
+            item.slugified.toLowerCase() === folder.toLowerCase() ||
+            removeIndex(item.title).toLowerCase() === normalizedFolder
+    );
+
+    if (!section) {
+        return null;
+    }
+
+    const pageEntry = section.sections.find(
+        (item) =>
+            filenameToSlug(item.name).toLowerCase() === page.toLowerCase() ||
+            item.name.toLowerCase() === filenameToTitle(page).toLowerCase()
+    );
+
+    if (!pageEntry) {
+        return null;
+    }
+
+    const pageIndexPrefix = pageEntry.index !== -1 ? `${pageEntry.index}.` : "";
+
+    return `${diskFolderName(section)}/${pageIndexPrefix}${page}.mdx`;
+}
+
+export async function getSectionsFromFilesystem(): Promise<LocalSection[]> {
+    let folderNames: string[];
+    try {
+        folderNames = await fs.readdir(DOCS_DIR);
+    } catch (error) {
+        Logger.error(`Failed to read docs directory: ${String(error)}`);
+        throw error;
+    }
+
+    const sections: LocalSection[] = [];
+
+    for (const folderName of folderNames) {
+        const folderStat = await fs.stat(path.join(DOCS_DIR, folderName));
+        if (!folderStat.isDirectory()) {
+            continue;
+        }
+
+        const sectionIndex = getIndex(folderName);
+        const sectionSlug = filenameToSlug(removeIndex(folderName));
+        const sectionTitle = filenameToTitle(removeIndex(folderName));
+        const filenames = await fs.readdir(path.join(DOCS_DIR, folderName));
+
+        sections.push({
+            title: sectionTitle,
+            slugified: sectionSlug,
+            index: sectionIndex,
+            sections: filenames
+                .filter((filename) => filename.endsWith(".mdx") || filename.endsWith(".md"))
+                .map((filename) => {
+                    const name = filenameToTitle(removeIndex(filename));
+                    return {
+                        name,
+                        slug: `/docs/${sectionSlug}/${filenameToSlug(name)}`,
+                        index: getIndex(filename)
+                    };
+                })
+        });
+    }
+
+    return sections.sort((a, b) => a.index - b.index);
+}
+
+async function upsertDocPage(filepath: string, content: string) {
+    const [folderName, filename] = filepath.split("/");
+
+    const sectionIndex = getIndex(folderName);
+    const sectionSlug = filenameToSlug(removeIndex(folderName));
+    const sectionTitle = filenameToTitle(removeIndex(folderName));
+
+    const section = await prisma.docSection.upsert({
+        where: { index: sectionIndex },
+        create: {
+            index: sectionIndex,
+            title: sectionTitle,
+            slug: sectionSlug
+        },
+        update: {
+            title: sectionTitle,
+            slug: sectionSlug
+        }
+    });
+
+    const mdxContent = await Docs.serialize(content);
+    const mdxFrontmatterDescription =
+        mdxContent.frontmatter.description &&
+        typeof mdxContent.frontmatter.description === "string"
+            ? await Docs.serialize(mdxContent.frontmatter.description)
+            : null;
+
+    const pageIndex = getIndex(filename);
+    const pageFilename = removeIndex(filename);
+    const pageName = filenameToTitle(pageFilename);
+    const pageTitle =
+        typeof mdxContent.frontmatter.title === "string"
+            ? mdxContent.frontmatter.title
+            : pageName;
+    const pageDescription =
+        typeof mdxContent.frontmatter.description === "string"
+            ? mdxContent.frontmatter.description
+            : null;
+    const headings = (mdxContent.scope.headings ?? []) as ValidDocsFile["headings"];
+    const pageSlug = `/docs/${sectionSlug}/${filenameToSlug(pageName)}`;
+    const contentHash = hashContent(content);
+
+    await prisma.docPage.upsert({
+        where: { filepath },
+        create: {
+            sectionId: section.id,
+            index: pageIndex,
+            filename: pageFilename,
+            name: pageName,
+            title: pageTitle,
+            description: pageDescription,
+            slug: pageSlug,
+            filepath,
+            content,
+            mdxContent: JSON.stringify(mdxContent),
+            mdxFrontmatterDescription: mdxFrontmatterDescription
+                ? JSON.stringify(mdxFrontmatterDescription)
+                : null,
+            headings: JSON.stringify(headings),
+            searchText: extractSearchText(content),
+            contentHash
+        },
+        update: {
+            sectionId: section.id,
+            index: pageIndex,
+            filename: pageFilename,
+            name: pageName,
+            title: pageTitle,
+            description: pageDescription,
+            slug: pageSlug,
+            content,
+            mdxContent: JSON.stringify(mdxContent),
+            mdxFrontmatterDescription: mdxFrontmatterDescription
+                ? JSON.stringify(mdxFrontmatterDescription)
+                : null,
+            headings: JSON.stringify(headings),
+            searchText: extractSearchText(content),
+            contentHash
+        }
+    });
+
+    return {
+        filename: pageFilename,
+        content,
+        mdxContent,
+        index: pageIndex,
+        mdxFrontmatterDescription,
+        headings
+    } satisfies ValidDocsFile;
+}
+
+export async function syncDocFromFilesystem(filepath: string): Promise<ValidDocsFile | null> {
+    const fullPath = path.join(DOCS_DIR, filepath);
+
+    let content: string;
+    try {
+        content = await fs.readFile(fullPath, "utf-8");
+    } catch {
+        return null;
+    }
+
+    return upsertDocPage(filepath, content);
+}
+
+export async function syncChangedDocsFromFilesystem() {
+    let folderNames: string[];
+    try {
+        folderNames = await fs.readdir(DOCS_DIR);
+    } catch (error) {
+        Logger.error(`Failed to read docs directory: ${String(error)}`);
+        throw error;
+    }
+
+    for (const folderName of folderNames) {
+        const folderStat = await fs.stat(path.join(DOCS_DIR, folderName));
+        if (!folderStat.isDirectory()) {
+            continue;
+        }
+
+        const filenames = await fs.readdir(path.join(DOCS_DIR, folderName));
+
+        for (const filename of filenames) {
+            if (!filename.endsWith(".mdx") && !filename.endsWith(".md")) {
+                continue;
+            }
+
+            const filepath = `${folderName}/${filename}`;
+            const content = await fs.readFile(path.join(DOCS_DIR, filepath), "utf-8");
+            const contentHash = hashContent(content);
+
+            const existing = await prisma.docPage.findUnique({
+                where: { filepath },
+                select: { contentHash: true }
+            });
+
+            if (existing?.contentHash === contentHash) {
+                continue;
+            }
+
+            await upsertDocPage(filepath, content);
+        }
+    }
 }
 
 export async function syncDocsFromFilesystem() {
@@ -43,23 +268,6 @@ export async function syncDocsFromFilesystem() {
             continue;
         }
 
-        const sectionIndex = getIndex(folderName);
-        const sectionSlug = filenameToSlug(removeIndex(folderName));
-        const sectionTitle = filenameToTitle(removeIndex(folderName));
-
-        const section = await prisma.docSection.upsert({
-            where: { index: sectionIndex },
-            create: {
-                index: sectionIndex,
-                title: sectionTitle,
-                slug: sectionSlug
-            },
-            update: {
-                title: sectionTitle,
-                slug: sectionSlug
-            }
-        });
-
         const filenames = await fs.readdir(path.join(DOCS_DIR, folderName));
 
         for (const filename of filenames) {
@@ -68,8 +276,7 @@ export async function syncDocsFromFilesystem() {
             }
 
             const filepath = `${folderName}/${filename}`;
-            const fullPath = path.join(DOCS_DIR, filepath);
-            const content = await fs.readFile(fullPath, "utf-8");
+            const content = await fs.readFile(path.join(DOCS_DIR, filepath), "utf-8");
             const contentHash = hashContent(content);
 
             const existing = await prisma.docPage.findUnique({
@@ -82,66 +289,7 @@ export async function syncDocsFromFilesystem() {
                 continue;
             }
 
-            const mdxContent = await Docs.serialize(content);
-            const mdxFrontmatterDescription =
-                mdxContent.frontmatter.description &&
-                typeof mdxContent.frontmatter.description === "string"
-                    ? await Docs.serialize(mdxContent.frontmatter.description)
-                    : null;
-
-            const pageIndex = getIndex(filename);
-            const pageFilename = removeIndex(filename);
-            const pageName = filenameToTitle(pageFilename);
-            const pageTitle =
-                typeof mdxContent.frontmatter.title === "string"
-                    ? mdxContent.frontmatter.title
-                    : pageName;
-            const pageDescription =
-                typeof mdxContent.frontmatter.description === "string"
-                    ? mdxContent.frontmatter.description
-                    : null;
-            const headings = mdxContent.scope.headings ?? [];
-            const pageSlug = `/docs/${sectionSlug}/${filenameToSlug(pageName)}`;
-
-            await prisma.docPage.upsert({
-                where: { filepath },
-                create: {
-                    sectionId: section.id,
-                    index: pageIndex,
-                    filename: pageFilename,
-                    name: pageName,
-                    title: pageTitle,
-                    description: pageDescription,
-                    slug: pageSlug,
-                    filepath,
-                    content,
-                    mdxContent: JSON.stringify(mdxContent),
-                    mdxFrontmatterDescription: mdxFrontmatterDescription
-                        ? JSON.stringify(mdxFrontmatterDescription)
-                        : null,
-                    headings: JSON.stringify(headings),
-                    searchText: extractSearchText(content),
-                    contentHash
-                },
-                update: {
-                    sectionId: section.id,
-                    index: pageIndex,
-                    filename: pageFilename,
-                    name: pageName,
-                    title: pageTitle,
-                    description: pageDescription,
-                    slug: pageSlug,
-                    content,
-                    mdxContent: JSON.stringify(mdxContent),
-                    mdxFrontmatterDescription: mdxFrontmatterDescription
-                        ? JSON.stringify(mdxFrontmatterDescription)
-                        : null,
-                    headings: JSON.stringify(headings),
-                    searchText: extractSearchText(content),
-                    contentHash
-                }
-            });
-
+            await upsertDocPage(filepath, content);
             syncedFilepaths.add(filepath);
         }
     }
@@ -152,7 +300,7 @@ export async function syncDocsFromFilesystem() {
                 notIn: [...syncedFilepaths]
             }
         },
-        select: { id: true, filepath: true }
+        select: { id: true }
     });
 
     if (stalePages.length > 0) {

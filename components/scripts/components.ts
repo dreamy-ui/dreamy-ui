@@ -61,10 +61,10 @@ function camelToKebabCase(str: string): string {
 function parseRecipeId(content: string): string[] {
     const recipeIds: string[] = [];
 
-    const importMatch = content.match(
-        /import\s+\{([^}]+)\}\s+from\s+["']styled-system\/recipes["']/
+    const importMatches = content.matchAll(
+        /import\s+\{([^}]+)\}\s+from\s+["']styled-system\/recipes["']/g
     );
-    if (importMatch) {
+    for (const importMatch of importMatches) {
         const imports = importMatch[1];
         const importList = imports.split(",").map((item) => item.trim());
         for (const item of importList) {
@@ -78,14 +78,14 @@ function parseRecipeId(content: string): string[] {
         }
     }
 
-    const simpleImportMatch = content.match(
-        /import\s+(\w+)\s+from\s+["']styled-system\/recipes["']/
+    const simpleImportMatches = content.matchAll(
+        /import\s+(\w+)\s+from\s+["']styled-system\/recipes["']/g
     );
-    if (simpleImportMatch) {
+    for (const simpleImportMatch of simpleImportMatches) {
         recipeIds.push(camelToKebabCase(simpleImportMatch[1]));
     }
 
-    return recipeIds;
+    return [...new Set(recipeIds)];
 }
 
 function parsePatternId(content: string): string[] {

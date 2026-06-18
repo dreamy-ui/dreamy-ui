@@ -17,6 +17,8 @@
 		"noEmit": true,
 		"paths": {
 			"styled-system/*": ["../website/styled-system/*"]
+			// "@dreamy-ui/react": ["../packages/react/src/index.ts"],
+			// "@dreamy-ui/react/rsc": ["../packages/react/src/rsc.ts"]
 		}
 	}
 }

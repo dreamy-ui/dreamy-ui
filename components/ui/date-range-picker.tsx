@@ -11,12 +11,7 @@ import { type DateRangePickerVariantProps, dateRangePicker } from "styled-system
 import { Box, type BoxProps } from "./box";
 import { Button, type ButtonProps } from "./button";
 import { Flex, type FlexProps } from "./flex";
-import {
-    Input as InputComponent,
-    InputGroup,
-    type InputGroupProps,
-    InputRightAddon
-} from "./input";
+import { Input as InputComponent, type InputGroupProps, type InputProps } from "./input";
 import * as Popover from "./popover";
 
 const { withProvider, withContext } = createStyleContext(dateRangePicker);
@@ -205,17 +200,17 @@ export const Input = withContext(function DateRangePickerInput(props: DateRangeP
 
     return (
         <Popover.Trigger>
-            <InputGroup>
+            <InputComponent.Group>
                 <InputComponent
                     placeholder={context.placeholder}
                     readOnly
                     value={formattedRange}
-                    {...inputProps}
+                    {...(inputProps as InputProps)}
                 />
-                <InputRightAddon>
+                <InputComponent.EndAddon>
                     <LuCalendar />
-                </InputRightAddon>
-            </InputGroup>
+                </InputComponent.EndAddon>
+            </InputComponent.Group>
         </Popover.Trigger>
     );
 }, "trigger");

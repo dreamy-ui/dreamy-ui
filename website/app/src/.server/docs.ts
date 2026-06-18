@@ -7,6 +7,13 @@ import remarkParse from "remark-parse";
 import { unified } from "unified";
 import { log } from "~/src/.server/als";
 import { prisma } from "~/src/.server/db";
+import {
+    getSectionsFromFilesystem,
+    resolveDocFilepath,
+    syncChangedDocsFromFilesystem,
+    syncDocFromFilesystem
+} from "~/src/.server/docs-sync";
+import { env } from "~/src/.server/env";
 import { capitalize, filenameToSlug } from "~/src/functions/string";
 import { createHId } from "~/src/ui/docs/MDXContent";
 import { remarkDreamyPMTabs } from "./remark-tabs";
@@ -14,6 +21,10 @@ import { cursorDarkTheme } from "./theme";
 
 export class Docs {
     public static async getSections(): Promise<LocalSection[]> {
+        if (env.NODE_ENV === "development") {
+            return getSectionsFromFilesystem();
+        }
+
         const sections = await prisma.docSection.findMany({
             include: {
                 pages: {
@@ -43,6 +54,21 @@ export class Docs {
         const start = performance.now();
 
         const sections = sectionsArg ?? (await Docs.getSections());
+
+        if (env.NODE_ENV === "development") {
+            const filepath = resolveDocFilepath(folder, page, sections);
+
+            if (!filepath) {
+                return null;
+            }
+
+            const doc = await syncDocFromFilesystem(filepath);
+
+            log().set({ doc: (performance.now() - start).toFixed(2) + "ms" });
+
+            return doc;
+        }
+
         const normalizedFolder = folder.replaceAll("-", " ").toLowerCase();
 
         const section = sections.find(
@@ -87,6 +113,10 @@ export class Docs {
         const trimmedQuery = query.trim();
         if (!trimmedQuery) {
             return [];
+        }
+
+        if (env.NODE_ENV === "development") {
+            await syncChangedDocsFromFilesystem();
         }
 
         const pages = await prisma.docPage.findMany({

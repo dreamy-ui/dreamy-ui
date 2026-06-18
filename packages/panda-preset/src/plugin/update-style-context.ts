@@ -162,7 +162,10 @@ export async function updateStyleContextTypes(jsxFolder: string) {
 
         // Undo legacy patches that stripped JsxStyleProps and broke prop inference.
         content = content
-            .replace(/Assign<RecipeVariantProps<R>>/g, "Assign<RecipeVariantProps<R>, JsxStyleProps>")
+            .replace(
+                /Assign<RecipeVariantProps<R>>/g,
+                "Assign<RecipeVariantProps<R>, JsxStyleProps>"
+            )
             .replace(
                 /JsxHTMLProps<ComponentProps<T> & UnstyledProps & AsProps>(?!\s*,)/g,
                 "JsxHTMLProps<ComponentProps<T> & UnstyledProps & AsProps, JsxStyleProps>"

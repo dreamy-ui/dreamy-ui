@@ -3,9 +3,6 @@ import compression from "compression";
 import express from "express";
 import "react-router";
 import type { ServerBuild } from "react-router";
-import { syncDocsFromFilesystem } from "~/src/.server/docs-sync";
-
-await syncDocsFromFilesystem();
 
 const PORT = Number.parseInt(process.env.PORT || "3000");
 

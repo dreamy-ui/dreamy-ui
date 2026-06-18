@@ -2,7 +2,7 @@ import { Button } from "@/ui";
 import { Flex } from "@/ui";
 import { Icon } from "@/ui";
 import { IconButton } from "@/ui";
-import { Input, InputGroup, InputLeftAddon } from "@/ui";
+import { Input } from "@/ui";
 import { Kbd } from "@/ui";
 import { Modal } from "@/ui";
 import { MotionBox } from "@/ui";
@@ -221,14 +221,14 @@ export default function Search() {
                 <Modal.Overlay />
                 <Modal.Content>
                     <Modal.Body pb={2}>
-                        <InputGroup w={"full"}>
-                            <InputLeftAddon pl={"0.75rem!"}>
+                        <Input.Group w={"full"}>
+                            <Input.StartAddon pl={"0.75rem!"}>
                                 <Icon
                                     as={BiSearch}
                                     boxSize={"5"}
                                     color={"alpha.900"}
                                 />
-                            </InputLeftAddon>
+                            </Input.StartAddon>
                             <Input
                                 aria-autocomplete="list"
                                 autoComplete={"false"}
@@ -246,7 +246,7 @@ export default function Search() {
                                         );
                                 }}
                                 onKeyDown={onKeyDown}
-                                pl={12}
+                                ps={12}
                                 placeholder="Search docs"
                                 ref={inputRef}
                                 size="lg"
@@ -255,7 +255,7 @@ export default function Search() {
                                 variant={"flushed"}
                                 w="100%"
                             />
-                        </InputGroup>
+                        </Input.Group>
 
                         {fetcher.data &&
                         "docs" in fetcher.data &&

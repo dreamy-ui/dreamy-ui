@@ -399,7 +399,7 @@ export type UseAutocompleteReturn = ReturnType<typeof useAutocomplete>;
 interface AutocompleteContextValue
     extends Omit<UseAutocompleteReturn, "getRootProps" | "getPopoverRootProps"> {
     size: "xs" | "sm" | "md" | "lg";
-    variant: string;
+    triggerVariant: string;
 }
 
 export const [AutocompleteProvider, useAutocompleteContext] =

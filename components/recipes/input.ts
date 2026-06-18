@@ -3,14 +3,7 @@ import { defineRecipe } from "@pandacss/dev";
 export const input = defineRecipe({
     className: "input",
     description: "Dreamy UI Input component",
-    jsx: [
-        "Input",
-        "PinInput.Root",
-        "PinInput.Field",
-        "InputGroup",
-        "InputLeftAddon",
-        "InputRightAddon"
-    ],
+    jsx: ["Input", "PinInput.Root", "PinInput.Field"],
     staticCss: ["*"],
     base: {
         appearance: "none",
@@ -38,6 +31,12 @@ export const input = defineRecipe({
             display: "flex",
             position: "relative",
             isolation: "isolate"
+        },
+        "[data-input-group]:has([data-part='prefix']) > &": {
+            borderStartRadius: "0"
+        },
+        "[data-input-group]:has([data-part='suffix']) > &": {
+            borderEndRadius: "0"
         }
     },
     defaultVariants: {

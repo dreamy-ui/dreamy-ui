@@ -49,10 +49,28 @@ export function Size() {
     );
 }
 
+export function TriggerVariant() {
+    return (
+        <HStack>
+            {(["outline", "solid"] as const).map((triggerVariant) => (
+                <Select.Root
+                    items={fruits}
+                    key={triggerVariant}
+                    triggerVariant={triggerVariant}
+                    width="xs"
+                >
+                    <Select.Trigger placeholder="Select a favorite fruit" />
+                    <Select.Content />
+                </Select.Root>
+            ))}
+        </HStack>
+    );
+}
+
 export function Variant() {
     return (
         <HStack>
-            {(["outline", "solid"] as const).map((variant) => (
+            {(["plain", "stretched"] as const).map((variant) => (
                 <Select.Root
                     items={fruits}
                     key={variant}

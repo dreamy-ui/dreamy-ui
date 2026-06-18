@@ -119,7 +119,7 @@ export interface AutocompleteProps
      * The visual variant forwarded to the inner `Input` component.
      * @default "outline"
      */
-    variant?: InputProps["variant"];
+    triggerVariant?: InputProps["variant"];
     children?: ReactNode;
 }
 
@@ -132,7 +132,7 @@ export const Root: (props: AutocompleteProps) => React.JSX.Element = withProvide
     function AutocompleteRoot({
         children,
         size = "md",
-        variant = "outline",
+        triggerVariant = "outline",
         ...props
     }: AutocompleteProps) {
         const [cssProps, restProps] = splitCssProps(props);
@@ -143,7 +143,7 @@ export const Root: (props: AutocompleteProps) => React.JSX.Element = withProvide
                 value={{
                     ...ctx,
                     size: size as "xs" | "sm" | "md" | "lg",
-                    variant: variant as string
+                    triggerVariant: triggerVariant as string
                 }}
             >
                 <Box
@@ -161,7 +161,7 @@ export const Root: (props: AutocompleteProps) => React.JSX.Element = withProvide
 ) as any;
 
 export interface AutocompleteInputProps
-    extends Omit<InputProps, "value" | "onChange" | "size" | "variant"> {
+    extends Omit<InputProps, "value" | "onChange" | "size" | "variant" | "triggerVariant"> {
     /**
      * Icon shown at the start of the input.
      */
@@ -169,7 +169,8 @@ export interface AutocompleteInputProps
 }
 
 export function Input({ icon, placeholder, ref, ...rest }: AutocompleteInputProps) {
-    const { getInputProps, isClearable, selectedValue, size, variant } = useAutocompleteContext();
+    const { getInputProps, isClearable, selectedValue, size, triggerVariant } =
+        useAutocompleteContext();
 
     return (
         <PopoverAnchor>
@@ -189,7 +190,7 @@ export function Input({ icon, placeholder, ref, ...rest }: AutocompleteInputProp
                 <BaseInput
                     placeholder={placeholder}
                     size={size}
-                    variant={variant as InputProps["variant"]}
+                    variant={triggerVariant as InputProps["variant"]}
                     width="full"
                     {...(getInputProps(rest as any, ref) as any)}
                 />

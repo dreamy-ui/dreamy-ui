@@ -118,12 +118,12 @@ Select comes with 4 different sizes.
 </Select.Root>
 ```
 
-### Variant
+### Trigger Variant
 
-Select can be used in `outline` or `solid` variant.
+The trigger can be used in `outline` or `solid` style.
 
 <Wrapper>
-    <Select.Root width="xs" variant={"outline"} items={[
+    <Select.Root width="xs" triggerVariant={"outline"} items={[
         { value: "strawberry", label: "Strawberry" },
         { value: "banana", label: "Banana" },
         { value: "orange", label: "Orange" },
@@ -131,7 +131,7 @@ Select can be used in `outline` or `solid` variant.
         <Select.Trigger placeholder="Select a favorite fruit" />
         <Select.Content />
     </Select.Root>
-    <Select.Root width="xs" variant={"solid"} items={[
+    <Select.Root width="xs" triggerVariant={"solid"} items={[
         { value: "strawberry", label: "Strawberry" },
         { value: "banana", label: "Banana" },
         { value: "orange", label: "Orange" },
@@ -142,7 +142,31 @@ Select can be used in `outline` or `solid` variant.
 </Wrapper>
 
 ```tsx
-<Select.Root variant="outline" items={fruits}>
+<Select.Root triggerVariant="outline" items={fruits}>
+    <Select.Trigger placeholder="Select a favorite fruit" />
+    <Select.Content />
+</Select.Root>
+```
+
+### Variant
+
+The dropdown list can be `plain` (padded, rounded items) or `stretched` (edge-to-edge items).
+
+<Wrapper>
+    {["plain", "stretched"].map((variant) => (
+        <Select.Root width="xs" variant={variant} items={[
+            { value: "strawberry", label: "Strawberry" },
+            { value: "banana", label: "Banana" },
+            { value: "orange", label: "Orange" },
+        ]}>
+            <Select.Trigger placeholder="Select a favorite fruit" />
+            <Select.Content />
+        </Select.Root>
+    ))}
+</Wrapper>
+
+```tsx
+<Select.Root variant="plain" items={fruits}>
     <Select.Trigger placeholder="Select a favorite fruit" />
     <Select.Content />
 </Select.Root>
@@ -315,7 +339,7 @@ Use `multipleSelectedText` on `Select.Trigger` to override the default comma-sep
 
 ### Async loading
 
-You can fetch data when the Select is opened and update the `items` array.
+You can fetch data when the Select is opened and update the `items` array. Use `showItems={false}` on `Select.Content` to render custom UI (such as a loading spinner) instead of the default items list.
 
 <Wrapper>
     <AsyncSelect />
@@ -340,10 +364,10 @@ export function AsyncSelect() {
 
     return (
         <Select.Root items={items} onOpen={fetchFruits} width="xs">
-            <Select.Trigger
-                placeholder={isLoading ? "Loading..." : "Select a favorite fruit"}
-            />
-            <Select.Content />
+            <Select.Trigger placeholder="Select a favorite fruit" />
+            <Select.Content showItems={!isLoading}>
+                <Spinner color="primary" py={4} />
+            </Select.Content>
         </Select.Root>
     );
 }

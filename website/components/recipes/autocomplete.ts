@@ -84,7 +84,6 @@ export const autocomplete = defineSlotRecipe({
             borderRadius: "l2!",
             outline: 0,
             maxH: "96",
-            p: "0 !important",
             gap: "0 !important",
             overflowY: "auto",
             boxShadow: "md"
@@ -99,7 +98,6 @@ export const autocomplete = defineSlotRecipe({
             justifyContent: "space-between",
             flex: "1",
             textAlign: "start",
-            borderRadius: "0",
             width: "full",
             _hover: {
                 "&:not([data-selected])": {
@@ -132,6 +130,25 @@ export const autocomplete = defineSlotRecipe({
         }
     },
     variants: {
+        variant: {
+            plain: {
+                content: {
+                    p: "1.5!"
+                },
+                item: {
+                    borderRadius: "l1"
+                }
+            },
+            stretched: {
+                content: {
+                    p: "0!",
+                    py: "1!"
+                },
+                item: {
+                    borderRadius: "0"
+                }
+            }
+        },
         size: {
             xs: {
                 root: {
@@ -213,6 +230,7 @@ export const autocomplete = defineSlotRecipe({
     },
     defaultVariants: {
         size: "md",
+        variant: "plain",
         selectedItemBackgroundScheme: "primary"
     }
 });
