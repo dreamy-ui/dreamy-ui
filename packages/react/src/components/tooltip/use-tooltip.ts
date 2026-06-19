@@ -290,15 +290,24 @@ export function useTooltip(props: Partial<UseTooltipProps> = {}) {
     useEventListener("pointerleave", closeWithDelay, () => ref.current);
 
     const getTriggerProps: PropGetter = useCallback(
-        (props = {}, _ref = null) => {
+        (props = {}) => {
+            const {
+                ref: forwardedRef,
+                onPointerEnter: propsOnPointerEnter,
+                onClick: propsOnClick,
+                onPointerDown: propsOnPointerDown,
+                onFocus: propsOnFocus,
+                onBlur: propsOnBlur,
+                ...rest
+            } = props;
             const triggerProps = {
-                ...props,
-                ref: mergeRefs(ref, _ref, referenceRef),
-                onPointerEnter: callAllHandlers(props.onPointerEnter, openOnPointerEnter),
-                onClick: callAllHandlers(props.onClick, onClick),
-                onPointerDown: callAllHandlers(props.onPointerDown, onPointerDown),
-                onFocus: callAllHandlers(props.onFocus, openOnFocus),
-                onBlur: callAllHandlers(props.onBlur, closeWithDelay),
+                ...rest,
+                ref: mergeRefs(ref, forwardedRef, referenceRef),
+                onPointerEnter: callAllHandlers(propsOnPointerEnter, openOnPointerEnter),
+                onClick: callAllHandlers(propsOnClick, onClick),
+                onPointerDown: callAllHandlers(propsOnPointerDown, onPointerDown),
+                onFocus: callAllHandlers(propsOnFocus, openOnFocus),
+                onBlur: callAllHandlers(propsOnBlur, closeWithDelay),
                 "aria-describedby": isOpen ? tooltipId : undefined
             };
 
@@ -317,34 +326,34 @@ export function useTooltip(props: Partial<UseTooltipProps> = {}) {
     );
 
     const getTooltipPositionerProps: PropGetter = useCallback(
-        (props = {}, forwardedRef = null) => {
-            return getPopperProps(
-                {
-                    ...props,
-                    style: {
-                        ...props.style,
-                        pointerEvents: "none",
-                        [popperCSSVars.arrowSize.var]: arrowSize ? `${arrowSize}px` : undefined,
-                        [popperCSSVars.arrowShadowColor.var]: arrowShadowColor
-                    }
-                },
-                forwardedRef
-            );
+        (props = {}) => {
+            const { ref, style, ...rest } = props;
+            return getPopperProps({
+                ...rest,
+                ref,
+                style: {
+                    ...style,
+                    pointerEvents: "none",
+                    [popperCSSVars.arrowSize.var]: arrowSize ? `${arrowSize}px` : undefined,
+                    [popperCSSVars.arrowShadowColor.var]: arrowShadowColor
+                }
+            });
         },
         [getPopperProps, arrowSize, arrowShadowColor]
     );
 
     const getTooltipProps: PropGetter = useCallback(
-        (props = {}, ref = null) => {
+        (props = {}) => {
+            const { ref, style, ...rest } = props;
             const styles: React.CSSProperties = {
-                ...props.style,
+                ...style,
                 position: "relative",
                 transformOrigin: popperCSSVars.transformOrigin.varRef
             };
 
             return {
+                ...rest,
                 ref,
-                ...props,
                 id: tooltipId,
                 role: "tooltip",
                 style: styles

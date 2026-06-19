@@ -14,12 +14,6 @@ export const inputGroup = defineSlotRecipe({
             isolation: "isolate",
             "& > input, & > textarea": {
                 flex: 1
-            },
-            "&[data-prefix] > input, &[data-prefix] > textarea": {
-                borderStartRadius: "none"
-            },
-            "&[data-suffix] > input, &[data-suffix] > textarea": {
-                borderEndRadius: "none"
             }
         },
         prefix: {

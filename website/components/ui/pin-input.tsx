@@ -50,8 +50,7 @@ export function Root(props: PinInputProps) {
 export interface PinInputFieldProps extends InputProps {}
 
 export function Field(props: InputProps) {
-    const { ref } = props;
-    const inputProps = usePinInputField<InputProps>(props, ref);
+    const inputProps = usePinInputField(props);
 
     return (
         <Input

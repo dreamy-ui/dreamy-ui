@@ -263,20 +263,20 @@ export function useAccordionItem(props: UseAccordionItemProps) {
 
 	const getTriggerProps: PropGetter = useCallback(
 		function getButtonProps(
-			props: Omit<React.HTMLAttributes<HTMLElement>, "color"> = {},
-			ref: React.Ref<HTMLButtonElement> | null = null
+			props: Omit<React.HTMLAttributes<HTMLElement>, "color"> & React.RefAttributes<HTMLElement> = {}
 		): React.ComponentProps<"button"> {
+			const { ref, ...rest } = props;
 			return {
-				...props,
+				...rest,
 				type: "button",
 				ref: mergeRefs(register, buttonRef as any, ref),
 				id: buttonId,
 				disabled: !!isDisabled,
 				"aria-expanded": !!isOpen,
 				"aria-controls": panelId,
-				onClick: callAllHandlers(props.onClick, onClick),
-				onFocus: callAllHandlers(props.onFocus, onFocus),
-				onKeyDown: callAllHandlers(props.onKeyDown, onKeyDown)
+				onClick: callAllHandlers(rest.onClick, onClick),
+				onFocus: callAllHandlers(rest.onFocus, onFocus),
+				onKeyDown: callAllHandlers(rest.onKeyDown, onKeyDown)
 			};
 		},
 		[buttonId, isDisabled, isOpen, onClick, onFocus, onKeyDown, panelId, register]
@@ -284,11 +284,11 @@ export function useAccordionItem(props: UseAccordionItemProps) {
 
 	const getContentProps: PropGetter = useCallback(
 		function getPanelProps<T>(
-			props: Omit<React.HTMLAttributes<T>, "color"> = {},
-			ref: React.Ref<T> | null = null
+			props: Omit<React.HTMLAttributes<T>, "color"> & React.RefAttributes<T> = {}
 		): React.HTMLAttributes<T> & React.RefAttributes<T> {
+			const { ref, ...rest } = props;
 			return {
-				...props,
+				...rest,
 				ref,
 				role: "region",
 				id: panelId,

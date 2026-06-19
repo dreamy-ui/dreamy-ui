@@ -62,11 +62,11 @@ export const Root = withProvider(function Component(props: SliderProps) {
         focusThumbOnChange: hideThumb ? false : focusThumbOnChange
     });
 
-    const rootProps = getRootProps(undefined, ref);
+    const rootProps = getRootProps({ ref });
 
     return (
         <SliderProvider value={rest}>
-            <VisuallyHiddenInput {...getInputProps(undefined, ref)} />
+            <VisuallyHiddenInput {...getInputProps({ ref })} />
             <Box
                 {...rootProps}
                 data-hide-thumb={hideThumb ? "" : undefined}
@@ -88,27 +88,24 @@ export const Root = withProvider(function Component(props: SliderProps) {
 export interface SliderTrackProps extends HTMLDreamyProps<"div"> {}
 
 export const Track = withContext(function Component(props: SliderTrackProps) {
-    const { ref } = props;
     const { getTrackProps } = useSliderContext();
 
-    return <Box {...getTrackProps(props, ref)} />;
+    return <Box {...getTrackProps(props)} />;
 }, "track");
 
 export interface SliderFilledTrackProps extends HTMLDreamyProps<"div"> {}
 
 export const FilledTrack = withContext(function Component(props: SliderFilledTrackProps) {
-    const { ref } = props;
     const { getInnerTrackProps } = useSliderContext();
-    return <Box {...getInnerTrackProps(props, ref)} />;
+    return <Box {...getInnerTrackProps(props)} />;
 }, "trackFilled");
 
 export interface SliderThumbProps extends HTMLDreamyProps<"div"> {}
 
 export const Thumb = withContext(function Component(props: SliderThumbProps) {
-    const { ref } = props;
     const { getThumbProps } = useSliderContext();
 
-    return <Box {...getThumbProps(props, ref)} />;
+    return <Box {...getThumbProps(props)} />;
 }, "thumb");
 
 export interface SliderMarkProps extends HTMLDreamyProps<"div"> {
@@ -116,8 +113,7 @@ export interface SliderMarkProps extends HTMLDreamyProps<"div"> {
 }
 
 export const Mark = withContext(function Component(props: SliderMarkProps) {
-    const { ref } = props;
     const { getMarkerProps } = useSliderContext();
 
-    return <Box {...getMarkerProps(props, ref)} />;
+    return <Box {...getMarkerProps(props)} />;
 }, "marker");

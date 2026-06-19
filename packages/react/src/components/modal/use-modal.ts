@@ -198,20 +198,22 @@ export function useModal(props: UseModalProps) {
     const [bodyMounted, setBodyMounted] = useState(false);
 
     const getDialogProps = useCallback(
-        (props: Record<string, any> = {}, ref: ForwardedRef<HTMLDivElement> | null = null): any =>
-            ({
+        (props: Record<string, any> = {}): any => {
+            const { ref, onClick, ...rest } = props;
+            return {
                 role: "dialog",
-                ...props,
+                ...rest,
                 ref: mergeRefs(ref, dialogRef),
                 id: dialogId,
                 tabIndex: -1,
                 "aria-modal": true,
                 "aria-labelledby": headerMounted ? headerId : undefined,
                 "aria-describedby": bodyMounted ? bodyId : undefined,
-                onClick: callAllHandlers(props?.onClick, (event: React.MouseEvent) =>
+                onClick: callAllHandlers(onClick, (event: React.MouseEvent) =>
                     event.stopPropagation()
                 )
-            }) as const,
+            } as const;
+        },
         [bodyId, bodyMounted, dialogId, headerId, headerMounted]
     );
 
@@ -243,14 +245,16 @@ export function useModal(props: UseModalProps) {
     );
 
     const getDialogContainerProps: PropGetter = useCallback(
-        (props: Record<string, any> = {}, ref = null) => {
+        (props: Record<string, any> = {}) => {
+            const { ref, onClick: propsOnClick, onKeyDown: propsOnKeyDown, onMouseDown: propsOnMouseDown, style, ...rest } = props;
             return {
-                ...props,
+                ...rest,
                 ref: mergeRefs(ref, overlayRef),
-                onClick: callAllHandlers(props.onClick, onOverlayClick),
-                onKeyDown: callAllHandlers(props.onKeyDown, onKeyDown),
-                onMouseDown: callAllHandlers(props.onMouseDown, onMouseDown),
+                onClick: callAllHandlers(propsOnClick, onOverlayClick),
+                onKeyDown: callAllHandlers(propsOnKeyDown, onKeyDown),
+                onMouseDown: callAllHandlers(propsOnMouseDown, onMouseDown),
                 style: {
+                    ...style,
                     overflow: scrollBehavior === "inside" ? "hidden" : "auto",
                     overscrollBehaviorY: "none"
                 }

@@ -198,37 +198,42 @@ export function useAutocomplete(props: UseAutocompleteProps) {
     // ─── Prop Getters ────────────────────────────────────────────────────────────
 
     const getRootProps = useCallback(
-        (props: Record<string, any> = {}) => ({
-            "data-open": isOpen ? "" : undefined,
-            ...props,
-            ref: controlRef
-        }),
+        (props: Record<string, any> = {}) => {
+            const { ref, ...rest } = props;
+            return {
+                ...rest,
+                "data-open": isOpen ? "" : undefined,
+                ref: mergeRefs(controlRef, ref)
+            };
+        },
         [isOpen]
     );
 
     const getInputProps = useCallback(
-        (props: Record<string, any> = {}, ref?: React.Ref<HTMLInputElement>) => ({
-            pe: "var(--ac-pe)",
-            ...props,
-            ref: mergeRefs(inputRef, ref ?? null),
-            value: isOpen ? searchQuery : selectedLabel,
-            role: "combobox",
-            "aria-expanded": isOpen,
-            "aria-haspopup": "listbox",
-            autoComplete: "off",
-            onChange: callAllHandlers(props.onChange, (e: React.ChangeEvent<HTMLInputElement>) => {
-                setSearchQuery(e.target.value);
-                if (!isOpen) onOpen();
-            }),
-            onFocus: callAllHandlers(props.onFocus, () => {
-                if (!isOpen) onOpen();
-            }),
-            onBlur: callAllHandlers(props.onBlur, () => {
-                onClose();
-            }),
-            onKeyDown: callAllHandlers(
-                props.onKeyDown,
-                (e: React.KeyboardEvent<HTMLInputElement>) => {
+        (props: Record<string, any> = {}) => {
+            const { ref, onChange, onFocus, onBlur, onKeyDown, ...rest } = props;
+            return {
+                ...rest,
+                pe: "var(--ac-pe)",
+                ref: mergeRefs(inputRef, ref ?? null),
+                value: isOpen ? searchQuery : selectedLabel,
+                role: "combobox",
+                "aria-expanded": isOpen,
+                "aria-haspopup": "listbox",
+                autoComplete: "off",
+                onChange: callAllHandlers(onChange, (e: React.ChangeEvent<HTMLInputElement>) => {
+                    setSearchQuery(e.target.value);
+                    if (!isOpen) onOpen();
+                }),
+                onFocus: callAllHandlers(onFocus, () => {
+                    if (!isOpen) onOpen();
+                }),
+                onBlur: callAllHandlers(onBlur, () => {
+                    onClose();
+                }),
+                onKeyDown: callAllHandlers(
+                    onKeyDown,
+                    (e: React.KeyboardEvent<HTMLInputElement>) => {
                     const lastIndex = filteredItems.length - 1;
 
                     function getActiveIndex() {
@@ -289,7 +294,8 @@ export function useAutocomplete(props: UseAutocompleteProps) {
                     }
                 }
             )
-        }),
+            };
+        },
         [
             isOpen,
             searchQuery,
@@ -303,58 +309,69 @@ export function useAutocomplete(props: UseAutocompleteProps) {
     );
 
     const getContentProps = useCallback(
-        (props: Record<string, any> = {}, ref?: React.Ref<HTMLDivElement>) => ({
-            role: "listbox",
-            ...props,
-            ref: mergeRefs(contentRef, ref ?? null),
-            // Prevent the input from losing focus when the user clicks inside the
-            // dropdown — without this, blur fires on the input before the item click
-            // registers, which closes the list and swallows the selection.
-            onMouseDown: (e: React.MouseEvent) => {
-                e.preventDefault();
-                props.onMouseDown?.(e);
-            },
-            style: {
-                ...props?.style,
-                ...(contentWidth && contentWidth > 0
-                    ? { width: `${contentWidth}px`, minWidth: `${contentWidth}px` }
-                    : {})
-            },
-            rootProps: {
-                style: { zIndex: "var(--z-index-dropdown)" }
-            }
-        }),
+        (props: Record<string, any> = {}) => {
+            const { ref, onMouseDown, style, ...rest } = props;
+            return {
+                ...rest,
+                role: "listbox",
+                ref: mergeRefs(contentRef, ref ?? null),
+                // Prevent the input from losing focus when the user clicks inside the
+                // dropdown — without this, blur fires on the input before the item click
+                // registers, which closes the list and swallows the selection.
+                onMouseDown: (e: React.MouseEvent) => {
+                    e.preventDefault();
+                    onMouseDown?.(e);
+                },
+                style: {
+                    ...style,
+                    ...(contentWidth && contentWidth > 0
+                        ? { width: `${contentWidth}px`, minWidth: `${contentWidth}px` }
+                        : {})
+                },
+                rootProps: {
+                    style: { zIndex: "var(--z-index-dropdown)" }
+                }
+            };
+        },
         [contentWidth]
     );
 
     const getItemProps = useCallback(
-        (props: Record<string, any> = {}, ref?: React.Ref<HTMLButtonElement>) => ({
-            type: "button" as const,
-            role: "option",
-            ...props,
-            ref,
-            "aria-selected": selectedValue === props.value,
-            "data-selected": selectedValue === props.value ? "" : undefined,
-            "data-focused": focusedIndex === props.index ? "" : undefined,
-            onClick: callAllHandlers(props.onClick, () => selectItem(props.value)),
-            onPointerEnter: callAllHandlers(props.onPointerEnter, () => {
-                setFocusedIndex(props.index ?? -1);
-            })
-        }),
+        (props: Record<string, any> = {}) => {
+            const { ref, onClick, onPointerEnter, value, index, ...rest } = props;
+            return {
+                ...rest,
+                type: "button" as const,
+                role: "option",
+                ref,
+                value,
+                index,
+                "aria-selected": selectedValue === value,
+                "data-selected": selectedValue === value ? "" : undefined,
+                "data-focused": focusedIndex === index ? "" : undefined,
+                onClick: callAllHandlers(onClick, () => selectItem(value)),
+                onPointerEnter: callAllHandlers(onPointerEnter, () => {
+                    setFocusedIndex(index ?? -1);
+                })
+            };
+        },
         [selectedValue, focusedIndex, selectItem]
     );
 
     const getClearButtonProps = useCallback(
-        (props: Record<string, any> = {}, ref?: React.Ref<HTMLButtonElement>) => ({
-            type: "button" as const,
-            "aria-label": "Clear selection",
-            ...props,
-            ref,
-            onClick: callAllHandlers(props.onClick, (e: React.MouseEvent) => {
-                e.stopPropagation();
-                clearItem();
-            })
-        }),
+        (props: Record<string, any> = {}) => {
+            const { ref, onClick, ...rest } = props;
+            return {
+                ...rest,
+                type: "button" as const,
+                "aria-label": "Clear selection",
+                ref,
+                onClick: callAllHandlers(onClick, (e: React.MouseEvent) => {
+                    e.stopPropagation();
+                    clearItem();
+                })
+            };
+        },
         [clearItem]
     );
 

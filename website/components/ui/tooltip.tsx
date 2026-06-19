@@ -109,13 +109,13 @@ export function Tooltip(props: TooltipProps) {
         const child = Children.only(children) as React.ReactElement & {
             ref?: React.Ref<any>;
         };
-        return cloneElement(child, tooltip.getTriggerProps(child.props as object, child.ref));
+        return cloneElement(child, tooltip.getTriggerProps(child.props as object));
     }, [shouldWrap, children, tooltip.getTriggerProps]);
 
     const hasAriaLabel = !!ariaLabel;
 
     const _tooltipProps = useMemo(
-        () => tooltip.getTooltipProps(undefined, ref),
+        () => tooltip.getTooltipProps({ ref }),
         [tooltip.getTooltipProps, ref]
     );
 

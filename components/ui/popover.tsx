@@ -133,10 +133,7 @@ export const Content = withContext(function PopoverContent(props: PopoverContent
     const content = (
         <div {...getPopoverPositionerProps(rootProps)}>
             <Transition
-                {...getPopoverProps(
-                    { ...motionProps, ...contentProps },
-                    ref as React.Ref<HTMLElement>
-                )}
+                {...getPopoverProps({ ...motionProps, ...contentProps, ref })}
                 onAnimationComplete={callAll(onAnimationComplete, contentProps.onAnimationComplete)}
             />
         </div>
@@ -148,14 +145,13 @@ export const Content = withContext(function PopoverContent(props: PopoverContent
 export interface PopoverHeaderProps extends HTMLDreamyProps<"header"> {}
 
 export const Header = withContext(function PopoverHeader(props: PopoverHeaderProps) {
-    const { ref } = props;
-    const { children, ...rest } = props;
+    const { children } = props;
     const { getHeaderProps } = usePopoverContext();
 
     return (
         <Box
             as={"header"}
-            {...getHeaderProps(rest, ref)}
+            {...getHeaderProps(props)}
         >
             {typeof children === "string" ? (
                 <Heading
@@ -174,10 +170,9 @@ export const Header = withContext(function PopoverHeader(props: PopoverHeaderPro
 export interface PopoverBodyProps extends HTMLDreamyProps<"div"> {}
 
 export const Body = withContext(function PopoverHeader(props: PopoverBodyProps) {
-    const { ref } = props;
     const { getBodyProps } = usePopoverContext();
 
-    return <Box {...getBodyProps(props, ref)} />;
+    return <Box {...getBodyProps(props)} />;
 }, "body");
 
 export interface PopoverFooterProps extends BoxProps {}

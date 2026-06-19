@@ -89,75 +89,90 @@ export function useFieldProvider(props: FieldContext) {
 	const [isFocused, setFocus] = useState(false);
 
 	const getHintProps = useCallback<PropGetter>(
-		(props = {}, forwardedRef = null) => ({
-			id: hintId,
-			...props,
-			/**
-			 * Notify the field context when the hint is rendered on screen,
-			 * so we can apply the correct `aria-describedby` to the field (e.g. input, textarea).
-			 */
-			ref: mergeRefs(forwardedRef, (node) => {
-				if (!node) return;
-				setHasHint(true);
-			})
-		}),
+		(props = {}) => {
+			const { ref, ...rest } = props;
+			return {
+				id: hintId,
+				...rest,
+				/**
+				 * Notify the field context when the hint is rendered on screen,
+				 * so we can apply the correct `aria-describedby` to the field (e.g. input, textarea).
+				 */
+				ref: mergeRefs(ref, (node) => {
+					if (!node) return;
+					setHasHint(true);
+				})
+			};
+		},
 		[hintId]
 	);
 
 	const getLabelProps = useCallback<PropGetter>(
-		(props = {}, forwardedRef = null) => ({
-			...props,
-			ref: forwardedRef,
-			"data-focus": dataAttr(isFocused),
-			"data-disabled": dataAttr(isDisabled),
-			"data-invalid": dataAttr(isInvalid),
-			"data-readonly": dataAttr(isReadOnly),
-			id: props.id !== undefined ? props.id : labelId,
-			htmlFor: props.htmlFor !== undefined ? props.htmlFor : id
-		}),
+		(props = {}) => {
+			const { ref, id: propsId, htmlFor: propsHtmlFor, ...rest } = props;
+			return {
+				...rest,
+				ref,
+				"data-focus": dataAttr(isFocused),
+				"data-disabled": dataAttr(isDisabled),
+				"data-invalid": dataAttr(isInvalid),
+				"data-readonly": dataAttr(isReadOnly),
+				id: propsId !== undefined ? propsId : labelId,
+				htmlFor: propsHtmlFor !== undefined ? propsHtmlFor : id
+			};
+		},
 		[id, isDisabled, isFocused, isInvalid, isReadOnly, labelId]
 	);
 
 	const getErrorMessageProps = useCallback<PropGetter>(
-		(props = {}, forwardedRef = null) => ({
-			id: feedbackId,
-			...props,
-			/**
-			 * Notify the field context when the error message is rendered on screen,
-			 * so we can apply the correct `aria-describedby` to the field (e.g. input, textarea).
-			 */
-			ref: mergeRefs(forwardedRef, (node) => {
-				if (!node) return;
-				setHasFeedbackText(true);
-			}),
-			"aria-live": "polite" as const
-		}),
+		(props = {}) => {
+			const { ref, ...rest } = props;
+			return {
+				id: feedbackId,
+				...rest,
+				/**
+				 * Notify the field context when the error message is rendered on screen,
+				 * so we can apply the correct `aria-describedby` to the field (e.g. input, textarea).
+				 */
+				ref: mergeRefs(ref, (node) => {
+					if (!node) return;
+					setHasFeedbackText(true);
+				}),
+				"aria-live": "polite" as const
+			};
+		},
 		[feedbackId]
 	);
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	const getRootProps = useCallback<PropGetter>(
-		(props = {}, forwardedRef = null) => ({
-			...props,
-			...htmlProps,
-			ref: forwardedRef,
-			role: "group",
-			"data-focus": dataAttr(isFocused),
-			"data-disabled": dataAttr(isDisabled),
-			"data-invalid": dataAttr(isInvalid),
-			"data-readonly": dataAttr(isReadOnly)
-		}),
+		(props = {}) => {
+			const { ref, ...rest } = props;
+			return {
+				...rest,
+				...htmlProps,
+				ref,
+				role: "group",
+				"data-focus": dataAttr(isFocused),
+				"data-disabled": dataAttr(isDisabled),
+				"data-invalid": dataAttr(isInvalid),
+				"data-readonly": dataAttr(isReadOnly)
+			};
+		},
 		[isDisabled, isFocused, isInvalid, isReadOnly, ...objectToDeps(htmlProps)]
 	);
 
 	const getRequiredIndicatorProps = useCallback<PropGetter>(
-		(props = {}, forwardedRef = null) => ({
-			...props,
-			ref: forwardedRef,
-			role: "presentation",
-			"aria-hidden": true,
-			children: props.children || "*"
-		}),
+		(props = {}) => {
+			const { ref, children, ...rest } = props;
+			return {
+				...rest,
+				ref,
+				role: "presentation",
+				"aria-hidden": true,
+				children: children || "*"
+			};
+		},
 		[]
 	);
 

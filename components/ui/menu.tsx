@@ -88,13 +88,11 @@ export const Root = withProvider(function MenuRoot({
 export interface MenuContentProps extends PopoverContentProps {}
 
 export const Content = withContext(function MenuContent(props: MenuContentProps) {
-    const { ref } = props;
-    const { children, ...rest } = props;
-
+    const { children } = props;
     const { getContentProps, descendants } = useMenuContext();
 
     return (
-        <PopoverContent {...getContentProps(rest, ref ?? null)}>
+        <PopoverContent {...getContentProps(props)}>
             <MenuDescendantsProvider value={descendants}>{children}</MenuDescendantsProvider>
         </PopoverContent>
     );
@@ -120,10 +118,8 @@ export interface MenuButtonProps extends HTMLDreamyProps<"button"> {
 }
 
 export const Item = withContext(function MenuButton(props: MenuButtonProps) {
-    const { ref } = props;
-    const { icon, command, rightContent, children, ...rest } = props;
-
-    const buttonProps = useMenuItem(rest, ref);
+    const { icon, command, rightContent, children } = props;
+    const buttonProps = useMenuItem(props);
     const actionKey = useActionKey();
 
     return (
@@ -146,7 +142,7 @@ export function Trigger({ children, placeholder, ref, ...rest }: MenuTriggerProp
     const { getTriggerProps } = useMenuContext();
 
     const child = Children.only(children) as ReactElement;
-    const trigger = cloneElement(child, getTriggerProps(rest, ref));
+    const trigger = cloneElement(child, getTriggerProps({ ...rest, ref }));
 
     return <PopoverTrigger {...rest}>{trigger}</PopoverTrigger>;
 }
@@ -197,7 +193,7 @@ export const TriggerItem = withContext(function MenuTriggerItem(props: MenuTrigg
     // is rendered), so this button is correctly registered in the parent menu's descendants
     // list and participates in its keyboard navigation (ArrowUp/Down/Enter).
     const { isOpen: parentIsOpen, triggerRef: parentTriggerRef } = useMenuContext();
-    const buttonProps = useMenuItem(rest, ref);
+    const buttonProps = useMenuItem(props);
     const actionKey = useActionKey();
 
     const { rest: _unused, ...nestedCtx } = useMenu({});

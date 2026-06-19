@@ -388,9 +388,10 @@ export function useSlider(props: UseSliderProps) {
 	});
 
 	const getRootProps: PropGetter = useCallback(
-		(props = {}, ref = null) => {
+		(props = {}) => {
+			const { ref, ...rest } = props;
 			return {
-				...props,
+				...rest,
 				...htmlProps,
 				draggable: false,
 				ref: mergeRefs(ref, rootRef),
@@ -406,9 +407,10 @@ export function useSlider(props: UseSliderProps) {
 	);
 
 	const getTrackProps: PropGetter = useCallback(
-		(props = {}, ref = null) => {
+		(props = {}) => {
+			const { ref, ...rest } = props;
 			return {
-				...props,
+				...rest,
 				ref: mergeRefs(ref, trackRef),
 				draggable: false,
 				id: trackId,
@@ -419,12 +421,13 @@ export function useSlider(props: UseSliderProps) {
 	);
 
 	const getInnerTrackProps: PropGetter = useCallback(
-		(props = {}, ref = null) => {
+		(props = {}) => {
+			const { ref, style, ...rest } = props;
 			return {
-				...props,
+				...rest,
 				draggable: false,
 				style: {
-					...props.style,
+					...style,
 					...orient({
 						orientation,
 						vertical: {
@@ -444,9 +447,10 @@ export function useSlider(props: UseSliderProps) {
 	);
 
 	const getThumbProps: PropGetter = useCallback(
-		(props = {}, ref = null) => {
+		(props = {}) => {
+			const { ref, style, onKeyDown: propsOnKeyDown, onFocus: propsOnFocus, onBlur: propsOnBlur, ...rest } = props;
 			return {
-				...props,
+				...rest,
 				ref: mergeRefs(ref, thumbRef),
 				role: "slider",
 				tabIndex: isInteractive ? 0 : undefined,
@@ -464,7 +468,7 @@ export function useSlider(props: UseSliderProps) {
 				"aria-labelledby": field ? field.labelId : ariaLabel ? undefined : ariaLabelledBy,
 				"data-invalid": dataAttr(isInvalid),
 				style: {
-					...props.style,
+					...style,
 					...orient({
 						orientation,
 						vertical: {
@@ -475,9 +479,9 @@ export function useSlider(props: UseSliderProps) {
 						}
 					})
 				},
-				onKeyDown: callAllHandlers(props.onKeyDown, onKeyDown),
-				onFocus: callAllHandlers(props.onFocus, () => setFocused(true)),
-				onBlur: callAllHandlers(props.onBlur, () => setFocused(false))
+				onKeyDown: callAllHandlers(propsOnKeyDown, onKeyDown),
+				onFocus: callAllHandlers(propsOnFocus, () => setFocused(true)),
+				onBlur: callAllHandlers(propsOnBlur, () => setFocused(false))
 			};
 		},
 		[
@@ -501,10 +505,11 @@ export function useSlider(props: UseSliderProps) {
 	);
 
 	const getMarkerProps: RequiredPropGetter<{ value: number }> = useCallback(
-		(props, ref = null) => {
-			const isInRange = !(props.value < min || props.value > max);
-			const isHighlighted = value >= props.value;
-			const markerPercent = valueToPercent(props.value, min, max);
+		(props) => {
+			const { ref, style, value: markerValue, ...rest } = props;
+			const isInRange = !(markerValue < min || markerValue > max);
+			const isHighlighted = value >= markerValue;
+			const markerPercent = valueToPercent(markerValue, min, max);
 
 			const markerStyle: React.CSSProperties = {
 				position: "absolute",
@@ -522,7 +527,8 @@ export function useSlider(props: UseSliderProps) {
 			};
 
 			return {
-				...props,
+				...rest,
+				value: markerValue,
 				ref,
 				role: "presentation",
 				"aria-hidden": true,
@@ -530,7 +536,7 @@ export function useSlider(props: UseSliderProps) {
 				"data-invalid": dataAttr(!isInRange),
 				"data-highlighted": dataAttr(isHighlighted),
 				style: {
-					...props.style,
+					...style,
 					...markerStyle
 				}
 			};
@@ -539,10 +545,11 @@ export function useSlider(props: UseSliderProps) {
 	);
 
 	const getInputProps: PropGetter = useCallback(
-		(props = {}, ref = null) => {
+		(props = {}) => {
+			const { ref, onChange: propsOnChange, ...rest } = props;
 			return {
 				...inputProps,
-				...props,
+				...rest,
 				ref,
 				value,
 				name,
@@ -556,7 +563,7 @@ export function useSlider(props: UseSliderProps) {
 				"data-disabled": dataAttr(isDisabled),
 				readOnly: isReadOnly,
 				"data-readonly": dataAttr(isReadOnly),
-				onChange: callAllHandlers(props.onChange, onChange, (e) => {
+				onChange: callAllHandlers(propsOnChange, onChange, (e) => {
 					const val = Number.parseFloat(e.target.value);
 					setValue(val);
 				})

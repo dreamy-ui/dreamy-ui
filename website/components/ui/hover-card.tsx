@@ -144,10 +144,7 @@ export const Content = withContext(function HoverCardContent(props: HoverCardCon
     const content = (
         <div {...getPopoverPositionerProps(rootProps)}>
             <Transition
-                {...getPopoverProps(
-                    { ...motionProps, ...contentProps },
-                    ref as React.Ref<HTMLElement>
-                )}
+                {...getPopoverProps({ ...motionProps, ...contentProps, ref })}
                 onAnimationComplete={callAll(onAnimationComplete, contentProps.onAnimationComplete)}
             />
         </div>
@@ -159,13 +156,12 @@ export const Content = withContext(function HoverCardContent(props: HoverCardCon
 export interface HoverCardHeaderProps extends HTMLDreamyProps<"header"> {}
 
 export const Header = withContext(function HoverCardHeader(props: HoverCardHeaderProps) {
-    const { ref } = props;
     const { getHeaderProps, size } = usePopoverContext();
 
     return (
         <Box
             as={"header"}
-            {...getHeaderProps(props, ref)}
+            {...getHeaderProps(props)}
         >
             {typeof props.children === "string" ? (
                 <Heading size={size ?? "md"}>{props.children}</Heading>
@@ -179,10 +175,9 @@ export const Header = withContext(function HoverCardHeader(props: HoverCardHeade
 export interface HoverCardBodyProps extends HTMLDreamyProps<"div"> {}
 
 export const Body = withContext(function HoverCardBody(props: HoverCardBodyProps) {
-    const { ref } = props;
     const { getBodyProps } = usePopoverContext();
 
-    return <Box {...getBodyProps(props, ref)} />;
+    return <Box {...getBodyProps(props)} />;
 }, "body");
 
 export interface HoverCardFooterProps extends BoxProps {}

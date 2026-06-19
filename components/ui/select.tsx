@@ -243,7 +243,7 @@ export const Trigger = withContext(function SelectTrigger({
 
     return (
         <PopoverTrigger>
-            <dreamy.button {...(getTriggerProps(rest, ref) as any)}>
+            <dreamy.button {...(getTriggerProps({ ...rest, ref }) as any)}>
                 {icon && icon}
 
                 <dreamy.span data-part="value">{children ?? getDisplayContent()}</dreamy.span>
@@ -272,7 +272,7 @@ export const Content = withContext(function SelectContent(props: SelectContentPr
     > & {
         renderItem?: (item: SelectItemData) => ReactNode;
     };
-    const contentPropsResult = getContentProps(rest, ref);
+    const contentPropsResult = getContentProps({ ...rest, ref });
 
     return (
         <PopoverContent {...contentPropsResult}>
@@ -320,7 +320,7 @@ export const VirtualContent = withContext(function SelectVirtualContent(
     > & {
         renderItem?: (item: SelectItemData) => ReactNode;
     };
-    const contentPropsResult = getContentProps(rest, ref);
+    const contentPropsResult = getContentProps({ ...rest, ref });
 
     return (
         <PopoverContent {...contentPropsResult}>
@@ -363,9 +363,9 @@ const SelectListItem = withContext(function SelectListItem({
                     value: item.value,
                     index,
                     disabled: item.disabled,
+                    ref,
                     ...rest
-                },
-                ref
+                }
             ) as any)}
         >
             {renderItem ? renderItem(item) : item.label}
@@ -533,7 +533,7 @@ const SelectClearButton = withContext(function SelectClearButton(props: SelectCl
     const { getClearButtonProps } = useSelectContext();
 
     return (
-        <dreamy.button {...getClearButtonProps(props, ref)}>
+        <dreamy.button {...getClearButtonProps(props)}>
             <svg
                 aria-hidden="true"
                 aria-label="Clear selection"

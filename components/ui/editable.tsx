@@ -44,7 +44,7 @@ export const Root = withProvider(function EditableRoot(props: EditableProps) {
 
     return (
         <EditableProvider value={context}>
-            <Box {...context.getRootProps({}, ref)}>{children}</Box>
+            <Box {...context.getRootProps({ ref })}>{children}</Box>
         </EditableProvider>
     );
 }, "root");
@@ -57,10 +57,9 @@ export interface EditablePreviewProps extends HTMLDreamyProps<"div"> {}
  * The `span` used to display the final value, in the `preview` mode
  */
 export const Preview = withContext(function EditablePreview(props: EditablePreviewProps) {
-    const { ref } = props;
     const { getPreviewProps } = useEditableContext();
 
-    return <Box {...getPreviewProps(props, ref)} />;
+    return <Box {...getPreviewProps(props)} />;
 }, "preview");
 
 export interface EditableInputProps extends HTMLDreamyProps<"input"> {}
@@ -71,19 +70,17 @@ export interface EditableInputProps extends HTMLDreamyProps<"input"> {}
  * The input used in the `edit` mode
  */
 export const Input = withContext(function EditableInput(props: EditableInputProps) {
-    const { ref } = props;
     const { getInputProps } = useEditableContext();
 
-    return <dreamy.input {...getInputProps(props, ref)} />;
+    return <dreamy.input {...getInputProps(props)} />;
 }, "input");
 
 export interface EditableEditButtonProps extends HTMLDreamyProps<"button"> {}
 
 export const EditButton = withContext(function EditableEditButton(props: EditableEditButtonProps) {
-    const { ref } = props;
     const { getEditButtonProps } = useEditableContext();
 
-    return <dreamy.button {...getEditButtonProps(props, ref)} />;
+    return <dreamy.button {...getEditButtonProps(props)} />;
 }, "editButton");
 
 interface EditableSubmitButtonProps extends HTMLDreamyProps<"button"> {}
@@ -91,10 +88,9 @@ interface EditableSubmitButtonProps extends HTMLDreamyProps<"button"> {}
 export const SubmitButton = withContext(function EditableSubmitButton(
     props: EditableSubmitButtonProps
 ) {
-    const { ref } = props;
     const { getSubmitButtonProps } = useEditableContext();
 
-    return <dreamy.button {...getSubmitButtonProps(props, ref)} />;
+    return <dreamy.button {...getSubmitButtonProps(props)} />;
 }, "submitButton");
 
 interface EditableCancelButtonProps extends HTMLDreamyProps<"button"> {}
@@ -102,8 +98,7 @@ interface EditableCancelButtonProps extends HTMLDreamyProps<"button"> {}
 export const CancelButton = withContext(function EditableCancelButton(
     props: EditableCancelButtonProps
 ) {
-    const { ref } = props;
     const { getCancelButtonProps } = useEditableContext();
 
-    return <dreamy.button {...getCancelButtonProps(props, ref)} />;
+    return <dreamy.button {...getCancelButtonProps(props)} />;
 }, "cancelButton");

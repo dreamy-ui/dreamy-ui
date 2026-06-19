@@ -60,11 +60,10 @@ const AutocompleteIndicator = withContext(AutocompleteIndicatorBase, "indicator"
 const AutocompleteClearButton = withContext(function AutocompleteClearButtonBase(
     props: HTMLDreamyProps<"button">
 ) {
-    const { ref } = props;
     const { getClearButtonProps } = useAutocompleteContext();
 
     return (
-        <dreamy.button {...getClearButtonProps(props, ref)}>
+        <dreamy.button {...getClearButtonProps(props)}>
             <dreamy.svg
                 aria-hidden="true"
                 asChild
@@ -192,7 +191,7 @@ export function Input({ icon, placeholder, ref, ...rest }: AutocompleteInputProp
                     size={size}
                     variant={triggerVariant as InputProps["variant"]}
                     width="full"
-                    {...(getInputProps(rest as any, ref) as any)}
+                    {...(getInputProps({ ...rest, ref } as any) as any)}
                 />
                 <AutocompleteIndicatorGroup>
                     {isClearable && selectedValue && <AutocompleteClearButton />}
@@ -234,7 +233,7 @@ export const Content = withContext(function AutocompleteContent({
     return (
         <PopoverContent
             className={className}
-            {...(getContentProps(rest as any, ref as any) as any)}
+            {...(getContentProps({ ...rest, ref, className } as any) as any)}
         >
             {filteredItems.length === 0
                 ? (noResultsContent ?? (
@@ -306,7 +305,7 @@ export const VirtualContent = withContext(function AutocompleteVirtualContent({
     return (
         <PopoverContent
             className={className}
-            {...(getContentProps(rest as any, ref as any) as any)}
+            {...(getContentProps({ ...rest, ref, className } as any) as any)}
         >
             {filteredItems.length === 0 ? (
                 (noResultsContent ?? <AutocompleteNoResults>{noResultsText}</AutocompleteNoResults>)
@@ -430,7 +429,7 @@ export const Item = withContext(function AutocompleteItem({
     const isSelected = selectedValue === value;
 
     return (
-        <dreamy.button {...(getItemProps({ value, index, ...rest }, ref) as any)}>
+        <dreamy.button {...(getItemProps({ value, index, ...rest, ref }) as any)}>
             {children}
             {isSelected && <AutocompleteItemIndicator />}
         </dreamy.button>

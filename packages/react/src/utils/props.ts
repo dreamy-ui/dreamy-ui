@@ -17,13 +17,11 @@ export interface DOMAttributes<T = DOMElement>
 }
 
 export type PropGetter<P = Record<string, unknown>, R = DOMAttributes> = (
-	props?: Merge<DOMAttributes, P>,
-	ref?: React.Ref<any>
+	props?: Merge<DOMAttributes, P>
 ) => R & React.RefAttributes<any>;
 
 export type RequiredPropGetter<P = Record<string, unknown>, R = DOMAttributes> = (
-	props: Merge<DOMAttributes, P>,
-	ref?: React.Ref<any>
+	props: Merge<DOMAttributes, P>
 ) => R & React.RefAttributes<any>;
 
 export type MaybeRenderProp<P> = React.ReactNode | ((props: P) => React.ReactNode);

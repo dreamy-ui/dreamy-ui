@@ -55,12 +55,12 @@ export const Root = withProvider(function Component(props: RangeSliderProps) {
         focusThumbOnChange
     });
 
-    const rootProps = getRootProps(undefined, ref);
+    const rootProps = getRootProps({ ref });
 
     return (
         <RangeSliderProvider value={rest}>
-            <VisuallyHiddenInput {...getInputProps(0)(undefined, ref)} />
-            <VisuallyHiddenInput {...getInputProps(1)(undefined, ref)} />
+            <VisuallyHiddenInput {...getInputProps(0)({ ref })} />
+            <VisuallyHiddenInput {...getInputProps(1)({ ref })} />
             <Box
                 {...rootProps}
                 style={
@@ -81,18 +81,16 @@ export const Root = withProvider(function Component(props: RangeSliderProps) {
 export interface RangeSliderTrackProps extends HTMLDreamyProps<"div"> {}
 
 export const Track = withContext(function Component(props: RangeSliderTrackProps) {
-    const { ref } = props;
     const { getTrackProps } = useRangeSliderContext();
 
-    return <Box {...getTrackProps(props, ref)} />;
+    return <Box {...getTrackProps(props)} />;
 }, "track");
 
 export interface RangeSliderFilledTrackProps extends HTMLDreamyProps<"div"> {}
 
 export const FilledTrack = withContext(function Component(props: RangeSliderFilledTrackProps) {
-    const { ref } = props;
     const { getInnerTrackProps } = useRangeSliderContext();
-    return <Box {...getInnerTrackProps(props, ref)} />;
+    return <Box {...getInnerTrackProps(props)} />;
 }, "trackFilled");
 
 export interface RangeSliderThumbProps extends HTMLDreamyProps<"div"> {
@@ -103,11 +101,10 @@ export interface RangeSliderThumbProps extends HTMLDreamyProps<"div"> {
 }
 
 export const Thumb = withContext(function Component(props: RangeSliderThumbProps) {
-    const { ref } = props;
     const { index, ...rest } = props;
     const { getThumbProps } = useRangeSliderContext();
 
-    return <Box {...getThumbProps(index)(rest, ref)} />;
+    return <Box {...getThumbProps(index)(rest)} />;
 }, "thumb");
 
 export interface RangeSliderMarkProps extends HTMLDreamyProps<"div"> {
@@ -115,8 +112,7 @@ export interface RangeSliderMarkProps extends HTMLDreamyProps<"div"> {
 }
 
 export const Mark = withContext(function Component(props: RangeSliderMarkProps) {
-    const { ref } = props;
     const { getMarkerProps } = useRangeSliderContext();
 
-    return <Box {...getMarkerProps(props, ref)} />;
+    return <Box {...getMarkerProps(props)} />;
 }, "marker");

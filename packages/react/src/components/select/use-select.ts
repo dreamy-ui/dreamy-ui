@@ -306,14 +306,15 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
     );
 
     const getRootProps: PropGetter = useCallback(
-        (props, ref) => {
+        (props = {}) => {
+            const { ref, className, ...rest } = props;
             return {
+                ...rest,
                 "data-slot": "root",
                 "data-open": dataAttr(isOpen),
                 "data-selected-strategy": selectedStrategy,
                 ref,
-                ...props,
-                className: cx(props?.className, "group")
+                className: cx(className, "group")
             };
         },
         [isOpen, selectedStrategy]
@@ -322,7 +323,15 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
     const [isTriggerFocused, setIsTriggerFocused] = useState(false);
 
     const getTriggerProps: PropGetter = useCallback(
-        (props, ref) => {
+        (props = {}) => {
+            const {
+                ref,
+                id: propsId,
+                onFocus: propsOnFocus,
+                onBlur: propsOnBlur,
+                onKeyDown: propsOnKeyDown,
+                ...rest
+            } = props;
             const onKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
                 if (resolvedIsDisabled || document.activeElement !== triggerRef.current) return;
 
@@ -397,9 +406,9 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
             };
 
             return {
-                ...props,
+                ...rest,
                 "data-slot": "trigger",
-                id: props?.id ?? fieldId,
+                id: propsId ?? fieldId,
                 "aria-invalid": ariaAttr(isInvalid),
                 "aria-required": ariaAttr(resolvedIsRequired),
                 "aria-describedby": ariaDescribedByField,
@@ -410,13 +419,13 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
                 "data-placeholder-shown": dataAttr(selectedKeys.length === 0),
                 disabled: resolvedIsDisabled,
                 type: "button",
-                onFocus: callAllHandlers(props?.onFocus, onFocusField, () => {
+                onFocus: callAllHandlers(propsOnFocus, onFocusField, () => {
                     setIsTriggerFocused(true);
                 }),
-                onBlur: callAllHandlers(props?.onBlur, onBlurField, () => {
+                onBlur: callAllHandlers(propsOnBlur, onBlurField, () => {
                     setIsTriggerFocused(false);
                 }),
-                onKeyDown: callAllHandlers(props?.onKeyDown, onKeyDown)
+                onKeyDown: callAllHandlers(propsOnKeyDown, onKeyDown)
             };
         },
         [
@@ -441,16 +450,17 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
     );
 
     const getContentProps = useCallback(
-        (props: Record<string, any>, ref: React.Ref<HTMLDivElement>) => {
+        (props: Record<string, any> = {}) => {
+            const { ref, onMouseDown, style, ...rest } = props;
             return {
+                ...rest,
                 ref: mergeRefs(popoverRef, ref),
-                ...props,
                 onMouseDown: (e: MouseEvent) => {
                     e.preventDefault();
-                    props?.onMouseDown?.(e);
+                    onMouseDown?.(e);
                 },
                 style: {
-                    ...props?.style,
+                    ...style,
                     ...(contentWidth > 0
                         ? { width: `${contentWidth}px`, minWidth: `${contentWidth}px` }
                         : {})
@@ -466,11 +476,8 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
     );
 
     const getItemProps = useCallback(
-        (
-            props: Record<string, any> = {},
-            ref: React.Ref<HTMLButtonElement> | null = null
-        ) => {
-            const { value, index, disabled, onPointerEnter, onClick, ...rest } = props;
+        (props: Record<string, any> = {}) => {
+            const { ref, value, index, disabled, onPointerEnter, onClick, ...rest } = props;
 
             return {
                 ...rest,
@@ -532,12 +539,13 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
         ]
     );
 
-    const getClearButtonProps: PropGetter = useCallback((props, ref) => {
+    const getClearButtonProps: PropGetter = useCallback((props = {}) => {
+        const { ref, onClick, ...rest } = props;
         return {
+            ...rest,
             ref,
-            ...props,
             type: "button",
-            onClick: callAllHandlers(props?.onClick, (e) => {
+            onClick: callAllHandlers(onClick, (e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 setSelectedKeys([]);

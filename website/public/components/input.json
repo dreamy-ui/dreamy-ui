@@ -11,6 +11,7 @@
   "hasRecipe": true,
   "hasPattern": false,
   "recipeIds": [
-    "input"
+    "input",
+    "input-group"
   ]
 }

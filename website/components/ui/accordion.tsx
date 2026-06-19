@@ -93,13 +93,12 @@ export interface AccordionContentProps extends HTMLDreamyProps<"div"> {
 }
 
 export const Content = withContext(function AccordionContent(props: AccordionContentProps) {
-    const { ref } = props;
-    const { collapseProps, ...rest } = props;
+    const { collapseProps } = props;
 
     const { reduceMotion } = useAccordionContext();
     const { getContentProps, isOpen } = useAccordionItemContext();
 
-    const panelProps = getContentProps(rest, ref) as any;
+    const panelProps = getContentProps(props) as any;
 
     if (!reduceMotion) {
         panelProps.hidden = undefined;
@@ -149,7 +148,7 @@ export const Trigger = withContext(function AccordionTrigger({
 
     return (
         <HeadingTag>
-            <dreamy.button {...(getTriggerProps(props, ref) as any)}>
+            <dreamy.button {...(getTriggerProps(props) as any)}>
                 {children}
                 {icon ?? <AccordionIcon {...iconProps} />}
             </dreamy.button>

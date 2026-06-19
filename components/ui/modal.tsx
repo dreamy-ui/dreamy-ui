@@ -139,7 +139,7 @@ interface ModalContainerProps extends BoxProps {}
 const Container = withContext(function Component({ children, ref, ...props }: ModalContainerProps) {
     const { getDialogContainerProps } = useModalContext();
 
-    return <Box {...getDialogContainerProps(props, ref)}>{children}</Box>;
+    return <Box {...getDialogContainerProps({ ...props, ref })}>{children}</Box>;
 }, "container");
 
 export interface ModalContentProps extends MotionFlexProps {}
@@ -163,7 +163,7 @@ export const Content = withContext(function Component({
                         initial="initial"
                         transition={transition}
                         variants={modal}
-                        {...getDialogProps(props, ref)}
+                        {...getDialogProps({ ...props, ref })}
                     >
                         {children}
                     </MotionFlex>

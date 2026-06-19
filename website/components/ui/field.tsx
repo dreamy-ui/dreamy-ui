@@ -18,16 +18,14 @@ export interface FieldLabelProps extends HTMLDreamyProps<"label"> {
 }
 
 export function Label(props: FieldLabelProps) {
-    const { ref } = props;
     const {
         children,
         requiredIndicator = <RequiredIndicator />,
-        optionalIndicator = null,
-        ...rest
+        optionalIndicator = null
     } = props;
 
     const field = useFieldContext();
-    const ownProps = field?.getLabelProps(rest, ref) ?? { ref, ...rest };
+    const ownProps = field?.getLabelProps(props) ?? props;
 
     return (
         <Box
@@ -48,7 +46,6 @@ export interface RequiredIndicatorProps extends HTMLDreamyProps<"span"> {}
  * a field is required.
  */
 export function RequiredIndicator(props: RequiredIndicatorProps) {
-    const { ref } = props;
     const field = useFieldContext();
 
     if (!field?.isRequired) return null;
@@ -57,7 +54,7 @@ export function RequiredIndicator(props: RequiredIndicatorProps) {
         <Box
             as={"span"}
             data-part="requiredIndicator"
-            {...field?.getRequiredIndicatorProps(props, ref)}
+            {...field?.getRequiredIndicatorProps(props)}
         />
     );
 }
@@ -65,7 +62,6 @@ export function RequiredIndicator(props: RequiredIndicatorProps) {
 export interface FieldErrorProps extends HTMLDreamyProps<"label"> {}
 
 export function Error(props: FieldErrorProps) {
-    const { ref } = props;
     const field = useFieldContext();
 
     if (!field?.isInvalid) return null;
@@ -73,7 +69,7 @@ export function Error(props: FieldErrorProps) {
     return (
         <Box
             data-part="error"
-            {...field?.getErrorMessageProps(props, ref)}
+            {...field?.getErrorMessageProps(props)}
         />
     );
 }
@@ -112,7 +108,6 @@ export function ErrorIcon(props: IconProps) {
 export interface FieldHintProps extends HTMLDreamyProps<"div"> {}
 
 export function Hint(props: FieldHintProps) {
-    const { ref } = props;
     const field = useFieldContext();
 
     if (field?.isInvalid) return null;
@@ -120,7 +115,7 @@ export function Hint(props: FieldHintProps) {
     return (
         <Box
             data-part="hint"
-            {...field?.getHintProps(props, ref)}
+            {...field?.getHintProps(props)}
         />
     );
 }
@@ -158,7 +153,7 @@ export function Root({ children, label, hint, error, ref, ...props }: FieldProps
 
     return (
         <FieldProvider value={context}>
-            <StyledField {...getRootProps({}, ref)}>
+            <StyledField {...getRootProps({ ref })}>
                 {label ? <Label>{label}</Label> : null}
                 {children}
                 {hint && <Hint>{hint}</Hint>}
