@@ -203,14 +203,14 @@ export async function writeComponentsIndexFile(
             const fileName = file.replace(/\.(tsx|ts|jsx|js)$/, "");
             const componentName = toPascalCase(fileName);
 
-            // Check if component has namespace exports (like export namespace ComponentName or export const Root)
-            const hasRootExport = fileContent.match(/export\s+const\s+Root\s*/) !== null;
+            // Compound components export a Root part (const or function after React 19 ref migration)
+            const hasRootExport = /\bexport\s+(?:const|function)\s+Root\b/.test(fileContent);
 
             if (hasRootExport) {
                 // Export as namespace: export * as ComponentName from "./component-name"
                 exports.push(`export * as ${componentName} from "./${fileName}";`);
             } else {
-                // Regular export: export * from "./component-name"
+                // Regular export (includes compounds like Input with Input.Group attached)
                 exports.push(`export * from "./${fileName}";`);
             }
         } catch (error) {

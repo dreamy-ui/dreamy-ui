@@ -35,9 +35,6 @@ import {
     Icon,
     Image,
     Input,
-    InputGroup,
-    InputLeftAddon,
-    InputRightAddon,
     Kbd,
     LightTheme,
     List,
@@ -260,6 +257,11 @@ const ControlledActionBar = wrapLazy(
 const AsyncAutocomplete = wrapLazy(
     lazy(() => import("./components/autocompletes").then((m) => ({ default: m.AsyncAutocomplete })))
 );
+const AsyncSearchAutocomplete = wrapLazy(
+    lazy(() =>
+        import("./components/autocompletes").then((m) => ({ default: m.AsyncSearchAutocomplete }))
+    )
+);
 const AutocompleteWithIcon = wrapLazy(
     lazy(() =>
         import("./components/autocompletes").then((m) => ({ default: m.AutocompleteWithIcon }))
@@ -401,6 +403,12 @@ const AsyncSelect = wrapLazy(
 const ControlledSelect = wrapLazy(
     lazy(() => import("./components/selects").then((m) => ({ default: m.ControlledSelect })))
 );
+const ItemsSelect = wrapLazy(
+    lazy(() => import("./components/selects").then((m) => ({ default: m.ItemsSelect })))
+);
+const SelectInModal = wrapLazy(
+    lazy(() => import("./components/selects").then((m) => ({ default: m.SelectInModal })))
+);
 
 const ControlledSlider = wrapLazy(
     lazy(() => import("./components/sliders").then((m) => ({ default: m.ControlledSlider })))
@@ -502,9 +510,6 @@ const DreamComponents = {
     PlacementModal,
     Stat,
     PinInput,
-    InputGroup,
-    InputLeftAddon,
-    InputRightAddon,
     AvatarGroup,
     Badge,
     // BasicPopover,
@@ -548,6 +553,8 @@ const DreamComponents = {
     Select,
     AsyncSelect,
     ControlledSelect,
+    ItemsSelect,
+    SelectInModal,
     Popover,
     Collapsed,
     Scaled,
@@ -606,6 +613,7 @@ const DreamComponents = {
     ControlledAutocomplete,
     AutocompleteWithIcon,
     AsyncAutocomplete,
+    AsyncSearchAutocomplete,
     VirtualAutocomplete,
     HoverCard,
     ControlledHoverCard,
@@ -634,6 +642,42 @@ function Wrapper({ children, ...props }: PropsWithChildren<FlexProps>) {
         >
             {children}
         </Flex>
+    );
+}
+
+function MdxTable({ children, ...props }: any) {
+    return (
+        <Table.Root
+            full
+            my={4}
+        >
+            <Table.Table {...props}>{children}</Table.Table>
+        </Table.Root>
+    );
+}
+
+function MdxTableHead(props: any) {
+    return <Table.Header {...props} />;
+}
+
+function MdxTableBody(props: any) {
+    return <Table.Body {...props} />;
+}
+
+function MdxTableRow(props: any) {
+    return <Table.Row {...props} />;
+}
+
+function MdxTableColumnHeader(props: any) {
+    return <Table.ColumnHeader {...props} />;
+}
+
+function MdxTableCell(props: any) {
+    return (
+        <Table.Cell
+            color={"fg.medium"}
+            {...props}
+        />
     );
 }
 
@@ -950,6 +994,12 @@ const components: any = {
             {...props}
         />
     ),
+    table: MdxTable,
+    thead: MdxTableHead,
+    tbody: MdxTableBody,
+    tr: MdxTableRow,
+    th: MdxTableColumnHeader,
+    td: MdxTableCell,
     ...DreamComponents,
     ...icons
 };

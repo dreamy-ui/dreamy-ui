@@ -84,20 +84,22 @@ export function useMenu<T extends any>(props: UseMenuProps<T>): UseMenuReturn {
     const [focusedIndex, setFocusedIndex] = useState(-1);
 
     const getRootProps: PropGetter = useCallback(
-        (props, ref) => {
+        (props = {}) => {
+            const { ref, className, ...rest } = props;
             return {
+                ...rest,
                 "data-slot": "root",
                 "data-open": dataAttr(isOpen),
                 ref,
-                ...props,
-                className: cx(props?.className, "group")
+                className: cx(className, "group")
             };
         },
         [isOpen]
     );
 
     const getTriggerProps: PropGetter = useCallback(
-        (props, ref) => {
+        (props = {}) => {
+            const { ref, onKeyDown: propsOnKeyDown, ...rest } = props;
             const onKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
                 if (!isOpen) return;
 
@@ -149,17 +151,18 @@ export function useMenu<T extends any>(props: UseMenuProps<T>): UseMenuReturn {
             return {
                 "data-slot": "trigger",
                 ref: mergeRefs(triggerRef, ref),
-                ...props,
-                onKeyDown: callAllHandlers(props?.onKeyDown, onKeyDown)
+                ...rest,
+                onKeyDown: callAllHandlers(propsOnKeyDown, onKeyDown)
             };
         },
         [focusedIndex, descendants, isOpen, popoverProps, onClose]
     );
 
-    const getContentProps = useCallback((props: Record<string, any>, ref: React.Ref<any>) => {
+    const getContentProps = useCallback((props: Record<string, any> = {}) => {
+        const { ref, ...rest } = props;
         return {
             ref: mergeRefs(popoverRef, ref),
-            ...props,
+            ...rest,
             rootProps: {
                 style: {
                     zIndex: "var(--z-index-dropdown)"
@@ -168,12 +171,13 @@ export function useMenu<T extends any>(props: UseMenuProps<T>): UseMenuReturn {
         } as const;
     }, []);
 
-    const getItemProps: PropGetter = useCallback((props, ref) => {
+    const getItemProps: PropGetter = useCallback((props = {}) => {
+        const { ref, onClick, ...rest } = props;
         return {
             "data-slot": "item",
-            ...props,
-            ref: mergeRefs(props?.ref, ref),
-            onClick: callAllHandlers(props?.onClick, () => {
+            ...rest,
+            ref: mergeRefs(ref),
+            onClick: callAllHandlers(onClick, () => {
                 if (triggerRef.current) {
                     requestAnimationFrame(() => {
                         triggerRef.current?.focus();
@@ -216,8 +220,7 @@ export interface UseMenuReturn {
     getRootProps: PropGetter;
     getTriggerProps: PropGetter;
     getContentProps: (
-        props: Record<string, any>,
-        ref: React.Ref<any>
+        props?: Record<string, any>
     ) => {
         rootProps: {
             style: {
@@ -245,6 +248,7 @@ export const [
 ] = createDescendantContext<HTMLButtonElement>();
 
 export interface UseMenuItemProps {
+    ref?: React.Ref<HTMLButtonElement>;
     isDisabled?: boolean;
     disabled?: boolean;
     onPointerEnter?: (event: React.PointerEvent<HTMLButtonElement>) => void;
@@ -259,17 +263,15 @@ export interface UseMenuItemProps {
 //     "data-focused"?: string;
 // }
 
-export function useMenuItem(
-    props: UseMenuItemProps,
-    ref: React.Ref<HTMLButtonElement> | null = null
-): DOMAttributes<HTMLButtonElement> & RefAttributes<HTMLButtonElement> {
+export function useMenuItem(props: UseMenuItemProps): DOMAttributes<HTMLButtonElement> & RefAttributes<HTMLButtonElement> {
+    const { ref, ...rest } = props;
     const { getItemProps, focusedIndex, setFocusedIndex } = useMenuContext();
     const { index, register } = useMenuDescendant({
         disabled: props?.isDisabled || props?.disabled || false
     });
 
     return getItemProps({
-        ...props,
+        ...rest,
         ref: mergeRefs(register, ref),
         index,
         "data-focused": dataAttr(focusedIndex === index),

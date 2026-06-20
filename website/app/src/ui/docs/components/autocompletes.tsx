@@ -1,5 +1,5 @@
-import { Autocomplete, type AutocompleteItem, HStack, Spinner, Text, VStack } from "@/ui";
-import { useEffect, useState } from "react";
+import { Autocomplete, type AutocompleteItem, Spinner, Text, VStack } from "@/ui";
+import { useState } from "react";
 import { LuSearch } from "react-icons/lu";
 
 const fruits: AutocompleteItem[] = [
@@ -44,6 +44,78 @@ export function AutocompleteWithIcon() {
             />
             <Autocomplete.Content />
         </Autocomplete.Root>
+    );
+}
+
+export function AsyncSearchAutocomplete() {
+    const [value, setValue] = useState("");
+    const [items, setItems] = useState<AutocompleteItem[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        if (!value) {
+            setItems([]);
+            setIsLoading(false);
+            return;
+        }
+
+        setIsLoading(true);
+
+        const timeoutId = setTimeout(() => {
+            fetch("/api/fake-select-data")
+                .then((res) => res.json())
+                .then((data: string[]) => {
+                    setItems(
+                        data
+                            .filter((item) => item.toLowerCase().includes(value.toLowerCase()))
+                            .map((item) => ({
+                                value: item,
+                                label: item.charAt(0).toUpperCase() + item.slice(1)
+                            }))
+                    );
+                })
+                .finally(() => setIsLoading(false));
+        }, 300);
+
+        return () => clearTimeout(timeoutId);
+    }, [value]);
+
+    return (
+        <VStack
+            align="start"
+            gap={2}
+        >
+            <Text>Query: {value || "none"}</Text>
+            <Autocomplete.Root
+                filterFn={() => true}
+                items={items}
+                width="xs"
+            >
+                <Autocomplete.Input
+                    onChangeValue={setValue}
+                    placeholder="Search fruits..."
+                />
+                <Autocomplete.Content
+                    noResultsContent={
+                        isLoading ? (
+                            <Spinner
+                                color="primary"
+                                py={4}
+                            />
+                        ) : value ? undefined : (
+                            <Text
+                                color="fg.medium"
+                                px={3}
+                                py={2}
+                            >
+                                Type to search...
+                            </Text>
+                        )
+                    }
+                    noResultsText="No fruits found"
+                />
+            </Autocomplete.Root>
+        </VStack>
     );
 }
 

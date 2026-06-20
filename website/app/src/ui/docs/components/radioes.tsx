@@ -31,24 +31,36 @@ export function ControlledRadioCards() {
                 full
                 wrapped
             >
-                <RadioCard
-                    description="Description for React Router"
+                <RadioCard.Root
                     full
-                    title="React Router"
                     value="rr"
-                />
-                <RadioCard
-                    description="Description for Next.js"
+                >
+                    <RadioCard.Header>
+                        <RadioCard.Title>React Router</RadioCard.Title>
+                        <RadioCard.Radio />
+                    </RadioCard.Header>
+                    <RadioCard.Description>Description for React Router</RadioCard.Description>
+                </RadioCard.Root>
+                <RadioCard.Root
                     full
-                    title="Next.js"
                     value="next"
-                />
-                <RadioCard
-                    description="Description for Vue.js"
+                >
+                    <RadioCard.Header>
+                        <RadioCard.Title>Next.js</RadioCard.Title>
+                        <RadioCard.Radio />
+                    </RadioCard.Header>
+                    <RadioCard.Description>Description for Next.js</RadioCard.Description>
+                </RadioCard.Root>
+                <RadioCard.Root
                     full
-                    title="Vue.js"
                     value="vue"
-                />
+                >
+                    <RadioCard.Header>
+                        <RadioCard.Title>Vue.js</RadioCard.Title>
+                        <RadioCard.Radio />
+                    </RadioCard.Header>
+                    <RadioCard.Description>Description for Vue.js</RadioCard.Description>
+                </RadioCard.Root>
             </Group>
         </RadioGroup>
     );

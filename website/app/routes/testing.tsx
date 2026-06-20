@@ -154,21 +154,17 @@ export default function Test() {
                 </Flex>
             </Flex>
 
-            <Select.Root>
+            <Select.Root
+                items={Array.from({ length: 250 }, (_, index) => ({
+                    value: index.toString(),
+                    label: index.toString()
+                }))}
+            >
                 <Select.Trigger
                     placeholder="Select a favorite fruit"
                     w={"250px"}
                 />
-                <Select.VirtualContent>
-                    {Array.from({ length: 250 }).map((_, index) => (
-                        <Select.Item
-                            key={index}
-                            value={index.toString()}
-                        >
-                            {index.toString()}
-                        </Select.Item>
-                    ))}
-                </Select.VirtualContent>
+                <Select.VirtualContent />
             </Select.Root>
 
             <Menu.Root>

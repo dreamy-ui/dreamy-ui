@@ -502,9 +502,10 @@ export function useRangeSlider(props: UseRangeSliderProps): UseRangeSliderReturn
 	});
 
 	const getRootProps: PropGetter = useCallback(
-		(props = {}, ref = null) => {
+		(props = {}) => {
+			const { ref, ...rest } = props;
 			return {
-				...props,
+				...rest,
 				...htmlProps,
 				draggable: false,
 				ref: mergeRefs(ref, rootRef),
@@ -520,9 +521,10 @@ export function useRangeSlider(props: UseRangeSliderProps): UseRangeSliderReturn
 	);
 
 	const getTrackProps: PropGetter = useCallback(
-		(props = {}, ref = null) => {
+		(props = {}) => {
+			const { ref, ...rest } = props;
 			return {
-				...props,
+				...rest,
 				ref: mergeRefs(ref, trackRef),
 				draggable: false,
 				id: trackId,
@@ -533,14 +535,15 @@ export function useRangeSlider(props: UseRangeSliderProps): UseRangeSliderReturn
 	);
 
 	const getInnerTrackProps: PropGetter = useCallback(
-		(props = {}, ref = null) => {
+		(props = {}) => {
+			const { ref, style, ...rest } = props;
 			const minPercent = Math.min(thumbPercent[0], thumbPercent[1]);
 
 			return {
-				...props,
+				...rest,
 				draggable: false,
 				style: {
-					...props.style,
+					...style,
 					...orient({
 						orientation,
 						vertical: {
@@ -561,9 +564,10 @@ export function useRangeSlider(props: UseRangeSliderProps): UseRangeSliderReturn
 
 	const getThumbProps = useCallback(
 		(thumbIndex: 0 | 1) =>
-			(props: React.ComponentPropsWithoutRef<"div"> = {}, ref?: React.Ref<any>) => {
+			(props: React.ComponentPropsWithoutRef<"div"> & React.RefAttributes<HTMLDivElement> = {}) => {
+				const { ref, style, onKeyDown: propsOnKeyDown, onFocus: propsOnFocus, onBlur: propsOnBlur, onPointerDown: propsOnPointerDown, ...rest } = props;
 				return {
-					...props,
+					...rest,
 					ref: mergeRefs(ref, thumbRef[thumbIndex]),
 					role: "slider",
 					tabIndex: isInteractive ? 0 : undefined,
@@ -585,7 +589,7 @@ export function useRangeSlider(props: UseRangeSliderProps): UseRangeSliderReturn
 						: ariaLabelledBy?.[thumbIndex],
 					"data-invalid": dataAttr(isInvalid),
 					style: {
-						...props.style,
+						...style,
 						...orient({
 							orientation,
 							vertical: {
@@ -604,10 +608,10 @@ export function useRangeSlider(props: UseRangeSliderProps): UseRangeSliderReturn
 								? 1
 								: 0
 					},
-					onKeyDown: callAllHandlers(props.onKeyDown, onKeyDown(thumbIndex)),
-					onFocus: callAllHandlers(props.onFocus, () => setFocusedThumb(thumbIndex)),
-					onBlur: callAllHandlers(props.onBlur, () => setFocusedThumb(null)),
-					onPointerDown: callAllHandlers(props.onPointerDown, () => {
+					onKeyDown: callAllHandlers(propsOnKeyDown, onKeyDown(thumbIndex)),
+					onFocus: callAllHandlers(propsOnFocus, () => setFocusedThumb(thumbIndex)),
+					onBlur: callAllHandlers(propsOnBlur, () => setFocusedThumb(null)),
+					onPointerDown: callAllHandlers(propsOnPointerDown, () => {
 						if (isInteractive) {
 							setActiveThumb(thumbIndex);
 						}
@@ -637,10 +641,11 @@ export function useRangeSlider(props: UseRangeSliderProps): UseRangeSliderReturn
 	);
 
 	const getMarkerProps: RequiredPropGetter<{ value: number }> = useCallback(
-		(props, ref = null) => {
-			const isInRange = !(props.value < min || props.value > max);
-			const isHighlighted = props.value >= value[0] && props.value <= value[1];
-			const markerPercent = valueToPercent(props.value, min, max);
+		(props) => {
+			const { ref, style, value: markerValue, ...rest } = props;
+			const isInRange = !(markerValue < min || markerValue > max);
+			const isHighlighted = markerValue >= value[0] && markerValue <= value[1];
+			const markerPercent = valueToPercent(markerValue, min, max);
 
 			const markerStyle: React.CSSProperties = {
 				position: "absolute",
@@ -658,7 +663,8 @@ export function useRangeSlider(props: UseRangeSliderProps): UseRangeSliderReturn
 			};
 
 			return {
-				...props,
+				...rest,
+				value: markerValue,
 				ref,
 				role: "presentation",
 				"aria-hidden": true,
@@ -666,7 +672,7 @@ export function useRangeSlider(props: UseRangeSliderProps): UseRangeSliderReturn
 				"data-invalid": dataAttr(!isInRange),
 				"data-highlighted": dataAttr(isHighlighted),
 				style: {
-					...props.style,
+					...style,
 					...markerStyle
 				}
 			};
@@ -676,9 +682,10 @@ export function useRangeSlider(props: UseRangeSliderProps): UseRangeSliderReturn
 
 	const getInputProps = useCallback(
 		(thumbIndex: 0 | 1) =>
-			(props: React.ComponentPropsWithoutRef<"input"> = {}, ref?: React.Ref<any>) => {
+			(props: React.ComponentPropsWithoutRef<"input"> & React.RefAttributes<HTMLInputElement> = {}) => {
+				const { ref, onChange: propsOnChange, ...rest } = props;
 				return {
-					...props,
+					...rest,
 					ref,
 					value: value[thumbIndex],
 					name: name ? `${name}[${thumbIndex}]` : undefined,
@@ -692,7 +699,7 @@ export function useRangeSlider(props: UseRangeSliderProps): UseRangeSliderReturn
 					"data-disabled": dataAttr(isDisabled),
 					readOnly: isReadOnly,
 					"data-readonly": dataAttr(isReadOnly),
-					onChange: callAllHandlers(props.onChange, onChange, (e) => {
+					onChange: callAllHandlers(propsOnChange, onChange, (e) => {
 						const val = Number.parseFloat(e.target.value);
 						constrain(thumbIndex, val);
 					})

@@ -20,7 +20,7 @@ type Matches = [{
   module: typeof import("../docs._index.js");
 }];
 
-type Annotations = GetAnnotations<Info & { module: Module, matches: Matches }>;
+type Annotations = GetAnnotations<Info & { module: Module, matches: Matches }, false>;
 
 export namespace Route {
   // links
@@ -57,18 +57,9 @@ export namespace Route {
   // HydrateFallback
   export type HydrateFallbackProps = Annotations["HydrateFallbackProps"];
 
-  // ServerHydrateFallback
-  export type ServerHydrateFallbackProps = Annotations["ServerHydrateFallbackProps"];
-
   // Component
   export type ComponentProps = Annotations["ComponentProps"];
 
-  // ServerComponent
-  export type ServerComponentProps = Annotations["ServerComponentProps"];
-
   // ErrorBoundary
   export type ErrorBoundaryProps = Annotations["ErrorBoundaryProps"];
-
-  // ServerErrorBoundary
-  export type ServerErrorBoundaryProps = Annotations["ServerErrorBoundaryProps"];
 }

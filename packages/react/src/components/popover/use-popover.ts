@@ -222,29 +222,30 @@ export function usePopover(props: UsePopoverProps = {}) {
     });
 
     const getPopoverProps = useCallback(
-        (props: Record<string, any> = {}, _ref: ForwardedRef<HTMLElement> = null) => {
+        (props: Record<string, any> = {}) => {
+            const { ref, style, children, onKeyDown: propsOnKeyDown, onBlur: propsOnBlur, onMouseEnter, onMouseLeave, ...rest } = props;
             const popoverProps: Record<string, any> = {
-                ...props,
+                ...rest,
                 style: {
-                    ...props.style,
+                    ...style,
                     transformOrigin: popperCSSVars.transformOrigin.varRef,
                     [popperCSSVars.arrowSize.var]: arrowSize ? `${arrowSize}px` : undefined,
                     [popperCSSVars.arrowShadowColor.var]: arrowShadowColor
                 },
-                ref: mergeRefs(popoverRef, _ref),
-                children: shouldRenderChildren ? props.children : null,
+                ref: mergeRefs(popoverRef, ref),
+                children: shouldRenderChildren ? children : null,
                 id: popoverId,
                 tabIndex: -1,
                 role: "dialog",
                 onKeyDown: callAllHandlers(
-                    props.onKeyDown,
+                    propsOnKeyDown,
                     (event: React.KeyboardEvent<HTMLDivElement>) => {
                         if (closeOnEsc && event.key === "Escape") {
                             onClose();
                         }
                     }
                 ),
-                onBlur: callAllHandlers(props.onBlur, (event: React.FocusEvent<HTMLDivElement>) => {
+                onBlur: callAllHandlers(propsOnBlur, (event: React.FocusEvent<HTMLDivElement>) => {
                     const relatedTarget = getRelatedTarget(event);
                     const targetIsPopover = contains(popoverRef.current, relatedTarget);
                     const targetIsTrigger = contains(triggerRef.current, relatedTarget);
@@ -261,11 +262,11 @@ export function usePopover(props: UsePopoverProps = {}) {
 
             if (trigger === TRIGGER.hover) {
                 popoverProps.role = "tooltip";
-                popoverProps.onMouseEnter = callAllHandlers(props.onMouseEnter, () => {
+                popoverProps.onMouseEnter = callAllHandlers(onMouseEnter, () => {
                     isHoveringRef.current = true;
                 });
                 popoverProps.onMouseLeave = callAllHandlers(
-                    props.onMouseLeave,
+                    onMouseLeave,
                     (event: React.MouseEvent<HTMLDivElement>) => {
                         // https://stackoverflow.com/questions/46831247/select-triggers-mouseleave-event-on-parent-element-in-mozilla-firefox
                         if (event.nativeEvent.relatedTarget === null) {
@@ -298,27 +299,28 @@ export function usePopover(props: UsePopoverProps = {}) {
     );
 
     const getPopoverPositionerProps: PropGetter = useCallback(
-        (props = {}, forwardedRef = null) =>
-            getPopperProps(
-                {
-                    ...props,
-                    style: {
-                        zIndex: "var(--z-index-popover)",
-                        visibility: animated.present ? "visible" : "hidden",
-                        ...props.style
-                    }
-                },
-                forwardedRef
-            ),
+        (props = {}) => {
+            const { ref, style, ...rest } = props;
+            return getPopperProps({
+                ...rest,
+                ref,
+                style: {
+                    zIndex: "var(--z-index-popover)",
+                    visibility: animated.present ? "visible" : "hidden",
+                    ...style
+                }
+            });
+        },
         [getPopperProps, animated.present]
     );
 
     const getAnchorProps: PropGetter = useCallback(
-        (props, _ref = null) => {
+        (props = {}) => {
+            const { ref, ...rest } = props;
             return {
-                ...props,
+                ...rest,
                 // If anchor is rendered, it is used as reference.
-                ref: mergeRefs(_ref, anchorRef, referenceRef)
+                ref: mergeRefs(ref, anchorRef, referenceRef)
             };
         },
         [referenceRef]
@@ -338,21 +340,22 @@ export function usePopover(props: UsePopoverProps = {}) {
     );
 
     const getTriggerProps: PropGetter = useCallback(
-        (props = {}, _ref = null) => {
+        (props = {}) => {
+            const { ref, id: propsId, onClick, onBlur, onFocus, onKeyDown, onMouseEnter, onMouseLeave, ...rest } = props;
             const triggerProps: DOMAttributes = {
-                ...props,
-                ref: mergeRefs(triggerRef, _ref, maybeReferenceRef),
-                id: triggerId,
-                "aria-haspopup": "dialog",
+                ...rest,
+                ref: mergeRefs(triggerRef, ref, maybeReferenceRef),
+                id: propsId ?? triggerId,
+                "aria-haspopup": rest["aria-haspopup"] ?? "dialog",
                 "aria-expanded": isOpen,
                 "aria-controls": popoverId
             };
 
             if (trigger === TRIGGER.click) {
-                triggerProps.onClick = callAllHandlers(props.onClick, onToggle);
+                triggerProps.onClick = callAllHandlers(onClick, onToggle);
             }
 
-            triggerProps.onBlur = callAllHandlers(props.onBlur, (event) => {
+            triggerProps.onBlur = callAllHandlers(onBlur, (event) => {
                 const relatedTarget = getRelatedTarget(event);
                 const isValidBlur = !contains(popoverRef.current, relatedTarget);
 
@@ -368,7 +371,7 @@ export function usePopover(props: UsePopoverProps = {}) {
                  *
                  * @see https://www.w3.org/WAI/WCAG21/Understanding/content-on-hover-or-focus.html
                  */
-                triggerProps.onFocus = callAllHandlers(props.onFocus, () => {
+                triggerProps.onFocus = callAllHandlers(onFocus, () => {
                     // If openTimeout.current does not exist, the user is using keyboard focus (not mouse hover/click)
                     if (openTimeout.current === null) {
                         onOpen();
@@ -379,18 +382,18 @@ export function usePopover(props: UsePopoverProps = {}) {
                  * Any content that shows on hover or focus must be dismissible.
                  * This case pressing `Escape` will dismiss the popover
                  */
-                triggerProps.onKeyDown = callAllHandlers(props.onKeyDown, (event) => {
+                triggerProps.onKeyDown = callAllHandlers(onKeyDown, (event) => {
                     if (event.key === "Escape") {
                         onClose();
                     }
                 });
 
-                triggerProps.onMouseEnter = callAllHandlers(props.onMouseEnter, () => {
+                triggerProps.onMouseEnter = callAllHandlers(onMouseEnter, () => {
                     isHoveringRef.current = true;
                     openTimeout.current = window.setTimeout(() => onOpen(), openDelay);
                 });
 
-                triggerProps.onMouseLeave = callAllHandlers(props.onMouseLeave, () => {
+                triggerProps.onMouseLeave = callAllHandlers(onMouseLeave, () => {
                     isHoveringRef.current = false;
 
                     if (openTimeout.current) {
@@ -435,24 +438,30 @@ export function usePopover(props: UsePopoverProps = {}) {
     }, []);
 
     const getHeaderProps: PropGetter = useCallback(
-        (props = {}, ref = null) => ({
-            ...props,
-            id: headerId,
-            ref: mergeRefs(ref, (node: HTMLElement | null) => {
-                setHasHeader(!!node);
-            })
-        }),
+        (props = {}) => {
+            const { ref, ...rest } = props;
+            return {
+                ...rest,
+                id: headerId,
+                ref: mergeRefs(ref, (node: HTMLElement | null) => {
+                    setHasHeader(!!node);
+                })
+            };
+        },
         [headerId]
     );
 
     const getBodyProps: PropGetter = useCallback(
-        (props = {}, ref = null) => ({
-            ...props,
-            id: bodyId,
-            ref: mergeRefs(ref, (node) => {
-                setHasBody(!!node);
-            })
-        }),
+        (props = {}) => {
+            const { ref, ...rest } = props;
+            return {
+                ...rest,
+                id: bodyId,
+                ref: mergeRefs(ref, (node) => {
+                    setHasBody(!!node);
+                })
+            };
+        },
         [bodyId]
     );
 

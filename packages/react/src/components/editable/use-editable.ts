@@ -283,9 +283,10 @@ export function useEditable(props: UseEditableProps = {}) {
 	);
 
 	const getRootProps: PropGetter = useCallback(
-		(props = {}, ref = null) => {
+		(props = {}) => {
+			const { ref, ...rest } = props;
 			return {
-				...props,
+				...rest,
 				...htmlProps,
 				"data-editable-state": isEditing ? "editing" : "view",
 				ref
@@ -296,22 +297,23 @@ export function useEditable(props: UseEditableProps = {}) {
 	);
 
 	const getPreviewProps: PropGetter = useCallback(
-		(props = {}, ref = null) => {
+		(props = {}) => {
+			const { ref, onFocus, onDoubleClick, ...rest } = props;
 			const tabIndex = isInteractive && isPreviewFocusable ? 0 : undefined;
 			return {
-				...props,
+				...rest,
 				ref: mergeRefs(ref, previewRef),
 				children: isValueEmpty ? placeholder : value,
 				hidden: isEditing,
 				"aria-disabled": ariaAttr(isDisabled),
 				tabIndex,
 				onFocus: callAllHandlers(
-					props.onFocus,
+					onFocus,
 					useDoubleClick ? undefined : onEdit,
 					useDoubleClick ? undefined : onUpdatePrevValue
 				),
 				onDoubleClick: callAllHandlers(
-					props.onDoubleClick,
+					onDoubleClick,
 					useDoubleClick ? onEdit : undefined,
 					useDoubleClick ? onUpdatePrevValue : undefined
 				)
@@ -332,36 +334,42 @@ export function useEditable(props: UseEditableProps = {}) {
 	);
 
 	const getInputProps: PropGetter = useCallback(
-		(props = {}, ref = null) => ({
-			...props,
-			hidden: !isEditing,
-			placeholder,
-			ref: mergeRefs(ref, inputRef),
-			disabled: isDisabled,
-			"aria-disabled": ariaAttr(isDisabled),
-			value,
-			onBlur: callAllHandlers(props.onBlur, onBlur),
-			onChange: callAllHandlers(props.onChange, onChange),
-			onKeyDown: callAllHandlers(props.onKeyDown, onKeyDown),
-			onFocus: callAllHandlers(props.onFocus, onUpdatePrevValue)
-		}),
+		(props = {}) => {
+			const { ref, onBlur: propsOnBlur, onChange: propsOnChange, onKeyDown: propsOnKeyDown, onFocus: propsOnFocus, ...rest } = props;
+			return {
+				...rest,
+				hidden: !isEditing,
+				placeholder,
+				ref: mergeRefs(ref, inputRef),
+				disabled: isDisabled,
+				"aria-disabled": ariaAttr(isDisabled),
+				value,
+				onBlur: callAllHandlers(propsOnBlur, onBlur),
+				onChange: callAllHandlers(propsOnChange, onChange),
+				onKeyDown: callAllHandlers(propsOnKeyDown, onKeyDown),
+				onFocus: callAllHandlers(propsOnFocus, onUpdatePrevValue)
+			};
+		},
 		[isDisabled, isEditing, onBlur, onChange, onKeyDown, onUpdatePrevValue, placeholder, value]
 	);
 
 	const getTextareaProps: PropGetter = useCallback(
-		(props = {}, ref = null) => ({
-			...props,
-			hidden: !isEditing,
-			placeholder,
-			ref: mergeRefs(ref, inputRef),
-			disabled: isDisabled,
-			"aria-disabled": ariaAttr(isDisabled),
-			value,
-			onBlur: callAllHandlers(props.onBlur, onBlur),
-			onChange: callAllHandlers(props.onChange, onChange),
-			onKeyDown: callAllHandlers(props.onKeyDown, onKeyDownWithoutSubmit),
-			onFocus: callAllHandlers(props.onFocus, onUpdatePrevValue)
-		}),
+		(props = {}) => {
+			const { ref, onBlur: propsOnBlur, onChange: propsOnChange, onKeyDown: propsOnKeyDown, onFocus: propsOnFocus, ...rest } = props;
+			return {
+				...rest,
+				hidden: !isEditing,
+				placeholder,
+				ref: mergeRefs(ref, inputRef),
+				disabled: isDisabled,
+				"aria-disabled": ariaAttr(isDisabled),
+				value,
+				onBlur: callAllHandlers(propsOnBlur, onBlur),
+				onChange: callAllHandlers(propsOnChange, onChange),
+				onKeyDown: callAllHandlers(propsOnKeyDown, onKeyDownWithoutSubmit),
+				onFocus: callAllHandlers(propsOnFocus, onUpdatePrevValue)
+			};
+		},
 		[
 			isDisabled,
 			isEditing,
@@ -375,42 +383,51 @@ export function useEditable(props: UseEditableProps = {}) {
 	);
 
 	const getEditButtonProps: PropGetter = useCallback(
-		(props = {}, ref = null) => ({
-			"aria-label": "Edit",
-			...props,
-			children: props.children || "Edit",
-			type: "button",
-			onClick: callAllHandlers(props.onClick, onEdit),
-			ref: mergeRefs(ref, editButtonRef),
-			disabled: isDisabled
-		}),
+		(props = {}) => {
+			const { ref, onClick, children, ...rest } = props;
+			return {
+				"aria-label": "Edit",
+				...rest,
+				children: children || "Edit",
+				type: "button",
+				onClick: callAllHandlers(onClick, onEdit),
+				ref: mergeRefs(ref, editButtonRef),
+				disabled: isDisabled
+			};
+		},
 		[onEdit, isDisabled]
 	);
 
 	const getSubmitButtonProps: PropGetter = useCallback(
-		(props = {}, ref = null) => ({
-			...props,
-			children: props.children || "Submit",
-			"aria-label": "Submit",
-			ref: mergeRefs(submitButtonRef, ref),
-			type: "button",
-			onClick: callAllHandlers(props.onClick, onSubmit),
-			disabled: isDisabled
-		}),
+		(props = {}) => {
+			const { ref, onClick, children, ...rest } = props;
+			return {
+				...rest,
+				children: children || "Submit",
+				"aria-label": "Submit",
+				ref: mergeRefs(submitButtonRef, ref),
+				type: "button",
+				onClick: callAllHandlers(onClick, onSubmit),
+				disabled: isDisabled
+			};
+		},
 		[onSubmit, isDisabled]
 	);
 
 	const getCancelButtonProps: PropGetter = useCallback(
-		(props = {}, ref = null) => ({
-			"aria-label": "Cancel",
-			id: "cancel",
-			...props,
-			children: props.children || "Cancel",
-			ref: mergeRefs(cancelButtonRef, ref),
-			type: "button",
-			onClick: callAllHandlers(props.onClick, onCancel),
-			disabled: isDisabled
-		}),
+		(props = {}) => {
+			const { ref, onClick, children, ...rest } = props;
+			return {
+				"aria-label": "Cancel",
+				id: "cancel",
+				...rest,
+				children: children || "Cancel",
+				ref: mergeRefs(cancelButtonRef, ref),
+				type: "button",
+				onClick: callAllHandlers(onClick, onCancel),
+				disabled: isDisabled
+			};
+		},
 		[onCancel, isDisabled]
 	);
 

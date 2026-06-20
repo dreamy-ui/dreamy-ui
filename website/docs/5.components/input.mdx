@@ -83,42 +83,51 @@ Pass `isInvalid` prop to the `Input` to show the error state.
 
 ### Input Group
 
-Combine `Input` with `InputGroup` to create a add elements on the left or right side of the input.
+Combine `Input` with `Input.Group` to attach prefix/suffix segments or place icons inside the field.
 
-Due to specificity of the `Input` component, space for addons won't be added automatically, so you will need to add padding left (`pl`) or right (`pr`) to the `Input` to make space for the addons.
+- `Input.Prefix` / `Input.Suffix` — attached segments joined to the input border (e.g. `$`, `https://`, `.com`)
+- `Input.StartAddon` / `Input.EndAddon` — content positioned inside the field (e.g. search icon)
+
+Due to specificity of the `Input` component, space for addons won't be added automatically, so you will need to add padding on the inline start (`ps`) or end (`pe`) side of the `Input` to make space for `Input.StartAddon` or `Input.EndAddon`.
 
 <Wrapper>
-	<InputGroup>
-		<InputLeftAddon>
+	<Input.Group>
+		<Input.StartAddon>
 			<Icon as={<BiSearch />} boxSize="5" color="fg.medium" />
-		</InputLeftAddon>
-		<Input pl="10" placeholder="Search for..." />
-	</InputGroup>	
+		</Input.StartAddon>
+		<Input ps="10" placeholder="Search for..." />
+	</Input.Group>	
 
-	<InputGroup leftElement={"$"}>
+	<Input.Group>
+		<Input.Prefix>$</Input.Prefix>
 		<Input placeholder="Product Price" />
-	</InputGroup>
+	</Input.Group>
 
-	<InputGroup rightElement={".com"} leftElement={"https://"}>
+	<Input.Group>
+		<Input.Prefix>https://</Input.Prefix>
 		<Input placeholder="Domain" />
-	</InputGroup>	
+		<Input.Suffix>.com</Input.Suffix>
+	</Input.Group>	
 </Wrapper>
 
 ```tsx
-<InputGroup>
-	<InputLeftAddon>
+<Input.Group>
+	<Input.StartAddon>
 		<Icon as={<BiSearch />} boxSize="5" color="fg.medium" />
-	</InputLeftAddon>
-	<Input pl="10" placeholder="Search for..." />
-</InputGroup>	
+	</Input.StartAddon>
+	<Input ps="10" placeholder="Search for..." />
+</Input.Group>	
 
-<InputGroup leftElement={"$"}>
+<Input.Group>
+	<Input.Prefix>$</Input.Prefix>
 	<Input placeholder="Product Price" />
-</InputGroup>
+</Input.Group>
 
-<InputGroup rightElement={".com"} leftElement={"https://"}>
+<Input.Group>
+	<Input.Prefix>https://</Input.Prefix>
 	<Input placeholder="Domain" />
-</InputGroup>	
+	<Input.Suffix>.com</Input.Suffix>
+</Input.Group>	
 ```
 
 ### Usage with Field

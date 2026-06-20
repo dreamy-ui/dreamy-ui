@@ -216,10 +216,13 @@ export function usePopper(props: UsePopperProps = {}) {
     );
 
     const getReferenceProps: PropGetter = useCallback(
-        (props = {}, ref = null) => ({
-            ...props,
-            ref: mergeRefs(referenceRef, ref)
-        }),
+        (props = {}) => {
+            const { ref, ...rest } = props;
+            return {
+                ...rest,
+                ref: mergeRefs(referenceRef, ref)
+            };
+        },
         [referenceRef]
     );
 
@@ -232,21 +235,24 @@ export function usePopper(props: UsePopperProps = {}) {
     );
 
     const getPopperProps: PropGetter = useCallback(
-        (props = {}, ref = null) => ({
-            ...props,
-            ref: mergeRefs(popperRef, ref),
-            style: {
-                ...props.style,
-                position: strategy,
-                minWidth: matchWidth ? undefined : "max-content",
-                inset: "0 auto auto 0"
-            }
-        }),
+        (props = {}) => {
+            const { ref, style, ...rest } = props;
+            return {
+                ...rest,
+                ref: mergeRefs(popperRef, ref),
+                style: {
+                    ...style,
+                    position: strategy,
+                    minWidth: matchWidth ? undefined : "max-content",
+                    inset: "0 auto auto 0"
+                }
+            };
+        },
         [strategy, popperRef, matchWidth]
     );
 
-    const getArrowProps: PropGetter = useCallback((props = {}, ref = null) => {
-        const { size, shadowColor, bg, style, ...rest } = props;
+    const getArrowProps: PropGetter = useCallback((props = {}) => {
+        const { ref, size, shadowColor, bg, style, ...rest } = props;
         return {
             ...rest,
             ref,
@@ -256,11 +262,14 @@ export function usePopper(props: UsePopperProps = {}) {
     }, []);
 
     const getArrowInnerProps: PropGetter = useCallback(
-        (props = {}, ref = null) => ({
-            ...props,
-            ref,
-            "data-popper-arrow-inner": ""
-        }),
+        (props = {}) => {
+            const { ref, ...rest } = props;
+            return {
+                ...rest,
+                ref,
+                "data-popper-arrow-inner": ""
+            };
+        },
         []
     );
 

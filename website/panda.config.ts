@@ -33,6 +33,13 @@ export default defineConfig({
                 body: "Geist",
                 heading: "Manrope"
             },
+            colorTuning: {
+                alpha: {
+                    chroma: {
+                        light: 0.1
+                    }
+                }
+            },
             // primaryColor: "#6056aa",
             primaryColor: "#6d52b8",
             secondaryColor: "#d193bb",

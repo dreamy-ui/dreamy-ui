@@ -111,6 +111,11 @@
   },
   {
     "type": "recipe",
+    "id": "input-group",
+    "file": "input-group.ts"
+  },
+  {
+    "type": "recipe",
     "id": "input",
     "file": "input.ts"
   },
@@ -198,6 +203,11 @@
     "type": "recipe",
     "id": "stat",
     "file": "stat.ts"
+  },
+  {
+    "type": "recipe",
+    "id": "stepper",
+    "file": "stepper.ts"
   },
   {
     "type": "recipe",

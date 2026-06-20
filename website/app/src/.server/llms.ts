@@ -4,8 +4,6 @@ import { Docs } from "./docs";
 export async function getFullLLMDocs() {
     const sections = await Docs.getSections();
 
-    console.log(JSON.stringify(sections, null, 2));
-
     const docsContentsPromises = sections.flatMap((section) => {
         return section.sections.map((page) => {
             return Docs.getDoc(filenameToSlug(section.title), filenameToSlug(page.name));

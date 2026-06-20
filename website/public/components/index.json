@@ -447,14 +447,12 @@
     "file": "input.tsx",
     "component": "Input",
     "npmDependencies": [],
-    "fileDependencies": [
-      "./box",
-      "./flex"
-    ],
+    "fileDependencies": [],
     "hasRecipe": true,
     "hasPattern": false,
     "recipeIds": [
-      "input"
+      "input",
+      "input-group"
     ]
   },
   {
@@ -630,8 +628,6 @@
     "component": "RadioCard",
     "npmDependencies": [],
     "fileDependencies": [
-      "./box",
-      "./text",
       "./visually-hidden"
     ],
     "hasRecipe": true,

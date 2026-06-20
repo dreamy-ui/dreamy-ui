@@ -40,50 +40,102 @@ export interface FgLightnessOffset {
 export interface BorderLightnessOffset {
     /**
      * `border` / `border.default` token.
-     * @default fgLightnessOffset.normal when `borderLightnessOffset` is not set
+     * @default `fg.lightness.normal` when `border.lightness` is not set
      */
     default?: number | LightDarkNumber;
     /**
      * `border.muted` token.
-     * @default fgLightnessOffset.disabled when `borderLightnessOffset` is not set
+     * @default `fg.lightness.disabled` when `border.lightness` is not set
      */
     muted?: number | LightDarkNumber;
     /**
      * `border.hover` token.
-     * @default fgLightnessOffset.normal when `borderLightnessOffset` is not set
+     * @default `fg.lightness.normal` when `border.lightness` is not set
      */
     hover?: number | LightDarkNumber;
 }
 
-interface ColorTuning {
+export interface FgColorTuning {
     /**
      * Multiplier applied to the computed foreground token chroma (color tint intensity).
      * Values above `1` increase the color tint of text tokens; values below `1` make them
      * more neutral/grayscale. The result is still clamped to safe bounds.
-     * Provide a `{ light, dark }` object to tune each color mode independently.
      * @default 1
      */
-    fgChromaScale?: number | LightDarkNumber;
-    /**
-     * Multiplier applied to the computed border token chroma (color tint intensity).
-     * Values above `1` increase the color tint of border tokens; values below `1` make them
-     * more neutral/grayscale. The result is still clamped to safe bounds.
-     * Provide a `{ light, dark }` object to tune each color mode independently.
-     * @default fgChromaScale (falls back to 1 if that is also not set)
-     */
-    borderChromaScale?: number | LightDarkNumber;
+    chroma?: number | LightDarkNumber;
     /**
      * Per-token lightness offset for foreground tokens (OKLCH 0–1 scale).
      * Positive values brighten a token; negative values darken it.
-     * Omitted tokens are left at their default lightness.
      */
-    fgLightnessOffset?: FgLightnessOffset;
+    lightness?: FgLightnessOffset;
+}
+
+export interface BorderColorTuning {
+    /**
+     * Multiplier applied to the computed border token chroma (color tint intensity).
+     * @default `fg.chroma` (falls back to `1` if that is also not set)
+     */
+    chroma?: number | LightDarkNumber;
     /**
      * Per-token lightness offset for border tokens (OKLCH 0–1 scale).
-     * When this entire option is omitted, border tokens fall back to corresponding
-     * fg offsets: `default` ← `fg.normal`, `muted` ← `fg.disabled`, `hover` ← `fg.normal`.
+     * When omitted entirely, border tokens fall back to corresponding fg offsets:
+     * `default` ← `fg.lightness.normal`, `muted` ← `fg.lightness.disabled`, `hover` ← `fg.lightness.normal`.
      */
-    borderLightnessOffset?: BorderLightnessOffset;
+    lightness?: BorderLightnessOffset;
+}
+
+export interface AlphaColorTuning {
+    /**
+     * OKLCH hue (0–360°) — which color the alpha overlay is tinted toward.
+     * Only visible when {@link chroma} is greater than `0`.
+     *
+     * **Hue guide (OKLCH degrees):**
+     * - `0` / `360` — red
+     * - `30` — orange
+     * - `60` — yellow
+     * - `90` — lime / yellow-green
+     * - `120` — green
+     * - `150` — teal
+     * - `180` — cyan
+     * - `210` — sky blue
+     * - `240` — blue
+     * - `270` — indigo / violet
+     * - `300` — magenta / fuchsia
+     * - `330` — pink / rose
+     *
+     * @default 245
+     */
+    hue?: number | LightDarkNumber;
+    /**
+     * OKLCH chroma (0–0.4) — how much color is mixed into alpha overlays.
+     * `0` keeps neutral grayscale overlays (default).
+     *
+     * Pair with {@link hue} to control tint direction and strength.
+     *
+     * **Hue guide (set on {@link hue}, OKLCH degrees):**
+     * - `25` — red
+     * - `60` — yellow
+     * - `120` — green
+     * - `180` — cyan
+     * - `240` — blue
+     * - `300` — magenta
+     *
+     * **Chroma intensity guide:**
+     * - `0` — neutral black/white alpha (no tint)
+     * - `0.005`–`0.01` — barely perceptible tint
+     * - `0.01`–`0.02` — subtle UI tint (borders, muted fills)
+     * - `0.02`–`0.04` — noticeable brand-colored overlays
+     * - `0.04`+ — strong accent tint (use sparingly)
+     *
+     * @default 0
+     */
+    chroma?: number | LightDarkNumber;
+}
+
+export interface ColorTuning {
+    fg?: FgColorTuning;
+    border?: BorderColorTuning;
+    alpha?: AlphaColorTuning;
 }
 
 export interface PresetOptions {

@@ -1,14 +1,34 @@
-import { Flex, Grid, Group, Icon, RadioCard, RadioGroup, Text, VStack } from "@/ui";
+import { Flex, Grid, Group, Icon, RadioCard, RadioGroup, Text } from "@/ui";
 import type { Meta } from "@storybook/react-vite";
 import { useState } from "react";
 import { FaPaypal, FaVuejs } from "react-icons/fa";
 import { FiCreditCard } from "react-icons/fi";
 import { RiNextjsLine } from "react-icons/ri";
 import { SiApple, SiReactrouter } from "react-icons/si";
-
 export default {
     title: "Radio Card"
 } satisfies Meta;
+
+interface RadioCardOptionProps extends React.ComponentProps<typeof RadioCard.Root> {
+    title: React.ReactNode;
+    description?: React.ReactNode;
+    hideRadio?: boolean;
+}
+
+function RadioCardOption(props: RadioCardOptionProps) {
+    const { title, description, hideRadio, children, ...rest } = props;
+
+    return (
+        <RadioCard.Root {...rest}>
+            <RadioCard.Header>
+                <RadioCard.Title>{title}</RadioCard.Title>
+                {!hideRadio && <RadioCard.Radio />}
+            </RadioCard.Header>
+            {description ? <RadioCard.Description>{description}</RadioCard.Description> : null}
+            {children}
+        </RadioCard.Root>
+    );
+}
 
 export function Base() {
     return (
@@ -20,21 +40,45 @@ export function Base() {
                 full
                 wrapped
             >
-                <RadioCard
+                <RadioCardOption
                     full
                     title="React Router"
                     value="rr"
                 />
-                <RadioCard
+                <RadioCardOption
                     full
                     title="Next.js"
                     value="next"
                 />
-                <RadioCard
+                <RadioCardOption
                     full
                     title="Vue.js"
                     value="vue"
                 />
+            </Group>
+        </RadioGroup>
+    );
+}
+
+export function Composition() {
+    return (
+        <RadioGroup
+            defaultValue="rr"
+            full
+        >
+            <Group
+                full
+                wrapped
+            >
+                <RadioCard.Root
+                    full
+                    value="rr"
+                >
+                    <RadioCard.Header>
+                        <RadioCard.Title>React Router</RadioCard.Title>
+                        <RadioCard.Radio />
+                    </RadioCard.Header>
+                </RadioCard.Root>
             </Group>
         </RadioGroup>
     );
@@ -50,19 +94,19 @@ export function WithDescription() {
                 full
                 wrapped
             >
-                <RadioCard
+                <RadioCardOption
                     description="Description for React Router"
                     full
                     title="React Router"
                     value="rr"
                 />
-                <RadioCard
+                <RadioCardOption
                     description="Description for Next.js"
                     full
                     title="Next.js"
                     value="next"
                 />
-                <RadioCard
+                <RadioCardOption
                     description="Description for Vue.js"
                     full
                     title="Vue.js"
@@ -80,14 +124,14 @@ export function RadioVariant() {
             full
         >
             <Group full>
-                <RadioCard
+                <RadioCardOption
                     description="Description for Outline"
                     full
                     title="Outline"
                     value="outline"
                     variant="outline"
                 />
-                <RadioCard
+                <RadioCardOption
                     description="Description for Subtle"
                     full
                     title="Subtle"
@@ -109,49 +153,49 @@ export function Scheme() {
                 columns={2}
                 full
             >
-                <RadioCard
+                <RadioCardOption
                     description="Description for Primary"
                     full
                     scheme="primary"
                     title="Primary"
                     value="primary"
                 />
-                <RadioCard
+                <RadioCardOption
                     description="Description for Secondary"
                     full
                     scheme="secondary"
                     title="Secondary"
                     value="secondary"
                 />
-                <RadioCard
+                <RadioCardOption
                     description="Description for Success"
                     full
                     scheme="success"
                     title="Success"
                     value="success"
                 />
-                <RadioCard
+                <RadioCardOption
                     description="Description for Warning"
                     full
                     scheme="warning"
                     title="Warning"
                     value="warning"
                 />
-                <RadioCard
+                <RadioCardOption
                     description="Description for Error"
                     full
                     scheme="error"
                     title="Error"
                     value="error"
                 />
-                <RadioCard
+                <RadioCardOption
                     description="Description for Info"
                     full
                     scheme="info"
                     title="Info"
                     value="info"
                 />
-                <RadioCard
+                <RadioCardOption
                     description="Description for None"
                     full
                     scheme="none"
@@ -174,21 +218,21 @@ export function Size() {
                 full
                 wrapped
             >
-                <RadioCard
+                <RadioCardOption
                     description="Description for Small"
                     full
                     size="sm"
                     title="Small"
                     value="sm"
                 />
-                <RadioCard
+                <RadioCardOption
                     description="Description for Medium"
                     full
                     size="md"
                     title="Medium"
                     value="md"
                 />
-                <RadioCard
+                <RadioCardOption
                     description="Description for Large"
                     full
                     size="lg"
@@ -214,19 +258,19 @@ export function Controlled() {
                     full
                     wrapped
                 >
-                    <RadioCard
+                    <RadioCardOption
                         description="Description for React Router"
                         full
                         title="React Router"
                         value="rr"
                     />
-                    <RadioCard
+                    <RadioCardOption
                         description="Description for Next.js"
                         full
                         title="Next.js"
                         value="next"
                     />
-                    <RadioCard
+                    <RadioCardOption
                         description="Description for Vue.js"
                         full
                         title="Vue.js"
@@ -248,7 +292,7 @@ export function WithIcon() {
                 full
                 wrapped
             >
-                <RadioCard
+                <RadioCardOption
                     description="Description for React Router"
                     full
                     title={
@@ -266,7 +310,7 @@ export function WithIcon() {
                     }
                     value="rr"
                 />
-                <RadioCard
+                <RadioCardOption
                     description="Description for Next.js"
                     full
                     title={
@@ -284,7 +328,7 @@ export function WithIcon() {
                     }
                     value="next"
                 />
-                <RadioCard
+                <RadioCardOption
                     description="Description for Vue.js"
                     full
                     title={
@@ -317,7 +361,7 @@ export function HideRadio() {
                 full
                 wrapped
             >
-                <RadioCard
+                <RadioCardOption
                     full
                     hideRadio
                     title={
@@ -337,7 +381,7 @@ export function HideRadio() {
                     }
                     value="paypal"
                 />
-                <RadioCard
+                <RadioCardOption
                     full
                     hideRadio
                     title={
@@ -357,7 +401,7 @@ export function HideRadio() {
                     }
                     value="cc"
                 />
-                <RadioCard
+                <RadioCardOption
                     full
                     hideRadio
                     title={

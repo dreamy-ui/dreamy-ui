@@ -424,17 +424,15 @@ export type UsePinInputFieldProps<I extends Record<string, any>> = I & {
 /**
  * @internal
  */
-export function usePinInputField<I extends Record<string, any>>(
-    props: UsePinInputFieldProps<I>,
-    ref: React.Ref<any> = null
-) {
+export function usePinInputField<I extends Record<string, any>>(props: UsePinInputFieldProps<I>) {
+    const { ref, ...rest } = props;
     const { getInputProps } = usePinInputContext();
     const { index, register } = usePinInputDescendant({
         disabled: props?.isDisabled || props?.disabled || false
     });
 
     return getInputProps({
-        ...props,
+        ...rest,
         ref: mergeRefs(register, ref),
         index
     });

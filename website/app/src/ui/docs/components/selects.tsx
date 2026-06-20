@@ -1,41 +1,97 @@
-import { Select } from "@/ui";
-import { Spinner } from "@/ui";
-import { useState } from "react";
+import { Button, HStack, Modal, Select, Spinner, Text } from "@/ui";import { useState } from "react";
+import { LuBanana, LuCherry, LuCitrus } from "react-icons/lu";
+
+const fruits = [
+    { value: "cherry", label: "Cherry", icon: <LuCherry /> },
+    { value: "banana", label: "Banana", icon: <LuBanana /> },
+    { value: "orange", label: "Orange", icon: <LuCitrus /> }
+];
+
+export function ItemsSelect() {
+    return (
+        <Select.Root
+            items={fruits}
+            renderItem={(item) => (
+                <HStack gap={2}>
+                    {item.icon}
+                    <Text>{item.label}</Text>
+                </HStack>
+            )}
+            width="xs"
+        >
+            <Select.Trigger placeholder="Select a favorite fruit" />
+            <Select.Content />
+        </Select.Root>
+    );
+}
+
+export function SelectInModal() {
+    const [isOpen, setIsOpen] = useState(false);
+
+    return (
+        <>
+            <Button
+                onClick={() => setIsOpen(true)}
+                variant="primary"
+                w="fit-content"
+            >
+                Open modal
+            </Button>
+            <Modal.Root
+                isOpen={isOpen}
+                onClose={() => setIsOpen(false)}
+            >
+                <Modal.Overlay />
+                <Modal.Content>
+                    <Modal.Header>Select in a modal</Modal.Header>
+                    <Modal.CloseButton />
+                    <Modal.Body>
+                        <Select.Root
+                            defaultValue="cherry"
+                            items={fruits}
+                            width="xs"
+                        >
+                            <Select.Trigger placeholder="Select a favorite fruit" />
+                            <Select.Content />
+                        </Select.Root>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button onClick={() => setIsOpen(false)}>Close</Button>
+                    </Modal.Footer>
+                </Modal.Content>
+            </Modal.Root>
+        </>
+    );
+}
 
 export function AsyncSelect() {
-    const [isLoading, setIsLoading] = useState(true);
-    const [fruits, setFruits] = useState<string[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [items, setItems] = useState<{ value: string; label: string }[]>([]);
 
     function fetchFruits() {
-        if (fruits.length > 0) return;
+        if (items.length > 0) return;
 
+        setIsLoading(true);
         fetch("/api/fake-select-data")
             .then((res) => res.json())
-            .then(setFruits)
+            .then((data: string[]) =>
+                setItems(data.map((fruit) => ({ value: fruit, label: fruit })))
+            )
             .finally(() => setIsLoading(false));
     }
 
     return (
         <Select.Root
+            items={items}
             onOpen={fetchFruits}
             width={"xs"}
         >
             <Select.Trigger placeholder="Select a favorite fruit" />
-            <Select.Content>
-                {isLoading && (
-                    <Spinner
-                        color="primary"
-                        py={4}
-                    />
-                )}
-                {fruits.map((fruit) => (
-                    <Select.Item
-                        key={fruit}
-                        value={fruit}
-                    >
-                        {fruit}
-                    </Select.Item>
-                ))}
+            <Select.Content showItems={!isLoading}>
+                <Spinner
+                    color="primary"
+                    py={4}
+                />
             </Select.Content>
         </Select.Root>
     );
@@ -44,18 +100,21 @@ export function AsyncSelect() {
 export function ControlledSelect() {
     const [value, setValue] = useState<string>("strawberry");
 
+    const fruits = [
+        { value: "strawberry", label: "Strawberry" },
+        { value: "banana", label: "Banana" },
+        { value: "orange", label: "Orange" }
+    ];
+
     return (
         <Select.Root
+            items={fruits}
             onChangeValue={setValue}
             value={value}
             width={"xs"}
         >
             <Select.Trigger placeholder="Select a favorite fruit" />
-            <Select.Content>
-                <Select.Item value="strawberry">Strawberry</Select.Item>
-                <Select.Item value="banana">Banana</Select.Item>
-                <Select.Item value="orange">Orange</Select.Item>
-            </Select.Content>
+            <Select.Content />
         </Select.Root>
     );
 }

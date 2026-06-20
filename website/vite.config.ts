@@ -4,6 +4,8 @@ import { defineConfig } from "vite";
 // import pandabox from "@pandabox/unplugin";
 // import Inspect from "vite-plugin-inspect";
 import babel from "vite-plugin-babel";
+import circleDependency from "vite-plugin-circular-dependency";
+import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig(({ isSsrBuild }) => {
     return {
@@ -20,6 +22,8 @@ export default defineConfig(({ isSsrBuild }) => {
             // Inspect({
             //     build: true
             // }),
+            // remixDevTools(),
+            circleDependency(),
             mdx({
                 development: true
             }) as any,

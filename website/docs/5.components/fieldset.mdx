@@ -38,14 +38,16 @@ Fieldset is a component that groups related form controls under a common name, m
 
             <Field.Root name="country">
                 <Field.Label><>Country</></Field.Label>
-                <Select.Root>
+                <Select.Root
+                    items={[
+                        { value: "uk", label: "United Kingdom" },
+                        { value: "ca", label: "Canada" },
+                        { value: "us", label: "United States" },
+                        { value: "pl", label: "Poland" },
+                    ]}
+                >
                     <Select.Trigger placeholder="Select a country" />
-                    <Select.Content>
-                        <Select.Item value="uk"><>United Kingdom</></Select.Item>
-                        <Select.Item value="ca"><>Canada</></Select.Item>
-                        <Select.Item value="us"><>United States</></Select.Item>
-                        <Select.Item value="pl"><>Poland</></Select.Item>
-                    </Select.Content>
+                    <Select.Content />
                 </Select.Root>
             </Field.Root>
         </Fieldset.Content>
@@ -80,13 +82,15 @@ Fieldset is a component that groups related form controls under a common name, m
 
         <Field.Root>
             <Field.Label>Country</Field.Label>
-            <Select.Root>
+            <Select.Root
+                items={[
+                    { value: "uk", label: "United Kingdom" },
+                    { value: "ca", label: "Canada" },
+                    { value: "us", label: "United States" },
+                ]}
+            >
                 <Select.Trigger placeholder="Select a country" />
-                <Select.Content>
-                    <Select.Item value="uk">United Kingdom</Select.Item>
-                    <Select.Item value="ca">Canada</Select.Item>
-                    <Select.Item value="us">United States</Select.Item>
-                </Select.Content>
+                <Select.Content />
             </Select.Root>
         </Field.Root>
     </Fieldset.Content>
@@ -115,13 +119,15 @@ Use the `disabled` prop to disable the fieldset, which disables all input elemen
 
             <Field.Root>
                 <Field.Label><>Country</></Field.Label>
-                <Select.Root>
+                <Select.Root
+                    items={[
+                        { value: "uk", label: "United Kingdom" },
+                        { value: "ca", label: "Canada" },
+                        { value: "us", label: "United States" },
+                    ]}
+                >
                     <Select.Trigger placeholder="Select a country" />
-                    <Select.Content>
-                        <Select.Item value="uk"><>United Kingdom</></Select.Item>
-                        <Select.Item value="ca"><>Canada</></Select.Item>
-                        <Select.Item value="us"><>United States</></Select.Item>
-                    </Select.Content>
+                    <Select.Content />
                 </Select.Root>
             </Field.Root>
 
@@ -145,13 +151,15 @@ Use the `disabled` prop to disable the fieldset, which disables all input elemen
 
         <Field.Root>
             <Field.Label>Country</Field.Label>
-            <Select.Root>
+            <Select.Root
+                items={[
+                    { value: "uk", label: "United Kingdom" },
+                    { value: "ca", label: "Canada" },
+                    { value: "us", label: "United States" },
+                ]}
+            >
                 <Select.Trigger placeholder="Select a country" />
-                <Select.Content>
-                    <Select.Item value="uk">United Kingdom</Select.Item>
-                    <Select.Item value="ca">Canada</Select.Item>
-                    <Select.Item value="us">United States</Select.Item>
-                </Select.Content>
+                <Select.Content />
             </Select.Root>
         </Field.Root>
 
@@ -181,13 +189,15 @@ Use the `invalid` prop to mark the fieldset as invalid. This will show the error
 
             <Field.Root invalid>
                 <Field.Label><>Country</></Field.Label>
-                <Select.Root>
+                <Select.Root
+                    items={[
+                        { value: "uk", label: "United Kingdom" },
+                        { value: "ca", label: "Canada" },
+                        { value: "us", label: "United States" },
+                    ]}
+                >
                     <Select.Trigger placeholder="Select a country" />
-                    <Select.Content>
-                        <Select.Item value="uk"><>United Kingdom</></Select.Item>
-                        <Select.Item value="ca"><>Canada</></Select.Item>
-                        <Select.Item value="us"><>United States</></Select.Item>
-                    </Select.Content>
+                    <Select.Content />
                 </Select.Root>
             </Field.Root>
 
@@ -215,13 +225,15 @@ Use the `invalid` prop to mark the fieldset as invalid. This will show the error
 
         <Field.Root invalid>
             <Field.Label>Country</Field.Label>
-            <Select.Root>
+            <Select.Root
+                items={[
+                    { value: "uk", label: "United Kingdom" },
+                    { value: "ca", label: "Canada" },
+                    { value: "us", label: "United States" },
+                ]}
+            >
                 <Select.Trigger placeholder="Select a country" />
-                <Select.Content>
-                    <Select.Item value="uk">United Kingdom</Select.Item>
-                    <Select.Item value="ca">Canada</Select.Item>
-                    <Select.Item value="us">United States</Select.Item>
-                </Select.Content>
+                <Select.Content />
             </Select.Root>
         </Field.Root>
 
