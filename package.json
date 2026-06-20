@@ -5,7 +5,8 @@
   "private": true,
   "packageManager": "pnpm@9.1.4",
   "workspaces": [
-    "packages/*"
+    "packages/**",
+    "website*"
   ],
   "scripts": {
     "dev:panda-preset": "cd packages/panda-preset && pnpm run dev",

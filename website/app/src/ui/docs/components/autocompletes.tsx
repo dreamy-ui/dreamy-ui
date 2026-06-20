@@ -1,5 +1,5 @@
-import { Autocomplete, type AutocompleteItem, Spinner, Text, VStack } from "@/ui";
-import { useState } from "react";
+import { Autocomplete, type AutocompleteItem, HStack, Spinner, Text, VStack } from "@/ui";
+import { useEffect, useState } from "react";
 import { LuSearch } from "react-icons/lu";
 
 const fruits: AutocompleteItem[] = [
@@ -21,9 +21,9 @@ export function ControlledAutocomplete() {
             <Text>Selected: {value ?? "none"}</Text>
             <Autocomplete.Root
                 items={fruits}
+                onChangeValue={setValue}
                 value={value}
                 width="xs"
-                onChangeValue={setValue}
             >
                 <Autocomplete.Input placeholder="Search a fruit..." />
                 <Autocomplete.Content />
@@ -70,8 +70,8 @@ export function AsyncAutocomplete() {
     return (
         <Autocomplete.Root
             items={items}
-            width="xs"
             onOpen={fetchItems}
+            width="xs"
         >
             <Autocomplete.Input placeholder="Search a fruit..." />
             <Autocomplete.Content
@@ -102,5 +102,73 @@ export function VirtualAutocomplete() {
             <Autocomplete.Input placeholder="Search items..." />
             <Autocomplete.VirtualContent />
         </Autocomplete.Root>
+    );
+}
+
+function useDebouncedEffect(effect: () => void, dependencies: any[], delay: number) {
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            effect();
+        }, delay);
+
+        return () => {
+            clearTimeout(timer);
+        };
+    }, [...dependencies]);
+}
+
+export function StationAutocomplete() {
+    const [value, setValue] = useState("");
+    const [raw, setRaw] = useState("");
+    const [items, setItems] = useState<any[]>([]);
+
+    useDebouncedEffect(
+        async () => {
+            if (!raw) {
+                return;
+            }
+
+            const data = [
+                {
+                    value: "Station1",
+                    label: "Station 1"
+                },
+                {
+                    value: "Station2",
+                    label: "Station 2"
+                },
+                {
+                    value: "Station2",
+                    label: "Station 2"
+                }
+            ];
+
+            setItems(data);
+        },
+        [raw],
+        200
+    );
+
+    return (
+        <>
+            <HStack>
+                <Text>Input: {raw}</Text>
+                <Text>Value: {value}</Text>
+            </HStack>
+            <Autocomplete.Root
+                filterFn={(item, query) => true}
+                items={items}
+                onChangeValue={setValue}
+                size={"lg"}
+                value={value}
+            >
+                <Autocomplete.Input
+                    onChangeValue={setRaw}
+                    placeholder="Enter station name..."
+                    value={raw}
+                />
+                <Autocomplete.Content />
+            </Autocomplete.Root>
+        </>
     );
 }

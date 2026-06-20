@@ -4,21 +4,15 @@ import { defineConfig } from "vite";
 // import pandabox from "@pandabox/unplugin";
 // import Inspect from "vite-plugin-inspect";
 import babel from "vite-plugin-babel";
-import tsconfigPaths from "vite-tsconfig-paths";
 
-export default defineConfig(({ isSsrBuild, mode }) => {
+export default defineConfig(({ isSsrBuild }) => {
     return {
-        // resolve: {
-        //     alias: {
-        //         "styled-system": path.resolve(__dirname, "./styled-system")
-        //     }
-        // },
         build: {
             minify: true,
             target: "esnext",
             rollupOptions: isSsrBuild
                 ? {
-                      input: ["./app/server.ts", "./app/cluster.ts"]
+                      input: ["./app/server.prod.ts", "./app/cluster.ts"]
                   }
                 : undefined
         },
@@ -26,7 +20,6 @@ export default defineConfig(({ isSsrBuild, mode }) => {
             // Inspect({
             //     build: true
             // }),
-            // remixDevTools(),
             mdx({
                 development: true
             }) as any,
@@ -48,15 +41,14 @@ export default defineConfig(({ isSsrBuild, mode }) => {
                     presets: ["@babel/preset-typescript"],
                     plugins: ["babel-plugin-react-compiler"]
                 }
-            }),
-            tsconfigPaths()
+            })
         ],
         optimizeDeps: {
-            esbuildOptions: {
-                loader: {
-                    ".js": "jsx"
-                }
-            },
+            // rolldownOptions: {
+            //     loader: {
+            //         ".js": "jsx"
+            //     }
+            // },
             exclude: [
                 "@dreamy-ui/panda-preset",
                 "@dreamy-ui/react",
@@ -69,6 +61,9 @@ export default defineConfig(({ isSsrBuild, mode }) => {
                 "styled-system",
                 "@resvg/resvg-js"
             ]
+        },
+        resolve: {
+            tsconfigPaths: true
         }
     };
 });
