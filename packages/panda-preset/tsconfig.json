@@ -3,6 +3,7 @@
 	"compilerOptions": {
 		"types": ["node"],
 		"lib": ["DOM", "DOM.Iterable", "ESNext"],
+		"types": ["node"],
 		"outDir": "dist",
 		"isolatedModules": true,
 		"esModuleInterop": true,
@@ -11,11 +12,12 @@
 		"moduleResolution": "Bundler",
 		"resolveJsonModule": true,
 		"target": "ESNext",
+		"ignoreDeprecations": "6.0",
 		"strict": true,
 		"allowJs": true,
 		"skipLibCheck": true,
 		"forceConsistentCasingInFileNames": true,
-		"rootDir": "./",
+		// "rootDir": "./",
 		"paths": {
 			"@/*": ["./src/*"]
 		}

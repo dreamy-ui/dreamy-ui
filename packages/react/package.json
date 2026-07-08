@@ -57,9 +57,9 @@
 		"aria-hidden": "^1.2.4",
 		"framesync": "^6.1.2",
 		"match-sorter": "^8.2.0",
-		"motion": "^12.23.22",
+		"motion": "^12.39.0",
 		"react": "^19.2.0",
-		"react-dom": "^19.2.0",
+		"react-dom": "^19.2.6",
 		"react-focus-lock": "^2.13.5",
 		"react-icons": "^5.4.0",
 		"react-remove-scroll": "^2.6.2"

@@ -9,12 +9,6 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig(({ isSsrBuild }) => {
     return {
-        // resolve: {
-        //     alias: {
-        //         "styled-system": path.resolve(__dirname, "./styled-system")
-        //     }
-        // },
-
         build: {
             minify: true,
             target: "esnext",
@@ -51,15 +45,14 @@ export default defineConfig(({ isSsrBuild }) => {
                     presets: ["@babel/preset-typescript"],
                     plugins: ["babel-plugin-react-compiler"]
                 }
-            }),
-            tsconfigPaths()
+            })
         ],
         optimizeDeps: {
-            esbuildOptions: {
-                loader: {
-                    ".js": "jsx"
-                }
-            },
+            // rolldownOptions: {
+            //     loader: {
+            //         ".js": "jsx"
+            //     }
+            // },
             exclude: [
                 "@dreamy-ui/panda-preset",
                 "@dreamy-ui/react",
@@ -72,6 +65,9 @@ export default defineConfig(({ isSsrBuild }) => {
                 "styled-system",
                 "@resvg/resvg-js"
             ]
+        },
+        resolve: {
+            tsconfigPaths: true
         }
     };
 });

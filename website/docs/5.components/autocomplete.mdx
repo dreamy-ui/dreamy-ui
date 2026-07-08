@@ -261,6 +261,85 @@ Use the `renderItem` prop on `Autocomplete.Content` to fully customise how each 
 </Autocomplete.Root>
 ```
 
+### Get value from the input
+
+Sometimes you want to do interactive search bars with easy autocomplete. You'll need input value to eg. download train stations the user is wanting to select. This is a fake demo, it doesn't fetch real station names, just shows how it could be done.
+
+<Wrapper>
+    <StationAutocomplete />
+</Wrapper>
+
+```tsx
+import type { AutocompleteProps } from "components/ui/autocomplete";
+import ky from "ky";
+import { useState } from "react";
+import { Autocomplete } from "@/ui";
+import type { Station, StationResponse } from "@/utils/types";
+
+interface StationAutocompleteProps extends Partial<AutocompleteProps> {
+	value: string;
+	setValue: (value: string) => void;
+}
+
+export function StationAutocomplete({
+	value,
+	setValue,
+	...props
+}: StationAutocompleteProps) {
+	const [inputValue, setInputValue] = useState("");
+	const [items, setItems] = useState<Station[]>([]);
+
+	useDebouncedEffect(
+		async () => {
+			if (!inputValue) {
+				return;
+			}
+
+			const data = await ky
+				.post("/api/stations", {
+					body: new URLSearchParams({
+						term: inputValue
+					})
+				})
+				.json<StationResponse[]>();
+
+			setItems(data.map((station) => ({ value: station.value, label: station.name })));
+		},
+		[inputValue],
+		200
+	);
+
+	return (
+		<Autocomplete.Root
+			filterFn={(item, query) => true} // add this to disable default filtering...
+			items={items}
+			onChangeValue={setValue}
+			value={value}
+			{...props}
+		>
+			<Autocomplete.Input
+				onChangeValue={setInputValue}
+				placeholder="Enter station name..."
+				value={inputValue}
+			/>
+			<Autocomplete.Content />
+		</Autocomplete.Root>
+	);
+}
+
+function useDebouncedEffect(effect: () => void, dependencies: any[], delay: number) {
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			effect();
+		}, delay);
+
+		return () => {
+			clearTimeout(timer);
+		};
+	}, [...dependencies]);
+}
+```
+
 ### With icon
 
 Pass an `icon` prop to `Autocomplete.Input` to show a leading icon inside the input.

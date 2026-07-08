@@ -432,6 +432,10 @@ const Scaled = wrapLazy(
     lazy(() => import("./components/transitions").then((m) => ({ default: m.Scaled })))
 );
 
+const StationAutocomplete = wrapLazy(
+    lazy(() => import("./components/autocompletes").then(m => ({ default: m.StationAutocomplete})))
+)
+
 interface Props {
     mdxContent: MdxContent;
 }
@@ -616,7 +620,8 @@ const DreamComponents = {
     Stepper,
     ControlledStepper,
     StepperWithIcons,
-    StepperWithColors
+    StepperWithColors,
+    StationAutocomplete
 };
 
 function Wrapper({ children, ...props }: PropsWithChildren<FlexProps>) {

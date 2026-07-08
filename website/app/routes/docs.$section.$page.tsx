@@ -250,6 +250,7 @@ export default function DocsSectionPage() {
                                     <IoMdBrowsers />
                                 )
                             }
+                            scheme={frontmatter.isServerComponent ? "info" : undefined}
                             size={"sm"}
                             transition={
                                 "translate {durations.fast} {easings.ease-in-out}, background-color {durations.normal} {easings.ease-in-out}"

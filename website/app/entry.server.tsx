@@ -1,19 +1,13 @@
 // import cluster from "node:cluster";
 import { PassThrough } from "node:stream";
 import { createReadableStreamFromReadable } from "@react-router/node";
-import { initLogger } from "evlog";
 import { isbot } from "isbot";
-import { renderToPipeableStream } from "react-dom/server";
+import type { RenderToPipeableStreamOptions } from "react-dom/server";
+import { renderToPipeableStream } from "react-dom/server.node";
 import type { EntryContext } from "react-router";
 import { ServerRouter } from "react-router";
-import { env } from "./src/.server/env";
-
-initLogger({
-    pretty: true,
-    env: {
-        environment: env.NODE_ENV
-    }
-});
+import { Docs } from "~/src/.server/docs";
+import { lru } from "./src/.server/cache";
 
 export const streamTimeout = 5000;
 
@@ -21,25 +15,51 @@ export default function handleRequest(
     request: Request,
     responseStatusCode: number,
     responseHeaders: Headers,
-    reactRouterContext: EntryContext
-    // _context: RouterContextProvider
+    routerContext: EntryContext
+    // _loadContext: RouterContextProvider
 ) {
+    // https://httpwg.org/specs/rfc9110.html#HEAD
+    if (request.method.toUpperCase() === "HEAD") {
+        return new Response(null, {
+            status: responseStatusCode,
+            headers: responseHeaders
+        });
+    }
+
     return new Promise((resolve, reject) => {
         let shellRendered = false;
+        const userAgent = request.headers.get("user-agent");
 
-        const isBot = isbot(request.headers.get("user-agent"));
+        // Ensure requests from bots and SPA Mode renders wait for all content to load before responding
+        // https://react.dev/reference/react-dom/server/renderToPipeableStream#waiting-for-all-content-to-load-for-crawlers-and-static-generation
+        const readyOption: keyof RenderToPipeableStreamOptions =
+            (userAgent && isbot(userAgent)) || routerContext.isSpaMode
+                ? "onAllReady"
+                : "onShellReady";
 
-        const resolver = isBot ? "onAllReady" : "onShellReady";
+        // Abort the rendering stream after the `streamTimeout` so it has time to
+        // flush down the rejected boundaries
+        let timeoutId: ReturnType<typeof setTimeout> | undefined = setTimeout(
+            () => abort(),
+            streamTimeout + 1000
+        );
 
-        const { pipe } = renderToPipeableStream(
+        const { abort } = renderToPipeableStream(
             <ServerRouter
-                context={reactRouterContext}
+                context={routerContext}
                 url={request.url}
             />,
             {
-                [resolver]() {
+                [readyOption]() {
                     shellRendered = true;
-                    const body = new PassThrough();
+                    const body = new PassThrough({
+                        final(callback) {
+                            // Clear the timeout to prevent retaining the closure and memory leak
+                            clearTimeout(timeoutId);
+                            timeoutId = undefined;
+                            callback();
+                        }
+                    });
                     const stream = createReadableStreamFromReadable(body);
 
                     responseHeaders.set("Content-Type", "text/html");
@@ -50,14 +70,15 @@ export default function handleRequest(
                             status: responseStatusCode
                         })
                     );
-
-                    pipe(body);
                 },
                 onShellError(error: unknown) {
                     reject(error);
                 },
                 onError(error: unknown) {
                     responseStatusCode = 500;
+                    // Log streaming rendering errors from inside the shell.  Don't log
+                    // errors encountered during initial shell rendering since they'll
+                    // reject and get logged in handleDocumentRequest.
                     if (shellRendered) {
                         console.error(error);
                     }
@@ -67,49 +88,10 @@ export default function handleRequest(
     });
 }
 
-// export const unstable_instrumentations: unstable_ServerInstrumentation[] = [
-// 	{
-// 		handler(handler) {
-// 			handler.instrument({
-// 				async request(handleRequest, { request }) {
-// 					const time = timing();
-// 					await handleRequest();
-// 					Logger.info(`${request.method} ${stripHost(request.url)} - ${time()}ms`, true);
-// 				}
-// 			});
-// 		},
-// 		route(route) {
-// 			route.instrument({
-// 				async loader(callLoader, { request }) {
-// 					const time = timing();
-// 					await callLoader();
-// 					Logger.info(
-// 						`Loader ${request.method} ${stripHost(request.url)} - ${time()}ms`,
-// 						true
-// 					);
-// 				},
-// 				async middleware(callMiddleware, { request }) {
-// 					const time = timing();
-// 					await callMiddleware();
-// 					Logger.info(
-// 						`Middleware ${request.method} ${stripHost(request.url)} - ${time()}ms`,
-// 						true
-// 					);
-// 				},
-// 				async action(callAction, { request }) {
-// 					const time = timing();
-// 					await callAction();
-// 					Logger.info(
-// 						`Action ${request.method} ${stripHost(request.url)} - ${time()}ms`,
-// 						true
-// 					);
-// 				},
-// 				async lazy(callLazy) {
-// 					const time = timing();
-// 					await callLazy();
-// 					Logger.info(`Lazy ${time()}ms`, true);
-// 				}
-// 			});
-// 		}
-// 	}
-// ];
+if (cluster.isPrimary) {
+    Docs.fetchDocsOnStartup();
+}
+
+if (process.env.NODE_ENV === "development") {
+    lru.clear();
+}
