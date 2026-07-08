@@ -10,8 +10,9 @@ const codes = {
         Built on top of Panda CSS
     </Heading>
     <Text size="lg">
-        Panda CSS is a powerful, flexible CSS-in-JS library that allows you to build
-        performant, build-time styles using style props.
+        Panda CSS is a powerful, flexible CSS-in-JS library 
+        that allows you to build performant, build-time styles 
+        using style props.
     </Text>
 </Flex>
 `

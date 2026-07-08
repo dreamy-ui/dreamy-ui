@@ -1,3 +1,4 @@
+import { setClientCookie } from "@dreamy-ui/react";
 import {
     type PropsWithChildren,
     createContext,
@@ -6,7 +7,8 @@ import {
     useMemo,
     useState
 } from "react";
-import { useRoot } from "~/src/hooks/useRoot";
+import { useRouteLoaderData } from "react-router";
+import type { Route } from "../../../+types/root";
 
 export type PM = "npm" | "pnpm" | "yarn" | "bun";
 
@@ -18,7 +20,7 @@ export interface GlobalContextType {
 const GlobalContext = createContext<GlobalContextType | null>(null);
 
 export default function GlobalContextProvider({ children }: PropsWithChildren) {
-    const { pm: pmFromRoot } = useRoot();
+    const { pm: pmFromRoot } = useRouteLoaderData<Route.ComponentProps["loaderData"]>("root") ?? {};
 
     const [pm, setPm] = useState<PM>(() => {
         let pm: PM | undefined;
@@ -39,9 +41,7 @@ export default function GlobalContextProvider({ children }: PropsWithChildren) {
     });
 
     const updatePm = useCallback((pm: PM) => {
-        cookieStore.set({
-            name: "pm",
-            value: pm,
+        setClientCookie("pm", pm, {
             path: "/",
             expires: Date.now() + 31536000000
         });

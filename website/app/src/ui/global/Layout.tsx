@@ -41,7 +41,7 @@ export default function AppLayout({ children }: PropsWithChildren) {
                     flex={1}
                     full
                     gap={10}
-                    maxW={"7xl"}
+                    maxW={"8xl"}
                     mt={{
                         base: isDocs ? 0 : 10,
                         md: 20

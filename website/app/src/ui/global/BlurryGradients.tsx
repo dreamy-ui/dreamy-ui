@@ -12,8 +12,8 @@ export default function BlurryGradients() {
             zIndex={-10}
         >
             <Box
-                bg={"rgb(73, 31, 171)"}
-                blur={"80px"}
+                bg={"primary"}
+                blur={"100px"}
                 bottom={"auto"}
                 filter={"auto"}
                 h={"500px"}
@@ -30,7 +30,7 @@ export default function BlurryGradients() {
                 }}
                 top={0}
                 translate={"auto"}
-                w={"500px"}
+                w={"700px"}
                 x={{
                     base: "0%",
                     md: "-30%"
@@ -39,7 +39,7 @@ export default function BlurryGradients() {
             />
             {/* bottom left */}
             <Box
-                bg={"rgb(205, 60, 190)"}
+                bg={"primary"}
                 blur={"80px"}
                 bottom={"auto"}
                 filter={"auto"}

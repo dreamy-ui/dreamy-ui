@@ -55,7 +55,7 @@ export function Logo() {
                         <Heading size={"xl"}>Your UI</Heading>
                     </MotionBox>
                 </Box>
-                <Badge scheme={"secondary"}>v2</Badge>
+                <Badge scheme={"primary"}>v2</Badge>
             </HStack>
 
             <Divider

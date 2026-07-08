@@ -1,5 +1,6 @@
 "use client";
 
+import { setClientCookie, type SetClientCookieOptions } from "@/utils/cookie";
 import { useSafeLayoutEffect } from "@/components/descendant/utils";
 import { useColorModeScript } from "@/provider/color-mode-script";
 import { objectToDeps } from "@/utils";
@@ -69,7 +70,7 @@ interface DreamyProviderProps extends Partial<Omit<IDreamContext, "hasHydrated">
      * The options to add to the color mode cookie.
      * @default { path: "/", expires: Date.now() + 31536000000 (1 year) }
      */
-    colorModeCookieOptions?: Partial<CookieInit>;
+    colorModeCookieOptions?: Partial<SetClientCookieOptions>;
     /**
      * Rest of the app.
      */
@@ -96,11 +97,9 @@ export function DreamyProvider({
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     const setColorModeCookie = useCallback((newColorMode: ColorMode) => {
-        cookieStore.set({
-            name: DREAMY_COLOR_MODE_COOKIE_KEY,
-            value: newColorMode,
+        setClientCookie(DREAMY_COLOR_MODE_COOKIE_KEY, newColorMode, {
             path: "/",
-            sameSite: "none",
+            sameSite: "lax",
             expires: Date.now() + 31536000000,
             ...colorModeCookieOptions
         });

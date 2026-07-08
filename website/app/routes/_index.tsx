@@ -1,4 +1,5 @@
 import { Flex } from "@/ui";
+import { Grid } from "@/ui";
 import { data } from "react-router";
 import { CACHE_DURATION, CacheHeaders, cachified } from "~/src/.server/cache";
 import { getLandingPageCodes } from "~/src/.server/codes";
@@ -93,19 +94,22 @@ export default function Index() {
             }}
             mb={20}
         >
-            <Flex
-                col
+            {/* Hero — two-column on large screens so components stay in viewport */}
+            <Grid
+                alignItems={"center"}
+                columns={{ base: 1, lg: 2 }}
                 full
-                gap={24}
-                justify={"center"}
-                minH={"calc(100vh - 288px)"}
+                gap={{ base: 12, lg: 16 }}
+                minH={"calc(100vh - 128px - 80px)"}
+                py={{ base: 12, lg: 0 }}
             >
                 <Main />
                 <FloatingComponents />
-            </Flex>
+            </Grid>
+
             <BuiltFor />
-            <Features />
             <EverythingYouNeed />
+            <Features />
             <Communities />
         </Flex>
     );

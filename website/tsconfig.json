@@ -27,6 +27,7 @@
 		"paths": {
 			"@/ui": ["./components/ui/index"],
 			"styled-system/*": ["./styled-system/*"],
+			"rr/*": ["./.react-router/types/*"],
 			"~/*": ["./app/*"]
 		},
 		// "baseUrl": ".",

@@ -8,7 +8,7 @@
 		"postinstall": "prisma generate",
 		"build": "prisma generate && prisma migrate deploy && panda codegen && react-router build",
 		"build:production": "prisma generate && prisma migrate deploy && panda codegen && react-router build",
-		"dev": "cross-env NODE_ENV=development tsx app/server.dev.ts",
+		"dev": "cross-env NODE_ENV=development tsx --env-file .env app/server.dev.ts",
 		"start": "cross-env NODE_ENV=production node --env-file .env ./build/server/index2.js",
 		"typecheck": "react-router typegen && tsc",
 		"db:migrate": "prisma migrate deploy",

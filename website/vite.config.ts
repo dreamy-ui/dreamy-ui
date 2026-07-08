@@ -14,6 +14,7 @@ export default defineConfig(({ isSsrBuild }) => {
         //         "styled-system": path.resolve(__dirname, "./styled-system")
         //     }
         // },
+
         build: {
             minify: true,
             target: "esnext",

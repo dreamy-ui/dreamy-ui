@@ -25,6 +25,7 @@ const newComponents = [
     "pagination",
     "stepper"
 ];
+
 const updatedComponents = ["menu", "tabs"];
 
 export default function SectionsNav() {
@@ -203,6 +204,7 @@ function SectionButton({
             key={"doc-" + file.name}
             size={"sm"}
             variant={isCurrent ? "primary" : "ghost"}
+            // variant={isCurrent ? "solid" : "ghost"}
         >
             {file.name === "Llms"
                 ? "LLMs"
@@ -216,7 +218,7 @@ function SectionButton({
                     css={{
                         "--badge-color": isCurrent ? "{colors.bg.light}" : undefined
                     }}
-                    scheme={isCurrent ? "none" : "secondary"}
+                    scheme={isCurrent ? "none" : "primary"}
                 >
                     {isNew ? "New" : "Updated"}
                 </Badge>

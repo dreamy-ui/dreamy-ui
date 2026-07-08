@@ -1,16 +1,16 @@
 import { ToastProvider } from "@/ui";
 import { DreamyProvider } from "@dreamy-ui/react";
 import { getColorModeHTMLProps, getSSRColorMode } from "@dreamy-ui/react/rsc";
-import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
+import { Links, Meta, Outlet, Scripts, ScrollRestoration, useRouteLoaderData } from "react-router";
 import type { Route } from "./+types/root";
 import "./index.css";
+import domMax from "./features";
 import {
     prefetchCacheControlHeaderMiddleware,
     requestMiddleware,
     timingsMiddleware
 } from "./src/.server/middlewares";
 import { getServerCookie } from "./src/functions/cookies";
-import { useRoot } from "./src/hooks/useRoot";
 import GlobalContextProvider from "./src/ui/global/GlobalContext";
 import AppLayout from "./src/ui/global/Layout";
 
@@ -60,16 +60,10 @@ export function shouldRevalidate() {
     return false;
 }
 
-const motionFeatures = () => import("./features").then((mod) => mod.default);
+const motionFeatures = domMax;
 
 export function Layout({ children }: { children: React.ReactNode }) {
-    let root: any;
-    try {
-        root = useRoot();
-    } catch (error) {
-        console.error(error);
-    }
-    const { colorMode } = root ?? {};
+    const { colorMode } = useRouteLoaderData<Route.ComponentProps["loaderData"]>("root") ?? {};
 
     return (
         <html

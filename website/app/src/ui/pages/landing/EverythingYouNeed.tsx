@@ -3,43 +3,77 @@ import { Flex } from "@/ui";
 import { Grid } from "@/ui";
 import { Heading } from "@/ui";
 import { Icon } from "@/ui";
-import { HStack } from "@/ui";
 import { Text } from "@/ui";
+import { m } from "motion/react";
+import { useState } from "react";
 import { BiSolidComponent } from "react-icons/bi";
 import { CgDarkMode } from "react-icons/cg";
+import { LuBrainCircuit, LuParentheses, LuShield, LuTerminal, LuZap } from "react-icons/lu";
 import { MdAnimation, MdOutlineDashboardCustomize, MdOutlineStyle } from "react-icons/md";
-import { TbServer } from "react-icons/tb";
 
 const features = [
     {
-        title: "Components",
+        title: "60+ Components",
         icon: BiSolidComponent,
-        description: "A wide range of components to choose from"
+        description:
+            "A wide range of production-ready components, from simple Buttons to complex DatePickers and Autocomplete inputs.",
+        scheme: "primary"
     },
     {
-        title: "Customization",
+        title: "Lightning fast",
+        icon: LuZap,
+        description:
+            "Tree-shakable, zero runtime CSS. Panda CSS generates only the styles your components actually use and ships minimal bytes.",
+        scheme: "warning"
+    },
+    {
+        title: "Deep customization",
         icon: MdOutlineDashboardCustomize,
-        description: "Customize components to your liking"
+        description:
+            "One design-token API controls your entire palette. Override any component variant with a simple recipe extension.",
+        scheme: "info"
     },
     {
-        title: "Easy dark mode",
+        title: "Accessible by default",
+        icon: LuShield,
+        description:
+            "Every component is WCAG 2.1 AA compliant. Keyboard navigation, ARIA attributes, and focus management are all handled out of the box.",
+        scheme: "success"
+    },
+    {
+        title: "Seamless dark mode",
         icon: CgDarkMode,
-        description: "Dark mode is supported out of the box"
+        description:
+            "Dark mode ships as a first-class citizen. Switch modes with a single hook function, no extra CSS overrides needed.",
+        scheme: "secondary"
     },
     {
-        title: "React server components",
-        icon: TbServer,
-        description: "Components compatible with RSC"
-    },
-    {
-        title: "Smooth animations",
+        title: "Buttery animations",
         icon: MdAnimation,
-        description: "Beautiful smooth animations"
+        description:
+            "Entrance and exit animations powered by Motion. Disable globally with a single prop for accessibility-first workflows.",
+        scheme: "error"
     },
     {
-        title: "No runtime styles",
-        icon: MdOutlineStyle,
-        description: "Styles are generated at build time"
+        title: "AI Ready",
+        icon: LuBrainCircuit,
+        description:
+            "Dreamy UI is built for the AI era. Components, hooks, and APIs are designed for seamless integration into AI-driven apps, with robust type safety that scales with your agents and automations.",
+        scheme: "primary"
+    },
+    {
+        title: "Useful hooks",
+        icon: LuParentheses,
+        description:
+            "Control your UI with useful hooks like useControllable, useClipboard, useIsMobile, and more. Those are really awesome hooks, even your AI agent will use them.",
+        scheme: "info"
+    },
+    {
+        title: "One-command setup",
+        icon: LuTerminal,
+        description:
+            "Run npx create-dreamy-app and you're live. Supports Next.js, Vite, React Router and Remix out of the box with no manual config required.",
+        scheme: "success"
     }
 ];
 
@@ -47,93 +81,141 @@ export default function EverythingYouNeed() {
     return (
         <Flex
             col
-            gap={10}
+            full
+            gap={12}
         >
             <Flex
                 col
-                gap={2}
+                gap={3}
+                itemsCenter
+                textCenter
             >
+                <Text
+                    color={"primary"}
+                    fontFamily={"mono"}
+                    fontWeight={"semibold"}
+                    letterSpacing={"widest"}
+                    size={"xs"}
+                    textTransform={"uppercase"}
+                >
+                    Why Dreamy UI
+                </Text>
                 <Heading
                     size="4xl"
                     textCenter
                 >
-                    Everything you
+                    Everything you{" "}
                     <Box
                         as="span"
-                        bg={"info/12"}
+                        bg={"info/10"}
                         color={"info"}
-                        ml={1}
                         px={2}
                         py={0.5}
-                        rounded={"sm"}
+                        rounded={"md"}
                     >
                         need
                     </Box>
                 </Heading>
                 <Text
                     color={"fg.medium"}
-                    size={"2xl"}
+                    maxW={"xl"}
+                    size={"lg"}
                     textCenter
                 >
-                    Featured component library for your app
+                    Every API decision, every animation, every token was made with intention.
+                    Because the tools you use shape the things you build.
                 </Text>
             </Flex>
 
             <Grid
-                columnGap={{
-                    base: 4,
-                    md: 10
-                }}
-                columns={{
-                    base: 1,
-                    md: 3
-                }}
+                columnGap={{ base: 4, md: 6 }}
+                columns={{ base: 1, md: 2, lg: 3 }}
+                full
                 rowGap={4}
             >
                 {features.map((feature, i) => (
-                    <Feature
-                        {...feature}
-                        key={i}
-                    />
+                    <m.div
+                        initial={{ opacity: 0, y: 20 }}
+                        key={feature.title}
+                        transition={{ duration: 0.4, delay: i * 0.06 }}
+                        viewport={{ once: true }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                    >
+                        <FeatureCard {...feature} />
+                    </m.div>
                 ))}
             </Grid>
         </Flex>
     );
 }
 
-interface FeatureProps {
+interface FeatureCardProps {
     title: string;
     description: string;
     icon: React.ElementType;
+    scheme: string;
 }
 
-function Feature({ title, description, icon }: FeatureProps) {
+function FeatureCard({ title, description, icon, scheme }: FeatureCardProps) {
+    const [hovered, setHovered] = useState(false);
+    const colorVar = `var(--colors-${scheme})`;
+
     return (
         <Flex
-            backdropBlur={"sm"}
+            backdropBlur={"md"}
             backdropFilter={"auto"}
-            bg={"bg/70"}
             border={"1px solid"}
-            borderColor={"border"}
             col
-            gap={2}
+            gap={4}
+            h={"full"}
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
             px={6}
-            py={4}
-            rounded={"l2"}
+            py={5}
+            rounded={"xl"}
+            style={{
+                background: hovered
+                    ? `color-mix(in srgb, ${colorVar} 6%, var(--colors-bg))`
+                    : "color-mix(in srgb, var(--colors-bg) 50%, transparent)",
+                borderColor: hovered
+                    ? `color-mix(in srgb, ${colorVar} 40%, transparent)`
+                    : "var(--colors-border)",
+                transition: "background 0.2s, border-color 0.2s"
+            }}
         >
-            <HStack>
+            <Flex
+                align={"center"}
+                boxSize={"10"}
+                center
+                rounded={"lg"}
+                style={{
+                    background: `color-mix(in srgb, ${colorVar} 12%, transparent)`
+                }}
+            >
                 <Icon
                     as={icon}
-                    color={"info"}
+                    boxSize={"5"}
+                    color={scheme as any}
                 />
+            </Flex>
+            <Flex
+                col
+                gap={1.5}
+            >
                 <Text
-                    color={"info"}
                     fontWeight={"semibold"}
+                    size={"md"}
                 >
                     {title}
                 </Text>
-            </HStack>
-            <Text color={"fg.medium"}>{description}</Text>
+                <Text
+                    color={"fg.medium"}
+                    lineHeight={"tall"}
+                    size={"sm"}
+                >
+                    {description}
+                </Text>
+            </Flex>
         </Flex>
     );
 }

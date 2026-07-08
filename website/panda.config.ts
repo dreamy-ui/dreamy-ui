@@ -41,8 +41,12 @@ export default defineConfig({
                 }
             },
             // primaryColor: "#6056aa",
-            primaryColor: "#6d52b8",
-            secondaryColor: "#d193bb",
+            // primaryColor: "#6d52b8",
+            primaryColor: {
+                light: "#3B82F6",
+                dark: "#74a6f8"
+            },
+            secondaryColor: "#fd8ebc",
             rounded: "lg"
         })
     ],

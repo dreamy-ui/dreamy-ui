@@ -35,7 +35,7 @@ export default function DocsLayout() {
                 md: "row"
             }}
             full
-            gap={5}
+            gap={14}
             justifyContent="space-between"
             pos="relative"
         >

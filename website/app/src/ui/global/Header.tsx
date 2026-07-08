@@ -56,7 +56,7 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: Props) {
             <Flex
                 contentBetween
                 full
-                maxW={"7xl"}
+                maxW={"8xl"}
                 mx={"auto"}
                 px={4}
             >
