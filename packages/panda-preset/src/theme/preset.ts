@@ -168,7 +168,10 @@ export interface PresetOptions {
     colorTuning?: ColorTuning;
 }
 
-export const defaultPresetOptions = {
+export const defaultPresetOptions: Omit<
+    PresetOptions,
+    "buttonPrimaryTextColor" | "buttonSecondaryTextColor"
+> = {
     backgrounds: {
         light: "#fff",
         dark: "#0D0D0E"
@@ -189,11 +192,11 @@ export const defaultPresetOptions = {
     // buttonPrimaryTextColor: "{colors.bg}",
     // buttonSecondaryTextColor: "{colors.bg}",
     rounded: "md"
-} satisfies Omit<PresetOptions, "buttonPrimaryTextColor" | "buttonSecondaryTextColor">;
+};
 
 const presetStorage = new AsyncLocalStorage<PresetOptions>();
 
-export function getPresetOptions() {
+export function getPresetOptions(): PresetOptions {
     const options = presetStorage.getStore();
     if (!options) {
         throw new Error(
@@ -203,7 +206,7 @@ export function getPresetOptions() {
     return options;
 }
 
-export function setPresetOptions(options: PresetOptions) {
+export function setPresetOptions(options: PresetOptions): void {
     void presetStorage.enterWith(options);
 }
 

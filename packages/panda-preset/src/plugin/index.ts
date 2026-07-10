@@ -1,4 +1,5 @@
 import { type Config, definePlugin } from "@pandacss/dev";
+import type { PandaPlugin } from "@pandacss/types";
 import chalk from "chalk";
 import { updateFactory } from "./factory";
 import { removeJsxElements } from "./remove-jsx-elements";
@@ -36,7 +37,7 @@ export interface DreamyPluginOptions {
  *
  * `jsxFactory: "dreamy"` is required in `panda.config.ts` to make Dreamy UI work.
  */
-export function dreamyPlugin(options?: DreamyPluginOptions) {
+export function dreamyPlugin(options?: DreamyPluginOptions): PandaPlugin {
     const {
         removeJsxElements: removeJsxElementsOption = true,
         updateFactory: updateFactoryOption = true,

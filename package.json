@@ -5,7 +5,9 @@
 	"private": true,
 	"packageManager": "pnpm@9.1.4",
 	"workspaces": [
-		"packages/*"
+		"packages/*",
+		"website",
+		"components"
 	],
 	"scripts": {
 		"dev:panda-preset": "cd packages/panda-preset && pnpm run dev",
@@ -30,7 +32,8 @@
 		"kill-ports": "kill-port 3000 && kill-port 3001 && kill-port 3002",
 		"components": "pnpm --filter @dreamy-ui/registry build",
 		"components:format": "pnpm --filter @dreamy-ui/registry format",
-		"components:watch": "pnpm --filter @dreamy-ui/registry watch"
+		"components:watch": "pnpm --filter @dreamy-ui/registry watch",
+		"clean:deps": "node scripts/clean-deps.mjs"
 	},
 	"keywords": [],
 	"author": "imexoodeex",

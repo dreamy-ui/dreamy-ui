@@ -44,23 +44,12 @@ export const snippet = defineSlotRecipe({
             flexWrap: "wrap"
         },
         copy: {
-            appearance: "none",
-            background: "transparent",
-            border: "none",
-            cursor: "pointer",
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "fg.medium",
             flexShrink: 0,
             p: 2,
+            color: "fg.medium",
             _hover: {
                 color: "fg"
             },
-            _disabled: {
-                cursor: "not-allowed",
-                opacity: 0.5
-            }
         },
         body: {},
         pre: {

@@ -14,8 +14,8 @@
 		"allowJs": true,
 		"skipLibCheck": true,
 		"forceConsistentCasingInFileNames": true,
-		"rootDir": ".",
-		"baseUrl": ".",
+		// "rootDir": ".",
+		// "baseUrl": ".",
 		"paths": {
 			"@/*": ["./src/*"]
 		}

@@ -9,10 +9,7 @@
 	"main": "dist/index.js",
 	"module": "dist/index.js",
 	"types": "dist/index.d.ts",
-	"files": [
-		"dist",
-		"bin"
-	],
+	"files": ["dist", "bin"],
 	"bin": {
 		"dreamy": "./bin/index.js"
 	},
@@ -21,18 +18,18 @@
 			"source": "./src/index.ts",
 			"import": {
 				"types": "./dist/index.d.ts",
-				"default": "./dist/index.js"
+				"default": "./dist/index.mjs"
 			}
 		},
 		"./package.json": "./package.json"
 	},
 	"scripts": {
-		"dev": "tsup --watch",
+		"dev": "tsdown --watch",
 		"start": "bun run ./src/index.ts",
 		"lint": "biome lint ./src",
-		"build": "tsup",
-		"build:dev": "tsup",
-		"build:production": "tsup"
+		"build": "tsdown",
+		"build:dev": "tsdown",
+		"build:production": "tsdown"
 	},
 	"dependencies": {
 		"@clack/prompts": "^0.11.0",
@@ -61,7 +58,7 @@
 		"@types/yargs": "17.0.33",
 		"dotenv": "^17.2.3",
 		"prettier": "^3.8.3",
-		"tsup": "^8.4.0",
+		"tsdown": "^0.22.4",
 		"typescript": "7.0.2"
 	},
 	"peerDependencies": {

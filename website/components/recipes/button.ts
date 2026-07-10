@@ -128,7 +128,7 @@ export const button = defineRecipe({
             link: parts({
                 root: {
                     bg: "transparent",
-                    h: "fit-content",
+                    // h: "fit-content",
                     outlineColor: "currentColor",
                     px: 0,
                     py: 0,
