@@ -90,6 +90,7 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: Props) {
                                 color: "#5865F2"
                             }}
                             as={FaDiscord}
+                            color={"fg.medium"}
                             h={4}
                             transition={
                                 "filter {durations.normal} {easings.ease-in-out}, color {durations.fastest} {easings.ease-in-out}"
@@ -100,6 +101,7 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: Props) {
                                 filter: "drop-shadow(0 0 4px #5865F2)",
                                 color: "#5865F2"
                             }}
+                            color={"fg.medium"}
                             transition={
                                 "filter {durations.normal} {easings.ease-in-out}, color {durations.fastest} {easings.ease-in-out}"
                             }
@@ -109,6 +111,7 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: Props) {
                     </HStack>
 
                     <Link
+                        color={"fg.medium"}
                         display={{
                             base: "none",
                             md: "inline-flex"

@@ -7,7 +7,7 @@
 		"styled-system/*",
 		"stories/**/*",
 		".storybook/**/*",
-		".react-router/types/**/*"
+		".react-router/**/*"
 	],
 	"compilerOptions": {
 		"lib": ["DOM", "DOM.Iterable", "ES2022"],

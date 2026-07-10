@@ -3,6 +3,9 @@ import { Grid } from "@/ui";
 import { data } from "react-router";
 import { CACHE_DURATION, CacheHeaders, cachified } from "~/src/.server/cache";
 import { getLandingPageCodes } from "~/src/.server/codes";
+import { daysToMs, hourToMs } from "~/src/.server/docs";
+import { env } from "~/src/.server/env";
+import { getGithubStars } from "~/src/.server/github";
 import BuiltFor from "~/src/ui/pages/landing/BuiltFor";
 import Communities from "~/src/ui/pages/landing/Community";
 import EverythingYouNeed from "~/src/ui/pages/landing/EverythingYouNeed";
@@ -70,15 +73,30 @@ export const meta: Route.MetaFunction = () => {
 };
 
 export async function loader() {
-    const codes = await cachified({
-        key: "landing-page-codes",
-        getFreshValue: getLandingPageCodes,
-        staleWhileRevalidate: process.env.NODE_ENV === "production" ? CACHE_DURATION.ONE_MONTH : 0
-    });
+    const [codes, githubStars] = await Promise.all([
+        cachified({
+            key: "landing-page-codes",
+            getFreshValue: getLandingPageCodes,
+            ttl: process.env.NODE_ENV === "production" ? CACHE_DURATION.ONE_MONTH : 0,
+            staleWhileRevalidate: env.NODE_ENV === "production" ? CACHE_DURATION.ONE_MONTH : 0
+        }),
+        cachified({
+            key: "github-stars",
+            getFreshValue: getGithubStars,
+            ttl: env.NODE_ENV === "production" ? hourToMs(3) : 0,
+            swr: env.NODE_ENV === "production" ? CACHE_DURATION.ONE_MONTH : 0
+        })
+    ]);
 
-    return data(codes, {
-        headers: CacheHeaders.cache(CACHE_DURATION.DEFAULT, undefined, true)
-    });
+    return data(
+        {
+            ...codes,
+            githubStars
+        },
+        {
+            headers: CacheHeaders.cache(CACHE_DURATION.DEFAULT, undefined, true)
+        }
+    );
 }
 
 export const headers = CacheHeaders.cache(CACHE_DURATION.DEFAULT);

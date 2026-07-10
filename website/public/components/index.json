@@ -735,8 +735,7 @@
     "component": "Snippet",
     "npmDependencies": [],
     "fileDependencies": [
-      "./icon-button",
-      "./tooltip"
+      "./theme"
     ],
     "hasRecipe": true,
     "hasPattern": false,

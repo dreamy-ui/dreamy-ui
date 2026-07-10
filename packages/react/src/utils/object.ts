@@ -15,5 +15,5 @@ export function isObject(value: any): value is Record<string, any> {
 }
 
 export function objectToDeps(obj: Record<string, any>) {
-    return Object.entries(obj).map(([key, value]) => `${key}:${value}`);
+    return Object.entries(obj).map(([key, value]) => `${key}:${JSON.stringify(value)}`);
 }

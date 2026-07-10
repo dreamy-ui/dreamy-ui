@@ -1,7 +1,37 @@
 import { createRequestLogger } from "evlog";
-import { type MiddlewareFunction, createContext } from "react-router";
+import { type MiddlewareFunction, createContext, redirect } from "react-router";
+import redirects from "~/redirects";
 import { getTimings, requestStorage } from "~/src/.server/als";
 import { Docs, type Sections } from "./docs";
+
+const redirectMap = new Map<string, string>();
+
+for (const entry of redirects) {
+    const paths = Array.isArray(entry.path) ? entry.path : [entry.path];
+
+    for (const path of paths) {
+        redirectMap.set(path, entry.redirect);
+    }
+}
+
+function normalizePathname(pathname: string) {
+    if (pathname.length > 1 && pathname.endsWith("/")) {
+        return pathname.slice(0, -1);
+    }
+
+    return pathname;
+}
+
+export const redirectsMiddleware: MiddlewareFunction = async ({ url }, next) => {
+    const pathname = normalizePathname(url.pathname);
+    const destination = redirectMap.get(pathname);
+
+    if (destination) {
+        throw redirect(destination);
+    }
+
+    return next();
+};
 
 export const requestMiddleware: MiddlewareFunction = async ({ context, request }, next) => {
     const start = performance.now();

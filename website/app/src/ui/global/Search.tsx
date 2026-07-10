@@ -19,9 +19,8 @@ import {
 import { useCallback, useRef, useState } from "react";
 import { BiSearch } from "react-icons/bi";
 import { MdNavigateNext } from "react-icons/md";
-import { useNavigate } from "react-router";
+import { useFetcher, useNavigate } from "react-router";
 import type { DocSearchResult } from "~/src/.server/docs";
-import { useDebounceFetcher } from "remix-utils/use-debounce-fetcher";
 import useDebounce from "~/src/hooks/useDebounce";
 import { useRoot } from "~/src/hooks/useRoot";
 import { Link, type LinkProps } from "~/src/ui/global/Link";
@@ -53,9 +52,26 @@ export default function Search() {
     const inputRef = useRef<HTMLInputElement>(null);
 
     const [debouncedQuery, setDebouncedQuery] = useState("");
-    useDebounce(() => setDebouncedQuery(query), [query], 100);
 
-    const fetcher = useDebounceFetcher<SearchActionData>();
+    const fetcher = useFetcher<SearchActionData>();
+
+    useDebounce(
+        function submitSearch() {
+            setDebouncedQuery(query);
+
+            if (query.length > 0) {
+                fetcher.submit(
+                    { query },
+                    {
+                        method: "POST",
+                        action: "/api/docs/search"
+                    }
+                );
+            }
+        },
+        [query],
+        100
+    );
 
     useEventListener("keydown", (e) => {
         if (e.key === "k" && e[getActionKeyCode()]) {
@@ -158,6 +174,8 @@ export default function Search() {
     const { isMac } = useRoot();
     const actionKey = useActionKey(isMac ? "⌘" : "Ctrl");
 
+    console.log("fetcher.data", fetcher.data);
+
     return (
         <>
             <Button
@@ -235,19 +253,10 @@ export default function Search() {
                                 maxLength={100}
                                 onChange={(e) => {
                                     setQuery(e.target.value);
-                                    if (e.target.value.length > 0)
-                                        fetcher.submit(
-                                            { query: e.target.value },
-                                            {
-                                                method: "POST",
-                                                action: "/api/docs/search",
-                                                debounceTimeout: 100
-                                            }
-                                        );
                                 }}
                                 onKeyDown={onKeyDown}
-                                ps={12}
                                 placeholder="Search docs"
+                                ps={12}
                                 ref={inputRef}
                                 size="lg"
                                 spellCheck={"false"}
@@ -259,6 +268,7 @@ export default function Search() {
 
                         {fetcher.data &&
                         "docs" in fetcher.data &&
+                        fetcher.data.docs &&
                         fetcher.data.docs.length > 0 &&
                         debouncedQuery.length > 0 ? (
                             <Flex

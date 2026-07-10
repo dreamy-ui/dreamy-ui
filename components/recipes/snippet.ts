@@ -1,85 +1,114 @@
-import { defineParts, defineRecipe } from "@pandacss/dev";
+import { defineSlotRecipe } from "@pandacss/dev";
 
-const parts = defineParts({
-    root: { selector: "&" },
-    content: { selector: "& [data-part=content]" },
-    pre: { selector: "& [data-part=pre]" },
-    symbol: { selector: "& [data-part=symbol]" },
-    copy: { selector: "& [data-part=copy]" },
-    copyIcon: { selector: "& [data-part=copy-icon]" },
-    checkIcon: { selector: "& [data-part=check-icon]" }
-});
-
-export { parts as snippetParts };
-
-export const snippet = defineRecipe({
+export const snippet = defineSlotRecipe({
     className: "snippet",
-    jsx: ["Snippet"],
-    base: parts({
+    description: "Dreamy UI Snippet component",
+    jsx: ["Snippet.Root", "Snippet.Header", "Snippet.Body"],
+    slots: ["root", "header", "headerInner", "headerIcon", "headerContent", "copy", "body", "pre"],
+    base: {
         root: {
-            display: "inline-flex",
+            display: "flex",
+            flexDirection: "column",
+            width: "100%",
+            borderRadius: "l3",
+            backgroundColor: "#1a1a1a",
+            color: "fg.medium",
+            overflow: "hidden"
+        },
+        header: {
+            display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            h: "fit",
-            gap: 2
+            gap: 2,
+            borderBottomWidth: "1px",
+            borderBottomStyle: "solid",
+            borderBottomColor: "whiteAlpha.300"
         },
-        content: {
+        headerInner: {
             display: "flex",
-            flexDirection: "column"
+            alignItems: "center",
+            gap: 2,
+            minWidth: 0,
+            flex: 1
+        },
+        headerIcon: {
+            boxSize: 4,
+            color: "fg.medium",
+            flexShrink: 0
+        },
+        headerContent: {
+            display: "flex",
+            alignItems: "center",
+            gap: 2,
+            minWidth: 0,
+            flexWrap: "wrap"
         },
         copy: {
-            // bg: "transparent !important"
+            appearance: "none",
+            background: "transparent",
+            border: "none",
+            cursor: "pointer",
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "fg.medium",
+            flexShrink: 0,
+            p: 2,
+            _hover: {
+                color: "fg"
+            },
+            _disabled: {
+                cursor: "not-allowed",
+                opacity: 0.5
+            }
         },
+        body: {},
         pre: {
+            m: 0,
             p: 0,
-            overflowX: "auto"
-        },
-        symbol: {
-            userSelect: "none"
+            overflowX: "auto",
+            whiteSpace: "pre-wrap",
+            color: "fg.medium"
         }
-    }),
+    },
     variants: {
-        variant: {
-            solid: parts({
-                root: {
-                    bg: "alpha.50",
-                    borderColor: "border",
-                    borderWidth: "2px"
-                }
-            }),
-            bordered: parts({
-                root: {
-                    borderWidth: "2px",
-                    borderColor: "border"
-                }
-            })
-        },
         size: {
-            sm: parts({
-                root: {
-                    px: 2,
-                    py: 0.5,
-                    rounded: "l1"
-                }
-            }),
-            md: parts({
-                root: {
+            sm: {
+                body: {
                     px: 3,
-                    py: 1.5,
-                    rounded: "l2"
+                    py: 3,
+                    fontSize: "sm"
+                },
+                header: {
+                    px: 3,
+                    py: 1.5
                 }
-            }),
-            lg: parts({
-                root: {
+            },
+            md: {
+                body: {
                     px: 4,
-                    py: 2,
-                    rounded: "l2"
+                    py: 4,
+                    fontSize: "md"
+                },
+                header: {
+                    px: 4,
+                    py: 2
                 }
-            })
+            },
+            lg: {
+                body: {
+                    px: 5,
+                    py: 5,
+                    fontSize: "lg"
+                },
+                header: {
+                    px: 5,
+                    py: 2.5
+                }
+            }
         }
     },
     defaultVariants: {
-        variant: "solid",
         size: "md"
     }
 });

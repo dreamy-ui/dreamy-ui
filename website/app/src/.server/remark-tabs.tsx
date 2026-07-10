@@ -59,12 +59,6 @@ function transformTree(parent: any) {
 					bun: `bun ${sub}`
 				};
 
-		// <PMTabs>
-		//   <PMTabs.Option name="npm">npx dreamy ...</PMTabs.Option>
-		//   <PMTabs.Option name="pnpm">pnpm dlx dreamy ...</PMTabs.Option>
-		//   <PMTabs.Option name="yarn">yarn dlx dreamy ...</PMTabs.Option>
-		//   <PMTabs.Option name="bun">bunx dreamy ...</PMTabs.Option>
-		// </PMTabs>
 		const children = [
 			createMdxEl("PMTabs.Option", [text(commands.npm)], [attr("name", "npm")]),
 			createMdxEl("PMTabs.Option", [text(commands.pnpm)], [attr("name", "pnpm")]),

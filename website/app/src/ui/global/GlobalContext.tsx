@@ -1,4 +1,3 @@
-import { setClientCookie } from "@dreamy-ui/react";
 import {
     type PropsWithChildren,
     createContext,
@@ -41,7 +40,9 @@ export default function GlobalContextProvider({ children }: PropsWithChildren) {
     });
 
     const updatePm = useCallback((pm: PM) => {
-        setClientCookie("pm", pm, {
+        cookieStore.set({
+            name: "pm",
+            value: pm,
             path: "/",
             expires: Date.now() + 31536000000
         });

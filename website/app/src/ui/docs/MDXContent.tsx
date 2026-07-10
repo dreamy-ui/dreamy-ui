@@ -434,7 +434,15 @@ const Scaled = wrapLazy(
 
 const StationAutocomplete = wrapLazy(
     lazy(() => import("./components/autocompletes").then(m => ({ default: m.StationAutocomplete})))
-)
+);
+
+const PackageManagerSnippet = wrapLazy(
+    lazy(() => import("./components/snippets").then((m) => ({ default: m.PackageManagerSnippet })))
+);
+
+const CustomCopySnippet = wrapLazy(
+    lazy(() => import("./components/snippets").then((m) => ({ default: m.CustomCopySnippet })))
+);
 
 interface Props {
     mdxContent: MdxContent;
@@ -621,7 +629,9 @@ const DreamComponents = {
     ControlledStepper,
     StepperWithIcons,
     StepperWithColors,
-    StationAutocomplete
+    StationAutocomplete,
+    PackageManagerSnippet,
+    CustomCopySnippet
 };
 
 function Wrapper({ children, ...props }: PropsWithChildren<FlexProps>) {

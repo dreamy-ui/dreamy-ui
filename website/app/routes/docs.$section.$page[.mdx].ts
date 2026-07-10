@@ -1,6 +1,7 @@
 import { createError } from "evlog";
+import { getTimings } from "~/src/.server/als";
 import { Docs } from "~/src/.server/docs";
-import { getTimings, sectionsContext } from "~/src/.server/middlewares";
+import { sectionsContext } from "~/src/.server/middlewares";
 import type { Route } from "./+types/docs.$section.$page[.mdx]";
 
 export async function loader({ params, context }: Route.LoaderArgs) {

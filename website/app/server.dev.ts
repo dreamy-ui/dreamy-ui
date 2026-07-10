@@ -4,6 +4,7 @@ import compression from "compression";
 import express from "express";
 import "react-router";
 import type { ServerBuild } from "react-router";
+import { createServer } from "vite";
 
 const PORT = Number.parseInt(process.env.PORT || "3000", 10);
 const HOST = process.env.HOST || "0.0.0.0";
@@ -17,18 +18,17 @@ console.log("Starting development server");
 
 const server = http.createServer(app);
 
-const viteDevServer = await import("vite").then((vite) =>
-    vite.createServer({
-        appType: "custom",
-        server: {
-            middlewareMode: true,
-            hmr: {
-                server,
-                clientPort: PORT
-            }
+const viteDevServer = await createServer({
+    appType: "custom",
+    server: {
+        middlewareMode: true,
+        hmr: {
+            server,
+            clientPort: PORT
         }
-    })
-);
+    }
+});
+
 app.use(viteDevServer.middlewares);
 app.use(async (req, res, next) => {
     try {

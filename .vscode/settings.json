@@ -1,5 +1,6 @@
 {
 	"typescript.tsdk": "node_modules/typescript/lib",
 	"cursorcord.app.privacyMode.enable": false,
-	"vscord.app.privacyMode.enable": false
+	"vscord.app.privacyMode.enable": false,
+	"js/ts.tsdk.path": "node_modules/typescript/lib"
 }

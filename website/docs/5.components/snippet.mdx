@@ -1,9 +1,9 @@
 ---
 title: Snippet
-description: Snippet provides a simple way to display code snippets with a copy button.
+description: Snippet displays code with a header toolbar and copy action.
 isServerComponent: false
-source: /packages/react/src/components/snippet/snippet.tsx
-themeSource: /packages/system/src/recipes/snippet.ts
+source: /components/ui/snippet.tsx
+themeSource: /components/recipes/snippet.ts
 ---
 
 ## Installation
@@ -15,75 +15,130 @@ pnpm dreamy add snippet
 ## Usage
 
 <Wrapper>
-	<Snippet w='full'>
-		<>pnpm dlx dreamy add --all</>
-	</Snippet>
+	<Snippet.Root w='full'>
+		<Snippet.Header />
+		<Snippet.Body>pnpm dlx dreamy add --all</Snippet.Body>
+	</Snippet.Root>
 </Wrapper>
 
 ```tsx
-<Snippet>
-	pnpm dlx dreamy add --all
-</Snippet>
+<Snippet.Root>
+	<Snippet.Header />
+	<Snippet.Body>pnpm dlx dreamy add --all</Snippet.Body>
+</Snippet.Root>
 ```
 
-### Variants 
+### Header children
+
+Place any controls between the icon and copy button via `Snippet.Header` children. Package manager tabs, labels, or custom actions are entirely up to you.
 
 <Wrapper>
-	<Snippet variant="bordered" w='full'>
-		<>pnpm dlx dreamy add --all</>
-	</Snippet>
-	<Snippet variant="solid" w='full'>
-		<>pnpm dlx dreamy add --all</>
-	</Snippet>
+	<PackageManagerSnippet />
 </Wrapper>
 
 ```tsx
-<Snippet variant="bordered">
-	pnpm dlx dreamy add --all
-</Snippet>
-<Snippet variant="solid">
-	pnpm dlx dreamy add --all
-</Snippet>
+import { Button, Snippet } from "@dreamy-ui/react";
+import { useState } from "react";
+
+const commands = {
+	npm: "npx dreamy init",
+	pnpm: "pnpm dlx dreamy init",
+	yarn: "yarn dlx dreamy init",
+	bun: "bunx dreamy init",
+} as const;
+
+function InstallSnippet() {
+	const [pm, setPm] = useState<keyof typeof commands>("pnpm");
+	const command = commands[pm];
+
+	return (
+		<Snippet.Root>
+			<Snippet.Header>
+				{(Object.keys(commands) as Array<keyof typeof commands>).map((name) => (
+					<Button
+						key={name}
+						variant="link"
+						size="sm"
+						color={pm === name ? "fg" : "fg.medium"}
+						onClick={() => setPm(name)}
+					>
+						{name}
+					</Button>
+				))}
+			</Snippet.Header>
+			<Snippet.Body codeString={command}>{command}</Snippet.Body>
+		</Snippet.Root>
+	);
+}
+```
+
+### Custom icon
+
+Use the `icon` prop on `Snippet.Header` to change the leading icon.
+
+```tsx
+import { LuLink } from "react-icons/lu";
+
+<Snippet.Root>
+	<Snippet.Header icon={LuLink} />
+	<Snippet.Body>pnpm dlx dreamy add --all</Snippet.Body>
+</Snippet.Root>
+```
+
+### Custom copy button
+
+Hide the default copy button with `hideCopyButton` and use `useSnippetContext` to wire your own control.
+
+<Wrapper>
+	<CustomCopySnippet />
+</Wrapper>
+
+```tsx
+import { Icon, IconButton, Snippet } from "@dreamy-ui/react";
+import { useSnippetContext } from "@dreamy-ui/react";
+import { LuCheck, LuCopy } from "react-icons/lu";
+
+function CustomCopyButton() {
+	const { copy, copied } = useSnippetContext();
+
+	return (
+		<IconButton
+			aria-label="Copy"
+			icon={<Icon as={copied ? LuCheck : LuCopy} boxSize="4" />}
+			onClick={() => copy()}
+			variant="link"
+		/>
+	);
+}
+
+<Snippet.Root>
+	<Snippet.Header hideCopyButton>
+		<CustomCopyButton />
+	</Snippet.Header>
+	<Snippet.Body>pnpm dlx dreamy add --all</Snippet.Body>
+</Snippet.Root>
 ```
 
 ### Sizes
 
 <Wrapper>
-	<Snippet size="sm" w='full'>
-		<>pnpm dlx dreamy add --all</>
-	</Snippet>
-	<Snippet size="md" w='full'>
-		<>pnpm dlx dreamy add --all</>
-	</Snippet>
-	<Snippet size="lg" w='full'>
-		<>pnpm dlx dreamy add --all</>
-	</Snippet>
+	<Snippet.Root size="sm" w='full'>
+		<Snippet.Header />
+		<Snippet.Body>pnpm dlx dreamy add --all</Snippet.Body>
+	</Snippet.Root>
+	<Snippet.Root size="md" w='full'>
+		<Snippet.Header />
+		<Snippet.Body>pnpm dlx dreamy add --all</Snippet.Body>
+	</Snippet.Root>
+	<Snippet.Root size="lg" w='full'>
+		<Snippet.Header />
+		<Snippet.Body>pnpm dlx dreamy add --all</Snippet.Body>
+	</Snippet.Root>
 </Wrapper>
 
 ```tsx
-<Snippet size="sm">
-	pnpm dlx dreamy add --all
-</Snippet>
-<Snippet size="md">
-	pnpm dlx dreamy add --all
-</Snippet>
-<Snippet size="lg">
-	pnpm dlx dreamy add --all
-</Snippet>
-```
-
-### Disable Tooltip
-
-You can disable the "Copy To Clipboard" tooltip by using the `disableTooltip` prop.
-
-<Wrapper>
-	<Snippet disableTooltip w='full'>
-		<>pnpm dlx dreamy add --all</>
-	</Snippet>
-</Wrapper>
-
-```tsx
-<Snippet disableTooltip>
-	pnpm dlx dreamy add --all
-</Snippet>
+<Snippet.Root size="sm">
+	<Snippet.Header />
+	<Snippet.Body>pnpm dlx dreamy add --all</Snippet.Body>
+</Snippet.Root>
 ```

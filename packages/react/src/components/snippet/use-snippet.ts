@@ -1,215 +1,203 @@
 import { useClipboard } from "@/hooks";
+import { mergeRefs } from "@/hooks/use-merge-refs";
+import { createContext } from "@/provider/create-context";
 import type { PropGetter } from "@/utils";
+import { callAllHandlers } from "@/utils";
 import { dataAttr } from "@/utils/attr";
-import { objectToDeps } from "@/utils/object";
-import { useFocusRing } from "@react-aria/focus";
 import {
 	type ComponentPropsWithoutRef,
-	type ForwardedRef,
-	type ReactElement,
+	type ReactNode,
+	isValidElement,
 	useCallback,
+	useEffect,
 	useMemo,
-	useRef
+	useRef,
+	useState
 } from "react";
 
-export interface UseSnippetProps<T extends Record<string, any>, B extends Record<string, any>>
-	extends Omit<ComponentPropsWithoutRef<"div">, "onCopy"> {
+export interface SnippetContextValue {
+	bodyContent: ReactNode;
+	setBodyContent: (content: ReactNode) => void;
+	codeString: string | undefined;
+	setCodeString: (value: string | undefined) => void;
+	copy: (value?: string) => void;
+	copied: boolean;
+	resetCopied: () => void;
+	onCopy?: (value: string) => void;
+	disableCopy: boolean;
+}
+
+export const [SnippetProvider, useSnippetContext] = createContext<SnippetContextValue>({
+	name: "SnippetContext",
+	hookName: "useSnippetContext",
+	providerName: "Snippet.Root"
+});
+
+export interface UseSnippetRootProps {
 	/**
-	 * Ref to the DOM node.
-	 */
-	ref?: ForwardedRef<HTMLDivElement | null>;
-	/**
-	 * The content of the snippet.
-	 * if `string[]` is passed, it will be rendered as a multi-line snippet.
-	 */
-	children?: React.ReactNode | string | string[];
-	/**
-	 * The symbol to show before the snippet.
-	 * @default "$"
-	 */
-	symbol?: string | React.ReactNode;
-	/**
-	 * The time in milliseconds to wait before resetting the clipboard.
+	 * The time in milliseconds to wait before resetting the copied state.
 	 * @default 5000
 	 */
 	timeout?: number;
-	/*
-	 * Snippet copy icon.
-	 */
-	copyIcon?: ReactElement;
-	/*
-	 * Snippet copy icon. This icon will be shown when the text is copied.
-	 */
-	checkIcon?: ReactElement;
-	/**
-	 * Whether the copy button should receive focus on render.
-	 * @default false
-	 */
-	autoFocus?: boolean;
-	/**
-	 * The code string to copy. if `codeString` is passed, it will be copied instead of the children.
-	 */
-	codeString?: string;
-	/**
-	 * Whether to hide the tooltip.
-	 * @default false
-	 */
-	disableTooltip?: boolean;
 	/**
 	 * Whether to disable the copy functionality.
 	 * @default false
 	 */
 	disableCopy?: boolean;
 	/**
-	 * Whether to hide the copy button.
-	 * @default false
-	 */
-	hideCopyButton?: boolean;
-	/**
-	 * Whether to hide the symbol.
-	 * @default false
-	 */
-	hideSymbol?: boolean;
-	/**
-	 * Tooltip props.
-	 */
-	tooltipProps?: Partial<T>;
-	/**
-	 * Copy button props.
-	 */
-	copyButtonProps?: Partial<B>;
-	/**
 	 * Callback when the text is copied.
 	 */
-	onCopy?: (value: string | string[]) => void;
-	reduceMotion?: boolean;
+	onCopy?: (value: string) => void;
 }
 
-export function useSnippet<T extends Record<string, any>, B extends Record<string, any>>(
-	props: UseSnippetProps<T, B>
-) {
-	const {
-		ref,
-		children,
-		symbol = "$",
-		timeout,
-		copyIcon,
-		checkIcon,
-		codeString,
-		disableCopy = false,
-		disableTooltip = false,
-		hideCopyButton = false,
-		autoFocus = false,
-		hideSymbol = false,
-		onCopy: onCopyProp,
-		tooltipProps: userTooltipProps = {},
-		copyButtonProps = {},
-		className,
-		...otherProps
-	} = props;
+export function useSnippetRoot(props: UseSnippetRootProps) {
+	const { timeout, disableCopy = false, onCopy } = props;
 
-	const tooltipProps = {
-		content: "Copy to clipboard",
-		openDelay: 1000,
-		...userTooltipProps
-	};
+	const [bodyContent, setBodyContent] = useState<ReactNode>(null);
+	const [codeString, setCodeString] = useState<string | undefined>();
 
-	const preRef = useRef<HTMLPreElement>(null);
+	const { copy, copied, reset } = useClipboard({ timeout });
 
-	const { copy, copied } = useClipboard({ timeout });
+	const getCopyValue = useCallback(() => {
+		if (codeString) {
+			return codeString;
+		}
 
-	const isMultiLine = children && Array.isArray(children);
+		return getNodeText(bodyContent);
+	}, [bodyContent, codeString]);
 
-	const { isFocusVisible } = useFocusRing({
-		autoFocus
-	});
+	const handleCopy = useCallback(
+		(valueToCopy?: string) => {
+			if (disableCopy) {
+				return;
+			}
 
-	const symbolBefore = useMemo(() => {
-		if (!symbol || typeof symbol !== "string") return symbol;
-		const str = symbol.trim();
-
-		return str ? `${str} ` : "";
-	}, [symbol]);
-
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-	const getSnippetProps = useCallback<PropGetter>(
-		() => ({
-			...otherProps,
-			ref
-		}),
-		[objectToDeps(otherProps), ref]
+			const nextValue = valueToCopy ?? getCopyValue();
+			copy(nextValue);
+			onCopy?.(nextValue);
+		},
+		[copy, disableCopy, getCopyValue, onCopy]
 	);
 
-	const onCopy = useCallback(() => {
-		if (disableCopy) {
-			return;
-		}
+	const resetCopied = useCallback(() => {
+		reset();
+	}, [reset]);
 
-		let stringValue = "";
+	const getRootProps = useCallback<PropGetter>((props = {}) => props, []);
 
-		if (typeof children === "string") {
-			stringValue = children;
-		} else if (Array.isArray(children)) {
-			children.forEach((child: any) => {
-				// @ts-ignore
-				const childString =
-					typeof child === "string" ? child : child?.props?.children?.toString();
-
-				if (childString) {
-					stringValue += childString + "\n";
-				}
-			});
-		}
-
-		if (symbolBefore && typeof symbolBefore === "string") {
-			stringValue = stringValue.replace(symbolBefore, "");
-		}
-
-		const valueToCopy = codeString || stringValue || preRef.current?.textContent || "";
-
-		copy(valueToCopy);
-		onCopyProp?.(valueToCopy);
-	}, [copy, codeString, disableCopy, onCopyProp, children]);
-
-	const getCopyButtonProps = useCallback(
-		() =>
-			({
-				...copyButtonProps,
-				"aria-label":
-					typeof tooltipProps.content === "string" && tooltipProps.content
-						? tooltipProps.content
-						: "Copy to clipboard",
-				"data-copied": dataAttr(copied),
-				"data-part": "copy",
-				onClick: onCopy
-			}) as const,
-		[
+	const context = useMemo<SnippetContextValue>(
+		() => ({
+			bodyContent,
+			setBodyContent,
+			codeString,
+			setCodeString,
+			copy: handleCopy,
 			copied,
+			resetCopied,
 			onCopy,
-			// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-			tooltipProps,
-			copyButtonProps
-		]
+			disableCopy
+		}),
+		[bodyContent, codeString, handleCopy, copied, resetCopied, onCopy, disableCopy]
 	);
 
 	return {
-		preRef,
-		children,
+		context,
+		getRootProps
+	};
+}
+
+export function useSnippetHeader() {
+	const { copy, copied, disableCopy } = useSnippetContext();
+
+	const getHeaderProps = useCallback<PropGetter>(
+		(props = {}) => ({
+			...props,
+			"aria-label": props["aria-label"] ?? "Snippet"
+		}),
+		[]
+	);
+
+	const getCopyButtonProps = useCallback<PropGetter>(
+		(props = {}) => ({
+			...props,
+			"aria-label": props["aria-label"] ?? "Copy",
+			"data-copied": dataAttr(copied),
+			"data-part": "copy",
+			onClick: callAllHandlers(props.onClick, () => copy())
+		}),
+		[copied, copy]
+	);
+
+	return {
 		copied,
-		onCopy,
-		copyIcon,
-		checkIcon,
-		symbolBefore,
-		isMultiLine,
-		isFocusVisible,
-		hideCopyButton,
 		disableCopy,
-		disableTooltip,
-		hideSymbol,
-		tooltipProps: tooltipProps as unknown as Partial<T>,
-		getSnippetProps,
+		getHeaderProps,
 		getCopyButtonProps
 	};
 }
 
-export type UseSnippetReturn = ReturnType<typeof useSnippet>;
+export interface UseSnippetBodyProps {
+	/**
+	 * The code string to copy. If provided, it will be copied instead of the rendered children.
+	 */
+	codeString?: string;
+	children?: ReactNode;
+}
+
+export function useSnippetBody(props: UseSnippetBodyProps) {
+	const { codeString, children } = props;
+	const preRef = useRef<HTMLPreElement>(null);
+
+	const { setBodyContent, setCodeString } = useSnippetContext();
+
+	useEffect(() => {
+		setBodyContent(children ?? null);
+	}, [children, setBodyContent]);
+
+	useEffect(() => {
+		setCodeString(codeString);
+		return () => setCodeString(undefined);
+	}, [codeString, setCodeString]);
+
+	const getBodyProps = useCallback<PropGetter>((props = {}) => props, []);
+
+	const getPreProps = useCallback<PropGetter>(
+		(props = {}) => ({
+			...props,
+			"data-part": "pre",
+			ref: mergeRefs(props.ref, preRef),
+			tabIndex: props.tabIndex ?? 0
+		}),
+		[]
+	);
+
+	return {
+		children,
+		getBodyProps,
+		getPreProps
+	};
+}
+
+function getNodeText(node: ReactNode): string {
+	if (node == null || typeof node === "boolean") {
+		return "";
+	}
+
+	if (typeof node === "string" || typeof node === "number") {
+		return String(node);
+	}
+
+	if (Array.isArray(node)) {
+		return node.map(getNodeText).join("");
+	}
+
+	if (isValidElement<{ children?: ReactNode }>(node)) {
+		return getNodeText(node.props.children);
+	}
+
+	return "";
+}
+
+export type UseSnippetRootReturn = ReturnType<typeof useSnippetRoot>;
+export type UseSnippetHeaderReturn = ReturnType<typeof useSnippetHeader>;
+export type UseSnippetBodyReturn = ReturnType<typeof useSnippetBody>;

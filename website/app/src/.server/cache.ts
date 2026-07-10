@@ -1,9 +1,8 @@
 import type { Cache, CacheEntry, CachifiedOptions } from "@epic-web/cachified";
 import { cachified as baseCachified, totalTtl } from "@epic-web/cachified";
 import { remember } from "@epic-web/remember";
-import type { HeadersFunction } from "react-router";
 import { LRUCache } from "lru-cache";
-import { Logger } from "~/src/.server/logger";
+import type { HeadersFunction } from "react-router";
 import { minToMs } from "./docs";
 import { env } from "./env";
 
@@ -39,7 +38,6 @@ export enum CACHE_DURATION {
 }
 
 const lruInstance = remember("lru", () => {
-    Logger.info("Using in-memory LRU cache");
     return new LRUCache<string, CacheEntry>({ max: 1000 });
 });
 

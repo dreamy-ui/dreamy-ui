@@ -9,7 +9,7 @@ import { BsDiscord } from "react-icons/bs";
 import { IoArrowForward } from "react-icons/io5";
 import { MdOutlineCloud } from "react-icons/md";
 import { Link } from "react-router";
-import { PMTabs } from "~/src/ui/docs/components/pm-tabs";
+import { LandingSnippet } from "./LandingSnippet";
 
 export default function Main() {
     return (
@@ -120,12 +120,7 @@ export default function Main() {
                 col
                 gap={6}
             >
-                <PMTabs>
-                    <PMTabs.Option name="npm">npx dreamy init</PMTabs.Option>
-                    <PMTabs.Option name="pnpm">pnpm dlx dreamy init</PMTabs.Option>
-                    <PMTabs.Option name="yarn">yarn dlx dreamy init</PMTabs.Option>
-                    <PMTabs.Option name="bun">bun dlx dreamy init</PMTabs.Option>
-                </PMTabs>
+                <LandingSnippet />
 
                 <HStack
                     color={"fg.subtle"}

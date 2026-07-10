@@ -46,7 +46,7 @@ export * from "./ripple";
 export * as Select from "./select";
 export * from "./skeleton";
 export * as Slider from "./slider";
-export * from "./snippet";
+export * as Snippet from "./snippet";
 export * from "./span";
 export * from "./spinner";
 export * from "./stack";

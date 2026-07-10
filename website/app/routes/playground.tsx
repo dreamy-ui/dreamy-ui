@@ -970,7 +970,10 @@ export default function playground() {
                 docsPath="/docs/components/snippet"
             >
                 <Category name="Basic">
-                    <Snippet w="xs">npm install @dreamy-ui/react</Snippet>
+                    <Snippet.Root w="xs">
+                        <Snippet.Header />
+                        <Snippet.Body>npm install @dreamy-ui/react</Snippet.Body>
+                    </Snippet.Root>
                 </Category>
             </Component>
 

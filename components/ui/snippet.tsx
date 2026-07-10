@@ -1,114 +1,142 @@
 "use client";
 
-import { type UseSnippetProps, useSnippet } from "@dreamy-ui/react";
-import { type SVGProps, cloneElement, useMemo } from "react";
-import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
+import {
+    SnippetProvider,
+    type UseSnippetBodyProps,
+    type UseSnippetRootProps,
+    useSnippetBody,
+    useSnippetHeader,
+    useSnippetRoot
+} from "@dreamy-ui/react";
+import { type SVGProps, cloneElement } from "react";
+import { type HTMLDreamyProps, createStyleContext, dreamy } from "styled-system/jsx";
 import { type SnippetVariantProps, snippet } from "styled-system/recipes";
-import { IconButton, type IconButtonProps } from "./icon-button";
-import { Tooltip, type TooltipProps } from "./tooltip";
+import { DarkTheme } from "./theme";
 
-export interface SnippetProps
-    extends UseSnippetProps<TooltipProps, IconButtonProps>,
-        Omit<HTMLDreamyProps<"div">, keyof UseSnippetProps<TooltipProps, IconButtonProps>>,
+const { withProvider, withContext } = createStyleContext(snippet);
+
+const HeaderInner = withContext(dreamy.div, "headerInner");
+const HeaderContent = withContext(dreamy.div, "headerContent");
+const CopyTrigger = withContext(dreamy.button, "copy");
+const Pre = withContext(dreamy.pre, "pre");
+
+const HeaderIcon = withContext(function SnippetHeaderIcon({
+    as: AsComponent,
+    ...props
+}: HTMLDreamyProps<"svg"> & { as?: React.ElementType }) {
+    const IconComponent = AsComponent ?? TerminalIcon;
+    return <IconComponent {...props} />;
+}, "headerIcon");
+
+function TerminalIcon(props: SVGProps<SVGSVGElement>) {
+    return (
+        <svg
+            aria-hidden="true"
+            fill="currentColor"
+            height="16"
+            viewBox="0 0 24 24"
+            width="16"
+            {...props}
+        >
+            <path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2ZM8.5 15.5 5 12l3.5-3.5 1.06 1.06L7.12 12l2.44 2.44-1.06 1.06Zm6.44-7L15 12l-2.44 2.44-1.06-1.06L12.88 12 10.44 9.56l1.06-1.06Z" />
+        </svg>
+    );
+}
+
+export interface SnippetRootProps
+    extends UseSnippetRootProps,
+        Omit<HTMLDreamyProps<"div">, keyof UseSnippetRootProps>,
         SnippetVariantProps {}
-
-const StyledSnippet = dreamy("div", snippet);
 
 /**
  * Snippet component
  *
  * @See Docs https://dreamy-ui.com/docs/components/snippet
  */
-export function Snippet(props: SnippetProps) {
-    const { ref } = props;
-    const {
-        preRef,
-        children,
-        copied,
-        copyIcon = <CopyIcon />,
-        checkIcon = <CheckIcon />,
-        symbolBefore,
-        disableTooltip,
-        hideSymbol,
-        hideCopyButton,
-        tooltipProps,
-        isMultiLine,
-        getSnippetProps,
-        getCopyButtonProps
-    } = useSnippet<TooltipProps, IconButtonProps>({ ...props, ref });
-
-    const contents = useMemo(() => {
-        const clonedCheckIcon = checkIcon && cloneElement(checkIcon, { "data-part": "check-icon" });
-        const clonedCopyIcon = copyIcon && cloneElement(copyIcon, { "data-part": "copy-icon" });
-
-        if (hideCopyButton) {
-            return null;
-        }
-
-        return (
-            <Tooltip
-                hasArrow
-                isDisabled={
-                    copied || tooltipProps.isDisabled || disableTooltip || props.disableCopy
-                }
-                {...tooltipProps}
-            >
-                <IconButton
-                    icon={copied ? clonedCheckIcon : clonedCopyIcon}
-                    size={"sm"}
-                    variant={"ghost"}
-                    {...getCopyButtonProps()}
-                />
-            </Tooltip>
-        );
-    }, [
-        hideCopyButton,
-        getCopyButtonProps,
-        tooltipProps,
-        disableTooltip,
-        copied,
-        checkIcon,
-        copyIcon,
-        props.disableCopy
-    ]);
-
-    const preContent = useMemo(() => {
-        if (isMultiLine && children && Array.isArray(children)) {
-            return (
-                <div data-part="content">
-                    {children.map((t, index) => (
-                        <pre
-                            data-part="pre"
-                            key={`${index}-${t}`}
-                            tabIndex={0}
-                        >
-                            {!hideSymbol && <span data-part="symbol">{symbolBefore}</span>}
-                            {t}
-                        </pre>
-                    ))}
-                </div>
-            );
-        }
-
-        return (
-            <pre
-                data-part="pre"
-                ref={preRef}
-                tabIndex={0}
-            >
-                {!hideSymbol && <span data-part="symbol">{symbolBefore}</span>}
-                {children}
-            </pre>
-        );
-    }, [children, hideSymbol, isMultiLine, symbolBefore, preRef]);
+export const Root = withProvider(function SnippetRoot(props: SnippetRootProps) {
+    const { children, timeout, disableCopy, onCopy, ...rest } = props;
+    const { context, getRootProps } = useSnippetRoot({ timeout, disableCopy, onCopy });
 
     return (
-        <StyledSnippet {...getSnippetProps()}>
-            {preContent}
-            {contents}
-        </StyledSnippet>
+        <SnippetProvider value={context}>
+            <dreamy.div {...getRootProps(rest)}>
+                <DarkTheme full>{children}</DarkTheme>
+            </dreamy.div>
+        </SnippetProvider>
     );
+}, "root");
+
+export interface SnippetHeaderProps extends Omit<HTMLDreamyProps<"div">, "children"> {
+    /**
+     * The icon displayed at the start of the header.
+     */
+    icon?: React.ElementType;
+    /**
+     * Whether to hide the default copy button.
+     * @default false
+     */
+    hideCopyButton?: boolean;
+    /**
+     * Snippet copy icon.
+     */
+    copyIcon?: React.ReactElement;
+    /**
+     * Snippet check icon shown after copying.
+     */
+    checkIcon?: React.ReactElement;
+    children?: React.ReactNode;
 }
+
+export const Header = withContext(function SnippetHeader(props: SnippetHeaderProps) {
+    const {
+        icon: IconComponent = TerminalIcon,
+        hideCopyButton = false,
+        copyIcon = <CopyIcon />,
+        checkIcon = <CheckIcon />,
+        children,
+        ...rest
+    } = props;
+
+    const { copied, disableCopy, getHeaderProps, getCopyButtonProps } = useSnippetHeader();
+
+    const clonedCheckIcon = checkIcon && cloneElement(checkIcon, { "data-part": "check-icon" });
+    const clonedCopyIcon = copyIcon && cloneElement(copyIcon, { "data-part": "copy-icon" });
+
+    return (
+        <dreamy.div {...getHeaderProps(rest)}>
+            <HeaderInner>
+                <HeaderIcon as={IconComponent} />
+                <HeaderContent>{children}</HeaderContent>
+            </HeaderInner>
+
+            {!hideCopyButton && (
+                <CopyTrigger {...getCopyButtonProps({ disabled: disableCopy, type: "button" })}>
+                    {copied ? clonedCheckIcon : clonedCopyIcon}
+                </CopyTrigger>
+            )}
+        </dreamy.div>
+    );
+}, "header");
+
+export interface SnippetBodyProps
+    extends UseSnippetBodyProps,
+        Omit<HTMLDreamyProps<"div">, keyof UseSnippetBodyProps> {}
+
+export const Body = withContext(function SnippetBody(props: SnippetBodyProps) {
+    const { children, codeString, ...rest } = props;
+    const { children: bodyChildren, getBodyProps, getPreProps } = useSnippetBody({
+        children,
+        codeString
+    });
+
+    return (
+        <dreamy.div {...getBodyProps(rest)}>
+            <Pre {...getPreProps()}>
+                <code>{bodyChildren}</code>
+            </Pre>
+        </dreamy.div>
+    );
+}, "body");
 
 export function CheckIcon(props: SVGProps<SVGSVGElement>) {
     return (
@@ -129,7 +157,7 @@ export function CheckIcon(props: SVGProps<SVGSVGElement>) {
     );
 }
 
-function CopyIcon(props: SVGProps<SVGSVGElement>) {
+export function CopyIcon(props: SVGProps<SVGSVGElement>) {
     return (
         <svg
             aria-hidden="true"
@@ -156,3 +184,5 @@ function CopyIcon(props: SVGProps<SVGSVGElement>) {
         </svg>
     );
 }
+
+export { useSnippetContext } from "@dreamy-ui/react";

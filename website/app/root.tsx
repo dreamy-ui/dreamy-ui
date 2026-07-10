@@ -7,6 +7,7 @@ import "./index.css";
 import domMax from "./features";
 import {
     prefetchCacheControlHeaderMiddleware,
+    redirectsMiddleware,
     requestMiddleware,
     timingsMiddleware
 } from "./src/.server/middlewares";
@@ -15,6 +16,7 @@ import GlobalContextProvider from "./src/ui/global/GlobalContext";
 import AppLayout from "./src/ui/global/Layout";
 
 export const middleware = [
+    redirectsMiddleware,
     requestMiddleware,
     timingsMiddleware,
     prefetchCacheControlHeaderMiddleware
@@ -41,10 +43,6 @@ export function links() {
             type: "font/ttf",
             crossOrigin: "anonymous"
         }
-        // {
-        //     rel: "stylesheet",
-        //     href: styles
-        // }
     ];
 }
 
