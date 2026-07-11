@@ -20,9 +20,9 @@ export function Base() {
     );
 }
 
-export function AllowMultiple() {
+export function AllowSingle() {
     return (
-        <Accordion.Root allowMultiple>
+        <Accordion.Root allowMultiple={false}>
             {Array.from({ length: 3 }).map((_, index) => (
                 <Accordion.Item key={index}>
                     <Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
@@ -47,7 +47,7 @@ export function AllowToggle() {
 }
 
 export function Controlled() {
-    const [value, setValue] = useState<number | number[]>(0);
+    const [value, setValue] = useState<number | number[]>([0]);
 
     return (
         <Accordion.Root

@@ -2,7 +2,7 @@ import { Accordion } from "@/ui";
 import { useState } from "react";
 
 export function ControlledAccordion() {
-    const [value, setValue] = useState<number | number[]>(0);
+    const [value, setValue] = useState<number | number[]>([0]);
 
     return (
         <Accordion.Root

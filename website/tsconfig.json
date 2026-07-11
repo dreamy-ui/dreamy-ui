@@ -28,7 +28,8 @@
 			"@/ui": ["./components/ui/index"],
 			"styled-system/*": ["./styled-system/*"],
 			"rr/*": ["./.react-router/types/*"],
-			"~/*": ["./app/*"]
+			"~/*": ["./app/*"],
+			"@dreamy-ui/react": ["../packages/react/src"]
 		},
 		// "baseUrl": ".",
 		// Vite takes care of building everything, not tsc.

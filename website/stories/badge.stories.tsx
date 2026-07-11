@@ -15,6 +15,7 @@ export function Variants() {
             <Badge variant="outline">Outline</Badge>
             <Badge variant="subtle">Subtle</Badge>
             <Badge variant="plain">Plain</Badge>
+            <Badge variant="pill">Pill</Badge>
         </HStack>
     );
 }
@@ -75,6 +76,55 @@ export function SchemesWithVariants() {
             <Badge
                 scheme="none"
                 variant="outline"
+            >
+                None
+            </Badge>
+        </Wrap>
+    );
+}
+
+export function PillSchemes() {
+    return (
+        <Wrap>
+            <Badge
+                scheme="primary"
+                variant="pill"
+            >
+                Primary
+            </Badge>
+            <Badge
+                scheme="secondary"
+                variant="pill"
+            >
+                Secondary
+            </Badge>
+            <Badge
+                scheme="success"
+                variant="pill"
+            >
+                Success
+            </Badge>
+            <Badge
+                scheme="warning"
+                variant="pill"
+            >
+                Warning
+            </Badge>
+            <Badge
+                scheme="error"
+                variant="pill"
+            >
+                Error
+            </Badge>
+            <Badge
+                scheme="info"
+                variant="pill"
+            >
+                Info
+            </Badge>
+            <Badge
+                scheme="none"
+                variant="pill"
             >
                 None
             </Badge>

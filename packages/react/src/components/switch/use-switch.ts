@@ -5,7 +5,7 @@ import { type PropGetter, TRANSITION_EASINGS, callAllHandlers, cx } from "@/util
 import { ariaAttr, dataAttr } from "@/utils/attr";
 import { objectToDeps } from "@/utils/object";
 import { useFocusRing } from "@react-aria/focus";
-import type { Transition } from "motion";
+import type { MotionProps, Transition } from "motion/react";
 import type React from "react";
 import { type ReactNode, type Ref, useCallback, useId, useMemo, useRef, useState } from "react";
 import { useSafeLayoutEffect } from "../descendant/utils";
@@ -64,6 +64,10 @@ export interface UseSwitchProps extends Props, UserFeedbackProps {
     isIndeterminate?: boolean;
     isChecked?: boolean;
     defaultChecked?: boolean;
+}
+
+export interface UseSwitchThumbProps extends MotionProps {
+    "data-part": "thumb";
 }
 
 export function useSwitch(props: UseSwitchProps = {}) {
@@ -176,12 +180,7 @@ export function useSwitch(props: UseSwitchProps = {}) {
             onPointerDown: callAllHandlers(otherProps.onPointerDown, () => setActive(true)),
             onPointerUp: callAllHandlers(otherProps.onPointerUp, () => setActive(false)),
             onPointerLeave: callAllHandlers(otherProps.onPointerLeave, () => setActive(false)),
-            onClick: callAllHandlers(props.onClick, () => {
-                inputRef.current?.click();
-                requestAnimationFrame(() => {
-                    inputRef.current?.focus({ preventScroll: true });
-                });
-            }),
+            onClick: props.onClick,
             className: cx(className, "group"),
             ...otherProps
         };
@@ -194,7 +193,6 @@ export function useSwitch(props: UseSwitchProps = {}) {
         className,
         active,
         props.onClick,
-        isFocusVisible,
         ...objectToDeps(otherProps)
     ]);
 
@@ -296,21 +294,43 @@ export function useSwitch(props: UseSwitchProps = {}) {
 
     const getLabelProps: PropGetter = useCallback(
         () => ({
-            htmlFor: labelId,
             "data-part": "label",
             ...otherProps.labelProps
         }),
-        [labelId, otherProps.labelProps]
+        [otherProps.labelProps]
     );
 
-    const getThumbProps = useCallback(() => {
+    const defaultTransition = useDefaultTransition();
+
+    const getThumbProps: () => UseSwitchThumbProps = useCallback(() => {
+        const layout: MotionProps["layout"] = reduceMotion ? false : "position";
+        const transition: Transition = reduceMotion
+            ? { duration: 0 }
+            : {
+                  ...defaultTransition,
+                  layout: {
+                      duration: 0.2,
+                      ease: TRANSITION_EASINGS.easeInOut
+                  }
+              };
+
         return {
+            ...otherProps.thumbProps,
             "data-part": "thumb",
-            layout: "position",
+            layout,
+            layoutDependency: isChecked || isIndeterminate,
             layoutId: `switch-thumb-${id ?? labelId}`,
-            ...otherProps.thumbProps
-        } as const;
-    }, [id, labelId, otherProps.thumbProps]);
+            transition
+        } as UseSwitchThumbProps;
+    }, [
+        id,
+        labelId,
+        otherProps.thumbProps,
+        reduceMotion,
+        isChecked,
+        isIndeterminate,
+        defaultTransition
+    ]);
 
     useSafeLayoutEffect(() => {
         const el = inputRef.current;

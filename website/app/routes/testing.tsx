@@ -1,4 +1,4 @@
-import { Autocomplete, Button, DatePicker, Menu, Pagination } from "@/ui";
+import { Accordion, Autocomplete, Button, DatePicker, Icon, Menu, Pagination } from "@/ui";
 import { Flex } from "@/ui";
 import { MotionFlex } from "@/ui";
 import { Select } from "@/ui";
@@ -7,6 +7,7 @@ import { Text } from "@/ui";
 import { useColorMode, useControllable, useUpdateLayoutEffect } from "@dreamy-ui/react";
 import { AnimatePresence, m } from "motion/react";
 import { useState } from "react";
+import { PiSpinner } from "react-icons/pi";
 import type { Route } from "./+types/testing";
 
 export function meta() {
@@ -66,6 +67,9 @@ export default function Test() {
             </Pagination.Root>
 
             <Button
+                isLoading
+                loadingText="Loading..."
+                rightIcon={<Icon as={PiSpinner} />}
                 size={"lg"}
                 variant={"primary"}
             >
@@ -107,6 +111,17 @@ export default function Test() {
                     </Flex>
                 )}
             </AnimatePresence>
+
+            <Accordion.Root reduceMotion>
+                <Accordion.Item value="1">
+                    <Accordion.Trigger>
+                        <Text>Accordion Item 1</Text>
+                    </Accordion.Trigger>
+                    <Accordion.Content>
+                        <Text>Accordion Content 1</Text>
+                    </Accordion.Content>
+                </Accordion.Item>
+            </Accordion.Root>
 
             {/* Test cases for switch animation */}
             <Flex

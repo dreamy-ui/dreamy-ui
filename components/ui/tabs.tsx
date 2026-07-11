@@ -3,11 +3,13 @@
 import {
     TabsDescendantsProvider,
     TabsProvider,
+    TRANSITION_EASINGS,
     type UseTabListProps,
     type UseTabOptions,
     type UseTabsProps,
     useCanUseDOM,
     useDefaultTransition,
+    useReducedMotion,
     useTab,
     useTabList,
     useTabPanel,
@@ -107,8 +109,9 @@ export interface TabIndicatorProps extends MotionFlexProps {}
  * @internal
  */
 const Indicator = withContext(function TabIndicator(props: TabIndicatorProps) {
-    const { id } = useTabsContext();
+    const { id, selectedIndex } = useTabsContext();
     const transition = useDefaultTransition();
+    const reduceMotion = useReducedMotion();
     const domAvailable = useCanUseDOM();
 
     return (
@@ -116,13 +119,20 @@ const Indicator = withContext(function TabIndicator(props: TabIndicatorProps) {
             {...props}
             animate={{ opacity: 1, scale: 1 }}
             initial={!domAvailable ? { opacity: 0, scale: 0.95 } : undefined}
-            layout
-            layoutDependency={false}
+            layout={reduceMotion ? false : "position"}
+            layoutDependency={selectedIndex}
             layoutId={`${id}-indicator`}
-            transition={{
-                ...transition,
-                duration: (transition?.duration ?? 0.2) * 1.5
-            }}
+            transition={
+                reduceMotion
+                    ? { duration: 0 }
+                    : {
+                          ...transition,
+                          layout: {
+                              duration: (transition?.duration ?? 0.2) * 1.5,
+                              ease: TRANSITION_EASINGS.easeInOut
+                          }
+                      }
+            }
         />
     );
 }, "tabIndicator");

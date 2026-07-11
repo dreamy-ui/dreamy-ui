@@ -1,6 +1,6 @@
 "use client";
 
-import { type UseSwitchProps, useSwitch } from "@dreamy-ui/react";
+import { type UseSwitchProps, type UseSwitchThumbProps, useSwitch } from "@dreamy-ui/react";
 
 import { dreamy } from "styled-system/jsx";
 import { type SwittchVariantProps, swittch } from "styled-system/recipes";
@@ -10,7 +10,7 @@ export interface SwitchProps
     extends Omit<UseSwitchProps, keyof SwittchVariantProps>,
         SwittchVariantProps {}
 
-const StyledSwitch = dreamy("div", swittch);
+const StyledSwitch = dreamy("label", swittch);
 
 /**
  * Switch component
@@ -29,11 +29,13 @@ export function Switch(props: SwitchProps) {
         getLabelProps
     } = useSwitch({ ...props, ref });
 
+    const thumbProps: UseSwitchThumbProps = getThumbProps();
+
     return (
         <StyledSwitch {...getRootProps()}>
             <VisuallyHiddenInput {...getInputProps()} />
             <span {...getWrapperProps()}>
-                <MotionBox {...getThumbProps()}>{icon}</MotionBox>
+                <MotionBox {...thumbProps}>{icon}</MotionBox>
             </span>
             {children && <span {...getLabelProps()}>{children}</span>}
         </StyledSwitch>

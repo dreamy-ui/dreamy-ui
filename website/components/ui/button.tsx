@@ -139,7 +139,9 @@ export function Button({
             onPointerDown={onPointerDown}
             type={rest.type || "button"}
         >
-            {leftIcon && (isLoading ? <span style={{ opacity: 0 }}>{LeftIcon}</span> : LeftIcon)}
+            {leftIcon &&
+                !loadingText &&
+                (isLoading ? <span style={{ opacity: 0 }}>{LeftIcon}</span> : LeftIcon)}
 
             {isLoading && spinnerPlacement !== "end" && (
                 <ButtonSpinner
@@ -160,7 +162,9 @@ export function Button({
                     {spinner}
                 </ButtonSpinner>
             )}
-            {rightIcon && (isLoading ? <span style={{ opacity: 0 }}>{RightIcon}</span> : RightIcon)}
+            {rightIcon &&
+                !loadingText &&
+                (isLoading ? <span style={{ opacity: 0 }}>{RightIcon}</span> : RightIcon)}
 
             {!disableRipple && (
                 <div data-part="ripple-container">

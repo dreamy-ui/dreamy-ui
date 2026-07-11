@@ -32,7 +32,7 @@ export const accordion = defineSlotRecipe({
             width: "100%",
             paddingY: "var(--accordion-padding-y)",
             fontSize: "md",
-            fontWeight: "bold",
+            fontWeight: "medium",
             textAlign: "left"
         },
         content: {

@@ -27,7 +27,7 @@ export const tabs = defineSlotRecipe({
             position: "relative"
         },
         tab: {
-            zIndex: 0,
+            position: "relative",
             minWidth: 20,
             borderRadius: "none",
             WebkitTapHighlightColor: "transparent",
@@ -54,7 +54,11 @@ export const tabs = defineSlotRecipe({
                     backgroundColor: "{colors.alpha.100}"
                 },
                 tab: {
+                    zIndex: 1,
                     borderRadius: "l2",
+                    _selected: {
+                        zIndex: 0
+                    },
                     _hover: {
                         backgroundColor: "alpha.50!"
                     }
@@ -93,7 +97,11 @@ export const tabs = defineSlotRecipe({
             },
             "filled-simple": {
                 tab: {
-                    borderRadius: "l2"
+                    zIndex: 1,
+                    borderRadius: "l2",
+                    _selected: {
+                        zIndex: 0
+                    }
                 },
                 tabList: {
                     width: "fit-content"
@@ -101,7 +109,8 @@ export const tabs = defineSlotRecipe({
                 tabIndicator: {
                     backgroundColor: "{colors.alpha.100}",
                     top: 0,
-                    bottom: 0
+                    bottom: 0,
+                    zIndex: -1
                 }
             }
         },

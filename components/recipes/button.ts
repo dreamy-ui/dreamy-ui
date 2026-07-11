@@ -9,7 +9,8 @@ const parts = defineParts({
     rippleContainer: { selector: '& > [data-part="ripple-container"]' },
     icons: {
         selector: '& [data-part="icon-left"], & [data-part="icon-right"]'
-    }
+    },
+    spinner: { selector: '& [data-spinner]' }
 });
 
 export { parts as buttonParts };
@@ -51,6 +52,9 @@ export const button = defineRecipe({
                 px: "0 !important",
                 py: "0 !important",
                 aspectRatio: 1
+            },
+            "& > [data-spinner]:not([data-has-loading-text])": {
+                position: "absolute"
             }
         },
         icons: {
@@ -59,10 +63,15 @@ export const button = defineRecipe({
             alignItems: "center",
             justifyContent: "center",
             flexShrink: 0,
-            lineHeight: "normal",
-            "&[data-spinner]:not([data-has-loading-text])": {
-                position: "absolute"
-            }
+            lineHeight: "normal"
+        },
+        spinner: {
+            display: "inline-flex",
+            alignSelf: "center",
+            alignItems: "center",
+            justifyContent: "center",
+            flexShrink: 0,
+            lineHeight: 0
         },
         rippleContainer: {
             position: "absolute",

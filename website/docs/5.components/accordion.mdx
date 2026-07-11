@@ -40,10 +40,14 @@ Accordion is a component that allows you to toggle the visibility of content.
 
 ### Allow Multiple Open
 
-You can allow multiple open items by using the `allowMultiple` prop.
+By default, multiple accordion items can be expanded at once. Opening a new item does not close the others.
+
+### Allow Single Open
+
+To allow only one item open at a time, set `allowMultiple` to `false`.
 
 <Wrapper>
-	<Accordion.Root allowMultiple>
+	<Accordion.Root allowMultiple={false}>
 		{Array.from({ length: 3 }).map((_, index) => (
 			<Accordion.Item key={index}>
 				<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
@@ -53,7 +57,7 @@ You can allow multiple open items by using the `allowMultiple` prop.
 	</Accordion.Root>
 </Wrapper>
 ```tsx
-<Accordion.Root	 allowMultiple>
+<Accordion.Root allowMultiple={false}>
 	{Array.from({ length: 3 }).map((_, index) => (
 		<Accordion.Item key={index}>
 			<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
@@ -99,7 +103,7 @@ You can control the Accordion by using the `onValueChange` prop.
 
 ```tsx
 export function ControlledAccordion() {
-    const [value, setValue] = useState<number | number[]>(0);
+    const [value, setValue] = useState<number | number[]>([0]);
 
     return (
         <Accordion.Root

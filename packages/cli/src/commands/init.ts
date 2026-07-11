@@ -1468,7 +1468,7 @@ function printNextSteps(cwd: string, framework: FrameworkConfig) {
 
     p.log.info(
         "2. Start your development server and begin using Dreamy UI components:\n\n" +
-            '   import { Button } from "@/ui/button";\n\n' +
+            '   import { Button } from "@/ui";\n\n' +
             "   export default function Page() {\n" +
             '       return <Button variant="primary">Hello Dreamy UI! 🌙</Button>;\n' +
             "   }\n"

@@ -39,7 +39,7 @@ export interface UseAccordionProps {
 	/**
 	 * If `true`, multiple accordion items can be expanded at once.
 	 *
-	 * @default false
+	 * @default true
 	 */
 	allowMultiple?: boolean;
 	/**
@@ -66,7 +66,7 @@ export function useAccordion({
 	onChange,
 	defaultIndex,
 	index: indexProp,
-	allowMultiple,
+	allowMultiple = true,
 	allowToggle,
 	...htmlProps
 }: UseAccordionProps) {

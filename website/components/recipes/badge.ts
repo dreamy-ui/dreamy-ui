@@ -4,7 +4,7 @@ import { defineRecipe } from "@pandacss/dev";
 export const badge = defineRecipe({
     className: "badge",
     description:
-        "A compact uppercase label for statuses, counts, or tags beside other content. outline shows scheme-colored text with a matching border and no fill; subtle adds a 10% tinted background; plain is text-only with no border or background.",
+        "A compact uppercase label for statuses, counts, or tags beside other content. outline shows scheme-colored text with a matching border and no fill; subtle adds a 10% tinted background; plain is text-only with no border or background; pill uses the same soft fill as subtle with a fully rounded shape and extra padding.",
     jsx: ["Badge"],
     base: {
         display: "flex",
@@ -37,6 +37,13 @@ export const badge = defineRecipe({
             plain: {
                 color: "var(--badge-color)",
                 bg: "transparent"
+            },
+            pill: {
+                color: "var(--badge-color)",
+                bg: "var(--badge-color)/10",
+                borderRadius: "full",
+                px: 2.5,
+                py: 0.5
             }
         },
         scheme: getColorSchemes("--badge-color")

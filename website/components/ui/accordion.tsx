@@ -141,7 +141,6 @@ export const Trigger = withContext(function AccordionTrigger({
     children,
     icon,
     iconProps,
-    ref,
     ...props
 }: AccordionTriggerProps) {
     const { getTriggerProps } = useAccordionItemContext();
