@@ -399,6 +399,31 @@ export function usePopover(props: UsePopoverProps = {}) {
 
             if (trigger === TRIGGER.click) {
                 triggerProps.onClick = callAllHandlers(onClick, onToggle);
+                triggerProps.onKeyDown = callAllHandlers(
+                    onKeyDown,
+                    function handleClickTriggerKeyDown(event: React.KeyboardEvent<HTMLElement>) {
+                        if (
+                            event.repeat ||
+                            (event.key !== "Enter" && event.key !== " ")
+                        ) {
+                            return;
+                        }
+
+                        const tagName = event.currentTarget.tagName;
+                        const usesNativeKeyboardClick =
+                            tagName === "BUTTON" ||
+                            (tagName === "A" && event.key === "Enter") ||
+                            (tagName === "INPUT" &&
+                                ["button", "submit", "reset"].includes(
+                                    (event.currentTarget as HTMLInputElement).type
+                                ));
+
+                        if (usesNativeKeyboardClick) return;
+
+                        event.preventDefault();
+                        onToggle();
+                    }
+                );
             }
 
             triggerProps.onBlur = onBlur;

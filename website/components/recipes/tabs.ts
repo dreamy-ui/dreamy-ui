@@ -40,7 +40,8 @@ export const tabs = defineSlotRecipe({
         tabIndicator: {
             position: "absolute",
             left: 0,
-            right: 0
+            right: 0,
+            borderRadius: "inherit"
         }
     },
     variants: {

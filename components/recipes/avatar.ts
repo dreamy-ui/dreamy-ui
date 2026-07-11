@@ -6,6 +6,7 @@ const parts = defineParts({
         selector: "&"
     },
     image: { selector: '& [data-part="image"]' },
+    fallbackIcon: { selector: '& [data-part="fallback-icon"]' },
     name: { selector: '& [data-part="name"]' },
     group: { selector: '[data-part="group"]:has(&)' },
     excess: { selector: '[data-part="group"]:has(&) [data-part="excess"]' }
@@ -42,6 +43,11 @@ export const avatar = defineRecipe({
             width: "100%",
             height: "100%",
             rounded: "inherit"
+        },
+        fallbackIcon: {
+            color: "currentColor",
+            width: "100%",
+            height: "100%"
         },
         group: {
             display: "flex",

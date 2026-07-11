@@ -1,0 +1,8 @@
+{
+  "type": "recipe",
+  "id": "collapse",
+  "file": {
+    "name": "collapse.ts",
+    "content": "import { defineRecipe } from \"@pandacss/dev\";\r\n\r\nexport const collapse = defineRecipe({\r\n    className: \"collapse\",\r\n    description: \"Collapse transition wrapper with hidden overflow for animated height changes.\",\r\n    jsx: [\"Collapse\"],\r\n    base: {\r\n        overflow: \"hidden\",\r\n        display: \"block\"\r\n    }\r\n});\r\n"
+  }
+}

@@ -71,11 +71,9 @@ const GenericAvatarIcon = (props: HTMLDreamyProps<"svg">) => {
     return (
         <Icon
             aria-label="Avatar"
-            color="currentColor"
-            height="100%"
+            data-part="fallback-icon"
             role="img"
             viewBox="0 0 128 128"
-            width="100%"
             {...props}
         >
             <path

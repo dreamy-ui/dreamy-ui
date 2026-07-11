@@ -83,6 +83,7 @@ function getInheritedButtonSize(
 
 interface DatePickerContextValue {
     id: string;
+    focusCalendar(): void;
     value: Date | null;
     setValue: React.Dispatch<React.SetStateAction<Date | null>>;
     viewDate: Dayjs;
@@ -101,6 +102,7 @@ interface DatePickerContextValue {
     setYearPageStart: React.Dispatch<React.SetStateAction<number>>;
     onApply?: () => void;
     onCancel?: () => void;
+    isOpen: boolean;
 }
 
 const [DatePickerProvider, useDatePickerContext] = createContext<DatePickerContextValue>({
@@ -126,6 +128,13 @@ function isDateWithinBounds(date: Dayjs, minDate?: Date, maxDate?: Date): boolea
     }
 
     return true;
+}
+
+function focusCalendarGridCell(gridRef: React.RefObject<HTMLDivElement | null>, selector: string) {
+    requestAnimationFrame(function focusCell() {
+        const el = gridRef.current?.querySelector(selector) as HTMLButtonElement | null;
+        el?.focus({ preventScroll: true });
+    });
 }
 
 export interface DatePickerRootProps
@@ -204,6 +213,22 @@ export const Root = withProvider(
         } = props;
         const calendarSize = props.size;
         const id = useId();
+        const focusCalendar = useCallback(
+            function focusCalendar() {
+                const grid = document.getElementById(`${id}-calendar-grid`);
+                const activeCell = grid?.querySelector<HTMLButtonElement>(
+                    'button[tabindex="0"]:not(:disabled)'
+                );
+                activeCell?.focus({ preventScroll: true });
+            },
+            [id]
+        );
+        const calendarInitialFocusRef = useMemo(
+            function createCalendarInitialFocusRef() {
+                return { current: { focus: focusCalendar } };
+            },
+            [focusCalendar]
+        );
 
         const [value, setValue] = useControllableState({
             value: valueProp,
@@ -260,15 +285,20 @@ export const Root = withProvider(
             setIsOpen(false);
         }, []);
 
-        const handleOpen = useCallback(function handleOpen() {
-            setIsOpen(true);
-            setCalendarView("day");
-        }, []);
+        const handleOpen = useCallback(
+            function handleOpen() {
+                setViewDate(value ? dayjs(value) : dayjs());
+                setIsOpen(true);
+                setCalendarView("day");
+            },
+            [value]
+        );
 
         const contextValue = useMemo<DatePickerContextValue>(
             function createContextValue() {
                 return {
                     id,
+                    focusCalendar,
                     value,
                     setValue: handleValueChange,
                     viewDate,
@@ -286,11 +316,13 @@ export const Root = withProvider(
                     yearPageStart,
                     setYearPageStart,
                     onApply: handleApply,
-                    onCancel: handleCancel
+                    onCancel: handleCancel,
+                    isOpen
                 };
             },
             [
                 id,
+                focusCalendar,
                 value,
                 handleValueChange,
                 viewDate,
@@ -304,7 +336,8 @@ export const Root = withProvider(
                 hasFooter,
                 yearPageStart,
                 handleApply,
-                handleCancel
+                handleCancel,
+                isOpen
             ]
         );
 
@@ -317,6 +350,8 @@ export const Root = withProvider(
                     positioning={positioning}
                     usePortal={false}
                     {...popoverProps}
+                    autoFocus
+                    initialFocusRef={calendarInitialFocusRef}
                 >
                     <Box {...rest}>{children}</Box>
                 </Popover.Root>
@@ -380,7 +415,20 @@ export interface DatePickerPopoverProps extends Omit<Popover.PopoverContentProps
 export const PopoverContent = withContext(function DatePickerPopover(
     props: DatePickerPopoverProps
 ) {
-    return <Popover.Content {...props} />;
+    const { onAnimationComplete, ...rest } = props;
+    const context = useDatePickerContext();
+
+    return (
+        <Popover.Content
+            {...rest}
+            onAnimationComplete={function handleAnimationComplete(definition) {
+                if (context.isOpen) {
+                    context.focusCalendar();
+                }
+                onAnimationComplete?.(definition);
+            }}
+        />
+    );
 }, "popover");
 
 export interface DatePickerControlProps extends FlexProps {
@@ -515,7 +563,6 @@ export const Nav = withContext(function DatePickerNav(props: DatePickerNavProps)
             {(["day", "month", "year"] as const).map(function renderNavItem(view) {
                 return (
                     <Button
-                        flex={1}
                         key={view}
                         onClick={function handleNavClick() {
                             setCalendarView(view);
@@ -595,7 +642,7 @@ export const Header = withContext(function DatePickerHeader(props: DatePickerHea
 }, "calendarHeader");
 
 function DayCalendarView() {
-    const { value, setValue, viewDate, setViewDate, minDate, maxDate, weekStartsOn } =
+    const { id, value, setValue, viewDate, setViewDate, minDate, maxDate, weekStartsOn, isOpen } =
         useDatePickerContext();
 
     const selectedDate = useMemo(
@@ -697,13 +744,19 @@ function DayCalendarView() {
         [today]
     );
 
-    const [focusedDate, setFocusedDate] = useState<Dayjs>(() =>
-        getDefaultFocusedDate(viewDate, selectedDate)
-    );
+    const [focusedDate, setFocusedDate] = useState<Dayjs>(() => selectedDate ?? today);
 
     const gridRef = useRef<HTMLDivElement>(null);
     const shouldMoveFocusRef = useRef(false);
     const isKeyboardNavRef = useRef(false);
+
+    useEffect(
+        function resetFocusedDateWhenOpen() {
+            if (!isOpen) return;
+            setFocusedDate(selectedDate ?? today);
+        },
+        [isOpen, selectedDate, today]
+    );
 
     useEffect(
         function syncFocusedDateOnViewChange() {
@@ -729,6 +782,14 @@ function DayCalendarView() {
             el?.focus();
         },
         [focusedDate]
+    );
+
+    useEffect(
+        function focusDefaultCellWhenOpen() {
+            if (!isOpen) return;
+            focusCalendarGridCell(gridRef, `[data-date="${focusedDate.format("YYYY-MM-DD")}"]`);
+        },
+        [isOpen, focusedDate]
     );
 
     const handleGridKeyDown = useCallback(
@@ -801,6 +862,7 @@ function DayCalendarView() {
 
     return (
         <CalendarGrid
+            id={`${id}-calendar-grid`}
             onKeyDown={handleGridKeyDown}
             ref={gridRef}
             role="grid"
@@ -841,12 +903,14 @@ function DayCalendarView() {
 
 function MonthCalendarView() {
     const {
+        id,
         viewDate,
         setViewDate,
         setCalendarView,
         value,
         setValue,
-        size: ctxSize
+        size: ctxSize,
+        isOpen
     } = useDatePickerContext();
     const inheritedSize = getInheritedButtonSize(ctxSize);
     const size = sizeMap[inheritedSize ?? "md"];
@@ -889,6 +953,14 @@ function MonthCalendarView() {
         [focusedMonthIndex]
     );
 
+    useEffect(
+        function focusDefaultCellWhenOpen() {
+            if (!isOpen) return;
+            focusCalendarGridCell(gridRef, `[data-month-index="${focusedMonthIndex}"]`);
+        },
+        [isOpen, focusedMonthIndex]
+    );
+
     const handleKeyDown = useCallback(
         function handleKeyDown(event: React.KeyboardEvent) {
             let next = focusedMonthIndex;
@@ -925,10 +997,8 @@ function MonthCalendarView() {
     );
 
     return (
-        <Box
-            display="grid"
-            gap={2}
-            gridTemplateColumns="repeat(3, 1fr)"
+        <SelectionGrid
+            id={`${id}-calendar-grid`}
             onKeyDown={handleKeyDown}
             ref={gridRef}
         >
@@ -955,12 +1025,13 @@ function MonthCalendarView() {
                     </Button>
                 );
             })}
-        </Box>
+        </SelectionGrid>
     );
 }
 
 function YearCalendarView() {
     const {
+        id,
         viewDate,
         setViewDate,
         setCalendarView,
@@ -968,7 +1039,8 @@ function YearCalendarView() {
         setValue,
         size: ctxSize,
         yearPageStart,
-        setYearPageStart
+        setYearPageStart,
+        isOpen
     } = useDatePickerContext();
     const inheritedSize = getInheritedButtonSize(ctxSize);
     const size = sizeMap[inheritedSize ?? "md"];
@@ -1029,6 +1101,14 @@ function YearCalendarView() {
         [focusedYear]
     );
 
+    useEffect(
+        function focusDefaultCellWhenOpen() {
+            if (!isOpen) return;
+            focusCalendarGridCell(gridRef, `[data-year="${focusedYear}"]`);
+        },
+        [isOpen, focusedYear]
+    );
+
     const handleKeyDown = useCallback(
         function handleKeyDown(event: React.KeyboardEvent) {
             let nextYear = focusedYear;
@@ -1070,10 +1150,8 @@ function YearCalendarView() {
     );
 
     return (
-        <Box
-            display="grid"
-            gap={2}
-            gridTemplateColumns="repeat(3, 1fr)"
+        <SelectionGrid
+            id={`${id}-calendar-grid`}
             onKeyDown={handleKeyDown}
             ref={gridRef}
         >
@@ -1100,7 +1178,7 @@ function YearCalendarView() {
                     </Button>
                 );
             })}
-        </Box>
+        </SelectionGrid>
     );
 }
 
@@ -1199,6 +1277,10 @@ export const CalendarGridBody = withContext(function DatePickerCalendarGridBody(
 ) {
     return <Box {...props} />;
 }, "calendarGridBody");
+
+export const SelectionGrid = withContext(function DatePickerSelectionGrid(props: BoxProps) {
+    return <dreamy.div {...props} />;
+}, "selectionGrid");
 
 export interface DatePickerCalendarCellProps extends BoxProps {}
 

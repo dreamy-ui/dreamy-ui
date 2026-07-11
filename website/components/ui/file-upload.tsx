@@ -4,6 +4,7 @@ import {
     FileUploadProvider,
     type UseFileUploadProps,
     type UseFileUploadReturn,
+    dataAttr,
     formatFileSize,
     useFileUpload,
     useFileUploadContext
@@ -429,8 +430,8 @@ export function Items(props: ItemsBaseProps & HTMLDreamyProps<"li">) {
                         </ItemContent>
                     ) : (
                         <ItemName
+                            data-grow={dataAttr(true)}
                             file={file}
-                            flex="1"
                         />
                     )}
                     {clearable && <ItemDeleteTrigger file={file} />}

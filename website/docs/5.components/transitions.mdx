@@ -89,6 +89,54 @@ export function Scaled() {
 }
 ```
 
+### Text collapse
+
+Use `Collapse` with a fixed `startingHeight` to truncate long text and reveal it with a show more / show less control.
+
+<Wrapper>
+    <TextCollapsed />
+</Wrapper>
+
+```tsx
+export function TextCollapsed() {
+    const [isOpen, setIsOpen] = useState(false);
+
+    return (
+        <VStack alignItems="flex-start" gap={2} w="full">
+            <Collapse
+                animateOpacity={false}
+                endingHeight="auto"
+                isOpen={isOpen}
+                startingHeight="4.5em"
+                w="full"
+            >
+                <Text>
+                    Dreamy UI is a modern React component library built for accessible,
+                    themeable interfaces. It pairs headless hooks with Panda CSS recipes
+                    so you can compose buttons, overlays, forms, and layout primitives
+                    without fighting your design system. Transitions like Collapse make
+                    it easy to reveal long copy, FAQ answers, or descriptions without a
+                    jarring layout shift. Each component is designed to be copied into
+                    your project, customized with tokens, and extended with the same
+                    patterns you see in the docs. Whether you are building a marketing
+                    page, a dashboard, or a complex form flow, Dreamy UI gives you
+                    polished defaults with room to adapt every detail.
+                </Text>
+            </Collapse>
+            <Button
+                alignSelf="flex-start"
+                color="primary"
+                onClick={() => setIsOpen(!isOpen)}
+                variant="link"
+                whiteSpace="nowrap"
+            >
+                {isOpen ? "Show less" : "Show more"}
+            </Button>
+        </VStack>
+    );
+}
+```
+
 ### Starting and ending height
 
 You can set the starting and ending height of the content by setting the `startingHeight` and `endingHeight` props.

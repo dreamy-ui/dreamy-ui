@@ -119,7 +119,6 @@ const Indicator = withContext(function TabIndicator(props: TabIndicatorProps) {
             layout
             layoutDependency={false}
             layoutId={`${id}-indicator`}
-            rounded={"inherit"}
             transition={{
                 ...transition,
                 duration: (transition?.duration ?? 0.2) * 1.5

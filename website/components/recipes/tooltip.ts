@@ -1,26 +1,19 @@
-import { defineParts, defineRecipe } from "@pandacss/dev";
+import { defineSlotRecipe } from "@pandacss/dev";
 
-const parts = defineParts({
-    root: {
-        selector: "&"
-    },
-    arrowOuter: {
-        selector: "& [data-popper-arrow]"
-    },
-    arrowInner: {
-        selector: "& [data-popper-arrow-inner]"
-    }
-});
-
-export { parts as tooltipParts };
-
-export const tooltip = defineRecipe({
+export const tooltip = defineSlotRecipe({
     className: "tooltip",
     description:
         "A compact tooltip for brief contextual hints on hover or focus. Inverted colors with dark background and light text, small shadow, and arrow — no variant options.",
     jsx: ["Tooltip"],
-    base: parts({
+    slots: ["root", "trigger", "content"],
+    base: {
         root: {
+            display: "contents"
+        },
+        trigger: {
+            display: "inline-block"
+        },
+        content: {
             "--tooltip-bg": "{colors.fg.max}",
             "--tooltip-color": "{colors.bg}",
             "--popper-arrow-bg": "var(--tooltip-bg)",
@@ -34,5 +27,5 @@ export const tooltip = defineRecipe({
             maxW: "xs",
             zIndex: "{zIndex.tooltip}"
         }
-    })
+    }
 });

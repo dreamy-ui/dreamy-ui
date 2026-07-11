@@ -22,6 +22,7 @@ export const datePicker = defineSlotRecipe({
         "calendarGridBody",
         "calendarCell",
         "calendarCellButton",
+        "selectionGrid",
         "footer",
         "footerButton"
     ],
@@ -42,6 +43,7 @@ export const datePicker = defineSlotRecipe({
         "CalendarGridBody",
         "CalendarCell",
         "CalendarCellButton",
+        "SelectionGrid",
         "Footer",
         "FooterButton",
         "AIO"
@@ -69,7 +71,10 @@ export const datePicker = defineSlotRecipe({
             display: "flex",
             flexDirection: "row",
             gap: 1,
-            w: "full"
+            w: "full",
+            "& > button": {
+                flex: 1
+            }
         },
         calendar: {
             display: "flex",
@@ -124,6 +129,11 @@ export const datePicker = defineSlotRecipe({
             position: "relative",
             width: "full",
             paddingBottom: "100%"
+        },
+        selectionGrid: {
+            display: "grid",
+            gap: 2,
+            gridTemplateColumns: "repeat(3, 1fr)"
         },
         calendarCellButton: {
             position: "absolute",

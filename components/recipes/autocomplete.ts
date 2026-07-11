@@ -15,6 +15,8 @@ export const autocomplete = defineSlotRecipe({
     slots: [
         "root",
         "control",
+        "icon",
+        "input",
         "indicatorGroup",
         "indicator",
         "clearButton",
@@ -37,6 +39,18 @@ export const autocomplete = defineSlotRecipe({
             display: "flex",
             alignItems: "stretch",
             width: "full"
+        },
+        icon: {
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexShrink: 0,
+            color: "fg.medium",
+            pl: "var(--ac-px)"
+        },
+        input: {
+            width: "full",
+            flex: 1
         },
         indicatorGroup: {
             display: "flex",

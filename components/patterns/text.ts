@@ -21,9 +21,9 @@ export const text = definePattern({
             ),
             fontFamily: map(variant, (v) => (v === "heading" ? "heading" : undefined)),
             transition: map(variant, (v) => (v === "link" ? "colors" : undefined)),
-            _hover: map(variant, (v) =>
-                v === "link" ? ({ color: "{colors.fg.max}" } as any) : undefined
-            ),
+            _hover: {
+                color: map(variant, (v) => (v === "link" ? "fg.max" : undefined))
+            },
             ...rest
         };
     }

@@ -11,9 +11,9 @@ import {
     useReducedMotion,
     useTooltip
 } from "@dreamy-ui/react";
-import { AnimatePresence, type HTMLMotionProps, m } from "motion/react";
+import { AnimatePresence, type HTMLMotionProps, isValidMotionProp, m } from "motion/react";
 import { Children, Fragment, cloneElement, useMemo } from "react";
-import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
+import { createStyleContext, dreamy, isCssProperty, type HTMLDreamyProps } from "styled-system/jsx";
 import { tooltip } from "styled-system/recipes";
 import { Box } from "./box";
 
@@ -63,7 +63,26 @@ export interface TooltipProps
     motionProps?: HTMLMotionProps<"div">;
 }
 
-const StyledTooltip = m.create(dreamy("div", tooltip));
+const { withProvider, withContext } = createStyleContext(tooltip);
+
+const TooltipRoot = withProvider(function TooltipRootBase({
+    children,
+    ...props
+}: HTMLDreamyProps<"div">) {
+    return <dreamy.div {...props}>{children}</dreamy.div>;
+}, "root");
+
+const TooltipTrigger = withContext(function TooltipTriggerBase(props: HTMLDreamyProps<"span">) {
+    return <dreamy.span {...props} />;
+}, "trigger");
+
+const StyledTooltip = withContext(
+    m.create(dreamy.div, {
+        shouldForwardProp: (prop, variantKeys) =>
+            isValidMotionProp(prop) || (!variantKeys.includes(prop) && !isCssProperty(prop))
+    }),
+    "content"
+);
 
 /**
  * Tooltips display informative text when users hover, focus on, or tap an element.
@@ -92,14 +111,12 @@ export function Tooltip(props: TooltipProps) {
     const trigger = useMemo(() => {
         if (shouldWrap) {
             return (
-                <Box
-                    as={"span"}
-                    display="inline-block"
+                <TooltipTrigger
                     tabIndex={0}
                     {...tooltip.getTriggerProps()}
                 >
                     {children}
-                </Box>
+                </TooltipTrigger>
             );
         }
         /**
@@ -140,7 +157,7 @@ export function Tooltip(props: TooltipProps) {
     }
 
     return (
-        <>
+        <TooltipRoot>
             {trigger}
             <AnimatePresence>
                 {tooltip.isOpen && !isDisabled && (
@@ -174,6 +191,6 @@ export function Tooltip(props: TooltipProps) {
                     </PortalComponent>
                 )}
             </AnimatePresence>
-        </>
+        </TooltipRoot>
     );
 }

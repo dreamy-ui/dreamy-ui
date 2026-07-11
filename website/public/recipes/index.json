@@ -56,6 +56,11 @@
   },
   {
     "type": "recipe",
+    "id": "collapse",
+    "file": "collapse.ts"
+  },
+  {
+    "type": "recipe",
     "id": "date-picker",
     "file": "date-picker.ts"
   },

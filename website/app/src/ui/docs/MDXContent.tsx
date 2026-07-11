@@ -431,6 +431,9 @@ const Collapsed = wrapLazy(
 const Scaled = wrapLazy(
     lazy(() => import("./components/transitions").then((m) => ({ default: m.Scaled })))
 );
+const TextCollapsed = wrapLazy(
+    lazy(() => import("./components/transitions").then((m) => ({ default: m.TextCollapsed })))
+);
 
 const StationAutocomplete = wrapLazy(
     lazy(() => import("./components/autocompletes").then(m => ({ default: m.StationAutocomplete})))
@@ -566,6 +569,7 @@ const DreamComponents = {
     Popover,
     Collapsed,
     Scaled,
+    TextCollapsed,
     ControlledAccordion,
     ControlledPinInput,
     Switch,

@@ -119,7 +119,10 @@ export const fileUpload = defineSlotRecipe({
         itemName: {
             color: "fg",
             fontWeight: "medium",
-            lineClamp: 1
+            lineClamp: 1,
+            "&[data-grow]": {
+                flex: 1
+            }
         },
         itemContent: {
             display: "flex",

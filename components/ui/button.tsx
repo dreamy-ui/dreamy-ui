@@ -2,10 +2,8 @@
 
 import { dataAttr, isMobile, nextTick, useRipple } from "@dreamy-ui/react";
 import { cloneElement, isValidElement, useCallback, useMemo } from "react";
-import { css, cx } from "styled-system/css";
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type ButtonVariantProps, button } from "styled-system/recipes";
-import { Box } from "./box";
 import { Ripple } from "./ripple";
 import { Span } from "./span";
 import { Spinner } from "./spinner";
@@ -206,17 +204,9 @@ function ButtonSpinner(props: ButtonSpinnerProps) {
     } = props;
 
     return (
-        <Box
+        <Span
             {...rest}
-            className={cx(
-                css({
-                    display: "flex",
-                    alignItems: "center",
-                    position: loadingText ? "relative" : "absolute",
-                    lineHeight: "normal"
-                }),
-                rest.className
-            )}
+            data-has-loading-text={dataAttr(!!loadingText)}
             data-part={
                 spinnerPlacement === "start"
                     ? "icon-left"
@@ -224,9 +214,10 @@ function ButtonSpinner(props: ButtonSpinnerProps) {
                       ? "icon-right"
                       : undefined
             }
+            data-spinner=""
         >
             {children}
-        </Box>
+        </Span>
     );
 }
 

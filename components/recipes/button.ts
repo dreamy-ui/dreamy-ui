@@ -58,7 +58,11 @@ export const button = defineRecipe({
             alignSelf: "center",
             alignItems: "center",
             justifyContent: "center",
-            flexShrink: 0
+            flexShrink: 0,
+            lineHeight: "normal",
+            "&[data-spinner]:not([data-has-loading-text])": {
+                position: "absolute"
+            }
         },
         rippleContainer: {
             position: "absolute",

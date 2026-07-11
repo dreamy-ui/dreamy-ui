@@ -11,11 +11,21 @@ import {
     AnimatePresence,
     type AnimatePresenceProps,
     type HTMLMotionProps,
-    type Variants
+    type Variants,
+    isValidMotionProp,
+    m
 } from "motion/react";
 import { useMemo } from "react";
-import { css, cx } from "styled-system/css";
+import { dreamy, isCssProperty } from "styled-system/jsx";
+import { collapse } from "styled-system/recipes";
 import { MotionBox, type MotionBoxProps } from "./motion";
+
+const CollapseMotion = m.create(
+    dreamy("div", collapse, {
+        shouldForwardProp: (prop, variantKeys) =>
+            isValidMotionProp(prop) || (!variantKeys.includes(prop) && !isCssProperty(prop))
+    })
+);
 
 export interface CollapseOptions {
     /**
@@ -92,20 +102,14 @@ export function Collapse(props: CollapseProps) {
             {...animatePresenceProps}
         >
             {show && (
-                <MotionBox
+                <CollapseMotion
                     animate={animate}
                     custom={custom}
                     exit="exit"
                     initial={unmountOnExit ? "exit" : false}
                     variants={transformReducedMotion(variants, reducedMotion)}
                     {...rest}
-                    className={cx(
-                        css({
-                            overflow: "hidden",
-                            display: "block"
-                        }),
-                        className
-                    )}
+                    className={className}
                 />
             )}
         </AnimatePresence>

@@ -129,7 +129,6 @@
     "component": "Button",
     "npmDependencies": [],
     "fileDependencies": [
-      "./box",
       "./ripple",
       "./span",
       "./spinner"
@@ -954,8 +953,11 @@
     "fileDependencies": [
       "./motion"
     ],
-    "hasRecipe": false,
-    "hasPattern": false
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "collapse"
+    ]
   },
   {
     "type": "component",

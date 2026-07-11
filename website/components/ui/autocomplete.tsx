@@ -35,6 +35,16 @@ const AutocompleteControl = withContext(function AutocompleteControlBase(
     return <dreamy.div {...props} />;
 }, "control");
 
+const AutocompleteIcon = withContext(function AutocompleteIconBase(props: HTMLDreamyProps<"div">) {
+    return <dreamy.div {...props} />;
+}, "icon");
+
+const AutocompleteInputWrapper = withContext(function AutocompleteInputWrapperBase(
+    props: HTMLDreamyProps<"div">
+) {
+    return <dreamy.div {...props} />;
+}, "input");
+
 const AutocompleteIndicatorGroup = withContext(Box, "indicatorGroup");
 
 function AutocompleteIndicatorBase(props: SVGProps<SVGSVGElement>) {
@@ -174,25 +184,15 @@ export function Input({ icon, placeholder, ref, ...rest }: AutocompleteInputProp
     return (
         <PopoverAnchor>
             <AutocompleteControl>
-                {icon && (
-                    <Box
-                        alignItems="center"
-                        color="fg.medium"
-                        display="flex"
-                        flexShrink={0}
-                        justifyContent="center"
-                        pl="var(--ac-px)"
-                    >
-                        {icon}
-                    </Box>
-                )}
-                <BaseInput
-                    placeholder={placeholder}
-                    size={size}
-                    variant={triggerVariant as InputProps["variant"]}
-                    width="full"
-                    {...(getInputProps({ ...rest, ref } as any) as any)}
-                />
+                {icon && <AutocompleteIcon>{icon}</AutocompleteIcon>}
+                <AutocompleteInputWrapper>
+                    <BaseInput
+                        placeholder={placeholder}
+                        size={size}
+                        variant={triggerVariant as InputProps["variant"]}
+                        {...(getInputProps({ ...rest, ref } as any) as any)}
+                    />
+                </AutocompleteInputWrapper>
                 <AutocompleteIndicatorGroup>
                     {isClearable && selectedValue && <AutocompleteClearButton />}
                     <AutocompleteIndicator />
