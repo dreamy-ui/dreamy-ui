@@ -10,7 +10,7 @@ import {
 import { useControllableState } from "@dreamy-ui/react";
 import dayjs, { type Dayjs } from "dayjs";
 import * as m from "motion/react-m";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import { LuCalendar } from "react-icons/lu";
 import { createStyleContext, dreamy } from "styled-system/jsx";
@@ -82,6 +82,7 @@ function getInheritedButtonSize(
 }
 
 interface DatePickerContextValue {
+    id: string;
     value: Date | null;
     setValue: React.Dispatch<React.SetStateAction<Date | null>>;
     viewDate: Dayjs;
@@ -202,6 +203,7 @@ export const Root = withProvider(
             ...rest
         } = props;
         const calendarSize = props.size;
+        const id = useId();
 
         const [value, setValue] = useControllableState({
             value: valueProp,
@@ -266,6 +268,7 @@ export const Root = withProvider(
         const contextValue = useMemo<DatePickerContextValue>(
             function createContextValue() {
                 return {
+                    id,
                     value,
                     setValue: handleValueChange,
                     viewDate,
@@ -287,6 +290,7 @@ export const Root = withProvider(
                 };
             },
             [
+                id,
                 value,
                 handleValueChange,
                 viewDate,
@@ -1225,7 +1229,7 @@ export const CalendarCellButton = withContext(function DatePickerCalendarCellBut
                     data-part="indicator"
                     initial={false}
                     layout={"position"}
-                    layoutId={`date-picker-cell-button-indicator-${viewMonthKey}`}
+                    layoutId={`${context.id}-date-picker-cell-button-indicator-${viewMonthKey}`}
                 />
             )}
             {props.children}
