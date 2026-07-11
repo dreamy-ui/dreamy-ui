@@ -2,6 +2,8 @@ import { defineRecipe } from "@pandacss/dev";
 
 export const group = defineRecipe({
     className: "group",
+    description:
+        "A layout wrapper for grouping adjacent buttons or inputs with shared borders. orientation controls row vs column layout; attached merges borders and corner radii with no gap between items; grow stretches children equally; stacking controls which focused item appears on top.",
     jsx: ["Group"],
     base: {
         display: "inline-flex",

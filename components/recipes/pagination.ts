@@ -2,7 +2,8 @@ import { defineSlotRecipe } from "@pandacss/dev";
 
 export const pagination = defineSlotRecipe({
     className: "pagination",
-    description: "Dreamy UI Pagination component",
+    description:
+        "Page navigation controls with previous/next triggers and numbered page items. The active page shows a primary-filled pill indicator behind the number — only size affects dimensions.",
     slots: ["root", "item", "ellipsis", "prevTrigger", "nextTrigger"],
     jsx: [
         "Pagination.Root",

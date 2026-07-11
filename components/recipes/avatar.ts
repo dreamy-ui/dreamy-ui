@@ -15,6 +15,8 @@ export { parts as avatarParts };
 
 export const avatar = defineRecipe({
     className: "avatar",
+    description:
+        "A circular avatar for user profile images, initials fallback, or stacked avatar groups. showBorder adds a 2px ring around the avatar; filled uses the scheme color as fallback background, subtle uses a soft gray fill, and outline shows only a border with no fill when the image is not loaded.",
     jsx: ["Avatar"],
     base: parts({
         root: {

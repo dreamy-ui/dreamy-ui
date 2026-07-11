@@ -2,6 +2,8 @@ import { defineRecipe } from "@pandacss/dev";
 
 export const icon = defineRecipe({
     className: "icon",
+    description:
+        "An SVG icon wrapper for consistently sizing inline icons that inherit currentColor. Only size sets width and height from 12px to 32px — no other visual variants.",
     base: {
         color: "currentcolor",
         display: "inline-block",

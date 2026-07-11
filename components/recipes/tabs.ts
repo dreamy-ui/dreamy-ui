@@ -2,7 +2,8 @@ import { defineSlotRecipe } from "@pandacss/dev";
 
 export const tabs = defineSlotRecipe({
     className: "tabs",
-    description: "Dreamy UI Tabs component",
+    description:
+        "A tabbed interface for switching between related content panels with an animated indicator. filled is a segmented control on a tinted rounded track; underline uses a bottom border with a primary indicator line; filled-simple highlights only the active tab with a soft background; fitted stretches tabs to equal width; orientation flips between horizontal and vertical layouts.",
     jsx: ["Tabs.Root", "Tabs.List", "Tabs.Tab", "Tabs.Panels", "Tabs.Panel"],
     slots: ["root", "tabList", "tab", "tabPanels", "tabPanel", "tabIndicator"],
     base: {

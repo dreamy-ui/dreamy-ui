@@ -2,7 +2,8 @@ import { defineSlotRecipe } from "@pandacss/dev";
 
 export const breadcrumb = defineSlotRecipe({
     className: "breadcrumb",
-    description: "Dreamy UI Breadcrumb component",
+    description:
+        "A breadcrumb trail for hierarchical navigation showing the current page path. plain highlights links on hover with color only; underline adds a text underline on hover and focus-visible.",
     slots: ["root", "list", "item", "link", "currentLink", "separator", "ellipsis"],
     jsx: [
         "Breadcrumb.Root",

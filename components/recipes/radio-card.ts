@@ -3,7 +3,8 @@ import { defineSlotRecipe } from "@pandacss/dev";
 
 export const radioCard = defineSlotRecipe({
     className: "radio-card",
-    description: "Dreamy UI Radio Card component",
+    description:
+        "A selectable card tile with an embedded radio for picking one option from a set. variant outline borders the card with a scheme ring when checked; subtle has no border and applies a soft scheme tint when selected; radioVariant solid fills the inner dot with the scheme color.",
     slots: ["root", "header", "title", "description", "radio", "label"],
     jsx: [
         "RadioCard.Root",

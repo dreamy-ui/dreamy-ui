@@ -1,8 +1,8 @@
-import { Autocomplete, type AutocompleteItem, Spinner, Text, VStack } from "@/ui";
-import { useState } from "react";
+import { Autocomplete, HStack, Spinner, Text, VStack } from "@/ui";
+import { useEffect, useState } from "react";
 import { LuSearch } from "react-icons/lu";
 
-const fruits: AutocompleteItem[] = [
+const fruits: Autocomplete.AutocompleteItem[] = [
     { value: "strawberry", label: "Strawberry" },
     { value: "banana", label: "Banana" },
     { value: "orange", label: "Orange" },
@@ -49,7 +49,7 @@ export function AutocompleteWithIcon() {
 
 export function AsyncSearchAutocomplete() {
     const [value, setValue] = useState("");
-    const [items, setItems] = useState<AutocompleteItem[]>([]);
+    const [items, setItems] = useState<Autocomplete.AutocompleteItem[]>([]);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
@@ -121,7 +121,7 @@ export function AsyncSearchAutocomplete() {
 
 export function AsyncAutocomplete() {
     const [isLoading, setIsLoading] = useState(true);
-    const [items, setItems] = useState<AutocompleteItem[]>([]);
+    const [items, setItems] = useState<Autocomplete.AutocompleteItem[]>([]);
 
     function fetchItems() {
         if (items.length > 0) return;
@@ -160,7 +160,7 @@ export function AsyncAutocomplete() {
     );
 }
 
-const manyItems: AutocompleteItem[] = Array.from({ length: 1000 }, (_, i) => ({
+const manyItems: Autocomplete.AutocompleteItem[] = Array.from({ length: 1000 }, (_, i) => ({
     value: `item-${i}`,
     label: `Item ${i + 1}`
 }));
@@ -190,7 +190,7 @@ function useDebouncedEffect(effect: () => void, dependencies: any[], delay: numb
 }
 
 export function StationAutocomplete() {
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState<string | null>("");
     const [raw, setRaw] = useState("");
     const [items, setItems] = useState<any[]>([]);
 

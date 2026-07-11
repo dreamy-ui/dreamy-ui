@@ -2,7 +2,8 @@ import { defineSlotRecipe } from "@pandacss/dev";
 
 export const hoverCard = defineSlotRecipe({
     className: "hover-card",
-    description: "Dreamy UI HoverCard component",
+    description:
+        "A hover-triggered preview panel for rich contextual content like user profiles or link previews. Panel uses bg.panel, blur, border, and shadow with optional header, body, and footer — only size changes dimensions and padding.",
     slots: ["content", "header", "body", "footer"],
     jsx: [
         "HoverCard.Root",

@@ -3,6 +3,8 @@ import { defineSlotRecipe } from "@pandacss/dev";
 
 export const rangeSlider = defineSlotRecipe({
     className: "rangeSlider",
+    description:
+        "A dual-thumb range slider for selecting a min-max value interval. Filled track and thumbs use the scheme color with a white inner dot on each thumb that shrinks when dragging — no variants beyond scheme.",
     jsx: [
         "RangeSlider.Root",
         "RangeSlider.Track",

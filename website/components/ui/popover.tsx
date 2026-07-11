@@ -51,9 +51,9 @@ export interface PopoverProps extends UsePopoverProps {
  * @See Docs https://dreamy-ui.com/docs/components/popover
  */
 export const Root = withRootProvider(function PopoverRoot(props: PopoverProps) {
-    const { children, direction = "ltr", hasArrow, usePortal = true, ...rest } = props;
+    const { children, hasArrow, usePortal = true, ...rest } = props;
 
-    const context = usePopover({ ...rest, direction });
+    const context = usePopover(rest);
 
     return (
         <PopoverProvider
@@ -75,17 +75,11 @@ export const Root = withRootProvider(function PopoverRoot(props: PopoverProps) {
 export interface PopoverArrowProps extends HTMLDreamyProps<"div"> {}
 
 export function Arrow(props: PopoverArrowProps) {
+    const { getArrowProps, getArrowInnerProps } = usePopoverContext();
+
     return (
-        <Box
-            data-popper-arrow
-            style={{
-                backgroundColor: "transparent"
-            }}
-        >
-            <Box
-                data-popper-arrow-inner
-                {...props}
-            />
+        <Box {...getArrowProps({ style: { backgroundColor: "transparent" } })}>
+            <Box {...getArrowInnerProps(props)} />
         </Box>
     );
 }
@@ -108,6 +102,7 @@ function Transition(props: PopoverTransitionProps) {
         <MotionBox
             animate={isOpen ? "initial" : "exit"}
             initial={false}
+            ref={ref}
             variants={transformReducedMotion(popover, reduceMotion)}
             {...rest}
         >

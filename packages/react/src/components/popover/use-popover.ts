@@ -1,4 +1,4 @@
-import { type UsePopperProps, popperCSSVars, usePopper } from "@/components/popper";
+import { type PositioningProps, popperCSSVars, usePopper } from "@/components/popper";
 import { useControllable } from "@/hooks";
 import { useAnimationState } from "@/hooks/use-animation-state";
 import { useFocusOnHide, useFocusOnShow } from "@/hooks/use-focus-effect";
@@ -25,7 +25,12 @@ const TRIGGER = {
     hover: "hover"
 } as const;
 
-export interface UsePopoverProps extends Omit<UsePopperProps, "enabled"> {
+export interface UsePopoverProps {
+    /**
+     * Positioning configuration for the popover floating element.
+     * Controls placement, offset, flip, shift, and more.
+     */
+    positioning?: PositioningProps;
     /**
      * The html `id` attribute of the popover.
      * If not provided, we generate a unique id.
@@ -161,7 +166,7 @@ export function usePopover(props: UsePopoverProps = {}) {
         lazyBehavior = "unmount",
         computePositionOnMount,
         reduceMotion = globalReduceMotion ?? false,
-        ...popperProps
+        positioning
     } = props;
 
     const { isOpen, onClose, onOpen, onToggle } = useControllable(props);
@@ -169,6 +174,7 @@ export function usePopover(props: UsePopoverProps = {}) {
     const anchorRef = useRef<HTMLElement>(null);
     const triggerRef = useRef<HTMLElement>(null);
     const popoverRef = useRef<HTMLElement>(null);
+    const shouldReturnFocusRef = useRef(true);
 
     const isHoveringRef = useRef(false);
 
@@ -191,7 +197,7 @@ export function usePopover(props: UsePopoverProps = {}) {
 
     const { referenceRef, getArrowProps, getPopperProps, getArrowInnerProps, forceUpdate } =
         usePopper({
-            ...popperProps,
+            ...positioning,
             enabled: isOpen || !!computePositionOnMount
         });
 
@@ -205,7 +211,7 @@ export function usePopover(props: UsePopoverProps = {}) {
     useFocusOnHide(popoverRef, {
         focusRef: triggerRef,
         visible: isOpen,
-        shouldFocus: returnFocusOnClose && trigger === TRIGGER.click
+        shouldFocus: returnFocusOnClose && trigger === TRIGGER.click && shouldReturnFocusRef.current
     });
 
     useFocusOnShow(popoverRef, {
@@ -213,6 +219,39 @@ export function usePopover(props: UsePopoverProps = {}) {
         visible: isOpen,
         shouldFocus: autoFocus && trigger === TRIGGER.click
     });
+
+    useEffect(() => {
+        if (isOpen) shouldReturnFocusRef.current = true;
+    }, [isOpen]);
+
+    useEffect(() => {
+        if (!isOpen || !closeOnBlur) return;
+
+        const doc =
+            popoverRef.current?.ownerDocument ?? triggerRef.current?.ownerDocument ?? document;
+
+        function handlePointerDown(event: PointerEvent) {
+            const target = event.target as Node | null;
+            if (!target) return;
+
+            const content = popoverRef.current;
+            const portal = content?.closest(".dreamy-portal");
+
+            if (
+                contains(triggerRef.current, target) ||
+                contains(content, target) ||
+                portal?.contains(target)
+            ) {
+                return;
+            }
+
+            shouldReturnFocusRef.current = false;
+            onClose();
+        }
+
+        doc.addEventListener("pointerdown", handlePointerDown, true);
+        return () => doc.removeEventListener("pointerdown", handlePointerDown, true);
+    }, [isOpen, closeOnBlur, onClose]);
 
     const shouldRenderChildren = lazyControl({
         wasSelected: hasBeenOpened.current,
@@ -223,7 +262,16 @@ export function usePopover(props: UsePopoverProps = {}) {
 
     const getPopoverProps = useCallback(
         (props: Record<string, any> = {}) => {
-            const { ref, style, children, onKeyDown: propsOnKeyDown, onBlur: propsOnBlur, onMouseEnter, onMouseLeave, ...rest } = props;
+            const {
+                ref,
+                style,
+                children,
+                onKeyDown: propsOnKeyDown,
+                onBlur: propsOnBlur,
+                onMouseEnter,
+                onMouseLeave,
+                ...rest
+            } = props;
             const popoverProps: Record<string, any> = {
                 ...rest,
                 style: {
@@ -245,17 +293,7 @@ export function usePopover(props: UsePopoverProps = {}) {
                         }
                     }
                 ),
-                onBlur: callAllHandlers(propsOnBlur, (event: React.FocusEvent<HTMLDivElement>) => {
-                    const relatedTarget = getRelatedTarget(event);
-                    const targetIsPopover = contains(popoverRef.current, relatedTarget);
-                    const targetIsTrigger = contains(triggerRef.current, relatedTarget);
-
-                    const isValidBlur = !targetIsPopover && !targetIsTrigger;
-
-                    if (isOpen && closeOnBlur && isValidBlur) {
-                        onClose();
-                    }
-                }),
+                onBlur: propsOnBlur,
                 "aria-labelledby": hasHeader ? headerId : undefined,
                 "aria-describedby": hasBody ? bodyId : undefined
             };
@@ -290,8 +328,6 @@ export function usePopover(props: UsePopoverProps = {}) {
             trigger,
             closeOnEsc,
             onClose,
-            isOpen,
-            closeOnBlur,
             closeDelay,
             arrowShadowColor,
             arrowSize
@@ -341,7 +377,17 @@ export function usePopover(props: UsePopoverProps = {}) {
 
     const getTriggerProps: PropGetter = useCallback(
         (props = {}) => {
-            const { ref, id: propsId, onClick, onBlur, onFocus, onKeyDown, onMouseEnter, onMouseLeave, ...rest } = props;
+            const {
+                ref,
+                id: propsId,
+                onClick,
+                onBlur,
+                onFocus,
+                onKeyDown,
+                onMouseEnter,
+                onMouseLeave,
+                ...rest
+            } = props;
             const triggerProps: DOMAttributes = {
                 ...rest,
                 ref: mergeRefs(triggerRef, ref, maybeReferenceRef),
@@ -355,14 +401,7 @@ export function usePopover(props: UsePopoverProps = {}) {
                 triggerProps.onClick = callAllHandlers(onClick, onToggle);
             }
 
-            triggerProps.onBlur = callAllHandlers(onBlur, (event) => {
-                const relatedTarget = getRelatedTarget(event);
-                const isValidBlur = !contains(popoverRef.current, relatedTarget);
-
-                if (isOpen && closeOnBlur && isValidBlur) {
-                    onClose();
-                }
-            });
+            triggerProps.onBlur = onBlur;
 
             if (trigger === TRIGGER.hover) {
                 /**
@@ -419,7 +458,6 @@ export function usePopover(props: UsePopoverProps = {}) {
             maybeReferenceRef,
             onToggle,
             onOpen,
-            closeOnBlur,
             onClose,
             openDelay,
             closeDelay
@@ -484,11 +522,6 @@ export function usePopover(props: UsePopoverProps = {}) {
 
 export type UsePopoverReturn = ReturnType<typeof usePopover>;
 
-function contains(parent: HTMLElement | null, child: HTMLElement | null) {
+function contains(parent: HTMLElement | null, child: Node | null) {
     return parent === child || parent?.contains(child);
-}
-
-function getRelatedTarget(event: React.FocusEvent) {
-    const activeEl = event.currentTarget.ownerDocument.activeElement;
-    return (event.relatedTarget ?? activeEl) as HTMLElement | null;
 }

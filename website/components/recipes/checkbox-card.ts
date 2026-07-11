@@ -24,6 +24,8 @@ export { parts as checkboxCardParts };
 
 export const checkboxCard = defineRecipe({
     className: "checkbox-card",
+    description:
+        "A selectable card tile that combines a checkbox with title and description for option pickers. variant outline styles the card with a border that gains a scheme ring when checked; subtle has no border and applies a soft scheme tint when checked; checkboxVariant controls the inner checkbox as outline (border-only) or solid (filled when checked).",
     jsx: ["CheckboxCard"],
     base: parts({
         root: {

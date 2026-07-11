@@ -20,6 +20,8 @@ export { parts as switchParts };
 
 export const swittch = defineRecipe({
     className: "switch",
+    description:
+        "A toggle switch for on/off boolean settings with a sliding thumb. Unchecked track is soft gray; checked track fills with the scheme color and the white thumb slides right, stretching wider on press.",
     jsx: ["Switch"],
     base: parts({
         root: {

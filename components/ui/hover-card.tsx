@@ -65,9 +65,9 @@ export interface HoverCardProps extends UseHoverCardProps {
  * @See Docs https://dreamy-ui.com/docs/components/hover-card
  */
 export const Root = withRootProvider(function HoverCardRoot(props: HoverCardProps) {
-    const { children, direction = "ltr", hasArrow = true, usePortal = true, ...rest } = props;
+    const { children, hasArrow = true, usePortal = true, ...rest } = props;
 
-    const context = useHoverCard({ ...rest, direction });
+    const context = useHoverCard(rest);
 
     return (
         <PopoverProvider
@@ -88,17 +88,11 @@ export const Root = withRootProvider(function HoverCardRoot(props: HoverCardProp
 export interface HoverCardArrowProps extends HTMLDreamyProps<"div"> {}
 
 export function Arrow(props: HoverCardArrowProps) {
+    const { getArrowProps, getArrowInnerProps } = usePopoverContext();
+
     return (
-        <Box
-            data-popper-arrow
-            style={{
-                backgroundColor: "transparent"
-            }}
-        >
-            <Box
-                data-popper-arrow-inner
-                {...props}
-            />
+        <Box {...getArrowProps({ style: { backgroundColor: "transparent" } })}>
+            <Box {...getArrowInnerProps(props)} />
         </Box>
     );
 }

@@ -3,6 +3,8 @@ import { defineSlotRecipe } from "@pandacss/dev";
 
 export const slider = defineSlotRecipe({
     className: "slider",
+    description:
+        "A single-thumb slider for selecting a numeric value along a track. Filled range and thumb use the scheme color; thumb has a white inner circle that shrinks when dragging — no variants beyond scheme.",
     jsx: ["Slider.Root", "Slider.Track", "Slider.TrackFilled", "Slider.Thumb", "Slider.Mark"],
     slots: ["root", "track", "trackFilled", "thumb", "marker"],
     staticCss: ["*"],

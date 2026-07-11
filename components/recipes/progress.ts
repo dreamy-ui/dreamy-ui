@@ -10,6 +10,8 @@ export { parts as progressParts };
 
 export const progress = defineRecipe({
     className: "progress",
+    description:
+        "A horizontal progress bar for showing completion percentage or loading state. isIndeterminate runs a sliding 50%-width animation on the fill track instead of a fixed percentage width.",
     jsx: ["Progress", "CircularProgress"],
     base: parts({
         root: {

@@ -1,4 +1,4 @@
-import { type UsePopperProps, popperCSSVars, usePopper } from "@/components/popper";
+import { type PositioningProps, popperCSSVars, usePopper } from "@/components/popper";
 import { useControllable, useEventListener } from "@/hooks";
 import { mergeRefs } from "@/hooks/use-merge-refs";
 import { type PropGetter, callAllHandlers } from "@/utils";
@@ -6,11 +6,12 @@ import { getScrollParent } from "@/utils/scrollable";
 import type React from "react";
 import { type RefObject, useCallback, useEffect, useId, useRef } from "react";
 
-export interface UseTooltipProps
-    extends Pick<
-        UsePopperProps,
-        "modifiers" | "gutter" | "offset" | "arrowPadding" | "direction" | "placement"
-    > {
+export interface UseTooltipProps {
+    /**
+     * Positioning configuration for the tooltip floating element.
+     * Controls placement, offset, flip, shift, and more.
+     */
+    positioning?: PositioningProps;
     /**
      * Delay (in ms) before showing the tooltip
      * @default 0ms
@@ -88,18 +89,13 @@ export function useTooltip(props: Partial<UseTooltipProps> = {}) {
         closeOnEsc = true,
         onOpen: onOpenProp,
         onClose: onCloseProp,
-        placement,
         id,
         isOpen: isOpenProp,
         defaultIsOpen,
         arrowSize = 10,
         arrowShadowColor,
-        arrowPadding,
-        modifiers,
         isDisabled,
-        gutter,
-        offset,
-        direction
+        positioning
     } = props;
 
     const { isOpen, onOpen, onClose } = useControllable({
@@ -111,12 +107,7 @@ export function useTooltip(props: Partial<UseTooltipProps> = {}) {
 
     const { referenceRef, getPopperProps, getArrowInnerProps, getArrowProps } = usePopper({
         enabled: isOpen,
-        placement,
-        arrowPadding,
-        modifiers,
-        gutter,
-        offset,
-        direction
+        ...positioning
     });
 
     const uuid = useId();

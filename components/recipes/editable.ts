@@ -2,7 +2,8 @@ import { defineSlotRecipe } from "@pandacss/dev";
 
 export const editable = defineSlotRecipe({
     className: "editable",
-    description: "Dreamy UI Editable component",
+    description:
+        "An inline editable field that toggles between read-only preview and edit mode with submit/cancel actions. Input gets a rounded focus ring on edit; action buttons appear contextually based on editable state — no visual variants beyond size.",
     slots: ["root", "preview", "input", "editButton", "submitButton", "cancelButton"],
     jsx: [
         "Editable.Root",

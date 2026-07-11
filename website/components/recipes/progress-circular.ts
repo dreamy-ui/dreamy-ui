@@ -26,6 +26,8 @@ export { parts as progressCircularParts };
 
 export const progressCircular = defineRecipe({
     className: "progress-circular",
+    description:
+        "A circular SVG progress indicator with optional value text in the center. Track stroke is soft gray and range stroke uses the scheme color; indeterminate mode spins the circle — only size changes diameter.",
     base: parts({
         root: {
             display: "flex",

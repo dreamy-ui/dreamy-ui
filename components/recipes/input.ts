@@ -2,7 +2,8 @@ import { defineRecipe } from "@pandacss/dev";
 
 export const input = defineRecipe({
     className: "input",
-    description: "Dreamy UI Input component",
+    description:
+        "A single-line text input, also used for pin/OTP entry. outline has a bordered box with focus ring; filled uses a tinted background with no border; flushed has only a bottom border with no corner radius; filledOutline combines border and tinted fill; inputType pin makes square aspect-ratio cells.",
     jsx: ["Input", "PinInput.Root", "PinInput.Field"],
     staticCss: ["*"],
     base: {

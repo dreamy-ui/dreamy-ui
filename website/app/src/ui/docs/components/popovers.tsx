@@ -1,7 +1,7 @@
 import { Button } from "@/ui";
 import { Flex } from "@/ui";
 import { Popover } from "@/ui";
-import { type PlacementWithLogical, useControllable } from "@dreamy-ui/react";
+import { type Placement, useControllable } from "@dreamy-ui/react";
 import { useCallback, useRef } from "react";
 
 export function ControlledPopover() {
@@ -117,7 +117,7 @@ export function PlacementPopovers() {
                     "left-end",
                     "right-start",
                     "right-end"
-                ] satisfies PlacementWithLogical[]
+                ] satisfies Placement[]
             ).map((placement) => (
                 <PlacementPopover
                     key={placement}
@@ -128,11 +128,11 @@ export function PlacementPopovers() {
     );
 }
 
-export function PlacementPopover({ placement }: { placement: PlacementWithLogical }) {
+export function PlacementPopover({ placement }: { placement: Placement }) {
     return (
         <Popover.Root
             hasArrow
-            placement={placement}
+            positioning={{ placement }}
         >
             <Popover.Trigger>
                 <Button

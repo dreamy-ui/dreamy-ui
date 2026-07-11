@@ -10,6 +10,8 @@ const parts = defineParts({
 
 export const spinner = defineRecipe({
     className: "spinner",
+    description:
+        "A dual-ring loading spinner for indicating async operations in buttons or pages. Two rotating borders in currentColor (solid outer, dotted inner) — only size changes dimensions and border width.",
     staticCss: ["*"],
     jsx: ["Spinner", "Button"],
     base: parts({

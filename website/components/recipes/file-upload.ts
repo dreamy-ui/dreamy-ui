@@ -2,7 +2,8 @@ import { defineSlotRecipe } from "@pandacss/dev";
 
 export const fileUpload = defineSlotRecipe({
     className: "file-upload",
-    description: "Dreamy UI FileUpload component",
+    description:
+        "A drag-and-drop file upload zone with a file list showing previews and remove actions. Dropzone uses a dashed border that turns solid primary when dragging, with soft hover and focus rings — no variant options beyond size.",
     slots: [
         "root",
         "label",

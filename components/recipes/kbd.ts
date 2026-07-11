@@ -2,6 +2,8 @@ import { defineRecipe } from "@pandacss/dev";
 
 export const kbd = defineRecipe({
     className: "kbd",
+    description:
+        "Inline keyboard key styling that visually represents shortcuts or key presses. Soft tinted background with rounded corners — only size changes padding, font size, and border radius.",
     jsx: ["Kbd", "Menu", "MenuButton", "MenuItem"],
     staticCss: ["*"],
     base: {

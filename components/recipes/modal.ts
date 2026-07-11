@@ -2,7 +2,8 @@ import { defineSlotRecipe } from "@pandacss/dev";
 
 export const modal = defineSlotRecipe({
     className: "modal",
-    description: "Dreamy UI Modal component",
+    description:
+        "A modal dialog with overlay scrim, header, body, footer, and close button for focused interactions. placement top positions content near the top of the viewport; placement center vertically centers the dialog — size sets maxWidth.",
     slots: ["overlay", "container", "content", "body", "header", "footer", "close"],
     jsx: [
         "Modal.Root",

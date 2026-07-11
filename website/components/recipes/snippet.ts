@@ -2,7 +2,8 @@ import { defineSlotRecipe } from "@pandacss/dev";
 
 export const snippet = defineSlotRecipe({
     className: "snippet",
-    description: "Dreamy UI Snippet component",
+    description:
+        "A dark-themed code snippet block with header bar and copy button for displaying example code. Uses a near-black background with a separated header — only size changes padding and font size.",
     jsx: ["Snippet.Root", "Snippet.Header", "Snippet.Body"],
     slots: ["root", "header", "headerInner", "headerIcon", "headerContent", "copy", "body", "pre"],
     base: {

@@ -9,7 +9,8 @@ const parts = defineParts({
 
 export const alert = defineRecipe({
     className: "alert",
-    description: "Dreamy UI Alert component",
+    description:
+        "An inline alert for communicating success, warning, error, or info messages with an icon, title, and description. The subtle variant fills the alert with a lightly tinted status-colored background and soft border; outline has no fill, using only a status-colored border with transparent background.",
     jsx: ["Alert"],
     base: parts({
         root: {

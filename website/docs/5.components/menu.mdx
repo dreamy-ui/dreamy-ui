@@ -31,7 +31,7 @@ Basic usage of Menu.
 </Wrapper>
 
 ```tsx
-<Menu.Root placement="bottom-start">
+<Menu.Root positioning={{ placement: "bottom-start" }}>
     <Menu.Trigger>
         <Button>Open Menu</Button>
     </Menu.Trigger>
@@ -49,7 +49,7 @@ Basic usage of Menu.
 You can change where the Menu is placed by using the `placement` prop. Use `icon` prop to place an icon on the beginning or the item and `comamnd` to show keybinding to the item. Using `{actionKey}` in command will automatically replace it with the action key of the user's operating system.
 
 <Wrapper>
-    <Menu.Root placement="bottom-start">
+    <Menu.Root positioning={{ placement: "bottom-start" }}>
         <Menu.Trigger>
             <Button w={"fit-content"}>Open Menu</Button>
         </Menu.Trigger>
@@ -63,7 +63,7 @@ You can change where the Menu is placed by using the `placement` prop. Use `icon
 </Wrapper>
 
 ```tsx
-<Menu.Root placement="bottom-start">
+<Menu.Root positioning={{ placement: "bottom-start" }}>
     <Menu.Trigger>
         <Button>Open Menu</Button>
     </Menu.Trigger>
@@ -185,7 +185,7 @@ export function VariantMenu({ variant }: { variant: string }) {
 You can use a custom link component with menu item but polymorphic props like `as`, `asComp` and `asChild`.
 
 <Wrapper>
-    <Menu.Root placement="bottom-start">
+    <Menu.Root positioning={{ placement: "bottom-start" }}>
         <Menu.Trigger>
             <Button w={"fit-content"}>Open Menu</Button>
         </Menu.Trigger>
@@ -206,7 +206,7 @@ You can use a custom link component with menu item but polymorphic props like `a
 </Wrapper>
 
 ```tsx
-<Menu.Root placement="bottom-start">
+<Menu.Root positioning={{ placement: "bottom-start" }}>
     <Menu.Trigger>
         <Button w={"fit-content"}>Open Menu</Button>
     </Menu.Trigger>
@@ -382,4 +382,70 @@ You can add right content to the item with `rightContent` prop.
         </Menu.Item>
     </Menu.Content>
 </Menu.Root>
+```
+
+### Nested Menus
+
+Use `Menu.TriggerItem` to create sub-menus. Hover over the item or press `ArrowRight` to open the sub-menu, and `ArrowLeft` or `Escape` to close it and return focus to the parent.
+
+<Wrapper>
+    <Menu.Root>
+        <Menu.Trigger>
+            <Button w={"fit-content"}>Open Menu</Button>
+        </Menu.Trigger>
+        <Menu.Content>
+            <Menu.Item icon={<IoAdd />}>Add new</Menu.Item>
+            <Menu.Item icon={<LuAlarmClock />}>Set alarm</Menu.Item>
+            <Menu.TriggerItem label="More options">
+                <Menu.Content>
+                    <Menu.Item icon={<LuBattery />}>Battery</Menu.Item>
+                    <Menu.Item icon={<LuTrash />}>Delete</Menu.Item>
+                    <Menu.TriggerItem label="Advanced">
+                        <Menu.Content>
+                            <Menu.Item>Export data</Menu.Item>
+                            <Menu.Item>Import data</Menu.Item>
+                            <Menu.Item>Reset settings</Menu.Item>
+                        </Menu.Content>
+                    </Menu.TriggerItem>
+                </Menu.Content>
+            </Menu.TriggerItem>
+        </Menu.Content>
+    </Menu.Root>
+</Wrapper>
+
+```tsx
+<Menu.Root>
+    <Menu.Trigger>
+        <Button>Open Menu</Button>
+    </Menu.Trigger>
+    <Menu.Content>
+        <Menu.Item icon={<IoAdd />}>Add new</Menu.Item>
+        <Menu.Item icon={<LuAlarmClock />}>Set alarm</Menu.Item>
+        {/* TriggerItem opens a sub-menu to the right */}
+        <Menu.TriggerItem label="More options">
+            <Menu.Content>
+                <Menu.Item icon={<LuBattery />}>Battery</Menu.Item>
+                <Menu.Item icon={<LuTrash />}>Delete</Menu.Item>
+                {/* Sub-menus can be nested arbitrarily deep */}
+                <Menu.TriggerItem label="Advanced">
+                    <Menu.Content>
+                        <Menu.Item>Export data</Menu.Item>
+                        <Menu.Item>Import data</Menu.Item>
+                        <Menu.Item>Reset settings</Menu.Item>
+                    </Menu.Content>
+                </Menu.TriggerItem>
+            </Menu.Content>
+        </Menu.TriggerItem>
+    </Menu.Content>
+</Menu.Root>
+```
+
+You can control the opening direction with the `positioning` prop:
+
+```tsx
+<Menu.TriggerItem label="More options" positioning={{ placement: "left-start" }}>
+    <Menu.Content>
+        <Menu.Item>Sub item</Menu.Item>
+    </Menu.Content>
+</Menu.TriggerItem>
 ```

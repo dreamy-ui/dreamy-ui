@@ -13,6 +13,8 @@ export { parts as imageParts };
 
 export const image = defineRecipe({
     className: "image",
+    description:
+        "A responsive image with optional zoom-on-hover and blurred placeholder layer. The blurred underlay uses heavy blur and low opacity behind the main image — no variant options.",
     jsx: ["Image"],
     staticCss: ["*"],
     base: parts({

@@ -1,7 +1,7 @@
 import { exec } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { unlink, writeFile } from "node:fs/promises";
-import { dirname, join } from "node:path";
+import { dirname, join, relative } from "node:path";
 import { promisify } from "node:util";
 import * as p from "@clack/prompts";
 import { Command } from "commander";
@@ -689,7 +689,6 @@ async function createDreamyProvider(
 
 import { DreamyProvider as BaseDreamyProvider, type ColorMode } from "@dreamy-ui/react";
 import { getColorModeHTMLProps, getSSRColorMode } from "@dreamy-ui/react/rsc";
-import type { Route } from "./+types/root";
 
 const domMax = () => import("motion/react").then((mod) => mod.domMax);
 
@@ -1078,14 +1077,336 @@ async function addDefaultComponents(cwd: string) {
     }
 }
 
-function printNextSteps(framework: FrameworkConfig) {
+function getProviderImportPath(cwd: string, rootPath: string, providerPath: string) {
+    const absoluteRootPath = join(cwd, rootPath);
+    const absoluteProviderPath = join(cwd, providerPath);
+    const importPath = relative(dirname(absoluteRootPath), absoluteProviderPath)
+        .replaceAll("\\", "/")
+        .replace(/\.(jsx|tsx)$/, "");
+
+    return importPath.startsWith(".") ? importPath : `./${importPath}`;
+}
+
+function prependImport(content: string, importStatement: string, importedName: string) {
+    if (content.includes(importedName)) {
+        return content;
+    }
+
+    return `${importStatement}\n${content}`;
+}
+
+function findFunctionBodyStart(content: string, functionName: string) {
+    const functionIndex = content.indexOf(`function ${functionName}`);
+    if (functionIndex === -1) {
+        return -1;
+    }
+
+    const parametersStart = content.indexOf("(", functionIndex);
+    if (parametersStart === -1) {
+        return -1;
+    }
+
+    let parentheses = 0;
+    for (let index = parametersStart; index < content.length; index++) {
+        if (content[index] === "(") {
+            parentheses++;
+        } else if (content[index] === ")") {
+            parentheses--;
+            if (parentheses === 0) {
+                return content.indexOf("{", index);
+            }
+        }
+    }
+
+    return -1;
+}
+
+function addColorModeToReactRouterRoot(
+    content: string,
+    providerImportPath: string,
+    isTypeScript: boolean
+) {
+    if (
+        !content.includes("<html") ||
+        !content.includes("{children}") ||
+        findFunctionBodyStart(content, "Layout") === -1
+    ) {
+        return null;
+    }
+
+    let updatedContent = content;
+
+    updatedContent = prependImport(
+        updatedContent,
+        `import { DreamyProvider } from "${providerImportPath}";`,
+        "DreamyProvider"
+    );
+    updatedContent = prependImport(
+        updatedContent,
+        `import { getColorModeHTMLProps } from "${providerImportPath}";`,
+        "getColorModeHTMLProps"
+    );
+    updatedContent = prependImport(
+        updatedContent,
+        `import { getSSRColorMode } from "${providerImportPath}";`,
+        "getSSRColorMode"
+    );
+    updatedContent = prependImport(
+        updatedContent,
+        'import { useRouteLoaderData } from "react-router";',
+        "useRouteLoaderData"
+    );
+
+    if (isTypeScript) {
+        updatedContent = prependImport(
+            updatedContent,
+            'import type { Route } from "./+types/root";',
+            'from "./+types/root"'
+        );
+    }
+
+    if (!updatedContent.includes("getSSRColorMode(request)")) {
+        const loaderBodyStart = findFunctionBodyStart(updatedContent, "loader");
+
+        if (loaderBodyStart === -1) {
+            const layoutIndex = updatedContent.indexOf("export function Layout");
+            if (layoutIndex === -1) {
+                return null;
+            }
+            const loader = isTypeScript
+                ? "export function loader({ request }: Route.LoaderArgs) {\n    return { colorMode: getSSRColorMode(request) };\n}\n\n"
+                : "export function loader({ request }) {\n    return { colorMode: getSSRColorMode(request) };\n}\n\n";
+            updatedContent =
+                updatedContent.slice(0, layoutIndex) + loader + updatedContent.slice(layoutIndex);
+        } else {
+            const loaderSignature = updatedContent.slice(
+                updatedContent.lastIndexOf("function loader", loaderBodyStart),
+                loaderBodyStart
+            );
+            const returnIndex = updatedContent.indexOf("return", loaderBodyStart);
+            const returnObjectStart =
+                returnIndex === -1 ? -1 : updatedContent.indexOf("{", returnIndex);
+            const returnPrefix =
+                returnIndex === -1 || returnObjectStart === -1
+                    ? ""
+                    : updatedContent.slice(returnIndex + "return".length, returnObjectStart);
+
+            if (
+                !loaderSignature.includes("request") ||
+                returnObjectStart === -1 ||
+                returnPrefix.trim()
+            ) {
+                return null;
+            }
+
+            updatedContent =
+                updatedContent.slice(0, returnObjectStart + 1) +
+                "\n        colorMode: getSSRColorMode(request)," +
+                updatedContent.slice(returnObjectStart + 1);
+        }
+    }
+
+    const layoutBodyStart = findFunctionBodyStart(updatedContent, "Layout");
+    if (
+        !updatedContent.includes('useRouteLoaderData<Route.ComponentProps["loaderData"]>("root")')
+    ) {
+        const loaderData = isTypeScript
+            ? '\n    const { colorMode } = useRouteLoaderData<Route.ComponentProps["loaderData"]>("root") ?? {};\n'
+            : '\n    const { colorMode } = useRouteLoaderData("root") ?? {};\n';
+        updatedContent =
+            updatedContent.slice(0, layoutBodyStart + 1) +
+            loaderData +
+            updatedContent.slice(layoutBodyStart + 1);
+    }
+
+    if (!updatedContent.includes("{...getColorModeHTMLProps(colorMode)}")) {
+        updatedContent = updatedContent.replace(
+            "<html",
+            "<html {...getColorModeHTMLProps(colorMode)}"
+        );
+    }
+
+    if (!updatedContent.includes("<DreamyProvider colorMode={colorMode}>")) {
+        const childrenIndex = updatedContent.indexOf("{children}", layoutBodyStart);
+        if (childrenIndex === -1) {
+            return null;
+        }
+        updatedContent =
+            updatedContent.slice(0, childrenIndex) +
+            "<DreamyProvider colorMode={colorMode}>{children}</DreamyProvider>" +
+            updatedContent.slice(childrenIndex + "{children}".length);
+    }
+
+    return updatedContent;
+}
+
+function addColorModeToNextRoot(content: string, providerImportPath: string) {
+    const rootLayoutBodyStart = findFunctionBodyStart(content, "RootLayout");
+    if (
+        rootLayoutBodyStart === -1 ||
+        !content.includes("<html") ||
+        !content.includes("{children}")
+    ) {
+        return null;
+    }
+
+    let updatedContent = content;
+    updatedContent = prependImport(
+        updatedContent,
+        `import { DreamyProvider } from "${providerImportPath}";`,
+        providerImportPath
+    );
+    updatedContent = prependImport(
+        updatedContent,
+        'import { getColorModeHTMLProps, getSSRColorMode } from "@dreamy-ui/react/rsc";',
+        "getColorModeHTMLProps"
+    );
+    updatedContent = prependImport(
+        updatedContent,
+        'import { cookies } from "next/headers";',
+        'from "next/headers"'
+    );
+
+    if (!/export\s+default\s+async\s+function\s+RootLayout/.test(updatedContent)) {
+        updatedContent = updatedContent.replace(
+            /export\s+default\s+function\s+RootLayout/,
+            "export default async function RootLayout"
+        );
+    }
+
+    const updatedRootLayoutBodyStart = findFunctionBodyStart(updatedContent, "RootLayout");
+    if (!updatedContent.includes("getSSRColorMode((await cookies()).toString())")) {
+        updatedContent =
+            updatedContent.slice(0, updatedRootLayoutBodyStart + 1) +
+            "\n    const colorMode = getSSRColorMode((await cookies()).toString());\n" +
+            updatedContent.slice(updatedRootLayoutBodyStart + 1);
+    }
+
+    if (!updatedContent.includes("{...getColorModeHTMLProps(colorMode)}")) {
+        updatedContent = updatedContent.replace(
+            "<html",
+            "<html {...getColorModeHTMLProps(colorMode)}"
+        );
+    }
+
+    if (!updatedContent.includes("<DreamyProvider colorMode={colorMode}>")) {
+        const childrenIndex = updatedContent.indexOf("{children}", updatedRootLayoutBodyStart);
+        if (childrenIndex === -1) {
+            return null;
+        }
+        updatedContent =
+            updatedContent.slice(0, childrenIndex) +
+            "<DreamyProvider colorMode={colorMode}>{children}</DreamyProvider>" +
+            updatedContent.slice(childrenIndex + "{children}".length);
+    }
+
+    return updatedContent;
+}
+
+function addProviderToViteRoot(content: string, providerImportPath: string) {
+    const appMatch = content.match(/<App\s*\/>/);
+    if (!appMatch) {
+        return null;
+    }
+
+    let updatedContent = prependImport(
+        content,
+        `import { DreamyProvider } from "${providerImportPath}";`,
+        providerImportPath
+    );
+
+    if (!updatedContent.includes("<DreamyProvider>")) {
+        updatedContent = updatedContent.replace(
+            /<App\s*\/>/,
+            "<DreamyProvider>\n            <App />\n        </DreamyProvider>"
+        );
+    }
+
+    return updatedContent;
+}
+
+async function configureAppRoot(
+    cwd: string,
+    framework: FrameworkConfig,
+    isTypeScript: boolean,
+    useDefaults: boolean
+) {
+    const rootPath = framework.cssImportPath;
+    const absoluteRootPath = join(cwd, rootPath);
+
+    if (!existsSync(absoluteRootPath)) {
+        p.log.warn(`⚠ Could not find ${rootPath} to configure DreamyProvider`);
+        printNextSteps(cwd, framework);
+        return false;
+    }
+
+    const currentContent = readFileSync(absoluteRootPath, "utf-8");
+    if (currentContent.includes("<DreamyProvider")) {
+        p.log.info(`⊘ ${rootPath} already uses DreamyProvider`);
+        return true;
+    }
+
+    const shouldConfigure = useDefaults
+        ? true
+        : await p.confirm({
+              message: `Update ${rootPath} to use DreamyProvider?`,
+              initialValue: true
+          });
+
+    if (p.isCancel(shouldConfigure) || !shouldConfigure) {
+        p.log.warn(`⊘ Skipped DreamyProvider setup in ${rootPath}`);
+        printNextSteps(cwd, framework);
+        return false;
+    }
+
+    try {
+        const providerImportPath = getProviderImportPath(cwd, rootPath, framework.providerPath);
+        let updatedContent: string | null;
+
+        if (framework.type === "react-router") {
+            updatedContent = addColorModeToReactRouterRoot(
+                currentContent,
+                providerImportPath,
+                isTypeScript
+            );
+        } else if (framework.type === "nextjs") {
+            updatedContent = addColorModeToNextRoot(currentContent, providerImportPath);
+        } else {
+            updatedContent = addProviderToViteRoot(currentContent, providerImportPath);
+        }
+
+        if (!updatedContent) {
+            p.log.warn(`⚠ Could not safely update ${rootPath} automatically`);
+            printNextSteps(cwd, framework);
+            return false;
+        }
+
+        await writeFile(absoluteRootPath, updatedContent, "utf-8");
+        p.log.success(`✓ Updated ${rootPath} with DreamyProvider`);
+        return true;
+    } catch (error) {
+        p.log.error(
+            `✗ Failed to update ${rootPath}: ${error instanceof Error ? error.message : String(error)}`
+        );
+        printNextSteps(cwd, framework);
+        return false;
+    }
+}
+
+function printNextSteps(cwd: string, framework: FrameworkConfig) {
+    const providerImportPath = getProviderImportPath(
+        cwd,
+        framework.cssImportPath,
+        framework.providerPath
+    );
+
     p.log.info("\n📋 Next Steps:");
     p.log.info("━".repeat(50));
 
     if (framework.type === "react-router") {
         p.log.info(
             "1. Update your app/root.tsx to use DreamyProvider:\n\n" +
-                `   import { DreamyProvider, getColorModeHTMLProps, getSSRColorMode } from "../${framework.providerPath.replace("app/", "")}";\n` +
+                `   import { DreamyProvider, getColorModeHTMLProps, getSSRColorMode } from "${providerImportPath}";\n` +
                 '   import type { Route } from "./+types/root";\n' +
                 '   import { useRouteLoaderData } from "react-router";\n\n' +
                 "   export function loader({ request }: Route.LoaderArgs) {\n" +
@@ -1113,7 +1434,7 @@ function printNextSteps(framework: FrameworkConfig) {
     } else if (framework.type === "nextjs") {
         p.log.info(
             "1. Update your app/layout.tsx to use DreamyProvider:\n\n" +
-                `   import { DreamyProvider } from "../${framework.providerPath.replace(/^(src\/)?/, "")}";\n` +
+                `   import { DreamyProvider } from "${providerImportPath}";\n` +
                 '   import { getSSRColorMode, getColorModeHTMLProps } from "@dreamy-ui/react/rsc";\n' +
                 '   import { cookies } from "next/headers";\n\n' +
                 "   export default async function RootLayout({\n" +
@@ -1134,7 +1455,7 @@ function printNextSteps(framework: FrameworkConfig) {
     } else {
         p.log.info(
             "1. Update your src/main.tsx or src/App.tsx to use DreamyProvider:\n\n" +
-                `   import { DreamyProvider } from "../${framework.providerPath.replace("src/", "")}";\n\n` +
+                `   import { DreamyProvider } from "${providerImportPath}";\n\n` +
                 "   function App() {\n" +
                 "       return (\n" +
                 "           <DreamyProvider>\n" +
@@ -1225,7 +1546,14 @@ export const InitCommand = new Command("init")
         }
 
         // Create DreamyProvider
-        await createDreamyProvider(cwd, framework, isTypeScript);
+        const providerCreated = await createDreamyProvider(cwd, framework, isTypeScript);
+
+        // Configure the app root with DreamyProvider
+        if (providerCreated) {
+            await configureAppRoot(cwd, framework, isTypeScript, flags.yes ?? false);
+        } else {
+            printNextSteps(cwd, framework);
+        }
 
         // Add default components
         if (!flags.skipInstall && !flags.skipComponents) {
@@ -1236,9 +1564,6 @@ export const InitCommand = new Command("init")
 
         // Run Panda codegen
         await runPandaCodegen(cwd);
-
-        // Print next steps
-        printNextSteps(framework);
 
         p.outro("✨ Dreamy UI initialized successfully!");
     });

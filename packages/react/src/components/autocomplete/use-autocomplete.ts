@@ -1,4 +1,5 @@
 import type { UsePopoverProps } from "@/components/popover";
+import type { PositioningProps } from "@/components/popper";
 import { mergeRefs } from "@/hooks/use-merge-refs";
 import { createContext } from "@/provider";
 import { callAllHandlers } from "@/utils";
@@ -52,9 +53,14 @@ export interface UseAutocompleteProps {
      */
     onClose?: () => void;
     /**
-     * Props forwarded to the internal popover (`usePopover` / `Popover` root).
+     * Positioning configuration for the dropdown floating element.
+     * Controls placement, offset, flip, shift, and more.
      */
-    popoverProps?: Partial<UsePopoverProps>;
+    positioning?: PositioningProps;
+    /**
+     * Additional props forwarded to the internal Popover root (non-positioning).
+     */
+    popoverProps?: Omit<Partial<UsePopoverProps>, "positioning">;
 }
 
 export function useAutocomplete(props: UseAutocompleteProps) {
@@ -68,6 +74,7 @@ export function useAutocomplete(props: UseAutocompleteProps) {
         isOpen: controlledIsOpen,
         onOpen: onOpenProp,
         onClose: onCloseProp,
+        positioning,
         popoverProps
     } = props;
 
@@ -103,10 +110,7 @@ export function useAutocomplete(props: UseAutocompleteProps) {
         return items.filter((item) => filterFn(item, searchQuery));
     }, [items, searchQuery, filterFn]);
 
-    function getDefaultFocusedIndex(
-        list: AutocompleteItem[],
-        value: string | null
-    ): number {
+    function getDefaultFocusedIndex(list: AutocompleteItem[], value: string | null): number {
         if (list.length === 0) return -1;
 
         if (value != null) {
@@ -213,14 +217,14 @@ export function useAutocomplete(props: UseAutocompleteProps) {
         (props: Record<string, any> = {}) => {
             const { ref, onChange, onFocus, onBlur, onKeyDown, ...rest } = props;
             return {
-                ...rest,
                 pe: "var(--ac-pe)",
-                ref: mergeRefs(inputRef, ref ?? null),
                 value: isOpen ? searchQuery : selectedLabel,
                 role: "combobox",
                 "aria-expanded": isOpen,
                 "aria-haspopup": "listbox",
                 autoComplete: "off",
+                ...rest,
+                ref: mergeRefs(inputRef, ref ?? null),
                 onChange: callAllHandlers(onChange, (e: React.ChangeEvent<HTMLInputElement>) => {
                     setSearchQuery(e.target.value);
                     if (!isOpen) onOpen();
@@ -234,66 +238,66 @@ export function useAutocomplete(props: UseAutocompleteProps) {
                 onKeyDown: callAllHandlers(
                     onKeyDown,
                     (e: React.KeyboardEvent<HTMLInputElement>) => {
-                    const lastIndex = filteredItems.length - 1;
+                        const lastIndex = filteredItems.length - 1;
 
-                    function getActiveIndex() {
-                        return focusedIndex >= 0
-                            ? focusedIndex
-                            : getDefaultFocusedIndex(filteredItems, selectedValue);
-                    }
-
-                    switch (e.key) {
-                        case "ArrowDown":
-                            e.preventDefault();
-                            if (!isOpen) {
-                                onOpen();
-                                break;
-                            }
-                            if (filteredItems.length === 0) break;
-                            setFocusedIndex((prev) => {
-                                const start =
-                                    prev < 0
-                                        ? getDefaultFocusedIndex(filteredItems, selectedValue)
-                                        : prev;
-                                const next = start + 1 > lastIndex ? start : start + 1;
-                                return next;
-                            });
-                            break;
-                        case "ArrowUp":
-                            e.preventDefault();
-                            if (!isOpen) {
-                                onOpen();
-                                break;
-                            }
-                            if (filteredItems.length === 0) break;
-                            setFocusedIndex((prev) => {
-                                const start =
-                                    prev < 0
-                                        ? getDefaultFocusedIndex(filteredItems, selectedValue)
-                                        : prev;
-                                return Math.max(0, start - 1);
-                            });
-                            break;
-                        case "Enter": {
-                            e.preventDefault();
-                            if (!isOpen) {
-                                onOpen();
-                                break;
-                            }
-                            if (filteredItems.length === 0) break;
-                            selectItem(filteredItems[getActiveIndex()].value);
-                            break;
+                        function getActiveIndex() {
+                            return focusedIndex >= 0
+                                ? focusedIndex
+                                : getDefaultFocusedIndex(filteredItems, selectedValue);
                         }
-                        case "Escape":
-                            e.preventDefault();
-                            onClose();
-                            break;
-                        case "Tab":
-                            onClose();
-                            break;
+
+                        switch (e.key) {
+                            case "ArrowDown":
+                                e.preventDefault();
+                                if (!isOpen) {
+                                    onOpen();
+                                    break;
+                                }
+                                if (filteredItems.length === 0) break;
+                                setFocusedIndex((prev) => {
+                                    const start =
+                                        prev < 0
+                                            ? getDefaultFocusedIndex(filteredItems, selectedValue)
+                                            : prev;
+                                    const next = start + 1 > lastIndex ? start : start + 1;
+                                    return next;
+                                });
+                                break;
+                            case "ArrowUp":
+                                e.preventDefault();
+                                if (!isOpen) {
+                                    onOpen();
+                                    break;
+                                }
+                                if (filteredItems.length === 0) break;
+                                setFocusedIndex((prev) => {
+                                    const start =
+                                        prev < 0
+                                            ? getDefaultFocusedIndex(filteredItems, selectedValue)
+                                            : prev;
+                                    return Math.max(0, start - 1);
+                                });
+                                break;
+                            case "Enter": {
+                                e.preventDefault();
+                                if (!isOpen) {
+                                    onOpen();
+                                    break;
+                                }
+                                if (filteredItems.length === 0) break;
+                                selectItem(filteredItems[getActiveIndex()].value);
+                                break;
+                            }
+                            case "Escape":
+                                e.preventDefault();
+                                onClose();
+                                break;
+                            case "Tab":
+                                onClose();
+                                break;
+                        }
                     }
-                }
-            )
+                )
             };
         },
         [
@@ -384,10 +388,10 @@ export function useAutocomplete(props: UseAutocompleteProps) {
             lazyBehavior: "keepMounted" as const,
             onClose,
             onOpen,
-            placement: "bottom" as const,
+            positioning: { placement: "bottom" as const, ...positioning },
             ...popoverProps
         }),
-        [isOpen, onClose, onOpen, popoverProps]
+        [isOpen, onClose, onOpen, positioning, popoverProps]
     );
 
     return {

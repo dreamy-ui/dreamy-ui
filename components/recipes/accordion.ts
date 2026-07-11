@@ -2,7 +2,8 @@ import { defineSlotRecipe } from "@pandacss/dev";
 
 export const accordion = defineSlotRecipe({
     className: "accordion",
-    description: "Dreamy UI Accordion component",
+    description:
+        "A collapsible accordion for showing and hiding sections of related content, such as FAQs or settings panels. The outline variant separates items with bottom border dividers only; solid wraps the whole list in a tinted rounded panel with padded items; subtle uses gap between items and highlights the expanded item with a soft background tint.",
     slots: ["root", "item", "trigger", "content", "icon"],
     jsx: [
         "Accordion.Root",

@@ -3,6 +3,8 @@ import { defineSlotRecipe } from "@pandacss/dev";
 
 export const table = defineSlotRecipe({
     className: "table",
+    description:
+        "A data table for displaying rows and columns with optional caption and selection state. variant simple gives column headers a tinted rounded background bar; line uses horizontal bottom borders on headers and cells; interactive adds row hover tint, striped alternates row backgrounds, showColumnBorder adds vertical dividers, and withBackground tints the table container.",
     slots: ["root", "table", "body", "header", "row", "cell", "columnHeader", "caption"],
     jsx: [
         "Table.Root",

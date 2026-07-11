@@ -45,7 +45,7 @@ export function Base() {
 
 export function Placement() {
     return (
-        <Menu.Root placement="bottom-start">
+        <Menu.Root positioning={{ placement: "bottom-start" }}>
             <Menu.Trigger>
                 <Button w="fit-content">Open Menu</Button>
             </Menu.Trigger>
@@ -162,5 +162,32 @@ export function Variants() {
                 </Menu.Root>
             ))}
         </>
+    );
+}
+
+export function NestedMenu() {
+    return (
+        <Menu.Root>
+            <Menu.Trigger>
+                <Button w="fit-content">Open Menu</Button>
+            </Menu.Trigger>
+            <Menu.Content>
+                <Menu.Item icon={<IoAdd />}>Add new</Menu.Item>
+                <Menu.Item icon={<LuAlarmClock />}>Set alarm</Menu.Item>
+                <Menu.TriggerItem label="More options">
+                    <Menu.Content>
+                        <Menu.Item icon={<LuBattery />}>Battery</Menu.Item>
+                        <Menu.Item icon={<LuTrash />}>Delete</Menu.Item>
+                        <Menu.TriggerItem label="Advanced">
+                            <Menu.Content>
+                                <Menu.Item>Export data</Menu.Item>
+                                <Menu.Item>Import data</Menu.Item>
+                                <Menu.Item>Reset settings</Menu.Item>
+                            </Menu.Content>
+                        </Menu.TriggerItem>
+                    </Menu.Content>
+                </Menu.TriggerItem>
+            </Menu.Content>
+        </Menu.Root>
     );
 }

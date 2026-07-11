@@ -2,6 +2,8 @@ import { defineRecipe } from "@pandacss/dev";
 
 export const textarea = defineRecipe({
     className: "textarea",
+    description:
+        "A multi-line text input for longer form content like comments or descriptions. outline has a bordered box; filled uses a tinted background with no border; flushed has only a bottom underline border with no corner radius.",
     jsx: ["Textarea", "TextareaNoAutoSize"],
     base: {
         appearance: "none",

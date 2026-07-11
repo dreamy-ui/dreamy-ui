@@ -3,7 +3,8 @@ import { defineSlotRecipe } from "@pandacss/dev";
 
 export const stepper = defineSlotRecipe({
     className: "stepper",
-    description: "Dreamy UI Stepper component",
+    description:
+        "A multi-step wizard showing numbered progress with connecting separators between steps. solid uses bordered circles for incomplete steps and fills completed steps with the scheme color; subtle uses soft filled circles for incomplete steps with the same completed fill behavior.",
     slots: [
         "root",
         "list",

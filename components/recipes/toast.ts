@@ -13,7 +13,8 @@ export { parts as toastParts };
 
 export const toast = defineRecipe({
     className: "toast",
-    description: "Dreamy UI Toast component",
+    description:
+        "A transient toast notification with icon, title, description, and close button for brief feedback. Default styling uses panel background with blur, border, and shadow; status drives icon color — no recipe variant keys beyond size.",
     staticCss: ["*"], // Adding staticCSS, since toast be cannot used as normal JSX component
     jsx: ["Toast"],
     base: parts({

@@ -16,6 +16,8 @@ export { parts as buttonParts };
 
 export const button = defineRecipe({
     className: "button",
+    description:
+        "An interactive button for primary actions, forms, and toolbars, also used by IconButton and CloseButton. primary and secondary are solid filled buttons; solid uses a subtle currentColor tint; outline has a transparent background with a border; ghost is borderless with a hover tint; link looks like inline text with no padding or ripple.",
     staticCss: ["*"],
     jsx: [
         "Button",

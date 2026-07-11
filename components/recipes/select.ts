@@ -3,6 +3,8 @@ import { defineSlotRecipe } from "@pandacss/dev";
 
 export const select = defineSlotRecipe({
     className: "select",
+    description:
+        "A dropdown select for choosing one value from a list with chevron indicator and clear button. triggerVariant outline shows a bordered transparent trigger; solid uses a tinted background with no border; variant plain pads and rounds dropdown items while stretched makes them edge-to-edge; selectedItemBackgroundScheme controls the selected item highlight color.",
     jsx: [
         "Select.Root",
         "Select.Trigger",

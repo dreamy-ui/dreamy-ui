@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext } from "@dreamy-ui/react";
+import { createContext, type PositioningProps } from "@dreamy-ui/react";
 import { useControllableState } from "@dreamy-ui/react";
 import dayjs, { type Dayjs } from "dayjs";
 import { useMemo, useState } from "react";
@@ -96,6 +96,10 @@ export interface DateRangePickerRootProps
      * Date range presets to display
      */
     presets?: Record<string, { label: string; value: DateRange }>;
+    /**
+     * Positioning configuration for the date range picker popover.
+     */
+    positioning?: PositioningProps;
 }
 
 export const Root = withProvider(function DateRangePickerRoot(props: DateRangePickerRootProps) {
@@ -111,6 +115,7 @@ export const Root = withProvider(function DateRangePickerRoot(props: DateRangePi
         maxDate,
         showFooter = false,
         presets,
+        positioning,
         children,
         ...rest
     } = props;
@@ -166,6 +171,7 @@ export const Root = withProvider(function DateRangePickerRoot(props: DateRangePi
                 isOpen={isOpen}
                 onClose={handleCancel}
                 onOpen={handleApply}
+                positioning={positioning}
             >
                 <Box {...rest}>{children}</Box>
             </Popover.Root>

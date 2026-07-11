@@ -23,6 +23,8 @@ export { parts as checkboxParts };
 
 export const checkbox = defineRecipe({
     className: "checkbox",
+    description:
+        "A checkbox control for boolean selection with label and group support. outline keeps a bordered box and tints the border to the scheme color when checked; solid fills the entire box with the scheme color when checked.",
     jsx: ["Checkbox", "CheckboxGroup"],
     base: parts({
         group: {

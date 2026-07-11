@@ -2,7 +2,8 @@ import { defineSlotRecipe } from "@pandacss/dev";
 
 export const dateRangePicker = defineSlotRecipe({
     className: "date-range-picker",
-    description: "Dreamy UI Date Range Picker component",
+    description:
+        "A date range picker with dual calendars, presets, and in-range highlighting for selecting start and end dates. Selected days use a solid primary fill, in-range days use primary.subtle, and today gets a primary border — only size affects spacing.",
     slots: [
         "root",
         "trigger",

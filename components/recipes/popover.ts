@@ -3,7 +3,8 @@ import { defineSlotRecipe } from "@pandacss/dev";
 
 export const popover = defineSlotRecipe({
     className: "popover",
-    description: "Dreamy UI Popover component",
+    description:
+        "A floating popover panel shared by Popover, Select, Menu, and DatePicker with optional arrow. Uses panel background, blur, border, and shadow — only size changes width, padding, and border radius.",
     slots: ["content", "body", "header", "footer", "close"],
     jsx: [
         ...mapJsx("Popover", ["Root", "Content", "Body", "Header", "Footer", "CloseButton"]),

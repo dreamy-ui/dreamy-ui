@@ -25,7 +25,8 @@ export { parts as fieldParts };
 
 export const field = defineRecipe({
     className: "field",
-    description: "Dreamy UI Field component",
+    description:
+        "A form field wrapper that pairs a label, control, hint text, and error message around inputs. orientation vertical stacks the label above the control; horizontal places the label in a fixed-width column beside the control.",
     jsx: ["Field.Root", "Field.Label", "Field.Error", "Field.Hint", "Field.ErrorIcon"],
     base: parts({
         root: {

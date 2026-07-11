@@ -10,7 +10,8 @@ import {
     useActionKey,
     useMenu,
     useMenuContext,
-    useMenuItem
+    useMenuItem,
+    type PositioningProps
 } from "@dreamy-ui/react";
 import { Children, type ReactElement, type ReactNode, cloneElement, useEffect } from "react";
 import { BiChevronRight } from "react-icons/bi";
@@ -43,10 +44,10 @@ const { withProvider, withContext } = createStyleContext(menu);
 
 export interface MenuProps extends UseMenuProps<PopoverProps> {
     /**
-     * The placement of the menu.
-     * @default "bottom"
+     * Positioning configuration for the menu dropdown.
+     * @default { placement: "bottom" }
      */
-    placement?: PopoverProps["placement"];
+    positioning?: PositioningProps;
     children?: ReactNode;
     className?: string;
 }
@@ -59,7 +60,7 @@ export interface MenuProps extends UseMenuProps<PopoverProps> {
 export const Root = withProvider(function MenuRoot({
     children,
     className,
-    placement,
+    positioning,
     ...props
 }: MenuProps) {
     const { rest, ...ctx } = useMenu(props);
@@ -74,7 +75,7 @@ export const Root = withProvider(function MenuRoot({
                     lazyBehavior="keepMounted"
                     onClose={ctx.onClose}
                     onOpen={ctx.onOpen}
-                    placement={placement ?? "bottom"}
+                    positioning={{ placement: "bottom", ...positioning }}
                     reduceMotion={ctx.reduceMotion}
                     {...props.popoverProps}
                 >
@@ -149,10 +150,10 @@ export function Trigger({ children, placeholder, ref, ...rest }: MenuTriggerProp
 
 export interface MenuTriggerItemProps extends Omit<MenuButtonProps, "children"> {
     /**
-     * The placement of the sub-menu.
-     * @default "right-start"
+     * Positioning configuration for the sub-menu.
+     * @default { placement: "right-start" }
      */
-    placement?: PopoverProps["placement"];
+    positioning?: PositioningProps;
     /**
      * The label to display inside the trigger button.
      */
@@ -184,7 +185,7 @@ export const TriggerItem = withContext(function MenuTriggerItem(props: MenuTrigg
         rightContent,
         label,
         children,
-        placement = "right-start",
+        positioning,
         onClick: userOnClick,
         ...rest
     } = props;
@@ -251,7 +252,7 @@ export const TriggerItem = withContext(function MenuTriggerItem(props: MenuTrigg
                 lazyBehavior="keepMounted"
                 onClose={nestedCtx.onClose}
                 onOpen={nestedCtx.onOpen}
-                placement={placement}
+                positioning={{ placement: "right-start", ...positioning }}
                 reduceMotion={nestedCtx.reduceMotion}
                 returnFocusOnClose={false}
             >

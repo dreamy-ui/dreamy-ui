@@ -26,6 +26,8 @@ export { parts as radioParts };
 
 export const radio = defineRecipe({
     className: "radio",
+    description:
+        "A radio button for single selection within a group with animated inner dot. solid fills the inner dot with the scheme color when checked and scales it down with reduced opacity on press.",
     jsx: ["Radio", "RadioGroup"],
     base: parts({
         group: {

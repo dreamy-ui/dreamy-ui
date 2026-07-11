@@ -2,7 +2,8 @@ import { defineSlotRecipe } from "@pandacss/dev";
 
 export const fieldset = defineSlotRecipe({
     className: "fieldset",
-    description: "Dreamy UI Fieldset component",
+    description:
+        "A fieldset for grouping related form fields under a legend with helper and error text. Borderless layout with spaced header, content, and footer sections — only size adjusts gaps and legend typography.",
     slots: ["root", "legend", "helperText", "errorText", "header", "content", "footer"],
     jsx: [
         "Fieldset.Root",

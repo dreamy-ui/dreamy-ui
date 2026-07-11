@@ -16,6 +16,8 @@ export { parts as tooltipParts };
 
 export const tooltip = defineRecipe({
     className: "tooltip",
+    description:
+        "A compact tooltip for brief contextual hints on hover or focus. Inverted colors with dark background and light text, small shadow, and arrow — no variant options.",
     jsx: ["Tooltip"],
     base: parts({
         root: {

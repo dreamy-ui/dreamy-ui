@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext } from "@/provider/create-context";
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useLayoutEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { usePortalManager } from "./portal-manager";
 
@@ -15,78 +15,84 @@ const [PortalContextProvider, usePortalContext] = createContext<PortalContext>({
 const PORTAL_CLASSNAME = "dreamy-portal";
 const PORTAL_SELECTOR = `.${PORTAL_CLASSNAME}`;
 
-function Container(props: React.PropsWithChildren<{ zIndex: number }>) {
-    return (
-        <div
-            style={{
-                position: "absolute",
-                zIndex: props.zIndex,
-                top: 0,
-                left: 0,
-                right: 0
-            }}
-        >
-            {props.children}
-        </div>
-    );
-}
+// Resets the browser's UA [popover] styles. Creates a zero-footprint transparent
+// container in the native top layer so it never intercepts pointer events.
+const TOP_LAYER_STYLE =
+    "border:none;padding:0;margin:0;background:transparent;overflow:visible;inset:0;width:0;height:0";
 
 /**
- * Portal that uses `document.body` as container
+ * Portal backed by the browser's native Top Layer (popover="manual").
+ *
+ * Top-layer portals are painted above every stacking context — no z-index
+ * juggling required. Browsers without the Popover API fall back to the old
+ * document.body append strategy transparently.
+ *
+ * Nested portals (appendToParentPortal + parent context present) skip the
+ * top-layer promotion and simply append inside the parent's container, since
+ * they already inherit the parent's layer position.
  */
-function DefaultPortal(props: React.PropsWithChildren<{ appendToParentPortal?: boolean }>) {
-    const { appendToParentPortal, children } = props;
-
-    const [tempNode, setTempNode] = useState<HTMLElement | null>(null);
-    const portal = useRef<HTMLDivElement | null>(null);
-
-    const [, forceUpdate] = useState({});
-    useEffect(() => forceUpdate({}), []);
-
+function DefaultPortal({
+    appendToParentPortal,
+    children
+}: React.PropsWithChildren<{ appendToParentPortal?: boolean }>) {
+    const [container, setContainer] = useState<HTMLDivElement | null>(null);
     const parentPortal = usePortalContext();
     const manager = usePortalManager();
 
     if (typeof document !== "undefined")
-        // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+        // biome-ignore lint/correctness/useExhaustiveDependencies: container setup is one-shot per portal instance
         useLayoutEffect(() => {
-            if (!tempNode) return;
+            const el = document.createElement("div");
+            el.className = PORTAL_CLASSNAME;
 
-            const doc = tempNode.ownerDocument;
-            const host = appendToParentPortal ? (parentPortal ?? doc.body) : doc.body;
+            if (appendToParentPortal && parentPortal) {
+                // Nested portal: insert into the parent portal's DOM container.
+                // It already lives inside the top layer — no further promotion needed.
+                parentPortal.appendChild(el);
+            } else if (typeof el.showPopover === "function") {
+                // Top-level portal: promote to the browser's native Top Layer.
+                // The element is rendered above all stacking contexts without z-index.
+                el.setAttribute("popover", "manual");
+                el.style.cssText = TOP_LAYER_STYLE;
+                document.body.appendChild(el);
+                el.showPopover();
+            } else {
+                // Fallback for browsers that don't support the Popover API.
+                document.body.appendChild(el);
+            }
 
-            if (!host) return;
+            setContainer(el);
 
-            portal.current = doc.createElement("div");
-            portal.current.className = PORTAL_CLASSNAME;
-
-            host.appendChild(portal.current);
-            forceUpdate({});
-
-            const portalNode = portal.current;
             return () => {
-                if (host.contains(portalNode)) {
-                    host.removeChild(portalNode);
-                }
+                try {
+                    if (el.matches(":popover-open")) el.hidePopover();
+                } catch (_) {}
+                el.remove();
             };
-        }, [tempNode]);
+        }, [appendToParentPortal, parentPortal]);
 
-    const _children = manager?.zIndex ? (
-        <Container zIndex={manager.zIndex}>{children}</Container>
-    ) : (
-        children
-    );
+    if (!container) return null;
 
-    return portal.current ? (
-        createPortal(
-            <PortalContextProvider value={portal.current}>{_children}</PortalContextProvider>,
-            portal.current
-        )
-    ) : (
-        <span
-            ref={(el) => {
-                if (el) setTempNode(el);
-            }}
-        />
+    const content =
+        manager?.zIndex ? (
+            <div
+                style={{
+                    position: "absolute",
+                    zIndex: manager.zIndex,
+                    top: 0,
+                    left: 0,
+                    right: 0
+                }}
+            >
+                {children}
+            </div>
+        ) : (
+            children
+        );
+
+    return createPortal(
+        <PortalContextProvider value={container}>{content}</PortalContextProvider>,
+        container
     );
 }
 
@@ -99,10 +105,9 @@ interface ContainerPortalProps extends React.PropsWithChildren<Record<string, un
 }
 
 /**
- * Portal that uses a custom container
+ * Portal that renders into a caller-supplied DOM container.
  */
-function ContainerPortal(props: ContainerPortalProps) {
-    const { children, containerRef, appendToParentPortal } = props;
+function ContainerPortal({ children, containerRef, appendToParentPortal }: ContainerPortalProps) {
     const containerEl = containerRef.current;
     const host = containerEl ?? (typeof window !== "undefined" ? document.body : undefined);
 
@@ -142,7 +147,7 @@ export interface PortalProps {
      */
     containerRef?: React.RefObject<HTMLElement | null>;
     /**
-     * The content or node you'll like to portal
+     * The content or node you'll like to portal.
      */
     children: React.ReactNode;
     /**
@@ -150,8 +155,8 @@ export interface PortalProps {
      * and append itself to the parent's portal node.
      * This provides nesting for portals.
      *
-     * If `false`, the portal will always append to `document.body`
-     * regardless of nesting. It is used to opt out of portal nesting.
+     * If `false`, the portal will always use a fresh top-layer context
+     * regardless of nesting.
      *
      * @default true
      */
@@ -163,6 +168,10 @@ export interface PortalProps {
  *
  * Declarative component used to render children into a DOM node
  * that exists outside the DOM hierarchy of the parent component.
+ *
+ * Uses the browser's native Top Layer API when available so that
+ * portal content always renders above every stacking context without
+ * relying on z-index values.
  */
 export function Portal(props: PortalProps) {
     const portalProps: PortalProps = {
@@ -183,5 +192,4 @@ export function Portal(props: PortalProps) {
 
 Portal.className = PORTAL_CLASSNAME;
 Portal.selector = PORTAL_SELECTOR;
-
 Portal.displayName = "Portal";

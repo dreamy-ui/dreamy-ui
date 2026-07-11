@@ -2,6 +2,18 @@ export function uniq<T>(array: T[]): T[] {
 	return Array.from(new Set(array));
 }
 
+export interface FetchResult<T> {
+	ok: true;
+	data: T;
+}
+
+export interface FetchError {
+	ok: false;
+	error: string;
+}
+
+export type SafeFetchResult<T> = FetchResult<T> | FetchError;
+
 export type ComponentList = ComponentIndexItem[];
 
 export interface ExtendedComponentIndexItem extends ComponentIndexItem {
@@ -13,6 +25,7 @@ export interface ComponentIndexItem {
 	id: string;
 	file: string;
 	component: string;
+	npmDependencies?: string[];
 	fileDependencies: string[];
 	hasRecipe: boolean;
 	hasPattern: boolean;
@@ -20,131 +33,193 @@ export interface ComponentIndexItem {
 	patternIds?: string[];
 }
 
-export interface ComponentItem {
-	type: string;
-	fileDependencies: string[];
-	id: string;
-	file: File;
-	component: string;
-	hasRecipe: boolean;
-	hasPattern: boolean;
-	recipeIds: string[];
-}
-
-export interface File {
+export interface RegistryFile {
 	name: string;
 	content: string;
 }
 
-// Base URLs for different API endpoints
-// Fallback to localhost for development if not set
+export interface ComponentItem {
+	type: string;
+	fileDependencies: string[];
+	npmDependencies?: string[];
+	id: string;
+	file: RegistryFile;
+	component: string;
+	hasRecipe: boolean;
+	hasPattern: boolean;
+	recipeIds?: string[];
+	patternIds?: string[];
+}
+
+export interface RecipeItem {
+	type: string;
+	id: string;
+	file: RegistryFile;
+}
+
+export interface PatternItem {
+	type: string;
+	id: string;
+	file: RegistryFile;
+}
+
 const DREAMY_BASE_URL = process.env.DREAMY_UI_BASE_URL || "http://localhost:3000";
 
-/**
- * Generic fetch utility with consistent error handling
- */
-async function fetchJson<T>(url: string, options?: RequestInit, errorContext?: string): Promise<T> {
-	const response = await fetch(url, options);
-
-	if (!response.ok) {
-		const context = errorContext || `fetch ${url}`;
-		throw new Error(`Failed to ${context}: ${response.status} ${response.statusText}`);
-	}
-	const json = await response.json();
-
-	return json as T;
-}
-
-async function fetchText(
-	url: string,
-	options?: RequestInit,
-	errorContext?: string
-): Promise<string> {
-	const response = await fetch(url, options);
-	if (!response.ok) {
-		const context = errorContext || `fetch ${url}`;
-		throw new Error(`Failed to ${context}: ${response.status} ${response.statusText}`);
-	}
-	return await response.text();
-}
-
-/**
- * Creates a Dreamy UI API URL
- */
 function createDreamyUrl(path: string): string {
 	return `${DREAMY_BASE_URL}${path}`;
 }
 
-/**
- * Fetches the list of all available Dreamy UI components
- */
-export async function fetchComponentList(): Promise<ComponentList> {
-	return fetchJson<ComponentList>(
+function toErrorMessage(error: unknown): string {
+	return error instanceof Error ? error.message : "Unknown error";
+}
+
+async function fetchJsonSafe<T>(url: string, errorContext?: string): Promise<SafeFetchResult<T>> {
+	try {
+		const response = await fetch(url);
+
+		if (!response.ok) {
+			const context = errorContext || `fetch ${url}`;
+			return {
+				ok: false,
+				error: `Failed to ${context}: ${response.status} ${response.statusText}`
+			};
+		}
+
+		const json = await response.json();
+		return { ok: true, data: json as T };
+	} catch (error) {
+		const context = errorContext || `fetch ${url}`;
+		return {
+			ok: false,
+			error: `Failed to ${context}: ${toErrorMessage(error)}`
+		};
+	}
+}
+
+async function fetchTextSafe(
+	url: string,
+	errorContext?: string
+): Promise<SafeFetchResult<string>> {
+	try {
+		const response = await fetch(url);
+
+		if (!response.ok) {
+			const context = errorContext || `fetch ${url}`;
+			return {
+				ok: false,
+				error: `Failed to ${context}: ${response.status} ${response.statusText}`
+			};
+		}
+
+		return { ok: true, data: await response.text() };
+	} catch (error) {
+		const context = errorContext || `fetch ${url}`;
+		return {
+			ok: false,
+			error: `Failed to ${context}: ${toErrorMessage(error)}`
+		};
+	}
+}
+
+export async function fetchComponentListSafe(): Promise<SafeFetchResult<ComponentList>> {
+	return fetchJsonSafe<ComponentList>(
 		createDreamyUrl("/components/index.json"),
-		undefined,
 		"fetch component list"
 	);
 }
 
-/**
- * Fetches the properties/props for a specific Dreamy UI component
- */
-export async function fetchComponent(component: string): Promise<ComponentItem> {
-	return fetchJson(
+export async function fetchComponentSafe(component: string): Promise<SafeFetchResult<ComponentItem>> {
+	return fetchJsonSafe<ComponentItem>(
 		createDreamyUrl(`/components/${component}.json`),
-		undefined,
 		`fetch component data for ${component}`
 	);
 }
 
-/**
- * Fetches example code for a specific Dreamy UI component
- */
-export async function fetchComponentExample(component: string): Promise<any> {
-	return fetchJson(
-		createDreamyUrl(`/r/examples/${component}.json`),
-		undefined,
-		`fetch example for component ${component}`
+export async function fetchRecipeSafe(recipeId: string): Promise<SafeFetchResult<RecipeItem>> {
+	return fetchJsonSafe<RecipeItem>(
+		createDreamyUrl(`/recipes/${recipeId}.json`),
+		`fetch recipe "${recipeId}"`
 	);
 }
 
-/**
- * Gets the combined list of all components
- */
-export async function getAllComponentNames(): Promise<string[]> {
-	const componentList = await fetchComponentList();
-
-	return componentList.map((c) => c.id); // return the slugified component name
+export async function fetchPatternSafe(patternId: string): Promise<SafeFetchResult<PatternItem>> {
+	return fetchJsonSafe<PatternItem>(
+		createDreamyUrl(`/patterns/${patternId}.json`),
+		`fetch pattern "${patternId}"`
+	);
 }
 
-/**
- * Gets the combined list of all components
- */
-export async function getAllComponents(): Promise<ExtendedComponentIndexItem[]> {
-	const componentList = await fetchComponentList();
-	return componentList.map((c) => {
-		return {
-			...c,
-			installCommand: `dreamy add ${c.id}`
-		};
-	});
-}
-
-export async function getComponentExample(component: string): Promise<string> {
-	return fetchText(
+export async function getComponentExampleSafe(
+	component: string
+): Promise<SafeFetchResult<string>> {
+	return fetchTextSafe(
 		createDreamyUrl(`/docs/components/${component}.mdx`),
-		undefined,
-		`fetch example for component ${component}`
+		`fetch documentation for component ${component}`
 	);
 }
 
-/**
- * Fetches the design context from the Dreamy UI API
- */
-export async function fetchRecipe(component: string) {
-	return await fetchJson(
-		createDreamyUrl(`/recipes/${component}.json`),
-		undefined,
-		"recipe fetch"
-	);
+function pascalToKebab(value: string): string {
+	return value
+		.replace(/([a-z0-9])([A-Z])/g, "$1-$2")
+		.replace(/([A-Z])([A-Z][a-z])/g, "$1-$2")
+		.toLowerCase();
+}
+
+export function resolveComponentId(
+	input: string,
+	componentList: ComponentIndexItem[]
+): string | null {
+	const normalized = input.trim().toLowerCase();
+
+	for (const component of componentList) {
+		if (component.id === normalized) {
+			return component.id;
+		}
+
+		if (component.component.toLowerCase() === normalized) {
+			return component.id;
+		}
+
+		if (pascalToKebab(component.component) === normalized) {
+			return component.id;
+		}
+	}
+
+	return null;
+}
+
+export async function getAllComponentNames(): Promise<string[]> {
+	const result = await fetchComponentListSafe();
+
+	if (!result.ok) {
+		console.error(`Dreamy UI MCP: ${result.error}`);
+		return [];
+	}
+
+	return result.data.map((component) => component.id);
+}
+
+export async function getAllComponents(): Promise<ExtendedComponentIndexItem[]> {
+	const result = await fetchComponentListSafe();
+
+	if (!result.ok) {
+		console.error(`Dreamy UI MCP: ${result.error}`);
+		return [];
+	}
+
+	return result.data.map((component) => ({
+		...component,
+		installCommand: `dreamy add ${component.id}`
+	}));
+}
+
+export async function getComponentIndex(): Promise<ComponentIndexItem[]> {
+	const result = await fetchComponentListSafe();
+
+	if (!result.ok) {
+		console.error(`Dreamy UI MCP: ${result.error}`);
+		return [];
+	}
+
+	return result.data;
 }

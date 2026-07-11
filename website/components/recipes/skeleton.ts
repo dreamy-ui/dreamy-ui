@@ -13,6 +13,8 @@ export { parts as skeletonParts };
 
 export const skeleton = defineRecipe({
     className: "skeleton",
+    description:
+        "A loading placeholder that mimics content shape while data is fetched. isLoaded toggles between skeleton and real content; variant pulse animates a soft gray background, shine sweeps a gradient across it, and none shows a static gray block without animation.",
     jsx: ["Skeleton", "SkeletonText"],
     base: parts({
         textWrapper: {

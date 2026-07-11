@@ -18,7 +18,7 @@ import { tooltip } from "styled-system/recipes";
 import { Box } from "./box";
 
 export interface TooltipProps
-    extends Omit<HTMLDreamyProps<"div">, "direction" | "offset" | "content">,
+    extends Omit<HTMLDreamyProps<"div">, "content">,
         Partial<UseTooltipProps> {
     /**
      * The React component to use as the
@@ -80,13 +80,12 @@ export function Tooltip(props: TooltipProps) {
         hasArrow = true,
         isDisabled,
         portalProps,
-        direction,
         motionProps,
         disablePortal = false,
         ...rest
     } = props;
 
-    const tooltip = useTooltip({ ...rest, direction: direction ?? "ltr" });
+    const tooltip = useTooltip(rest);
 
     const shouldWrap = shouldWrapChildren || typeof children === "string";
 
@@ -166,8 +165,8 @@ export function Tooltip(props: TooltipProps) {
                                     </Box>
                                 )}
                                 {hasArrow && (
-                                    <Box data-popper-arrow>
-                                        <Box data-popper-arrow-inner />
+                                    <Box {...tooltip.getArrowProps({ style: { backgroundColor: "transparent" } })}>
+                                        <Box {...tooltip.getArrowInnerProps()} />
                                     </Box>
                                 )}
                             </StyledTooltip>

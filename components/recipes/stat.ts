@@ -2,6 +2,8 @@ import { defineSlotRecipe } from "@pandacss/dev";
 
 export const stat = defineSlotRecipe({
     className: "stat",
+    description:
+        "A stat/metric display with label, value, unit, and optional trend indicator for dashboards. Green up and red down indicators show change direction — only size scales the value typography.",
     slots: ["root", "label", "hint", "valueUnit", "valueText", "indicator"],
     jsx: [
         "Stat.Root",

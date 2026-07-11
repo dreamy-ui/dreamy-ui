@@ -155,41 +155,32 @@ export function FocusPopover() {
 
 ### Placement
 
-You can customize the placement of the popover relative to the trigger element using the `placement` prop.
+You can customize the placement of the popover relative to the trigger element using the `positioning` prop.
 
 <Wrapper>
 	<PlacementPopovers />
 </Wrapper>
 
 ```tsx
+const placements = [
+    "top", "bottom", "left", "right",
+    "top-start", "top-end", "bottom-start", "bottom-end",
+    "left-start", "left-end", "right-start", "right-end"
+];
+
 export function PlacementPopovers() {
     return (
         <Flex wrapped gap={5}>
-            {(
-                [
-                    "top",
-                    "bottom",
-                    "left",
-                    "right",
-                    "top-start",
-                    "top-end",
-                    "bottom-start",
-                    "bottom-end",
-                    "left-start",
-                    "left-end",
-                    "right-start",
-                    "right-end"
-                ] satisfies PlacementWithLogical[]
-            ).map((placement) => (
+            {placements.map((placement) => (
                 <PlacementPopover key={placement} placement={placement} />
             ))}
         </Flex>
     );
 }
 
-export function PlacementPopover({ placement }: { placement: PlacementWithLogical }) {
+export function PlacementPopover({ placement }: { placement: string }) {
     return (
-        <Popover.Root hasArrow placement={placement}>
+        <Popover.Root hasArrow positioning={{ placement }}>
             <Popover.Trigger>
                 <Button variant={"primary"}>{placement}</Button>
             </Popover.Trigger>

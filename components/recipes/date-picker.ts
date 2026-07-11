@@ -3,7 +3,8 @@ import { defineSlotRecipe } from "@pandacss/dev";
 
 export const datePicker = defineSlotRecipe({
     className: "date-picker",
-    description: "Dreamy UI Date Picker component",
+    description:
+        "A calendar popover for selecting a single date from a monthly grid. Base styling uses circular day cells with primary fill for selected days and a subtle highlight for today — only size changes popover width and padding.",
     slots: [
         "root",
         "trigger",

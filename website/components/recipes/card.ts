@@ -2,7 +2,8 @@ import { defineSlotRecipe } from "@pandacss/dev";
 
 export const card = defineSlotRecipe({
     className: "card",
-    description: "Dreamy UI Card component",
+    description:
+        "A structured card container for grouping related content into header, body, and footer sections. elevated uses panel background with a medium shadow and no border; outline uses the same background with a 1px border instead of shadow.",
     slots: ["root", "header", "body", "footer", "title", "description"],
     jsx: ["Card.Root", "Card.Header", "Card.Body", "Card.Footer", "Card.Title", "Card.Description"],
     base: {

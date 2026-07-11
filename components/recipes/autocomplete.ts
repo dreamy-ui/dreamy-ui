@@ -3,6 +3,8 @@ import { defineSlotRecipe } from "@pandacss/dev";
 
 export const autocomplete = defineSlotRecipe({
     className: "autocomplete",
+    description:
+        "A searchable combobox with a filterable dropdown for picking one or more options from a list. The plain variant pads the dropdown and rounds each item; stretched removes inner padding so items span edge to edge; selectedItemBackgroundScheme controls the highlight color of the selected item.",
     jsx: [
         "Autocomplete.Root",
         "Autocomplete.Input",

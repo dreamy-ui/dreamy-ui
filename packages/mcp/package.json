@@ -1,6 +1,6 @@
 {
 	"name": "@dreamy-ui/mcp",
-	"main": "dist/stdio.js",
+	"main": "dist/stdio.mjs",
 	"version": "2.0.3",
 	"description": "MCP for Dreamy UI",
 	"author": "imexoodeex",
@@ -9,7 +9,7 @@
 	"sideEffects": false,
 	"files": ["dist"],
 	"bin": {
-		"dreamy-ui-mcp": "./dist/stdio.js"
+		"dreamy-ui-mcp": "./dist/stdio.mjs"
 	},
 	"scripts": {
 		"build": "tsdown ",

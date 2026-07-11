@@ -2,7 +2,8 @@ import { defineSlotRecipe } from "@pandacss/dev";
 
 export const inputGroup = defineSlotRecipe({
     className: "inputGroup",
-    description: "Dreamy UI Input.Group component",
+    description:
+        "An input group that attaches prefix/suffix blocks or inline addons to a text input. Prefix and suffix use a soft tinted background and border merged with the input's border radius — no variant options.",
     slots: ["root", "prefix", "suffix", "startAddon", "endAddon"],
     jsx: ["Input.Group", "Input.Prefix", "Input.Suffix", "Input.StartAddon", "Input.EndAddon"],
     base: {

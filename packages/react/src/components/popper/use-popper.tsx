@@ -1,218 +1,96 @@
+"use client";
+
 import {
-    type PlacementWithLogical,
-    getPopperPlacement
-} from "@/components/popper/popper-placement";
+    arrow,
+    autoUpdate,
+    flip,
+    offset,
+    shift,
+    size as sizeMiddleware,
+    useFloating,
+    type Middleware,
+    type OffsetOptions
+} from "@floating-ui/react";
 import { mergeRefs } from "@/hooks/use-merge-refs";
 import type { PropGetter } from "@/utils";
-import { type Instance, type Modifier, type VirtualElement, createPopper } from "@popperjs/core";
-import { useCallback, useEffect, useRef } from "react";
-import * as customModifiers from "./modifiers";
-import { cssVars, getEventListenerOptions } from "./utils";
+import { useCallback, useRef } from "react";
+import type { PositioningProps } from "./positioning";
+import { cssVars, getBoxShadow, toTransformOrigin } from "./utils";
 
-export interface UsePopperProps {
-    /**
-     * Whether the popper.js should be enabled
-     */
-    enabled?: boolean;
-    /**
-     * The main and cross-axis offset to displace popper element
-     * from its reference element.
-     */
-    offset?: [number, number];
-    /**
-     * The distance or margin between the reference and popper.
-     * It is used internally to create an `offset` modifier.
-     *
-     * NB: If you define `offset` prop, it'll override the gutter.
-     * @default 8
-     */
-    gutter?: number;
-    /**
-     * If `true`, will prevent the popper from being cut off and ensure
-     * it's visible within the boundary area.
-     * @default true
-     */
-    preventOverflow?: boolean;
-    /**
-     * If `true`, the popper will change its placement and flip when it's
-     * about to overflow its boundary area.
-     * @default true
-     */
-    flip?: boolean;
-    /**
-     * If `true`, the popper will match the width of the reference at all times.
-     * It's useful for `autocomplete`, `date-picker` and `select` patterns.
-     * @default false
-     */
-    matchWidth?: boolean;
-    /**
-     * The boundary area for the popper. Used within the `preventOverflow` modifier
-     * @default "clippingParents"
-     */
-    boundary?: "clippingParents" | "scrollParent" | HTMLElement;
-    /**
-     * If provided, determines whether the popper will reposition itself on `scroll`
-     * and `resize` of the window.
-     * @default true
-     */
-    eventListeners?: boolean | { scroll?: boolean; resize?: boolean };
-    /**
-     * The padding required to prevent the arrow from
-     * reaching the very edge of the popper.
-     * @default 8
-     */
-    arrowPadding?: number;
-    /**
-     * The CSS positioning strategy to use.
-     * @default "absolute"
-     */
-    strategy?: "absolute" | "fixed";
-    /**
-     * The placement of the popper relative to its reference.
-     * @default "bottom"
-     */
-    placement?: PlacementWithLogical;
-    /**
-     * Array of popper.js modifiers. Check the docs to see
-     * the list of possible modifiers you can pass.
-     *
-     * @see Docs https://popper.js.org/docs/v2/modifiers/
-     */
-    modifiers?: Array<Partial<Modifier<string, any>>>;
-    /**
-     * Theme direction `ltr` or `rtl`. Popper's placement will
-     * be set accordingly
-     * @default "ltr"
-     */
-    direction?: "ltr" | "rtl";
+function mirrorRTLPlacement(
+    placement: PositioningProps["placement"],
+    dir?: "ltr" | "rtl"
+): PositioningProps["placement"] {
+    if (!placement || dir !== "rtl") return placement;
+    return placement
+        .replace("left", "___TEMP___")
+        .replace("right", "left")
+        .replace("___TEMP___", "right") as PositioningProps["placement"];
 }
 
-export type ArrowCSSVarProps = {
+export interface UsePopperProps extends PositioningProps {
     /**
-     * The size of the popover arrow.
-     * This sets the `--popper-arrow-size` css property
+     * Whether the popper is active. When `false`, auto-update is disabled.
+     * @default true
      */
-    size?: string | number;
-    /**
-     * The box-shadow color of the popover arrow.
-     * This sets the `--popper-arrow-shadow-color` css property
-     */
-    shadowColor?: string;
-    /**
-     * The background color of the popper arrow.
-     * This sets the `--popper-arrow-bg` css property.
-     */
-    bg?: string;
-};
+    enabled?: boolean;
+}
 
 export function usePopper(props: UsePopperProps = {}) {
     const {
         enabled = true,
-        modifiers,
         placement: placementProp = "bottom",
+        gutter = 8,
+        offset: offsetProp,
+        flip: enableFlip = true,
+        shift: enableShift = true,
+        shiftPadding = 8,
+        matchWidth: enableMatchWidth = false,
         strategy = "absolute",
         arrowPadding = 8,
-        eventListeners = true,
-        offset,
-        gutter = 8,
-        flip = true,
-        boundary = "clippingParents",
-        preventOverflow = true,
-        matchWidth,
-        direction = "ltr"
+        boundary,
+        dir
     } = props;
 
-    const reference = useRef<Element | VirtualElement | null>(null);
-    const popper = useRef<HTMLElement | null>(null);
-    const instance = useRef<Instance | null>(null);
-    const placement = getPopperPlacement(placementProp, direction);
+    const arrowRef = useRef<HTMLElement | null>(null);
 
-    const cleanup = useRef(() => {});
+    const resolvedPlacement = mirrorRTLPlacement(placementProp, dir) ?? "bottom";
 
-    const setupPopper = useCallback(() => {
-        if (!enabled || !reference.current || !popper.current) return;
+    const computedOffset: OffsetOptions =
+        offsetProp !== undefined ? offsetProp : { mainAxis: gutter };
 
-        // If popper instance exists, destroy it, so we can create a new one
-        cleanup.current?.();
+    const middleware: Middleware[] = [
+        offset(computedOffset),
+        ...(enableFlip
+            ? [flip({ padding: 8, ...(boundary ? { boundary } : {}) })]
+            : []),
+        ...(enableShift
+            ? [shift({ padding: shiftPadding, ...(boundary ? { boundary } : {}) })]
+            : []),
+        ...(enableMatchWidth
+            ? [
+                  sizeMiddleware({
+                      apply({ rects, elements }) {
+                          elements.floating.style.width = `${rects.reference.width}px`;
+                      }
+                  })
+              ]
+            : []),
+        arrow({ element: arrowRef, padding: arrowPadding })
+    ];
 
-        instance.current = createPopper(reference.current, popper.current, {
-            placement,
-            modifiers: [
-                customModifiers.innerArrow,
-                customModifiers.positionArrow,
-                customModifiers.transformOrigin,
-                {
-                    ...customModifiers.matchWidth,
-                    enabled: !!matchWidth
-                },
-                {
-                    name: "eventListeners",
-                    ...getEventListenerOptions(eventListeners)
-                },
-                {
-                    name: "arrow",
-                    options: { padding: arrowPadding }
-                },
-                {
-                    name: "offset",
-                    options: {
-                        offset: offset ?? [0, gutter]
-                    }
-                },
-                {
-                    name: "flip",
-                    enabled: !!flip,
-                    options: { padding: 8 }
-                },
-                {
-                    name: "preventOverflow",
-                    enabled: !!preventOverflow,
-                    options: { boundary }
-                },
-                // allow users override internal modifiers
-                ...(modifiers ?? [])
-            ],
-            strategy
-        });
-
-        // force update one-time to fix any positioning issues
-        instance.current.forceUpdate();
-
-        cleanup.current = instance.current.destroy;
-    }, [
-        placement,
-        enabled,
-        modifiers,
-        matchWidth,
-        eventListeners,
-        arrowPadding,
-        offset,
-        gutter,
-        flip,
-        preventOverflow,
-        boundary,
-        strategy
-    ]);
-
-    useEffect(() => {
-        return () => {
-            /**
-             * Fast refresh might call this function and tear down the popper
-             * even if the reference still exists. This checks against that
-             */
-            if (!reference.current && !popper.current) {
-                instance.current?.destroy();
-                instance.current = null;
-            }
-        };
-    }, []);
+    const { refs, floatingStyles, placement, middlewareData, update } = useFloating({
+        placement: resolvedPlacement,
+        strategy,
+        middleware,
+        whileElementsMounted: enabled ? autoUpdate : undefined
+    });
 
     const referenceRef = useCallback(
-        <T extends Element | VirtualElement>(node: T | null) => {
-            reference.current = node;
-            setupPopper();
+        <T extends Element>(node: T | null) => {
+            refs.setReference(node);
         },
-        [setupPopper]
+        [refs.setReference]
     );
 
     const getReferenceProps: PropGetter = useCallback(
@@ -228,10 +106,9 @@ export function usePopper(props: UsePopperProps = {}) {
 
     const popperRef = useCallback(
         <T extends HTMLElement>(node: T | null) => {
-            popper.current = node;
-            setupPopper();
+            refs.setFloating(node);
         },
-        [setupPopper]
+        [refs.setFloating]
     );
 
     const getPopperProps: PropGetter = useCallback(
@@ -241,45 +118,92 @@ export function usePopper(props: UsePopperProps = {}) {
                 ...rest,
                 ref: mergeRefs(popperRef, ref),
                 style: {
+                    ...floatingStyles,
                     ...style,
-                    position: strategy,
-                    minWidth: matchWidth ? undefined : "max-content",
-                    inset: "0 auto auto 0"
-                }
+                    [cssVars.transformOrigin.var]: toTransformOrigin(placement),
+                    minWidth: enableMatchWidth ? undefined : "max-content"
+                } as React.CSSProperties
             };
         },
-        [strategy, popperRef, matchWidth]
+        [floatingStyles, popperRef, placement, enableMatchWidth]
     );
 
-    const getArrowProps: PropGetter = useCallback((props = {}) => {
-        const { ref, size, shadowColor, bg, style, ...rest } = props;
-        return {
-            ...rest,
-            ref,
-            "data-popper-arrow": "",
-            style: getArrowStyle(props)
-        };
-    }, []);
+    const getArrowProps: PropGetter = useCallback(
+        (props: any = {}) => {
+            const { size, shadowColor, bg, style, ref, ...rest } = props;
+
+            const arrowData = middlewareData.arrow;
+            const side = placement.split("-")[0] as "top" | "right" | "bottom" | "left";
+            const staticSide =
+                ({ top: "bottom", right: "left", bottom: "top", left: "right" } as const)[side] ??
+                "bottom";
+
+            // Build the style object without duplicate keys.
+            // Setting `left: undefined` or `top: undefined` after `[staticSide]` in an
+            // object literal would silently overwrite the static-side value, because
+            // JavaScript last-key-wins semantics apply before React sees the object.
+            const computedStyle: Record<string, unknown> = {
+                position: "absolute",
+                [staticSide]: `calc(${cssVars.arrowSize.varRef} / -2 + 1px)`,
+                width: cssVars.arrowSize.varRef,
+                height: cssVars.arrowSize.varRef,
+                zIndex: -1,
+                [cssVars.arrowSizeHalf.var]: `calc(${cssVars.arrowSize.varRef} / 2 - 1px)`,
+                [cssVars.arrowOffset.var]: `calc(${cssVars.arrowSizeHalf.varRef} * -1)`,
+                ...style
+            };
+
+            // Only add left/top from the arrow middleware when they are defined.
+            // This avoids overriding the static-side position set above.
+            if (arrowData?.x != null) computedStyle.left = `${arrowData.x}px`;
+            if (arrowData?.y != null) computedStyle.top = `${arrowData.y}px`;
+
+            if (size)
+                computedStyle[cssVars.arrowSize.var] =
+                    typeof size === "number" ? `${size}px` : size;
+            if (shadowColor) computedStyle[cssVars.arrowShadowColor.var] = shadowColor;
+            if (bg) computedStyle[cssVars.arrowBg.var] = bg;
+
+            return {
+                ...rest,
+                ref: mergeRefs(arrowRef, ref),
+                "data-popper-arrow": "",
+                style: computedStyle as React.CSSProperties
+            };
+        },
+        [middlewareData.arrow, placement]
+    );
 
     const getArrowInnerProps: PropGetter = useCallback(
         (props = {}) => {
-            const { ref, ...rest } = props;
+            const { style, ref, ...rest } = props;
+            const boxShadow = getBoxShadow(placement);
+
             return {
                 ...rest,
                 ref,
-                "data-popper-arrow-inner": ""
+                "data-popper-arrow-inner": "",
+                style: {
+                    transform: "rotate(45deg)",
+                    background: cssVars.arrowBg.varRef,
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                    position: "absolute" as const,
+                    zIndex: "inherit",
+                    boxShadow: "var(--popper-arrow-shadow, var(--popper-arrow-default-shadow))",
+                    "--popper-arrow-default-shadow": boxShadow,
+                    ...style
+                } as React.CSSProperties
             };
         },
-        []
+        [placement]
     );
 
     return {
-        update() {
-            instance.current?.update();
-        },
-        forceUpdate() {
-            instance.current?.forceUpdate();
-        },
+        update,
+        forceUpdate: update,
         transformOrigin: cssVars.transformOrigin.varRef,
         referenceRef,
         popperRef,
@@ -288,21 +212,6 @@ export function usePopper(props: UsePopperProps = {}) {
         getArrowInnerProps,
         getReferenceProps
     };
-}
-
-function getArrowStyle(props: any) {
-    const { size, shadowColor, bg, style } = props;
-    const computedStyle = { ...style, position: "absolute" };
-    if (size) {
-        computedStyle["--popper-arrow-size"] = size;
-    }
-    if (shadowColor) {
-        computedStyle["--popper-arrow-shadow-color"] = shadowColor;
-    }
-    if (bg) {
-        computedStyle["--popper-arrow-bg"] = bg;
-    }
-    return computedStyle;
 }
 
 export type UsePopperReturn = ReturnType<typeof usePopper>;

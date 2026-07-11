@@ -2,7 +2,8 @@ import { defineSlotRecipe } from "@pandacss/dev";
 
 export const emptyState = defineSlotRecipe({
     className: "empty-state",
-    description: "Dreamy UI Empty State component",
+    description:
+        "A centered empty-state placeholder with icon, title, and description when a list or page has no data. Uses muted indicator color and stacked layout — only size changes padding, gaps, and typography.",
     slots: ["root", "content", "indicator", "title", "description"],
     jsx: [
         "EmptyState.Root",

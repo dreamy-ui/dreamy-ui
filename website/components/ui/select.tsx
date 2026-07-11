@@ -2,6 +2,7 @@
 
 import {
     type FocusableElement,
+    type PositioningProps,
     SelectProvider,
     type UseSelectProps,
     useHiddenSelect,
@@ -119,6 +120,11 @@ export interface SelectProps<
      * Auto-detected when omitted.
      */
     layer?: SelectLayer;
+    /**
+     * Positioning configuration for the select dropdown.
+     * @default { placement: "bottom" }
+     */
+    positioning?: PositioningProps;
     children?: ReactNode;
 }
 
@@ -132,7 +138,7 @@ export const Root: <T extends boolean = false, Item extends SelectItemData = Sel
 ) => React.JSX.Element = withProvider(function SelectRoot<
     T extends boolean = false,
     Item extends SelectItemData = SelectItemData
->({ children, items, renderItem, layer, contentZIndex, ...props }: SelectProps<T, Item>) {
+>({ children, items, renderItem, layer, contentZIndex, positioning, ...props }: SelectProps<T, Item>) {
     const [cssProps, restProps] = splitCssProps(props);
     const [autoContentZIndex, setAutoContentZIndex] = useState<string>();
 
@@ -179,7 +185,7 @@ export const Root: <T extends boolean = false, Item extends SelectItemData = Sel
                     lazyBehavior="keepMounted"
                     onClose={ctx.onClose}
                     onOpen={ctx.onOpen}
-                    placement="bottom"
+                    positioning={{ placement: "bottom", ...positioning }}
                     reduceMotion={ctx.reduceMotion}
                     {...props.popoverProps}
                 >

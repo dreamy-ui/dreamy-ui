@@ -2,7 +2,8 @@ import { defineSlotRecipe } from "@pandacss/dev";
 
 export const actionBar = defineSlotRecipe({
     className: "action-bar",
-    description: "Dreamy UI Action Bar component",
+    description:
+        "A fixed bottom bar for bulk-selection actions when users select multiple items in a list or table. Renders a floating panel with panel background, blur, border, and strong shadow — only size affects padding and typography.",
     slots: ["root", "content", "selectionTrigger", "separator", "closeTrigger"],
     jsx: [
         "ActionBar.Root",

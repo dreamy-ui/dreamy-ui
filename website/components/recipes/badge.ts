@@ -3,6 +3,8 @@ import { defineRecipe } from "@pandacss/dev";
 
 export const badge = defineRecipe({
     className: "badge",
+    description:
+        "A compact uppercase label for statuses, counts, or tags beside other content. outline shows scheme-colored text with a matching border and no fill; subtle adds a 10% tinted background; plain is text-only with no border or background.",
     jsx: ["Badge"],
     base: {
         display: "flex",

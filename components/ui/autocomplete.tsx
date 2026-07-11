@@ -160,7 +160,7 @@ export const Root: (props: AutocompleteProps) => React.JSX.Element = withProvide
 ) as any;
 
 export interface AutocompleteInputProps
-    extends Omit<InputProps, "value" | "onChange" | "size" | "variant" | "triggerVariant"> {
+    extends Omit<InputProps, "size" | "variant" | "triggerVariant"> {
     /**
      * Icon shown at the start of the input.
      */

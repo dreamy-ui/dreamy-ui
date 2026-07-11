@@ -11,6 +11,6 @@ async function main() {
 }
 
 main().catch((error) => {
-    console.error("Fatal error in main():", error);
-    process.exit(1);
+	console.error("Dreamy UI MCP fatal error:", error instanceof Error ? error.message : error);
+	process.exit(1);
 });
