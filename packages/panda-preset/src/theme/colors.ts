@@ -233,6 +233,57 @@ export function alpha(color: string, amount: number) {
     return normal.toString({ format: "oklch" });
 }
 
+function mixColors(base: string, target: string, targetRatio: number): string {
+    return Color.mix(new Color(base), target, targetRatio, { space: "oklch" }).toString({
+        format: "oklch"
+    });
+}
+
+export function mixWhite(color: string, whitePercent: number): string {
+    return mixColors(color, "white", whitePercent / 100);
+}
+
+export function mixBlack(color: string, blackPercent: number): string {
+    return mixColors(color, "black", blackPercent / 100);
+}
+
+interface BackgroundSurfaceTokens {
+    panel: string;
+    subtle: string;
+    muted: string;
+}
+
+interface GeneratedBackgroundSurfaces {
+    light: BackgroundSurfaceTokens;
+    dark: BackgroundSurfaceTokens;
+}
+
+/** Opacity for floating surfaces (popover, modal, card). */
+const PANEL_ALPHA = 0.8;
+
+/** How much white to mix into the dark base before applying panel alpha. */
+const PANEL_DARK_LIFT = 8;
+
+export function genBackgroundSurfaceTokens(
+    lightBg: string,
+    darkBg: string
+): GeneratedBackgroundSurfaces {
+    const darkPanelBase = mixWhite(darkBg, PANEL_DARK_LIFT);
+
+    return {
+        light: {
+            panel: alpha("#ffffff", PANEL_ALPHA),
+            subtle: mixBlack(lightBg, 3),
+            muted: mixBlack(lightBg, 6)
+        },
+        dark: {
+            panel: alpha(darkPanelBase, PANEL_ALPHA),
+            subtle: mixWhite(darkBg, 4),
+            muted: mixWhite(darkBg, 8)
+        }
+    };
+}
+
 const ALPHA_OPACITIES = {
     50: 0.04,
     100: 0.08,

@@ -3,7 +3,7 @@ import { defineSemanticTokens } from "@pandacss/dev";
 import {
     type ResolvedBorderOffsets,
     type ResolvedFgOffsets,
-    alpha,
+    genBackgroundSurfaceTokens,
     genBorderTokens,
     genForegroundTokens,
     resolveModeNumber
@@ -58,6 +58,7 @@ export function createColorTokens() {
 
     const fgLight = genForegroundTokens(lightBackground, fgChromaScaleLight, fgOffsets("light"));
     const fgDark = genForegroundTokens(darkBackground, fgChromaScaleDark, fgOffsets("dark"));
+    const bgSurfaces = genBackgroundSurfaceTokens(lightBackground, darkBackground);
 
     // const borderLight = genBorderTokens(
     //     lightBackground,
@@ -163,12 +164,21 @@ export function createColorTokens() {
             },
             panel: {
                 value: {
-                    // light background with 85% opacity
-                    // base: `color-mix(in srgb, ${lightBackground} 85%, transparent 15%)`,
-                    base: lightBackground,
-                    // dark background with white alpha, to whiten the background and also alphied
-                    // _dark: `color-mix(in srgb, ${darkBackground} 85%, {colors.whiteAlpha.200} 20%)`
-                    _dark: alpha(darkBackground, 0.8)
+                    base: bgSurfaces.light.panel,
+                    _light: bgSurfaces.light.panel,
+                    _dark: bgSurfaces.dark.panel
+                }
+            },
+            subtle: {
+                value: {
+                    _light: bgSurfaces.light.subtle,
+                    _dark: bgSurfaces.dark.subtle
+                }
+            },
+            muted: {
+                value: {
+                    _light: bgSurfaces.light.muted,
+                    _dark: bgSurfaces.dark.muted
                 }
             }
         },
