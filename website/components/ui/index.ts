@@ -8,7 +8,7 @@ export * from "./box";
 export * as Breadcrumb from "./breadcrumb";
 export * from "./button";
 export * as Card from "./card";
-export * from "./checkbox-card";
+export * as CheckboxCard from "./checkbox-card";
 export * from "./checkbox";
 export * from "./close-button";
 export * as DatePicker from "./date-picker";

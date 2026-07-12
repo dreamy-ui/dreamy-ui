@@ -1,33 +1,21 @@
 import { getColorSchemes } from "@dreamy-ui/panda-preset";
-import { defineParts, defineRecipe } from "@pandacss/dev";
+import { defineSlotRecipe } from "@pandacss/dev";
 
-const parts = defineParts({
-    root: { selector: "&" },
-    header: { selector: "& [data-part='header']" },
-    title: { selector: "& [data-part='title']" },
-    description: { selector: "& [data-part='description']" },
-    checkboxRoot: {
-        selector: "& [data-part='checkbox-root']"
-    },
-    control: {
-        selector: '& [data-part="control"]'
-    },
-    icon: {
-        selector: '& [data-part="icon"]'
-    },
-    label: {
-        selector: '& [data-part="label"]'
-    }
-});
-
-export { parts as checkboxCardParts };
-
-export const checkboxCard = defineRecipe({
+export const checkboxCard = defineSlotRecipe({
     className: "checkbox-card",
     description:
         "A selectable card tile that combines a checkbox with title and description for option pickers. variant outline styles the card with a border that gains a scheme ring when checked; subtle has no border and applies a soft scheme tint when checked; checkboxVariant controls the inner checkbox as outline (border-only) or solid (filled when checked).",
-    jsx: ["CheckboxCard"],
-    base: parts({
+    slots: ["root", "header", "title", "description", "checkbox", "label"],
+    jsx: [
+        "CheckboxCard.Root",
+        "CheckboxCard.RootProvider",
+        "CheckboxCard.Header",
+        "CheckboxCard.Title",
+        "CheckboxCard.Description",
+        "CheckboxCard.Checkbox",
+        "CheckboxCard.Label"
+    ],
+    base: {
         root: {
             position: "relative",
             display: "flex",
@@ -47,52 +35,64 @@ export const checkboxCard = defineRecipe({
             },
             _hover: {
                 borderColor: "border.hover"
+            },
+            "&:hover [data-part=control]": {
+                bg: "{colors.alpha.50}"
+            },
+            "&:not(:has([data-slot=description])) [data-slot=header]": {
+                alignItems: "center"
             }
         },
         header: {
             display: "flex",
             flexDir: "row",
             alignItems: "flex-start",
+            w: "full",
             justifyContent: "space-between",
-            gap: 6,
-            pr: 10
+            gap: 6
         },
         title: {
             color: "fg",
-            fontWeight: "semibold"
+            fontWeight: "semibold",
+            w: "full"
         },
         description: {
             color: "fg.medium"
         },
-        checkboxRoot: {
-            position: "absolute",
-            top: 3,
-            right: 3,
+        checkbox: {
+            position: "relative",
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "start",
             cursor: "pointer",
             WebkitTapHighlightColor: "transparent",
             maxWidth: "fit-content",
+            flexShrink: 0,
             _disabled: {
                 cursor: "not-allowed",
                 opacity: 0.6
+            },
+            "& [data-part=control]": {
+                position: "relative",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+                overflow: "hidden",
+                borderWidth: "1px",
+                borderStyle: "solid",
+                borderRadius: "l1",
+                transition: "border-color 0.1s, background-color 0.1s",
+                _focusVisible: {
+                    bg: "{colors.border}",
+                    boxShadow: "0 0 0 1.5px {colors.primary}"
+                }
+            },
+            "& [data-part=icon]": {
+                color: "currentColor"
             }
-        },
-        control: {
-            flex: 1,
-            position: "relative",
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexShrink: 0,
-            overflow: "hidden",
-            borderWidth: "1px",
-            borderStyle: "solid",
-            borderRadius: "l1",
-            transition: "border-color 0.1s, background-color 0.1s"
         }
-    }),
+    },
     defaultVariants: {
         size: "md",
         checkboxVariant: "solid",
@@ -101,7 +101,7 @@ export const checkboxCard = defineRecipe({
     },
     variants: {
         size: {
-            sm: parts({
+            sm: {
                 root: {
                     padding: "3",
                     gap: "0.5"
@@ -112,12 +112,14 @@ export const checkboxCard = defineRecipe({
                 description: {
                     textStyle: "xs"
                 },
-                control: {
-                    width: "5",
-                    height: "5"
+                checkbox: {
+                    "& [data-part=control]": {
+                        width: "5",
+                        height: "5"
+                    }
                 }
-            }),
-            md: parts({
+            },
+            md: {
                 root: {
                     padding: "3",
                     gap: "1.5"
@@ -128,12 +130,14 @@ export const checkboxCard = defineRecipe({
                 description: {
                     textStyle: "sm"
                 },
-                control: {
-                    width: "5",
-                    height: "5"
+                checkbox: {
+                    "& [data-part=control]": {
+                        width: "5",
+                        height: "5"
+                    }
                 }
-            }),
-            lg: parts({
+            },
+            lg: {
                 root: {
                     padding: "4",
                     gap: "1.5"
@@ -144,14 +148,16 @@ export const checkboxCard = defineRecipe({
                 description: {
                     textStyle: "md"
                 },
-                control: {
-                    width: "6",
-                    height: "6"
+                checkbox: {
+                    "& [data-part=control]": {
+                        width: "6",
+                        height: "6"
+                    }
                 }
-            })
+            }
         },
         variant: {
-            outline: parts({
+            outline: {
                 root: {
                     borderWidth: "1px",
                     borderColor: "border",
@@ -171,8 +177,8 @@ export const checkboxCard = defineRecipe({
                         boxShadow: "0 0 0 1.5px {colors.primary}"
                     }
                 }
-            }),
-            subtle: parts({
+            },
+            subtle: {
                 root: {
                     borderWidth: "0px",
                     _checked: {
@@ -182,44 +188,42 @@ export const checkboxCard = defineRecipe({
                         bg: "var(--checkbox-bg)/18"
                     }
                 }
-                // title: {
-                //     ".group:is(:checked, [data-checked], [aria-checked=true])&": {
-                //         color: "var(--checkbox-bg)"
-                //     }
-                // },
-                // description: {
-                //     ".group:is(:checked, [data-checked], [aria-checked=true])&": {
-                //         color: "var(--checkbox-bg)"
-                //     }
-                // }
-            })
+            }
         },
         checkboxVariant: {
-            outline: parts({
-                control: {
-                    borderColor: "border",
-                    ".group:is([data-checked])&": {
+            outline: {
+                checkbox: {
+                    "& [data-part=control]": {
+                        borderColor: "border",
+                        color: "var(--checkbox-bg)"
+                    }
+                },
+                root: {
+                    "&[data-checked] [data-part=control]": {
                         borderColor: "var(--checkbox-bg)"
                     },
-                    ".group:is(:active)&": {
+                    "&:is(:active, [data-active]) [data-part=control]": {
                         borderColor: "var(--checkbox-bg)"
-                    },
-                    color: "var(--checkbox-bg)"
+                    }
                 }
-            }),
-            solid: parts({
-                control: {
-                    ".group:is([data-checked])&": {
+            },
+            solid: {
+                checkbox: {
+                    "& [data-part=control]": {
+                        borderColor: "border"
+                    }
+                },
+                root: {
+                    "&[data-checked] [data-part=control]": {
                         background: "var(--checkbox-bg)",
                         borderColor: "var(--checkbox-bg)"
                     },
-                    ".group:is(:active)&": {
+                    "&:is(:active, [data-active]) [data-part=control]": {
                         background: "var(--checkbox-bg)/50",
                         borderColor: "var(--checkbox-bg)"
-                    },
-                    borderColor: "border"
+                    }
                 }
-            })
+            }
         },
         scheme: getColorSchemes(
             "--checkbox-bg",

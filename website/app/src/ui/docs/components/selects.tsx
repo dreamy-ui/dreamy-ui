@@ -1,4 +1,5 @@
-import { Button, HStack, Modal, Select, Spinner, Text } from "@/ui";import { useState } from "react";
+import { Button, HStack, Modal, Select, Spinner, Text } from "@/ui";
+import { useState } from "react";
 import { LuBanana, LuCherry, LuCitrus } from "react-icons/lu";
 
 const fruits = [

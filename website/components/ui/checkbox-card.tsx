@@ -1,115 +1,113 @@
 "use client";
 
-import { CheckboxProvider, type UseCheckboxProps, useCheckbox } from "@dreamy-ui/react";
-import { type ElementType, type ReactElement, cloneElement, useMemo } from "react";
-import { dreamy } from "styled-system/jsx";
+import {
+    CheckboxCardProvider,
+    type UseCheckboxProps,
+    type UseCheckboxReturn,
+    useCheckbox,
+    useCheckboxCardContext
+} from "@dreamy-ui/react";
+import { type ReactElement, cloneElement, useMemo } from "react";
+import { type HTMLDreamyProps, createStyleContext, dreamy } from "styled-system/jsx";
 import { type CheckboxCardVariantProps, checkboxCard } from "styled-system/recipes";
-import { Box } from "./box";
 import { CheckboxIcon } from "./checkbox";
-import { Text, type TextProps } from "./text";
 import { VisuallyHiddenInput } from "./visually-hidden";
 
-export interface CheckboxCardProps extends UseCheckboxProps, CheckboxCardVariantProps {
-    /**
-     * The title of the checkbox card
-     */
-    title?: string;
-    /**
-     * The description of the checkbox card
-     */
-    description?: string;
-    /**
-     * The tag of the title
-     */
-    titleTag?: ElementType;
-    /**
-     * The props of the title
-     */
-    titleProps?: TextProps;
-    /**
-     * The props of the description
-     */
-    descriptionProps?: TextProps;
-}
+const { withProvider, withContext } = createStyleContext(checkboxCard);
 
-const StyledCheckbox = dreamy("div", checkboxCard);
+const StyledRoot = withProvider(dreamy.div, "root");
+const StyledRootProvider = withProvider(dreamy.div, "root");
+const StyledCheckbox = withContext(dreamy.div, "checkbox");
+
+export interface CheckboxCardRootProps
+    extends UseCheckboxProps,
+        CheckboxCardVariantProps,
+        Omit<HTMLDreamyProps<"div">, keyof UseCheckboxProps> {}
 
 /**
- * CheckboxCard component
+ * CheckboxCard.Root
  *
  * @See Docs https://dreamy-ui.com/docs/components/checkbox-card
  */
-export function CheckboxCard(props: CheckboxCardProps) {
+export function Root(props: CheckboxCardRootProps) {
     const { ref } = props;
-    const { title, description, titleTag = "p", titleProps, descriptionProps, ...rest } = props;
-    const {
-        children,
-        icon = <CheckboxIcon />,
-        isChecked,
-        isDisabled,
-        isInvalid,
-        getRootProps,
-        getWrapperProps,
-        getInputProps,
-        getIconProps,
-        getLabelProps
-    } = useCheckbox({ ...rest, isCard: true, ref });
+    const { children, ...rest } = props;
+    const context = useCheckbox({ ...rest, isCard: true, ref });
+    const rootProps = context.getRootProps();
+
+    return (
+        <CheckboxCardProvider value={context}>
+            <StyledRoot {...rootProps}>
+                <VisuallyHiddenInput {...context.getInputProps()} />
+                {children}
+            </StyledRoot>
+        </CheckboxCardProvider>
+    );
+}
+
+export interface CheckboxCardRootProviderProps extends HTMLDreamyProps<"div"> {
+    value: UseCheckboxReturn;
+}
+
+/**
+ * CheckboxCard.RootProvider
+ *
+ * Use when controlling the checkbox card with the `useCheckbox` hook externally.
+ */
+export function RootProvider(props: CheckboxCardRootProviderProps) {
+    const { value, children, ...rest } = props;
+    const rootProps = value.getRootProps();
+
+    return (
+        <CheckboxCardProvider value={value}>
+            <StyledRootProvider
+                {...rootProps}
+                {...rest}
+            >
+                <VisuallyHiddenInput {...value.getInputProps()} />
+                {children}
+            </StyledRootProvider>
+        </CheckboxCardProvider>
+    );
+}
+
+export interface CheckboxCardHeaderProps extends HTMLDreamyProps<"div"> {}
+export const Header = withContext(dreamy.div, "header");
+
+export interface CheckboxCardTitleProps extends HTMLDreamyProps<"p"> {}
+export const Title = withContext(dreamy.p, "title");
+
+export interface CheckboxCardDescriptionProps extends HTMLDreamyProps<"p"> {}
+export const Description = withContext(dreamy.p, "description");
+
+export interface CheckboxCardLabelProps extends HTMLDreamyProps<"label"> {}
+export const Label = withContext(dreamy.label, "label");
+
+export interface CheckboxCardCheckboxProps extends HTMLDreamyProps<"div"> {}
+
+/**
+ * CheckboxCard.Checkbox
+ *
+ * The checkbox indicator. Must be used inside `CheckboxCard.Root`.
+ */
+export function Checkbox(props: CheckboxCardCheckboxProps) {
+    const context = useCheckboxCardContext();
+    const icon = context?.icon ?? <CheckboxIcon />;
+    const getIconProps = context?.getIconProps;
 
     const clonedIcon = useMemo(() => {
+        if (!getIconProps) {
+            return null;
+        }
+
         return typeof icon === "function"
             ? icon(getIconProps())
             : cloneElement(icon as ReactElement, getIconProps());
     }, [getIconProps, icon]);
 
-    const ctx = useMemo(() => {
-        return {
-            children,
-            icon,
-            isChecked,
-            isDisabled,
-            isInvalid,
-            getRootProps,
-            getWrapperProps,
-            getInputProps,
-            getIconProps,
-            getLabelProps
-        };
-    }, [
-        children,
-        icon,
-        isChecked,
-        isDisabled,
-        isInvalid,
-        getRootProps,
-        getWrapperProps,
-        getInputProps,
-        getIconProps,
-        getLabelProps
-    ]);
-
     return (
-        <CheckboxProvider value={ctx}>
-            <StyledCheckbox {...getRootProps()}>
-                <Box data-part={"header"}>
-                    <Text
-                        as={titleTag}
-                        data-part={"title"}
-                        {...titleProps}
-                    >
-                        {title}
-                    </Text>
-                    <Box data-part={"checkbox-root"}>
-                        <VisuallyHiddenInput {...getInputProps()} />
-                        <span {...getWrapperProps()}>{clonedIcon}</span>
-                    </Box>
-                </Box>
-                <Text
-                    data-part={"description"}
-                    {...descriptionProps}
-                >
-                    {description}
-                </Text>
-            </StyledCheckbox>
-        </CheckboxProvider>
+        <StyledCheckbox {...props}>
+            <span {...context?.getWrapperProps()}>{clonedIcon}</span>
+        </StyledCheckbox>
     );
 }

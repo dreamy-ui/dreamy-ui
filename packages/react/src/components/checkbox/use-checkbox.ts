@@ -10,10 +10,6 @@ import { useSafeLayoutEffect } from "../descendant/utils";
 import { type UserFeedbackProps, useField } from "../field/use-field";
 import { useCheckboxGroupContext } from "./use-checkbox-group";
 
-export const [CheckboxProvider, useCheckboxCardContext] = createContext<UseCheckboxProps>({
-	strict: false
-});
-
 export interface IconCustomProps {
 	/**
 	 * Animation time in milliseconds.
@@ -130,6 +126,7 @@ export function useCheckbox(props: UseCheckboxProps = {}) {
 
 	const [isActive, setActive] = useState(false);
 	const active = isActive && !isInteractionDisabled;
+	const [suppressFocusVisible, setSuppressFocusVisible] = useState(false);
 
 	const { isFocusVisible, focusProps } = useFocusRing({
 		autoFocus
@@ -179,14 +176,32 @@ export function useCheckbox(props: UseCheckboxProps = {}) {
 			"data-invalid": dataAttr(isInvalid),
 			"data-readonly": dataAttr(isReadOnly),
 			"data-indeterminate": dataAttr(isIndeterminate),
-			"data-focus-visible": isCard ? dataAttr(isFocusVisible) : undefined,
-			onPointerDown: callAllHandlers(otherProps.onPointerDown, () => setActive(true)),
+			"data-focus-visible": isCard
+				? dataAttr(isFocusVisible && !suppressFocusVisible)
+				: undefined,
+			onPointerDown: callAllHandlers(otherProps.onPointerDown, (event) => {
+				setActive(true);
+				if (isCard && event.pointerType) {
+					setSuppressFocusVisible(true);
+				}
+			}),
 			onPointerUp: callAllHandlers(otherProps.onPointerUp, () => setActive(false)),
 			onPointerLeave: callAllHandlers(otherProps.onPointerLeave, () => setActive(false)),
 			onClick: callAllHandlers(props.onClick, () => {
-				inputRef.current?.click();
+				const input = inputRef.current;
+				if (!input) {
+					return;
+				}
+
+				input.click();
+
+				if (isCard) {
+					input.focus({ preventScroll: true });
+					return;
+				}
+
 				requestAnimationFrame(() => {
-					inputRef.current?.focus({ preventScroll: true });
+					input.focus({ preventScroll: true });
 				});
 			}),
 			className: cx(className, "group"),
@@ -203,6 +218,7 @@ export function useCheckbox(props: UseCheckboxProps = {}) {
 		props.onClick,
 		isCard,
 		isFocusVisible,
+		suppressFocusVisible,
 		groupContext,
 		// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 		otherProps
@@ -255,9 +271,17 @@ export function useCheckbox(props: UseCheckboxProps = {}) {
 			value,
 			tabIndex,
 			onChange: handleChange,
-			onBlur: callAllHandlers(props.onBlur, onBlurProp),
+			onBlur: callAllHandlers(props.onBlur, onBlurProp, () => {
+				if (isCard) {
+					setSuppressFocusVisible(false);
+				}
+			}),
 			onFocus: callAllHandlers(props.onFocus, onFocusProp),
-			onKeyDown: callAllHandlers(props.onKeyDown, onKeyDown),
+			onKeyDown: callAllHandlers(props.onKeyDown, onKeyDown, () => {
+				if (isCard) {
+					setSuppressFocusVisible(false);
+				}
+			}),
 			onKeyUp: callAllHandlers(props.onKeyUp, onKeyUp),
 			required: isRequired,
 			checked: isChecked,
@@ -298,7 +322,8 @@ export function useCheckbox(props: UseCheckboxProps = {}) {
 		value,
 		onKeyDown,
 		onKeyUp,
-		focusProps
+		focusProps,
+		isCard
 	]);
 
 	const getLabelProps: PropGetter = useCallback(
@@ -349,3 +374,8 @@ export function useCheckbox(props: UseCheckboxProps = {}) {
 }
 
 export type UseCheckboxReturn = ReturnType<typeof useCheckbox>;
+
+export const [CheckboxCardProvider, useCheckboxCardContext] = createContext<UseCheckboxReturn>({
+	name: "CheckboxCardContext",
+	strict: false
+});

@@ -2,8 +2,8 @@
 title: Checkbox Card
 description: A selectable card component that behaves like a checkbox
 isServerComponent: false
-source: /packages/react/src/components/checkbox-card/checkbox-card.tsx
-themeSource: /packages/system/src/recipes/checkbox-card.ts
+source: /components/ui/checkbox-card.tsx
+themeSource: /components/recipes/checkbox-card.ts
 ---
 
 ## Installation
@@ -14,16 +14,66 @@ pnpm dreamy add checkbox-card
 
 ## Usage
 
-Checkbox Card is a component that allows you to select a value from a list of options.
+Checkbox Card is a multipart component. The hidden checkbox input is rendered automatically inside `CheckboxCard.Root` — pass all checkbox props to `Root`.
 
 <Wrapper>
-	<VStack w='250px'>
-		<CheckboxCard title="Default Checkbox Card" description="This is a description" />
-	</VStack>
+	<CheckboxCard.Root>
+		<CheckboxCard.Header>
+			<CheckboxCard.Title>Default Checkbox Card</CheckboxCard.Title>
+			<CheckboxCard.Checkbox />
+		</CheckboxCard.Header>
+		<CheckboxCard.Description>This is a description</CheckboxCard.Description>
+	</CheckboxCard.Root>
 </Wrapper>
 
 ```tsx
-<CheckboxCard title="Default Checkbox Card" description="This is a description" />
+<CheckboxCard.Root>
+	<CheckboxCard.Header>
+		<CheckboxCard.Title>Default Checkbox Card</CheckboxCard.Title>
+		<CheckboxCard.Checkbox />
+	</CheckboxCard.Header>
+	<CheckboxCard.Description>This is a description</CheckboxCard.Description>
+</CheckboxCard.Root>
+```
+
+### With description
+
+Add `CheckboxCard.Description` below the header for supporting text.
+
+<Wrapper>
+	<Group full wrapped>
+		<CheckboxCard.Root full>
+			<CheckboxCard.Header>
+				<CheckboxCard.Title>React Router</CheckboxCard.Title>
+				<CheckboxCard.Checkbox />
+			</CheckboxCard.Header>
+			<CheckboxCard.Description>Description for React Router</CheckboxCard.Description>
+		</CheckboxCard.Root>
+		<CheckboxCard.Root full>
+			<CheckboxCard.Header>
+				<CheckboxCard.Title>Next.js</CheckboxCard.Title>
+				<CheckboxCard.Checkbox />
+			</CheckboxCard.Header>
+			<CheckboxCard.Description>Description for Next.js</CheckboxCard.Description>
+		</CheckboxCard.Root>
+		<CheckboxCard.Root full>
+			<CheckboxCard.Header>
+				<CheckboxCard.Title>Vue.js</CheckboxCard.Title>
+				<CheckboxCard.Checkbox />
+			</CheckboxCard.Header>
+			<CheckboxCard.Description>Description for Vue.js</CheckboxCard.Description>
+		</CheckboxCard.Root>
+	</Group>
+</Wrapper>
+
+```tsx
+<CheckboxCard.Root full>
+	<CheckboxCard.Header>
+		<CheckboxCard.Title>React Router</CheckboxCard.Title>
+		<CheckboxCard.Checkbox />
+	</CheckboxCard.Header>
+	<CheckboxCard.Description>Description for React Router</CheckboxCard.Description>
+</CheckboxCard.Root>
 ```
 
 ### Variant
@@ -31,17 +81,32 @@ Checkbox Card is a component that allows you to select a value from a list of op
 Change the variant of the checkbox card.
 
 <Wrapper>	
-	<VStack w='250px' align='stretch'>
-		<CheckboxCard variant={"outline"} title={"Outline variant"} description={`Description for Outline variant`} />
-		<CheckboxCard variant={"subtle"} title={"Subtle variant"} description={`Description for Subtle variant`} />
-	</VStack>
+	<Group full>
+		<CheckboxCard.Root full variant={"outline"}>
+			<CheckboxCard.Header>
+				<CheckboxCard.Title>Outline variant</CheckboxCard.Title>
+				<CheckboxCard.Checkbox />
+			</CheckboxCard.Header>
+			<CheckboxCard.Description>Description for Outline variant</CheckboxCard.Description>
+		</CheckboxCard.Root>
+		<CheckboxCard.Root full variant={"subtle"}>
+			<CheckboxCard.Header>
+				<CheckboxCard.Title>Subtle variant</CheckboxCard.Title>
+				<CheckboxCard.Checkbox />
+			</CheckboxCard.Header>
+			<CheckboxCard.Description>Description for Subtle variant</CheckboxCard.Description>
+		</CheckboxCard.Root>
+	</Group>
 </Wrapper>
 
 ```tsx
-<VStack w='250px' align='stretch'>
-	<CheckboxCard variant={"outline"} title={"Outline variant"} description={`Description for Outline variant`} />
-	<CheckboxCard variant={"subtle"} title={"Subtle variant"} description={`Description for Subtle variant`} />
-</VStack>
+<CheckboxCard.Root full variant="outline">
+	<CheckboxCard.Header>
+		<CheckboxCard.Title>Outline variant</CheckboxCard.Title>
+		<CheckboxCard.Checkbox />
+	</CheckboxCard.Header>
+	<CheckboxCard.Description>Description for Outline variant</CheckboxCard.Description>
+</CheckboxCard.Root>
 ```
 
 ### Checkbox variant
@@ -49,17 +114,32 @@ Change the variant of the checkbox card.
 Change the checkbox variant of the checkbox card.
 	
 <Wrapper>
-	<VStack w='250px' align='stretch'>
-		<CheckboxCard checkboxVariant={"solid"} title={"Solid variant"} description={`Description for Solid variant`} />
-		<CheckboxCard checkboxVariant={"outline"} title={"Outline variant"} description={`Description for Outline variant`} />
-	</VStack>
+	<Group full>
+		<CheckboxCard.Root full checkboxVariant={"solid"}>
+			<CheckboxCard.Header>
+				<CheckboxCard.Title>Solid variant</CheckboxCard.Title>
+				<CheckboxCard.Checkbox />
+			</CheckboxCard.Header>
+			<CheckboxCard.Description>Description for Solid variant</CheckboxCard.Description>
+		</CheckboxCard.Root>
+		<CheckboxCard.Root full checkboxVariant={"outline"}>
+			<CheckboxCard.Header>
+				<CheckboxCard.Title>Outline variant</CheckboxCard.Title>
+				<CheckboxCard.Checkbox />
+			</CheckboxCard.Header>
+			<CheckboxCard.Description>Description for Outline variant</CheckboxCard.Description>
+		</CheckboxCard.Root>
+	</Group>
 </Wrapper>
 
 ```tsx
-<VStack w='250px' align='stretch'>
-	<CheckboxCard checkboxVariant={"solid"} title={"Solid variant"} description={`Description for Solid variant`} />
-	<CheckboxCard checkboxVariant={"outline"} title={"Outline variant"} description={`Description for Outline variant`} />
-</VStack>
+<CheckboxCard.Root full checkboxVariant="solid">
+	<CheckboxCard.Header>
+		<CheckboxCard.Title>Solid variant</CheckboxCard.Title>
+		<CheckboxCard.Checkbox />
+	</CheckboxCard.Header>
+	<CheckboxCard.Description>Description for Solid variant</CheckboxCard.Description>
+</CheckboxCard.Root>
 ```
 
 ### Scheme
@@ -67,25 +147,60 @@ Change the checkbox variant of the checkbox card.
 Change the color scheme of the checkbox card.
 
 <Wrapper>
-	<VStack w='250px' align='stretch'>
-		<CheckboxCard scheme={"primary"} defaultChecked title={"Primary"} description={`Description for Primary`} />
-		<CheckboxCard scheme={"secondary"} defaultChecked title={"Secondary"} description={`Description for Secondary`} />
-		<CheckboxCard scheme={"success"} defaultChecked title={"Success"} description={`Description for Success`} />
-		<CheckboxCard scheme={"warning"} defaultChecked title={"Warning"} description={`Description for Warning`} />
-		<CheckboxCard scheme={"error"} defaultChecked title={"Error"} description={`Description for Error`} />
-		<CheckboxCard scheme={"info"} defaultChecked title={"Info"} description={`Description for Info`} />
-	</VStack>
+	<Grid columns={2} full>
+		<CheckboxCard.Root full scheme={"primary"} defaultChecked>
+			<CheckboxCard.Header>
+				<CheckboxCard.Title>Primary</CheckboxCard.Title>
+				<CheckboxCard.Checkbox />
+			</CheckboxCard.Header>
+			<CheckboxCard.Description>Description for Primary</CheckboxCard.Description>
+		</CheckboxCard.Root>
+		<CheckboxCard.Root full scheme={"secondary"} defaultChecked>
+			<CheckboxCard.Header>
+				<CheckboxCard.Title>Secondary</CheckboxCard.Title>
+				<CheckboxCard.Checkbox />
+			</CheckboxCard.Header>
+			<CheckboxCard.Description>Description for Secondary</CheckboxCard.Description>
+		</CheckboxCard.Root>
+		<CheckboxCard.Root full scheme={"success"} defaultChecked>
+			<CheckboxCard.Header>
+				<CheckboxCard.Title>Success</CheckboxCard.Title>
+				<CheckboxCard.Checkbox />
+			</CheckboxCard.Header>
+			<CheckboxCard.Description>Description for Success</CheckboxCard.Description>
+		</CheckboxCard.Root>
+		<CheckboxCard.Root full scheme={"warning"} defaultChecked>
+			<CheckboxCard.Header>
+				<CheckboxCard.Title>Warning</CheckboxCard.Title>
+				<CheckboxCard.Checkbox />
+			</CheckboxCard.Header>
+			<CheckboxCard.Description>Description for Warning</CheckboxCard.Description>
+		</CheckboxCard.Root>
+		<CheckboxCard.Root full scheme={"error"} defaultChecked>
+			<CheckboxCard.Header>
+				<CheckboxCard.Title>Error</CheckboxCard.Title>
+				<CheckboxCard.Checkbox />
+			</CheckboxCard.Header>
+			<CheckboxCard.Description>Description for Error</CheckboxCard.Description>
+		</CheckboxCard.Root>
+		<CheckboxCard.Root full scheme={"info"} defaultChecked>
+			<CheckboxCard.Header>
+				<CheckboxCard.Title>Info</CheckboxCard.Title>
+				<CheckboxCard.Checkbox />
+			</CheckboxCard.Header>
+			<CheckboxCard.Description>Description for Info</CheckboxCard.Description>
+		</CheckboxCard.Root>
+	</Grid>
 </Wrapper>
 
 ```tsx
-<VStack w='250px' align='stretch'>
-	<CheckboxCard scheme={"primary"} defaultChecked title={"Primary"} description={`Description for Primary`} />
-	<CheckboxCard scheme={"secondary"} defaultChecked title={"Secondary"} description={`Description for Secondary`} />
-	<CheckboxCard scheme={"success"} defaultChecked title={"Success"} description={`Description for Success`} />
-	<CheckboxCard scheme={"warning"} defaultChecked title={"Warning"} description={`Description for Warning`} />
-	<CheckboxCard scheme={"error"} defaultChecked title={"Error"} description={`Description for Error`} />
-	<CheckboxCard scheme={"info"} defaultChecked title={"Info"} description={`Description for Info`} />
-</VStack>
+<CheckboxCard.Root full scheme="primary" defaultChecked>
+	<CheckboxCard.Header>
+		<CheckboxCard.Title>Primary</CheckboxCard.Title>
+		<CheckboxCard.Checkbox />
+	</CheckboxCard.Header>
+	<CheckboxCard.Description>Description for Primary</CheckboxCard.Description>
+</CheckboxCard.Root>
 ```
 
 ### Size
@@ -93,19 +208,39 @@ Change the color scheme of the checkbox card.
 Change the checkbox card size.
 
 <Wrapper>
-	<VStack w='250px' align='stretch'>
-		<CheckboxCard size={"sm"} title={"Small"} description={`Description for Small`} />
-		<CheckboxCard size={"md"} title={"Medium"} description={`Description for Medium`} />
-		<CheckboxCard size={"lg"} title={"Large"} description={`Description for Large`} />
-	</VStack>
+	<Group full alignItems="start" wrapped>
+		<CheckboxCard.Root full size={"sm"}>
+			<CheckboxCard.Header>
+				<CheckboxCard.Title>Small</CheckboxCard.Title>
+				<CheckboxCard.Checkbox />
+			</CheckboxCard.Header>
+			<CheckboxCard.Description>Description for Small</CheckboxCard.Description>
+		</CheckboxCard.Root>
+		<CheckboxCard.Root full size={"md"}>
+			<CheckboxCard.Header>
+				<CheckboxCard.Title>Medium</CheckboxCard.Title>
+				<CheckboxCard.Checkbox />
+			</CheckboxCard.Header>
+			<CheckboxCard.Description>Description for Medium</CheckboxCard.Description>
+		</CheckboxCard.Root>
+		<CheckboxCard.Root full size={"lg"}>
+			<CheckboxCard.Header>
+				<CheckboxCard.Title>Large</CheckboxCard.Title>
+				<CheckboxCard.Checkbox />
+			</CheckboxCard.Header>
+			<CheckboxCard.Description>Description for Large</CheckboxCard.Description>
+		</CheckboxCard.Root>
+	</Group>
 </Wrapper>
 
 ```tsx
-<VStack w='250px' align='stretch'>
-	<CheckboxCard size={"sm"} title={"Small"} description={`Description for Small`} />
-	<CheckboxCard size={"md"} title={"Medium"} description={`Description for Medium`} />
-	<CheckboxCard size={"lg"} title={"Large"} description={`Description for Large`} />
-</VStack>
+<CheckboxCard.Root full size="sm">
+	<CheckboxCard.Header>
+		<CheckboxCard.Title>Small</CheckboxCard.Title>
+		<CheckboxCard.Checkbox />
+	</CheckboxCard.Header>
+	<CheckboxCard.Description>Description for Small</CheckboxCard.Description>
+</CheckboxCard.Root>
 ```
 
 ### Controlled
@@ -123,14 +258,17 @@ export function ControlledCheckboxCard() {
     return (
         <>
             <Text>Selected: {isChecked ? "true" : "false"}</Text>
-            <VStack w="250px" align='stretch'>
-                <CheckboxCard
-                    title="Controlled"
-                    description="Description for Controlled"
-                    isChecked={isChecked}
-                    onChangeValue={setIsChecked}
-                />
-            </VStack>
+            <CheckboxCard.Root
+                full
+                isChecked={isChecked}
+                onChangeValue={setIsChecked}
+            >
+                <CheckboxCard.Header>
+                    <CheckboxCard.Title>Controlled</CheckboxCard.Title>
+                    <CheckboxCard.Checkbox />
+                </CheckboxCard.Header>
+                <CheckboxCard.Description>Description for Controlled</CheckboxCard.Description>
+            </CheckboxCard.Root>
         </>
     );
 }
@@ -157,11 +295,143 @@ function CheckboxCardGroupControl() {
 				value={value}
 				onChange={setValue}
 			>
-				<CheckboxCard value="1" title="Option 1" description="Description for Option 1" />
-				<CheckboxCard value="2" title="Option 2" description="Description for Option 2" />
-				<CheckboxCard value="3" title="Option 3" description="Description for Option 3" />
+				<Group full wrapped>
+					<CheckboxCard.Root full value="1">
+						<CheckboxCard.Header>
+							<CheckboxCard.Title>Option 1</CheckboxCard.Title>
+							<CheckboxCard.Checkbox />
+						</CheckboxCard.Header>
+						<CheckboxCard.Description>Description for Option 1</CheckboxCard.Description>
+					</CheckboxCard.Root>
+					<CheckboxCard.Root full value="2">
+						<CheckboxCard.Header>
+							<CheckboxCard.Title>Option 2</CheckboxCard.Title>
+							<CheckboxCard.Checkbox />
+						</CheckboxCard.Header>
+						<CheckboxCard.Description>Description for Option 2</CheckboxCard.Description>
+					</CheckboxCard.Root>
+					<CheckboxCard.Root full value="3">
+						<CheckboxCard.Header>
+							<CheckboxCard.Title>Option 3</CheckboxCard.Title>
+							<CheckboxCard.Checkbox />
+						</CheckboxCard.Header>
+						<CheckboxCard.Description>Description for Option 3</CheckboxCard.Description>
+					</CheckboxCard.Root>
+				</Group>
 			</CheckboxGroup>
 		 </>
 	);
 }
+```
+
+### With icon
+
+Use custom content inside `CheckboxCard.Title` or `CheckboxCard.Description` for richer layouts.
+
+<Wrapper>
+	<Group full wrapped>
+		<CheckboxCard.Root full>
+			<CheckboxCard.Header>
+				<CheckboxCard.Title>
+					<Flex col gap={2}> 
+						<Icon as={<SiReactrouter />} boxSize={"5"} color="fg.medium" />
+						<Text>React Router</Text>
+					</Flex>
+				</CheckboxCard.Title>
+				<CheckboxCard.Checkbox />
+			</CheckboxCard.Header>
+			<CheckboxCard.Description>Description for React Router</CheckboxCard.Description>
+		</CheckboxCard.Root>
+		<CheckboxCard.Root full>
+			<CheckboxCard.Header>
+				<CheckboxCard.Title>
+					<Flex col gap={2}> 
+						<Icon as={<RiNextjsLine />} boxSize={"5"} color="fg.medium" />
+						<Text>Next.js</Text>
+					</Flex>
+				</CheckboxCard.Title>
+				<CheckboxCard.Checkbox />
+			</CheckboxCard.Header>
+			<CheckboxCard.Description>Description for Next.js</CheckboxCard.Description>
+		</CheckboxCard.Root>
+		<CheckboxCard.Root full>
+			<CheckboxCard.Header>
+				<CheckboxCard.Title>
+					<Flex col gap={2}> 
+						<Icon as={<FaVuejs />} boxSize={"5"} color="fg.medium" />
+						<Text>Vue.js</Text>
+					</Flex>
+				</CheckboxCard.Title>
+				<CheckboxCard.Checkbox />
+			</CheckboxCard.Header>
+			<CheckboxCard.Description>Description for Vue.js</CheckboxCard.Description>
+		</CheckboxCard.Root>
+	</Group>
+</Wrapper>
+
+```tsx
+<CheckboxCard.Root full>
+	<CheckboxCard.Header>
+		<CheckboxCard.Title>
+			<Flex col gap={2}> 
+				<Icon as={<SiReactrouter />} boxSize="5" color="fg.medium" />
+				<Text>React Router</Text>
+			</Flex>
+		</CheckboxCard.Title>
+		<CheckboxCard.Checkbox />
+	</CheckboxCard.Header>
+	<CheckboxCard.Description>Description for React Router</CheckboxCard.Description>
+</CheckboxCard.Root>
+```
+
+### Hide checkbox indicator
+
+Omit `CheckboxCard.Checkbox` to hide the checkbox indicator.
+
+<Wrapper>
+	<Group full wrapped>
+		<CheckboxCard.Root full>
+			<CheckboxCard.Header>
+				<CheckboxCard.Title>
+					<Flex full gap={2} row center>
+						<Icon as={<FaPaypal />} boxSize={"5"} color="fg.medium" />
+						<Text>Paypal</Text>
+					</Flex>
+				</CheckboxCard.Title>
+			</CheckboxCard.Header>
+		</CheckboxCard.Root>
+		<CheckboxCard.Root full>
+			<CheckboxCard.Header>
+				<CheckboxCard.Title>
+					<Flex full gap={2} row center>
+						<Icon as={<FiCreditCard />} boxSize={"5"} color="fg.medium" />
+						<Text>Credit Card</Text>
+					</Flex>
+				</CheckboxCard.Title>
+			</CheckboxCard.Header>
+		</CheckboxCard.Root>
+		<CheckboxCard.Root full>
+			<CheckboxCard.Header>
+				<CheckboxCard.Title>
+					<Flex full gap={2} row center>
+						<Icon as={<SiApple />} boxSize={"5"} color="fg.medium" />
+						<Text>Apple</Text>
+					</Flex>
+				</CheckboxCard.Title>
+			</CheckboxCard.Header>
+		</CheckboxCard.Root>
+	</Group>
+</Wrapper>
+
+```tsx
+<CheckboxCard.Root full>
+	<CheckboxCard.Header>
+		<CheckboxCard.Title>
+			<Flex full gap={2} row center>
+				<Icon as={<FaPaypal />} boxSize="5" color="fg.medium" />
+				<Text>Paypal</Text>
+			</Flex>
+		</CheckboxCard.Title>
+	</CheckboxCard.Header>
+</CheckboxCard.Root>
 ```

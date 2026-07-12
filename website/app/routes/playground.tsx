@@ -325,18 +325,30 @@ export default function playground() {
             >
                 <Category name="Basic">
                     <Group>
-                        <CheckboxCard
-                            description="Description for option 1"
-                            title="Option 1"
+                        <CheckboxCard.Root
                             value="option1"
                             w={"xs"}
-                        />
-                        <CheckboxCard
-                            description="Description for option 2"
-                            title="Option 2"
+                        >
+                            <CheckboxCard.Header>
+                                <CheckboxCard.Title>Option 1</CheckboxCard.Title>
+                                <CheckboxCard.Checkbox />
+                            </CheckboxCard.Header>
+                            <CheckboxCard.Description>
+                                Description for option 1
+                            </CheckboxCard.Description>
+                        </CheckboxCard.Root>
+                        <CheckboxCard.Root
                             value="option2"
                             w={"xs"}
-                        />
+                        >
+                            <CheckboxCard.Header>
+                                <CheckboxCard.Title>Option 2</CheckboxCard.Title>
+                                <CheckboxCard.Checkbox />
+                            </CheckboxCard.Header>
+                            <CheckboxCard.Description>
+                                Description for option 2
+                            </CheckboxCard.Description>
+                        </CheckboxCard.Root>
                     </Group>
                 </Category>
             </Component>

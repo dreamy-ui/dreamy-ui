@@ -39,12 +39,6 @@ const AutocompleteIcon = withContext(function AutocompleteIconBase(props: HTMLDr
     return <dreamy.div {...props} />;
 }, "icon");
 
-const AutocompleteInputWrapper = withContext(function AutocompleteInputWrapperBase(
-    props: HTMLDreamyProps<"div">
-) {
-    return <dreamy.div {...props} />;
-}, "input");
-
 const AutocompleteIndicatorGroup = withContext(Box, "indicatorGroup");
 
 function AutocompleteIndicatorBase(props: SVGProps<SVGSVGElement>) {
@@ -177,7 +171,12 @@ export interface AutocompleteInputProps
     icon?: ReactNode;
 }
 
-export function Input({ icon, placeholder, ref, ...rest }: AutocompleteInputProps) {
+export const Input = withContext(function AutocompleteInput({
+    icon,
+    placeholder,
+    ref,
+    ...rest
+}: AutocompleteInputProps) {
     const { getInputProps, isClearable, selectedValue, size, triggerVariant } =
         useAutocompleteContext();
 
@@ -185,14 +184,12 @@ export function Input({ icon, placeholder, ref, ...rest }: AutocompleteInputProp
         <PopoverAnchor>
             <AutocompleteControl>
                 {icon && <AutocompleteIcon>{icon}</AutocompleteIcon>}
-                <AutocompleteInputWrapper>
-                    <BaseInput
-                        placeholder={placeholder}
-                        size={size}
-                        variant={triggerVariant as InputProps["variant"]}
-                        {...(getInputProps({ ...rest, ref } as any) as any)}
-                    />
-                </AutocompleteInputWrapper>
+                <BaseInput
+                    placeholder={placeholder}
+                    size={size}
+                    variant={triggerVariant as InputProps["variant"]}
+                    {...(getInputProps({ ...rest, ref } as any) as any)}
+                />
                 <AutocompleteIndicatorGroup>
                     {isClearable && selectedValue && <AutocompleteClearButton />}
                     <AutocompleteIndicator />
@@ -200,7 +197,7 @@ export function Input({ icon, placeholder, ref, ...rest }: AutocompleteInputProp
             </AutocompleteControl>
         </PopoverAnchor>
     );
-}
+}, "input");
 
 export interface AutocompleteContentProps extends Omit<PopoverContentProps, "children"> {
     /**

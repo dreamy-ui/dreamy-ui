@@ -1,6 +1,6 @@
 import { Checkbox, CheckboxGroup } from "@/ui";
 import { CheckboxCard } from "@/ui";
-import { VStack } from "@/ui";
+import { Group } from "@/ui";
 import { Text } from "@/ui";
 import { useState } from "react";
 
@@ -26,14 +26,17 @@ export function ControlledCheckboxCard() {
     return (
         <>
             <Text>Selected: {isChecked ? "true" : "false"}</Text>
-            <VStack w="250px">
-                <CheckboxCard
-                    description="Description for Controlled"
-                    isChecked={isChecked}
-                    onChangeValue={setIsChecked}
-                    title="Controlled"
-                />
-            </VStack>
+            <CheckboxCard.Root
+                full
+                isChecked={isChecked}
+                onChangeValue={setIsChecked}
+            >
+                <CheckboxCard.Header>
+                    <CheckboxCard.Title>Controlled</CheckboxCard.Title>
+                    <CheckboxCard.Checkbox />
+                </CheckboxCard.Header>
+                <CheckboxCard.Description>Description for Controlled</CheckboxCard.Description>
+            </CheckboxCard.Root>
         </>
     );
 }
@@ -66,26 +69,41 @@ export function CheckboxCardGroupControl() {
                 onChange={setValue}
                 value={value}
             >
-                <VStack
-                    align="stretch"
-                    w="250px"
+                <Group
+                    full
+                    wrapped
                 >
-                    <CheckboxCard
-                        description="Description for Option 1"
-                        title="Option 1"
+                    <CheckboxCard.Root
+                        full
                         value="1"
-                    />
-                    <CheckboxCard
-                        description="Description for Option 2"
-                        title="Option 2"
+                    >
+                        <CheckboxCard.Header>
+                            <CheckboxCard.Title>Option 1</CheckboxCard.Title>
+                            <CheckboxCard.Checkbox />
+                        </CheckboxCard.Header>
+                        <CheckboxCard.Description>Description for Option 1</CheckboxCard.Description>
+                    </CheckboxCard.Root>
+                    <CheckboxCard.Root
+                        full
                         value="2"
-                    />
-                    <CheckboxCard
-                        description="Description for Option 3"
-                        title="Option 3"
+                    >
+                        <CheckboxCard.Header>
+                            <CheckboxCard.Title>Option 2</CheckboxCard.Title>
+                            <CheckboxCard.Checkbox />
+                        </CheckboxCard.Header>
+                        <CheckboxCard.Description>Description for Option 2</CheckboxCard.Description>
+                    </CheckboxCard.Root>
+                    <CheckboxCard.Root
+                        full
                         value="3"
-                    />
-                </VStack>
+                    >
+                        <CheckboxCard.Header>
+                            <CheckboxCard.Title>Option 3</CheckboxCard.Title>
+                            <CheckboxCard.Checkbox />
+                        </CheckboxCard.Header>
+                        <CheckboxCard.Description>Description for Option 3</CheckboxCard.Description>
+                    </CheckboxCard.Root>
+                </Group>
             </CheckboxGroup>
         </>
     );

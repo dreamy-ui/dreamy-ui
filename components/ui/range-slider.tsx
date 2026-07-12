@@ -66,7 +66,6 @@ export const Root = withProvider(function Component(props: RangeSliderProps) {
                 style={
                     {
                         ...rootProps.style,
-                        // @ts-expect-error
                         "--range-slider-thumb-size": `${config.thumbSize}px`,
                         ...(orientation === "horizontal"
                             ? { height: config.trackSize }

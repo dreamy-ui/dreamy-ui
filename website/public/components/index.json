@@ -159,9 +159,7 @@
     "component": "CheckboxCard",
     "npmDependencies": [],
     "fileDependencies": [
-      "./box",
       "./checkbox",
-      "./text",
       "./visually-hidden"
     ],
     "hasRecipe": true,

@@ -110,6 +110,7 @@ export function useRadio(props: UseRadioProps = {}) {
         () => isActive && !isInteractionDisabled,
         [isActive, isInteractionDisabled]
     );
+    const [suppressFocusVisible, setSuppressFocusVisible] = useState(false);
 
     const { isFocusVisible, focusProps } = useFocusRing({
         autoFocus
@@ -151,14 +152,32 @@ export function useRadio(props: UseRadioProps = {}) {
             "data-invalid": dataAttr(isInvalid),
             "data-readonly": dataAttr(isReadOnly),
             "data-active": dataAttr(active),
-            "data-focus-visible": isCard ? dataAttr(isFocusVisible) : undefined,
-            onPointerDown: callAllHandlers(otherProps.onPointerDown, () => setActive(true)),
+            "data-focus-visible": isCard
+                ? dataAttr(isFocusVisible && !suppressFocusVisible)
+                : undefined,
+            onPointerDown: callAllHandlers(otherProps.onPointerDown, (event) => {
+                setActive(true);
+                if (isCard && event.pointerType) {
+                    setSuppressFocusVisible(true);
+                }
+            }),
             onPointerUp: callAllHandlers(otherProps.onPointerUp, () => setActive(false)),
             onPointerLeave: callAllHandlers(otherProps.onPointerLeave, () => setActive(false)),
             onClick: callAllHandlers(props.onClick, () => {
-                inputRef.current?.click();
+                const input = inputRef.current;
+                if (!input) {
+                    return;
+                }
+
+                input.click();
+
+                if (isCard) {
+                    input.focus({ preventScroll: true });
+                    return;
+                }
+
                 requestAnimationFrame(() => {
-                    inputRef.current?.focus({ preventScroll: true });
+                    input.focus({ preventScroll: true });
                 });
             }),
             className: cx(className, "group"),
@@ -174,6 +193,7 @@ export function useRadio(props: UseRadioProps = {}) {
         props.onClick,
         isCard,
         isFocusVisible,
+        suppressFocusVisible,
         groupContext,
         active,
         ...objectToDeps(otherProps)
@@ -222,9 +242,17 @@ export function useRadio(props: UseRadioProps = {}) {
             id: labelId,
             tabIndex,
             onChange: handleChange,
-            onBlur: callAllHandlers(props.onBlur, onBlurProp),
+            onBlur: callAllHandlers(props.onBlur, onBlurProp, () => {
+                if (isCard) {
+                    setSuppressFocusVisible(false);
+                }
+            }),
             onFocus: callAllHandlers(props.onFocus, onFocusProp),
-            onKeyDown: callAllHandlers(props.onKeyDown, onKeyDown),
+            onKeyDown: callAllHandlers(props.onKeyDown, onKeyDown, () => {
+                if (isCard) {
+                    setSuppressFocusVisible(false);
+                }
+            }),
             onKeyUp: callAllHandlers(props.onKeyUp, onKeyUp),
             required: isRequired,
             checked: isChecked,
@@ -263,7 +291,8 @@ export function useRadio(props: UseRadioProps = {}) {
         value,
         onKeyDown,
         onKeyUp,
-        focusProps
+        focusProps,
+        isCard
     ]);
 
     const getLabelProps: PropGetter = useCallback(
