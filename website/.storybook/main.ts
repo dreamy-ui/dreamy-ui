@@ -14,6 +14,7 @@ function getAbsolutePath(value: string): any {
 }
 
 export default {
+    staticDirs: ["../public"],
     stories: [
         "../../components/**/*.stories.@(mdx|js|jsx|mjs|ts|tsx)",
         "../stories/**/*.@(mdx|js|jsx|mjs|ts|tsx)"

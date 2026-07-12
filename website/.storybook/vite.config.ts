@@ -1,6 +1,6 @@
-import pandacss from "@pandacss/dev/postcss";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import pandacss from "@pandacss/dev/postcss";
 import { defineConfig, loadEnv } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
@@ -17,10 +17,10 @@ export default defineConfig(({ mode }) => {
             }
         },
         resolve: {
+            tsconfigPaths: true,
             alias: {
                 "@/ui": resolve(__dirname, "../components/ui/index")
             }
-        },
-        plugins: [tsconfigPaths({ root: "./" })]
+        }
     };
 });

@@ -18,7 +18,14 @@ export default defineConfig({
         // "../packages/panda-preset/dist/**/*.{js,jsx,ts,tsx}" // The preset location
     ],
     exclude: [],
-    presets: [createDreamyPreset()],
+    presets: [
+        createDreamyPreset({
+            fonts: {
+                body: "Geist",
+                heading: "Manrope"
+            }
+        })
+    ],
     patterns: {
         extend: patterns
     },

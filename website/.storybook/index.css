@@ -1,1 +1,8 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap");
+
+@font-face {
+	font-family: "Geist";
+	src: url("/Geist[wght].ttf");
+}
+
 @layer reset, base, tokens, recipes, utilities;
