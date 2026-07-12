@@ -1,6 +1,6 @@
 import fs from "node:fs";
 
-const files = ["components/ui/date-picker.tsx", "components/ui/date-range-picker.tsx"];
+const files = ["components/date-picker/index.tsx", "components/date-range-picker/index.tsx"];
 
 for (const file of files) {
     let result = fs.readFileSync(file, "utf8");

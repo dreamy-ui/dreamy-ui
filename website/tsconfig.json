@@ -2,6 +2,7 @@
 	"include": [
 		"app/**/*",
 		"components/**/*",
+		"../components/**/*.stories.tsx",
 		"app/**/.server/**/*",
 		"app/**/.client/**/*",
 		"styled-system/*",

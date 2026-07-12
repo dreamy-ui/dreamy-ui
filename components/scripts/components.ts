@@ -5,10 +5,8 @@ import { consola } from "consola";
 import { ensureDirSync } from "fs-extra";
 import {
     WEBSITE_DIR,
-    getPatternsDirectory,
-    getPublicDirectory,
-    getRecipesDirectory,
-    getUiDirectory
+    getComponentDirectories,
+    getPublicDirectory
 } from "./paths";
 
 function getImports(content: string) {
@@ -36,13 +34,46 @@ function resolveDependency(specifier: string, dependencies: string[]) {
     return result;
 }
 
+function normalizeFileDependency(importPath: string) {
+    const siblingMatch = importPath.match(/^\.\.\/([^/]+)\/\1(?:\.(?:tsx|ts|jsx|js))?$/);
+    if (siblingMatch) {
+        return `./${siblingMatch[1]}`;
+    }
+
+    const folderMatch = importPath.match(/^\.\.\/([^/]+)$/);
+    if (folderMatch) {
+        return `./${folderMatch[1]}`;
+    }
+
+    const localMatch = importPath.match(/^\.\/([^/]+)(?:\.(?:tsx|ts|jsx|js))?$/);
+    if (localMatch) {
+        return `./${localMatch[1]}`;
+    }
+
+    if (importPath.startsWith("compositions/ui")) {
+        return importPath.replace(/^compositions\/ui\//, "./");
+    }
+
+    return importPath;
+}
+
+function transformContentForOutput(content: string) {
+    return content
+        .replace(
+            /from (["'])\.\.\/([^/"']+)\/\2(?:\.(?:tsx|ts|jsx|js))?\1/g,
+            "from $1./$2$1"
+        )
+        .replace(/from (["'])\.\.\/([^/"']+)\1/g, "from $1./$2$1")
+        .replace(/components\/ui/g, ".");
+}
+
 function getDependencies(imports: Set<string>, dependencies: string[]) {
     const fileDependencies = new Set<string>();
     const npmDependencies = new Set<string>();
 
     for (const _import of Array.from(imports)) {
         if (isFileDependency(_import)) {
-            fileDependencies.add(_import);
+            fileDependencies.add(normalizeFileDependency(_import));
         } else if (isNpmDependency(dependencies, _import)) {
             const dependency = resolveDependency(_import, dependencies);
             if (dependency) {
@@ -145,33 +176,50 @@ const getFileName = (file: string) => basename(file, extname(file));
 
 const getComponentName = (file: string) => getFileName(file).split("-").map(camelCase).join("");
 
-function generateRecipes(recipesDir: string, publicDir: string) {
-    if (!existsSync(recipesDir)) {
-        consola.warn(`Recipes directory not found: ${recipesDir}`);
-        return [];
-    }
+function isRecipeFile(content: string) {
+    return /defineRecipe|defineSlotRecipe/.test(content);
+}
 
-    const recipeFiles = readdirSync(recipesDir, { encoding: "utf-8" }).filter((file) =>
-        file.endsWith(".ts")
-    );
+function isPatternFile(content: string) {
+    return /definePattern/.test(content);
+}
 
-    const recipes = recipeFiles.map((file) => {
-        const filePath = join(recipesDir, file);
-        const content = readFileSync(filePath, "utf-8");
-        const recipeId = getFileName(file);
-
-        return {
-            path: join(publicDir, "recipes", setFileExtension(file, ".json")),
-            data: {
-                type: "recipe",
-                id: recipeId,
-                file: {
-                    name: file,
-                    content: content.replace(/from "@\/recipes\//g, 'from "./')
-                }
-            }
+function generateRecipes(publicDir: string) {
+    const recipes: Array<{
+        path: string;
+        data: {
+            type: string;
+            id: string;
+            file: { name: string; content: string };
         };
-    });
+    }> = [];
+
+    for (const componentDir of getComponentDirectories()) {
+        const files = readdirSync(componentDir, { encoding: "utf-8" }).filter((file) =>
+            file.endsWith(".ts")
+        );
+
+        for (const file of files) {
+            const filePath = join(componentDir, file);
+            const content = readFileSync(filePath, "utf-8");
+            if (!isRecipeFile(content)) {
+                continue;
+            }
+
+            const recipeId = getFileName(file);
+            recipes.push({
+                path: join(publicDir, "recipes", setFileExtension(file, ".json")),
+                data: {
+                    type: "recipe",
+                    id: recipeId,
+                    file: {
+                        name: file,
+                        content: content.replace(/from "@\/recipes\//g, 'from "./')
+                    }
+                }
+            });
+        }
+    }
 
     recipes.push({
         path: join(publicDir, "recipes", "index.json"),
@@ -186,33 +234,42 @@ function generateRecipes(recipesDir: string, publicDir: string) {
     return recipes;
 }
 
-function generatePatterns(patternsDir: string, publicDir: string) {
-    if (!existsSync(patternsDir)) {
-        consola.warn(`Patterns directory not found: ${patternsDir}`);
-        return [];
-    }
-
-    const patternFiles = readdirSync(patternsDir, { encoding: "utf-8" }).filter((file) =>
-        file.endsWith(".ts")
-    );
-
-    const patterns = patternFiles.map((file) => {
-        const filePath = join(patternsDir, file);
-        const content = readFileSync(filePath, "utf-8");
-        const patternId = getFileName(file);
-
-        return {
-            path: join(publicDir, "patterns", setFileExtension(file, ".json")),
-            data: {
-                type: "pattern",
-                id: patternId,
-                file: {
-                    name: file,
-                    content: content.replace(/from "@\/patterns\//g, 'from "./')
-                }
-            }
+function generatePatterns(publicDir: string) {
+    const patterns: Array<{
+        path: string;
+        data: {
+            type: string;
+            id: string;
+            file: { name: string; content: string };
         };
-    });
+    }> = [];
+
+    for (const componentDir of getComponentDirectories()) {
+        const files = readdirSync(componentDir, { encoding: "utf-8" }).filter((file) =>
+            file.endsWith(".ts")
+        );
+
+        for (const file of files) {
+            const filePath = join(componentDir, file);
+            const content = readFileSync(filePath, "utf-8");
+            if (!isPatternFile(content)) {
+                continue;
+            }
+
+            const patternId = getFileName(file);
+            patterns.push({
+                path: join(publicDir, "patterns", setFileExtension(file, ".json")),
+                data: {
+                    type: "pattern",
+                    id: patternId,
+                    file: {
+                        name: file,
+                        content: content.replace(/from "@\/patterns\//g, 'from "./')
+                    }
+                }
+            });
+        }
+    }
 
     patterns.push({
         path: join(publicDir, "patterns", "index.json"),
@@ -234,10 +291,23 @@ function checkForRecipesOrPatterns(recipeIds: string[], patternIds: string[]) {
     return { hasRecipe, hasPattern };
 }
 
+function getComponentFiles() {
+    const files: Array<{ componentId: string; filePath: string; fileName: string }> = [];
+
+    for (const componentDir of getComponentDirectories()) {
+        const componentId = basename(componentDir);
+        const filePath = join(componentDir, "index.tsx");
+        if (!existsSync(filePath)) {
+            continue;
+        }
+
+        files.push({ componentId, filePath, fileName: `${componentId}.tsx` });
+    }
+
+    return files;
+}
+
 export async function main() {
-    const componentsDir = getUiDirectory();
-    const recipesDir = getRecipesDirectory();
-    const patternsDir = getPatternsDirectory();
     const publicDir = getPublicDirectory();
 
     const pkgJson = readFileSync(join(WEBSITE_DIR, "package.json"), "utf-8");
@@ -246,22 +316,16 @@ export async function main() {
         (dep) => !excludedDependencies.includes(dep)
     );
 
-    const files = readdirSync(componentsDir, { encoding: "utf-8" }).filter(
-        (file) => file.endsWith(".tsx") || file.endsWith(".ts")
-    );
+    const files = getComponentFiles();
 
-    console.log("Components directory:", componentsDir);
-    console.log("Recipes directory:", recipesDir);
-    console.log("Patterns directory:", patternsDir);
+    console.log("Component directories:", getComponentDirectories().length);
 
-    const components = files.map((file) => {
-        const filePath = join(componentsDir, file);
+    const components = files.map(({ componentId, filePath, fileName }) => {
         const content = readFileSync(filePath, "utf-8");
         const { fileDependencies, npmDependencies } = getDependencies(
             getImports(content),
             dependencies
         );
-        const componentId = getFileName(file);
 
         const recipeIds = parseRecipeId(content);
         const patternIds = parsePatternId(content);
@@ -269,17 +333,17 @@ export async function main() {
         const { hasRecipe, hasPattern } = checkForRecipesOrPatterns(recipeIds, patternIds);
 
         return {
-            path: join(publicDir, "components", setFileExtension(file, ".json")),
+            path: join(publicDir, "components", setFileExtension(fileName, ".json")),
             data: {
                 type: "component",
                 npmDependencies: Array.from(npmDependencies),
                 fileDependencies: Array.from(fileDependencies),
                 id: componentId,
                 file: {
-                    name: file,
-                    content: content.replace("components/ui", ".")
+                    name: fileName,
+                    content: transformContentForOutput(content)
                 },
-                component: getComponentName(file),
+                component: getComponentName(fileName),
                 hasRecipe,
                 hasPattern,
                 ...(recipeIds.length > 0 && { recipeIds }),
@@ -305,8 +369,8 @@ export async function main() {
         }))
     });
 
-    const recipes = generateRecipes(recipesDir, publicDir);
-    const patterns = generatePatterns(patternsDir, publicDir);
+    const recipes = generateRecipes(publicDir);
+    const patterns = generatePatterns(publicDir);
 
     ensureDirSync(join(publicDir, "components"));
     ensureDirSync(join(publicDir, "recipes"));

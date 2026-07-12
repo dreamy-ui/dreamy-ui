@@ -4,14 +4,7 @@ import { basename, extname, join, normalize } from "node:path";
 import { setTimeout as setTimeoutPromise } from "node:timers/promises";
 import chokidar from "chokidar";
 import { main } from "./components";
-import {
-    REGISTRY_DIR,
-    WEBSITE_DIR,
-    getPatternsDirectory,
-    getPublicDirectory,
-    getRecipesDirectory,
-    getUiDirectory
-} from "./paths";
+import { REGISTRY_DIR, WEBSITE_DIR, getPublicDirectory } from "./paths";
 
 interface ComponentIndexItem {
     id: string;
@@ -22,6 +15,14 @@ interface ComponentIndexItem {
 interface RegistryChange {
     kind: "component" | "recipe" | "pattern";
     id: string;
+}
+
+function isRecipeFile(content: string) {
+    return /defineRecipe|defineSlotRecipe/.test(content);
+}
+
+function isPatternFile(content: string) {
+    return /definePattern/.test(content);
 }
 
 while (true) {
@@ -39,8 +40,14 @@ setTimeout(() => {
 }, 250);
 
 chokidar
-    .watch([getUiDirectory(), getRecipesDirectory(), getPatternsDirectory()], {
-        ignoreInitial: true
+    .watch([join(REGISTRY_DIR, "*")], {
+        ignoreInitial: true,
+        ignored: [
+            join(REGISTRY_DIR, "scripts", "**"),
+            join(REGISTRY_DIR, "node_modules", "**"),
+            join(REGISTRY_DIR, "package.json"),
+            join(REGISTRY_DIR, "tsconfig.json")
+        ]
     })
     .on("change", async (filePath) => {
         console.log("filePath", filePath);
@@ -68,17 +75,30 @@ function parseRegistryChange(filePath: string): RegistryChange | null {
     const normalizedPath = normalize(filePath).replaceAll("\\", "/");
     const fileId = basename(normalizedPath, extname(normalizedPath));
     const registryPath = normalize(REGISTRY_DIR).replaceAll("\\", "/");
+    const ext = extname(normalizedPath);
 
-    if (normalizedPath.includes(`${registryPath}/ui/`)) {
-        return { kind: "component", id: fileId };
+    const match = normalizedPath.match(new RegExp(`${registryPath}/([^/]+)/[^/]+$`));
+    if (!match) {
+        return null;
     }
 
-    if (normalizedPath.includes(`${registryPath}/recipes/`)) {
-        return { kind: "recipe", id: fileId };
+    const folderName = match[1];
+    if (folderName === "scripts" || folderName === "node_modules") {
+        return null;
     }
 
-    if (normalizedPath.includes(`${registryPath}/patterns/`)) {
-        return { kind: "pattern", id: fileId };
+    if (ext === ".tsx" && normalizedPath.endsWith("/index.tsx")) {
+        return { kind: "component", id: folderName };
+    }
+
+    if (ext === ".ts") {
+        const content = readFileSync(filePath, "utf-8");
+        if (isRecipeFile(content)) {
+            return { kind: "recipe", id: fileId };
+        }
+        if (isPatternFile(content)) {
+            return { kind: "pattern", id: fileId };
+        }
     }
 
     return null;

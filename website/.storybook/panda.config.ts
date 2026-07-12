@@ -12,6 +12,7 @@ export default defineConfig({
     // clean: true,
     outExtension: "js",
     include: [
+        "../../components/**/*.stories.{js,jsx,ts,tsx}",
         "../stories/**/*.{js,jsx,ts,tsx}"
         // "../packages/react/dist/**/*.{js,jsx,ts,tsx}",
         // "../packages/panda-preset/dist/**/*.{js,jsx,ts,tsx}" // The preset location

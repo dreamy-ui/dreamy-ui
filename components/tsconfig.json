@@ -1,5 +1,6 @@
 {
-	"include": ["ui/**/*", "recipes/**/*", "patterns/**/*", "scripts/**/*"],
+	"include": ["*/index.tsx", "*/**/*.ts", "scripts/**/*"],
+	"exclude": ["**/*.stories.tsx"],
 	"compilerOptions": {
 		"lib": ["DOM", "DOM.Iterable", "ES2022"],
 		"types": ["node"],

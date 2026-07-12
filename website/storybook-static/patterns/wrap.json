@@ -1,0 +1,8 @@
+{
+  "type": "pattern",
+  "id": "wrap",
+  "file": {
+    "name": "wrap.ts",
+    "content": "import { definePattern } from \"@pandacss/dev\";\n\nexport const wrap = definePattern({\n    properties: {\n        gap: { type: \"property\", value: \"gap\" },\n        rowGap: { type: \"property\", value: \"gap\" },\n        columnGap: { type: \"property\", value: \"gap\" },\n        align: { type: \"property\", value: \"alignItems\" },\n        justify: { type: \"property\", value: \"justifyContent\" }\n    },\n    transform(props) {\n        const {\n            columnGap,\n            rowGap,\n            gap = columnGap || rowGap ? undefined : \"10px\",\n            align,\n            justify,\n            ...rest\n        } = props;\n        return {\n            display: \"flex\",\n            flexWrap: \"wrap\",\n            alignItems: align,\n            justifyContent: justify,\n            gap,\n            columnGap,\n            rowGap,\n            ...rest\n        };\n    }\n});\n"
+  }
+}

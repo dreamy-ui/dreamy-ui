@@ -1,0 +1,15 @@
+{
+  "type": "component",
+  "npmDependencies": [],
+  "fileDependencies": [
+    "./motion"
+  ],
+  "id": "ripple",
+  "file": {
+    "name": "ripple.tsx",
+    "content": "\"use client\";\n\nimport { type IRipple, clampValue } from \"@dreamy-ui/react\";\nimport type { HTMLMotionProps } from \"motion/react\";\nimport { AnimatePresence } from \"motion/react\";\nimport type React from \"react\";\nimport { MotionBox } from \"./motion\";\n\nexport interface RippleProps {\n    ripples: IRipple[];\n    currentRipple: string | null;\n    color?: string;\n    motionProps?: HTMLMotionProps<\"div\">;\n    style?: React.CSSProperties;\n    onClear: (key: React.Key) => void;\n}\n\n/**\n * Ripple component. Use with `useRipple` hook.\n */\nexport function Ripple(props: RippleProps) {\n    const {\n        ripples = [],\n        currentRipple,\n        motionProps,\n        color = \"currentColor\",\n        style,\n        onClear\n    } = props;\n\n    return ripples.map((ripple) => {\n        const isEdgingThisRipple = !!currentRipple && ripples.at(-1)?.key === ripple.key;\n        const duration = clampValue(\n            0.01 * ripple.size,\n            isEdgingThisRipple ? 2 : 0.3,\n            isEdgingThisRipple ? 3 : ripple.size > 100 ? 0.75 : 0.4\n        );\n\n        return (\n            <AnimatePresence\n                key={ripple.key}\n                mode=\"popLayout\"\n            >\n                <MotionBox\n                    animate={{\n                        scale: isEdgingThisRipple ? 1.8 : 2,\n                        opacity: isEdgingThisRipple ? 0 : 0.01\n                    }}\n                    exit={{ opacity: 0 }}\n                    initial={{\n                        scale: 0,\n                        opacity: 0.4\n                    }}\n                    onAnimationComplete={() => {\n                        setTimeout(() => {\n                            onClear(ripple.key);\n                        }, duration * 1000);\n                    }}\n                    style={{\n                        position: \"absolute\",\n                        backgroundColor: color,\n                        borderRadius: \"100%\",\n                        transformOrigin: \"center\",\n                        pointerEvents: \"none\",\n                        overflow: \"hidden\",\n                        inset: 0,\n                        zIndex: 0,\n                        top: ripple.y,\n                        left: ripple.x,\n                        width: `${ripple.size}px`,\n                        height: `${ripple.size}px`,\n                        willChange: \"transform, opacity\",\n                        ...style\n                    }}\n                    transition={{\n                        type: \"spring\",\n                        stiffness: isEdgingThisRipple ? 20 : 80,\n                        damping: isEdgingThisRipple ? 25 : 20\n                    }}\n                    {...motionProps}\n                    data-part=\"ripple\"\n                />\n            </AnimatePresence>\n        );\n    });\n}\n"
+  },
+  "component": "Ripple",
+  "hasRecipe": false,
+  "hasPattern": false
+}

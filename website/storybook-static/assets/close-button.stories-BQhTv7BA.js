@@ -1,0 +1,3 @@
+import{i as e}from"./preload-helper-CCSz8wUY.js";import{Ar as t,ei as n,t as r}from"./iframe-22HWPPlw.js";function i(){return(0,a.jsx)(t,{"aria-label":`Close Modal`,w:`fit-content`})}var a,o,s;e((()=>{r(),a=n(),o={title:`Close Button`},i.__docgenInfo={description:``,methods:[],displayName:`Base`},i.parameters={...i.parameters,docs:{...i.parameters?.docs,source:{originalSource:`function Base() {
+  return <CloseButton aria-label="Close Modal" w="fit-content" />;
+}`,...i.parameters?.docs?.source}}},s=[`Base`]}))();export{i as Base,s as __namedExportsOrder,o as default};

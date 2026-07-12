@@ -71,6 +71,7 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: Props) {
                     <HStack
                         as={
                             <Link
+                                color={"fg.medium"}
                                 display={{
                                     base: "none",
                                     md: "inline-flex"
@@ -84,10 +85,9 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: Props) {
                     >
                         <Icon
                             as={FaDiscord}
-                            color={"fg.medium"}
                             h={4}
                         />
-                        <Text color={"fg.medium"}>Discord</Text>
+                        <Text>Discord</Text>
                     </HStack>
 
                     <Link

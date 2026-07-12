@@ -14,7 +14,10 @@ function getAbsolutePath(value: string): any {
 }
 
 export default {
-    stories: ["../stories/**/*.@(mdx|js|jsx|mjs|ts|tsx)"],
+    stories: [
+        "../../components/**/*.stories.@(mdx|js|jsx|mjs|ts|tsx)",
+        "../stories/**/*.@(mdx|js|jsx|mjs|ts|tsx)"
+    ],
     addons: [
         getAbsolutePath("@storybook/addon-a11y"),
         getAbsolutePath("@storybook/addon-themes"),
