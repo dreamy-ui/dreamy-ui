@@ -59,8 +59,8 @@ export const Root = withProvider(function Component(props: RangeSliderProps) {
 
     return (
         <RangeSliderProvider value={rest}>
-            <VisuallyHiddenInput {...getInputProps(0)({ ref })} />
-            <VisuallyHiddenInput {...getInputProps(1)({ ref })} />
+            <VisuallyHiddenInput {...getInputProps(0)()} />
+            <VisuallyHiddenInput {...getInputProps(1)()} />
             <Box
                 {...rootProps}
                 style={

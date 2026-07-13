@@ -48,7 +48,8 @@ export default defineConfig({
         // }),
         reactRouter(),
         babel({
-            presets: [reactCompilerPreset()]
+            presets: [reactCompilerPreset()],
+            exclude: [/node_modules/, /packages[\\/]react[\\/]/]
         })
     ],
     optimizeDeps: {

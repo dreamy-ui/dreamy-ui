@@ -11,9 +11,9 @@ export function Base() {
         <RangeSlider.Root>
             <RangeSlider.Track maxW="xs">
                 <RangeSlider.FilledTrack />
-                <RangeSlider.Thumb index={0} />
-                <RangeSlider.Thumb index={1} />
             </RangeSlider.Track>
+            <RangeSlider.Thumb index={0} />
+            <RangeSlider.Thumb index={1} />
         </RangeSlider.Root>
     );
 }
@@ -36,9 +36,9 @@ export function MaxMinStep() {
             >
                 <RangeSlider.Track maxW="xs">
                     <RangeSlider.FilledTrack />
-                    <RangeSlider.Thumb index={0} />
-                    <RangeSlider.Thumb index={1} />
                 </RangeSlider.Track>
+                <RangeSlider.Thumb index={0} />
+                <RangeSlider.Thumb index={1} />
             </RangeSlider.Root>
         </>
     );
@@ -53,23 +53,23 @@ export function Size() {
             <RangeSlider.Root size="sm">
                 <RangeSlider.Track maxW="xs">
                     <RangeSlider.FilledTrack />
-                    <RangeSlider.Thumb index={0} />
-                    <RangeSlider.Thumb index={1} />
                 </RangeSlider.Track>
+                <RangeSlider.Thumb index={0} />
+                <RangeSlider.Thumb index={1} />
             </RangeSlider.Root>
             <RangeSlider.Root size="md">
                 <RangeSlider.Track maxW="xs">
                     <RangeSlider.FilledTrack />
-                    <RangeSlider.Thumb index={0} />
-                    <RangeSlider.Thumb index={1} />
                 </RangeSlider.Track>
+                <RangeSlider.Thumb index={0} />
+                <RangeSlider.Thumb index={1} />
             </RangeSlider.Root>
             <RangeSlider.Root size="lg">
                 <RangeSlider.Track maxW="xs">
                     <RangeSlider.FilledTrack />
-                    <RangeSlider.Thumb index={0} />
-                    <RangeSlider.Thumb index={1} />
                 </RangeSlider.Track>
+                <RangeSlider.Thumb index={0} />
+                <RangeSlider.Thumb index={1} />
             </RangeSlider.Root>
         </VStack>
     );
@@ -84,44 +84,44 @@ export function Scheme() {
             <RangeSlider.Root scheme="primary">
                 <RangeSlider.Track maxW="xs">
                     <RangeSlider.FilledTrack />
-                    <RangeSlider.Thumb index={0} />
-                    <RangeSlider.Thumb index={1} />
                 </RangeSlider.Track>
+                <RangeSlider.Thumb index={0} />
+                <RangeSlider.Thumb index={1} />
             </RangeSlider.Root>
             <RangeSlider.Root scheme="secondary">
                 <RangeSlider.Track maxW="xs">
                     <RangeSlider.FilledTrack />
-                    <RangeSlider.Thumb index={0} />
-                    <RangeSlider.Thumb index={1} />
                 </RangeSlider.Track>
+                <RangeSlider.Thumb index={0} />
+                <RangeSlider.Thumb index={1} />
             </RangeSlider.Root>
             <RangeSlider.Root scheme="info">
                 <RangeSlider.Track maxW="xs">
                     <RangeSlider.FilledTrack />
-                    <RangeSlider.Thumb index={0} />
-                    <RangeSlider.Thumb index={1} />
                 </RangeSlider.Track>
+                <RangeSlider.Thumb index={0} />
+                <RangeSlider.Thumb index={1} />
             </RangeSlider.Root>
             <RangeSlider.Root scheme="success">
                 <RangeSlider.Track maxW="xs">
                     <RangeSlider.FilledTrack />
-                    <RangeSlider.Thumb index={0} />
-                    <RangeSlider.Thumb index={1} />
                 </RangeSlider.Track>
+                <RangeSlider.Thumb index={0} />
+                <RangeSlider.Thumb index={1} />
             </RangeSlider.Root>
             <RangeSlider.Root scheme="warning">
                 <RangeSlider.Track maxW="xs">
                     <RangeSlider.FilledTrack />
-                    <RangeSlider.Thumb index={0} />
-                    <RangeSlider.Thumb index={1} />
                 </RangeSlider.Track>
+                <RangeSlider.Thumb index={0} />
+                <RangeSlider.Thumb index={1} />
             </RangeSlider.Root>
             <RangeSlider.Root scheme="error">
                 <RangeSlider.Track maxW="xs">
                     <RangeSlider.FilledTrack />
-                    <RangeSlider.Thumb index={0} />
-                    <RangeSlider.Thumb index={1} />
                 </RangeSlider.Track>
+                <RangeSlider.Thumb index={0} />
+                <RangeSlider.Thumb index={1} />
             </RangeSlider.Root>
         </VStack>
     );
@@ -135,9 +135,9 @@ export function Orientation() {
         >
             <RangeSlider.Track maxW="xs">
                 <RangeSlider.FilledTrack />
-                <RangeSlider.Thumb index={0} />
-                <RangeSlider.Thumb index={1} />
             </RangeSlider.Track>
+            <RangeSlider.Thumb index={0} />
+            <RangeSlider.Thumb index={1} />
         </RangeSlider.Root>
     );
 }
@@ -147,9 +147,9 @@ export function Reversed() {
         <RangeSlider.Root isReversed>
             <RangeSlider.Track maxW="xs">
                 <RangeSlider.FilledTrack />
-                <RangeSlider.Thumb index={0} />
-                <RangeSlider.Thumb index={1} />
             </RangeSlider.Track>
+            <RangeSlider.Thumb index={0} />
+            <RangeSlider.Thumb index={1} />
         </RangeSlider.Root>
     );
 }
@@ -163,16 +163,16 @@ export function CustomThumbSize() {
             <RangeSlider.Root thumbSize={16}>
                 <RangeSlider.Track maxW="xs">
                     <RangeSlider.FilledTrack />
-                    <RangeSlider.Thumb index={0} />
-                    <RangeSlider.Thumb index={1} />
                 </RangeSlider.Track>
+                <RangeSlider.Thumb index={0} />
+                <RangeSlider.Thumb index={1} />
             </RangeSlider.Root>
             <RangeSlider.Root thumbSize={32}>
                 <RangeSlider.Track maxW="xs">
                     <RangeSlider.FilledTrack />
-                    <RangeSlider.Thumb index={0} />
-                    <RangeSlider.Thumb index={1} />
                 </RangeSlider.Track>
+                <RangeSlider.Thumb index={0} />
+                <RangeSlider.Thumb index={1} />
             </RangeSlider.Root>
             <RangeSlider.Root
                 scheme="info"
@@ -180,9 +180,9 @@ export function CustomThumbSize() {
             >
                 <RangeSlider.Track maxW="xs">
                     <RangeSlider.FilledTrack />
-                    <RangeSlider.Thumb index={0} />
-                    <RangeSlider.Thumb index={1} />
                 </RangeSlider.Track>
+                <RangeSlider.Thumb index={0} />
+                <RangeSlider.Thumb index={1} />
             </RangeSlider.Root>
         </VStack>
     );
@@ -203,9 +203,9 @@ export function Controlled() {
             >
                 <RangeSlider.Track maxW="xs">
                     <RangeSlider.FilledTrack />
-                    <RangeSlider.Thumb index={0} />
-                    <RangeSlider.Thumb index={1} />
                 </RangeSlider.Track>
+                <RangeSlider.Thumb index={0} />
+                <RangeSlider.Thumb index={1} />
             </RangeSlider.Root>
         </>
     );

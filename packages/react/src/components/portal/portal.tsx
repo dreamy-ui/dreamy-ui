@@ -73,22 +73,21 @@ function DefaultPortal({
 
     if (!container) return null;
 
-    const content =
-        manager?.zIndex ? (
-            <div
-                style={{
-                    position: "absolute",
-                    zIndex: manager.zIndex,
-                    top: 0,
-                    left: 0,
-                    right: 0
-                }}
-            >
-                {children}
-            </div>
-        ) : (
-            children
-        );
+    const content = manager?.zIndex ? (
+        <div
+            style={{
+                position: "absolute",
+                zIndex: manager.zIndex,
+                top: 0,
+                left: 0,
+                right: 0
+            }}
+        >
+            {children}
+        </div>
+    ) : (
+        children
+    );
 
     return createPortal(
         <PortalContextProvider value={container}>{content}</PortalContextProvider>,

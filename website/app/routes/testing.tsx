@@ -1,4 +1,13 @@
-import { Accordion, Autocomplete, Button, DatePicker, Icon, Menu, Pagination } from "@/ui";
+import {
+    Accordion,
+    Autocomplete,
+    Button,
+    DatePicker,
+    Icon,
+    Menu,
+    Pagination,
+    RangeSlider
+} from "@/ui";
 import { Flex } from "@/ui";
 import { MotionFlex } from "@/ui";
 import { Select } from "@/ui";
@@ -56,6 +65,14 @@ export default function Test() {
             col
             gap={10}
         >
+            <RangeSlider.Root maxW={"150px"}>
+                <RangeSlider.Track>
+                    <RangeSlider.FilledTrack />
+                    <RangeSlider.Thumb index={0} />
+                    <RangeSlider.Thumb index={1} />
+                </RangeSlider.Track>
+            </RangeSlider.Root>
+
             <Pagination.Root
                 count={100}
                 defaultPage={1}
@@ -205,7 +222,6 @@ export default function Test() {
         </Flex>
     );
 }
-
 // function RenderDreamy() {
 // 	const start = performance.now();
 // 	const elements = Array.from({ length: 1000 }).map((_, index) => (
