@@ -9,7 +9,7 @@ import autoprefixer from "autoprefixer";
 import { defineConfig } from "vite";
 import circleDependency from "vite-plugin-circular-dependency";
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
     css: {
         postcss: {
             plugins: [pandacss as any, autoprefixer]
@@ -21,7 +21,8 @@ export default defineConfig({
                 target: "esnext",
                 minify: true,
                 rollupOptions: {
-                    input: "./app/server.prod.ts"
+                    input: "./app/server.prod.ts",
+                    external: ["@mdx-js/rollup", "next-mdx-remote"]
                 }
             }
         }
@@ -32,9 +33,12 @@ export default defineConfig({
         // }),
         // remixDevTools(),
         circleDependency(),
-        mdx({
-            development: true
-        }) as any,
+        {
+            enforce: "pre",
+            ...mdx({
+                development: mode === "development"
+            })
+        },
         // pandabox.vite({
         //     optimizeJs: "macro",
         //     exclude: [
@@ -75,4 +79,4 @@ export default defineConfig({
     resolve: {
         tsconfigPaths: true
     }
-});
+}));

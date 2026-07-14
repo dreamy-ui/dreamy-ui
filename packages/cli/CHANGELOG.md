@@ -1,25 +1,27 @@
 # @dreamy-ui/cli
 
+## 2.1.0
+
 ## 2.0.3
 
 ### Patch Changes
 
-- Component updates
+-   Component updates
 
 ## 2.0.2
 
 ### Patch Changes
 
-- fix bugs
+-   fix bugs
 
 ## 2.0.1
 
 ### Patch Changes
 
-- fix CLI wrong registry url
+-   fix CLI wrong registry url
 
 ## 2.0.0
 
 ### Major Changes
 
-- pre v2
+-   pre v2

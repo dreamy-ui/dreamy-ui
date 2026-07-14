@@ -1,13 +1,15 @@
 {
 	"name": "@dreamy-ui/mcp",
 	"main": "dist/stdio.mjs",
-	"version": "2.0.3",
+	"version": "2.1.0",
 	"description": "MCP for Dreamy UI",
 	"author": "imexoodeex",
 	"license": "MIT",
 	"type": "module",
 	"sideEffects": false,
-	"files": ["dist"],
+	"files": [
+		"dist"
+	],
 	"bin": {
 		"dreamy-ui-mcp": "./dist/stdio.mjs"
 	},

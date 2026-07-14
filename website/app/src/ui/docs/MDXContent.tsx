@@ -73,7 +73,7 @@ import {
 } from "@/ui";
 import { Portal, useToast } from "@dreamy-ui/react";
 import { MDXRemote } from "next-mdx-remote";
-import {
+import React, {
     type PropsWithChildren,
     type ReactNode,
     Suspense,
@@ -116,6 +116,7 @@ import { PiConfetti } from "react-icons/pi";
 import { RiNextjsLine } from "react-icons/ri";
 import { SiApple, SiReactrouter } from "react-icons/si";
 import { Link as RemixLink, useLocation } from "react-router";
+import { jsx } from "react/jsx-runtime";
 import type { MdxContent } from "~/src/.server/docs";
 import { Link, ReactRouterLink } from "~/src/ui/global/Link";
 import { IntroductionCards } from "./components/introduction-cards";
@@ -437,7 +438,9 @@ const TextCollapsed = wrapLazy(
 );
 
 const StationAutocomplete = wrapLazy(
-    lazy(() => import("./components/autocompletes").then(m => ({ default: m.StationAutocomplete})))
+    lazy(() =>
+        import("./components/autocompletes").then((m) => ({ default: m.StationAutocomplete }))
+    )
 );
 
 const PackageManagerSnippet = wrapLazy(

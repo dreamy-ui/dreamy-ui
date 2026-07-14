@@ -1,6 +1,6 @@
 /* eslint-disable */
 import type { SlotRecipeRuntimeFn, RecipeVariantProps } from '../types/recipe';
-import type { JsxHTMLProps, Assign } from '../types/system-types';
+import type { JsxHTMLProps, JsxStyleProps, Assign } from '../types/system-types';
 import type { JsxFactoryOptions, ComponentProps, DataAttrs, AsProps } from '../types/jsx';
 import type { ComponentType, ElementType } from 'react'
 
@@ -23,7 +23,7 @@ interface WithProviderOptions<P = {}> {
 }
 
 type StyleContextProvider<T extends ElementType, R extends SlotRecipe> = ComponentType<
-  JsxHTMLProps<ComponentProps<T> & UnstyledProps & AsProps, Assign<RecipeVariantProps<R>>>
+  JsxHTMLProps<ComponentProps<T> & UnstyledProps & AsProps, Assign<RecipeVariantProps<R>, JsxStyleProps>>
 >
 
 type StyleContextRootProvider<T extends ElementType, R extends SlotRecipe> = ComponentType<
@@ -31,7 +31,7 @@ type StyleContextRootProvider<T extends ElementType, R extends SlotRecipe> = Com
 >
 
 type StyleContextConsumer<T extends ElementType> = ComponentType<
-  JsxHTMLProps<ComponentProps<T> & UnstyledProps & AsProps>
+  JsxHTMLProps<ComponentProps<T> & UnstyledProps & AsProps, JsxStyleProps>
 >
 
 interface StyleContextOptions {

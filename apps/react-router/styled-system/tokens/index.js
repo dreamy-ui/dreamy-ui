@@ -100,7 +100,7 @@ const tokens = {
     "variable": "var(--colors-black-alpha-500)"
   },
   "colors.blackAlpha.600": {
-    "value": "rgba(0, 0, 0, 0.40)",
+    "value": "rgba(0, 0, 0, 0.4)",
     "variable": "var(--colors-black-alpha-600)"
   },
   "colors.blackAlpha.700": {
@@ -144,7 +144,7 @@ const tokens = {
     "variable": "var(--colors-white-alpha-500)"
   },
   "colors.whiteAlpha.600": {
-    "value": "rgba(255, 255, 255, 0.40)",
+    "value": "rgba(255, 255, 255, 0.4)",
     "variable": "var(--colors-white-alpha-600)"
   },
   "colors.whiteAlpha.700": {
@@ -2138,6 +2138,14 @@ const tokens = {
   "colors.secondary.active": {
     "value": "var(--colors-secondary-active)",
     "variable": "var(--colors-secondary-active)"
+  },
+  "colors.bg.subtle": {
+    "value": "var(--colors-bg-subtle)",
+    "variable": "var(--colors-bg-subtle)"
+  },
+  "colors.bg.muted": {
+    "value": "var(--colors-bg-muted)",
+    "variable": "var(--colors-bg-muted)"
   },
   "colors.fg": {
     "value": "var(--colors-fg)",

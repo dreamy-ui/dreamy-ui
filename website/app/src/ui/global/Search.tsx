@@ -174,8 +174,6 @@ export default function Search() {
     const { isMac } = useRoot();
     const actionKey = useActionKey(isMac ? "⌘" : "Ctrl");
 
-    console.log("fetcher.data", fetcher.data);
-
     return (
         <>
             <Button

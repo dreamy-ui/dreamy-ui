@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
+import { env } from "~/src/.server/env";
 import { Logger } from "~/src/.server/logger";
 import { filenameToSlug } from "~/src/functions/string";
 import { prisma } from "./db";
@@ -15,6 +16,9 @@ import {
 
 const DOCS_DIR = path.join(process.cwd(), "docs");
 
+// Bump when stored MDX compile format changes to force a database re-sync.
+const MDX_STORAGE_VERSION = "production-jsx-v1";
+
 function extractSearchText(content: string) {
     const withoutFrontmatter = content.replace(/---[\s\S]*?---/, "");
 
@@ -28,7 +32,7 @@ function extractSearchText(content: string) {
 }
 
 function hashContent(content: string) {
-    return createHash("sha256").update(content).digest("hex");
+    return createHash("sha256").update(content).update(MDX_STORAGE_VERSION).digest("hex");
 }
 
 function diskFolderName(section: LocalSection) {
@@ -125,11 +129,25 @@ async function upsertDocPage(filepath: string, content: string) {
         }
     });
 
-    const mdxContent = await Docs.serialize(content);
+    const mdxContentForStorage = await Docs.serialize(content, { forStorage: true });
+    const mdxFrontmatterDescriptionForStorage =
+        mdxContentForStorage.frontmatter.description &&
+        typeof mdxContentForStorage.frontmatter.description === "string"
+            ? await Docs.serialize(mdxContentForStorage.frontmatter.description, {
+                  forStorage: true
+              })
+            : null;
+
+    const mdxContent =
+        env.NODE_ENV === "development"
+            ? await Docs.serialize(content)
+            : mdxContentForStorage;
     const mdxFrontmatterDescription =
         mdxContent.frontmatter.description &&
         typeof mdxContent.frontmatter.description === "string"
-            ? await Docs.serialize(mdxContent.frontmatter.description)
+            ? env.NODE_ENV === "development"
+                ? await Docs.serialize(mdxContent.frontmatter.description)
+                : mdxFrontmatterDescriptionForStorage
             : null;
 
     const pageIndex = getIndex(filename);
@@ -157,9 +175,9 @@ async function upsertDocPage(filepath: string, content: string) {
         slug: pageSlug,
         filepath,
         content,
-        mdxContent: JSON.stringify(mdxContent),
-        mdxFrontmatterDescription: mdxFrontmatterDescription
-            ? JSON.stringify(mdxFrontmatterDescription)
+        mdxContent: JSON.stringify(mdxContentForStorage),
+        mdxFrontmatterDescription: mdxFrontmatterDescriptionForStorage
+            ? JSON.stringify(mdxFrontmatterDescriptionForStorage)
             : null,
         headings: JSON.stringify(headings),
         searchText: extractSearchText(content),

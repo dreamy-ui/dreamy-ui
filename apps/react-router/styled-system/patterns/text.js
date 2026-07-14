@@ -5,16 +5,16 @@ const textConfig = {
 transform(props, { map }) {
   const { variant, size, ...rest } = props;
   return {
-    textStyle: size ?? map(variant, (v) => v === "heading" ? "xl" : void 0),
+    textStyle: size ?? map(variant, (v2) => v2 === "heading" ? "xl" : void 0),
     fontWeight: map(
       variant,
-      (v) => v === "heading" ? "bold" : v === "link" ? "semibold" : void 0
+      (v2) => v2 === "heading" ? "bold" : v2 === "link" ? "semibold" : void 0
     ),
-    fontFamily: map(variant, (v) => v === "heading" ? "heading" : void 0),
-    transition: map(variant, (v) => v === "link" ? "colors" : void 0),
+    fontFamily: map(variant, (v2) => v2 === "heading" ? "heading" : void 0),
+    transition: map(variant, (v2) => v2 === "link" ? "colors" : void 0),
     _hover: map(
       variant,
-      (v) => v === "link" ? { color: "{colors.fg.max}" } : void 0
+      (v2) => v2 === "link" ? { color: "{colors.fg.max}" } : void 0
     ),
     ...rest
   };
