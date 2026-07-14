@@ -105,6 +105,11 @@ export interface SelectProps<
      */
     layer?: SelectLayer;
     /**
+     * Explicit z-index for the dropdown content.
+     * Prefer `layer` unless you need a custom CSS value.
+     */
+    contentZIndex?: string;
+    /**
      * Positioning configuration for the select dropdown.
      * @default { placement: "bottom" }
      */

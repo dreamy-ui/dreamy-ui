@@ -26,9 +26,9 @@
 		"story": "cd website && pnpm run story",
 		"sync": "git pull && pnpm i && pnpm run build",
 		"kill-ports": "kill-port 3000 && kill-port 3001 && kill-port 3002",
-		"components": "pnpm --filter @dreamy-ui/registry build",
-		"components:format": "pnpm --filter @dreamy-ui/registry format",
-		"components:watch": "pnpm --filter @dreamy-ui/registry watch",
+		"components": "bun --filter @dreamy-ui/registry build",
+		"components:format": "bun --filter @dreamy-ui/registry format",
+		"components:watch": "bun --filter @dreamy-ui/registry watch",
 		"clean:deps": "node scripts/clean-deps.mjs"
 	},
 	"keywords": [],

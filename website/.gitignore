@@ -10,4 +10,5 @@ styled-system-studio
 
 ## Prisma
 prisma/dev.db
+prisma/prisma/dev.db
 prisma/dev.db-journal

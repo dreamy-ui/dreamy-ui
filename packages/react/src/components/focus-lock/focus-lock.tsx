@@ -1,7 +1,7 @@
 "use client";
 
-import { getAllFocusable } from "@/utils/focusable";
-import { useCallback } from "react";
+import { useFocusOnShow } from "@/hooks/use-focus-effect";
+import { useCallback, useRef } from "react";
 import ReactFocusLock from "react-focus-lock";
 
 const FocusTrap: typeof ReactFocusLock =
@@ -77,18 +77,15 @@ export const FocusLock: React.FC<FocusLockProps> = (props) => {
 		lockFocusAcrossFrames
 	} = props;
 
-	const onActivation = useCallback(() => {
-		if (initialFocusRef?.current) {
-			initialFocusRef.current.focus();
-		} else if (contentRef?.current) {
-			const focusables = getAllFocusable(contentRef.current);
-			if (focusables.length === 0) {
-				requestAnimationFrame(() => {
-					contentRef.current?.focus();
-				});
-			}
-		}
-	}, [initialFocusRef, contentRef]);
+	const fallbackRef = useRef<HTMLElement | null>(null);
+	const containerRef = contentRef ?? fallbackRef;
+	const shouldFocus = autoFocus || !!initialFocusRef;
+
+	useFocusOnShow(containerRef, {
+		focusRef: initialFocusRef,
+		visible: !isDisabled,
+		shouldFocus
+	});
 
 	const onDeactivation = useCallback(() => {
 		finalFocusRef?.current?.focus();
@@ -100,9 +97,8 @@ export const FocusLock: React.FC<FocusLockProps> = (props) => {
 		<FocusTrap
 			crossFrame={lockFocusAcrossFrames}
 			persistentFocus={persistentFocus}
-			autoFocus={autoFocus}
+			autoFocus={false}
 			disabled={isDisabled}
-			onActivation={onActivation}
 			onDeactivation={onDeactivation}
 			returnFocus={returnFocus}
 		>
