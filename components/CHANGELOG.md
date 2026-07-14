@@ -1,5 +1,14 @@
 # @dreamy-ui/registry
 
+## 2.1.1
+
+### Patch Changes
+
+-   fix backdrop-filter not working
+-   Updated dependencies
+    -   @dreamy-ui/panda-preset@2.1.1
+    -   @dreamy-ui/react@2.1.1
+
 ## 2.1.0
 
 ### Patch Changes

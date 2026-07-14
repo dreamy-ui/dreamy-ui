@@ -1,5 +1,13 @@
 # dreamy-ui-website
 
+## 0.0.4
+
+### Patch Changes
+
+-   Updated dependencies
+    -   @dreamy-ui/panda-preset@2.1.1
+    -   @dreamy-ui/react@2.1.1
+
 ## 0.0.3
 
 ### Patch Changes
