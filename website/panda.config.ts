@@ -9,6 +9,7 @@ export default defineConfig({
     jsxFramework: "react",
     jsxStyleProps: "all",
     jsxFactory: "dreamy",
+    lightningcss: false,
     // clean: true,
     outExtension: "js",
     include: [

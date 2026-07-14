@@ -86,6 +86,16 @@ export function dreamyPlugin(options?: DreamyPluginOptions): PandaPlugin {
                         chalk.gray(` (${(end - start).toFixed(0)}ms)`)
                     );
                 }
+            },
+            "cssgen:done": ({ artifact, content }) => {
+                if (artifact !== "styles.css") return;
+
+                // LightningCSS removes the unprefixed `backdrop-filter`, leaving only
+                // `-webkit-backdrop-filter`. This adds it back after the prefixed version.
+                return content.replace(
+                    /(-webkit-backdrop-filter:\s*)([^;]+;)(?!\s*backdrop-filter:)/g,
+                    "$1$2\n  backdrop-filter: $2"
+                );
             }
         }
     });
