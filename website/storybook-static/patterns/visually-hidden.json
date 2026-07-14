@@ -1,8 +1,0 @@
-{
-  "type": "pattern",
-  "id": "visually-hidden",
-  "file": {
-    "name": "visually-hidden.ts",
-    "content": "import { definePattern } from \"@pandacss/dev\";\n\nexport const visuallyHidden = definePattern({\n    jsx: [\"VisuallyHidden\", \"VisuallyHiddenInput\"],\n    transform(props) {\n        return {\n            srOnly: true,\n            ...props\n        };\n    }\n});\n"
-  }
-}

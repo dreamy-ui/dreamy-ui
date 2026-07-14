@@ -11,4 +11,7 @@ styled-system-studio
 ## Prisma
 prisma/dev.db
 prisma/prisma/dev.db
+prisma/prisma/*
 prisma/dev.db-journal
+
+storybook-static
