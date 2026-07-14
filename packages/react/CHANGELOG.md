@@ -1,5 +1,11 @@
 # @dreamy-ui/react
 
+## 2.1.2
+
+### Patch Changes
+
+-   fix `initialFocusRef` not working
+
 ## 2.1.1
 
 ### Patch Changes
