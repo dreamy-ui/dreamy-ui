@@ -4,6 +4,7 @@ import {
     type MaybeRenderProp,
     PopoverProvider,
     Portal,
+    type PortalProps,
     type UseHoverCardProps,
     callAll,
     runIfFn,
@@ -42,6 +43,11 @@ export interface HoverCardProps extends UseHoverCardProps {
      */
     usePortal?: boolean;
     /**
+     * Props forwarded to the `Portal` used by `HoverCard.Content`.
+     * Use `containerRef` to render into a native or third-party top-layer container.
+     */
+    portalProps?: Omit<PortalProps, "children">;
+    /**
      * Controlled open state of the hover card.
      */
     isOpen?: boolean;
@@ -65,7 +71,7 @@ export interface HoverCardProps extends UseHoverCardProps {
  * @See Docs https://dreamy-ui.com/docs/components/hover-card
  */
 export const Root = withRootProvider(function HoverCardRoot(props: HoverCardProps) {
-    const { children, hasArrow = true, usePortal = true, ...rest } = props;
+    const { children, hasArrow = true, usePortal = true, portalProps, ...rest } = props;
 
     const context = useHoverCard(rest);
 
@@ -74,7 +80,8 @@ export const Root = withRootProvider(function HoverCardRoot(props: HoverCardProp
             value={{
                 ...context,
                 hasArrow,
-                usePortal
+                usePortal,
+                portalProps
             }}
         >
             {runIfFn(children, {
@@ -130,8 +137,14 @@ export const Content = withContext(function HoverCardContent(props: HoverCardCon
     const { ref } = props;
     const { rootProps, motionProps, ...contentProps } = props;
 
-    const { getPopoverProps, getPopoverPositionerProps, onAnimationComplete, usePortal } =
-        usePopoverContext();
+    const {
+        getPopoverProps,
+        getPopoverPositionerProps,
+        isOpen,
+        onAnimationComplete,
+        usePortal,
+        portalProps
+    } = usePopoverContext();
 
     if (typeof document === "undefined") return null;
 
@@ -144,7 +157,17 @@ export const Content = withContext(function HoverCardContent(props: HoverCardCon
         </div>
     );
 
-    return usePortal ? <Portal>{content}</Portal> : content;
+    return usePortal ? (
+        <Portal
+            isActive={isOpen}
+            zIndex="var(--z-index-popover)"
+            {...portalProps}
+        >
+            {content}
+        </Portal>
+    ) : (
+        content
+    );
 }, "content");
 
 export interface HoverCardHeaderProps extends HTMLDreamyProps<"header"> {}

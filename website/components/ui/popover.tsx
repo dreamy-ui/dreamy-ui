@@ -4,6 +4,7 @@ import {
     type MaybeRenderProp,
     PopoverProvider,
     Portal,
+    type PortalProps,
     type UsePopoverProps,
     callAll,
     callAllHandlers,
@@ -43,6 +44,11 @@ export interface PopoverProps extends UsePopoverProps {
      * @default true
      */
     usePortal?: boolean;
+    /**
+     * Props forwarded to the `Portal` used by `Popover.Content`.
+     * Use `containerRef` to render into a native or third-party top-layer container.
+     */
+    portalProps?: Omit<PortalProps, "children">;
 }
 
 /**
@@ -51,7 +57,7 @@ export interface PopoverProps extends UsePopoverProps {
  * @See Docs https://dreamy-ui.com/docs/components/popover
  */
 export const Root = withRootProvider(function PopoverRoot(props: PopoverProps) {
-    const { children, hasArrow, usePortal = true, ...rest } = props;
+    const { children, hasArrow, usePortal = true, portalProps, ...rest } = props;
 
     const context = usePopover(rest);
 
@@ -60,7 +66,8 @@ export const Root = withRootProvider(function PopoverRoot(props: PopoverProps) {
             value={{
                 ...context,
                 hasArrow: hasArrow ?? false,
-                usePortal
+                usePortal,
+                portalProps
             }}
         >
             {runIfFn(children, {
@@ -120,8 +127,14 @@ export interface PopoverContentProps extends PopoverTransitionProps {
 export const Content = withContext(function PopoverContent(props: PopoverContentProps) {
     const { rootProps, motionProps, ref, ...contentProps } = props;
 
-    const { getPopoverProps, getPopoverPositionerProps, onAnimationComplete, usePortal } =
-        usePopoverContext();
+    const {
+        getPopoverProps,
+        getPopoverPositionerProps,
+        isOpen,
+        onAnimationComplete,
+        usePortal,
+        portalProps
+    } = usePopoverContext();
 
     if (typeof document === "undefined") return null;
 
@@ -134,7 +147,17 @@ export const Content = withContext(function PopoverContent(props: PopoverContent
         </div>
     );
 
-    return usePortal ? <Portal>{content}</Portal> : content;
+    return usePortal ? (
+        <Portal
+            isActive={isOpen}
+            zIndex="var(--z-index-popover)"
+            {...portalProps}
+        >
+            {content}
+        </Portal>
+    ) : (
+        content
+    );
 }, "content");
 
 export interface PopoverHeaderProps extends HTMLDreamyProps<"header"> {}

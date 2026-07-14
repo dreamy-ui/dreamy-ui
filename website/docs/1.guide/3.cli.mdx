@@ -14,6 +14,12 @@ The CLI is included when you install the `@dreamy-ui/cli` package:
 pnpm add -D @dreamy-ui/cli
 ```
 
+Or run it directly without installing:
+
+```bash
+npx @dreamy-ui/cli [command]
+```
+
 ## Commands
 
 ### init
@@ -21,44 +27,49 @@ pnpm add -D @dreamy-ui/cli
 Initialize Dreamy UI in your project with automatic setup.
 
 ```bash
-pnpm dreamy init
+npx @dreamy-ui/cli init
 ```
 
 **What it does:**
 
 1. Detect your framework (React Router v7, Next.js, or Vite)
-2. Install all required dependencies (Panda CSS + Dreamy UI)
-3. Create and configure `panda.config.ts`
-4. Update `vite.config.ts` or `postcss.config.mjs` with Panda CSS PostCSS plugin
-5. Remove default Tailwind CSS (React Router v7 and Next.js only)
-6. Set up CSS files with proper imports
-7. Create a `DreamyProvider` component
-8. Update your `tsconfig.json` with `@/*` path alias and styled-system (if using TypeScript)
-9. Next.js also gets `styled-system/*` path alias for proper type resolution
-10. Run Panda CSS codegen to generate the styled-system
-11. Add recommended components (button, flex, text, heading) to get you started
-12. Prints out code to add to the root of your application
+2. Install required dependencies:
+   - Dev: `@pandacss/dev`, `@pandacss/postcss`, `@dreamy-ui/cli`
+   - Prod: `@dreamy-ui/react`, `@dreamy-ui/panda-preset`, `motion`
+3. Create and configure `panda.config.ts` with the Dreamy preset, patterns, and recipes
+4. Add a `prepare` script (`panda codegen`) to `package.json`
+5. Configure PostCSS (`postcss.config.mjs`) — Next.js only
+6. Update `vite.config` with the Panda CSS PostCSS plugin — Vite and React Router only (removes Tailwind if present)
+7. Remove the default Tailwind CSS setup — React Router v7 only
+8. Set up your CSS file with Panda layers and import it in your app entry
+9. Update `tsconfig.json` — add `styled-system/**/*` to `include` and an `@/ui/*` path alias (Next.js also gets `styled-system/*`)
+10. Create a `components/dreamy-provider.tsx` wrapper component
+11. Wire up `DreamyProvider` in your app root (with SSR color mode for React Router and Next.js)
+12. Add recommended starter components (`button`, `flex`, `text`, `heading`)
+13. Run Panda CSS codegen to generate `styled-system`
+
+If automatic root setup is not possible, the CLI prints the code you need to add manually.
 
 **Options:**
 
 - `--yes, -y` - Skip all prompts and use defaults
 - `--skip-install` - Skip dependency installation (useful if you want to install manually)
-- `--skip-components` - Skip adding recommended components (button, flex, text, heading)
+- `--skip-components` - Skip adding recommended components (`button`, `flex`, `text`, `heading`)
 
 **Examples:**
 
 ```bash
 # Interactive setup with prompts
-dreamy init
+npx @dreamy-ui/cli init
 
 # Skip all prompts
-dreamy init --yes
+npx @dreamy-ui/cli init --yes
 
 # Skip dependency installation
-dreamy init --skip-install
+npx @dreamy-ui/cli init --skip-install
 
 # Skip adding default components
-dreamy init --skip-components
+npx @dreamy-ui/cli init --skip-components
 ```
 
 ---
@@ -68,23 +79,23 @@ dreamy init --skip-components
 Add Dreamy UI components to your project.
 
 ```bash
-dreamy add [components...]
+npx @dreamy-ui/cli add [components...]
 ```
 
 **Examples:**
 
 ```bash
 # Add a single component
-dreamy add button
+npx @dreamy-ui/cli add button
 
 # Add multiple components
-dreamy add button input card
+npx @dreamy-ui/cli add button input card
 
 # Add all components
-dreamy add --all
+npx @dreamy-ui/cli add --all
 
 # Add components interactively
-dreamy add
+npx @dreamy-ui/cli add
 ```
 
 **Options:**
@@ -109,7 +120,7 @@ dreamy add
 List all available components in the Dreamy UI registry.
 
 ```bash
-dreamy list
+npx @dreamy-ui/cli list
 ```
 
 Shows a table of all available components with their names and descriptions.
@@ -121,17 +132,17 @@ Shows a table of all available components with their names and descriptions.
 Compare your local components with the registry versions.
 
 ```bash
-dreamy diff [component]
+npx @dreamy-ui/cli diff [component]
 ```
 
 **Examples:**
 
 ```bash
 # Check differences for a specific component
-dreamy diff button
+npx @dreamy-ui/cli diff button
 
 # Check all components
-dreamy diff
+npx @dreamy-ui/cli diff
 ```
 
 **What it shows:**
@@ -147,19 +158,21 @@ dreamy diff
 
 ### CLI not found
 
-If you get a "command not found" error, try installing the command again:
+If you get a "command not found" error, use `npx` or install the CLI locally:
 
 ```bash
-pnpm install -D @dreamy-ui/cli
+pnpm add -D @dreamy-ui/cli
 ```
 
 ### Framework not detected
 
 If the CLI can't detect your framework:
 
-1. Make sure you have a config file (`next.config.js`, `react-router.config.ts`, or `vite.config.ts`)
+1. Make sure you have a config file (`react-router.config.ts`, `next.config.js/ts/mjs`, or `vite.config.ts`)
 2. The file should be in the root of your project
 3. Try running from your project root directory
+
+Remix projects using Vite are detected as **Vite**.
 
 ### TypeScript errors after init
 
@@ -173,8 +186,8 @@ After running `init`, you might need to:
 
 If dependency installation fails during `init`, run without installing dependencies:
 
-```md
-dreamy init --skip-install
+```bash
+npx @dreamy-ui/cli init --skip-install
 
 # Then manually install dependencies
 pnpm add -D @pandacss/dev @pandacss/postcss @dreamy-ui/cli
@@ -196,10 +209,9 @@ The CLI respects these environment variables:
 
 For more help with any command:
 
-```md
-dreamy --help
-dreamy [command] --help
+```bash
+npx @dreamy-ui/cli --help
+npx @dreamy-ui/cli [command] --help
 ```
 
 Visit our [documentation](https://dreamy-ui.com/docs) for more information.
-

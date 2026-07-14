@@ -47,6 +47,12 @@ function ControlledActionBar() {
 }
 ```
 
+### Overlay stacking
+
+Action Bar renders in the shared [Portal](/docs/components/portal) stack. If it is opened inside another Dreamy UI portal, it becomes a nested stacking scope and adds its semantic layer to the parent base. Same-layer active portals follow open order, while later sibling overlays still cover earlier overlay subtrees.
+
+No manual layer or z-index is needed. Use `portalProps.containerRef` only when targeting the non-scrolling root of a native or third-party overlay.
+
 ### With Close Trigger
 
 Add a close button to allow users to dismiss the action bar manually.

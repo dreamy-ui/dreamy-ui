@@ -51,7 +51,7 @@ export interface TooltipProps
     /**
      * Props to be forwarded to the portal component
      */
-    portalProps?: Pick<PortalProps, "appendToParentPortal" | "containerRef">;
+    portalProps?: Omit<PortalProps, "children">;
     /**
      * If `true`, the tooltip will not be rendered inside a portal
      * @default false
@@ -161,7 +161,15 @@ export function Tooltip(props: TooltipProps) {
             {trigger}
             <AnimatePresence>
                 {tooltip.isOpen && !isDisabled && (
-                    <PortalComponent {...(disablePortal ? {} : portalProps)}>
+                    <PortalComponent
+                        {...(disablePortal
+                            ? {}
+                            : {
+                                  isActive: tooltip.isOpen,
+                                  zIndex: "var(--z-index-tooltip)",
+                                  ...portalProps
+                              })}
+                    >
                         <Box {...tooltip.getTooltipPositionerProps()}>
                             <StyledTooltip
                                 animate="initial"

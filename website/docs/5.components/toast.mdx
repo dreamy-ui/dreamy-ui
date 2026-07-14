@@ -50,6 +50,12 @@ function Toast() {
 }
 ```
 
+### Overlay stacking
+
+ToastProvider renders to the shared [Portal](/docs/components/portal) stack at the `toast` layer (1700). Toasts remain above lower semantic layers without manual z-index values, and active same-layer portal scopes follow open order.
+
+There is still only one browser Top Layer host per `Document`; ToastProvider does not create an independent top-layer entry.
+
 ### Status
 
 The `status` prop changes the color of the Toast and the icon.

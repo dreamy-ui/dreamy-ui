@@ -65,6 +65,26 @@ export function BasicPopover() {
 }
 ```
 
+### Automatic overlay stacking
+
+Popover content renders through the shared [Portal](/docs/components/portal) stack at the `popover` layer (1500). Inside another Dreamy UI overlay, its portal becomes a nested scope and adds that layer to its parent base automatically. No `usePortal={false}`, manual layer, or z-index workaround is needed.
+
+Active popovers at the same layer follow open order. A later sibling Modal still covers an earlier Modal's complete subtree, including open popovers.
+
+Popover-based composites expose the same escape hatch through `popoverProps.portalProps`. Use `portalProps.containerRef` only to target the non-scrolling overlay root of a native or third-party overlay.
+
+```tsx
+const overlayRef = useRef<HTMLDivElement>(null);
+
+// Attach overlayRef to the third-party overlay's non-scrolling root.
+<Popover.Root portalProps={{ containerRef: overlayRef }}>
+    <Popover.Trigger>
+        <Button>Open Popover</Button>
+    </Popover.Trigger>
+    <Popover.Content>Rendered in the external overlay root</Popover.Content>
+</Popover.Root>
+```
+
 ### Controlled Popover
 
 Most of the time, you'll want to control the popover's open state. Use `useControllable` hook to do that.

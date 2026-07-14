@@ -61,6 +61,7 @@ export default defineConfig({
         exclude: [
             "@dreamy-ui/panda-preset",
             "@dreamy-ui/react",
+            "@dreamy-ui/react/rsc",
             "styled-system/css",
             "styled-system/jsx",
             "styled-system/patterns",

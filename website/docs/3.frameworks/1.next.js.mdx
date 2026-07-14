@@ -15,115 +15,110 @@ npx @dreamy-ui/cli init
 ---
 
 The CLI will automatically:
+
 1. Detect your framework (React Router v7, Next.js, or Vite)
-2. Install all required dependencies (Panda CSS + Dreamy UI)
-3. Create and configure `panda.config.ts`
-4. Update `vite.config.ts` or `postcss.config.mjs` with Panda CSS PostCSS plugin
-5. Remove default Tailwind CSS (React Router v7 and Next.js only)
-6. Set up CSS files with proper imports
-7. Create a `DreamyProvider` component
-8. Update your `tsconfig.json` with `@/*` path alias and styled-system (if using TypeScript)
-9. Next.js also gets `styled-system/*` path alias for proper type resolution
-10. Run Panda CSS codegen to generate the styled-system
-11. Add recommended components (button, flex, text, heading) to get you started
-12. Prints out code to add to the root of your application
+2. Install required dependencies:
+   - Dev: `@pandacss/dev`, `@pandacss/postcss`, `@dreamy-ui/cli`
+   - Prod: `@dreamy-ui/react`, `@dreamy-ui/panda-preset`, `motion`
+3. Create and configure `panda.config.ts` with the Dreamy preset, patterns, and recipes
+4. Add a `prepare` script (`panda codegen`) to `package.json`
+5. Configure PostCSS (`postcss.config.mjs`)
+6. Set up `globals.css` with Panda layers and import it in `layout.tsx`
+7. Update `tsconfig.json` — add `styled-system/**/*` to `include`, `@/ui/*` and `styled-system/*` path aliases
+8. Create a `components/dreamy-provider.tsx` wrapper component
+9. Wire up `DreamyProvider` in `app/layout.tsx` with SSR color mode
+10. Add recommended starter components (`button`, `flex`, `text`, `heading`)
+11. Run Panda CSS codegen to generate `styled-system`
 
 ## Manual Installation
 
-### 1. Follow the Panda CSS installation guide
-
-Follow the [Panda CSS installation guide](https://panda-css.com/docs/installation/nextjs) to set up Panda CSS in your Next.js project.
-
-### 2. Install Dreamy UI
-
-Install Dreamy UI in your project:
+### 1. Install dependencies
 
 ```bash
+pnpm add -D @pandacss/dev @pandacss/postcss @dreamy-ui/cli
 pnpm add @dreamy-ui/react @dreamy-ui/panda-preset motion
 ```
 
-### 2. Configure panda.config.ts
+### 2. Configure PostCSS
 
-Configure environment and panda presets in your `panda.config.ts` file:
+Create `postcss.config.mjs` in your project root:
 
-```ts {1, 10-16}
+```js
+export default {
+	plugins: {
+		"@pandacss/postcss": {}
+	}
+};
+```
+
+### 3. Configure `panda.config.ts`
+
+```ts {1-3, 7-16}
 import createDreamyPreset, { dreamyPlugin } from "@dreamy-ui/panda-preset";
-import { defineConfig } from "@pandacss/dev";
+import { patterns } from "./components/patterns";
+import { recipes } from "./components/recipes";
 
 export default defineConfig({
-	...,
-	preflight: true,
-    jsxFramework: "react",
-    jsxStyleProps: "all",
-    outExtension: "js",
-    include: [
-        "./src/**/*.{js,jsx,ts,tsx}",
-    ],
-    presets: [
-        createDreamyPreset()
-    ],
-    plugins: [dreamyPlugin],
-    theme: {
-		extend: {}
-	},
-	globalCss: {
-		extend: {}
-	},
-	staticCss: {
-		extend: {}
+	// ...
+	jsxFactory: "dreamy",
+	include: [
+		"./src/**/*.{js,jsx,ts,tsx}" // Use "./app/**/*.{js,jsx,ts,tsx}" if not using a src directory
+	],
+	presets: [createDreamyPreset()],
+	plugins: [dreamyPlugin()],
+	patterns,
+	theme: {
+		extend: {
+			recipes
+		}
 	}
 });
 ```
 
-### 3. Add styled-system to tsconfig.json
+Add components first with `npx dreamy add button` so the `components/patterns` and `components/recipes` index files exist.
 
-Add the following configuration to your `tsconfig.json` file:
+### 4. Set up CSS layers
 
-```json {6, 13-14}
+Replace the contents of `src/app/globals.css` (or `app/globals.css`) with:
+
+```css
+@layer reset, base, tokens, recipes, utilities;
+```
+
+Make sure `globals.css` is imported in your root `layout.tsx`.
+
+### 5. Add a `prepare` script
+
+```json
+{
+	"scripts": {
+		"prepare": "panda codegen"
+	}
+}
+```
+
+### 6. Update `tsconfig.json`
+
+```json {3-5, 10}
 {
 	"compilerOptions": {
-		...
 		"paths": {
-			"@/*": ["./components/ui/*"],
+			"@/ui/*": ["./components/ui/*"],
 			"styled-system/*": ["./styled-system/*"]
 		}
 	},
 	"include": [
-		"next-env.d.ts",
-		"**/*.ts",
-		"**/*.tsx",
-		"styled-system/**/*",
-		".next/types/**/*.ts"
-	],
-	"exclude": ["node_modules"]
+		// ...
+		"styled-system/**/*"
+	]
 }
 ```
 
-**Note:** Next.js requires both the `styled-system/*` path alias AND the include entry for proper type resolution. The CLI automatically configures both for you.
+Next.js requires both the `styled-system/*` path alias and the `include` entry for proper type resolution.
 
-{/* Add the following alias to your `next.config.ts` file:
+### 7. Add `DreamyProvider`
 
-```ts {2,5-12}
-import type { NextConfig } from "next";
-import { resolve } from "node:path";
-
-export default {
-    webpack: (config) => {
-        config.resolve.alias = {
-            ...config.resolve.alias,
-            "styled-system": resolve(__dirname, "./styled-system"),
-        };
-
-        return config;
-    }
-} satisfies NextConfig;
-``` */}
-
-### 4. Add Dreamy Provider
-
-After configuring Panda CSS, finally we can add the main Dreamy Provider to your `app/layout.tsx`.
-
-First create a `dreamy-provider.tsx` file in `components/dreamy-provider.tsx` (or `src/components/dreamy-provider.tsx` if using src directory):
+Create `components/dreamy-provider.tsx` (or `src/components/dreamy-provider.tsx` if using a `src` directory):
 
 ```tsx
 "use client";
@@ -134,62 +129,57 @@ import type { ColorMode } from "@dreamy-ui/react";
 const domMax = () => import("motion/react").then((mod) => mod.domMax);
 
 interface DreamyProviderProps {
-    children: React.ReactNode;
-    colorMode?: ColorMode;
+	children: React.ReactNode;
+	colorMode?: ColorMode;
 }
 
 export function DreamyProvider({ children, colorMode }: DreamyProviderProps) {
-    return (
-        <BaseDreamyProvider 
-            motionFeatures={domMax} 
-            motionStrict
-            colorMode={colorMode}
-            useUserPreferenceColorMode
-        >
-            {children}
-        </BaseDreamyProvider>
-    );
+	return (
+		<BaseDreamyProvider
+			motionFeatures={domMax}
+			motionStrict
+			colorMode={colorMode}
+			useUserPreferenceColorMode
+		>
+			{children}
+		</BaseDreamyProvider>
+	);
 }
 ```
 
-Next, add the `DreamyProvider` component to your `app/layout.tsx` file.
+Wire it up in `app/layout.tsx` with SSR color mode to prevent flashing:
 
-This way we pass the color mode from server-side cookies so the initial document request will have the correct user color mode without flashing:
-
-```tsx {2-3, 12, 15-19}
-...
-import { DreamyProvider } from "@/components/dreamy-provider";
-import { getSSRColorMode } from "@dreamy-ui/react/rsc";
+```tsx {1-3, 6, 9, 11}
+import { DreamyProvider } from "../components/dreamy-provider"; // Adjust relative path if using a src directory
+import { getColorModeHTMLProps, getSSRColorMode } from "@dreamy-ui/react/rsc";
 import { cookies } from "next/headers";
 
-...
+export default async function RootLayout({ children }) {
+	const colorMode = getSSRColorMode((await cookies()).toString());
 
-export default async function RootLayout({
-    children
-}: Readonly<{
-    children: React.ReactNode;
-}>) {
-    const colorMode = getSSRColorMode((await cookies()).toString());
-
-    return (
-        <html lang="en">
-            <body>
-                <DreamyProvider colorMode={colorMode}>{children}</DreamyProvider>
-            </body>
-        </html>
-    );
+	return (
+		<html lang="en" {...getColorModeHTMLProps(colorMode)}>
+			<body>
+				<DreamyProvider colorMode={colorMode}>{children}</DreamyProvider>
+			</body>
+		</html>
+	);
 }
-
 ```
 
-### 5. Start using Dreamy UI
+### 8. Add components and run codegen
 
-Let's write some Dreamy UI in `app/page.tsx`.
+```bash
+npx dreamy add button flex text heading
+npx panda codegen
+```
 
-```tsx {1, 4}
-import { Button } from "@dreamy-ui/react";
+### 9. Start using Dreamy UI
+
+```tsx {1, 5}
+import { Button } from "@/ui";
 
 export default function Home() {
-    return <Button>Hello World</Button>;
+	return <Button>Hello World</Button>;
 }
 ```

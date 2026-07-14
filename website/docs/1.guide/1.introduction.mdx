@@ -6,32 +6,41 @@ title: Introduction
 
 Dreamy UI is a React UI library that provides a set of customizable components and utilities to build performant, websites with ease.
 
-## Motivation
+<IntroductionCards />
 
-> info: Note: this isn't about which library is better, every library has its own pros and cons.
+## Motivation
 
 Many UI libraries are built on top of CSS-in-JS libraries like [Styled Components](https://styled-components.com/) or [Emotion](https://emotion.sh/). These libraries provide a great developer experience, but they come with a cost: they use runtime CSS styles, which slow down rendering, performance and limit some features, like streaming.
 
 Dreamy UI is built on top of [Panda CSS](https://panda-css.com/), which is a CSS-in-JS library that provides strongly typed CSS styles, that are generated at **build time**, incredibly improving website performance and not decreasing developer experience.
 
+As a developer, I've always been frustrated by needing to do some hacks to achieve what I wanted to do. That's why I made Dreamy UI modular. Every component, recipe and pattern is fully customizable. Multipart components are built on top of other base components, for eg. `<Autocomplete />` is built on top of `<Input />` and `<Popover />`. In this way, while modifying an `<Input />` recipe, you also modify the style of `<Autocomplete.Input />`, without having to copy and paste the code. This keeps the codebase cleaner, easier to maintain and extend and reduces redundancy.
+
+```tsx
+<Autocomplete.Root>
+	<Autocomplete.Input /> // <input /> as base
+	<Autocomplete.Content items={[...]} /> // <Popover.Content /> as base
+</Autocomplete.Root>
+```
+
 ## Solution
 
-Introducing Dreamy UI, a library that allows you to write your favorite CSS-in-JS code, while still enjoying native CSS performance. Dream comes with many utilities to write your website even faster with Boolean style props. Let's say you are sure your flex component will be column, so instead of typing `flexDir="column"`, it is possible to write `col` or `column` as prop 🎉. You can mix and use any styling style to your preference.
+Introducing Dreamy UI, a library that allows you to write your favorite CSS-in-JS code, while still enjoying native CSS performance. Dreamy UI comes with many utilities to write your website even faster with Boolean style props. Let's say you are sure your flex component will be column, so instead of typing `flexDir="column"`, it is possible to write `col` or `column` as prop 🎉. You can mix and use any styling style to your preference.
 
-Dream is highly customizable, meaning you can modify any component recipe in panda config.
-If you have had used any CSS-in-JS library before, you are fully familiar with styling components and you'll have no problem with Dream.
+Dreamy UI is highly customizable, meaning you can modify any component recipe in panda config.
+If you have had used any CSS-in-JS library before, you are fully familiar with styling components and you'll have no problem with Dreamy UI.
 
 ---
 
 ## FAQ
 
-### What's the difference between Dream and tailwind/panda CSS?
+### What's the difference between Dreamy UI and tailwind/panda CSS?
 
-Dream is a component library, which uses Panda CSS and it's peer dependency. Tailwind and panda CSS are not component libraries, they are styling engines that provide a set of utilities to write CSS styles.
+Dreamy UI is a component library, which uses Panda CSS and it's peer dependency. Tailwind and panda CSS are not component libraries, they are styling engines that provide a set of utilities to write CSS styles.
 
 ### Does Dreamy UI support SSR?
 
-Yes, Dreamy UI supports SSR. You can use it with Next.js, Remix, etc.
+Yes, Dreamy UI supports SSR. You can use it with Next.js, React Router, etc. However some components like `Popover` will throw a hydration warning, as they inject HTML via js, that can't be injected on the server (you can use `suppressHydrationWarning` prop in the root `<html />` tag to ignore it).
 
 ### Why does Dreamy UI use motion?
 
@@ -39,7 +48,7 @@ Yes, Dreamy UI supports SSR. You can use it with Next.js, Remix, etc.
 
 ### Does Dreamy UI support React Server Components?
 
-Yes, Dreamy UI supports React Server Components. You can use it with Next.js or Remix, etc. Most basic components are supported and Dream provides set of RSC component alternatives for client ones, for example `Input` component has a RSC version called `InputRSC`, which works the same, but doesn't offer support for `Field` usage.
+Yes, Dreamy UI supports React Server Components. You can use it with Next.js or React Router, etc. Non-client components DO NOT use `"use client"` directive. Only components that need to use client-side functionality are marked with `"use client"` on the top of the file. This makes Dreamy UI use the real React Server Components, by not making whole page a client components that don't need it.
 
 ### Does Dreamy UI work in other libraries like Vue, Solid, etc?
 

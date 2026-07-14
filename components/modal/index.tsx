@@ -43,7 +43,7 @@ export interface ModalProps extends UseModalProps, ModalOptions {
     /**
      * Props to be forwarded to the portal component
      */
-    portalProps?: PortalProps;
+    portalProps?: Omit<PortalProps, "children">;
 }
 
 /**
@@ -102,7 +102,9 @@ export const Root = withRootProvider(function ModalRoot(props: ModalProps) {
             <AnimatePresence onExitComplete={onCloseComplete}>
                 {context.isOpen && (
                     <Portal
+                        isActive={context.isOpen}
                         key={context.id}
+                        zIndex="var(--z-index-modal)"
                         {...portalProps}
                     >
                         {children}

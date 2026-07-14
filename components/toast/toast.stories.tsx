@@ -1,10 +1,19 @@
-import { Box, Button, Flex, HStack } from "@/ui";
+import { Box, Button, Flex, HStack, ToastProvider } from "@/ui";
 import { useToast } from "@dreamy-ui/react";
 import type { Meta } from "@storybook/react-vite";
 import { useState } from "react";
 
 export default {
-    title: "Toast"
+    title: "Toast",
+    decorators: [
+        function ToastStoryProvider(Story) {
+            return (
+                <ToastProvider>
+                    <Story />
+                </ToastProvider>
+            );
+        }
+    ]
 } satisfies Meta;
 
 export function Base() {

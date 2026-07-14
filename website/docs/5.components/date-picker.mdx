@@ -46,6 +46,32 @@ The most common usage is with an input field that displays the selected date.
 </DatePicker.Root>
 ```
 
+### Popover props
+
+Use `popoverProps` on `DatePicker.Root` to pass behavior props to the internal [Popover](/docs/components/popover). Keep placement options on the root `positioning` prop.
+
+The calendar uses the shared Portal stack at the `popover` layer (1500). Inside a Dreamy UI overlay, its scope nests automatically and adds 1500 to the parent base while escaping clipped or scrolling content. Keep the portal enabled—no manual layer or z-index is needed. For a native or third-party overlay, use `popoverProps={{ portalProps: { containerRef } }}` with its non-scrolling root.
+
+<Wrapper>
+    <DatePicker.Root popoverProps={{ closeOnBlur: false }}>
+        <DatePicker.Input />
+        <DatePicker.PopoverContent>
+            <DatePicker.Header />
+            <DatePicker.Calendar />
+        </DatePicker.PopoverContent>
+    </DatePicker.Root>
+</Wrapper>
+
+```tsx
+<DatePicker.Root popoverProps={{ closeOnBlur: false }}>
+    <DatePicker.Input />
+    <DatePicker.PopoverContent>
+        <DatePicker.Header />
+        <DatePicker.Calendar />
+    </DatePicker.PopoverContent>
+</DatePicker.Root>
+```
+
 ### With Button Trigger
 
 You can also use a button as the trigger instead of an input field.

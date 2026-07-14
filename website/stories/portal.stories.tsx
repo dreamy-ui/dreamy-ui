@@ -2,7 +2,7 @@ import { Portal } from "@dreamy-ui/react";
 import type { Meta } from "@storybook/react-vite";
 
 export default {
-    title: "Portal"
+    title: "Portal/Docs"
 } satisfies Meta;
 
 export function Base() {

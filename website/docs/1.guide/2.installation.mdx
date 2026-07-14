@@ -12,21 +12,37 @@ Use the automated CLI to set up Dreamy UI in your project:
 npx @dreamy-ui/cli init
 ```
 
+Use `--yes` to accept all defaults without prompts:
+
+```bash
+npx @dreamy-ui/cli init --yes
+```
+
 ---
 
 The CLI will automatically:
+
 1. Detect your framework (React Router v7, Next.js, or Vite)
-2. Install all required dependencies (Panda CSS + Dreamy UI)
-3. Create and configure `panda.config.ts`
-4. Update `vite.config.ts` or `postcss.config.mjs` with Panda CSS PostCSS plugin
-5. Remove default Tailwind CSS (React Router v7 and Next.js only)
-6. Set up CSS files with proper imports
-7. Create a `DreamyProvider` component
-8. Update your `tsconfig.json` with `@/*` path alias and styled-system (if using TypeScript)
-9. Next.js also gets `styled-system/*` path alias for proper type resolution
-10. Run Panda CSS codegen to generate the styled-system
-11. Add recommended components (button, flex, text, heading) to get you started
-12. Prints out code to add to the root of your application
+2. Install required dependencies:
+   - Dev: `@pandacss/dev`, `@pandacss/postcss`, `@dreamy-ui/cli`
+   - Prod: `@dreamy-ui/react`, `@dreamy-ui/panda-preset`, `motion`
+3. Create and configure `panda.config.ts` with the Dreamy preset, patterns, and recipes
+4. Add a `prepare` script (`panda codegen`) to `package.json`
+5. Configure PostCSS (`postcss.config.mjs`) — Next.js only
+6. Update `vite.config` with the Panda CSS PostCSS plugin — Vite and React Router only (removes Tailwind if present)
+7. Remove the default Tailwind CSS setup — React Router v7 only
+8. Set up your CSS file with Panda layers and import it in your app entry
+9. Update `tsconfig.json` — add `styled-system/**/*` to `include` and an `@/ui/*` path alias (Next.js also gets `styled-system/*`)
+10. Create a `components/dreamy-provider.tsx` wrapper component
+11. Wire up `DreamyProvider` in your app root (with SSR color mode for React Router and Next.js)
+12. Add recommended starter components (`button`, `flex`, `text`, `heading`)
+13. Run Panda CSS codegen to generate `styled-system`
+
+**Options:**
+
+- `--yes, -y` — Skip all prompts and use defaults
+- `--skip-install` — Skip dependency installation
+- `--skip-components` — Skip adding recommended components
 
 ## Manual Installation
 
@@ -37,81 +53,91 @@ If you prefer manual installation or need more control, follow the framework-spe
 -   [Remix](/docs/frameworks/remix)
 -   [Vite](/docs/frameworks/vite)
 
-### 1. Follow panda CSS installation steps
+### 1. Install dependencies
 
-Install panda by following the [panda CSS installation](https://panda-css.com/docs/overview/getting-started#installation) for your framework.
-
-### 2. Install Dreamy UI
+Install Panda CSS dev dependencies and Dreamy UI packages:
 
 ```bash
-pnpm install @dreamy-ui/react @dreamy-ui/panda-preset @dreamy-ui/cli motion
+pnpm add -D @pandacss/dev @pandacss/postcss @dreamy-ui/cli
+pnpm add @dreamy-ui/react @dreamy-ui/panda-preset motion
 ```
 
-### 3. Add Dream preset
+### 2. Configure `panda.config.ts`
 
-After installing, you should configure your panda config with Dream preset. Copy and paste the following code into your `panda.config.ts` file:
+Configure your Panda config with the Dreamy preset. The `patterns` and `recipes` imports are created automatically when you add components with the CLI — for a fresh manual setup, add at least one component first (`npx dreamy add button`) or create the `components/patterns` and `components/recipes` index files yourself.
 
-```ts {1-4, 9-25}
+```ts {1-3, 7-16}
 import createDreamyPreset, { dreamyPlugin } from "@dreamy-ui/panda-preset";
-import { defineConfig } from "@pandacss/dev";
-import { patterns } from "./app/components/patterns";
-import { recipes } from "./app/components/recipes";
+import { patterns } from "./components/patterns";
+import { recipes } from "./components/recipes";
 
 export default defineConfig({
-	preflight: true,
-	watch: true,
-	jsxFramework: "react",
-	jsxStyleProps: "all",
-	outExtension: "js",
+	// ...
 	jsxFactory: "dreamy",
 	include: [
-		"./app/**/*.{js,jsx,ts,tsx}" // Replace with your app source directory
+		"./app/**/*.{js,jsx,ts,tsx}" // Adjust for your framework — see guides below
 	],
 	presets: [createDreamyPreset()],
 	plugins: [dreamyPlugin()],
-	patterns: {
-		extend: patterns
-	},
+	patterns,
 	theme: {
 		extend: {
 			recipes
 		}
-	},
-	globalCss: {
-		extend: {}
-	},
-	staticCss: {
-		extend: {}
-	},
-	
+	}
 });
 ```
 
-Note: The `patterns` and `recipes` imports are automatically configured by the CLI based on your framework. The paths will be adjusted for Next.js (`./src/components` or `./components`) or Vite (`./src/components`).
+The `include` path and build-tool setup (Vite PostCSS plugin, PostCSS config, CSS layers) differ per framework — see the linked guides above.
 
-### 4. Add Dream Provider
+### 3. Add a `prepare` script
 
-Add `DreamyProvider` to the root of your app. It is a wrapper for your app, which provides Dreamy UI with all the necessary context.
+Add Panda codegen to your `package.json` so types are generated after install:
 
-```tsx
-import { DreamyProvider } from "@dreamy-ui/react";
-import domMax from "motion/react";
-
-export default function App() {
-	return (
-		<DreamyProvider motionFeatures={domMax}>
-			<YourApp />
-		</DreamyProvider>
-	);
+```json
+{
+	"scripts": {
+		"prepare": "panda codegen"
+	}
 }
 ```
 
-### 5. Try and see Dream in action
+### 4. Configure TypeScript
 
-Create a new component and use some Dreamy UI components!
+Add `styled-system/**/*` to the `include` array and an `@/ui/*` path alias in `tsconfig.json`:
+
+```json
+{
+	"compilerOptions": {
+		"paths": {
+			"@/ui/*": ["./components/ui/*"]
+		}
+	},
+	"include": ["**/*.ts", "**/*.tsx", "styled-system/**/*"]
+}
+```
+
+Next.js projects also need a `styled-system/*` path alias — see the [Next.js guide](/docs/frameworks/next.js).
+
+### 5. Add `DreamyProvider`
+
+Create `components/dreamy-provider.tsx` and wrap your app root. The exact setup depends on your framework (SSR color mode for React Router and Next.js, client-only for Vite). See the framework guides for copy-paste examples.
+
+### 6. Add components and run codegen
+
+Add the components you need, then generate the styled-system:
+
+```bash
+npx dreamy add button flex text heading
+npx panda codegen
+```
+
+### 7. Start using Dreamy UI
+
+Import components from `@/ui` — they are copied into your project by the CLI:
 
 ```tsx
-import { Button } from "@dreamy-ui/react";
+import { Button } from "@/ui";
 
 export default function Index() {
 	return <Button variant="primary">I am a Dream Button 🚀</Button>;

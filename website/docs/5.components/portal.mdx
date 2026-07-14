@@ -13,9 +13,7 @@ pnpm dreamy add portal
 
 ## Usage
 
-Portal is useful when you need to render a component at the end of document for some reason.
-
-Check the end of `document.body` in the dev tools for the rendered component, in the empty wrapper below.
+Portal renders content outside its original DOM hierarchy while keeping it in Dreamy UI's shared overlay stack.
 
 <Wrapper>
 	<Portal>
@@ -27,4 +25,37 @@ Check the end of `document.body` in the dev tools for the rendered component, in
 <Portal>
 	<div>Hello</div>
 </Portal>
+```
+
+### Top layer and nesting
+
+Dreamy UI creates one browser Top Layer host per `Document`. Every Portal is a stacking scope inside that shared host, and nested portals append to their nearest parent Portal by default.
+
+Each scope adds its local `zIndex` to its parent base through CSS variables. The semantic layers remain `dropdown` (1000), `overlay` (1300), `modal` (1400), `popover` (1500), `toast` (1700), and `tooltip` (1800). For example, a page Select resolves to 1000, a Modal to 1400, and a Select inside that Modal to `calc(1400 + 1000)`.
+
+Nested scopes remain confined by their parent stacking context, so a later sibling Modal still covers an earlier Modal and everything nested inside it. Active portals at the same layer move to the end of their scope, making open order deterministic.
+
+```tsx
+<Portal>
+    <div>
+        Parent portal
+        <Portal zIndex="var(--z-index-dropdown)">
+            Nested dropdown scope
+        </Portal>
+    </div>
+</Portal>
+```
+
+### Custom container
+
+Dreamy UI overlays compose automatically: do not disable their portals, choose a manual layer, or add z-index workarounds.
+
+`containerRef` is an advanced escape hatch for a native or third-party overlay root. Choose a non-scrolling root outside clipped content. `appendToParentPortal` starts a root scope in the shared host when set to `false`; `zIndex` sets a local offset, and `isActive` controls same-layer open ordering.
+
+```tsx
+const overlayRef = useRef<HTMLDivElement>(null);
+
+<div ref={overlayRef}>
+    <Portal containerRef={overlayRef}>Overlay content</Portal>
+</div>
 ```

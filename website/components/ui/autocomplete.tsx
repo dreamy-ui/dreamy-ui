@@ -18,6 +18,7 @@ import {
     Anchor as PopoverAnchor,
     Content as PopoverContent,
     type PopoverContentProps,
+    type PopoverProps,
     Root as PopoverRoot
 } from "./popover";
 
@@ -115,7 +116,7 @@ const AutocompleteNoResults = withContext(Box, "noResults");
 // ─── Public API ──────────────────────────────────────────────────────────────
 
 export interface AutocompleteProps
-    extends UseAutocompleteProps,
+    extends Omit<UseAutocompleteProps, "popoverProps">,
         AutocompleteVariantProps,
         Omit<HTMLDreamyProps<"div">, "children" | "onChange" | "value" | "defaultValue"> {
     /**
@@ -123,6 +124,11 @@ export interface AutocompleteProps
      * @default "outline"
      */
     triggerVariant?: InputProps["variant"];
+    /**
+     * Props forwarded to the internal `Popover.Root`.
+     * Set `usePortal` to `false` to render the dropdown in place.
+     */
+    popoverProps?: Omit<PopoverProps, "positioning">;
     children?: ReactNode;
 }
 
@@ -155,7 +161,15 @@ export const Root: (props: AutocompleteProps) => React.JSX.Element = withProvide
                         className: restProps.className
                     })}
                 >
-                    <PopoverRoot {...ctx.getPopoverRootProps()}>{children}</PopoverRoot>
+                    <PopoverRoot
+                        {...ctx.getPopoverRootProps()}
+                        portalProps={{
+                            zIndex: "var(--z-index-dropdown)",
+                            ...restProps.popoverProps?.portalProps
+                        }}
+                    >
+                        {children}
+                    </PopoverRoot>
                 </Box>
             </AutocompleteProvider>
         );

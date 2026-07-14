@@ -118,6 +118,7 @@ import { SiApple, SiReactrouter } from "react-icons/si";
 import { Link as RemixLink, useLocation } from "react-router";
 import type { MdxContent } from "~/src/.server/docs";
 import { Link, ReactRouterLink } from "~/src/ui/global/Link";
+import { IntroductionCards } from "./components/introduction-cards";
 import { PMTabs } from "./components/pm-tabs";
 
 function LazyFallback() {
@@ -635,7 +636,8 @@ const DreamComponents = {
     StepperWithColors,
     StationAutocomplete,
     PackageManagerSnippet,
-    CustomCopySnippet
+    CustomCopySnippet,
+    IntroductionCards
 };
 
 function Wrapper({ children, ...props }: PropsWithChildren<FlexProps>) {

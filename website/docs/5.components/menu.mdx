@@ -44,6 +44,36 @@ Basic usage of Menu.
 </Menu.Root>
 ```
 
+### Popover props
+
+Use `popoverProps` on `Menu.Root` to pass behavior props to the internal [Popover](/docs/components/popover). Keep placement options on the root `positioning` prop.
+
+Menu uses the shared Portal stack at the `dropdown` layer (1000). Inside a Dreamy UI overlay, its scope nests automatically and adds 1000 to the parent base; nested menus continue the same scoped behavior. Keep the portal enabled—no manual layer or z-index is needed. For a native or third-party overlay, target its non-scrolling root with `popoverProps={{ portalProps: { containerRef } }}`.
+
+<Wrapper>
+    <Menu.Root popoverProps={{ lazyBehavior: "unmount" }}>
+        <Menu.Trigger>
+            <Button>Open Menu</Button>
+        </Menu.Trigger>
+        <Menu.Content>
+            <Menu.Item>Add new</Menu.Item>
+            <Menu.Item>Delete</Menu.Item>
+        </Menu.Content>
+    </Menu.Root>
+</Wrapper>
+
+```tsx
+<Menu.Root popoverProps={{ lazyBehavior: "unmount" }}>
+    <Menu.Trigger>
+        <Button>Open Menu</Button>
+    </Menu.Trigger>
+    <Menu.Content>
+        <Menu.Item>Add new</Menu.Item>
+        <Menu.Item>Delete</Menu.Item>
+    </Menu.Content>
+</Menu.Root>
+```
+
 ### Placement
 
 You can change where the Menu is placed by using the `placement` prop. Use `icon` prop to place an icon on the beginning or the item and `comamnd` to show keybinding to the item. Using `{actionKey}` in command will automatically replace it with the action key of the user's operating system.

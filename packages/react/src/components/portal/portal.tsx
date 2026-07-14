@@ -5,139 +5,295 @@ import { useLayoutEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { usePortalManager } from "./portal-manager";
 
-type PortalContext = HTMLDivElement | null;
+export type PortalZIndex = string | number;
 
-const [PortalContextProvider, usePortalContext] = createContext<PortalContext>({
+interface PortalContextValue {
+    container: HTMLDivElement;
+    zIndex: PortalZIndex;
+}
+
+interface SharedPortalHost {
+    element: HTMLDivElement;
+    referenceCount: number;
+    removalTimer?: number;
+}
+
+const [PortalContextProvider, usePortalContext] = createContext<PortalContextValue | null>({
     strict: false,
     name: "PortalContext"
 });
 
 const PORTAL_CLASSNAME = "dreamy-portal";
 const PORTAL_SELECTOR = `.${PORTAL_CLASSNAME}`;
+const PORTAL_HOST_CLASSNAME = "dreamy-portal-host";
+const PORTAL_HOST_SELECTOR = `.${PORTAL_HOST_CLASSNAME}`;
+const PORTAL_BASE_Z_INDEX_VAR = "--dreamy-portal-base-z-index";
+const PORTAL_LOCAL_Z_INDEX_VAR = "--dreamy-portal-local-z-index";
+const PORTAL_Z_INDEX = `calc(var(${PORTAL_BASE_Z_INDEX_VAR}, 0) + var(${PORTAL_LOCAL_Z_INDEX_VAR}, 0))`;
+const sharedPortalHosts = new WeakMap<Document, SharedPortalHost>();
 
-// Resets the browser's UA [popover] styles. Creates a zero-footprint transparent
-// container in the native top layer so it never intercepts pointer events.
-const TOP_LAYER_STYLE =
-    "border:none;padding:0;margin:0;background:transparent;overflow:visible;inset:0;width:0;height:0";
+const HOST_STYLE =
+    "position:fixed;border:none;padding:0;margin:0;background:transparent;overflow:visible;inset:0;width:0;height:0;z-index:2147483647;pointer-events:none";
+
+function isZeroZIndex(value: PortalZIndex | undefined): boolean {
+    return value === undefined || value === 0 || value === "0";
+}
+
+function addZIndexes(base: PortalZIndex, local: PortalZIndex): PortalZIndex {
+    if (typeof base === "number" && typeof local === "number") return base + local;
+    if (isZeroZIndex(base)) return local;
+    if (isZeroZIndex(local)) return base;
+    return `calc(${base} + ${local})`;
+}
+
+function hideAndRemoveHost(host: HTMLDivElement) {
+    try {
+        if (host.matches(":popover-open")) host.hidePopover();
+    } catch (_) {}
+    host.remove();
+}
+
+function createSharedPortalHost(ownerDocument: Document): SharedPortalHost {
+    const element = ownerDocument.createElement("div");
+    element.className = PORTAL_HOST_CLASSNAME;
+    element.dataset.dreamyPortalHost = "";
+    element.style.cssText = HOST_STYLE;
+
+    const parent = ownerDocument.body ?? ownerDocument.documentElement;
+    parent.appendChild(element);
+
+    if (typeof element.showPopover === "function") {
+        try {
+            element.setAttribute("popover", "manual");
+            element.showPopover();
+        } catch (_) {
+            element.removeAttribute("popover");
+        }
+    }
+
+    return { element, referenceCount: 0 };
+}
+
+function acquireSharedPortalHost(ownerDocument: Document): SharedPortalHost {
+    let host = sharedPortalHosts.get(ownerDocument);
+
+    if (!host || !host.element.isConnected) {
+        host = createSharedPortalHost(ownerDocument);
+        sharedPortalHosts.set(ownerDocument, host);
+    }
+
+    if (host.removalTimer !== undefined) {
+        ownerDocument.defaultView?.clearTimeout(host.removalTimer);
+        host.removalTimer = undefined;
+    }
+
+    host.referenceCount += 1;
+    return host;
+}
+
+function releaseSharedPortalHost(ownerDocument: Document, host: SharedPortalHost) {
+    host.referenceCount = Math.max(0, host.referenceCount - 1);
+    if (host.referenceCount > 0) return;
+
+    const ownerWindow = ownerDocument.defaultView;
+    if (!ownerWindow) {
+        hideAndRemoveHost(host.element);
+        sharedPortalHosts.delete(ownerDocument);
+        return;
+    }
+
+    host.removalTimer = ownerWindow.setTimeout(function removeUnusedHost() {
+        host.removalTimer = undefined;
+        if (host.referenceCount > 0) return;
+        hideAndRemoveHost(host.element);
+        sharedPortalHosts.delete(ownerDocument);
+    }, 0);
+}
+
+function applyPortalLayerStyles(
+    element: HTMLDivElement,
+    baseZIndex: PortalZIndex,
+    localZIndex: PortalZIndex
+) {
+    element.style.position = "absolute";
+    element.style.inset = "0";
+    element.style.width = "0";
+    element.style.height = "0";
+    element.style.overflow = "visible";
+    element.style.pointerEvents = "auto";
+    element.style.isolation = "isolate";
+    element.style.zIndex = PORTAL_Z_INDEX;
+    element.style.setProperty(PORTAL_BASE_Z_INDEX_VAR, String(baseZIndex));
+    element.style.setProperty(PORTAL_LOCAL_Z_INDEX_VAR, String(localZIndex));
+}
+
+function movePortalToFront(container: HTMLDivElement) {
+    const ownerWindow = container.ownerDocument.defaultView;
+    if (!ownerWindow) {
+        container.parentNode?.appendChild(container);
+        return;
+    }
+
+    const frameId = ownerWindow.requestAnimationFrame(function appendActivePortal() {
+        container.parentNode?.appendChild(container);
+    });
+
+    return function cancelMoveToFront() {
+        ownerWindow.cancelAnimationFrame(frameId);
+    };
+}
 
 /**
- * Portal backed by the browser's native Top Layer (popover="manual").
- *
- * Top-layer portals are painted above every stacking context — no z-index
- * juggling required. Browsers without the Popover API fall back to the old
- * document.body append strategy transparently.
- *
- * Nested portals (appendToParentPortal + parent context present) skip the
- * top-layer promotion and simply append inside the parent's container, since
- * they already inherit the parent's layer position.
+ * Portal backed by one shared browser Top Layer host per document.
  */
 function DefaultPortal({
     appendToParentPortal,
+    isActive,
+    zIndex,
     children
-}: React.PropsWithChildren<{ appendToParentPortal?: boolean }>) {
+}: React.PropsWithChildren<{
+    appendToParentPortal?: boolean;
+    isActive?: boolean;
+    zIndex?: PortalZIndex;
+}>) {
     const [container, setContainer] = useState<HTMLDivElement | null>(null);
     const parentPortal = usePortalContext();
     const manager = usePortalManager();
+    const parentContainer = parentPortal?.container;
+    const localZIndex = zIndex ?? 0;
+    const baseZIndex =
+        (appendToParentPortal ? parentPortal?.zIndex : undefined) ?? manager?.zIndex ?? 0;
+    const resolvedZIndex = addZIndexes(baseZIndex, localZIndex);
 
-    if (typeof document !== "undefined")
-        // biome-ignore lint/correctness/useExhaustiveDependencies: container setup is one-shot per portal instance
-        useLayoutEffect(() => {
-            const el = document.createElement("div");
-            el.className = PORTAL_CLASSNAME;
+    useLayoutEffect(
+        function mountPortalContainer() {
+            if (typeof document === "undefined") return;
 
-            if (appendToParentPortal && parentPortal) {
-                // Nested portal: insert into the parent portal's DOM container.
-                // It already lives inside the top layer — no further promotion needed.
-                parentPortal.appendChild(el);
-            } else if (typeof el.showPopover === "function") {
-                // Top-level portal: promote to the browser's native Top Layer.
-                // The element is rendered above all stacking contexts without z-index.
-                el.setAttribute("popover", "manual");
-                el.style.cssText = TOP_LAYER_STYLE;
-                document.body.appendChild(el);
-                el.showPopover();
+            const ownerDocument = parentContainer?.ownerDocument ?? document;
+            const element = ownerDocument.createElement("div");
+            element.className = PORTAL_CLASSNAME;
+            element.dataset.dreamyPortal = "";
+
+            let sharedHost: SharedPortalHost | undefined;
+            if (appendToParentPortal && parentContainer) {
+                parentContainer.appendChild(element);
             } else {
-                // Fallback for browsers that don't support the Popover API.
-                document.body.appendChild(el);
+                sharedHost = acquireSharedPortalHost(ownerDocument);
+                sharedHost.element.appendChild(element);
             }
 
-            setContainer(el);
+            setContainer(element);
 
-            return () => {
-                try {
-                    if (el.matches(":popover-open")) el.hidePopover();
-                } catch (_) {}
-                el.remove();
+            return function unmountPortalContainer() {
+                element.remove();
+                if (sharedHost) releaseSharedPortalHost(ownerDocument, sharedHost);
             };
-        }, [appendToParentPortal, parentPortal]);
+        },
+        [appendToParentPortal, parentContainer]
+    );
+
+    useLayoutEffect(
+        function syncPortalLayer() {
+            if (!container) return;
+            applyPortalLayerStyles(container, baseZIndex, localZIndex);
+        },
+        [container, baseZIndex, localZIndex]
+    );
+
+    useLayoutEffect(
+        function moveActivePortalToFront() {
+            if (!container || !isActive || !container.parentNode) return;
+            return movePortalToFront(container);
+        },
+        [container, isActive]
+    );
 
     if (!container) return null;
 
-    const content = manager?.zIndex ? (
-        <div
-            style={{
-                position: "absolute",
-                zIndex: manager.zIndex,
-                top: 0,
-                left: 0,
-                right: 0
-            }}
-        >
-            {children}
-        </div>
-    ) : (
-        children
-    );
+    const contextValue: PortalContextValue = {
+        container,
+        zIndex: resolvedZIndex
+    };
 
     return createPortal(
-        <PortalContextProvider value={container}>{content}</PortalContextProvider>,
+        <PortalContextProvider value={contextValue}>{children}</PortalContextProvider>,
         container
     );
 }
 
 interface ContainerPortalProps extends React.PropsWithChildren<Record<string, unknown>> {
     containerRef: React.RefObject<HTMLElement | null>;
-    /**
-     * @default false
-     */
     appendToParentPortal?: boolean;
+    isActive?: boolean;
+    zIndex?: PortalZIndex;
 }
 
 /**
  * Portal that renders into a caller-supplied DOM container.
  */
-function ContainerPortal({ children, containerRef, appendToParentPortal }: ContainerPortalProps) {
-    const containerEl = containerRef.current;
-    const host = containerEl ?? (typeof window !== "undefined" ? document.body : undefined);
+function ContainerPortal({
+    children,
+    containerRef,
+    appendToParentPortal,
+    isActive,
+    zIndex
+}: ContainerPortalProps) {
+    const [container, setContainer] = useState<HTMLDivElement | null>(null);
+    const parentPortal = usePortalContext();
+    const manager = usePortalManager();
+    const localZIndex = zIndex ?? 0;
+    const baseZIndex =
+        (appendToParentPortal ? parentPortal?.zIndex : undefined) ?? manager?.zIndex ?? 0;
+    const resolvedZIndex = addZIndexes(baseZIndex, localZIndex);
 
-    const portal = useMemo(() => {
-        const node = containerEl?.ownerDocument.createElement("div");
-        if (node) node.className = PORTAL_CLASSNAME;
-        return node;
-    }, [containerEl]);
+    useLayoutEffect(
+        function mountContainerPortal() {
+            if (typeof document === "undefined") return;
 
-    const [, forceUpdate] = useState({});
-    if (typeof document !== "undefined") useLayoutEffect(() => forceUpdate({}), []);
+            const host = containerRef.current ?? document.body;
+            const element = host.ownerDocument.createElement("div");
+            element.className = PORTAL_CLASSNAME;
+            element.dataset.dreamyPortal = "";
+            host.appendChild(element);
+            setContainer(element);
 
-    if (typeof document !== "undefined")
-        useLayoutEffect(() => {
-            if (!portal || !host) return;
-            host.appendChild(portal);
-            return () => {
-                host.removeChild(portal);
+            return function unmountContainerPortal() {
+                element.remove();
             };
-        }, [portal, host]);
+        },
+        [containerRef]
+    );
 
-    if (host && portal) {
-        return createPortal(
-            <PortalContextProvider value={appendToParentPortal ? portal : null}>
-                {children}
-            </PortalContextProvider>,
-            portal
-        );
-    }
+    useLayoutEffect(
+        function syncPortalLayer() {
+            if (!container) return;
+            applyPortalLayerStyles(container, baseZIndex, localZIndex);
+        },
+        [container, baseZIndex, localZIndex]
+    );
 
-    return null;
+    useLayoutEffect(
+        function moveActivePortalToFront() {
+            if (!container || !isActive || !container.parentNode) return;
+            return movePortalToFront(container);
+        },
+        [container, isActive]
+    );
+
+    const contextValue = useMemo<PortalContextValue | null>(
+        function getPortalContextValue() {
+            if (!container) return null;
+            return { container, zIndex: resolvedZIndex };
+        },
+        [container, resolvedZIndex]
+    );
+
+    if (!container || !contextValue) return null;
+
+    return createPortal(
+        <PortalContextProvider value={contextValue}>{children}</PortalContextProvider>,
+        container
+    );
 }
 
 export interface PortalProps {
@@ -160,6 +316,20 @@ export interface PortalProps {
      * @default true
      */
     appendToParentPortal?: boolean;
+    /**
+     * Local z-index offset for this portal's stacking scope.
+     * Nested portals add this value to their parent portal's resolved z-index.
+     *
+     * @default 0
+     */
+    zIndex?: PortalZIndex;
+    /**
+     * Whether this portal is currently active.
+     * Active portals move to the end of their scope so equal layers follow open order.
+     *
+     * @default true
+     */
+    isActive?: boolean;
 }
 
 /**
@@ -175,6 +345,7 @@ export interface PortalProps {
 export function Portal(props: PortalProps) {
     const portalProps: PortalProps = {
         appendToParentPortal: true,
+        isActive: true,
         ...props
     };
 
@@ -191,4 +362,6 @@ export function Portal(props: PortalProps) {
 
 Portal.className = PORTAL_CLASSNAME;
 Portal.selector = PORTAL_SELECTOR;
+Portal.hostClassName = PORTAL_HOST_CLASSNAME;
+Portal.hostSelector = PORTAL_HOST_SELECTOR;
 Portal.displayName = "Portal";

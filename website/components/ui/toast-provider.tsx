@@ -3,6 +3,7 @@
 import {
     type IToast,
     type Position,
+    Portal,
     ToastContext,
     type ToastContextType,
     type ToastWithRender,
@@ -212,7 +213,10 @@ export function ToastManager() {
     );
 
     return (
-        <>
+        <Portal
+            isActive={toasts.length > 0}
+            zIndex="var(--z-index-toast)"
+        >
             {positions.map((position) => (
                 <Fragment key={`${position}-toast-container`}>
                     <AnimatePresence>
@@ -259,6 +263,6 @@ export function ToastManager() {
                     </AnimatePresence>
                 </Fragment>
             ))}
-        </>
+        </Portal>
     );
 }

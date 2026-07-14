@@ -29,10 +29,18 @@ export function ItemsSelect() {
 export function SelectInModal() {
     const [isOpen, setIsOpen] = useState(false);
 
+    function openModal() {
+        setIsOpen(true);
+    }
+
+    function closeModal() {
+        setIsOpen(false);
+    }
+
     return (
         <>
             <Button
-                onClick={() => setIsOpen(true)}
+                onClick={openModal}
                 variant="primary"
                 w="fit-content"
             >
@@ -40,7 +48,7 @@ export function SelectInModal() {
             </Button>
             <Modal.Root
                 isOpen={isOpen}
-                onClose={() => setIsOpen(false)}
+                onClose={closeModal}
             >
                 <Modal.Overlay />
                 <Modal.Content>
@@ -57,7 +65,7 @@ export function SelectInModal() {
                         </Select.Root>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button onClick={() => setIsOpen(false)}>Close</Button>
+                        <Button onClick={closeModal}>Close</Button>
                     </Modal.Footer>
                 </Modal.Content>
             </Modal.Root>

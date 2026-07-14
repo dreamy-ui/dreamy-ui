@@ -8,10 +8,12 @@ import { createContext, useReducedMotion } from "@/provider";
 import { type DOMAttributes, type PropGetter, callAllHandlers } from "@/utils";
 import { type LazyMode, lazyControl } from "@/utils/lazy";
 import { type ForwardedRef, useCallback, useEffect, useId, useRef, useState } from "react";
+import type { PortalProps } from "../portal";
 
 interface PopoverContext extends UsePopoverReturn {
     hasArrow?: boolean;
     usePortal?: boolean;
+    portalProps?: Omit<PortalProps, "children">;
 }
 
 export const [PopoverProvider, usePopoverContext] = createContext<PopoverContext>({

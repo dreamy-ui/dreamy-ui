@@ -35,23 +35,6 @@ export interface SelectItemData {
 
 export type SelectLayer = "dropdown" | "popover" | "tooltip";
 
-function resolveFloatingContentZIndex(triggerEl: HTMLElement): string {
-    if (triggerEl.closest('[role="dialog"][aria-modal="true"]')) {
-        return "var(--z-index-popover)";
-    }
-
-    let parent: HTMLElement | null = triggerEl.parentElement;
-    while (parent) {
-        const className = parent.className;
-        if (typeof className === "string" && className.includes("popover")) {
-            return "var(--z-index-tooltip)";
-        }
-        parent = parent.parentElement;
-    }
-
-    return "var(--z-index-dropdown)";
-}
-
 export interface HiddenSelectProps {
     placeholder: string;
     multiple: boolean;
@@ -103,7 +86,7 @@ function HiddenSelect(props: HiddenSelectProps) {
 export interface SelectProps<
     T extends boolean = false,
     Item extends SelectItemData = SelectItemData
-> extends Omit<UseSelectProps<T, PopoverProps>, "items">,
+> extends Omit<UseSelectProps<T, PopoverProps>, "items" | "popoverProps">,
         SelectVariantProps,
         Omit<HTMLDreamyProps<"div">, keyof UseSelectProps<T, PopoverProps>> {
     /**
@@ -117,7 +100,8 @@ export interface SelectProps<
     renderItem?: (item: Item) => ReactNode;
     /**
      * Semantic z-index layer for the dropdown content.
-     * Auto-detected when omitted.
+     * Nested overlay scopes are added automatically.
+     * @default "dropdown"
      */
     layer?: SelectLayer;
     /**
@@ -125,6 +109,11 @@ export interface SelectProps<
      * @default { placement: "bottom" }
      */
     positioning?: PositioningProps;
+    /**
+     * Props forwarded to the internal `Popover.Root`.
+     * Set `usePortal` to `false` to render the dropdown in place.
+     */
+    popoverProps?: Omit<PopoverProps, "positioning">;
     children?: ReactNode;
 }
 
@@ -140,27 +129,14 @@ export const Root: <T extends boolean = false, Item extends SelectItemData = Sel
     Item extends SelectItemData = SelectItemData
 >({ children, items, renderItem, layer, contentZIndex, positioning, ...props }: SelectProps<T, Item>) {
     const [cssProps, restProps] = splitCssProps(props);
-    const [autoContentZIndex, setAutoContentZIndex] = useState<string>();
-
     const resolvedContentZIndex =
-        contentZIndex ??
-        (layer ? `var(--z-index-${layer})` : autoContentZIndex) ??
-        "var(--z-index-dropdown)";
+        contentZIndex ?? (layer ? `var(--z-index-${layer})` : "var(--z-index-dropdown)");
 
     const ctx = useSelect<T, PopoverProps>({
         ...restProps,
         items,
         contentZIndex: resolvedContentZIndex
     });
-
-    useSafeLayoutEffect(() => {
-        if (contentZIndex || layer) return;
-
-        const triggerEl = ctx.triggerRef.current;
-        if (!triggerEl) return;
-
-        setAutoContentZIndex(resolveFloatingContentZIndex(triggerEl));
-    }, [contentZIndex, layer, ctx.isOpen, ctx.triggerRef]);
 
     return (
         <SelectProvider
@@ -188,6 +164,10 @@ export const Root: <T extends boolean = false, Item extends SelectItemData = Sel
                     positioning={{ placement: "bottom", ...positioning }}
                     reduceMotion={ctx.reduceMotion}
                     {...props.popoverProps}
+                    portalProps={{
+                        zIndex: resolvedContentZIndex,
+                        ...props.popoverProps?.portalProps
+                    }}
                 >
                     {children}
                 </PopoverRoot>

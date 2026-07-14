@@ -13,7 +13,7 @@
 		"typecheck": "react-router typegen && tsc",
 		"db:migrate": "prisma migrate deploy",
 		"db:migrate:dev": "prisma migrate dev",
-		"docs:sync": "tsx app/scripts/sync-docs.ts",
+		"docs:sync": "cross-env NODE_ENV=development bun app/scripts/sync-docs.ts",
 		"compositions:host": "tsx reserve-compositions-host/server.ts",
 		"test": "tsx tests/render.test.tsx",
 		"test:e2e": "playwright test",

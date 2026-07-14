@@ -1,4 +1,4 @@
-import { Box, HStack, Select, Spinner, Text } from "@/ui";
+import { Box, HStack, Modal, Select, Spinner, Text } from "@/ui";
 import type { Meta } from "@storybook/react-vite";
 import { useState } from "react";
 import { LuBanana, LuCherry, LuCitrus } from "react-icons/lu";
@@ -241,5 +241,49 @@ export function CloseOnSelect() {
             <Select.Trigger placeholder="Select a favorite fruit" />
             <Select.Content />
         </Select.Root>
+    );
+}
+
+export function SharedOverlayStack() {
+    function keepOpen() {}
+
+    return (
+        <>
+            <Select.Root
+                isOpen
+                items={fruits}
+                onClose={keepOpen}
+                popoverProps={{ autoFocus: false }}
+                width="xs"
+            >
+                <Select.Trigger placeholder="Page Select" />
+                <Select.Content data-testid="page-select-content" />
+            </Select.Root>
+
+            <Modal.Root
+                autoFocus={false}
+                isOpen
+                onClose={keepOpen}
+                trapFocus={false}
+            >
+                <Modal.Overlay />
+                <Modal.Content data-testid="modal-content">
+                    <Modal.Header>Shared overlay stack</Modal.Header>
+                    <Modal.Body>
+                        <Text>Nested overlays automatically stack above this Modal.</Text>
+                        <Select.Root
+                            isOpen
+                            items={fruits}
+                            onClose={keepOpen}
+                            popoverProps={{ autoFocus: false }}
+                            width="xs"
+                        >
+                            <Select.Trigger placeholder="Modal Select" />
+                            <Select.Content data-testid="modal-select-content" />
+                        </Select.Root>
+                    </Modal.Body>
+                </Modal.Content>
+            </Modal.Root>
+        </>
     );
 }

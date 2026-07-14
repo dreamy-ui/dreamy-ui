@@ -100,6 +100,11 @@ export interface DateRangePickerRootProps
      * Positioning configuration for the date range picker popover.
      */
     positioning?: PositioningProps;
+    /**
+     * Props forwarded to the internal `Popover.Root`.
+     * Set `usePortal` to `false` to render the calendar in place.
+     */
+    popoverProps?: Omit<Popover.PopoverProps, "positioning">;
 }
 
 export const Root = withProvider(function DateRangePickerRoot(props: DateRangePickerRootProps) {
@@ -116,6 +121,7 @@ export const Root = withProvider(function DateRangePickerRoot(props: DateRangePi
         showFooter = false,
         presets,
         positioning,
+        popoverProps,
         children,
         ...rest
     } = props;
@@ -172,6 +178,11 @@ export const Root = withProvider(function DateRangePickerRoot(props: DateRangePi
                 onClose={handleCancel}
                 onOpen={handleApply}
                 positioning={positioning}
+                {...popoverProps}
+                portalProps={{
+                    zIndex: "var(--z-index-popover)",
+                    ...popoverProps?.portalProps
+                }}
             >
                 <Box {...rest}>{children}</Box>
             </Popover.Root>

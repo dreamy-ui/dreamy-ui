@@ -43,6 +43,35 @@ const fruits = [
 </Select.Root>
 ```
 
+### Popover props
+
+Use `popoverProps` on `Select.Root` to pass behavior props to the internal [Popover](/docs/components/popover). Keep placement options on the root `positioning` prop. The dropdown joins the shared Portal stack automatically; use `popoverProps.portalProps.containerRef` only for a native or third-party overlay root.
+
+<Wrapper>
+    <Select.Root
+        width="xs"
+        items={[
+            { value: "strawberry", label: "Strawberry" },
+            { value: "banana", label: "Banana" },
+            { value: "orange", label: "Orange" },
+        ]}
+        popoverProps={{ lazyBehavior: "unmount" }}
+    >
+        <Select.Trigger placeholder="Select a favorite fruit" />
+        <Select.Content />
+    </Select.Root>
+</Wrapper>
+
+```tsx
+<Select.Root
+    items={fruits}
+    popoverProps={{ lazyBehavior: "unmount" }}
+>
+    <Select.Trigger placeholder="Select a favorite fruit" />
+    <Select.Content />
+</Select.Root>
+```
+
 ### Custom item rendering
 
 Use the `renderItem` prop on `Select.Root` to customise how each option is displayed. The render function receives the full item type from your `items` array, so extra fields such as `icon` are type-safe.
@@ -410,17 +439,60 @@ const manyItems = Array.from({ length: 250 }, (_, index) => ({
 
 ### Inside modals and popovers
 
-By default, the select dropdown uses the `dropdown` z-index layer. When rendered inside a modal or popover, `Select.Root` automatically raises the z-index. You can also set it explicitly with `layer` or `contentZIndex`.
+No extra prop is needed inside Dreamy UI overlays. Keep the Select portal enabled so its `dropdown` scope (1000) nests under the parent scope and escapes clipped or scrolling content. In a Modal, it resolves to `calc(1400 + 1000)` automatically.
+
+Later sibling Modals still cover earlier Modal subtrees, and same-layer dropdowns follow open order. Do not disable the portal or add a manual layer or z-index. For a native or third-party overlay, pass its non-scrolling root with `popoverProps={{ portalProps: { containerRef } }}`.
 
 <Wrapper>
     <SelectInModal />
 </Wrapper>
 
 ```tsx
-<Select.Root items={fruits} layer="popover">
-    <Select.Trigger placeholder="Select a favorite fruit" />
-    <Select.Content />
-</Select.Root>
+const fruits = [
+    { value: "cherry", label: "Cherry" },
+    { value: "banana", label: "Banana" },
+    { value: "orange", label: "Orange" },
+];
+
+export function SelectInModal() {
+    const [isOpen, setIsOpen] = useState(false);
+
+    function openModal() {
+        setIsOpen(true);
+    }
+
+    function closeModal() {
+        setIsOpen(false);
+    }
+
+    return (
+        <>
+            <Button onClick={openModal} variant="primary">
+                Open modal
+            </Button>
+            <Modal.Root isOpen={isOpen} onClose={closeModal}>
+                <Modal.Overlay />
+                <Modal.Content>
+                    <Modal.Header>Select in a modal</Modal.Header>
+                    <Modal.CloseButton />
+                    <Modal.Body>
+                        <Select.Root
+                            defaultValue="cherry"
+                            items={fruits}
+                            width="xs"
+                        >
+                            <Select.Trigger placeholder="Select a favorite fruit" />
+                            <Select.Content />
+                        </Select.Root>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button onClick={closeModal}>Close</Button>
+                    </Modal.Footer>
+                </Modal.Content>
+            </Modal.Root>
+        </>
+    );
+}
 ```
 
 ### Close on select

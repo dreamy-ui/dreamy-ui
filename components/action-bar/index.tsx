@@ -2,6 +2,7 @@
 
 import {
     Portal,
+    type PortalProps,
     type UseControllableReturn,
     useControllable,
     type useControllableProps,
@@ -28,10 +29,15 @@ function useActionBarContext() {
     return context;
 }
 
-export interface ActionBarRootProps extends BoxProps, ActionBarVariantProps, useControllableProps {}
+export interface ActionBarRootProps extends BoxProps, ActionBarVariantProps, useControllableProps {
+    /**
+     * Props forwarded to the shared overlay portal.
+     */
+    portalProps?: Omit<PortalProps, "children">;
+}
 
 export const Root = withProvider(function ActionBarRoot(props: ActionBarRootProps) {
-    const { children, isOpen, defaultIsOpen, onOpen, onClose, ...rest } = props;
+    const { children, isOpen, defaultIsOpen, onOpen, onClose, portalProps, ...rest } = props;
     const actionBarProps = useControllable({
         isOpen,
         defaultIsOpen,
@@ -41,9 +47,13 @@ export const Root = withProvider(function ActionBarRoot(props: ActionBarRootProp
 
     return (
         <ActionBarContext.Provider value={actionBarProps}>
-            <Portal>
+            <Portal
+                isActive={actionBarProps.isOpen}
+                zIndex="var(--z-index-modal)"
+                {...portalProps}
+            >
                 <AnimatePresence>
-                    {isOpen && (
+                    {actionBarProps.isOpen && (
                         <Box
                             data-state={actionBarProps.isOpen ? "open" : "closed"}
                             {...rest}

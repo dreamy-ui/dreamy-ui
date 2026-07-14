@@ -1,0 +1,165 @@
+---
+title: Using Vite
+---
+
+# Using Dreamy UI with Vite
+
+## Quick Start (Recommended)
+
+Use the automated CLI to set up Dreamy UI in your project:
+
+```bash
+npx @dreamy-ui/cli init
+```
+
+---
+
+The CLI will automatically:
+
+1. Detect your framework (React Router v7, Next.js, or Vite)
+2. Install required dependencies:
+   - Dev: `@pandacss/dev`, `@pandacss/postcss`, `@dreamy-ui/cli`
+   - Prod: `@dreamy-ui/react`, `@dreamy-ui/panda-preset`, `motion`
+3. Create and configure `panda.config.ts` with the Dreamy preset, patterns, and recipes
+4. Add a `prepare` script (`panda codegen`) to `package.json`
+5. Update `vite.config` with the Panda CSS PostCSS plugin (removes Tailwind if present)
+6. Set up `src/index.css` with Panda layers and import it in `src/main.tsx`
+7. Update `tsconfig.json` — add `styled-system/**/*` to `include` and an `@/ui/*` path alias
+8. Create a `components/dreamy-provider.tsx` wrapper component
+9. Wire up `DreamyProvider` in `src/main.tsx`
+10. Add recommended starter components (`button`, `flex`, `text`, `heading`)
+11. Run Panda CSS codegen to generate `styled-system`
+
+## Manual Installation
+
+### 1. Install dependencies
+
+```bash
+pnpm add -D @pandacss/dev @pandacss/postcss @dreamy-ui/cli
+pnpm add @dreamy-ui/react @dreamy-ui/panda-preset motion
+```
+
+### 2. Configure Vite PostCSS
+
+Add the Panda CSS PostCSS plugin to `vite.config.ts`:
+
+```ts {1, 5-9}
+import pandacss from "@pandacss/dev/postcss";
+
+export default defineConfig({
+	// ...
+	css: {
+		postcss: {
+			plugins: [pandacss]
+		}
+	}
+});
+```
+
+### 3. Configure `panda.config.ts`
+
+```ts {1-3, 7-16}
+import createDreamyPreset, { dreamyPlugin } from "@dreamy-ui/panda-preset";
+import { patterns } from "./components/patterns";
+import { recipes } from "./components/recipes";
+
+export default defineConfig({
+	// ...
+	jsxFactory: "dreamy",
+	include: ["./src/**/*.{js,jsx,ts,tsx}"],
+	presets: [createDreamyPreset()],
+	plugins: [dreamyPlugin()],
+	patterns,
+	theme: {
+		extend: {
+			recipes
+		}
+	}
+});
+```
+
+Add components first with `npx dreamy add button` so the `components/patterns` and `components/recipes` index files exist.
+
+### 4. Set up CSS layers
+
+Add Panda layers to `src/index.css`:
+
+```css
+@layer reset, base, tokens, recipes, utilities;
+```
+
+Make sure `src/index.css` is imported in `src/main.tsx`.
+
+### 5. Add a `prepare` script
+
+```json
+{
+	"scripts": {
+		"prepare": "panda codegen"
+	}
+}
+```
+
+### 6. Update `tsconfig.json`
+
+```json {3-4, 9}
+{
+	"compilerOptions": {
+		"paths": {
+			"@/ui/*": ["./components/ui/*"]
+		}
+	},
+	"include": [
+		// ...
+		"styled-system/**/*"
+	]
+}
+```
+
+### 7. Add `DreamyProvider`
+
+Create `components/dreamy-provider.tsx`:
+
+```tsx
+import { DreamyProvider as BaseDreamyProvider } from "@dreamy-ui/react";
+import domMax from "motion/react";
+
+interface DreamyProviderProps {
+	children: React.ReactNode;
+}
+
+export function DreamyProvider({ children }: DreamyProviderProps) {
+	return <BaseDreamyProvider motionFeatures={domMax}>{children}</BaseDreamyProvider>;
+}
+```
+
+Wrap your app in `src/main.tsx`:
+
+```tsx {1, 4-6}
+import { DreamyProvider } from "../components/dreamy-provider";
+
+ReactDOM.createRoot(document.getElementById("root")!).render(
+	<DreamyProvider>
+		<App />
+	</DreamyProvider>
+);
+```
+
+### 8. Add components and run codegen
+
+```bash
+npx dreamy add button flex text heading
+npx panda codegen
+```
+
+### 9. Start using Dreamy UI
+
+```tsx
+import { Button } from "@/ui";
+
+function App() {
+	return <Button>Dreamy UI!</Button>;
+}
+
+export default App;
+```

@@ -188,7 +188,8 @@ export interface DatePickerRootProps
      */
     positioning?: PositioningProps;
     /**
-     * Additional props to pass to the popover (non-positioning).
+     * Props forwarded to the internal `Popover.Root`.
+     * Set `usePortal` to `false` to render the calendar in place.
      */
     popoverProps?: Omit<Popover.PopoverProps, "positioning">;
 }
@@ -348,8 +349,11 @@ export const Root = withProvider(
                     onClose={handleClose}
                     onOpen={handleOpen}
                     positioning={positioning}
-                    usePortal={false}
                     {...popoverProps}
+                    portalProps={{
+                        zIndex: "var(--z-index-popover)",
+                        ...popoverProps?.portalProps
+                    }}
                     autoFocus
                     initialFocusRef={calendarInitialFocusRef}
                 >

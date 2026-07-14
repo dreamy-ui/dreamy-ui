@@ -15,164 +15,184 @@ npx @dreamy-ui/cli init
 ---
 
 The CLI will automatically:
+
 1. Detect your framework (React Router v7, Next.js, or Vite)
-2. Install all required dependencies (Panda CSS + Dreamy UI)
-3. Create and configure `panda.config.ts`
-4. Update `vite.config.ts` or `postcss.config.mjs` with Panda CSS PostCSS plugin
-5. Remove default Tailwind CSS (React Router v7 and Next.js only)
-6. Set up CSS files with proper imports
-7. Create a `DreamyProvider` component
-8. Update your `tsconfig.json` with `@/*` path alias and styled-system (if using TypeScript)
-9. Next.js also gets `styled-system/*` path alias for proper type resolution
-10. Run Panda CSS codegen to generate the styled-system
-11. Add recommended components (button, flex, text, heading) to get you started
-12. Prints out code to add to the root of your application
+2. Install required dependencies:
+   - Dev: `@pandacss/dev`, `@pandacss/postcss`, `@dreamy-ui/cli`
+   - Prod: `@dreamy-ui/react`, `@dreamy-ui/panda-preset`, `motion`
+3. Create and configure `panda.config.ts` with the Dreamy preset, patterns, and recipes
+4. Add a `prepare` script (`panda codegen`) to `package.json`
+5. Update `vite.config` with the Panda CSS PostCSS plugin (removes Tailwind if present)
+6. Remove the default Tailwind CSS setup (`app/app.css` and its import)
+7. Set up `app/app.css` with Panda layers and import it in `app/root.tsx`
+8. Update `tsconfig.json` — add `styled-system/**/*` to `include` and an `@/ui/*` path alias
+9. Create a `components/dreamy-provider.tsx` wrapper component
+10. Wire up `DreamyProvider` in `app/root.tsx` with SSR color mode
+11. Add recommended starter components (`button`, `flex`, `text`, `heading`)
+12. Run Panda CSS codegen to generate `styled-system`
 
 ## Manual Installation
 
-### 1. Follow the Panda CSS installation guide
-
-Follow the [Panda CSS installation guide](https://panda-css.com/docs/installation/react-router) to set up Panda CSS in your React Router project.
-
-### 2. Install Dreamy UI
-
-Install Dreamy UI in your project:
+### 1. Install dependencies
 
 ```bash
-pnpm install @dreamy-ui/react @dreamy-ui/panda-preset motion
+pnpm add -D @pandacss/dev @pandacss/postcss @dreamy-ui/cli
+pnpm add @dreamy-ui/react @dreamy-ui/panda-preset motion
 ```
 
-### 2. Configure panda.config.ts
+### 2. Configure Vite PostCSS
 
-Configure environment and panda presets in your `panda.config.ts` file:
+Add the Panda CSS PostCSS plugin to `vite.config.ts`:
 
-```ts {1, 10-16}
-import createDreamyPreset, { dreamyPlugin } from "@dreamy-ui/panda-preset";
-import { defineConfig } from "@pandacss/dev";
+```ts {1, 5-9}
+import pandacss from "@pandacss/dev/postcss";
 
 export default defineConfig({
-	...,
-	preflight: true,
-    jsxFramework: "react",
-    jsxStyleProps: "all",
-    outExtension: "js",
-    include: [
-        "./src/**/*.{js,jsx,ts,tsx}",
-    ],
-    presets: [
-        createDreamyPreset()
-    ],
-    plugins: [dreamyPlugin],
-    theme: {
-		extend: {}
-	},
-	globalCss: {
-		extend: {}
-	},
-	staticCss: {
-		extend: {}
+	// ...
+	css: {
+		postcss: {
+			plugins: [pandacss]
+		}
 	}
 });
 ```
 
-### 3. Add styled-system alias to tsconfig.json
+### 3. Configure `panda.config.ts`
 
-Add the following alias to your `tsconfig.json` file:
+```ts {1-3, 7-16}
+import createDreamyPreset, { dreamyPlugin } from "@dreamy-ui/panda-preset";
+import { patterns } from "./components/patterns";
+import { recipes } from "./components/recipes";
 
-```json {9}
+export default defineConfig({
+	// ...
+	jsxFactory: "dreamy",
+	include: ["./app/**/*.{js,jsx,ts,tsx}"],
+	presets: [createDreamyPreset()],
+	plugins: [dreamyPlugin()],
+	patterns,
+	theme: {
+		extend: {
+			recipes
+		}
+	}
+});
+```
+
+Add components first with `npx dreamy add button` so the `components/patterns` and `components/recipes` index files exist.
+
+### 4. Set up CSS layers
+
+Create or update `app/app.css`:
+
+```css
+@layer reset, base, tokens, recipes, utilities;
+```
+
+Import it at the top of `app/root.tsx`:
+
+```tsx
+import "./app.css";
+```
+
+### 5. Add a `prepare` script
+
+```json
 {
-	"include": [
-		"**/*.ts",
-		"**/*.tsx",
-		"**/.server/**/*.ts",
-		"**/.server/**/*.tsx",
-		"**/.client/**/*.ts",
-		"**/.client/**/*.tsx",
-		"styled-system/*"
-	],
-	...
+	"scripts": {
+		"prepare": "panda codegen"
+	}
 }
 ```
 
-{/* Add the following alias to your `vite.config.ts` file:
+### 6. Update `tsconfig.json`
 
-```ts {1, 4-8}
-import { resolve } from "node:path";
-
-export default defineConfig({
-    resolve: {
-        alias: {
-            "styled-system": resolve(__dirname, "./styled-system")
-        }
-    },
-    ...
-})
-``` */}
-
-### 4. Add Dreamy Provider
-
-After configuring Panda CSS, finally we can add the main Dreamy Provider to your `app/root.tsx`.
-
-(Optional, only for Framework mode) To fix color mode flashing on document request, we need to get color mode from the loader, to render the correct color mode.
-
-```tsx {2-4, 5, 9-13, 15, 18, 23, 32-39}
-...
-import { DreamyProvider } from "@dreamy-ui/react";
-import { getColorModeHTMLProps, getSSRColorMode } from "@dreamy-ui/react/rsc";
-import type { Route } from "./+types/root";
-import { useRouteLoaderData } from "react-router";
-
-// Loaders only work for Framework mode,
-// you can skip this, if you are using React Router as library mode.
-export function loader({ request }: Route.LoaderArgs) {
-    return {
-        colorMode: getSSRColorMode(request)
-    };
+```json {3-4, 9}
+{
+	"compilerOptions": {
+		"paths": {
+			"@/ui/*": ["./components/ui/*"]
+		}
+	},
+	"include": [
+		// ...
+		"styled-system/**/*"
+	]
 }
+```
+
+### 7. Add `DreamyProvider`
+
+Create `components/dreamy-provider.tsx`:
+
+```tsx
+"use client";
+
+import { DreamyProvider as BaseDreamyProvider, type ColorMode } from "@dreamy-ui/react";
+import { getColorModeHTMLProps, getSSRColorMode } from "@dreamy-ui/react/rsc";
 
 const domMax = () => import("motion/react").then((mod) => mod.domMax);
 
-export function Layout({ children }: { children: React.ReactNode }) {
-    const { colorMode } = useRouteLoaderData<Route.ComponentProps["loaderData"]>("root") ?? {}; 
-
-    return (
-        <html
-            lang="en"
-            {...getColorModeHTMLProps(colorMode)}
-        >
-            <head>
-                <meta charSet="utf-8" />
-                <meta name="viewport" content="width=device-width, initial-scale=1" />
-                <Meta />
-                <Links />
-            </head>
-            <body>
-                <DreamyProvider
-                    motionFeatures={domMax}
-                    colorMode={colorMode}
-                    motionStrict
-                    useUserPreferenceColorMode
-                >
-                    {children}
-                </DreamyProvider>
-                <ScrollRestoration />
-                <Scripts />
-            </body>
-        </html>
-    );
+interface DreamyProviderProps {
+	children: React.ReactNode;
+	colorMode?: ColorMode;
 }
 
-...
+export function DreamyProvider({ children, colorMode }: DreamyProviderProps) {
+	return (
+		<BaseDreamyProvider
+			motionFeatures={domMax}
+			colorMode={colorMode}
+			motionStrict
+			useUserPreferenceColorMode
+		>
+			{children}
+		</BaseDreamyProvider>
+	);
+}
+
+export { getColorModeHTMLProps, getSSRColorMode };
 ```
 
-### 5. Start using Dreamy UI
+Wire it up in `app/root.tsx` with SSR color mode (Framework mode):
 
-Let's write some Dreamy UI in `app/routes/_index.tsx`.
+```tsx {1-3, 5-7, 10, 13, 16}
+import { DreamyProvider, getColorModeHTMLProps, getSSRColorMode } from "../components/dreamy-provider";
+import type { Route } from "./+types/root";
+import { useRouteLoaderData } from "react-router";
 
-```tsx {1, 4}
-import { Button } from "@dreamy-ui/react";
+export function loader({ request }: Route.LoaderArgs) {
+	return { colorMode: getSSRColorMode(request) };
+}
+
+export function Layout({ children }: { children: React.ReactNode }) {
+	const { colorMode } = useRouteLoaderData<Route.ComponentProps["loaderData"]>("root") ?? {};
+
+	return (
+		<html lang="en" {...getColorModeHTMLProps(colorMode)}>
+			{/* ... */}
+			<body>
+				<DreamyProvider colorMode={colorMode}>{children}</DreamyProvider>
+				{/* ... */}
+			</body>
+		</html>
+	);
+}
+```
+
+### 8. Add components and run codegen
+
+```bash
+npx dreamy add button flex text heading
+npx panda codegen
+```
+
+### 9. Start using Dreamy UI
+
+```tsx {1, 5}
+import { Button } from "@/ui";
 
 export default function Index() {
-    return <Button>Hello World</Button>;
+	return <Button>Hello World</Button>;
 }
 ```

@@ -3,15 +3,14 @@
 import {
     MenuDescendantsProvider,
     MenuProvider,
-    type UseMenuItemProps,
+    type PositioningProps,
     type UseMenuProps,
     callAllHandlers,
     runIfFn,
     useActionKey,
     useMenu,
     useMenuContext,
-    useMenuItem,
-    type PositioningProps
+    useMenuItem
 } from "@dreamy-ui/react";
 import { Children, type ReactElement, type ReactNode, cloneElement, useEffect } from "react";
 import { BiChevronRight } from "react-icons/bi";
@@ -42,12 +41,17 @@ function mergeRefs<T>(...refs: (React.Ref<T> | undefined | null)[]): React.RefCa
 
 const { withProvider, withContext } = createStyleContext(menu);
 
-export interface MenuProps extends UseMenuProps<PopoverProps> {
+export interface MenuProps extends Omit<UseMenuProps<PopoverProps>, "popoverProps"> {
     /**
      * Positioning configuration for the menu dropdown.
      * @default { placement: "bottom" }
      */
     positioning?: PositioningProps;
+    /**
+     * Props forwarded to the internal `Popover.Root`.
+     * Set `usePortal` to `false` to render the menu in place.
+     */
+    popoverProps?: Omit<PopoverProps, "positioning">;
     children?: ReactNode;
     className?: string;
 }
@@ -78,6 +82,10 @@ export const Root = withProvider(function MenuRoot({
                     positioning={{ placement: "bottom", ...positioning }}
                     reduceMotion={ctx.reduceMotion}
                     {...props.popoverProps}
+                    portalProps={{
+                        zIndex: "var(--z-index-dropdown)",
+                        ...props.popoverProps?.portalProps
+                    }}
                 >
                     {children}
                 </PopoverRoot>
@@ -253,6 +261,7 @@ export const TriggerItem = withContext(function MenuTriggerItem(props: MenuTrigg
                 onClose={nestedCtx.onClose}
                 onOpen={nestedCtx.onOpen}
                 positioning={{ placement: "right-start", ...positioning }}
+                portalProps={{ zIndex: "var(--z-index-dropdown)" }}
                 reduceMotion={nestedCtx.reduceMotion}
                 returnFocusOnClose={false}
             >

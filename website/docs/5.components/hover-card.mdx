@@ -58,6 +58,23 @@ Hover over the username to see a profile card.
 </HoverCard.Root>
 ```
 
+### Automatic overlay stacking
+
+Hover Card uses the shared [Portal](/docs/components/portal) stack at the `popover` layer (1500). Inside another Dreamy UI overlay, it becomes a nested scope and adds that layer to its parent base automatically. Keep the portal enabled—no manual layer or z-index workaround is needed.
+
+Use `portalProps.containerRef` only to target the non-scrolling root of a native or third-party overlay.
+
+```tsx
+<HoverCard.Root>
+    <HoverCard.Trigger>
+        <Button variant="link">@dreamy_ui</Button>
+    </HoverCard.Trigger>
+    <HoverCard.Content>
+        <HoverCard.Body>Automatically stacked content</HoverCard.Body>
+    </HoverCard.Content>
+</HoverCard.Root>
+```
+
 ### With Header and Footer
 
 Use `HoverCard.Header` and `HoverCard.Footer` for structured layouts.

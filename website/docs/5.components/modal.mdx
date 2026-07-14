@@ -44,6 +44,25 @@ export default function BasicModal() {
 }
 ```
 
+### Automatic overlay stacking
+
+Modal uses the shared [Portal](/docs/components/portal) stack at the `modal` layer (1400). Portalled controls inside it stay above the Modal automatically: for example, a Select adds its `dropdown` layer (1000) and resolves to `calc(1400 + 1000)`.
+
+Nested scopes stay inside their parent stacking context, so a later sibling Modal covers an earlier Modal and all of its open menus, selects, popovers, and tooltips. No portal disabling or z-index workaround is needed. Use `portalProps.containerRef` only when the Modal must attach to a native or third-party overlay root.
+
+```tsx
+const overlayRef = useRef<HTMLElement>(null);
+
+<Modal.Root
+    isOpen={isOpen}
+    onClose={onClose}
+    portalProps={{ containerRef: overlayRef }}
+>
+    <Modal.Overlay />
+    <Modal.Content>Modal content</Modal.Content>
+</Modal.Root>
+```
+
 ### Customizing Modal Size
 
 <Wrapper>

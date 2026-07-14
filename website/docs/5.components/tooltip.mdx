@@ -108,20 +108,20 @@ You can control the arrow of the tooltip by using the `hasArrow` and `arrowSize`
 </Tooltip>
 ```
 
-### Disable Portal
+### Automatic overlay stacking
 
-In some cases you might want to disable the portal and render the tooltip directly in the parent component.
+Tooltip uses the shared [Portal](/docs/components/portal) stack at the `tooltip` layer (1800). Inside a Dreamy UI Modal, Popover, or other overlay, it becomes a nested scope and adds that layer to its parent base automatically. Keep the portal enabled—no manual layer or z-index workaround is needed.
 
-You may use it in a sticky header for example, as with portal, the tooltip will look weird.
+Use `portalProps.containerRef` only to target the non-scrolling root of a native or third-party overlay.
 
 <Wrapper>
-	<Tooltip content="I am rendered directly in the parent component" disablePortal>
-		<Text w="fit-content">Disable portal</Text>
+	<Tooltip content="Automatically stacked tooltip">
+		<Text w="fit-content">Hover me</Text>
 	</Tooltip>
 </Wrapper>
 
 ```tsx
-<Tooltip content="I am rendered directly in the parent component" disablePortal>
-	<Text>Disable portal</Text>
+<Tooltip content="Automatically stacked tooltip">
+	<Text>Hover me</Text>
 </Tooltip>
 ```

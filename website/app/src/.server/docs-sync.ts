@@ -147,44 +147,55 @@ async function upsertDocPage(filepath: string, content: string) {
     const pageSlug = `/docs/${sectionSlug}/${filenameToSlug(pageName)}`;
     const contentHash = hashContent(content);
 
-    await prisma.docPage.upsert({
-        where: { filepath },
-        create: {
-            sectionId: section.id,
-            index: pageIndex,
-            filename: pageFilename,
-            name: pageName,
-            title: pageTitle,
-            description: pageDescription,
-            slug: pageSlug,
-            filepath,
-            content,
-            mdxContent: JSON.stringify(mdxContent),
-            mdxFrontmatterDescription: mdxFrontmatterDescription
-                ? JSON.stringify(mdxFrontmatterDescription)
-                : null,
-            headings: JSON.stringify(headings),
-            searchText: extractSearchText(content),
-            contentHash
-        },
-        update: {
-            sectionId: section.id,
-            index: pageIndex,
-            filename: pageFilename,
-            name: pageName,
-            title: pageTitle,
-            description: pageDescription,
-            slug: pageSlug,
-            content,
-            mdxContent: JSON.stringify(mdxContent),
-            mdxFrontmatterDescription: mdxFrontmatterDescription
-                ? JSON.stringify(mdxFrontmatterDescription)
-                : null,
-            headings: JSON.stringify(headings),
-            searchText: extractSearchText(content),
-            contentHash
-        }
+    const pageData = {
+        sectionId: section.id,
+        index: pageIndex,
+        filename: pageFilename,
+        name: pageName,
+        title: pageTitle,
+        description: pageDescription,
+        slug: pageSlug,
+        filepath,
+        content,
+        mdxContent: JSON.stringify(mdxContent),
+        mdxFrontmatterDescription: mdxFrontmatterDescription
+            ? JSON.stringify(mdxFrontmatterDescription)
+            : null,
+        headings: JSON.stringify(headings),
+        searchText: extractSearchText(content),
+        contentHash
+    };
+
+    const existingByFilepath = await prisma.docPage.findUnique({
+        where: { filepath }
     });
+
+    if (existingByFilepath) {
+        await prisma.docPage.update({
+            where: { id: existingByFilepath.id },
+            data: pageData
+        });
+    } else {
+        const existingBySectionFilename = await prisma.docPage.findUnique({
+            where: {
+                sectionId_filename: {
+                    sectionId: section.id,
+                    filename: pageFilename
+                }
+            }
+        });
+
+        if (existingBySectionFilename) {
+            await prisma.docPage.update({
+                where: { id: existingBySectionFilename.id },
+                data: pageData
+            });
+        } else {
+            await prisma.docPage.create({
+                data: pageData
+            });
+        }
+    }
 
     return {
         filename: pageFilename,

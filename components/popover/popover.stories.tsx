@@ -33,6 +33,23 @@ export function Base() {
     );
 }
 
+export function CustomPortalContainer() {
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    return (
+        <div ref={containerRef}>
+            <Popover.Root portalProps={{ containerRef }}>
+                <Popover.Trigger>
+                    <Button variant="primary">Open contained Popover</Button>
+                </Popover.Trigger>
+                <Popover.Content>
+                    <Popover.Body>Rendered in the supplied portal container.</Popover.Body>
+                </Popover.Content>
+            </Popover.Root>
+        </div>
+    );
+}
+
 export function ControlledPopover() {
     const { isOpen, onOpen, onClose } = useControllable();
 
