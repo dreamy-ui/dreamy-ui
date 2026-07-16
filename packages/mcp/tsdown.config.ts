@@ -20,7 +20,7 @@ export default defineConfig({
     },
     // splitting: false,
     env: {
-        DREAMY_UI_BASE_URL: process.env.DREAMY_UI_BASE_URL ?? "http://localhost:3000"
+        DREAMY_UI_BASE_URL: process.env.DREAMY_UI_BASE_URL ?? "https://dreamy-ui.com"
     },
     clean: false,
     dts: false,

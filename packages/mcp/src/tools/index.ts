@@ -1,17 +1,27 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { Tool } from "../lib/types.js";
 import { getComponentTool } from "./get-component.js";
-import { getComponentsTool } from "./get-components.js";
-import { getComponentExampleTool } from "./get-component-example.js";
+import { getComponentExampleTool, getComponentExamplesTool } from "./get-component-example.js";
+import { getComponentSourceTool } from "./get-component-source.js";
+import { getComponentsTool, listComponentsTool } from "./get-components.js";
 
-const tools: Tool[] = [getComponentTool, getComponentsTool, getComponentExampleTool];
+const tools: Tool[] = [
+	listComponentsTool,
+	getComponentTool,
+	getComponentExamplesTool,
+	getComponentSourceTool,
+	// Backward-compatible aliases
+	getComponentsTool,
+	getComponentExampleTool
+];
 
 const registeredToolCache = new Map<string, Tool>();
 
 function getDefaultToolContext(toolName: string) {
 	switch (toolName) {
+		case "list_components":
 		case "get_components":
-			return { components: [] };
+			return { componentIds: [], components: [] };
 		default:
 			return { componentIds: [] };
 	}
@@ -19,7 +29,7 @@ function getDefaultToolContext(toolName: string) {
 
 export async function initializeTools(server: McpServer) {
 	await Promise.all(
-		tools.map(async (tool) => {
+		tools.map(async function (tool) {
 			if (registeredToolCache.has(tool.name)) {
 				return;
 			}

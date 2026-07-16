@@ -18,6 +18,7 @@ export type ComponentList = ComponentIndexItem[];
 
 export interface ExtendedComponentIndexItem extends ComponentIndexItem {
 	installCommand: string;
+	description?: string;
 }
 
 export interface ComponentIndexItem {
@@ -63,7 +64,7 @@ export interface PatternItem {
 	file: RegistryFile;
 }
 
-const DREAMY_BASE_URL = process.env.DREAMY_UI_BASE_URL || "http://localhost:3000";
+const DREAMY_BASE_URL = process.env.DREAMY_UI_BASE_URL || "https://dreamy-ui.com";
 
 function createDreamyUrl(path: string): string {
 	return `${DREAMY_BASE_URL}${path}`;
@@ -149,13 +150,18 @@ export async function fetchPatternSafe(patternId: string): Promise<SafeFetchResu
 	);
 }
 
-export async function getComponentExampleSafe(
-	component: string
-): Promise<SafeFetchResult<string>> {
+export async function fetchDocsSafe(component: string): Promise<SafeFetchResult<string>> {
 	return fetchTextSafe(
 		createDreamyUrl(`/docs/components/${component}.mdx`),
 		`fetch documentation for component ${component}`
 	);
+}
+
+/** @deprecated Use fetchDocsSafe */
+export async function getComponentExampleSafe(
+	component: string
+): Promise<SafeFetchResult<string>> {
+	return fetchDocsSafe(component);
 }
 
 function pascalToKebab(value: string): string {
@@ -196,7 +202,9 @@ export async function getAllComponentNames(): Promise<string[]> {
 		return [];
 	}
 
-	return result.data.map((component) => component.id);
+	return result.data.map(function (component) {
+		return component.id;
+	});
 }
 
 export async function getAllComponents(): Promise<ExtendedComponentIndexItem[]> {
@@ -207,10 +215,12 @@ export async function getAllComponents(): Promise<ExtendedComponentIndexItem[]> 
 		return [];
 	}
 
-	return result.data.map((component) => ({
-		...component,
-		installCommand: `dreamy add ${component.id}`
-	}));
+	return result.data.map(function (component) {
+		return {
+			...component,
+			installCommand: `dreamy add ${component.id}`
+		};
+	});
 }
 
 export async function getComponentIndex(): Promise<ComponentIndexItem[]> {
@@ -222,4 +232,79 @@ export async function getComponentIndex(): Promise<ComponentIndexItem[]> {
 	}
 
 	return result.data;
+}
+
+function extractFrontmatterDescription(mdx: string): string | undefined {
+	const match = mdx.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+
+	if (!match) {
+		return undefined;
+	}
+
+	const descriptionLine = match[1]
+		.split(/\r?\n/)
+		.find(function (line) {
+			return line.startsWith("description:");
+		});
+
+	if (!descriptionLine) {
+		return undefined;
+	}
+
+	return descriptionLine.replace(/^description:\s*/, "").trim();
+}
+
+let descriptionsCache: Map<string, string> | null = null;
+let descriptionsPromise: Promise<Map<string, string>> | null = null;
+
+/**
+ * Lazily load docs descriptions for the component catalog (cached).
+ */
+export async function getComponentDescriptions(
+	componentIds: string[]
+): Promise<Map<string, string>> {
+	if (descriptionsCache) {
+		return descriptionsCache;
+	}
+
+	if (descriptionsPromise) {
+		return descriptionsPromise;
+	}
+
+	descriptionsPromise = (async function () {
+		const entries = await Promise.all(
+			componentIds.map(async function (id) {
+				const result = await fetchDocsSafe(id);
+
+				if (!result.ok) {
+					return null;
+				}
+
+				const description = extractFrontmatterDescription(result.data);
+
+				if (!description) {
+					return null;
+				}
+
+				return [id, description] as const;
+			})
+		);
+
+		const map = new Map<string, string>();
+
+		for (const entry of entries) {
+			if (entry) {
+				map.set(entry[0], entry[1]);
+			}
+		}
+
+		descriptionsCache = map;
+		return map;
+	})();
+
+	return descriptionsPromise;
+}
+
+export function getBaseUrl(): string {
+	return DREAMY_BASE_URL;
 }

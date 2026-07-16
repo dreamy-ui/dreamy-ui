@@ -19,10 +19,19 @@ The Dreamy UI MCP exposes the following tools to AI agents:
 
 ### Component Tools
 
-- **`get_components`**: Get a complete list of all available components
-- **`get_component`**: Get detailed props, types, and configuration options
-  for any component
-- **`get_component_example`**: Get example code for a specific Dreamy UI component
+- **`list_components`**: List or search all components (id, name, description, recipe/pattern). Pass optional `query` to filter.
+- **`get_component`**: LLM-ready API reference — props, styling variants (`variant` / `size` / `scheme`), compound exports, install/import, and a primary usage example. **Start here** before writing UI code.
+- **`get_component_examples`**: All official docs code snippets for a component (variants, sizes, controlled mode, etc.).
+- **`get_component_source`**: Full component + recipe/pattern source when customizing internals.
+
+Aliases: `get_components` → `list_components`, `get_component_example` → `get_component_examples`.
+
+### Recommended agent flow
+
+1. `list_components` (optionally with `query`) to discover what exists
+2. `get_component` for each component you will use
+3. `get_component_examples` if you need more patterns
+4. `get_component_source` only when editing styles or internals
 
 ## Setup
 

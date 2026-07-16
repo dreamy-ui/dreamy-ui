@@ -1,8 +1,11 @@
 {
 	"mcpServers": {
 		"dreamy-ui": {
-			"command": "npx",
-			"args": ["-y", "@dreamy-ui/mcp"]
+			"command": "node",
+			"args": ["./packages/mcp/dist/stdio.mjs"],
+			"env": {
+				"DREAMY_UI_BASE_URL": "https://dreamy-ui.com"
+			}
 		}
 	}
 }

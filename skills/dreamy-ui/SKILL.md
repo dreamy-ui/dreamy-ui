@@ -25,17 +25,17 @@ Dreamy UI provides a **Model Context Protocol (MCP) server** that exposes author
 
 Before generating React UI code, you MUST:
 
-1. Query the Dreamy UI MCP server to discover available components.
-   - Use the MCP tool that lists components (e.g. `get_components`).
+1. Discover available components:
+   - `list_components` (optional `query` to search, e.g. `"dialog"`, `"form"`)
 
 2. For each component you intend to use:
-   - Fetch detailed component metadata (props, variants, types) (`get_component` tool).
-   - Fetch at least one official usage example (`get_component_example` tool).
+   - `get_component` — props, styling variants, compound API, install/import, primary usage example
+   - `get_component_examples` — when you need more official snippets
+   - `get_component_source` — only when customizing internals/recipes
 
 3. Treat MCP responses as the **single source of truth** for:
-   - Component APIs
-   - Props
-   - Variants
+   - Component APIs and props
+   - Variants / sizes / color schemes
    - Example usage patterns
 
 Do not guess component APIs when MCP data is available.
