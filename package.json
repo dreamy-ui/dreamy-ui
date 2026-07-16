@@ -29,7 +29,8 @@
 		"components": "bun --filter @dreamy-ui/registry build",
 		"components:format": "bun --filter @dreamy-ui/registry format",
 		"components:watch": "bun --filter @dreamy-ui/registry watch",
-		"clean:deps": "node scripts/clean-deps.mjs"
+		"clean:deps": "node scripts/clean-deps.mjs",
+		"test": "bun --filter @dreamy-ui/registry test"
 	},
 	"keywords": [],
 	"author": "imexoodeex",

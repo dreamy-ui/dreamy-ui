@@ -70,7 +70,7 @@ Change the Switch size.
 
 ### Controlled
 
-Use `isChecked` and `onChange`, `onChangeValue` to control the checkbox.
+Use `isChecked` with `onChange` or `onChangeValue` to control the Switch.
 
 <Wrapper>
 	<ControlledSwitch />
@@ -92,4 +92,48 @@ export function ControlledSwitch() {
         </>
     );
 }
+```
+
+### Props
+
+Switch is a compound control: a styled root `label`, a hidden checkbox input, a visual control track, a thumb, and an optional text label.
+
+| Prop | Forwarded to | Description |
+| --- | --- | --- |
+| `onChange` | hidden input | Native checkbox change event |
+| `onChangeValue` | hidden input | Boolean callback when the value changes |
+| `name`, `value`, `tabIndex`, `autoFocus` | hidden input | Standard form input attributes |
+| `isChecked`, `defaultChecked`, `isIndeterminate` | hidden input | Checked state |
+| `isDisabled`, `isReadOnly`, `isRequired`, `isInvalid` | root + hidden input | Field state |
+| `inputProps` | hidden input | Extra props for the hidden checkbox |
+| `wrapperProps` | control `span` | Props for the visual track |
+| `labelProps` | label `span` | Props for the text label |
+| `thumbProps` | thumb | Props for the animated thumb |
+| `scheme`, `size` | root | Recipe variants |
+| other HTML/`data-*` props | root | Applied to the root `label` |
+
+Use top-level props such as `name` and `onChange` for the common case. Reach for `inputProps`, `wrapperProps`, `labelProps`, and `thumbProps` when you need to target a specific internal element.
+
+<Wrapper>
+	<Switch
+		name="notifications"
+		defaultChecked
+		inputProps={{ "aria-label": "Email notifications" }}
+		wrapperProps={{ "data-testid": "switch-control" }}
+		labelProps={{ className: "font-medium" }}
+	>
+		Email notifications
+	</Switch>
+</Wrapper>
+
+```tsx
+<Switch
+    name="notifications"
+    defaultChecked
+    inputProps={{ "aria-label": "Email notifications" }}
+    wrapperProps={{ "data-testid": "switch-control" }}
+    labelProps={{ className: "font-medium" }}
+>
+    Email notifications
+</Switch>
 ```

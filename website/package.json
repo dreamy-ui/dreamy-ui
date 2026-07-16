@@ -14,7 +14,6 @@
 		"db:migrate:dev": "prisma migrate dev",
 		"docs:sync": "cross-env NODE_ENV=production bun app/scripts/sync-docs.ts",
 		"compositions:host": "tsx reserve-compositions-host/server.ts",
-		"test": "tsx tests/render.test.tsx",
 		"test:e2e": "playwright test",
 		"story": "storybook dev -p 6006"
 	},

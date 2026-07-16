@@ -8,12 +8,21 @@
 // 	| "content";
 
 import type { Target, TargetAndTransition, Transition } from "motion";
+import type { HTMLAttributes, InputHTMLAttributes } from "react";
 
 // export type AnyFunction<T = any> = (...args: T[]) => any;
 
 export type Merge<M, N> = N extends Record<string, unknown> ? M : Omit<M, keyof N> & N;
 
 export type Status = "success" | "info" | "warning" | "error";
+
+export interface HtmlDataAttributes {
+    [K in `data-${string}`]?: string | undefined;
+}
+
+export interface InputElementProps extends InputHTMLAttributes<HTMLInputElement>, HtmlDataAttributes {}
+
+export interface SpanElementProps extends HTMLAttributes<HTMLSpanElement>, HtmlDataAttributes {}
 
 // export interface FocusableElement {
 // 	focus(options?: FocusOptions): void;

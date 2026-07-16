@@ -2,14 +2,27 @@ import { useCallbackRef } from "@/hooks";
 import { mergeRefs } from "@/hooks/use-merge-refs";
 import { useDefaultTransition, useReducedMotion } from "@/provider";
 import { type PropGetter, TRANSITION_EASINGS, callAllHandlers, cx } from "@/utils";
+import type { HtmlDataAttributes, InputElementProps, SpanElementProps } from "@/utils/types";
 import { ariaAttr, dataAttr } from "@/utils/attr";
 import { objectToDeps } from "@/utils/object";
 import { useFocusRing } from "@react-aria/focus";
 import type { MotionProps, Transition } from "motion/react";
 import type React from "react";
-import { type ReactNode, type Ref, useCallback, useId, useMemo, useRef, useState } from "react";
+import {
+    type ChangeEventHandler,
+    type ComponentPropsWithoutRef,
+    type KeyboardEventHandler,
+    type LabelHTMLAttributes,
+    type ReactNode,
+    type Ref,
+    useCallback,
+    useId,
+    useMemo,
+    useRef,
+    useState
+} from "react";
 import { useSafeLayoutEffect } from "../descendant/utils";
-import { type UserFeedbackProps, useField } from "../field/use-field";
+import { type UseFieldProps, useField } from "../field/use-field";
 
 export type SwitchIconProps = {
     "data-checked": string;
@@ -18,7 +31,7 @@ export type SwitchIconProps = {
     reduceMotion: boolean;
 };
 
-interface Props extends Record<string, any> {
+interface SwitchOwnProps {
     /**
      * Ref to the DOM node.
      */
@@ -28,14 +41,13 @@ interface Props extends Record<string, any> {
      */
     children?: ReactNode;
     /**
-     * Whether the Switch is disabled.
-     * @default false
-     */
-    isDisabled?: boolean;
-    /**
      * The icon to be displayed when the Switch is checked.
      */
     icon?: ReactNode | React.ReactElement;
+    /**
+     * Native change handler for the hidden checkbox input.
+     */
+    onChange?: ChangeEventHandler<HTMLInputElement>;
     /**
      * The callback function with value, instead of event, when the Switch is changed.
      */
@@ -43,28 +55,41 @@ interface Props extends Record<string, any> {
     /**
      * Props forwarded to the internal wrapper (`span`).
      */
-    wrapperProps?: Record<string, any>;
+    wrapperProps?: SpanElementProps;
     /**
-     * Props forwarded to the internal input (`input`).
+     * Props forwarded to the hidden checkbox input.
      */
-    inputProps?: Record<string, any>;
+    inputProps?: InputElementProps;
     /**
-    /**
-     * Props forwarded to the internal label (`label`).
+     * Props forwarded to the internal label (`span`).
      */
-    labelProps?: Record<string, any>;
+    labelProps?: SpanElementProps;
     /**
      * Props forwarded to the internal thumb (`div`).
      */
-    thumbProps?: Record<string, any>;
-}
-
-export interface UseSwitchProps extends Props, UserFeedbackProps {
+    thumbProps?: Partial<MotionProps>;
     reduceMotion?: boolean;
     isIndeterminate?: boolean;
     isChecked?: boolean;
     defaultChecked?: boolean;
+    name?: string;
+    value?: string;
+    tabIndex?: number;
+    autoFocus?: boolean;
+    onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
+    onKeyUp?: KeyboardEventHandler<HTMLInputElement>;
+    "aria-label"?: string;
+    "aria-labelledby"?: string;
+    "aria-invalid"?: boolean | "true" | "false" | "grammar" | "spelling";
 }
+
+type SwitchRootProps = Omit<
+    LabelHTMLAttributes<HTMLLabelElement>,
+    keyof SwitchOwnProps | keyof UseFieldProps<HTMLInputElement> | "onChange"
+> &
+    HtmlDataAttributes;
+
+export interface UseSwitchProps extends SwitchOwnProps, UseFieldProps<HTMLInputElement>, SwitchRootProps {}
 
 export interface UseSwitchThumbProps extends MotionProps {
     "data-part": "thumb";
@@ -105,6 +130,10 @@ export function useSwitch(props: UseSwitchProps = {}) {
         onChange,
         onChangeValue,
         tabIndex,
+        wrapperProps,
+        inputProps,
+        labelProps,
+        thumbProps,
         "aria-label": ariaLabel,
         "aria-labelledby": ariaLabelledBy,
         "aria-invalid": ariaInvalid,
@@ -203,10 +232,10 @@ export function useSwitch(props: UseSwitchProps = {}) {
                 "data-part": "control",
                 "data-focus-visible": dataAttr(isFocusVisible),
                 "aria-hidden": true,
-                ...otherProps.wrapperProps
+                ...wrapperProps
             };
         },
-        [isFocusVisible, otherProps.wrapperProps]
+        [isFocusVisible, wrapperProps]
     );
 
     const onKeyDown = useCallback(
@@ -259,8 +288,8 @@ export function useSwitch(props: UseSwitchProps = {}) {
             "aria-describedby": ariaDescribedBy,
             "aria-disabled": ariaAttr(isDisabled),
             className: "peer",
-            ...(focusProps as any),
-            ...otherProps.inputProps
+            ...(focusProps as ComponentPropsWithoutRef<"input">),
+            ...inputProps
         };
     }, [
         handleChange,
@@ -289,15 +318,16 @@ export function useSwitch(props: UseSwitchProps = {}) {
         onKeyDown,
         onKeyUp,
         focusProps,
+        inputProps,
         ...objectToDeps(otherProps)
     ]);
 
     const getLabelProps: PropGetter = useCallback(
         () => ({
             "data-part": "label",
-            ...otherProps.labelProps
+            ...labelProps
         }),
-        [otherProps.labelProps]
+        [labelProps]
     );
 
     const defaultTransition = useDefaultTransition();
@@ -315,7 +345,7 @@ export function useSwitch(props: UseSwitchProps = {}) {
               };
 
         return {
-            ...otherProps.thumbProps,
+            ...thumbProps,
             "data-part": "thumb",
             layout,
             layoutDependency: isChecked || isIndeterminate,
@@ -325,7 +355,7 @@ export function useSwitch(props: UseSwitchProps = {}) {
     }, [
         id,
         labelId,
-        otherProps.thumbProps,
+        thumbProps,
         reduceMotion,
         isChecked,
         isIndeterminate,

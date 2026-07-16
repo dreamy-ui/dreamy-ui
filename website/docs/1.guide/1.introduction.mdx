@@ -17,9 +17,9 @@ Dreamy UI is built on top of [Panda CSS](https://panda-css.com/), which is a CSS
 As a developer, I've always been frustrated by needing to do some hacks to achieve what I wanted to do. That's why I made Dreamy UI modular. Every component, recipe and pattern is fully customizable. Multipart components are built on top of other base components, for eg. `<Autocomplete />` is built on top of `<Input />` and `<Popover />`. In this way, while modifying an `<Input />` recipe, you also modify the style of `<Autocomplete.Input />`, without having to copy and paste the code. This keeps the codebase cleaner, easier to maintain and extend and reduces redundancy.
 
 ```tsx
-<Autocomplete.Root>
-	<Autocomplete.Input /> // <input /> as base
-	<Autocomplete.Content items={[...]} /> // <Popover.Content /> as base
+<Autocomplete.Root items={[...]}>
+	<Autocomplete.Input /> // <Input /> as base
+	<Autocomplete.Content /> // <Popover.Content /> as base
 </Autocomplete.Root>
 ```
 

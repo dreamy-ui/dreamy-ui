@@ -1,0 +1,30 @@
+{
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"paths": {
+			"styled-system/*": ["../website/styled-system/*"],
+			"@dreamy-ui/react": ["../packages/react/src/index.ts"],
+			"@dreamy-ui/react/rsc": ["../packages/react/src/rsc.ts"],
+			"@/*": ["../packages/react/src/*"]
+		}
+	},
+	"include": [
+		"**/*.test.tsx",
+		"**/*.test-d.tsx",
+		"test/**/*",
+		"*/index.tsx",
+		"motion/index.tsx",
+		"visually-hidden/index.tsx",
+		"close-button/index.tsx",
+		"icon-button/index.tsx",
+		"button/index.tsx",
+		"box/index.tsx",
+		"flex/index.tsx",
+		"heading/index.tsx",
+		"text/index.tsx",
+		"icon/index.tsx",
+		"spinner/index.tsx",
+		"kbd/index.tsx",
+		"transitions/index.tsx"
+	]
+}

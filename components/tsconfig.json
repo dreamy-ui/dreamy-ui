@@ -1,9 +1,16 @@
 {
-	"include": ["*/index.tsx", "*/**/*.ts", "scripts/**/*"],
+	"include": [
+		"*/index.tsx",
+		"*/**/*.ts",
+		"*/**/*.test.tsx",
+		"*/**/*.test-d.tsx",
+		"scripts/**/*",
+		"test/**/*"
+	],
 	"exclude": ["**/*.stories.tsx"],
 	"compilerOptions": {
 		"lib": ["DOM", "DOM.Iterable", "ES2022"],
-		"types": ["node"],
+		"types": ["node", "vitest/globals", "@testing-library/jest-dom"],
 		"isolatedModules": true,
 		"esModuleInterop": true,
 		"jsx": "react-jsx",
@@ -19,7 +26,8 @@
 		"paths": {
 			"styled-system/*": ["../website/styled-system/*"],
 			"@dreamy-ui/react": ["../packages/react/src/index.ts"],
-			"@dreamy-ui/react/rsc": ["../packages/react/src/rsc.ts"]
+			"@dreamy-ui/react/rsc": ["../packages/react/src/rsc.ts"],
+			"@/*": ["../packages/react/src/*"]
 		}
 	}
 }

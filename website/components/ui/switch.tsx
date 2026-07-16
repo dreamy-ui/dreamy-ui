@@ -2,12 +2,14 @@
 
 import { type UseSwitchProps, type UseSwitchThumbProps, useSwitch } from "@dreamy-ui/react";
 
-import { dreamy } from "styled-system/jsx";
+import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type SwittchVariantProps, swittch } from "styled-system/recipes";
 import { MotionBox } from "./motion";
 import { VisuallyHiddenInput } from "./visually-hidden";
+
 export interface SwitchProps
-    extends Omit<UseSwitchProps, keyof SwittchVariantProps>,
+    extends Omit<HTMLDreamyProps<"label">, "size" | "onChange" | "ref" | "color">,
+        Omit<UseSwitchProps, keyof SwittchVariantProps>,
         SwittchVariantProps {}
 
 const StyledSwitch = dreamy("label", swittch);
