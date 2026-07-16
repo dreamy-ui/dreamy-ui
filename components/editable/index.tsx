@@ -30,7 +30,6 @@ const { withProvider, withContext } = createStyleContext(editable);
  * @see Docs https://dreamy-ui.com/docs/components/editable
  */
 export const Root = withProvider(function EditableRoot(props: EditableProps) {
-    const { ref } = props;
     const context = useEditable(props);
 
     const { isEditing, onSubmit, onCancel, onEdit } = context;
@@ -44,7 +43,7 @@ export const Root = withProvider(function EditableRoot(props: EditableProps) {
 
     return (
         <EditableProvider value={context}>
-            <Box {...context.getRootProps({ ref })}>{children}</Box>
+            <Box {...context.getRootProps({ ref: props.ref })}>{children}</Box>
         </EditableProvider>
     );
 }, "root");

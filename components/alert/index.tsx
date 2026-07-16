@@ -34,10 +34,12 @@ const StyledAlert = dreamy("div", alert);
  */
 export function Alert(props: AlertProps) {
     const { status = "info", title, description, ...rest } = props;
+    const role = status === "error" ? "alert" : "status";
 
     return (
         <StyledAlert
             data-status={status}
+            role={role}
             {...rest}
         >
             <Text

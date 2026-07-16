@@ -78,6 +78,7 @@ export function Ripple(props: RippleProps) {
                         damping: isEdgingThisRipple ? 25 : 20
                     }}
                     {...motionProps}
+                    aria-hidden="true"
                     data-part="ripple"
                 />
             </AnimatePresence>

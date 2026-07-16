@@ -47,6 +47,30 @@ describe("IconButton", () => {
         expect(onClick).toHaveBeenCalledTimes(1);
     });
 
+    it("activates with Enter and Space and keeps a single accessible name", async () => {
+        const user = userEvent.setup();
+        const onClick = vi.fn();
+
+        render(
+            <IconButton
+                aria-label="Edit profile"
+                icon={<EditIcon />}
+                onClick={onClick}
+            />
+        );
+
+        const button = screen.getByRole("button", { name: "Edit profile" });
+        const icon = screen.getByTestId("edit-icon");
+
+        expect(icon).not.toHaveAttribute("aria-label");
+        expect(screen.getAllByRole("button", { name: "Edit profile" })).toHaveLength(1);
+
+        button.focus();
+        await user.keyboard("{Enter}");
+        await user.keyboard(" ");
+        expect(onClick).toHaveBeenCalledTimes(2);
+    });
+
     it("does not activate when disabled", async () => {
         const user = userEvent.setup();
         const onClick = vi.fn();

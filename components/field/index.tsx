@@ -148,12 +148,12 @@ const StyledField = dreamy("div", field);
  *
  * @See Docs https://dreamy-ui.com/docs/components/field
  */
-export function Root({ children, label, hint, error, ref, ...props }: FieldProps) {
+export function Root({ children, label, hint, error, ...props }: FieldProps) {
     const { getRootProps, htmlProps: _, ...context } = useFieldProvider(props);
 
     return (
         <FieldProvider value={context}>
-            <StyledField {...getRootProps({ ref })}>
+            <StyledField {...getRootProps({ ref: props.ref })}>
                 {label ? <Label>{label}</Label> : null}
                 {children}
                 {hint && <Hint>{hint}</Hint>}

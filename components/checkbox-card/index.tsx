@@ -30,9 +30,8 @@ export interface CheckboxCardRootProps
  * @See Docs https://dreamy-ui.com/docs/components/checkbox-card
  */
 export function Root(props: CheckboxCardRootProps) {
-    const { ref } = props;
     const { children, ...rest } = props;
-    const context = useCheckbox({ ...rest, isCard: true, ref });
+    const context = useCheckbox({ ...rest, isCard: true });
     const rootProps = context.getRootProps();
 
     return (

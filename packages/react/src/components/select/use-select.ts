@@ -18,10 +18,12 @@ import {
     useState
 } from "react";
 import { flushSync } from "react-dom";
-import { type UserFeedbackProps, useField } from "../field";
-import type { FocusableElement } from "../modal";
+import { type UserFeedbackProps, useFieldProps } from "../field";
+import type { FocusableElement } from "@/utils/types";
 
-interface SelectContext extends Omit<UseSelectReturn, "rest"> {}
+interface SelectContext extends Omit<UseSelectReturn, "rest"> {
+    renderItem?: (item: SelectOption) => ReactNode;
+}
 
 export const [SelectProvider, useSelectContext] = createContext<SelectContext>({
     name: "SelectContext",
@@ -154,16 +156,18 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
     } = props;
 
     const {
-        disabled: isDisabledField = false,
-        required: isRequiredField = false,
+        isDisabled: isDisabledField = false,
+        isRequired: isRequiredField = false,
+        isInvalid: isInvalidField = false,
         id: fieldId,
         onBlur: onBlurField,
         onFocus: onFocusField,
         "aria-describedby": ariaDescribedByField
-    } = useField(props);
+    } = useFieldProps(props);
 
     const resolvedIsDisabled = isDisabled ?? isDisabledField;
     const resolvedIsRequired = isRequired ?? isRequiredField;
+    const resolvedIsInvalid = isInvalid ?? isInvalidField;
 
     const { isOpen, onOpen, onClose, onToggle } = useControllable({
         isOpen: isOpenProp,
@@ -409,12 +413,12 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
                 ...rest,
                 "data-slot": "trigger",
                 id: propsId ?? fieldId,
-                "aria-invalid": ariaAttr(isInvalid),
+                "aria-invalid": ariaAttr(resolvedIsInvalid),
                 "aria-required": ariaAttr(resolvedIsRequired),
                 "aria-describedby": ariaDescribedByField,
                 "aria-expanded": isOpen,
                 "aria-haspopup": "listbox",
-                "data-invalid": dataAttr(isInvalid),
+                "data-invalid": dataAttr(resolvedIsInvalid),
                 ref: mergeRefs(triggerRef, ref),
                 "data-placeholder-shown": dataAttr(selectedKeys.length === 0),
                 disabled: resolvedIsDisabled,
@@ -429,7 +433,7 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
             };
         },
         [
-            isInvalid,
+            resolvedIsInvalid,
             resolvedIsRequired,
             ariaDescribedByField,
             fieldId,
@@ -454,6 +458,7 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
             const { ref, onMouseDown, style, ...rest } = props;
             return {
                 ...rest,
+                role: "listbox",
                 ref: mergeRefs(popoverRef, ref),
                 onMouseDown: (e: MouseEvent) => {
                     e.preventDefault();
@@ -478,6 +483,7 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
     const getItemProps = useCallback(
         (props: Record<string, any> = {}) => {
             const { ref, value, index, disabled, onPointerEnter, onClick, ...rest } = props;
+            const isSelected = selectedKeys.includes(value);
 
             return {
                 ...rest,
@@ -487,9 +493,11 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
                 value,
                 disabled,
                 type: "button",
+                role: "option",
+                "aria-selected": isSelected,
                 "data-selected-strategy": selectedStrategy,
                 "data-focused": dataAttr(focusedIndex === index),
-                "data-selected": dataAttr(selectedKeys.includes(value)),
+                "data-selected": dataAttr(isSelected),
                 onPointerEnter: callAllHandlers(onPointerEnter, () => {
                     setFocusedIndex(index);
                 }),
@@ -542,6 +550,7 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
     const getClearButtonProps: PropGetter = useCallback((props = {}) => {
         const { ref, onClick, ...rest } = props;
         return {
+            "aria-label": "Clear selection",
             ...rest,
             ref,
             type: "button",
@@ -559,7 +568,7 @@ export function useSelect<T extends boolean, P extends Record<string, any>>(
         items,
         triggerRef,
         reduceMotion,
-        isInvalid,
+        isInvalid: resolvedIsInvalid,
         isDisabled: resolvedIsDisabled,
         isRequired: resolvedIsRequired,
         hiddenSelectProps,
@@ -655,7 +664,7 @@ export function useHiddenSelect(props: HiddenSelectProps) {
             autoComplete,
             disabled: isDisabled,
             required: isRequired,
-            invalid: isInvalid,
+            "aria-invalid": ariaAttr(isInvalid),
             value: isMultiple ? selectedKeys.map((k: any) => String(k)) : (selectedKeys[0] ?? ""),
             multiple: isMultiple,
             onChange: (e: React.ChangeEvent<HTMLSelectElement>) => {

@@ -55,4 +55,21 @@ describe("Progress", () => {
             "75"
         );
     });
+
+    it("exposes aria-valuetext when percent alone is unclear", () => {
+        render(
+            <Progress
+                aria-label="File upload"
+                aria-valuetext="3 of 4 files"
+                max={4}
+                min={0}
+                value={3}
+            />
+        );
+
+        expect(screen.getByRole("progressbar", { name: "File upload" })).toHaveAttribute(
+            "aria-valuetext",
+            "3 of 4 files"
+        );
+    });
 });

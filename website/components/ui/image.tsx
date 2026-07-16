@@ -1,7 +1,7 @@
 "use client";
 
 import { ariaAttr, callAllHandlers, objectToDeps, omit } from "@dreamy-ui/react";
-import { cloneElement, useMemo, useRef } from "react";
+import { cloneElement, useMemo, useRef, type SyntheticEvent } from "react";
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { image } from "styled-system/recipes";
 import type { SystemProperties } from "styled-system/types";
@@ -88,10 +88,10 @@ export function Image(props: ImageProps) {
                 loading={loading}
                 referrerPolicy={referrerPolicy}
                 {...shared}
-                onError={callAllHandlers((e: any) => {
+                onError={callAllHandlers((e: SyntheticEvent<HTMLImageElement>) => {
                     if (fallbackSrc && !hasErrored.current) {
                         hasErrored.current = true;
-                        e.target.src = fallbackSrc;
+                        e.currentTarget.src = fallbackSrc;
                     }
                 }, rest.onError)}
             />

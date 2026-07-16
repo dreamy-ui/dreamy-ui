@@ -110,7 +110,7 @@ export interface HoverCardTransitionProps extends Omit<MotionBoxProps, "children
 }
 
 function Transition(props: HoverCardTransitionProps) {
-    const { ref, children, arrowProps, ...rest } = props;
+    const { children, arrowProps, ...rest } = props;
 
     const { isOpen, hasArrow, reduceMotion } = usePopoverContext();
     const { popover } = useMotionVariants();
@@ -134,7 +134,6 @@ export interface HoverCardContentProps extends HoverCardTransitionProps {
 }
 
 export const Content = withContext(function HoverCardContent(props: HoverCardContentProps) {
-    const { ref } = props;
     const { rootProps, motionProps, ...contentProps } = props;
 
     const {
@@ -151,7 +150,13 @@ export const Content = withContext(function HoverCardContent(props: HoverCardCon
     const content = (
         <div {...getPopoverPositionerProps(rootProps)}>
             <Transition
-                {...getPopoverProps({ ...motionProps, ...contentProps, ref })}
+                {...getPopoverProps({
+                    // Hover cards frequently include interactive content; APG forbids
+                    // interactive tooltips, so default to a non-modal dialog.
+                    role: "dialog",
+                    ...motionProps,
+                    ...contentProps
+                })}
                 onAnimationComplete={callAll(onAnimationComplete, contentProps.onAnimationComplete)}
             />
         </div>
@@ -173,7 +178,7 @@ export const Content = withContext(function HoverCardContent(props: HoverCardCon
 export interface HoverCardHeaderProps extends HTMLDreamyProps<"header"> {}
 
 export const Header = withContext(function HoverCardHeader(props: HoverCardHeaderProps) {
-    const { getHeaderProps, size } = usePopoverContext();
+    const { getHeaderProps } = usePopoverContext();
 
     return (
         <Box
@@ -181,7 +186,7 @@ export const Header = withContext(function HoverCardHeader(props: HoverCardHeade
             {...getHeaderProps(props)}
         >
             {typeof props.children === "string" ? (
-                <Heading size={size ?? "md"}>{props.children}</Heading>
+                <Heading size="md">{props.children}</Heading>
             ) : (
                 props.children
             )}
@@ -213,8 +218,10 @@ export const Footer = withContext(function HoverCardFooter(props: HoverCardFoote
  * It must be an interactive element such as `button` or `a`.
  */
 export function Trigger(props: { children: React.ReactNode }) {
-    const child: any = Children.only(props.children);
+    const child = Children.only(props.children) as React.ReactElement<Record<string, unknown>> & {
+        ref?: React.Ref<Element>;
+    };
     const { getTriggerProps } = usePopoverContext();
 
-    return <>{cloneElement(child, getTriggerProps(child.props, child.ref))}</>;
+    return <>{cloneElement(child, getTriggerProps({ ...child.props, ref: child.ref }))}</>;
 }

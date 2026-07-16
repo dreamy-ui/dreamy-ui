@@ -52,7 +52,7 @@ export const Root = withProvider(function PaginationRoot(props: PaginationRootPr
         pageSize,
         siblingCount,
         onPageChange,
-        size: size as any
+        size: size as "sm" | "md" | "lg"
     });
 
     return (

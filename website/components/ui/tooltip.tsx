@@ -11,11 +11,12 @@ import {
     useReducedMotion,
     useTooltip
 } from "@dreamy-ui/react";
-import { AnimatePresence, type HTMLMotionProps, isValidMotionProp, m } from "motion/react";
-import { Children, Fragment, cloneElement, useMemo } from "react";
-import { createStyleContext, dreamy, isCssProperty, type HTMLDreamyProps } from "styled-system/jsx";
+import { AnimatePresence, type HTMLMotionProps } from "motion/react";
+import { Children, Fragment, cloneElement, useMemo, type ComponentType } from "react";
+import { createStyleContext, dreamy, type HTMLDreamyProps } from "styled-system/jsx";
 import { tooltip } from "styled-system/recipes";
 import { Box } from "./box";
+import { MotionBox, type MotionBoxProps } from "./motion";
 
 export interface TooltipProps
     extends Omit<HTMLDreamyProps<"div">, "content">,
@@ -76,13 +77,9 @@ const TooltipTrigger = withContext(function TooltipTriggerBase(props: HTMLDreamy
     return <dreamy.span {...props} />;
 }, "trigger");
 
-const StyledTooltip = withContext(
-    m.create(dreamy.div, {
-        shouldForwardProp: (prop, variantKeys) =>
-            isValidMotionProp(prop) || (!variantKeys.includes(prop) && !isCssProperty(prop))
-    }),
-    "content"
-);
+const StyledTooltip = withContext(function TooltipContent(props: MotionBoxProps) {
+    return <MotionBox {...props} />;
+}, "content") as ComponentType<MotionBoxProps>;
 
 /**
  * Tooltips display informative text when users hover, focus on, or tap an element.
@@ -123,7 +120,7 @@ export function Tooltip(props: TooltipProps) {
          * Ensure tooltip has only one child node
          */
         const child = Children.only(children) as React.ReactElement & {
-            ref?: React.Ref<any>;
+            ref?: React.Ref<Element>;
         };
         return cloneElement(child, tooltip.getTriggerProps(child.props as object));
     }, [shouldWrap, children, tooltip.getTriggerProps]);

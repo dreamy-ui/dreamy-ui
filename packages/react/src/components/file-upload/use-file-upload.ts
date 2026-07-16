@@ -2,7 +2,9 @@
 
 import { useCallbackRef } from "@/hooks";
 import { createContext } from "@/provider";
+import { ariaAttr } from "@/utils/attr";
 import { type ReactNode, useCallback, useEffect, useId, useRef, useState } from "react";
+import { useFieldProps } from "../field";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -277,13 +279,29 @@ export function useFileUpload(props: UseFileUploadProps = {}): UseFileUploadRetu
         locale = "en-US"
     } = props;
 
+    const {
+        id: fieldId,
+        isDisabled: fieldDisabled = false,
+        isRequired: fieldRequired = false,
+        isInvalid: fieldInvalid = false,
+        "aria-describedby": ariaDescribedByField
+    } = useFieldProps({
+        isDisabled: disabled || undefined,
+        isRequired: required || undefined,
+        isInvalid: invalid || undefined
+    });
+
+    const resolvedDisabled = disabled || fieldDisabled;
+    const resolvedRequired = required || fieldRequired;
+    const resolvedInvalid = invalid || fieldInvalid;
+
     const maxFileSize =
         typeof maxFileSizeRaw === "string" ? parseFileSize(maxFileSizeRaw) : maxFileSizeRaw;
     const minFileSize =
         typeof minFileSizeRaw === "string" ? parseFileSize(minFileSizeRaw) : minFileSizeRaw;
 
     const reactId = useId();
-    const id = `file-upload-${reactId}`;
+    const id = fieldId ?? `file-upload-${reactId}`;
 
     const inputRef = useRef<HTMLInputElement>(null);
     const [acceptedFiles, setAcceptedFiles] = useState<File[]>([]);
@@ -428,19 +446,19 @@ export function useFileUpload(props: UseFileUploadProps = {}): UseFileUploadRetu
     );
 
     const openFilePicker = useCallback(() => {
-        if (disabled) return;
+        if (resolvedDisabled) return;
         inputRef.current?.click();
-    }, [disabled]);
+    }, [resolvedDisabled]);
 
     const setClipboardFiles = useCallback(
         (data: DataTransfer) => {
-            if (disabled) return;
+            if (resolvedDisabled) return;
             const files = Array.from(data.files);
             if (files.length > 0) {
                 processFiles(files);
             }
         },
-        [disabled, processFiles]
+        [resolvedDisabled, processFiles]
     );
 
     // ─── Prop getters ────────────────────────────────────────────────────────
@@ -449,11 +467,10 @@ export function useFileUpload(props: UseFileUploadProps = {}): UseFileUploadRetu
         () => ({
             "data-scope": "file-upload",
             "data-part": "root",
-            "data-disabled": disabled || undefined,
-            "data-invalid": invalid || undefined,
-            id
+            "data-disabled": resolvedDisabled || undefined,
+            "data-invalid": resolvedInvalid || undefined
         }),
-        [disabled, invalid, id]
+        [resolvedDisabled, resolvedInvalid]
     );
 
     const getDropzoneProps = useCallback(
@@ -461,11 +478,11 @@ export function useFileUpload(props: UseFileUploadProps = {}): UseFileUploadRetu
             "data-scope": "file-upload",
             "data-part": "dropzone",
             "data-dragging": isDragging || undefined,
-            "data-disabled": disabled || undefined,
-            tabIndex: disabled ? undefined : 0,
+            "data-disabled": resolvedDisabled || undefined,
+            tabIndex: resolvedDisabled ? undefined : 0,
             role: "button" as const,
             onDragEnter: (e: React.DragEvent) => {
-                if (!allowDrop || disabled) return;
+                if (!allowDrop || resolvedDisabled) return;
                 e.preventDefault();
                 e.stopPropagation();
                 dragCounter.current++;
@@ -474,12 +491,12 @@ export function useFileUpload(props: UseFileUploadProps = {}): UseFileUploadRetu
                 }
             },
             onDragOver: (e: React.DragEvent) => {
-                if (!allowDrop || disabled) return;
+                if (!allowDrop || resolvedDisabled) return;
                 e.preventDefault();
                 e.stopPropagation();
             },
             onDragLeave: (e: React.DragEvent) => {
-                if (!allowDrop || disabled) return;
+                if (!allowDrop || resolvedDisabled) return;
                 e.preventDefault();
                 e.stopPropagation();
                 dragCounter.current--;
@@ -488,7 +505,7 @@ export function useFileUpload(props: UseFileUploadProps = {}): UseFileUploadRetu
                 }
             },
             onDrop: (e: React.DragEvent) => {
-                if (!allowDrop || disabled) return;
+                if (!allowDrop || resolvedDisabled) return;
                 e.preventDefault();
                 e.stopPropagation();
                 dragCounter.current = 0;
@@ -497,29 +514,32 @@ export function useFileUpload(props: UseFileUploadProps = {}): UseFileUploadRetu
                 processFiles(files);
             },
             onClick: () => {
-                if (!disabled) {
+                if (!resolvedDisabled) {
                     openFilePicker();
                 }
             },
             onKeyDown: (e: React.KeyboardEvent) => {
-                if ((e.key === "Enter" || e.key === " ") && !disabled) {
+                if ((e.key === "Enter" || e.key === " ") && !resolvedDisabled) {
                     e.preventDefault();
                     openFilePicker();
                 }
             }
         }),
-        [isDragging, disabled, allowDrop, processFiles, openFilePicker]
+        [isDragging, resolvedDisabled, allowDrop, processFiles, openFilePicker]
     );
 
     const getInputProps = useCallback(
         () => ({
             ref: inputRef,
             type: "file" as const,
+            id,
             accept: getAcceptAttr(accept),
             multiple: maxFiles > 1,
             name,
-            disabled,
-            required,
+            disabled: resolvedDisabled,
+            required: resolvedRequired,
+            "aria-invalid": ariaAttr(resolvedInvalid),
+            "aria-describedby": ariaDescribedByField,
             capture: capture as string | undefined,
             onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
                 const files = Array.from(e.target.files || []);
@@ -544,23 +564,35 @@ export function useFileUpload(props: UseFileUploadProps = {}): UseFileUploadRetu
             "data-part": "hidden-input",
             ...(directory ? { webkitdirectory: "", directory: "" } : {})
         }),
-        [accept, maxFiles, name, disabled, required, capture, directory, processFiles]
+        [
+            accept,
+            maxFiles,
+            name,
+            resolvedDisabled,
+            resolvedRequired,
+            resolvedInvalid,
+            ariaDescribedByField,
+            capture,
+            directory,
+            processFiles,
+            id
+        ]
     );
 
     const getTriggerProps = useCallback(
         () => ({
             "data-scope": "file-upload",
             "data-part": "trigger",
-            "data-disabled": disabled || undefined,
+            "data-disabled": resolvedDisabled || undefined,
             type: "button" as const,
-            disabled,
+            disabled: resolvedDisabled,
             onClick: () => {
-                if (!disabled) {
+                if (!resolvedDisabled) {
                     openFilePicker();
                 }
             }
         }),
-        [disabled, openFilePicker]
+        [resolvedDisabled, openFilePicker]
     );
 
     // Prevent document-level drops
@@ -587,9 +619,9 @@ export function useFileUpload(props: UseFileUploadProps = {}): UseFileUploadRetu
         acceptedFiles,
         rejectedFiles,
         isDragging,
-        disabled,
-        invalid,
-        required,
+        disabled: resolvedDisabled,
+        invalid: resolvedInvalid,
+        required: resolvedRequired,
         locale,
         clearFiles,
         removeFile,

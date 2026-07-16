@@ -8,9 +8,9 @@ import { MotionBox } from "./motion";
 import { VisuallyHiddenInput } from "./visually-hidden";
 
 export interface SwitchProps
-    extends Omit<HTMLDreamyProps<"label">, "size" | "onChange" | "ref" | "color">,
-        Omit<UseSwitchProps, keyof SwittchVariantProps>,
-        SwittchVariantProps {}
+    extends UseSwitchProps,
+        SwittchVariantProps,
+        Omit<HTMLDreamyProps<"label">, keyof UseSwitchProps | keyof SwittchVariantProps> {}
 
 const StyledSwitch = dreamy("label", swittch);
 

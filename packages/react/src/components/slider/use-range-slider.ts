@@ -4,7 +4,7 @@ import { useLatestRef } from "@/hooks/use-latest-ref";
 import { type ReactRef, mergeRefs } from "@/hooks/use-merge-refs";
 import { usePanEvent } from "@/hooks/use-pan-event";
 import { createContext } from "@/provider/create-context";
-import { type PropGetter, type RequiredPropGetter, callAllHandlers } from "@/utils";
+import { type PropGetter, type RequiredPropGetter, callAllHandlers, omitDreamyProps } from "@/utils";
 import { ariaAttr, dataAttr } from "@/utils/attr";
 import { percentToValue, roundValueToStep, valueToPercent } from "@/utils/number";
 import {
@@ -188,8 +188,10 @@ export function useRangeSlider(props: UseRangeSliderProps): UseRangeSliderReturn
 		"aria-valuetext": ariaValueText,
 		"aria-label": ariaLabel,
 		"aria-labelledby": ariaLabelledBy,
-		...htmlProps
+		...htmlPropsRest
 	} = props;
+
+	const htmlProps = omitDreamyProps(htmlPropsRest);
 
 	const BORDER_SIZE = thumbSize / 2;
 
@@ -582,11 +584,12 @@ export function useRangeSlider(props: UseRangeSliderProps): UseRangeSliderReturn
 					"aria-disabled": ariaAttr(isDisabled),
 					"aria-readonly": ariaAttr(isReadOnly),
 					"aria-label": ariaLabel?.[thumbIndex],
-					"aria-labelledby": field
-						? field.labelId
-						: ariaLabel
+					// Prefer per-thumb aria-label over Field label so multi-thumb names stay distinct
+					"aria-labelledby": ariaLabel?.[thumbIndex]
 						? undefined
-						: ariaLabelledBy?.[thumbIndex],
+						: field
+							? field.labelId
+							: ariaLabelledBy?.[thumbIndex],
 					"data-invalid": dataAttr(isInvalid),
 					style: {
 						...style,
@@ -694,7 +697,6 @@ export function useRangeSlider(props: UseRangeSliderProps): UseRangeSliderReturn
 					type: "range",
 					"aria-invalid": ariaAttr(isInvalid),
 					"data-invalid": dataAttr(isInvalid),
-					invalid: isInvalid,
 					disabled: isDisabled,
 					"data-disabled": dataAttr(isDisabled),
 					readOnly: isReadOnly,

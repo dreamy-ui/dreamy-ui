@@ -67,11 +67,37 @@ function composeRefs(...refs) {
     };
 }
 
+const dreamyProprietaryProps = new Set([
+    "onChangeValue",
+    "onChangeStart",
+    "onChangeEnd",
+    "isInvalid",
+    "isDisabled",
+    "isRequired",
+    "isReadOnly",
+    "isChecked",
+    "isIndeterminate",
+    "isFocusable",
+    "isPreviewFocusable",
+    "isSelected",
+    "isClearable",
+    "isMultiple",
+    "isNative",
+    "isCard",
+    "isReversed",
+    "isOpen",
+    "isLoading",
+    "isActive",
+    "reduceMotion",
+    "defaultIsOpen"
+]);
+
 function styledFn(Dynamic, configOrCva = {}, options = {}) {
     const cvaFn = configOrCva.__cva__ || configOrCva.__recipe__ ? configOrCva : cva(configOrCva);
 
     const forwardFn = options.shouldForwardProp || defaultShouldForwardProp;
     const shouldForwardProp = (prop) => {
+        if (dreamyProprietaryProps.has(prop)) return false;
         if (options.forwardProps?.includes(prop)) return true;
         return forwardFn(prop, cvaFn.variantKeys);
     };

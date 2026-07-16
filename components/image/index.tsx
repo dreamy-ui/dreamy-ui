@@ -1,7 +1,7 @@
 "use client";
 
 import { ariaAttr, callAllHandlers, objectToDeps, omit } from "@dreamy-ui/react";
-import { cloneElement, useMemo, useRef } from "react";
+import { cloneElement, useMemo, useRef, type SyntheticEvent } from "react";
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { image } from "styled-system/recipes";
 import type { SystemProperties } from "styled-system/types";
@@ -53,7 +53,6 @@ const StyledImage = dreamy("img", image);
  * @See Docs https://dreamy-ui.com/docs/components/image
  */
 export function Image(props: ImageProps) {
-    const { ref } = props;
     const {
         fallbackSrc,
         src,
@@ -73,11 +72,10 @@ export function Image(props: ImageProps) {
 
     const shared = useMemo(() => {
         return {
-            ref,
             "data-zoomed": zoomOnHover,
             ...omit(rest, ["onError", "onLoad"])
         };
-    }, [zoomOnHover, ref, ...objectToDeps(rest)]);
+    }, [zoomOnHover, ...objectToDeps(rest)]);
 
     const img = useMemo(
         () => (
@@ -88,10 +86,10 @@ export function Image(props: ImageProps) {
                 loading={loading}
                 referrerPolicy={referrerPolicy}
                 {...shared}
-                onError={callAllHandlers((e: any) => {
+                onError={callAllHandlers((e: SyntheticEvent<HTMLImageElement>) => {
                     if (fallbackSrc && !hasErrored.current) {
                         hasErrored.current = true;
-                        e.target.src = fallbackSrc;
+                        e.currentTarget.src = fallbackSrc;
                     }
                 }, rest.onError)}
             />

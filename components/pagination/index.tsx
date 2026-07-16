@@ -52,7 +52,7 @@ export const Root = withProvider(function PaginationRoot(props: PaginationRootPr
         pageSize,
         siblingCount,
         onPageChange,
-        size: size as any
+        size: size as "sm" | "md" | "lg"
     });
 
     return (
@@ -73,9 +73,8 @@ export interface PaginationItemProps extends Omit<Partial<IconButtonProps>, "val
  * Pagination Item component - represents a single page number
  */
 export const Item = withContext(function PaginationItem(props: PaginationItemProps) {
-    const { ref } = props;
     const { value, children, ...rest } = props;
-    const itemProps = usePaginationItem({ value, ref });
+    const itemProps = usePaginationItem({ value });
     const indicatorProps = usePaginationIndicator();
 
     const { page, size } = usePaginationContext();
@@ -118,9 +117,8 @@ export interface PaginationPrevTriggerProps extends Partial<IconButtonProps> {}
 export const PrevTrigger = withContext(function PaginationPrevTrigger(
     props: PaginationPrevTriggerProps
 ) {
-    const { ref } = props;
     const { children, ...rest } = props;
-    const prevProps = usePaginationPrevTrigger({ ref });
+    const prevProps = usePaginationPrevTrigger({});
 
     const { size } = usePaginationContext();
 
@@ -144,9 +142,8 @@ export interface PaginationNextTriggerProps extends Partial<IconButtonProps> {}
 export const NextTrigger = withContext(function PaginationNextTrigger(
     props: PaginationNextTriggerProps
 ) {
-    const { ref } = props;
     const { children, ...rest } = props;
-    const nextProps = usePaginationNextTrigger({ ref });
+    const nextProps = usePaginationNextTrigger({});
 
     const { size } = usePaginationContext();
 

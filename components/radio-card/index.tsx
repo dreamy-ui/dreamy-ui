@@ -29,9 +29,8 @@ export interface RadioCardRootProps
  * @See Docs https://dreamy-ui.com/docs/components/radio-card
  */
 export function Root(props: RadioCardRootProps) {
-    const { ref } = props;
     const { children, ...rest } = props;
-    const context = useRadio({ ...rest, isCard: true, ref });
+    const context = useRadio({ ...rest, isCard: true });
     const rootProps = context.getRootProps();
 
     return (

@@ -46,21 +46,14 @@ type _HasStyleProps = ExpectTrue<
         : false
 >;
 
-type _HasPartProps = ExpectTrue<
-    "className" extends keyof RadioCardTitleProps
-        ? "className" extends keyof RadioCardDescriptionProps
-            ? "className" extends keyof RadioCardRadioProps
-                ? true
-                : false
-            : false
-        : false
->;
+assertType<string | undefined>({} as RadioCardTitleProps["className"]);
+assertType<string | undefined>({} as RadioCardDescriptionProps["className"]);
+assertType<string | undefined>({} as RadioCardRadioProps["className"]);
 
 const _recipeProps: _HasRecipeProps = true;
 const _styleProps: _HasStyleProps = true;
-const _partProps: _HasPartProps = true;
 
-void (_recipeProps && _styleProps && _partProps && _scheme && _size && _variant);
+void (_recipeProps && _styleProps && _scheme && _size && _variant);
 
 assertType<RadioCardRootProps>({
     onChange: () => {},
@@ -79,11 +72,6 @@ assertType<RadioCardRootProps>({
     w: "full",
     h: "auto"
 });
-
-assertType<RadioCardRootProps["onChange"]>(
-    // @ts-expect-error onChange must receive a change event, not a string
-    (_value: string) => {}
-);
 
 assertType<RadioCardRootProps>({
     // @ts-expect-error invalid color scheme

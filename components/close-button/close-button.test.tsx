@@ -33,6 +33,31 @@ describe("CloseButton", () => {
         expect(onClick).toHaveBeenCalledTimes(1);
     });
 
+    it("activates with Enter and Space and ignores disabled", async () => {
+        const user = userEvent.setup();
+        const onClick = vi.fn();
+
+        const { rerender } = render(<CloseButton onClick={onClick} />);
+
+        const button = screen.getByRole("button", { name: "Close" });
+        button.focus();
+        await user.keyboard("{Enter}");
+        await user.keyboard(" ");
+        expect(onClick).toHaveBeenCalledTimes(2);
+
+        rerender(
+            <CloseButton
+                isDisabled
+                onClick={onClick}
+            />
+        );
+
+        const disabled = screen.getByRole("button", { name: "Close" });
+        expect(disabled).toBeDisabled();
+        await user.click(disabled);
+        expect(onClick).toHaveBeenCalledTimes(2);
+    });
+
     it("does not activate when disabled", async () => {
         const user = userEvent.setup();
         const onClick = vi.fn();

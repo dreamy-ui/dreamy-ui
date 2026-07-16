@@ -934,7 +934,8 @@
     "component": "Tooltip",
     "npmDependencies": [],
     "fileDependencies": [
-      "./box"
+      "./box",
+      "./motion"
     ],
     "hasRecipe": true,
     "hasPattern": false,

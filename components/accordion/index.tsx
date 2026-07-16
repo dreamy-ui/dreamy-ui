@@ -98,7 +98,7 @@ export const Content = withContext(function AccordionContent(props: AccordionCon
     const { reduceMotion } = useAccordionContext();
     const { getContentProps, isOpen } = useAccordionItemContext();
 
-    const panelProps = getContentProps(props) as any;
+    const panelProps = getContentProps(props);
 
     if (!reduceMotion) {
         panelProps.hidden = undefined;
@@ -147,7 +147,7 @@ export const Trigger = withContext(function AccordionTrigger({
 
     return (
         <HeadingTag>
-            <dreamy.button {...(getTriggerProps(props) as any)}>
+            <dreamy.button {...getTriggerProps(props)}>
                 {children}
                 {icon ?? <AccordionIcon {...iconProps} />}
             </dreamy.button>

@@ -57,6 +57,8 @@ export function Toast({ toast }: { toast: IToast }) {
         );
     }
 
+    const liveRole = toast.status === "error" ? "alert" : "status";
+
     return (
         <StyledToast
             animate={{ opacity: 1, scale: 1 }}
@@ -69,6 +71,7 @@ export function Toast({ toast }: { toast: IToast }) {
             key={`${toast.id}-toast`}
             layout
             layoutId={toast.id}
+            role={liveRole}
             transition={{
                 duration: 0.3,
                 ease: TRANSITION_EASINGS.easeInOut
@@ -110,9 +113,9 @@ export function Toast({ toast }: { toast: IToast }) {
 function ToastIcon({ status }: { status: Status }) {
     return (
         <Icon
+            aria-hidden="true"
             asChild
             data-part={"icon"}
-            role="img"
         >
             <StatusIcon status={status} />
         </Icon>

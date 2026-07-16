@@ -150,4 +150,59 @@ describe("RadioCard", () => {
         await user.click(screen.getAllByRole("radio", { hidden: true })[1]);
         expect(onChange).not.toHaveBeenCalled();
     });
+
+    it("moves selection across cards with arrow keys", async () => {
+        const user = userEvent.setup();
+        const onChange = vi.fn();
+
+        render(
+            <RadioGroup
+                defaultValue="pro"
+                onChange={onChange}
+                role="radiogroup"
+                aria-label="Plan"
+            >
+                <RadioCard.Root
+                    name="plan"
+                    value="pro"
+                >
+                    <RadioCard.Header>
+                        <RadioCard.Title>Pro</RadioCard.Title>
+                        <RadioCard.Radio />
+                    </RadioCard.Header>
+                </RadioCard.Root>
+                <RadioCard.Root
+                    name="plan"
+                    value="team"
+                >
+                    <RadioCard.Header>
+                        <RadioCard.Title>Team</RadioCard.Title>
+                        <RadioCard.Radio />
+                    </RadioCard.Header>
+                </RadioCard.Root>
+            </RadioGroup>
+        );
+
+        const radios = screen.getAllByRole("radio", { hidden: true });
+
+        radios[0].focus();
+        await user.keyboard("{ArrowDown}");
+
+        expect(radios[1]).toBeChecked();
+        expect(onChange).toHaveBeenCalledWith("team");
+    });
+
+    it("names each option from Title content", () => {
+        render(
+            <RadioCard.Root value="pro">
+                <RadioCard.Header>
+                    <RadioCard.Title>Pro plan</RadioCard.Title>
+                    <RadioCard.Radio />
+                </RadioCard.Header>
+            </RadioCard.Root>
+        );
+
+        expect(screen.getByText("Pro plan")).toBeInTheDocument();
+        expect(screen.getByRole("radio", { hidden: true })).toBeInTheDocument();
+    });
 });

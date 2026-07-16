@@ -4,22 +4,31 @@ import { render } from "../test/render";
 import { ProgressCircular } from "./index";
 
 describe("ProgressCircular", () => {
-    it("accepts progressbar ARIA attributes on the root", () => {
+    it("exposes progressbar role with valuemin valuemax and valuenow", () => {
         render(
             <ProgressCircular
                 aria-label="Upload progress"
-                aria-valuemax={100}
-                aria-valuemin={0}
-                aria-valuenow={40}
-                role="progressbar"
+                maxValue={100}
+                minValue={0}
                 value={40}
             />
         );
 
         const progressbar = screen.getByRole("progressbar", { name: "Upload progress" });
+        expect(progressbar).toHaveAttribute("role", "progressbar");
         expect(progressbar).toHaveAttribute("aria-valuemin", "0");
         expect(progressbar).toHaveAttribute("aria-valuemax", "100");
         expect(progressbar).toHaveAttribute("aria-valuenow", "40");
+    });
+
+    it("omits aria-valuenow when indeterminate", () => {
+        render(<ProgressCircular aria-label="Working" />);
+
+        const progressbar = screen.getByRole("progressbar", { name: "Working" });
+        expect(progressbar).toHaveAttribute("aria-valuemin", "0");
+        expect(progressbar).toHaveAttribute("aria-valuemax", "100");
+        expect(progressbar).not.toHaveAttribute("aria-valuenow");
+        expect(progressbar).toHaveAttribute("data-indeterminate");
     });
 
     it("hides the SVG rings from AT and exposes a named root", () => {
@@ -47,15 +56,19 @@ describe("ProgressCircular", () => {
             />
         );
 
+        const progressbar = screen.getByRole("progressbar", { name: "Download" });
+
         expect(screen.getByText("Half done")).toBeInTheDocument();
-        expect(screen.getByLabelText("Download")).toBeInTheDocument();
+        expect(progressbar).toHaveAttribute("aria-valuetext", "Half done");
+        expect(progressbar).toHaveAttribute("aria-valuenow", "50");
     });
 
     it("marks indeterminate progress when value is omitted", () => {
         const { container } = render(<ProgressCircular aria-label="Working" />);
 
-        const root = screen.getByLabelText("Working");
+        const root = screen.getByRole("progressbar", { name: "Working" });
         expect(root).toHaveAttribute("data-indeterminate");
+        expect(root).not.toHaveAttribute("aria-valuenow");
         expect(container.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
     });
 

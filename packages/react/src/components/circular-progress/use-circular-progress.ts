@@ -97,12 +97,31 @@ export function useCircularProgress(props: UseCircularProgressProps) {
 	const getProgressBarProps = useCallback<PropGetter>(
 		(props = {}) => ({
 			ref: domRef,
+			role: "progressbar",
+			"aria-valuemin": minValue,
+			"aria-valuemax": maxValue,
+			...(isIndeterminate || value === undefined
+				? {}
+				: { "aria-valuenow": value }),
+			...(valueLabel != null || (showValueLabel && !isIndeterminate)
+				? { "aria-valuetext": valueText }
+				: {}),
 			"data-indeterminate": dataAttr(isIndeterminate),
 			"data-disabled": dataAttr(rest.isDisabled),
 			...props,
 			...rest
 		}),
-		[domRef, isIndeterminate, ...objectToDeps(rest)]
+		[
+			domRef,
+			isIndeterminate,
+			minValue,
+			maxValue,
+			value,
+			valueLabel,
+			showValueLabel,
+			valueText,
+			...objectToDeps(rest)
+		]
 	);
 
 	const getLabelProps = useCallback<PropGetter>(

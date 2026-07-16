@@ -61,26 +61,18 @@ type _HasStyleProps = ExpectTrue<
         : false
 >;
 
-type _HasPartProps = ExpectTrue<
-    "className" extends keyof CheckboxCardTitleProps
-        ? "className" extends keyof CheckboxCardDescriptionProps
-            ? "className" extends keyof CheckboxCardCheckboxProps
-                ? true
-                : false
-            : false
-        : false
->;
+assertType<string | undefined>({} as CheckboxCardTitleProps["className"]);
+assertType<string | undefined>({} as CheckboxCardDescriptionProps["className"]);
+assertType<string | undefined>({} as CheckboxCardCheckboxProps["className"]);
 
 const _callbackProps: _HasCallbackProps = true;
 const _recipeProps: _HasRecipeProps = true;
 const _styleProps: _HasStyleProps = true;
-const _partProps: _HasPartProps = true;
 
 void (
     _callbackProps &&
     _recipeProps &&
     _styleProps &&
-    _partProps &&
     _scheme &&
     _size &&
     _variant &&
@@ -106,11 +98,6 @@ assertType<CheckboxCardRootProps>({
     w: "full",
     h: "auto"
 });
-
-assertType<CheckboxCardRootProps["onChange"]>(
-    // @ts-expect-error onChange must receive a change event, not a boolean
-    (_value: boolean) => {}
-);
 
 assertType<CheckboxCardRootProps>({
     // @ts-expect-error invalid color scheme

@@ -58,8 +58,7 @@ export const Root = withProvider(function Tabs(props: TabsProps) {
 export interface TabListProps extends UseTabListProps, Omit<FlexProps, "onKeyDown" | "ref"> {}
 
 export const List = withContext(function TabList(props: TabListProps) {
-    const { ref } = props;
-    const tablistProps = useTabList({ ...props, ref });
+    const tablistProps = useTabList(props);
 
     return <Flex {...tablistProps} />;
 }, "tabList");
@@ -67,10 +66,9 @@ export const List = withContext(function TabList(props: TabListProps) {
 export interface TabProps extends UseTabOptions, ButtonProps {}
 
 export const Tab = withContext(function Tab(props: TabProps) {
-    const { ref } = props;
     const { children, ...rest } = props;
 
-    const { isSelected, props: tabProps } = useTab({ ...rest, ref });
+    const { isSelected, props: tabProps } = useTab(rest);
 
     return (
         <Button
@@ -96,8 +94,7 @@ export const Panels = withContext(function TabPanels(props: TabPanelsProps) {
 export interface TabPanelProps extends HTMLDreamyProps<"div"> {}
 
 export const Panel = withContext(function TabPanel(props: TabPanelProps) {
-    const { ref } = props;
-    const panelProps = useTabPanel({ ...props, ref });
+    const panelProps = useTabPanel(props);
 
     return <Flex {...panelProps} />;
 }, "tabPanel");

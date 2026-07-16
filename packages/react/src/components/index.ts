@@ -1,4 +1,5 @@
 export * from "./accordion";
+export * from "./action-bar";
 export * from "./autocomplete";
 export * from "./hover-card";
 export * from "./avatar";

@@ -47,6 +47,45 @@ describe("PinInput", () => {
 
         expect(root).toBeInTheDocument();
         expect(root).toHaveAttribute("role", "group");
+        expect(screen.getByText("Verification code")).toBeInTheDocument();
+    });
+
+    it("names the pin group from Field and keeps a purpose name when masked", () => {
+        render(
+            <Field.Root>
+                <Field.Label>Security PIN</Field.Label>
+                <PinInput.Root mask>
+                    <PinInput.Field />
+                    <PinInput.Field />
+                    <PinInput.Field />
+                    <PinInput.Field />
+                </PinInput.Root>
+            </Field.Root>
+        );
+
+        expect(screen.getByText("Security PIN")).toBeInTheDocument();
+
+        const fields = document.querySelectorAll("[data-pin-input] input");
+
+        expect(fields).toHaveLength(4);
+        for (const field of fields) {
+            expect(field).toHaveAttribute("aria-label", "Please enter your pin code");
+        }
+    });
+
+    it("sets numeric inputMode when type is number", () => {
+        render(
+            <PinInput.Root type="number">
+                <PinInput.Field />
+                <PinInput.Field />
+                <PinInput.Field />
+                <PinInput.Field />
+            </PinInput.Root>
+        );
+
+        for (const field of getPinFields()) {
+            expect(field).toHaveAttribute("inputmode", "numeric");
+        }
     });
 
     it("sets autocomplete one-time-code when otp is enabled", () => {
@@ -116,6 +155,30 @@ describe("PinInput", () => {
         });
 
         fireEvent.keyDown(fields[1], { key: "ArrowLeft" });
+
+        await waitFor(function waitForPrevFocus() {
+            expect(fields[0]).toHaveFocus();
+        });
+    });
+
+    it("moves focus to the previous cell on Backspace when empty", async () => {
+        const user = userEvent.setup();
+
+        render(
+            <PinInput.Root
+                defaultValue="1"
+                manageFocus
+            >
+                <PinInput.Field />
+                <PinInput.Field />
+                <PinInput.Field />
+            </PinInput.Root>
+        );
+
+        const fields = getPinFields();
+
+        fields[1].focus();
+        await user.keyboard("{Backspace}");
 
         await waitFor(function waitForPrevFocus() {
             expect(fields[0]).toHaveFocus();

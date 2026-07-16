@@ -165,6 +165,7 @@ function ActionButtons() {
                     />
                 }
                 fontWeight={500}
+                h={"fit"}
                 justifyContent={"space-between"}
                 rightIcon={<Icon as={BiEdit} />}
                 variant={"link"}
@@ -173,6 +174,7 @@ function ActionButtons() {
             </Button>
             <Button
                 fontWeight={500}
+                h={"fit"}
                 justifyContent={"space-between"}
                 onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
                 opacity={hasScrolled ? 1 : 0}

@@ -1,4 +1,5 @@
 import { screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import { render } from "../test/render";
 import * as Table from "./index";
@@ -64,5 +65,36 @@ describe("Table", () => {
         const root = screen.getByTestId("table-root");
         expect(root).toHaveClass("custom-table");
         expect(screen.getByRole("table", { name: "Scores" })).toBeInTheDocument();
+    });
+
+    it("keeps interactive controls inside cells keyboard operable", async () => {
+        const user = userEvent.setup();
+
+        render(
+            <Table.Root>
+                <Table.Table aria-label="Users">
+                    <Table.Header>
+                        <Table.Row>
+                            <Table.ColumnHeader>Name</Table.ColumnHeader>
+                            <Table.ColumnHeader>Actions</Table.ColumnHeader>
+                        </Table.Row>
+                    </Table.Header>
+                    <Table.Body>
+                        <Table.Row>
+                            <Table.Cell>Ada</Table.Cell>
+                            <Table.Cell>
+                                <button type="button">Edit</button>
+                            </Table.Cell>
+                        </Table.Row>
+                    </Table.Body>
+                </Table.Table>
+            </Table.Root>
+        );
+
+        const edit = screen.getByRole("button", { name: "Edit" });
+        edit.focus();
+        expect(edit).toHaveFocus();
+        await user.keyboard("{Enter}");
+        expect(edit).toBeInTheDocument();
     });
 });

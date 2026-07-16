@@ -45,8 +45,8 @@ const SIZE_CONFIG = {
  * @See Docs https://dreamy-ui.com/docs/components/range-slider
  */
 export const Root = withProvider(function Component(props: RangeSliderProps) {
-    const { ref } = props;
-    const { size = "md", orientation = "horizontal", focusThumbOnChange, ...restProps } = props;
+    const { size = "md", orientation = "horizontal", focusThumbOnChange, ref, ...restProps } =
+        props;
     const config = SIZE_CONFIG[size];
     const { getRootProps, getInputProps, ...rest } = useRangeSlider({
         ...restProps,
@@ -70,7 +70,7 @@ export const Root = withProvider(function Component(props: RangeSliderProps) {
                         ...(orientation === "horizontal"
                             ? { height: config.trackSize }
                             : { width: config.trackSize })
-                    } as React.CSSProperties
+                    } as unknown as React.CSSProperties
                 }
             />
         </RangeSliderProvider>

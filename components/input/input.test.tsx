@@ -106,4 +106,47 @@ describe("Input", () => {
         expect(input).toHaveAttribute("name", "q");
         expect(input).toHaveAttribute("placeholder", "Search…");
     });
+
+    it("keeps Field.Label as the accessible name when a placeholder is present", () => {
+        render(
+            <Field.Root>
+                <Field.Label>Email</Field.Label>
+                <Input
+                    placeholder="you@example.com"
+                    type="email"
+                />
+            </Field.Root>
+        );
+
+        expect(screen.getByRole("textbox", { name: "Email" })).toBeInTheDocument();
+        expect(screen.queryByRole("textbox", { name: "you@example.com" })).not.toBeInTheDocument();
+    });
+
+    it("supports decorative prefix/suffix icons and labeled interactive addons", () => {
+        render(
+            <Input.Group>
+                <Input.Prefix>
+                    <span
+                        aria-hidden="true"
+                        data-testid="prefix-icon"
+                    >
+                        $
+                    </span>
+                </Input.Prefix>
+                <Input aria-label="Amount" />
+                <Input.EndAddon>
+                    <button
+                        aria-label="Clear amount"
+                        type="button"
+                    >
+                        Clear
+                    </button>
+                </Input.EndAddon>
+            </Input.Group>
+        );
+
+        expect(screen.getByTestId("prefix-icon")).toHaveAttribute("aria-hidden", "true");
+        expect(screen.getByRole("textbox", { name: "Amount" })).toBeInTheDocument();
+        expect(screen.getByRole("button", { name: "Clear amount" })).toBeInTheDocument();
+    });
 });

@@ -1,5 +1,5 @@
 import { getColorSchemes } from "@dreamy-ui/panda-preset";
-import { defineSlotRecipe } from "@pandacss/dev";
+import { type SystemStyleObject, defineSlotRecipe } from "@pandacss/dev";
 
 export const select = defineSlotRecipe({
     className: "select",
@@ -352,7 +352,7 @@ export const select = defineSlotRecipe({
                                 : scheme === "none"
                                   ? "colors.bg"
                                   : "color-mix(in srgb, white 87%, transparent)"
-                } as Record<any, any>;
+                } as SystemStyleObject;
             },
             "content"
         )

@@ -1,6 +1,13 @@
 import { mergeRefs } from "@/hooks/use-merge-refs";
 import { createContext } from "@/provider";
-import { type PropGetter, ariaAttr, callAllHandlers, dataAttr, objectToDeps } from "@/utils";
+import {
+	type PropGetter,
+	ariaAttr,
+	callAllHandlers,
+	dataAttr,
+	objectToDeps,
+	omitDreamyProps
+} from "@/utils";
 import { useCallback, useId, useState } from "react";
 
 export interface UserFeedbackProps {
@@ -215,8 +222,11 @@ export interface UseFieldProps<T extends HTMLElement> extends UserFeedbackProps 
  * React hook that provides the props that should be spread on to
  * input fields (`input`, `select`, `textarea`, etc.).
  *
- * It provides a convenient way to control a form fields, validation
- * and hint.
+ * Returned props are DOM-safe: proprietary Dreamy props (`isInvalid`,
+ * `onChangeValue`, etc.) are stripped. Use `aria-*` / `data-*` and native
+ * `disabled` / `required` / `readOnly` instead.
+ *
+ * For boolean feedback flags in headless hooks, use {@link useFieldProps}.
  *
  * @internal
  */
@@ -224,7 +234,7 @@ export function useField<T extends HTMLElement>(props: UseFieldProps<T>) {
 	const { isDisabled, isInvalid, isReadOnly, isRequired, ...rest } = useFieldProps(props);
 
 	return {
-		...rest,
+		...omitDreamyProps(rest),
 		disabled: isDisabled,
 		readOnly: isReadOnly,
 		required: isRequired,
@@ -238,6 +248,11 @@ export function useField<T extends HTMLElement>(props: UseFieldProps<T>) {
 }
 
 /**
+ * Resolves field feedback state from props + Field context.
+ *
+ * Returns `is*` flags for headless composition. Do not spread the result onto
+ * DOM nodes — use {@link useField} for that.
+ *
  * @internal
  */
 export function useFieldProps<T extends HTMLElement>(props: UseFieldProps<T>) {
@@ -269,7 +284,7 @@ export function useFieldProps<T extends HTMLElement>(props: UseFieldProps<T>) {
 	}
 
 	return {
-		...rest,
+		...omitDreamyProps(rest),
 		"aria-describedby": labelIds.join(" ") || undefined,
 		id: id ?? field?.id,
 		isDisabled: disabled ?? isDisabled ?? field?.isDisabled,

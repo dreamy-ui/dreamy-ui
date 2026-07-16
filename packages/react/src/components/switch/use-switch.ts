@@ -1,7 +1,7 @@
 import { useCallbackRef } from "@/hooks";
 import { mergeRefs } from "@/hooks/use-merge-refs";
 import { useDefaultTransition, useReducedMotion } from "@/provider";
-import { type PropGetter, TRANSITION_EASINGS, callAllHandlers, cx } from "@/utils";
+import { type PropGetter, TRANSITION_EASINGS, callAllHandlers, cx, omitDreamyProps } from "@/utils";
 import type { HtmlDataAttributes, InputElementProps, SpanElementProps } from "@/utils/types";
 import { ariaAttr, dataAttr } from "@/utils/attr";
 import { objectToDeps } from "@/utils/object";
@@ -22,7 +22,7 @@ import {
     useState
 } from "react";
 import { useSafeLayoutEffect } from "../descendant/utils";
-import { type UseFieldProps, useField } from "../field/use-field";
+import { type UseFieldProps, useFieldProps } from "../field/use-field";
 
 export type SwitchIconProps = {
     "data-checked": string;
@@ -99,14 +99,15 @@ export function useSwitch(props: UseSwitchProps = {}) {
     const reduceMotionGlobal = useReducedMotion();
 
     const {
-        disabled: isDisabledField = false,
-        readOnly: isReadOnlyField = false,
-        required: isRequiredField = false,
+        isDisabled: isDisabledField = false,
+        isReadOnly: isReadOnlyField = false,
+        isRequired: isRequiredField = false,
+        isInvalid: isInvalidField = false,
         id,
         onBlur,
         onFocus,
         "aria-describedby": ariaDescribedByField
-    } = useField(props);
+    } = useFieldProps(props);
 
     const onBlurProp = useCallbackRef(onBlur);
     const onFocusProp = useCallbackRef(onFocus);
@@ -123,7 +124,7 @@ export function useSwitch(props: UseSwitchProps = {}) {
         isIndeterminate = false,
         isDisabled = isDisabledField,
         isReadOnly = isReadOnlyField,
-        isInvalid = false,
+        isInvalid = isInvalidField,
         className,
         isRequired = isRequiredField,
         defaultChecked,
@@ -200,18 +201,16 @@ export function useSwitch(props: UseSwitchProps = {}) {
             ref: domRef,
             "data-disabled": dataAttr(isDisabled),
             "data-checked": dataAttr(isChecked || isIndeterminate),
-            "aria-checked": ariaAttr(isChecked || isIndeterminate),
             "data-invalid": dataAttr(isInvalid),
             "data-readonly": dataAttr(isReadOnly),
             "data-indeterminate": dataAttr(isIndeterminate),
             "data-active": dataAttr(active),
-            "aria-active": ariaAttr(active),
             onPointerDown: callAllHandlers(otherProps.onPointerDown, () => setActive(true)),
             onPointerUp: callAllHandlers(otherProps.onPointerUp, () => setActive(false)),
             onPointerLeave: callAllHandlers(otherProps.onPointerLeave, () => setActive(false)),
             onClick: props.onClick,
             className: cx(className, "group"),
-            ...otherProps
+            ...omitDreamyProps(otherProps)
         };
     }, [
         isDisabled,
@@ -269,6 +268,7 @@ export function useSwitch(props: UseSwitchProps = {}) {
         return {
             ref: mergeRefs(inputRef, ref),
             type: "checkbox",
+            role: "switch",
             name,
             value,
             tabIndex,
@@ -283,7 +283,7 @@ export function useSwitch(props: UseSwitchProps = {}) {
             readOnly: isReadOnly,
             id: id ?? labelId,
             "aria-label": ariaLabel,
-            "aria-labelledby": ariaLabelledBy ?? labelId,
+            "aria-labelledby": ariaLabelledBy,
             "aria-invalid": ariaAttr(ariaInvalid ? Boolean(ariaInvalid) : isInvalid),
             "aria-describedby": ariaDescribedBy,
             "aria-disabled": ariaAttr(isDisabled),

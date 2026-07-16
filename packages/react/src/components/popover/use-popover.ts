@@ -286,7 +286,8 @@ export function usePopover(props: UsePopoverProps = {}) {
                 children: shouldRenderChildren ? children : null,
                 id: popoverId,
                 tabIndex: -1,
-                role: "dialog",
+                // Allow consumers (Select/Autocomplete/Menu/HoverCard) to override the default role.
+                role: rest.role ?? (trigger === TRIGGER.hover ? "tooltip" : "dialog"),
                 onKeyDown: callAllHandlers(
                     propsOnKeyDown,
                     (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -301,7 +302,6 @@ export function usePopover(props: UsePopoverProps = {}) {
             };
 
             if (trigger === TRIGGER.hover) {
-                popoverProps.role = "tooltip";
                 popoverProps.onMouseEnter = callAllHandlers(onMouseEnter, () => {
                     isHoveringRef.current = true;
                 });

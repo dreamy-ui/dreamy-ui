@@ -68,22 +68,25 @@ const EndAddon = withContext(dreamy.div, "endAddon");
  * @See Docs https://dreamy-ui.com/docs/components/input
  */
 export function Input(props: InputProps) {
+    const { onChangeValue, onChange, ...restProps } = props;
     const groupContext = useInputGroup();
     const field = useField(
         useMemo(() => {
             return {
                 ...groupContext,
-                ...props
+                ...restProps
             };
-        }, [groupContext, props])
+        }, [groupContext, restProps])
     );
 
     return (
         <StyledInput
             {...field}
-            onChange={callAllHandlers(props.onChange, (e: React.ChangeEvent<HTMLInputElement>) =>
-                props.onChangeValue?.(e.target.value)
-            )}
+            onChange={callAllHandlers(onChange, function handleChangeValue(
+                e: React.ChangeEvent<HTMLInputElement>
+            ) {
+                onChangeValue?.(e.target.value);
+            })}
         />
     );
 }

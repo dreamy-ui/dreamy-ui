@@ -451,6 +451,67 @@ const CustomCopySnippet = wrapLazy(
     lazy(() => import("./components/snippets").then((m) => ({ default: m.CustomCopySnippet })))
 );
 
+const TokenBreakpoints = wrapLazy(
+    lazy(() =>
+        import("./components/token-docs").then((m) => ({ default: m.TokenBreakpoints }))
+    )
+);
+const TokenColors = wrapLazy(
+    lazy(() => import("./components/token-docs").then((m) => ({ default: m.TokenColors })))
+);
+const TokenSemanticColors = wrapLazy(
+    lazy(() =>
+        import("./components/token-docs").then((m) => ({ default: m.TokenSemanticColors }))
+    )
+);
+const TokenSpacings = wrapLazy(
+    lazy(() => import("./components/token-docs").then((m) => ({ default: m.TokenSpacings })))
+);
+const TokenRadii = wrapLazy(
+    lazy(() => import("./components/token-docs").then((m) => ({ default: m.TokenRadii })))
+);
+const TokenShadows = wrapLazy(
+    lazy(() => import("./components/token-docs").then((m) => ({ default: m.TokenShadows })))
+);
+const TokenSizings = wrapLazy(
+    lazy(() => import("./components/token-docs").then((m) => ({ default: m.TokenSizings })))
+);
+const TokenFonts = wrapLazy(
+    lazy(() => import("./components/token-docs").then((m) => ({ default: m.TokenFonts })))
+);
+const TokenFontSizes = wrapLazy(
+    lazy(() => import("./components/token-docs").then((m) => ({ default: m.TokenFontSizes })))
+);
+const TokenFontWeights = wrapLazy(
+    lazy(() => import("./components/token-docs").then((m) => ({ default: m.TokenFontWeights })))
+);
+const TokenLetterSpacings = wrapLazy(
+    lazy(() =>
+        import("./components/token-docs").then((m) => ({ default: m.TokenLetterSpacings }))
+    )
+);
+const TokenLineHeights = wrapLazy(
+    lazy(() => import("./components/token-docs").then((m) => ({ default: m.TokenLineHeights })))
+);
+const TokenKeyframes = wrapLazy(
+    lazy(() => import("./components/token-docs").then((m) => ({ default: m.TokenKeyframes })))
+);
+const TokenBlurs = wrapLazy(
+    lazy(() => import("./components/token-docs").then((m) => ({ default: m.TokenBlurs })))
+);
+const TokenDurations = wrapLazy(
+    lazy(() => import("./components/token-docs").then((m) => ({ default: m.TokenDurations })))
+);
+const TokenEasings = wrapLazy(
+    lazy(() => import("./components/token-docs").then((m) => ({ default: m.TokenEasings })))
+);
+const TokenZIndex = wrapLazy(
+    lazy(() => import("./components/token-docs").then((m) => ({ default: m.TokenZIndex })))
+);
+const TokenAspectRatios = wrapLazy(
+    lazy(() => import("./components/token-docs").then((m) => ({ default: m.TokenAspectRatios })))
+);
+
 interface Props {
     mdxContent: MdxContent;
 }
@@ -640,7 +701,25 @@ const DreamComponents = {
     StationAutocomplete,
     PackageManagerSnippet,
     CustomCopySnippet,
-    IntroductionCards
+    IntroductionCards,
+    TokenBreakpoints,
+    TokenColors,
+    TokenSemanticColors,
+    TokenSpacings,
+    TokenRadii,
+    TokenShadows,
+    TokenSizings,
+    TokenFonts,
+    TokenFontSizes,
+    TokenFontWeights,
+    TokenLetterSpacings,
+    TokenLineHeights,
+    TokenKeyframes,
+    TokenBlurs,
+    TokenDurations,
+    TokenEasings,
+    TokenZIndex,
+    TokenAspectRatios
 };
 
 function Wrapper({ children, ...props }: PropsWithChildren<FlexProps>) {

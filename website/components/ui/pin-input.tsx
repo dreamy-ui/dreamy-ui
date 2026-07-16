@@ -39,6 +39,7 @@ export function Root(props: PinInputProps) {
             {...cssProps}
             data-pin-input
             ref={ref}
+            role="group"
         >
             <PinInputDescendantsProvider value={descendants}>
                 <PinInputProvider value={context}>{children}</PinInputProvider>

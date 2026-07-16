@@ -1,5 +1,5 @@
 import { getColorSchemes } from "@dreamy-ui/panda-preset";
-import { defineSlotRecipe } from "@pandacss/dev";
+import { defineSlotRecipe, type SystemStyleObject } from "@pandacss/dev";
 
 export const autocomplete = defineSlotRecipe({
     className: "autocomplete",
@@ -239,7 +239,7 @@ export const autocomplete = defineSlotRecipe({
                                 : scheme === "none"
                                   ? "colors.bg"
                                   : "color-mix(in srgb, white 87%, transparent)"
-                } as Record<any, any>;
+                } as SystemStyleObject;
             },
             "content"
         )

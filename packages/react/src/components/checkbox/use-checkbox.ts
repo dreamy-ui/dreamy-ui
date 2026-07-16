@@ -1,13 +1,22 @@
 import { useCallbackRef } from "@/hooks";
 import { mergeRefs } from "@/hooks/use-merge-refs";
 import { createContext, useReducedMotion } from "@/provider";
-import { type PropGetter, callAllHandlers, cx } from "@/utils";
+import { type PropGetter, callAllHandlers, cx, omitDreamyProps } from "@/utils";
 import { ariaAttr, dataAttr } from "@/utils/attr";
 import { useFocusRing } from "@react-aria/focus";
 import type { SVGMotionProps } from "motion/react";
-import { type ReactNode, type Ref, useCallback, useId, useMemo, useRef, useState } from "react";
+import {
+	type PointerEvent,
+	type ReactNode,
+	type Ref,
+	useCallback,
+	useId,
+	useMemo,
+	useRef,
+	useState
+} from "react";
 import { useSafeLayoutEffect } from "../descendant/utils";
-import { type UserFeedbackProps, useField } from "../field/use-field";
+import { type UserFeedbackProps, useFieldProps } from "../field/use-field";
 import { useCheckboxGroupContext } from "./use-checkbox-group";
 
 export interface IconCustomProps {
@@ -66,14 +75,15 @@ export function useCheckbox(props: UseCheckboxProps = {}) {
 	const groupContext = useCheckboxGroupContext();
 
 	const {
-		disabled: isDisabledField = groupContext?.isDisabled ?? false,
-		readOnly: isReadOnlyField = groupContext?.isReadOnly ?? false,
-		required: isRequiredField = groupContext?.isRequired ?? false,
+		isDisabled: isDisabledField = groupContext?.isDisabled ?? false,
+		isReadOnly: isReadOnlyField = groupContext?.isReadOnly ?? false,
+		isRequired: isRequiredField = groupContext?.isRequired ?? false,
+		isInvalid: isInvalidField = groupContext?.isInvalid ?? false,
 		id,
 		onBlur,
 		onFocus,
 		"aria-describedby": ariaDescribedByField
-	} = useField(props);
+	} = useFieldProps(props);
 
 	const onBlurProp = useCallbackRef(onBlur);
 	const onFocusProp = useCallbackRef(onFocus);
@@ -90,7 +100,7 @@ export function useCheckbox(props: UseCheckboxProps = {}) {
 		isIndeterminate = false,
 		isDisabled = isDisabledField,
 		isReadOnly = isReadOnlyField,
-		isInvalid = false,
+		isInvalid = isInvalidField,
 		className,
 		isRequired = isRequiredField,
 		defaultChecked,
@@ -172,14 +182,13 @@ export function useCheckbox(props: UseCheckboxProps = {}) {
 			ref: domRef,
 			"data-disabled": dataAttr(isDisabled),
 			"data-checked": dataAttr(isChecked || isIndeterminate),
-			"aria-checked": ariaAttr(isChecked || isIndeterminate),
 			"data-invalid": dataAttr(isInvalid),
 			"data-readonly": dataAttr(isReadOnly),
 			"data-indeterminate": dataAttr(isIndeterminate),
 			"data-focus-visible": isCard
 				? dataAttr(isFocusVisible && !suppressFocusVisible)
 				: undefined,
-			onPointerDown: callAllHandlers(otherProps.onPointerDown, (event) => {
+			onPointerDown: callAllHandlers(otherProps.onPointerDown, (event: PointerEvent) => {
 				setActive(true);
 				if (isCard && event.pointerType) {
 					setSuppressFocusVisible(true);
@@ -206,7 +215,7 @@ export function useCheckbox(props: UseCheckboxProps = {}) {
 			}),
 			className: cx(className, "group"),
 			...groupProps,
-			...otherProps
+			...omitDreamyProps(otherProps)
 		};
 	}, [
 		isDisabled,
@@ -289,10 +298,10 @@ export function useCheckbox(props: UseCheckboxProps = {}) {
 			readOnly: isReadOnly,
 			id: id ?? labelId,
 			"aria-label": ariaLabel,
-			"aria-labelledby": ariaLabelledBy ?? labelId,
-			"aria-invalid": ariaInvalid ? Boolean(ariaInvalid) : isInvalid,
+			"aria-labelledby": ariaLabelledBy,
+			"aria-invalid": ariaAttr(ariaInvalid ? Boolean(ariaInvalid) : isInvalid),
 			"aria-describedby": ariaDescribedBy,
-			"aria-disabled": isDisabled,
+			"aria-disabled": ariaAttr(isDisabled),
 			className: "peer",
 			...(focusProps as any)
 		};
@@ -348,6 +357,12 @@ export function useCheckbox(props: UseCheckboxProps = {}) {
 		}),
 		[isChecked, isIndeterminate, reduceMotion, active, animationTime, pathProps]
 	);
+
+	useSafeLayoutEffect(() => {
+		const el = inputRef.current;
+		if (!el) return;
+		el.indeterminate = Boolean(isIndeterminate);
+	}, [isIndeterminate, isChecked]);
 
 	useSafeLayoutEffect(() => {
 		const el = inputRef.current;

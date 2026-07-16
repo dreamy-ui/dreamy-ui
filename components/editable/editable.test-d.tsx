@@ -47,21 +47,14 @@ type _HasStyleProps = ExpectTrue<
         : false
 >;
 
-type _HasPartProps = ExpectTrue<
-    "className" extends keyof EditablePreviewProps
-        ? "className" extends keyof EditableInputProps
-            ? "className" extends keyof EditableEditButtonProps
-                ? true
-                : false
-            : false
-        : false
->;
+assertType<string | undefined>({} as EditablePreviewProps["className"]);
+assertType<string | undefined>({} as EditableInputProps["className"]);
+assertType<string | undefined>({} as EditableEditButtonProps["className"]);
 
 const _callbackProps: _HasCallbackProps = true;
 const _styleProps: _HasStyleProps = true;
-const _partProps: _HasPartProps = true;
 
-void (_callbackProps && _styleProps && _partProps);
+void (_callbackProps && _styleProps);
 
 assertType<EditableProps>({
     onChange: () => {},

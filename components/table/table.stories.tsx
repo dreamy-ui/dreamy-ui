@@ -33,36 +33,38 @@ export function Base() {
 export function Variants() {
     return (
         <>
-            {["simple", "line"].map((variant) => (
-                <div key={variant}>
-                    <Text size="lg">{variant}</Text>
-                    <Table.Root
-                        variant={variant as any}
-                        w="full"
-                    >
-                        <Table.Table>
-                            <Table.Header>
-                                <Table.Row>
-                                    <Table.ColumnHeader>Name</Table.ColumnHeader>
-                                    <Table.ColumnHeader>Age</Table.ColumnHeader>
-                                    <Table.ColumnHeader>Gender</Table.ColumnHeader>
-                                </Table.Row>
-                            </Table.Header>
-                            <Table.Body>
-                                {[20, 22, 25].map((item, index) => (
-                                    <Table.Row key={index}>
-                                        <Table.Cell>Name {index + 1}</Table.Cell>
-                                        <Table.Cell>{item}</Table.Cell>
-                                        <Table.Cell>
-                                            {item % 5 === 0 ? "Male" : "Female"}
-                                        </Table.Cell>
+            {(["simple", "line"] as const).map(function mapVariant(variant) {
+                return (
+                    <div key={variant}>
+                        <Text size="lg">{variant}</Text>
+                        <Table.Root
+                            variant={variant}
+                            w="full"
+                        >
+                            <Table.Table>
+                                <Table.Header>
+                                    <Table.Row>
+                                        <Table.ColumnHeader>Name</Table.ColumnHeader>
+                                        <Table.ColumnHeader>Age</Table.ColumnHeader>
+                                        <Table.ColumnHeader>Gender</Table.ColumnHeader>
                                     </Table.Row>
-                                ))}
-                            </Table.Body>
-                        </Table.Table>
-                    </Table.Root>
-                </div>
-            ))}
+                                </Table.Header>
+                                <Table.Body>
+                                    {[20, 22, 25].map((item, index) => (
+                                        <Table.Row key={index}>
+                                            <Table.Cell>Name {index + 1}</Table.Cell>
+                                            <Table.Cell>{item}</Table.Cell>
+                                            <Table.Cell>
+                                                {item % 5 === 0 ? "Male" : "Female"}
+                                            </Table.Cell>
+                                        </Table.Row>
+                                    ))}
+                                </Table.Body>
+                            </Table.Table>
+                        </Table.Root>
+                    </div>
+                );
+            })}
         </>
     );
 }
@@ -70,37 +72,39 @@ export function Variants() {
 export function WithBackground() {
     return (
         <>
-            {["simple", "line"].map((variant) => (
-                <div key={variant}>
-                    <Text size="lg">{variant}</Text>
-                    <Table.Root
-                        variant={variant as any}
-                        w="full"
-                        withBackground
-                    >
-                        <Table.Table>
-                            <Table.Header>
-                                <Table.Row>
-                                    <Table.ColumnHeader>Name</Table.ColumnHeader>
-                                    <Table.ColumnHeader>Age</Table.ColumnHeader>
-                                    <Table.ColumnHeader>Gender</Table.ColumnHeader>
-                                </Table.Row>
-                            </Table.Header>
-                            <Table.Body>
-                                {[20, 22, 25].map((item, index) => (
-                                    <Table.Row key={index}>
-                                        <Table.Cell>Name {index + 1}</Table.Cell>
-                                        <Table.Cell>{item}</Table.Cell>
-                                        <Table.Cell>
-                                            {item % 5 === 0 ? "Male" : "Female"}
-                                        </Table.Cell>
+            {(["simple", "line"] as const).map(function mapVariant(variant) {
+                return (
+                    <div key={variant}>
+                        <Text size="lg">{variant}</Text>
+                        <Table.Root
+                            variant={variant}
+                            w="full"
+                            withBackground
+                        >
+                            <Table.Table>
+                                <Table.Header>
+                                    <Table.Row>
+                                        <Table.ColumnHeader>Name</Table.ColumnHeader>
+                                        <Table.ColumnHeader>Age</Table.ColumnHeader>
+                                        <Table.ColumnHeader>Gender</Table.ColumnHeader>
                                     </Table.Row>
-                                ))}
-                            </Table.Body>
-                        </Table.Table>
-                    </Table.Root>
-                </div>
-            ))}
+                                </Table.Header>
+                                <Table.Body>
+                                    {[20, 22, 25].map((item, index) => (
+                                        <Table.Row key={index}>
+                                            <Table.Cell>Name {index + 1}</Table.Cell>
+                                            <Table.Cell>{item}</Table.Cell>
+                                            <Table.Cell>
+                                                {item % 5 === 0 ? "Male" : "Female"}
+                                            </Table.Cell>
+                                        </Table.Row>
+                                    ))}
+                                </Table.Body>
+                            </Table.Table>
+                        </Table.Root>
+                    </div>
+                );
+            })}
         </>
     );
 }
@@ -164,13 +168,14 @@ export function Striped() {
 export function Sizes() {
     return (
         <>
-            {["sm", "md", "lg"].map((size) => (
-                <div key={size}>
-                    <Text size="lg">{size}</Text>
-                    <Table.Root
-                        size={size as any}
-                        w="full"
-                    >
+            {(["sm", "md", "lg"] as const).map(function mapSize(size) {
+                return (
+                    <div key={size}>
+                        <Text size="lg">{size}</Text>
+                        <Table.Root
+                            size={size}
+                            w="full"
+                        >
                         <Table.Table>
                             <Table.Header>
                                 <Table.Row>
@@ -192,8 +197,9 @@ export function Sizes() {
                             </Table.Body>
                         </Table.Table>
                     </Table.Root>
-                </div>
-            ))}
+                    </div>
+                );
+            })}
         </>
     );
 }

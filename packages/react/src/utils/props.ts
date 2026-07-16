@@ -46,6 +46,54 @@ export function omit<T extends Record<string, any>, K extends keyof T>(
 	return clone as Omit<T, K>;
 }
 
+/**
+ * Dreamy proprietary props that must never be forwarded to native DOM elements.
+ * Prefer native equivalents (`disabled`, `required`, `readOnly`, `checked`) and
+ * `aria-*` / `data-*` attributes instead of these `is*` / callback helpers.
+ */
+export const DREAMY_PROPRIETARY_PROPS = [
+	"onChangeValue",
+	"onChangeStart",
+	"onChangeEnd",
+	"isInvalid",
+	"isDisabled",
+	"isRequired",
+	"isReadOnly",
+	"isChecked",
+	"isIndeterminate",
+	"isFocusable",
+	"isPreviewFocusable",
+	"isSelected",
+	"isClearable",
+	"isMultiple",
+	"isNative",
+	"isCard",
+	"isReversed",
+	"isOpen",
+	"isLoading",
+	"isActive",
+	"reduceMotion",
+	"defaultIsOpen"
+] as const;
+
+export type DreamyProprietaryProp = (typeof DREAMY_PROPRIETARY_PROPS)[number];
+
+const dreamyProprietaryPropSet = new Set<string>(DREAMY_PROPRIETARY_PROPS);
+
+/**
+ * Returns whether a prop name is a Dreamy proprietary prop that should not hit the DOM.
+ */
+export function isDreamyProprietaryProp(prop: string): boolean {
+	return dreamyProprietaryPropSet.has(prop);
+}
+
+/**
+ * Strips known Dreamy proprietary props from a props object so the result is safe to spread onto DOM nodes.
+ */
+export function omitDreamyProps<T extends Record<string, any>>(props: T) {
+	return omit(props, DREAMY_PROPRIETARY_PROPS as unknown as (keyof T)[]);
+}
+
 export function pick<T extends Record<string, any>, K extends keyof T>(object: T, keysToPick: K[]) {
 	const result = {} as {
 		[P in K]: T[P];

@@ -133,4 +133,20 @@ describe("CheckboxCard", () => {
 
         expect(screen.getByRole("checkbox", { hidden: true })).not.toBeChecked();
     });
+
+    it("uses Field or aria-label for the accessible name", () => {
+        render(
+            <Field.Root>
+                <Field.Label>Add-ons</Field.Label>
+                <CheckboxCard.Root>
+                    <CheckboxCard.Header>
+                        <CheckboxCard.Title>Analytics</CheckboxCard.Title>
+                        <CheckboxCard.Checkbox />
+                    </CheckboxCard.Header>
+                </CheckboxCard.Root>
+            </Field.Root>
+        );
+
+        expect(screen.getByRole("checkbox", { name: /add-ons|analytics/i, hidden: true })).toBeInTheDocument();
+    });
 });

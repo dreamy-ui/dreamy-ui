@@ -3,10 +3,12 @@
 import {
     Portal,
     type PortalProps,
-    type UseControllableReturn,
-    useControllable,
-    type useControllableProps,
-    useMotionVariants
+    type UseActionBarProps,
+    type UseActionBarReturn,
+    transformReducedMotion,
+    useActionBar,
+    useMotionVariants,
+    useReducedMotion
 } from "@dreamy-ui/react";
 import { AnimatePresence } from "motion/react";
 import { createContext, useCallback, useContext } from "react";
@@ -19,7 +21,7 @@ import { MotionBox, type MotionBoxProps } from "../motion";
 
 const { withProvider, withContext } = createStyleContext(actionBar);
 
-const ActionBarContext = createContext<UseControllableReturn | null>(null);
+const ActionBarContext = createContext<UseActionBarReturn | null>(null);
 
 function useActionBarContext() {
     const context = useContext(ActionBarContext);
@@ -29,7 +31,7 @@ function useActionBarContext() {
     return context;
 }
 
-export interface ActionBarRootProps extends BoxProps, ActionBarVariantProps, useControllableProps {
+export interface ActionBarRootProps extends BoxProps, ActionBarVariantProps, UseActionBarProps {
     /**
      * Props forwarded to the shared overlay portal.
      */
@@ -38,7 +40,7 @@ export interface ActionBarRootProps extends BoxProps, ActionBarVariantProps, use
 
 export const Root = withProvider(function ActionBarRoot(props: ActionBarRootProps) {
     const { children, isOpen, defaultIsOpen, onOpen, onClose, portalProps, ...rest } = props;
-    const actionBarProps = useControllable({
+    const actionBarProps = useActionBar({
         isOpen,
         defaultIsOpen,
         onOpen,
@@ -69,31 +71,36 @@ export const Root = withProvider(function ActionBarRoot(props: ActionBarRootProp
 
 export interface ActionBarContentProps extends MotionBoxProps {}
 
-export const Content = withContext(function ActionBarContent(props: ActionBarContentProps) {
+const StyledContent = withContext(MotionBox, "content");
+
+export const Content = function ActionBarContent(props: ActionBarContentProps) {
     const { children, ...rest } = props;
-    const { isOpen } = useActionBarContext();
+    const { isOpen, getContentProps } = useActionBarContext();
+    const reduceMotion = useReducedMotion() ?? false;
 
     const { actionBar: variants } = useMotionVariants();
+    const contentProps = getContentProps(rest);
+    const motionVariants = transformReducedMotion(variants, reduceMotion);
 
     return (
         <AnimatePresence propagate>
             {isOpen && (
-                <MotionBox
+                <StyledContent
                     animate="animate"
-                    aria-label="Action bar"
                     data-state={isOpen ? "open" : "closed"}
                     exit="exit"
-                    initial="initial"
-                    role="dialog"
-                    variants={variants}
-                    {...rest}
+                    // Avoid animating from opacity 0 when reduced motion is on so
+                    // toolbar actions are immediately focusable / operable.
+                    initial={reduceMotion ? false : "initial"}
+                    variants={motionVariants}
+                    {...contentProps}
                 >
                     {children}
-                </MotionBox>
+                </StyledContent>
             )}
         </AnimatePresence>
     );
-}, "content");
+};
 
 export interface ActionBarSelectionTriggerProps extends HTMLDreamyProps<"span"> {}
 

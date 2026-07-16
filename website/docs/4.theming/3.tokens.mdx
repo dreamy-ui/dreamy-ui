@@ -1,22 +1,161 @@
 ---
 title: Tokens
+description: Explore every design and semantic token shipped with the Dreamy UI Panda preset.
 ---
 
 # Tokens
 
-Dreamy UI comes with a preset for Panda CSS, which provides tokens, patterns, recipes and utilities that are required for components to be styled.
+Dreamy UI ships a Panda CSS preset with tokens, semantic tokens, patterns, recipes, and utilities that components rely on for styling.
 
-Tokens are meant to be type safe way of using CSS, meaning your app stays consistent and they are easy to change.
+Tokens give you a type-safe way to use CSS values so your app stays consistent and easy to theme.
 
-### Typography
+## Breakpoints
 
-Use `size` or `textStyle` for typography instead of only `fontSize`. These properties will apply the correct font size, line height and font weight, including responsive sizes.
+Use the `breakpoints` key in the `theme` section of your Panda config to customize breakpoints.
 
-<Wrapper>
-	<Text size="sm">Small text</Text>
-	<Text size="md">Medium text</Text>
-	<Text size="lg">Large text</Text>
-</Wrapper>
+```ts
+import { defineConfig } from "@pandacss/dev";
+
+export default defineConfig({
+    theme: {
+        extend: {
+            breakpoints: {
+                "3xl": "1800px"
+            }
+        }
+    }
+});
+```
+
+Dreamy UI ships with these breakpoints by default:
+
+<TokenBreakpoints />
+
+## Tokens
+
+### Colors
+
+Use the `colors` key in the `tokens` section of your Panda config to customize color values.
+
+```ts
+import { defineConfig } from "@pandacss/dev";
+
+export default defineConfig({
+    theme: {
+        extend: {
+            tokens: {
+                colors: {
+                    tertiary: { value: "#fbb36a" }
+                }
+            }
+        }
+    }
+});
+```
+
+#### Color palettes
+
+Click a swatch to copy its value.
+
+<TokenColors />
+
+#### Semantic colors
+
+Semantic colors adapt to light and dark mode. Prefer these for UI surfaces, text, actions, and status.
+
+Most semantic colors are generated from your preset options — for example `primary` / `secondary`, `bg`, `fg`, `border`, and `alpha` are derived from `primaryColor`, `secondaryColor`, `backgrounds`, and related settings in `createDreamyPreset`. Change those options and the semantic palette updates with them.
+
+<TokenSemanticColors />
+
+### Spacing
+
+Use the `spacing` key to customize spacing values.
+
+```ts
+import { defineConfig } from "@pandacss/dev";
+
+export default defineConfig({
+    theme: {
+        extend: {
+            tokens: {
+                spacing: {
+                    gutter: { value: "32px" }
+                }
+            }
+        }
+    }
+});
+```
+
+Dreamy UI ships with these spacing tokens by default:
+
+<TokenSpacings />
+
+### Border radius
+
+Use the `radii` key to customize border radius values. Semantic radii (`l1`, `l2`, `l3`, `p-*`) are generated from the `rounded` option in `createDreamyPreset`.
+
+```ts
+import createDreamyPreset from "@dreamy-ui/panda-preset";
+
+createDreamyPreset({
+    rounded: "lg"
+});
+```
+
+<TokenRadii />
+
+### Shadows
+
+Use the `shadows` key to customize box shadows. Shadows are semantic tokens that adapt to color mode.
+
+<TokenShadows />
+
+### Sizing
+
+Use the `sizes` key to customize sizing values. Size tokens include spacing values plus larger container sizes.
+
+```ts
+import { defineConfig } from "@pandacss/dev";
+
+export default defineConfig({
+    theme: {
+        extend: {
+            tokens: {
+                sizes: {
+                    icon: { value: "24px" }
+                }
+            }
+        }
+    }
+});
+```
+
+Dreamy UI ships with these sizing tokens (in addition to spacing values):
+
+<TokenSizings />
+
+### Fonts
+
+Use the `fonts` key to customize font families. `body`, `heading`, and `mono` are configured via `createDreamyPreset`.
+
+```ts
+import createDreamyPreset from "@dreamy-ui/panda-preset";
+
+createDreamyPreset({
+    fonts: {
+        body: "Geist",
+        heading: "Manrope",
+        mono: "JetBrains Mono"
+    }
+});
+```
+
+<TokenFonts />
+
+### Font sizes
+
+Prefer `size` or `textStyle` for typography instead of only `fontSize`. Those properties apply the correct font size, line height, and responsive sizes.
 
 ```tsx
 <Text size="sm">Small text</Text>
@@ -24,318 +163,105 @@ Use `size` or `textStyle` for typography instead of only `fontSize`. These prope
 <Text size="lg">Large text</Text>
 ```
 
-Main colors for foreground are `fg`, `fg.max`, `fg.medium` and `fg.disabled`. Use these tokens for typography.
+<TokenFontSizes />
 
-<Wrapper>
-	<Text color="fg.max">Max text</Text>
-	<Text color="fg">Main text</Text>
-	<Text color="fg.medium">Secondary text</Text>
-	<Text color="fg.disabled">Disabled text</Text>
-</Wrapper>
+### Font weights
 
-```tsx
-<Text color="fg.max">Max text</Text>
-<Text color="fg">Main text</Text>
-<Text color="fg.medium">Secondary text</Text>
-<Text color="fg.disabled">Disabled text</Text>
+<TokenFontWeights />
+
+### Letter spacings
+
+<TokenLetterSpacings />
+
+### Line heights
+
+<TokenLineHeights />
+
+### Blurs
+
+<TokenBlurs />
+
+### Durations
+
+<TokenDurations />
+
+### Easings
+
+<TokenEasings />
+
+### Z-index
+
+<TokenZIndex />
+
+### Aspect ratios
+
+<TokenAspectRatios />
+
+## Keyframes
+
+Use the `keyframes` key in the `theme` section to customize animations.
+
+```ts
+import { defineConfig } from "@pandacss/dev";
+
+export default defineConfig({
+    theme: {
+        extend: {
+            keyframes: {
+                fadein: {
+                    "0%": { opacity: "0" },
+                    "100%": { opacity: "1" }
+                }
+            }
+        }
+    }
+});
 ```
 
-### Background colors
+Dreamy UI ships with these keyframes by default:
 
-Background colors are `bg`, which will be the current background color. `bg.light` and `bg.dark` are the light and dark background colors.
+<TokenKeyframes />
 
-<Wrapper>
-	<Box bg="bg">Current Background</Box>
-	<Box bg="bg.light">Light background</Box>
-	<Box bg="bg.dark">Dark background</Box>
-</Wrapper>
+## Usage tips
 
-```tsx
-<Box bg="bg">Current Background</Box>
-<Box bg="bg.light">Light background</Box>
-<Box bg="bg.dark">Dark background</Box>
-```
+Prefer **semantic tokens** over raw design tokens or hardcoded values. Semantic tokens (`fg`, `bg`, `primary`, `border`, `l2`, …) follow your theme and color mode, so a single change in `createDreamyPreset` updates the whole UI. Design tokens (`blue.500`, `4`, `md`) and fixed CSS (`#3B82F6`, `16px`) lock you to one look and break dark mode or rebrands.
 
-### Action colors
-
-Main action colors are `primary` and `secondary`, which you define in the dreamy preset in `panda.config.ts`. Use these colors for buttons, links, etc.
-
-<Wrapper>
-	<Text semibold color="primary">
-		<>Primary</>
-	</Text>
-	<Text semibold color="secondary">
-		<>Secondary</>
-	</Text>
-</Wrapper>
+### Prefer semantic tokens
 
 ```tsx
-<Text semibold color="primary">Primary</Text>
-<Text semibold color="secondary">Secondary</Text>
-```
-
-Dreamy exports a `success`, `warning`, `error` and `info` semantic tokens to easily signalize the status of an action.
-
-<Wrapper>
-	<Text color="success" semibold>
-		<>Success</>
-	</Text>
-	<Text color="warning" semibold>
-		<>Warning</>
-	</Text>
-	<Text color="error" semibold>
-		<>Error</>
-	</Text>
-	<Text color="info" semibold>
-		<>Info</>
-	</Text>
-</Wrapper>
-
-```tsx
-<Text color="success" semibold>Success</Text>
-<Text color="warning" semibold>Warning</Text>
-<Text color="error" semibold>Error</Text>
-<Text color="info" semibold>Info</Text>
-```
-
-### Alphas
-
-Alphas are easy way to create a slightly transparent color. These colors will be black alphas for light color mode and white alphas for dark.
-
-<Wrapper>
-	<Flex
-		wrapped
-		gap={2}
-		css={{
-			"& > *": {
-				p: 2
-			}
-		}}
-	>
-		<Box bg="alpha.50">Alpha 50</Box>
-		<Box bg="alpha.100">Alpha 100</Box>
-		<Box bg="alpha.200">Alpha 200</Box>
-		<Box bg="alpha.300">Alpha 300</Box>
-		<Box bg="alpha.400">Alpha 400</Box>
-		<Box bg="alpha.500">Alpha 500</Box>
-		<Box bg="alpha.600">Alpha 600</Box>
-		<Box bg="alpha.700">Alpha 700</Box>
-		<Box bg="alpha.800">Alpha 800</Box>
-		<Box bg="alpha.900">Alpha 900</Box>
-		<Box bg="alpha.950">Alpha 950</Box>
-	</Flex>
-</Wrapper>
-
-```tsx
-<Box bg="alpha.50">Alpha 50</Box>
-<Box bg="alpha.100">Alpha 100</Box>
-<Box bg="alpha.200">Alpha 200</Box>
-<Box bg="alpha.300">Alpha 300</Box>
-<Box bg="alpha.400">Alpha 400</Box>
-<Box bg="alpha.500">Alpha 500</Box>
-<Box bg="alpha.600">Alpha 600</Box>
-<Box bg="alpha.700">Alpha 700</Box>
-<Box bg="alpha.800">Alpha 800</Box>
-<Box bg="alpha.900">Alpha 900</Box>
-<Box bg="alpha.950">Alpha 950</Box>
-```
-
-### Borders
-
-Borders are `border`, `border.muted` and `border.hover`. Use these tokens for borders.
-
-<Wrapper>
-	<Box border="1px solid" borderColor="border" p={2}>Default border</Box>
-	<Box border="1px solid" borderColor="border.muted" p={2}>Muted border</Box>
-	<Box border="1px solid" borderColor="border.hover" p={2}>Hover border</Box>
-</Wrapper>
-
-```tsx
-<Box border="1px solid" borderColor="border" p={2}>Default border</Box>
-<Box border="1px solid" borderColor="border.muted" p={2}>Muted border</Box>
-<Box border="1px solid" borderColor="border.hover" p={2}>Hover border</Box>
-```
-
-### Radii
-
-Use `l1` for small rounded, `l2` for medium rounded and `l3` for large rounded. Those are values that are generated from radius property in `createDreamyPreset`.
-
-<Wrapper>
-    <Flex col gap={2}>
-        <Text semibold>Semantic tokens</Text>
-
-        <Group>
-            <Box rounded="l05" p={2} border="1px solid" borderColor="border">
-                <>Extra Small rounded</>
-            </Box>
-            <Box rounded="l1" p={2} border="1px solid" borderColor="border">
-                <>Small rounded</>
-            </Box>
-            <Box rounded="l2" p={2} border="1px solid" borderColor="border">
-                <>Medium rounded</>
-            </Box>
-            <Box rounded="l3" p={2} border="1px solid" borderColor="border">
-                <>Large rounded</>
-            </Box>
-        </Group>
-
-        <Group wrapped>
-            <Box rounded="p-2" p={2} border="1px solid" borderColor="border">
-                <Flex center bg="inverted" p={2} rounded="l1" color="bg">
-                    <>Padding 2</>
-                </Flex>
-            </Box>
-            <Box rounded="p-3" p={3} border="1px solid" borderColor="border">
-                <Flex center bg="inverted" p={2} rounded="l1" color="bg">
-                    <>Padding 3</>
-                </Flex>
-            </Box>
-            <Box rounded="p-4" p={4} border="1px solid" borderColor="border">
-                <Flex center bg="inverted" p={2} rounded="l1" color="bg">
-                    <>Padding 4</>
-                </Flex>
-            </Box>
-            <Box rounded="p-5" p={5} border="1px solid" borderColor="border">
-                <Flex center bg="inverted" p={2} rounded="l1" color="bg">
-                    <>Padding 5</>
-                </Flex>
-            </Box>
-            <Box rounded="p-6" p={6} border="1px solid" borderColor="border">
-                <Flex center bg="inverted" p={2} rounded="l1" color="bg">
-                    <>Padding 6</>
-                </Flex>
-            </Box>
-        </Group>
-    </Flex>
-
-    <Flex col gap={2} mt={4}>
-        <Text semibold>Design tokens</Text>
-
-        <Wrap>
-            <Box rounded="none" p={2} border="1px solid" borderColor="border" nowrap>
-                <>None rounded</>
-            </Box>
-            <Box rounded="xs" p={2} border="1px solid" borderColor="border" nowrap>
-                <>XS rounded</>
-            </Box>
-            <Box rounded="sm" p={2} border="1px solid" borderColor="border" nowrap>
-                <>SM rounded</>
-            </Box>
-            <Box rounded="md" p={2} border="1px solid" borderColor="border" nowrap>
-                <>MD rounded</>
-            </Box>
-            <Box rounded="lg" p={2} border="1px solid" borderColor="border" nowrap>
-                <>LG rounded</>
-            </Box>
-            <Box rounded="xl" p={2} border="1px solid" borderColor="border" nowrap>
-                <>XL rounded</>
-            </Box>
-            <Box rounded="2xl" p={2} border="1px solid" borderColor="border" nowrap>
-                <>2XL rounded</>
-            </Box>
-            <Box rounded="3xl" p={2} border="1px solid" borderColor="border" nowrap>
-                <>3XL rounded</>
-            </Box>
-            <Box rounded="full" p={2} border="1px solid" borderColor="border" nowrap>
-                <>Full rounded</>
-            </Box>
-        </Wrap>
-    </Flex>
-</Wrapper>
-
-```tsx
-<Flex col gap={2}>
-    <Text semibold>Semantic tokens</Text>
-
-    <Group>
-        <Box rounded="l05" p={2} border="1px solid" borderColor="border">
-            Extra Small rounded
-        </Box>
-        <Box rounded="l1" p={2} border="1px solid" borderColor="border">
-            Small rounded
-        </Box>
-        <Box rounded="l2" p={2} border="1px solid" borderColor="border">
-            Medium rounded
-        </Box>
-        <Box rounded="l3" p={2} border="1px solid" borderColor="border">
-            Large rounded
-        </Box>
-    </Group>
-
-    <Group>
-        <Box rounded="p-2" p={2} border="1px solid" borderColor="border">
-            <Flex center bg="inverted" p={2} rounded="l1" color="bg">
-                Padding 2
-            </Flex>
-        </Box>
-        <Box rounded="p-3" p={3} border="1px solid" borderColor="border">
-            <Flex center bg="inverted" p={2} rounded="l1" color="bg">
-                Padding 3
-            </Flex>
-        </Box>
-        <Box rounded="p-4" p={4} border="1px solid" borderColor="border">
-            <Flex center bg="inverted" p={2} rounded="l1" color="bg">
-                Padding 4
-            </Flex>
-        </Box>
-        <Box rounded="p-5" p={5} border="1px solid" borderColor="border">
-            <Flex center bg="inverted" p={2} rounded="l1" color="bg">
-                Padding 5
-            </Flex>
-        </Box>
-        <Box rounded="p-6" p={6} border="1px solid" borderColor="border">
-            <Flex center bg="inverted" p={2} rounded="l1" color="bg">
-                Padding 6
-            </Flex>
-        </Box>
-    </Group>
-</Flex>
-
-<Flex col gap={2} mt={4}>
-    <Text semibold>Design tokens</Text>
-
-    <Wrap>
-        <Box rounded="none" p={2} border="1px solid" borderColor="border" nowrap>
-            None rounded
-        </Box>
-        <Box rounded="xs" p={2} border="1px solid" borderColor="border" nowrap>
-            XS rounded
-        </Box>
-        <Box rounded="sm" p={2} border="1px solid" borderColor="border" nowrap>
-            SM rounded
-        </Box>
-        <Box rounded="md" p={2} border="1px solid" borderColor="border" nowrap>
-            MD rounded
-        </Box>
-        <Box rounded="lg" p={2} border="1px solid" borderColor="border" nowrap>
-            LG rounded
-        </Box>
-        <Box rounded="xl" p={2} border="1px solid" borderColor="border" nowrap>
-            XL rounded
-        </Box>
-        <Box rounded="2xl" p={2} border="1px solid" borderColor="border" nowrap>
-            2XL rounded
-        </Box>
-        <Box rounded="3xl" p={2} border="1px solid" borderColor="border" nowrap>
-            3XL rounded
-        </Box>
-        <Box rounded="full" p={2} border="1px solid" borderColor="border" nowrap>
-            Full rounded
-        </Box>
-    </Wrap>
+<Flex
+    bg="bg.panel"
+    border="1px solid"
+    borderColor="border"
+    gap={4}
+    p={4}
+    rounded="l2"
+>
+    <Text color="fg">Account settings</Text>
+    <Text color="fg.medium">Manage your profile and preferences.</Text>
+    <Button scheme="primary">Save changes</Button>
 </Flex>
 ```
 
-### Other tokens
+This stays correct when you switch light/dark mode or change `primaryColor` / `backgrounds` in the preset.
 
-Using other blur, shadows, durations, etc.
-
-When building your app, use tokens for consistency.
+### Avoid design tokens and fixed values
 
 ```tsx
-<Box blur="sm">Blurred box</Box>
-<Box shadow="lg">Shadowed box</Box>
-<Box transition="ease-in-out {durations.fast}">Fast transition</Box>
+{/* Fragile: breaks in dark mode and ignores your brand */}
+<Flex
+    bg="#ffffff"
+    border="1px solid #e5e7eb"
+    gap="16px"
+    p="16px"
+    rounded="8px"
+>
+    <Text color="gray.900">Account settings</Text>
+    <Text color="gray.500">Manage your profile and preferences.</Text>
+    <Button bg="blue.500" color="white">
+        Save changes
+    </Button>
+</Flex>
 ```
 
-For more information visit [Panda CSS docs](https://panda-css.com/docs/customization/theme), since Dreamy UI extends Panda CSS default preset.
+Hardcoded hex values and palette steps like `blue.500` or `gray.900` bypass the semantic layer. Reach for design tokens only when you need a one-off accent that is not part of the theme API.

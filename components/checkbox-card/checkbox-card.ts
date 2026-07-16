@@ -237,7 +237,7 @@ export const checkboxCard = defineSlotRecipe({
                               : scheme === "success" || scheme === "warning" || scheme === "info"
                                 ? "black/87"
                                 : "white/87"
-                } as Record<any, any>;
+                };
             },
             "root"
         )

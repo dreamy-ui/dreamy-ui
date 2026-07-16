@@ -3,7 +3,7 @@ import { useControllableState } from "@/hooks/use-controllable-state";
 import { useFocusOnPointerDown } from "@/hooks/use-focus-on-pointer-down";
 import { mergeRefs } from "@/hooks/use-merge-refs";
 import { createContext } from "@/provider/create-context";
-import { type PropGetter, callAllHandlers } from "@/utils";
+import { type PropGetter, callAllHandlers, omitDreamyProps } from "@/utils";
 import { ariaAttr } from "@/utils/attr";
 import { type RefObject, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
@@ -111,8 +111,10 @@ export function useEditable(props: UseEditableProps = {}) {
 		placeholder,
 		onEdit: onEditCallback,
 		finalFocusRef,
-		...htmlProps
+		...htmlPropsRest
 	} = props;
+
+	const htmlProps = omitDreamyProps(htmlPropsRest);
 
 	const onEditProp = useCallbackRef(onEditCallback);
 

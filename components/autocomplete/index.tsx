@@ -175,7 +175,7 @@ export const Root: (props: AutocompleteProps) => React.JSX.Element = withProvide
         );
     },
     "root"
-) as any;
+) as (props: AutocompleteProps) => React.JSX.Element;
 
 export interface AutocompleteInputProps
     extends Omit<InputProps, "size" | "variant" | "triggerVariant"> {
@@ -188,7 +188,6 @@ export interface AutocompleteInputProps
 export const Input = withContext(function AutocompleteInput({
     icon,
     placeholder,
-    ref,
     ...rest
 }: AutocompleteInputProps) {
     const { getInputProps, isClearable, selectedValue, size, triggerVariant } =
@@ -200,9 +199,9 @@ export const Input = withContext(function AutocompleteInput({
                 {icon && <AutocompleteIcon>{icon}</AutocompleteIcon>}
                 <BaseInput
                     placeholder={placeholder}
-                    size={size}
+                    size={size === "xs" ? "sm" : size}
                     variant={triggerVariant as InputProps["variant"]}
-                    {...(getInputProps({ ...rest, ref } as any) as any)}
+                    {...(getInputProps(rest) as InputProps)}
                 />
                 <AutocompleteIndicatorGroup>
                     {isClearable && selectedValue && <AutocompleteClearButton />}
@@ -236,7 +235,6 @@ export const Content = withContext(function AutocompleteContent({
     noResultsContent,
     renderItem,
     className,
-    ref,
     ...rest
 }: AutocompleteContentProps) {
     const { filteredItems, getContentProps } = useAutocompleteContext();
@@ -244,7 +242,7 @@ export const Content = withContext(function AutocompleteContent({
     return (
         <PopoverContent
             className={className}
-            {...(getContentProps({ ...rest, ref, className } as any) as any)}
+            {...getContentProps({ ...rest, className })}
         >
             {filteredItems.length === 0
                 ? (noResultsContent ?? (
@@ -308,7 +306,6 @@ export const VirtualContent = withContext(function AutocompleteVirtualContent({
     noResultsContent,
     renderItem,
     className,
-    ref,
     ...rest
 }: AutocompleteVirtualContentProps) {
     const { filteredItems, getContentProps, isOpen } = useAutocompleteContext();
@@ -316,7 +313,7 @@ export const VirtualContent = withContext(function AutocompleteVirtualContent({
     return (
         <PopoverContent
             className={className}
-            {...(getContentProps({ ...rest, ref, className } as any) as any)}
+            {...getContentProps({ ...rest, className })}
         >
             {filteredItems.length === 0 ? (
                 (noResultsContent ?? <AutocompleteNoResults>{noResultsText}</AutocompleteNoResults>)
@@ -433,14 +430,13 @@ export const Item = withContext(function AutocompleteItem({
     value,
     index,
     children,
-    ref,
     ...rest
 }: AutocompleteItemProps) {
     const { getItemProps, selectedValue } = useAutocompleteContext();
     const isSelected = selectedValue === value;
 
     return (
-        <dreamy.button {...(getItemProps({ value, index, ...rest, ref }) as any)}>
+        <dreamy.button {...(getItemProps({ value, index, ...rest }) as HTMLDreamyProps<"button">)}>
             {children}
             {isSelected && <AutocompleteItemIndicator />}
         </dreamy.button>

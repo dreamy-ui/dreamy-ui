@@ -159,4 +159,39 @@ describe("Radio", () => {
         expect(radios[0]).not.toBeChecked();
         expect(radios[1]).toBeChecked();
     });
+
+    it("moves selection with arrow keys within the group", async () => {
+        const user = userEvent.setup();
+        const onChange = vi.fn();
+
+        render(
+            <RadioGroup
+                defaultValue="pro"
+                onChange={onChange}
+                role="radiogroup"
+                aria-label="Plan"
+            >
+                <Radio
+                    name="plan"
+                    value="pro"
+                >
+                    Pro
+                </Radio>
+                <Radio
+                    name="plan"
+                    value="team"
+                >
+                    Team
+                </Radio>
+            </RadioGroup>
+        );
+
+        const radios = screen.getAllByRole("radio", { hidden: true });
+
+        radios[0].focus();
+        await user.keyboard("{ArrowDown}");
+
+        expect(radios[1]).toBeChecked();
+        expect(onChange).toHaveBeenCalledWith("team");
+    });
 });

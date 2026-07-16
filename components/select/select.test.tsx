@@ -87,7 +87,7 @@ describe("Select", () => {
         );
 
         await user.click(screen.getByRole("button", { name: "Fruit" }));
-        await user.click(screen.getByRole("button", { name: "Banana" }));
+        await user.click(screen.getByRole("option", { name: "Banana" }));
 
         await waitFor(function waitForSelection() {
             expect(onChangeValue).toHaveBeenCalledWith("banana");
@@ -197,5 +197,37 @@ describe("Select", () => {
         );
 
         expect(screen.getByRole("button", { name: "Fruit" })).toHaveTextContent("Orange");
+    });
+
+    it("exposes a named clear button and keeps the hidden select out of the tab order", async () => {
+        const user = userEvent.setup();
+
+        render(
+            <Select.Root
+                defaultValue="banana"
+                isClearable
+                items={fruits}
+                popoverProps={{ usePortal: false }}
+            >
+                <Select.Trigger
+                    aria-label="Fruit"
+                    placeholder="Select a fruit"
+                />
+                <Select.Content />
+            </Select.Root>
+        );
+
+        const clear = screen.getByRole("button", { name: "Clear selection" });
+        const clearIcon = clear.querySelector("svg");
+        const hiddenSelect = document.querySelector("select");
+
+        expect(clearIcon).toHaveAttribute("aria-hidden", "true");
+        expect(hiddenSelect).toBeInTheDocument();
+        expect(hiddenSelect).toHaveValue("banana");
+        expect(hiddenSelect).toHaveAttribute("tabindex", "-1");
+        expect(hiddenSelect?.closest("[aria-hidden='true']")).toBeTruthy();
+
+        await user.click(clear);
+        expect(screen.queryByRole("button", { name: "Clear selection" })).not.toBeInTheDocument();
     });
 });

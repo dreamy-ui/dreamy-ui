@@ -1,9 +1,20 @@
 "use client";
 
+import { createContext } from "@dreamy-ui/react";
+import { useId } from "react";
 import { type HTMLDreamyProps, createStyleContext, dreamy } from "styled-system/jsx";
 import { fieldset } from "styled-system/recipes";
 
 const { withProvider, withContext } = createStyleContext(fieldset);
+
+interface FieldsetContextValue {
+    legendId: string;
+}
+
+const [FieldsetProvider, useFieldsetContext] = createContext<FieldsetContextValue>({
+    strict: false,
+    name: "FieldsetContext"
+});
 
 export interface FieldsetRootProps extends HTMLDreamyProps<"fieldset"> {
     /**
@@ -23,14 +34,19 @@ export interface FieldsetRootProps extends HTMLDreamyProps<"fieldset"> {
  */
 export const Root = withProvider(function FieldsetRoot(props: FieldsetRootProps) {
     const { disabled, invalid, ...rest } = props;
+    const legendId = useId();
+
     return (
-        <dreamy.fieldset
-            aria-invalid={invalid}
-            data-disabled={disabled ? "" : undefined}
-            data-invalid={invalid ? "" : undefined}
-            disabled={disabled}
-            {...rest}
-        />
+        <FieldsetProvider value={{ legendId }}>
+            <dreamy.fieldset
+                {...rest}
+                aria-invalid={invalid}
+                aria-labelledby={legendId}
+                data-disabled={disabled ? "" : undefined}
+                data-invalid={invalid ? "" : undefined}
+                disabled={disabled}
+            />
+        </FieldsetProvider>
     );
 }, "root");
 
@@ -39,7 +55,16 @@ export interface FieldsetLegendProps extends HTMLDreamyProps<"legend"> {}
 /**
  * Fieldset Legend component - provides a caption for the fieldset
  */
-export const Legend = withContext(dreamy.legend, "legend");
+export const Legend = withContext(function FieldsetLegend(props: FieldsetLegendProps) {
+    const fieldset = useFieldsetContext();
+
+    return (
+        <dreamy.legend
+            {...props}
+            id={props.id ?? fieldset?.legendId}
+        />
+    );
+}, "legend");
 
 export interface FieldsetHelperTextProps extends HTMLDreamyProps<"div"> {}
 

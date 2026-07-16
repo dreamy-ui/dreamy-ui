@@ -140,4 +140,26 @@ describe("RangeSlider", () => {
         expect(onChangeValue).not.toHaveBeenCalled();
         expect(minThumb).toHaveAttribute("aria-valuenow", "25");
     });
+
+    it("reflects read-only and invalid state on thumbs", () => {
+        render(
+            <RangeSlider.Root
+                aria-label={["Minimum price", "Maximum price"]}
+                defaultValue={[20, 80]}
+                isInvalid
+                isReadOnly
+            >
+                <RangeSlider.Track>
+                    <RangeSlider.FilledTrack />
+                </RangeSlider.Track>
+                <RangeSlider.Thumb index={0} />
+                <RangeSlider.Thumb index={1} />
+            </RangeSlider.Root>
+        );
+
+        for (const thumb of screen.getAllByRole("slider")) {
+            expect(thumb).toHaveAttribute("aria-readonly", "true");
+            expect(thumb).toHaveAttribute("data-invalid");
+        }
+    });
 });

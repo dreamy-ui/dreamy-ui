@@ -86,4 +86,18 @@ describe("Textarea", () => {
         expect(textarea.tagName).toBe("TEXTAREA");
         expect(textarea.getAttribute("aria-describedby")).toContain(hint.id);
     });
+
+    it("keeps Field.Label as the accessible name when a placeholder is present", () => {
+        render(
+            <Field.Root>
+                <Field.Label>Bio</Field.Label>
+                <Textarea placeholder="Tell us about yourself" />
+            </Field.Root>
+        );
+
+        expect(screen.getByRole("textbox", { name: "Bio" })).toBeInTheDocument();
+        expect(
+            screen.queryByRole("textbox", { name: "Tell us about yourself" })
+        ).not.toBeInTheDocument();
+    });
 });

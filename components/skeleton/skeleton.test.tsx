@@ -53,4 +53,39 @@ describe("Skeleton", () => {
             expect(line).toHaveAttribute("aria-hidden", "true");
         }
     });
+
+    it("announces loading once at the region and clears aria-busy when loaded", () => {
+        const { rerender } = render(
+            <div
+                aria-busy="true"
+                role="status"
+            >
+                <span>Loading content</span>
+                <Skeleton
+                    aria-hidden="true"
+                    data-testid="sk-1"
+                />
+                <Skeleton
+                    aria-hidden="true"
+                    data-testid="sk-2"
+                />
+            </div>
+        );
+
+        expect(screen.getByRole("status")).toHaveAttribute("aria-busy", "true");
+        expect(screen.getByTestId("sk-1")).toHaveAttribute("aria-hidden", "true");
+        expect(screen.getByTestId("sk-2")).toHaveAttribute("aria-hidden", "true");
+
+        rerender(
+            <div
+                aria-busy="false"
+                role="status"
+            >
+                <p>Ready</p>
+            </div>
+        );
+
+        expect(screen.getByRole("status")).toHaveAttribute("aria-busy", "false");
+        expect(screen.getByText("Ready")).toBeInTheDocument();
+    });
 });

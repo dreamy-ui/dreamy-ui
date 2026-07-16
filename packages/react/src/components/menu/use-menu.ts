@@ -152,6 +152,7 @@ export function useMenu<T extends any>(props: UseMenuProps<T>): UseMenuReturn {
                 "data-slot": "trigger",
                 ref: mergeRefs(triggerRef, ref),
                 ...rest,
+                "aria-haspopup": "menu",
                 onKeyDown: callAllHandlers(propsOnKeyDown, onKeyDown)
             };
         },
@@ -163,6 +164,7 @@ export function useMenu<T extends any>(props: UseMenuProps<T>): UseMenuReturn {
         return {
             ref: mergeRefs(popoverRef, ref),
             ...rest,
+            role: "menu",
             rootProps: {
                 style: {
                     zIndex: "var(--z-index-dropdown)"
@@ -171,21 +173,28 @@ export function useMenu<T extends any>(props: UseMenuProps<T>): UseMenuReturn {
         } as const;
     }, []);
 
-    const getItemProps: PropGetter = useCallback((props = {}) => {
-        const { ref, onClick, ...rest } = props;
-        return {
-            "data-slot": "item",
-            ...rest,
-            ref: mergeRefs(ref),
-            onClick: callAllHandlers(onClick, () => {
-                if (triggerRef.current) {
-                    requestAnimationFrame(() => {
-                        triggerRef.current?.focus();
-                    });
-                }
-            })
-        };
-    }, []);
+    const getItemProps: PropGetter = useCallback(
+        (props = {}) => {
+            const { ref, onClick, role, ...rest } = props;
+            return {
+                "data-slot": "item",
+                ...rest,
+                role: role ?? "menuitem",
+                ref: mergeRefs(ref),
+                onClick: callAllHandlers(onClick, () => {
+                    if (closeOnClick) {
+                        onClose();
+                    }
+                    if (triggerRef.current) {
+                        requestAnimationFrame(() => {
+                            triggerRef.current?.focus();
+                        });
+                    }
+                })
+            };
+        },
+        [closeOnClick, onClose]
+    );
 
     return {
         triggerRef,

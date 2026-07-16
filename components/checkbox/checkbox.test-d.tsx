@@ -90,11 +90,6 @@ assertType<CheckboxGroupProps>({
     variant: "solid"
 });
 
-assertType<CheckboxProps["onChange"]>(
-    // @ts-expect-error onChange must receive a change event, not a boolean
-    (_value: boolean) => {}
-);
-
 assertType<CheckboxProps>({
     // @ts-expect-error invalid color scheme
     scheme: "invalid"

@@ -70,7 +70,7 @@ export const Root = withProvider(function Component(props: RangeSliderProps) {
                         ...(orientation === "horizontal"
                             ? { height: config.trackSize }
                             : { width: config.trackSize })
-                    } as React.CSSProperties
+                    } as unknown as React.CSSProperties
                 }
             />
         </RangeSliderProvider>

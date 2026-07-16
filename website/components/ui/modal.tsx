@@ -178,9 +178,17 @@ export const Content = withContext(function Component({
 export interface ModalHeaderProps extends FlexProps {}
 
 export const Header = withContext(function Component({ children, ...props }: ModalHeaderProps) {
+    const { headerId, setHeaderMounted } = useModalContext();
+
+    useEffect(() => {
+        setHeaderMounted(true);
+        return () => setHeaderMounted(false);
+    }, [setHeaderMounted]);
+
     return (
         <Flex
             as={"header"}
+            id={headerId}
             {...props}
         >
             {typeof children === "string" ? (
@@ -200,10 +208,16 @@ export const Header = withContext(function Component({ children, ...props }: Mod
 export interface ModalBodyProps extends FlexProps {}
 
 export const Body = withContext(function Component({ children, style, ...props }: ModalBodyProps) {
-    const { scrollBehavior } = useModalContext();
+    const { scrollBehavior, bodyId, setBodyMounted } = useModalContext();
+
+    useEffect(() => {
+        setBodyMounted(true);
+        return () => setBodyMounted(false);
+    }, [setBodyMounted]);
 
     return (
         <Flex
+            id={bodyId}
             {...props}
             style={{
                 maxHeight: scrollBehavior === "inside" ? "calc(100vh - 10rem)" : undefined,

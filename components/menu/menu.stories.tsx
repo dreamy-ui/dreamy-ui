@@ -82,42 +82,44 @@ export function Placement() {
 export function Sizes() {
     return (
         <>
-            {["xs", "sm", "md", "lg"].map((size) => (
-                <Menu.Root
-                    key={size}
-                    size={size as any}
-                >
-                    <Menu.Trigger>
-                        <Button w="fit-content">Open {size} Menu</Button>
-                    </Menu.Trigger>
-                    <Menu.Content>
-                        <Menu.Item
-                            command="{actionKey} n"
-                            icon={<IoAdd />}
-                        >
-                            Add new
-                        </Menu.Item>
-                        <Menu.Item
-                            command="{actionKey} a"
-                            icon={<LuAlarmClock />}
-                        >
-                            Set alarm
-                        </Menu.Item>
-                        <Menu.Item
-                            command="{actionKey} b"
-                            icon={<LuBattery />}
-                        >
-                            Battery
-                        </Menu.Item>
-                        <Menu.Item
-                            command="{actionKey} d"
-                            icon={<LuTrash />}
-                        >
-                            Delete
-                        </Menu.Item>
-                    </Menu.Content>
-                </Menu.Root>
-            ))}
+            {(["xs", "sm", "md", "lg"] as const).map(function mapSize(size) {
+                return (
+                    <Menu.Root
+                        key={size}
+                        size={size}
+                    >
+                        <Menu.Trigger>
+                            <Button w="fit-content">Open {size} Menu</Button>
+                        </Menu.Trigger>
+                        <Menu.Content>
+                            <Menu.Item
+                                command="{actionKey} n"
+                                icon={<IoAdd />}
+                            >
+                                Add new
+                            </Menu.Item>
+                            <Menu.Item
+                                command="{actionKey} a"
+                                icon={<LuAlarmClock />}
+                            >
+                                Set alarm
+                            </Menu.Item>
+                            <Menu.Item
+                                command="{actionKey} b"
+                                icon={<LuBattery />}
+                            >
+                                Battery
+                            </Menu.Item>
+                            <Menu.Item
+                                command="{actionKey} d"
+                                icon={<LuTrash />}
+                            >
+                                Delete
+                            </Menu.Item>
+                        </Menu.Content>
+                    </Menu.Root>
+                );
+            })}
         </>
     );
 }

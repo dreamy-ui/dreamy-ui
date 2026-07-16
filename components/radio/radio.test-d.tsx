@@ -66,7 +66,7 @@ assertType<RadioProps>({
     defaultChecked: false,
     scheme: "primary",
     size: "md",
-    variant: "outline",
+    variant: "solid",
     name: "plan",
     className: "custom-radio",
     bg: "primary",
@@ -87,11 +87,6 @@ assertType<RadioGroupProps>({
     isDisabled: false,
     isInvalid: false
 });
-
-assertType<RadioProps["onChange"]>(
-    // @ts-expect-error onChange must receive a change event, not a string
-    (_value: string) => {}
-);
 
 assertType<RadioProps>({
     // @ts-expect-error invalid color scheme

@@ -5,9 +5,10 @@ import {
     createContext,
     cx,
     dataAttr,
+    useControllableState,
+    useFieldContext,
     useUpdateEffect
 } from "@dreamy-ui/react";
-import { useControllableState } from "@dreamy-ui/react";
 import dayjs, { type Dayjs } from "dayjs";
 import * as m from "motion/react-m";
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
@@ -388,6 +389,7 @@ export interface DatePickerInputProps extends InputGroupProps {}
 export const Input = withContext(function DatePickerInput(props: DatePickerInputProps) {
     const { ref: _ref, ...inputProps } = props;
     const context = useDatePickerContext();
+    const field = useFieldContext();
     const formattedDate = useMemo(
         function formatDate() {
             return context.value ? dayjs(context.value).format(context.dateFormat) : "";
@@ -398,19 +400,20 @@ export const Input = withContext(function DatePickerInput(props: DatePickerInput
     const size = getInheritedButtonSize(context.size);
 
     return (
-        <Popover.Trigger>
-            <InputComponent.Group size={size}>
+        <InputComponent.Group size={size}>
+            <Popover.Trigger>
                 <InputComponent
+                    id={field?.id}
                     placeholder={context.placeholder}
                     readOnly
                     value={formattedDate}
                     {...(inputProps as InputProps)}
                 />
-                <InputComponent.EndAddon>
-                    <LuCalendar />
-                </InputComponent.EndAddon>
-            </InputComponent.Group>
-        </Popover.Trigger>
+            </Popover.Trigger>
+            <InputComponent.EndAddon>
+                <LuCalendar aria-hidden="true" />
+            </InputComponent.EndAddon>
+        </InputComponent.Group>
     );
 }, "trigger");
 
@@ -1301,6 +1304,7 @@ export interface DatePickerCalendarCellButtonProps extends ButtonProps {
 export const CalendarCellButton = withContext(function DatePickerCalendarCellButton(
     props: DatePickerCalendarCellButtonProps
 ) {
+    const { isSelected, isDisabled, disabled, children, ...rest } = props;
     const context = useDatePickerContext();
     const viewMonthKey = useMemo(
         function getViewMonthKey() {
@@ -1309,8 +1313,11 @@ export const CalendarCellButton = withContext(function DatePickerCalendarCellBut
         [context.viewDate]
     );
     return (
-        <dreamy.button {...props}>
-            {props.isSelected && (
+        <dreamy.button
+            {...rest}
+            disabled={disabled ?? isDisabled}
+        >
+            {isSelected && (
                 <m.div
                     data-part="indicator"
                     initial={false}
@@ -1318,7 +1325,7 @@ export const CalendarCellButton = withContext(function DatePickerCalendarCellBut
                     layoutId={`${context.id}-date-picker-cell-button-indicator-${viewMonthKey}`}
                 />
             )}
-            {props.children}
+            {children}
         </dreamy.button>
     );
 }, "calendarCellButton");

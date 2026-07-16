@@ -28,7 +28,6 @@ const StyledCheckbox = dreamy("div", checkbox);
  * @See Docs https://dreamy-ui.com/docs/components/checkbox
  */
 export function Checkbox(props: CheckboxProps) {
-    const { ref } = props;
     const {
         children,
         icon = <CheckboxIcon />,
@@ -37,7 +36,7 @@ export function Checkbox(props: CheckboxProps) {
         getInputProps,
         getIconProps,
         getLabelProps
-    } = useCheckbox({ ...props, ref });
+    } = useCheckbox(props);
 
     const clonedIcon = useMemo(() => {
         return typeof icon === "function"

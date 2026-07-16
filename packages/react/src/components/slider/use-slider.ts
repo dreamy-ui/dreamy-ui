@@ -4,7 +4,7 @@ import { useLatestRef } from "@/hooks/use-latest-ref";
 import { type ReactRef, mergeRefs } from "@/hooks/use-merge-refs";
 import { usePanEvent } from "@/hooks/use-pan-event";
 import { createContext } from "@/provider/create-context";
-import { type PropGetter, type RequiredPropGetter, callAllHandlers } from "@/utils";
+import { type PropGetter, type RequiredPropGetter, callAllHandlers, omitDreamyProps } from "@/utils";
 import { ariaAttr, dataAttr } from "@/utils/attr";
 import { percentToValue, roundValueToStep, valueToPercent } from "@/utils/number";
 import {
@@ -163,8 +163,10 @@ export function useSlider(props: UseSliderProps) {
 		"aria-label": ariaLabel,
 		"aria-labelledby": ariaLabelledBy,
 		inputProps,
-		...htmlProps
+		...htmlPropsRest
 	} = props;
+
+	const htmlProps = omitDreamyProps(htmlPropsRest);
 
 	const BORDER_SIZE = thumbSize / 2;
 
@@ -465,7 +467,11 @@ export function useSlider(props: UseSliderProps) {
 				"aria-disabled": ariaAttr(isDisabled),
 				"aria-readonly": ariaAttr(isReadOnly),
 				"aria-label": ariaLabel,
-				"aria-labelledby": field ? field.labelId : ariaLabel ? undefined : ariaLabelledBy,
+				"aria-labelledby": ariaLabel
+					? undefined
+					: field
+						? field.labelId
+						: ariaLabelledBy,
 				"data-invalid": dataAttr(isInvalid),
 				style: {
 					...style,
@@ -558,7 +564,6 @@ export function useSlider(props: UseSliderProps) {
 				type: "range",
 				"aria-invalid": ariaAttr(isInvalid),
 				"data-invalid": dataAttr(isInvalid),
-				invalid: isInvalid,
 				disabled: isDisabled,
 				"data-disabled": dataAttr(isDisabled),
 				readOnly: isReadOnly,

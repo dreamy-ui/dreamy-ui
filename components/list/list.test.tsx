@@ -1,4 +1,5 @@
 import { screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import { render } from "../test/render";
 import * as List from "./index";
@@ -48,5 +49,37 @@ describe("List", () => {
         const root = screen.getByTestId("list-root");
         expect(root).toHaveClass("custom-list");
         expect(root).toHaveAttribute("aria-label", "Hardware");
+    });
+
+    it("nests lists inside list items and keeps focusable children keyboard operable", async () => {
+        const user = userEvent.setup();
+
+        render(
+            <List.Root>
+                <List.Item>
+                    Fruits
+                    <List.Root>
+                        <List.Item>
+                            <a href="/apple">Apple</a>
+                        </List.Item>
+                    </List.Root>
+                </List.Item>
+                <List.Item>
+                    <button type="button">Action</button>
+                </List.Item>
+            </List.Root>
+        );
+
+        const lists = screen.getAllByRole("list");
+        expect(lists).toHaveLength(2);
+        expect(lists[1].parentElement?.tagName).toBe("LI");
+
+        const link = screen.getByRole("link", { name: "Apple" });
+        const button = screen.getByRole("button", { name: "Action" });
+
+        link.focus();
+        expect(link).toHaveFocus();
+        await user.tab();
+        expect(button).toHaveFocus();
     });
 });

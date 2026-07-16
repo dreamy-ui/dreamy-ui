@@ -42,10 +42,17 @@ export function Group({ children, skip, ...props }: GroupProps) {
         if (validChildArray.length === 1) return childArray;
 
         return childArray.map((child) => {
-            const childProps = child.props as any;
-            if (skip?.(child)) return child;
+            const typedChild = child as React.ReactElement<{
+                style?: React.CSSProperties;
+                "data-group-item"?: string;
+                "data-first"?: string | boolean;
+                "data-last"?: string | boolean;
+                "data-between"?: string | boolean;
+            }>;
+            const childProps = typedChild.props;
+            if (skip?.(typedChild)) return typedChild;
             const index = validChildArray.indexOf(child);
-            return cloneElement(child, {
+            return cloneElement(typedChild, {
                 ...childProps,
                 "data-group-item": "",
                 "data-first": dataAttr(index === 0),
@@ -54,9 +61,9 @@ export function Group({ children, skip, ...props }: GroupProps) {
                 style: {
                     "--group-count": validChildCount,
                     "--group-index": index,
-                    ...(childProps?.style ?? {})
-                }
-            } as any);
+                    ...(childProps.style ?? {})
+                } as React.CSSProperties
+            });
         });
     }, [children, skip]);
 

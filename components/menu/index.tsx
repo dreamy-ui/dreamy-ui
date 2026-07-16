@@ -147,11 +147,11 @@ export interface MenuTriggerProps extends HTMLDreamyProps<"button"> {
     placeholder?: string;
 }
 
-export function Trigger({ children, placeholder, ref, ...rest }: MenuTriggerProps) {
+export function Trigger({ children, placeholder, ...rest }: MenuTriggerProps) {
     const { getTriggerProps } = useMenuContext();
 
     const child = Children.only(children) as ReactElement;
-    const trigger = cloneElement(child, getTriggerProps({ ...rest, ref }));
+    const trigger = cloneElement(child, getTriggerProps(rest));
 
     return <PopoverTrigger {...rest}>{trigger}</PopoverTrigger>;
 }
@@ -186,7 +186,6 @@ export interface MenuTriggerItemProps extends Omit<MenuButtonProps, "children"> 
  * ```
  */
 export const TriggerItem = withContext(function MenuTriggerItem(props: MenuTriggerItemProps) {
-    const { ref } = props;
     const {
         icon,
         command,
@@ -215,7 +214,7 @@ export const TriggerItem = withContext(function MenuTriggerItem(props: MenuTrigg
 
     // Close nested menu when this item loses virtual focus in the parent menu
     // (e.g. user navigates to a different item with ArrowDown).
-    const isFocusedAttr = (buttonProps as any)["data-focused"];
+    const isFocusedAttr = (buttonProps as Record<string, unknown>)["data-focused"];
     useEffect(() => {
         if (isFocusedAttr === undefined) nestedCtx.onClose();
     }, [isFocusedAttr, nestedCtx.onClose]);
@@ -268,14 +267,23 @@ export const TriggerItem = withContext(function MenuTriggerItem(props: MenuTrigg
                 <PopoverAnchor>
                     <dreamy.button
                         {...buttonProps}
-                        onClick={callAllHandlers(userOnClick as any, nestedCtx.onToggle)}
+                        onClick={callAllHandlers(
+                            userOnClick as React.MouseEventHandler<HTMLButtonElement> | undefined,
+                            nestedCtx.onToggle
+                        )}
                         onKeyDown={callAllHandlers(
-                            buttonProps.onKeyDown as any,
-                            nestedOnKeyDown as any,
-                            handleButtonKeyDown as any
+                            buttonProps.onKeyDown as
+                                | React.KeyboardEventHandler<HTMLButtonElement>
+                                | undefined,
+                            nestedOnKeyDown as
+                                | React.KeyboardEventHandler<HTMLButtonElement>
+                                | undefined,
+                            handleButtonKeyDown
                         )}
                         onPointerEnter={callAllHandlers(
-                            buttonProps.onPointerEnter as any,
+                            buttonProps.onPointerEnter as
+                                | React.PointerEventHandler<HTMLButtonElement>
+                                | undefined,
                             nestedCtx.onOpen
                         )}
                         ref={mergeRefs(buttonProps.ref, nestedCtx.triggerRef)}

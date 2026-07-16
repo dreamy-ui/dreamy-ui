@@ -223,10 +223,12 @@ export const CloseButton = withContext(function PopoverCloseButton(props: Popove
  * for the popover.
  */
 export function Anchor(props: React.PropsWithChildren<{}>) {
-    const child: any = Children.only(props.children);
+    const child = Children.only(props.children) as React.ReactElement<Record<string, unknown>> & {
+        ref?: React.Ref<Element>;
+    };
     const { getAnchorProps } = usePopoverContext();
 
-    return <>{cloneElement(child, getAnchorProps(child.props, child.props.ref))}</>;
+    return <>{cloneElement(child, getAnchorProps({ ...child.props, ref: child.ref }))}</>;
 }
 
 /**
@@ -234,8 +236,10 @@ export function Anchor(props: React.PropsWithChildren<{}>) {
  * such as `button` or `a`.
  */
 export function Trigger(props: { children: React.ReactNode }) {
-    const child: any = Children.only(props.children);
+    const child = Children.only(props.children) as React.ReactElement<Record<string, unknown>> & {
+        ref?: React.Ref<Element>;
+    };
     const { getTriggerProps } = usePopoverContext();
 
-    return <>{cloneElement(child, getTriggerProps(child.props, child.props.ref))}</>;
+    return <>{cloneElement(child, getTriggerProps({ ...child.props, ref: child.ref }))}</>;
 }

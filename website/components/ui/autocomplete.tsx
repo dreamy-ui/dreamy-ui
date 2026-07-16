@@ -175,7 +175,7 @@ export const Root: (props: AutocompleteProps) => React.JSX.Element = withProvide
         );
     },
     "root"
-) as any;
+) as (props: AutocompleteProps) => React.JSX.Element;
 
 export interface AutocompleteInputProps
     extends Omit<InputProps, "size" | "variant" | "triggerVariant"> {
@@ -200,9 +200,9 @@ export const Input = withContext(function AutocompleteInput({
                 {icon && <AutocompleteIcon>{icon}</AutocompleteIcon>}
                 <BaseInput
                     placeholder={placeholder}
-                    size={size}
+                    size={size === "xs" ? "sm" : size}
                     variant={triggerVariant as InputProps["variant"]}
-                    {...(getInputProps({ ...rest, ref } as any) as any)}
+                    {...(getInputProps({ ...rest, ref }) as InputProps)}
                 />
                 <AutocompleteIndicatorGroup>
                     {isClearable && selectedValue && <AutocompleteClearButton />}
@@ -244,7 +244,7 @@ export const Content = withContext(function AutocompleteContent({
     return (
         <PopoverContent
             className={className}
-            {...(getContentProps({ ...rest, ref, className } as any) as any)}
+            {...getContentProps({ ...rest, ref, className })}
         >
             {filteredItems.length === 0
                 ? (noResultsContent ?? (
@@ -316,7 +316,7 @@ export const VirtualContent = withContext(function AutocompleteVirtualContent({
     return (
         <PopoverContent
             className={className}
-            {...(getContentProps({ ...rest, ref, className } as any) as any)}
+            {...getContentProps({ ...rest, ref, className })}
         >
             {filteredItems.length === 0 ? (
                 (noResultsContent ?? <AutocompleteNoResults>{noResultsText}</AutocompleteNoResults>)
@@ -440,7 +440,7 @@ export const Item = withContext(function AutocompleteItem({
     const isSelected = selectedValue === value;
 
     return (
-        <dreamy.button {...(getItemProps({ value, index, ...rest, ref }) as any)}>
+        <dreamy.button {...(getItemProps({ value, index, ...rest, ref }) as HTMLDreamyProps<"button">)}>
             {children}
             {isSelected && <AutocompleteItemIndicator />}
         </dreamy.button>

@@ -149,7 +149,7 @@ export const Root: <T extends boolean = false, Item extends SelectItemData = Sel
                 {
                     ...ctx,
                     renderItem: renderItem as ((item: SelectItemData) => ReactNode) | undefined
-                } as any
+                } as React.ComponentProps<typeof SelectProvider>["value"]
             }
         >
             <Box
@@ -179,7 +179,9 @@ export const Root: <T extends boolean = false, Item extends SelectItemData = Sel
             </Box>
         </SelectProvider>
     );
-}, "root") as any;
+}, "root") as <T extends boolean = false, Item extends SelectItemData = SelectItemData>(
+    props: SelectProps<T, Item>
+) => React.JSX.Element;
 
 export interface SelectTriggerProps extends HTMLDreamyProps<"button"> {
     icon?: React.ReactNode;
@@ -234,7 +236,7 @@ export const Trigger = withContext(function SelectTrigger({
 
     return (
         <PopoverTrigger>
-            <dreamy.button {...(getTriggerProps({ ...rest, ref }) as any)}>
+            <dreamy.button {...(getTriggerProps({ ...rest, ref }) as HTMLDreamyProps<"button">)}>
                 {icon && icon}
 
                 <dreamy.span data-part="value">{children ?? getDisplayContent()}</dreamy.span>
@@ -357,7 +359,7 @@ const SelectListItem = withContext(function SelectListItem({
                     ref,
                     ...rest
                 }
-            ) as any)}
+            ) as HTMLDreamyProps<"button">)}
         >
             {renderItem ? renderItem(item) : item.label}
             {(selectedStrategy === "checkmark" || selectedStrategy === "both") &&
@@ -527,7 +529,6 @@ const SelectClearButton = withContext(function SelectClearButton(props: SelectCl
         <dreamy.button {...getClearButtonProps(props)}>
             <svg
                 aria-hidden="true"
-                aria-label="Clear selection"
                 fill="none"
                 stroke="currentColor"
                 strokeLinecap="round"

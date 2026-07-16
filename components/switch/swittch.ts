@@ -125,7 +125,6 @@ export const swittch = defineRecipe({
         },
         scheme: getColorSchemes(
             "--switch-bg",
-            // @ts-expect-error
             (scheme) =>
                 scheme === "primary"
                     ? {

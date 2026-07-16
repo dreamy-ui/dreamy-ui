@@ -7,10 +7,10 @@ import { Box } from "../box";
 interface ProgressFilledTrackProps extends HTMLDreamyProps<"div">, GetProgressPropsOptions {}
 
 function ProgressFilledTrack(props: ProgressFilledTrackProps) {
-    const { min, max, value, isIndeterminate, role, ...rest } = props;
+    const { min, max, value, isIndeterminate, role, valueText, getValueText, ...rest } = props;
     const progress = useMemo(
-        () => getProgressProps({ value, min, max, isIndeterminate, role }),
-        [value, min, max, isIndeterminate, role]
+        () => getProgressProps({ value, min, max, isIndeterminate, role, valueText, getValueText }),
+        [value, min, max, isIndeterminate, role, valueText, getValueText]
     );
 
     return (
@@ -89,12 +89,12 @@ export function Progress(props: ProgressProps) {
             <ProgressFilledTrack
                 aria-label={ariaLabel}
                 aria-labelledby={ariaLabelledBy}
-                aria-valuetext={ariaValueText}
                 max={max}
                 min={min}
                 role={role}
                 title={title}
                 value={value}
+                valueText={ariaValueText}
             />
             {children}
         </StyledProgress>

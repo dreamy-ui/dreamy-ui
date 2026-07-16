@@ -16,17 +16,19 @@ export type Merge<M, N> = N extends Record<string, unknown> ? M : Omit<M, keyof 
 
 export type Status = "success" | "info" | "warning" | "error";
 
-export interface HtmlDataAttributes {
+export type HtmlDataAttributes = {
     [K in `data-${string}`]?: string | undefined;
-}
+};
 
-export interface InputElementProps extends InputHTMLAttributes<HTMLInputElement>, HtmlDataAttributes {}
+export interface InputElementProps
+    extends InputHTMLAttributes<HTMLInputElement>,
+        HtmlDataAttributes {}
 
 export interface SpanElementProps extends HTMLAttributes<HTMLSpanElement>, HtmlDataAttributes {}
 
-// export interface FocusableElement {
-// 	focus(options?: FocusOptions): void;
-// }
+export interface FocusableElement {
+    focus(options?: FocusOptions): void;
+}
 
 // export type Dict<T = any> = Record<string, T>;
 

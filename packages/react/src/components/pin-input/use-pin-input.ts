@@ -3,7 +3,7 @@ import { getActionKeyCode } from "@/hooks/use-action-key";
 import { useControllableState } from "@/hooks/use-controllable-state";
 import { mergeRefs } from "@/hooks/use-merge-refs";
 import { createContext } from "@/provider/create-context";
-import { callAllHandlers } from "@/utils";
+import { callAllHandlers, omitDreamyProps } from "@/utils";
 import { useCallback, useEffect, useId, useMemo, useState } from "react";
 import type { UserFeedbackProps } from "../field";
 
@@ -147,11 +147,15 @@ export function usePinInput<I extends Record<string, any>, W extends Record<stri
         id: idProp,
         type = "number",
         mask,
+        isDisabled,
+        isInvalid,
+        isRequired,
+        isReadOnly,
         ...restProps
     } = props;
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: restProps will have different ref between renders, so we stringify it to prevent re-renders
-    const rest = useMemo(() => restProps, [JSON.stringify(restProps)]);
+    const rest = useMemo(() => omitDreamyProps(restProps), [JSON.stringify(restProps)]);
 
     const uuid = useId();
     const id = idProp ?? `pin-input-${uuid}`;
@@ -350,11 +354,16 @@ export function usePinInput<I extends Record<string, any>, W extends Record<stri
             return {
                 "aria-label": "Please enter your pin code",
                 inputMode: type === "number" ? "numeric" : "text",
-                type: mask ? "password" : inputType,
                 maxLength: 1,
-                index,
                 ...rest,
                 ...inputRest,
+                // Passed through to Input → useField (stripped before DOM)
+                isDisabled: inputRest.isDisabled ?? isDisabled,
+                isInvalid: inputRest.isInvalid ?? isInvalid,
+                isRequired: inputRest.isRequired ?? isRequired,
+                isReadOnly: inputRest.isReadOnly ?? isReadOnly,
+                // Must win over rest/inputRest so mask and pin type stay correct
+                type: mask ? "password" : inputType,
                 id: `${id}-${index}`,
                 onChange: callAllHandlers(
                     inputRest.onChange as (event: React.ChangeEvent<HTMLInputElement>) => void,
@@ -392,7 +401,11 @@ export function usePinInput<I extends Record<string, any>, W extends Record<stri
             type,
             values,
             clear,
-            rest
+            rest,
+            isDisabled,
+            isInvalid,
+            isRequired,
+            isReadOnly
         ]
     );
 

@@ -70,21 +70,21 @@ describe("Menu", () => {
 
         await user.keyboard("{ArrowDown}");
         await waitFor(() => {
-            expect(screen.getByRole("button", { name: "Add new" })).toHaveAttribute(
+            expect(screen.getByRole("menuitem", { name: "Add new" })).toHaveAttribute(
                 "data-focused"
             );
         });
 
         await user.keyboard("{ArrowDown}");
         await waitFor(() => {
-            expect(screen.getByRole("button", { name: "Set alarm" })).toHaveAttribute(
+            expect(screen.getByRole("menuitem", { name: "Set alarm" })).toHaveAttribute(
                 "data-focused"
             );
         });
 
         await user.keyboard("{ArrowUp}");
         await waitFor(() => {
-            expect(screen.getByRole("button", { name: "Add new" })).toHaveAttribute(
+            expect(screen.getByRole("menuitem", { name: "Add new" })).toHaveAttribute(
                 "data-focused"
             );
         });
@@ -148,7 +148,7 @@ describe("Menu", () => {
         await waitFor(() => {
             expect(getMenuSurface()).toBeTruthy();
         });
-        await user.click(screen.getByRole("button", { name: "Choose me" }));
+        await user.click(screen.getByRole("menuitem", { name: "Choose me" }));
 
         expect(onSelect).toHaveBeenCalled();
         await waitFor(() => {
@@ -181,11 +181,11 @@ describe("Menu", () => {
             expect(getMenuSurface()).toBeTruthy();
         });
 
-        const submenuTrigger = screen.getByRole("button", { name: /More/ });
+        const submenuTrigger = screen.getByRole("menuitem", { name: /More/ });
         await user.click(submenuTrigger);
 
         await waitFor(() => {
-            expect(screen.getByRole("button", { name: "Nested one" })).toBeInTheDocument();
+            expect(screen.getByRole("menuitem", { name: "Nested one" })).toBeInTheDocument();
         });
     });
 });

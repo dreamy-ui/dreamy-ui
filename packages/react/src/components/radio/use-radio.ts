@@ -1,13 +1,22 @@
 import { useCallbackRef } from "@/hooks";
 import { mergeRefs } from "@/hooks/use-merge-refs";
 import { createContext, useReducedMotion } from "@/provider";
-import { type PropGetter, callAllHandlers, cx } from "@/utils";
-import { dataAttr } from "@/utils/attr";
+import { type PropGetter, callAllHandlers, cx, omitDreamyProps } from "@/utils";
+import { ariaAttr, dataAttr } from "@/utils/attr";
 import { objectToDeps } from "@/utils/object";
 import { useFocusRing } from "@react-aria/focus";
-import { type ReactNode, type Ref, useCallback, useId, useMemo, useRef, useState } from "react";
+import {
+    type PointerEvent,
+    type ReactNode,
+    type Ref,
+    useCallback,
+    useId,
+    useMemo,
+    useRef,
+    useState
+} from "react";
 import { useSafeLayoutEffect } from "../descendant/utils";
-import { type UserFeedbackProps, useField } from "../field/use-field";
+import { type UserFeedbackProps, useFieldProps } from "../field/use-field";
 import { useRadioGroupContext } from "./use-radio-group";
 
 interface Props extends Record<string, any> {
@@ -47,14 +56,15 @@ export function useRadio(props: UseRadioProps = {}) {
     const groupContext = useRadioGroupContext();
 
     const {
-        disabled: isDisabledField = groupContext?.isDisabled ?? false,
-        readOnly: isReadOnlyField = groupContext?.isReadOnly ?? false,
-        required: isRequiredField = groupContext?.isRequired ?? false,
+        isDisabled: isDisabledField = groupContext?.isDisabled ?? false,
+        isReadOnly: isReadOnlyField = groupContext?.isReadOnly ?? false,
+        isRequired: isRequiredField = groupContext?.isRequired ?? false,
+        isInvalid: isInvalidField = groupContext?.isInvalid ?? false,
         id,
         onBlur,
         onFocus,
         "aria-describedby": ariaDescribedByField
-    } = useField(props);
+    } = useFieldProps(props);
 
     const onBlurProp = useCallbackRef(onBlur);
     const onFocusProp = useCallbackRef(onFocus);
@@ -69,7 +79,7 @@ export function useRadio(props: UseRadioProps = {}) {
         reduceMotion = groupContext?.reduceMotion ?? reduceMotionGlobal ?? false,
         isDisabled = isDisabledField,
         isReadOnly = isReadOnlyField,
-        isInvalid = false,
+        isInvalid = isInvalidField,
         className,
         isRequired = isRequiredField,
         defaultChecked,
@@ -155,7 +165,7 @@ export function useRadio(props: UseRadioProps = {}) {
             "data-focus-visible": isCard
                 ? dataAttr(isFocusVisible && !suppressFocusVisible)
                 : undefined,
-            onPointerDown: callAllHandlers(otherProps.onPointerDown, (event) => {
+            onPointerDown: callAllHandlers(otherProps.onPointerDown, (event: PointerEvent) => {
                 setActive(true);
                 if (isCard && event.pointerType) {
                     setSuppressFocusVisible(true);
@@ -182,7 +192,7 @@ export function useRadio(props: UseRadioProps = {}) {
             }),
             className: cx(className, "group"),
             ...groupProps,
-            ...otherProps
+            ...omitDreamyProps(otherProps)
         };
     }, [
         isDisabled,
@@ -260,9 +270,9 @@ export function useRadio(props: UseRadioProps = {}) {
             readOnly: isReadOnly,
             "aria-label": ariaLabel,
             "aria-labelledby": ariaLabelledBy,
-            "aria-invalid": ariaInvalid ? Boolean(ariaInvalid) : isInvalid,
+            "aria-invalid": ariaAttr(ariaInvalid ? Boolean(ariaInvalid) : isInvalid),
             "aria-describedby": ariaDescribedBy,
-            "aria-disabled": isDisabled,
+            "aria-disabled": ariaAttr(isDisabled),
             className: "peer",
             ...(focusProps as any)
         };

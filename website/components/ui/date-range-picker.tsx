@@ -1,9 +1,9 @@
 "use client";
 
-import { createContext, type PositioningProps } from "@dreamy-ui/react";
+import { createContext, type PositioningProps, useFieldContext } from "@dreamy-ui/react";
 import { useControllableState } from "@dreamy-ui/react";
 import dayjs, { type Dayjs } from "dayjs";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import { LuCalendar } from "react-icons/lu";
 import { createStyleContext } from "styled-system/jsx";
@@ -132,28 +132,50 @@ export const Root = withProvider(function DateRangePickerRoot(props: DateRangePi
         onChange
     });
 
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(function getInitialOpen() {
+        return popoverProps?.isOpen ?? false;
+    });
     const [viewDate, setViewDate] = useState(() => {
         if (value?.start) return dayjs(value.start);
         return dayjs();
     });
     const [selectingStart, setSelectingStart] = useState(true);
 
-    const handleApply = () => {
+    useEffect(
+        function syncOpenFromPopoverProps() {
+            if (typeof popoverProps?.isOpen === "boolean") {
+                setIsOpen(popoverProps.isOpen);
+            }
+        },
+        [popoverProps?.isOpen]
+    );
+
+    function handleApply() {
         onApply?.();
         setIsOpen(false);
-    };
+    }
 
-    const handleCancel = () => {
+    function handleCancel() {
         onCancel?.();
         setIsOpen(false);
-    };
+    }
+
+    function handleOpen() {
+        setIsOpen(true);
+        popoverProps?.onOpen?.();
+    }
+
+    function handleClose() {
+        setIsOpen(false);
+        popoverProps?.onClose?.();
+        onCancel?.();
+    }
 
     return (
         <DateRangePickerProvider
             value={{
                 value,
-                setValue: (range) => {
+                setValue: function handleSetValue(range) {
                     setValue(range);
                     if (!showFooter && range?.start && range?.end) {
                         setIsOpen(false);
@@ -174,11 +196,11 @@ export const Root = withProvider(function DateRangePickerRoot(props: DateRangePi
             }}
         >
             <Popover.Root
-                isOpen={isOpen}
-                onClose={handleCancel}
-                onOpen={handleApply}
                 positioning={positioning}
                 {...popoverProps}
+                isOpen={isOpen}
+                onClose={handleClose}
+                onOpen={handleOpen}
                 portalProps={{
                     zIndex: "var(--z-index-popover)",
                     ...popoverProps?.portalProps
@@ -210,25 +232,27 @@ export interface DateRangePickerInputProps extends InputGroupProps {}
 export const Input = withContext(function DateRangePickerInput(props: DateRangePickerInputProps) {
     const { ref: _ref, ...inputProps } = props;
     const context = useDateRangePickerContext();
+    const field = useFieldContext();
     const formattedRange =
         context.value?.start && context.value?.end
             ? `${dayjs(context.value.start).format(context.dateFormat)} – ${dayjs(context.value.end).format(context.dateFormat)}`
-            : context.placeholder;
+            : "";
 
     return (
-        <Popover.Trigger>
-            <InputComponent.Group>
+        <InputComponent.Group>
+            <Popover.Trigger>
                 <InputComponent
+                    id={field?.id}
                     placeholder={context.placeholder}
                     readOnly
                     value={formattedRange}
                     {...(inputProps as InputProps)}
                 />
-                <InputComponent.EndAddon>
-                    <LuCalendar />
-                </InputComponent.EndAddon>
-            </InputComponent.Group>
-        </Popover.Trigger>
+            </Popover.Trigger>
+            <InputComponent.EndAddon>
+                <LuCalendar aria-hidden="true" />
+            </InputComponent.EndAddon>
+        </InputComponent.Group>
     );
 }, "trigger");
 
@@ -322,21 +346,23 @@ export const Calendar = withContext(function DateRangePickerCalendar(
             <CalendarHeader>
                 <CalendarNav>
                     <CalendarNavButton
+                        aria-label="Previous month"
                         onClick={handlePreviousMonth}
                         type="button"
                     >
-                        <BiChevronLeft />
+                        <BiChevronLeft aria-hidden="true" />
                     </CalendarNavButton>
                     <CalendarTitle>{viewDate.format("MMMM YYYY")}</CalendarTitle>
                     <CalendarNavButton
+                        aria-label="Next month"
                         onClick={handleNextMonth}
                         type="button"
                     >
-                        <BiChevronRight />
+                        <BiChevronRight aria-hidden="true" />
                     </CalendarNavButton>
                 </CalendarNav>
             </CalendarHeader>
-            <CalendarGrid>
+            <CalendarGrid role="grid">
                 <CalendarGridHeader>
                     {WEEKDAYS.map((day) => (
                         <CalendarGridHeaderCell key={day}>{day}</CalendarGridHeaderCell>
@@ -346,6 +372,7 @@ export const Calendar = withContext(function DateRangePickerCalendar(
                     {calendarDays.map((date) => (
                         <CalendarCell key={date.format("YYYY-MM-DD")}>
                             <CalendarCellButton
+                                aria-label={date.format("dddd, MMMM D, YYYY")}
                                 data-in-range={isInRange(date) ? "" : undefined}
                                 data-outside-month={isOutsideMonth(date) ? "" : undefined}
                                 data-range-end={isEnd(date) ? "" : undefined}

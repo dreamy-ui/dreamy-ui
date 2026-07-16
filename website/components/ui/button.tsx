@@ -1,7 +1,7 @@
 "use client";
 
 import { dataAttr, isMobile, nextTick, useRipple } from "@dreamy-ui/react";
-import { cloneElement, isValidElement, useCallback, useMemo } from "react";
+import { cloneElement, isValidElement, useCallback, useMemo, type ReactElement } from "react";
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type ButtonVariantProps, button } from "styled-system/recipes";
 import { Ripple } from "./ripple";
@@ -231,10 +231,16 @@ function ButtonIcon(props: ButtonIconProps) {
     const { children, className, ...rest } = props;
 
     const _children = isValidElement(children)
-        ? cloneElement<any>(children, {
-              "aria-hidden": true,
-              focusable: false
-          })
+        ? cloneElement(
+              children as ReactElement<{
+                  "aria-hidden"?: boolean;
+                  focusable?: boolean;
+              }>,
+              {
+                  "aria-hidden": true,
+                  focusable: false
+              }
+          )
         : children;
 
     return <Span {...rest}>{_children}</Span>;

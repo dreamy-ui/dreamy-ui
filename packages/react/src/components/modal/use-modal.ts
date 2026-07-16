@@ -1,3 +1,4 @@
+import type { FocusableElement } from "@/utils/types";
 import { mergeRefs } from "@/hooks/use-merge-refs";
 import { createContext } from "@/provider";
 import type { PropGetter } from "@/utils";
@@ -16,9 +17,6 @@ import {
 
 export { RemoveScroll } from "react-remove-scroll";
 
-export interface FocusableElement {
-    focus(options?: FocusOptions): void;
-}
 
 export interface ModalOptions {
     /**
