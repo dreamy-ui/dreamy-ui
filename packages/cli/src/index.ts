@@ -1,6 +1,7 @@
 import * as p from "@clack/prompts";
 import { Command } from "commander";
 import { AddCommand } from "./commands/add";
+import { AddMcpCommand } from "./commands/add-mcp";
 import { DiffCommand } from "./commands/diff";
 import { InitCommand } from "./commands/init";
 import { ListCommand } from "./commands/list";
@@ -18,6 +19,7 @@ export async function run() {
 
     program.addCommand(InitCommand);
     program.addCommand(AddCommand);
+    program.addCommand(AddMcpCommand);
     program.addCommand(ListCommand);
     program.addCommand(DiffCommand);
 

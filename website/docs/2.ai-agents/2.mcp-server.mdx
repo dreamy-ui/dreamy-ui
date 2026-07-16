@@ -30,6 +30,20 @@ The MCP server currently supports only
 [stdio transport](https://modelcontextprotocol.io/specification/2025-06-18/basic/transports#stdio)
 and is published at `@dreamy-ui/mcp`.
 
+The fastest way to configure AI clients is with the CLI:
+
+```bash
+npx dreamy add-mcp
+```
+
+Or target specific clients:
+
+```bash
+npx dreamy add-mcp --client cursor,vscode
+```
+
+Supported clients: `claude`, `cursor`, `vscode`, `windsurf`, `codex`.
+
 ### Cursor
 
 In the `.cursor/mcp.json` file at the root of your project, add the following

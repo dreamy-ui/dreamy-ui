@@ -90,6 +90,29 @@ List all available components.
 npx @dreamy-ui/cli list
 ```
 
+### `add-mcp`
+
+Add the Dreamy UI MCP server to AI client configs (Cursor, VS Code, Claude, Windsurf, Codex).
+
+```bash
+npx @dreamy-ui/cli add-mcp
+```
+
+**Options:**
+
+- `--client <clients>` - Comma-separated AI clients to configure (`claude`, `cursor`, `vscode`, `windsurf`, `codex`)
+- `--cwd <cwd>` - Working directory (defaults to current directory)
+
+**Examples:**
+
+```bash
+# Interactive — pick clients from a multiselect
+npx @dreamy-ui/cli add-mcp
+
+# Configure specific clients
+npx @dreamy-ui/cli add-mcp --client cursor,vscode
+```
+
 ### `diff`
 
 Compare local components with registry versions.
