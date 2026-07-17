@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "skills": {
+    "dreamy-ui": {
+      "source": "dreamy-ui/dreamy-ui",
+      "sourceType": "github",
+      "skillPath": "skills/dreamy-ui/SKILL.md",
+      "computedHash": "7888b06f9a9e413bdecec395062200cfa8f44bf00105825993f663daf0dd220c"
+    },
+    "dreamy-ui-frontend": {
+      "source": "dreamy-ui/dreamy-ui",
+      "sourceType": "github",
+      "skillPath": "skills/dreamy-ui-frontend/SKILL.md",
+      "computedHash": "128e09421e88e3f01e956544a96e37b720ec0b6cf0fd45f576e0f92ad6b21e37"
+    },
+    "dreamy-ui-theming": {
+      "source": "dreamy-ui/dreamy-ui",
+      "sourceType": "github",
+      "skillPath": "skills/dreamy-ui-theming/SKILL.md",
+      "computedHash": "62d20666af09cc2750f444cdc28da59b686701bedeed808a215511b8196bac14"
+    }
+  }
+}

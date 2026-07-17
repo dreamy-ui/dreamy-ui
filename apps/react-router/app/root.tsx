@@ -4,11 +4,17 @@ import {
     Outlet,
     Scripts,
     ScrollRestoration,
-    isRouteErrorResponse
+    isRouteErrorResponse,
+    useRouteLoaderData
 } from "react-router";
 
 import type { Route } from "./+types/root";
 import "./app.css";
+import {
+    DreamyProvider,
+    getColorModeHTMLProps,
+    getSSRColorMode
+} from "../components/dreamy-provider";
 
 export const links: Route.LinksFunction = () => [
     { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -23,15 +29,17 @@ export const links: Route.LinksFunction = () => [
     }
 ];
 
-export async function loader() {
-    const aaa = "";
-
-    return aaa;
+export function loader({ request }: Route.LoaderArgs) {
+    return { colorMode: getSSRColorMode(request) };
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
+    const { colorMode } = useRouteLoaderData<Route.ComponentProps["loaderData"]>("root") ?? {};
     return (
-        <html lang="en">
+        <html
+            lang="en"
+            {...getColorModeHTMLProps(colorMode)}
+        >
             <head>
                 <meta charSet="utf-8" />
                 <meta
@@ -42,7 +50,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 <Links />
             </head>
             <body>
-                {children}
+                <DreamyProvider colorMode={colorMode}>{children}</DreamyProvider>
                 <ScrollRestoration />
                 <Scripts />
             </body>

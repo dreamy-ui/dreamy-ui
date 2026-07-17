@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "dreamy-ui": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@dreamy-ui/mcp"
+      ]
+    },
+    "panda": {
+      "command": "npx",
+      "args": [
+        "panda",
+        "mcp"
+      ]
+    }
+  }
+}
