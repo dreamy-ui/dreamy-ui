@@ -25,6 +25,18 @@ const StyledToast = m.create(
     })
 );
 
+/**
+ * Toast component — notification rendered by the toast system.
+ *
+ * @see Docs https://dreamy-ui.com/docs/components/toast
+ *
+ * @example
+ * ```tsx
+ * <ToastProvider>
+ *   <Toast toast={toast} />
+ * </ToastProvider>
+ * ```
+ */
 export function Toast({ toast }: { toast: IToast }) {
     const { removeToast } = useToast();
 

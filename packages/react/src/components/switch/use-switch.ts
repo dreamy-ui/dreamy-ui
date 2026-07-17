@@ -68,18 +68,68 @@ interface SwitchOwnProps {
      * Props forwarded to the internal thumb (`div`).
      */
     thumbProps?: Partial<MotionProps>;
+    /**
+     * If `true`, switch animations are disabled.
+     * Inherits from the reduced-motion preference when omitted.
+     *
+     * @default false
+     */
     reduceMotion?: boolean;
+    /**
+     * If `true`, the switch shows an indeterminate visual state.
+     *
+     * @default false
+     */
     isIndeterminate?: boolean;
+    /**
+     * If `true`, the switch is on (controlled).
+     */
     isChecked?: boolean;
+    /**
+     * If `true`, the switch is on on initial render (uncontrolled).
+     *
+     * @default false
+     */
     defaultChecked?: boolean;
+    /**
+     * The name attribute of the hidden checkbox input.
+     */
     name?: string;
+    /**
+     * The value attribute of the hidden checkbox input.
+     *
+     * @default ""
+     */
     value?: string;
+    /**
+     * The tab index of the hidden checkbox input.
+     */
     tabIndex?: number;
+    /**
+     * If `true`, the input is focused on mount.
+     *
+     * @default false
+     */
     autoFocus?: boolean;
+    /**
+     * Native `keydown` handler for the hidden checkbox input.
+     */
     onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
+    /**
+     * Native `keyup` handler for the hidden checkbox input.
+     */
     onKeyUp?: KeyboardEventHandler<HTMLInputElement>;
+    /**
+     * Accessible label when no visible label is provided.
+     */
     "aria-label"?: string;
+    /**
+     * Id(s) of element(s) that label the switch.
+     */
     "aria-labelledby"?: string;
+    /**
+     * Marks the switch as invalid for assistive technologies.
+     */
     "aria-invalid"?: boolean | "true" | "false" | "grammar" | "spelling";
 }
 

@@ -5,10 +5,28 @@ import { useCallback, useId, useState } from "react";
 import { useCallbackRef } from "./use-callback-ref";
 
 export interface useControllableProps {
+    /**
+     * If `true`, the disclosure is open (controlled).
+     */
     isOpen?: boolean;
+    /**
+     * If `true`, the disclosure is open on initial render (uncontrolled).
+     *
+     * @default false
+     */
     defaultIsOpen?: boolean;
+    /**
+     * Callback fired when the disclosure closes.
+     */
     onClose?(): void;
+    /**
+     * Callback fired when the disclosure opens.
+     */
     onOpen?(): void;
+    /**
+     * Custom id used for `aria-controls` / disclosure wiring.
+     * Falls back to an auto-generated id when omitted.
+     */
     id?: string;
 }
 

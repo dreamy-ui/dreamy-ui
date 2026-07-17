@@ -209,12 +209,39 @@ export function useFieldProvider(props: FieldContext) {
 }
 
 export interface UseFieldProps<T extends HTMLElement> extends UserFeedbackProps {
+	/**
+	 * Custom id for the field control. Used to wire label, hint, and error message ids.
+	 */
 	id?: string;
+	/**
+	 * Focus handler for the underlying form control.
+	 */
 	onFocus?: React.FocusEventHandler<T>;
+	/**
+	 * Blur handler for the underlying form control.
+	 */
 	onBlur?: React.FocusEventHandler<T>;
+	/**
+	 * Native `disabled` attribute. Prefer `isDisabled` for Dreamy feedback props.
+	 *
+	 * @default false
+	 */
 	disabled?: boolean;
+	/**
+	 * Native `readOnly` attribute. Prefer `isReadOnly` for Dreamy feedback props.
+	 *
+	 * @default false
+	 */
 	readOnly?: boolean;
+	/**
+	 * Native `required` attribute. Prefer `isRequired` for Dreamy feedback props.
+	 *
+	 * @default false
+	 */
 	required?: boolean;
+	/**
+	 * Id(s) of element(s) that describe the field (hint and/or error text).
+	 */
 	"aria-describedby"?: string;
 }
 

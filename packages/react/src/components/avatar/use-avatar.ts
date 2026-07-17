@@ -31,12 +31,33 @@ export function initials(name: string) {
 
 // Custom useImage hook for avatar
 export function useAvatarImage(props: {
+	/**
+	 * Image URL for the avatar.
+	 */
 	src?: string;
+	/**
+	 * Comma-separated list of candidate image sources for responsive images.
+	 */
 	srcSet?: string;
+	/**
+	 * Sizes attribute for responsive images.
+	 */
 	sizes?: string;
+	/**
+	 * Called when the image loads successfully.
+	 */
 	onLoad?: React.ImgHTMLAttributes<HTMLImageElement>["onLoad"];
+	/**
+	 * Called when the image fails to load.
+	 */
 	onError?: React.ImgHTMLAttributes<HTMLImageElement>["onError"];
+	/**
+	 * CORS setting for the image request.
+	 */
 	crossOrigin?: React.ImgHTMLAttributes<HTMLImageElement>["crossOrigin"];
+	/**
+	 * Native image loading hint (`lazy` | `eager`).
+	 */
 	loading?: React.ImgHTMLAttributes<HTMLImageElement>["loading"];
 }) {
 	const { loading, src, srcSet, onLoad, onError, crossOrigin, sizes } = props;

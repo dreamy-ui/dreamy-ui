@@ -29,8 +29,7 @@ export interface PinInputProps
  * @see Docs https://dreamy-ui.com/docs/components/pin-input
  */
 export function Root(props: PinInputProps) {
-    const { ref } = props;
-    const { children, ...rest } = props;
+    const { children, ref, ...rest } = props;
     const [cssProps, otherProps] = splitCssProps(rest);
     const { descendants, ...context } = usePinInput<InputProps, HStackProps>(otherProps);
 

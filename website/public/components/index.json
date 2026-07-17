@@ -202,8 +202,7 @@
     "file": "date-picker.tsx",
     "component": "DatePicker",
     "npmDependencies": [
-      "dayjs",
-      "react-icons"
+      "dayjs"
     ],
     "fileDependencies": [
       "./box",
@@ -226,8 +225,7 @@
     "file": "date-range-picker.tsx",
     "component": "DateRangePicker",
     "npmDependencies": [
-      "dayjs",
-      "react-icons"
+      "dayjs"
     ],
     "fileDependencies": [
       "./box",
@@ -496,9 +494,7 @@
     "id": "menu",
     "file": "menu.tsx",
     "component": "Menu",
-    "npmDependencies": [
-      "react-icons"
-    ],
+    "npmDependencies": [],
     "fileDependencies": [
       "./box",
       "./kbd",

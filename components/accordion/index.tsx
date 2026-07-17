@@ -35,9 +35,19 @@ export interface AccordionProps
 }
 
 /**
- * Accordion component
+ * Accordion component — expandable sections for progressive disclosure.
  *
- * @See Docs https://dreamy-ui.com/docs/components/accordion
+ * @see Docs https://dreamy-ui.com/docs/components/accordion
+ *
+ * @example
+ * ```tsx
+ * <Accordion.Root>
+ *   <Accordion.Item>
+ *     <Accordion.Trigger>Section</Accordion.Trigger>
+ *     <Accordion.Content>Details</Accordion.Content>
+ *   </Accordion.Item>
+ * </Accordion.Root>
+ * ```
  */
 export const Root = withProvider(function AccordionRoot(ownProps: AccordionProps) {
     const { htmlProps, descendants, ...context } = useAccordion(ownProps);
@@ -67,6 +77,9 @@ export interface AccordionItemProps
           }) => React.ReactNode);
 }
 
+/**
+ * Accordion Item — a single expandable section within the accordion.
+ */
 export const Item = withContext(function AccordionItem(props: AccordionItemProps) {
     const { children } = props;
     const { htmlProps, ...ctx } = useAccordionItem(props);
@@ -92,6 +105,9 @@ export interface AccordionContentProps extends HTMLDreamyProps<"div"> {
     collapseProps?: CollapseProps;
 }
 
+/**
+ * Accordion Content — the collapsible panel revealed when an item is expanded.
+ */
 export const Content = withContext(function AccordionContent(props: AccordionContentProps) {
     const { collapseProps } = props;
 
@@ -136,6 +152,9 @@ export interface AccordionTriggerProps extends HTMLDreamyProps<"button"> {
     iconProps?: IconProps;
 }
 
+/**
+ * Accordion Trigger — the button that expands or collapses an item.
+ */
 export const Trigger = withContext(function AccordionTrigger({
     headingTag: HeadingTag = "h2",
     children,
@@ -158,6 +177,8 @@ export const Trigger = withContext(function AccordionTrigger({
 export interface AccordionIconProps extends HTMLDreamyProps<"svg"> {}
 
 /**
+ * Default chevron icon for the accordion trigger.
+ *
  * @internal
  */
 const AccordionIcon = withContext(function AccordionIcon(props: AccordionIconProps) {

@@ -56,6 +56,9 @@ export interface UseCircularProgressProps {
 	 * The format options of the progress circular.
 	 */
 	formatOptions?: Intl.NumberFormatOptions;
+	/**
+	 * Custom id for the circular progress element.
+	 */
 	id?: string;
 }
 

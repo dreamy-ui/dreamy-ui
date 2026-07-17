@@ -15,9 +15,14 @@ export interface SwitchProps
 const StyledSwitch = dreamy("label", swittch);
 
 /**
- * Switch component
+ * Switch component — toggle between two states.
  *
- * @See Docs https://dreamy-ui.com/docs/components/switch
+ * @see Docs https://dreamy-ui.com/docs/components/switch
+ *
+ * @example
+ * ```tsx
+ * <Switch>Notifications</Switch>
+ * ```
  */
 export function Switch(props: SwitchProps) {
     const {

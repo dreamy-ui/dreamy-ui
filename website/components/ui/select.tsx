@@ -199,7 +199,6 @@ export const Trigger = withContext(function SelectTrigger({
     placeholder,
     icon,
     multipleSelectedText,
-    ref,
     ...rest
 }: SelectTriggerProps) {
     const { getTriggerProps, selectedKeys, items, isClearable, renderItem } = useSelectContext() as ReturnType<
@@ -236,7 +235,7 @@ export const Trigger = withContext(function SelectTrigger({
 
     return (
         <PopoverTrigger>
-            <dreamy.button {...(getTriggerProps({ ...rest, ref }) as HTMLDreamyProps<"button">)}>
+            <dreamy.button {...(getTriggerProps(rest) as HTMLDreamyProps<"button">)}>
                 {icon && icon}
 
                 <dreamy.span data-part="value">{children ?? getDisplayContent()}</dreamy.span>
@@ -259,13 +258,13 @@ export interface SelectContentProps extends PopoverContentProps {
 }
 
 export const Content = withContext(function SelectContent(props: SelectContentProps) {
-    const { ref, showItems = true, children, ...rest } = props;
+    const { showItems = true, children, ...rest } = props;
     const { getContentProps, items, renderItem } = useSelectContext() as ReturnType<
         typeof useSelect
     > & {
         renderItem?: (item: SelectItemData) => ReactNode;
     };
-    const contentPropsResult = getContentProps({ ...rest, ref });
+    const contentPropsResult = getContentProps(rest);
 
     return (
         <PopoverContent {...contentPropsResult}>
@@ -299,7 +298,6 @@ export const VirtualContent = withContext(function SelectVirtualContent(
     props: SelectVirtualContentProps
 ) {
     const {
-        ref,
         estimatedItemHeight = 32,
         overscan = 5,
         maxHeight = 300,
@@ -313,7 +311,7 @@ export const VirtualContent = withContext(function SelectVirtualContent(
     > & {
         renderItem?: (item: SelectItemData) => ReactNode;
     };
-    const contentPropsResult = getContentProps({ ...rest, ref });
+    const contentPropsResult = getContentProps(rest);
 
     return (
         <PopoverContent {...contentPropsResult}>
@@ -344,7 +342,6 @@ const SelectListItem = withContext(function SelectListItem({
     item,
     index,
     renderItem,
-    ref,
     ...rest
 }: SelectListItemProps<SelectItemData>) {
     const { getItemProps, selectedStrategy, selectedKeys } = useSelectContext();
@@ -356,7 +353,6 @@ const SelectListItem = withContext(function SelectListItem({
                     value: item.value,
                     index,
                     disabled: item.disabled,
-                    ref,
                     ...rest
                 }
             ) as HTMLDreamyProps<"button">)}
@@ -522,7 +518,6 @@ const SelectIndicator = withContext(SelectIndicatorBase, "indicator");
 export interface SelectClearButtonProps extends HTMLDreamyProps<"button"> {}
 
 const SelectClearButton = withContext(function SelectClearButton(props: SelectClearButtonProps) {
-    const { ref } = props;
     const { getClearButtonProps } = useSelectContext();
 
     return (

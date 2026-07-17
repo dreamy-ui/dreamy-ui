@@ -45,12 +45,12 @@ const SIZE_CONFIG = {
  * @See Docs https://dreamy-ui.com/docs/components/slider
  */
 export const Root = withProvider(function Component(props: SliderProps) {
-    const { ref } = props;
     const {
         size = "md",
         orientation = "horizontal",
         hideThumb = false,
         focusThumbOnChange,
+        ref,
         ...restProps
     } = props;
     const config = SIZE_CONFIG[size];

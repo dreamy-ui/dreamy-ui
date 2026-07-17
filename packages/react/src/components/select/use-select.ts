@@ -40,6 +40,9 @@ export interface SelectOption {
 export interface UseSelectProps<T extends boolean, P extends Record<string, any>>
     extends UserFeedbackProps,
         useControllableProps {
+    /**
+     * Select trigger and content children (e.g. `Select.Trigger`, `Select.Content`).
+     */
     children?: ReactNode;
     /**
      * Options to display in the select.

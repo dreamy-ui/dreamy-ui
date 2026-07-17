@@ -25,9 +25,18 @@ export interface EditableProps
 const { withProvider, withContext } = createStyleContext(editable);
 
 /**
- * Editable component
+ * Editable component — inline text that toggles between preview and edit modes.
  *
  * @see Docs https://dreamy-ui.com/docs/components/editable
+ *
+ * @example
+ * ```tsx
+ * <Editable.Root defaultValue="Click to edit">
+ *   <Editable.Preview />
+ *   <Editable.Input />
+ *   <Editable.EditButton />
+ * </Editable.Root>
+ * ```
  */
 export const Root = withProvider(function EditableRoot(props: EditableProps) {
     const context = useEditable(props);
@@ -51,9 +60,7 @@ export const Root = withProvider(function EditableRoot(props: EditableProps) {
 export interface EditablePreviewProps extends HTMLDreamyProps<"div"> {}
 
 /**
- * EditablePreview component
- *
- * The `span` used to display the final value, in the `preview` mode
+ * Editable Preview — read-only display shown when not editing.
  */
 export const Preview = withContext(function EditablePreview(props: EditablePreviewProps) {
     const { getPreviewProps } = useEditableContext();
@@ -64,9 +71,7 @@ export const Preview = withContext(function EditablePreview(props: EditablePrevi
 export interface EditableInputProps extends HTMLDreamyProps<"input"> {}
 
 /**
- * EditableInput component
- *
- * The input used in the `edit` mode
+ * Editable Input — text field shown in edit mode.
  */
 export const Input = withContext(function EditableInput(props: EditableInputProps) {
     const { getInputProps } = useEditableContext();
@@ -76,6 +81,9 @@ export const Input = withContext(function EditableInput(props: EditableInputProp
 
 export interface EditableEditButtonProps extends HTMLDreamyProps<"button"> {}
 
+/**
+ * Editable Edit Button — enters edit mode.
+ */
 export const EditButton = withContext(function EditableEditButton(props: EditableEditButtonProps) {
     const { getEditButtonProps } = useEditableContext();
 
@@ -84,6 +92,9 @@ export const EditButton = withContext(function EditableEditButton(props: Editabl
 
 interface EditableSubmitButtonProps extends HTMLDreamyProps<"button"> {}
 
+/**
+ * Editable Submit Button — saves the edited value.
+ */
 export const SubmitButton = withContext(function EditableSubmitButton(
     props: EditableSubmitButtonProps
 ) {
@@ -94,6 +105,9 @@ export const SubmitButton = withContext(function EditableSubmitButton(
 
 interface EditableCancelButtonProps extends HTMLDreamyProps<"button"> {}
 
+/**
+ * Editable Cancel Button — discards edits and returns to preview mode.
+ */
 export const CancelButton = withContext(function EditableCancelButton(
     props: EditableCancelButtonProps
 ) {

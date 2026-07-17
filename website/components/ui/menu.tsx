@@ -1,6 +1,7 @@
 "use client";
 
 import {
+    ChevronRightIcon,
     MenuDescendantsProvider,
     MenuProvider,
     type PositioningProps,
@@ -13,7 +14,6 @@ import {
     useMenuItem
 } from "@dreamy-ui/react";
 import { Children, type ReactElement, type ReactNode, cloneElement, useEffect } from "react";
-import { BiChevronRight } from "react-icons/bi";
 import { type HTMLDreamyProps, createStyleContext, dreamy } from "styled-system/jsx";
 import { menu } from "styled-system/recipes";
 import { Box } from "./box";
@@ -147,11 +147,11 @@ export interface MenuTriggerProps extends HTMLDreamyProps<"button"> {
     placeholder?: string;
 }
 
-export function Trigger({ children, placeholder, ref, ...rest }: MenuTriggerProps) {
+export function Trigger({ children, placeholder, ...rest }: MenuTriggerProps) {
     const { getTriggerProps } = useMenuContext();
 
     const child = Children.only(children) as ReactElement;
-    const trigger = cloneElement(child, getTriggerProps({ ...rest, ref }));
+    const trigger = cloneElement(child, getTriggerProps(rest));
 
     return <PopoverTrigger {...rest}>{trigger}</PopoverTrigger>;
 }
@@ -186,7 +186,6 @@ export interface MenuTriggerItemProps extends Omit<MenuButtonProps, "children"> 
  * ```
  */
 export const TriggerItem = withContext(function MenuTriggerItem(props: MenuTriggerItemProps) {
-    const { ref } = props;
     const {
         icon,
         command,
@@ -260,8 +259,8 @@ export const TriggerItem = withContext(function MenuTriggerItem(props: MenuTrigg
                 lazyBehavior="keepMounted"
                 onClose={nestedCtx.onClose}
                 onOpen={nestedCtx.onOpen}
-                positioning={{ placement: "right-start", ...positioning }}
                 portalProps={{ zIndex: "var(--z-index-dropdown)" }}
+                positioning={{ placement: "right-start", ...positioning }}
                 reduceMotion={nestedCtx.reduceMotion}
                 returnFocusOnClose={false}
             >
@@ -297,7 +296,7 @@ export const TriggerItem = withContext(function MenuTriggerItem(props: MenuTrigg
                             <Kbd size={"sm"}>{command.replaceAll("{actionKey}", actionKey)}</Kbd>
                         )}
                         {rightContent && runIfFn(rightContent)}
-                        <BiChevronRight />
+                        <ChevronRightIcon />
                     </dreamy.button>
                 </PopoverAnchor>
                 {children}

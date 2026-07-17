@@ -1,3 +1,4 @@
+import { mapJsx } from "@dreamy-ui/panda-preset";
 import { defineSlotRecipe } from "@pandacss/dev";
 
 export const dateRangePicker = defineSlotRecipe({
@@ -24,26 +25,27 @@ export const dateRangePicker = defineSlotRecipe({
         "footer",
         "footerButton"
     ],
-    jsx: [
-        "DateRangePicker.Root",
-        "DateRangePicker.Trigger",
-        "DateRangePicker.Popover",
-        "DateRangePicker.Calendar",
-        "DateRangePicker.CalendarHeader",
-        "DateRangePicker.CalendarTitle",
-        "DateRangePicker.CalendarNav",
-        "DateRangePicker.CalendarNavButton",
-        "DateRangePicker.CalendarGrid",
-        "DateRangePicker.CalendarGridHeader",
-        "DateRangePicker.CalendarGridHeaderCell",
-        "DateRangePicker.CalendarGridBody",
-        "DateRangePicker.CalendarCell",
-        "DateRangePicker.CalendarCellButton",
-        "DateRangePicker.RangePreset",
-        "DateRangePicker.RangePresetButton",
-        "DateRangePicker.Footer",
-        "DateRangePicker.FooterButton"
-    ],
+    jsx: mapJsx("DateRangePicker", [
+        "Root",
+        "Trigger",
+        "Input",
+        "PopoverContent",
+        "Calendar",
+        "CalendarHeader",
+        "CalendarTitle",
+        "CalendarNav",
+        "CalendarNavButton",
+        "CalendarGrid",
+        "CalendarGridHeader",
+        "CalendarGridHeaderCell",
+        "CalendarGridBody",
+        "CalendarCell",
+        "CalendarCellButton",
+        "RangePreset",
+        "RangePresetButton",
+        "Footer",
+        "FooterButton"
+    ]),
     base: {
         root: {
             display: "flex",

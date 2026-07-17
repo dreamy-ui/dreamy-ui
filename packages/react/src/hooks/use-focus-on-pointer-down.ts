@@ -1,8 +1,19 @@
 import { useEventListener } from "./use-event-listener";
 
 export interface UseFocusOnMouseDownProps {
+	/**
+	 * If `true`, pointer-down focus polyfill is enabled (Safari).
+	 *
+	 * @default false
+	 */
 	enabled?: boolean;
+	/**
+	 * Ref to the element that should receive focus.
+	 */
 	ref: React.RefObject<HTMLElement | null>;
+	/**
+	 * Additional elements that should not steal focus when pressed.
+	 */
 	elements?: Array<React.RefObject<HTMLElement | null> | HTMLElement>;
 }
 

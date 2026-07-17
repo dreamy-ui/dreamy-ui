@@ -50,7 +50,15 @@ export interface UseCheckboxGroupProps extends UserFeedbackProps {
      * @default false
      */
     isNative?: boolean;
+    /**
+     * If `true`, checkbox animations are disabled for all items in the group.
+     *
+     * @default false
+     */
     reduceMotion?: boolean;
+    /**
+     * Recipe variant props forwarded to each checkbox in the group.
+     */
     variants?: Record<string, any>;
 }
 

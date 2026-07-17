@@ -213,11 +213,19 @@ OKLCH tint for generated alpha overlays: `colors.alpha.*`, `colors.blackAlpha.*`
 
 - `blackAlpha` uses **light** mode values (dark overlays on light backgrounds).
 - `whiteAlpha` uses **dark** mode values (light overlays on dark backgrounds).
+- When `chroma` is `0` (default), overlays stay pure black/white.
+- When `chroma` is greater than `0`, overlays use near-black / near-white lightness so hue is actually visible (pure black/white cannot carry color in OKLCH).
 
 ```ts
 alpha: {
     hue: 240,
     chroma: 0.02
+}
+
+// Or per mode — omit a mode to keep its default
+alpha: {
+    hue: 240,
+    chroma: { light: 0.02, dark: 0.015 }
 }
 ```
 

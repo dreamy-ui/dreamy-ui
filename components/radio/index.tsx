@@ -23,9 +23,17 @@ export interface RadioProps
 const StyledRadio = dreamy("div", radio);
 
 /**
- * Radio component
+ * Radio component — single option in a mutually exclusive group.
  *
- * @See Docs https://dreamy-ui.com/docs/components/radio
+ * @see Docs https://dreamy-ui.com/docs/components/radio
+ *
+ * @example
+ * ```tsx
+ * <RadioGroup>
+ *   <Radio value="a">Option A</Radio>
+ *   <Radio value="b">Option B</Radio>
+ * </RadioGroup>
+ * ```
  */
 export function Radio(props: RadioProps) {
     const {
@@ -66,9 +74,7 @@ export interface RadioGroupProps
         Omit<FlexProps, "defaultValue" | "onChange"> {}
 
 /**
- * RadioGroup component. Useful for grouping multiple Radios together.
- *
- * @See Docs https://dreamy-ui.com/docs/components/radio
+ * Radio Group — groups multiple radios with shared state.
  */
 export function RadioGroup(props: RadioGroupProps) {
     const {

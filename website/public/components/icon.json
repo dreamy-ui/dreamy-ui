@@ -5,7 +5,7 @@
   "id": "icon",
   "file": {
     "name": "icon.tsx",
-    "content": "import { type HTMLDreamyProps, dreamy } from \"styled-system/jsx\";\r\nimport { type IconVariantProps, icon } from \"styled-system/recipes\";\r\n\r\nexport interface IconProps extends HTMLDreamyProps<\"svg\">, IconVariantProps {}\r\n\r\nconst StyledIcon = dreamy(\"svg\", icon);\r\n\r\n/**\r\n * Icon component\r\n *\r\n * @See Docs https://dreamy-ui.com/docs/components/icon\r\n */\r\nexport function Icon({ ...props }: IconProps) {\r\n    return <StyledIcon {...props} />;\r\n}\r\n"
+    "content": "import { type HTMLDreamyProps, dreamy } from \"styled-system/jsx\";\nimport { type IconVariantProps, icon } from \"styled-system/recipes\";\n\nexport interface IconProps extends HTMLDreamyProps<\"svg\">, IconVariantProps {}\n\nconst StyledIcon = dreamy(\"svg\", icon);\n\n/**\n * Icon component\n *\n * @See Docs https://dreamy-ui.com/docs/components/icon\n */\nexport function Icon({ ...props }: IconProps) {\n    return <StyledIcon {...props} />;\n}\n"
   },
   "component": "Icon",
   "hasRecipe": true,

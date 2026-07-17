@@ -141,6 +141,9 @@ export interface UseSnippetBodyProps {
 	 * The code string to copy. If provided, it will be copied instead of the rendered children.
 	 */
 	codeString?: string;
+	/**
+	 * Fallback content to display and copy when `codeString` is not provided.
+	 */
 	children?: ReactNode;
 }
 

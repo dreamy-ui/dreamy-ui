@@ -48,7 +48,15 @@ export interface UseRadioGroupProps extends UserFeedbackProps {
      * @default false
      */
     isNative?: boolean;
+    /**
+     * If `true`, radio animations are disabled for all items in the group.
+     *
+     * @default false
+     */
     reduceMotion?: boolean;
+    /**
+     * Recipe variant props forwarded to each radio in the group.
+     */
     variants?: Record<string, any>;
 }
 

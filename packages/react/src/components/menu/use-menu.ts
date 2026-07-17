@@ -20,6 +20,9 @@ import type { UsePopoverProps } from "../popover";
 interface MenuContext extends Omit<UseMenuReturn, "rest"> {}
 
 export interface UseMenuProps<T extends any> extends UserFeedbackProps, useControllableProps {
+    /**
+     * Menu trigger and content children.
+     */
     children?: ReactNode;
     /**
      * The class name for the wrapper. You probably want to style the Menu trigger, use `MenuTrigger` instead.
@@ -257,11 +260,33 @@ export const [
 ] = createDescendantContext<HTMLButtonElement>();
 
 export interface UseMenuItemProps {
+    /**
+     * Ref to the menu item button element.
+     */
     ref?: React.Ref<HTMLButtonElement>;
+    /**
+     * If `true`, the menu item is disabled and not focusable.
+     *
+     * @default false
+     */
     isDisabled?: boolean;
+    /**
+     * Native `disabled` attribute. Prefer `isDisabled`.
+     *
+     * @default false
+     */
     disabled?: boolean;
+    /**
+     * Pointer enter handler. Also used internally to update keyboard focus index.
+     */
     onPointerEnter?: (event: React.PointerEvent<HTMLButtonElement>) => void;
+    /**
+     * Descendant index within the menu. Usually set automatically by the hook.
+     */
     index?: number;
+    /**
+     * Data attribute reflecting whether this item currently has keyboard focus.
+     */
     "data-focused"?: string;
 }
 

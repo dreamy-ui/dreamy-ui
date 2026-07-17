@@ -22,12 +22,19 @@ interface RootBaseProps extends UseFileUploadProps {}
 const StyledRoot = withProvider(dreamy.div, "root");
 
 /**
- * FileUpload.Root
+ * File Upload component — drag-and-drop and picker-based file selection.
  *
- * The root container for the file upload component.
- * Includes the hidden file input automatically.
+ * @see Docs https://dreamy-ui.com/docs/components/file-upload
  *
- * @See Docs https://dreamy-ui.com/docs/components/file-upload
+ * @example
+ * ```tsx
+ * <FileUpload.Root accept="image/*" maxFiles={3}>
+ *   <FileUpload.Dropzone>
+ *     <FileUpload.Trigger>Choose files</FileUpload.Trigger>
+ *   </FileUpload.Dropzone>
+ *   <FileUpload.List />
+ * </FileUpload.Root>
+ * ```
  */
 export function Root(props: RootBaseProps & HTMLDreamyProps<"div">) {
     const {
@@ -95,10 +102,7 @@ interface RootProviderProps {
 const StyledRootProvider = withProvider(dreamy.div, "root");
 
 /**
- * FileUpload.RootProvider
- *
- * Use this when you want to control the file upload externally
- * via the useFileUpload hook.
+ * File Upload Root Provider — root wrapper when using `useFileUpload` externally.
  */
 export function RootProvider(props: RootProviderProps & HTMLDreamyProps<"div">) {
     const { value, children, ...rest } = props;
@@ -118,6 +122,9 @@ export function RootProvider(props: RootProviderProps & HTMLDreamyProps<"div">) 
 
 // ─── Label ───────────────────────────────────────────────────────────────────
 
+/**
+ * File Upload Label — accessible label for the file input.
+ */
 export const Label = withContext(dreamy.label, "label");
 
 // ─── Dropzone ────────────────────────────────────────────────────────────────
@@ -125,9 +132,7 @@ export const Label = withContext(dreamy.label, "label");
 const StyledDropzone = withContext(dreamy.div, "dropzone");
 
 /**
- * FileUpload.Dropzone
- *
- * A drag-and-drop area for uploading files.
+ * File Upload Dropzone — drag-and-drop area for uploading files.
  */
 export function Dropzone(props: HTMLDreamyProps<"div">) {
     const { children, ...rest } = props;
@@ -145,6 +150,9 @@ export function Dropzone(props: HTMLDreamyProps<"div">) {
 
 // ─── DropzoneContent ─────────────────────────────────────────────────────────
 
+/**
+ * File Upload Dropzone Content — inner content area of the dropzone.
+ */
 export const DropzoneContent = withContext(dreamy.div, "dropzoneContent");
 
 // ─── Trigger ─────────────────────────────────────────────────────────────────
@@ -152,9 +160,7 @@ export const DropzoneContent = withContext(dreamy.div, "dropzoneContent");
 const StyledTrigger = withContext(dreamy.button, "trigger");
 
 /**
- * FileUpload.Trigger
- *
- * A button that opens the file picker dialog.
+ * File Upload Trigger — button that opens the file picker dialog.
  */
 export function Trigger(props: HTMLDreamyProps<"button">) {
     const { children, ...rest } = props;
@@ -172,6 +178,9 @@ export function Trigger(props: HTMLDreamyProps<"button">) {
 
 // ─── ItemGroup ───────────────────────────────────────────────────────────────
 
+/**
+ * File Upload Item Group — list container for uploaded files.
+ */
 export const ItemGroup = withContext(dreamy.ul, "itemGroup");
 
 // ─── Item ────────────────────────────────────────────────────────────────────
@@ -184,9 +193,7 @@ interface ItemProps {
 const StyledItem = withContext(dreamy.li, "item");
 
 /**
- * FileUpload.Item
- *
- * Represents a single uploaded file in the list.
+ * File Upload Item — single uploaded file in the list.
  */
 export function Item(props: ItemProps & HTMLDreamyProps<"li">) {
     const { file, children, ...rest } = props;
@@ -211,10 +218,7 @@ interface ItemPreviewProps {
 const StyledItemPreview = withContext(dreamy.div, "itemPreview");
 
 /**
- * FileUpload.ItemPreview
- *
- * Displays a preview icon for the uploaded file.
- * If no children are provided, displays a default file icon.
+ * File Upload Item Preview — preview icon or content for an uploaded file.
  */
 export function ItemPreview(props: ItemPreviewProps & HTMLDreamyProps<"div">) {
     const { children, ...rest } = props;
@@ -231,9 +235,7 @@ interface ItemPreviewImageProps {
 const StyledItemPreviewImage = withContext(dreamy.img, "itemPreviewImage");
 
 /**
- * FileUpload.ItemPreviewImage
- *
- * Displays an image preview for image files.
+ * File Upload Item Preview Image — image preview for uploaded image files.
  */
 export function ItemPreviewImage(props: ItemPreviewImageProps & HTMLDreamyProps<"img">) {
     const { file, ...rest } = props;
@@ -250,6 +252,9 @@ export function ItemPreviewImage(props: ItemPreviewImageProps & HTMLDreamyProps<
 
 // ─── ItemContent ─────────────────────────────────────────────────────────────
 
+/**
+ * File Upload Item Content — groups file name, size, and actions.
+ */
 export const ItemContent = withContext(dreamy.div, "itemContent");
 
 // ─── ItemName ────────────────────────────────────────────────────────────────
@@ -262,9 +267,7 @@ interface ItemNameProps {
 const StyledItemName = withContext(dreamy.span, "itemName");
 
 /**
- * FileUpload.ItemName
- *
- * Displays the name of the uploaded file.
+ * File Upload Item Name — displays the uploaded file name.
  */
 export function ItemName(props: ItemNameProps & HTMLDreamyProps<"span">) {
     const { file, children, ...rest } = props;
@@ -282,9 +285,7 @@ interface ItemSizeTextProps {
 const StyledItemSizeText = withContext(dreamy.span, "itemSizeText");
 
 /**
- * FileUpload.ItemSizeText
- *
- * Displays the file size in a human-readable format.
+ * File Upload Item Size Text — human-readable file size display.
  */
 export function ItemSizeText(props: ItemSizeTextProps & HTMLDreamyProps<"span">) {
     const { file, children, ...rest } = props;
@@ -304,9 +305,7 @@ interface ItemDeleteTriggerProps {
 const StyledItemDeleteTrigger = withContext(dreamy.button, "itemDeleteTrigger");
 
 /**
- * FileUpload.ItemDeleteTrigger
- *
- * A button to remove a specific file from the accepted list.
+ * File Upload Item Delete Trigger — removes a specific file from the list.
  */
 export function ItemDeleteTrigger(props: ItemDeleteTriggerProps & HTMLDreamyProps<"button">) {
     const { file, children, ...rest } = props;
@@ -329,9 +328,7 @@ export function ItemDeleteTrigger(props: ItemDeleteTriggerProps & HTMLDreamyProp
 const StyledClearTrigger = withContext(dreamy.button, "itemDeleteTrigger");
 
 /**
- * FileUpload.ClearTrigger
- *
- * A button to clear all accepted files.
+ * File Upload Clear Trigger — removes all accepted files.
  */
 export function ClearTrigger(props: HTMLDreamyProps<"button">) {
     const { children, ...rest } = props;
@@ -359,9 +356,7 @@ interface FileTextProps {
 const StyledFileText = withContext(dreamy.span, "fileText");
 
 /**
- * FileUpload.FileText
- *
- * Displays the selected file name(s), or a fallback text when no files are selected.
+ * File Upload File Text — selected file name or placeholder text.
  */
 export function FileText(props: FileTextProps & HTMLDreamyProps<"span">) {
     const { fallback = "Select file(s)", children, ...rest } = props;
@@ -389,9 +384,7 @@ export function FileText(props: FileTextProps & HTMLDreamyProps<"span">) {
 // ─── Context ─────────────────────────────────────────────────────────────────
 
 /**
- * FileUpload.Context
- *
- * Render prop component to access the file upload context.
+ * File Upload Context — render-prop access to file upload state.
  */
 export function Context(props: { children: (ctx: UseFileUploadReturn) => React.ReactNode }) {
     const ctx = useFileUploadContext();
@@ -406,9 +399,7 @@ interface ItemsBaseProps {
 }
 
 /**
- * FileUpload.Items
- *
- * Shortcut component that renders all accepted files as items.
+ * File Upload Items — shortcut that renders all accepted files as items.
  */
 export function Items(props: ItemsBaseProps & HTMLDreamyProps<"li">) {
     const { showSize, clearable, ...rest } = props;
@@ -444,10 +435,7 @@ export function Items(props: ItemsBaseProps & HTMLDreamyProps<"li">) {
 interface ListProps extends ItemsBaseProps {}
 
 /**
- * FileUpload.List
- *
- * Shortcut that renders an item group with all accepted files.
- * Equivalent to `<FileUpload.ItemGroup><FileUpload.Items /></FileUpload.ItemGroup>`.
+ * File Upload List — item group containing all accepted files.
  */
 export function List(props: ListProps & HTMLDreamyProps<"ul">) {
     const { showSize, clearable, ...rest } = props;

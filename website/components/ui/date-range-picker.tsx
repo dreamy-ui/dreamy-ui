@@ -1,11 +1,16 @@
 "use client";
 
-import { createContext, type PositioningProps, useFieldContext } from "@dreamy-ui/react";
-import { useControllableState } from "@dreamy-ui/react";
+import {
+    CalendarIcon,
+    ChevronLeftIcon,
+    ChevronRightIcon,
+    type PositioningProps,
+    createContext,
+    useControllableState,
+    useFieldContext
+} from "@dreamy-ui/react";
 import dayjs, { type Dayjs } from "dayjs";
 import { useEffect, useMemo, useState } from "react";
-import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
-import { LuCalendar } from "react-icons/lu";
 import { createStyleContext } from "styled-system/jsx";
 import { type DateRangePickerVariantProps, dateRangePicker } from "styled-system/recipes";
 import { Box, type BoxProps } from "./box";
@@ -250,7 +255,7 @@ export const Input = withContext(function DateRangePickerInput(props: DateRangeP
                 />
             </Popover.Trigger>
             <InputComponent.EndAddon>
-                <LuCalendar aria-hidden="true" />
+                <CalendarIcon aria-hidden="true" />
             </InputComponent.EndAddon>
         </InputComponent.Group>
     );
@@ -350,7 +355,7 @@ export const Calendar = withContext(function DateRangePickerCalendar(
                         onClick={handlePreviousMonth}
                         type="button"
                     >
-                        <BiChevronLeft aria-hidden="true" />
+                        <ChevronLeftIcon aria-hidden="true" />
                     </CalendarNavButton>
                     <CalendarTitle>{viewDate.format("MMMM YYYY")}</CalendarTitle>
                     <CalendarNavButton
@@ -358,7 +363,7 @@ export const Calendar = withContext(function DateRangePickerCalendar(
                         onClick={handleNextMonth}
                         type="button"
                     >
-                        <BiChevronRight aria-hidden="true" />
+                        <ChevronRightIcon aria-hidden="true" />
                     </CalendarNavButton>
                 </CalendarNav>
             </CalendarHeader>
@@ -526,7 +531,6 @@ export interface DateRangePickerRangePresetButtonProps extends Omit<ButtonProps,
 export const RangePresetButton = withContext(function DateRangePickerRangePresetButton(
     props: DateRangePickerRangePresetButtonProps
 ) {
-    const { ref } = props;
     const context = useDateRangePickerContext();
     const { value: dateRangeValue, ...restProps } = props;
     const isSelected =
@@ -535,13 +539,11 @@ export const RangePresetButton = withContext(function DateRangePickerRangePreset
         dayjs(context.value.start).isSame(dayjs(dateRangeValue.start), "day") &&
         dayjs(context.value.end).isSame(dayjs(dateRangeValue.end), "day");
 
-    const buttonProps: Omit<ButtonProps, "ref"> = restProps as Omit<ButtonProps, "ref">;
-
     return (
         <Button
             size="sm"
             variant={isSelected ? "solid" : "outline"}
-            {...buttonProps}
+            {...restProps}
         />
     );
 }, "rangePresetButton");

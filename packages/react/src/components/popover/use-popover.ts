@@ -144,6 +144,12 @@ export interface UsePopoverProps {
      * as it might affect scrolling performance.
      */
     computePositionOnMount?: boolean;
+    /**
+     * If `true`, popover open/close animations are disabled.
+     * Inherits from the reduced-motion preference when omitted.
+     *
+     * @default false
+     */
     reduceMotion?: boolean;
 }
 

@@ -53,7 +53,6 @@ const StyledImage = dreamy("img", image);
  * @See Docs https://dreamy-ui.com/docs/components/image
  */
 export function Image(props: ImageProps) {
-    const { ref } = props;
     const {
         fallbackSrc,
         src,
@@ -73,11 +72,10 @@ export function Image(props: ImageProps) {
 
     const shared = useMemo(() => {
         return {
-            ref,
             "data-zoomed": zoomOnHover,
             ...omit(rest, ["onError", "onLoad"])
         };
-    }, [zoomOnHover, ref, ...objectToDeps(rest)]);
+    }, [zoomOnHover, ...objectToDeps(rest)]);
 
     const img = useMemo(
         () => (

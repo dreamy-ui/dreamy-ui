@@ -47,9 +47,20 @@ export interface ModalProps extends UseModalProps, ModalOptions {
 }
 
 /**
- * Modal component
+ * Modal component — accessible dialog overlay.
  *
- * @See Docs https://dreamy-ui.com/docs/components/modal
+ * @see Docs https://dreamy-ui.com/docs/components/modal
+ *
+ * @example
+ * ```tsx
+ * <Modal.Root isOpen={isOpen} onClose={onClose}>
+ *   <Modal.Overlay />
+ *   <Modal.Content>
+ *     <Modal.Header>Title</Modal.Header>
+ *     <Modal.Body>Body</Modal.Body>
+ *   </Modal.Content>
+ * </Modal.Root>
+ * ```
  */
 export const Root = withRootProvider(function ModalRoot(props: ModalProps) {
     const modalProps: ModalProps = {
@@ -117,6 +128,9 @@ export const Root = withRootProvider(function ModalRoot(props: ModalProps) {
 
 export interface ModalOverlayProps extends MotionBoxProps {}
 
+/**
+ * Modal Overlay — backdrop behind the dialog content.
+ */
 export const Overlay = withContext(function Component(props: ModalOverlayProps) {
     const { isOpen } = useModalContext();
     const { overlay } = useMotionVariants();
@@ -146,6 +160,9 @@ const Container = withContext(function Component({ children, ...props }: ModalCo
 
 export interface ModalContentProps extends MotionFlexProps {}
 
+/**
+ * Modal Content — centered dialog surface and focus scope.
+ */
 export const Content = withContext(function Component({
     children,
     ...props
@@ -176,6 +193,9 @@ export const Content = withContext(function Component({
 
 export interface ModalHeaderProps extends FlexProps {}
 
+/**
+ * Modal Header — top section for the dialog title.
+ */
 export const Header = withContext(function Component({ children, ...props }: ModalHeaderProps) {
     const { headerId, setHeaderMounted } = useModalContext();
 
@@ -206,6 +226,9 @@ export const Header = withContext(function Component({ children, ...props }: Mod
 
 export interface ModalBodyProps extends FlexProps {}
 
+/**
+ * Modal Body — main content area of the dialog.
+ */
 export const Body = withContext(function Component({ children, style, ...props }: ModalBodyProps) {
     const { scrollBehavior, bodyId, setBodyMounted } = useModalContext();
 
@@ -231,6 +254,9 @@ export const Body = withContext(function Component({ children, style, ...props }
 
 export interface ModalFooterProps extends FlexProps {}
 
+/**
+ * Modal Footer — bottom section for dialog actions.
+ */
 export const Footer = withContext(function Component({ children, ...props }: ModalFooterProps) {
     return (
         <Flex
@@ -244,6 +270,9 @@ export const Footer = withContext(function Component({ children, ...props }: Mod
 
 export interface ModalCloseButtonProps extends CloseButtonProps {}
 
+/**
+ * Modal Close Button — dismisses the dialog.
+ */
 export const CloseButton = withContext(function Component({ ...props }: ModalCloseButtonProps) {
     const { onClose } = useModalContext();
 

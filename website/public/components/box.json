@@ -5,7 +5,7 @@
   "id": "box",
   "file": {
     "name": "box.tsx",
-    "content": "import { type HTMLDreamyProps, dreamy } from \"styled-system/jsx\";\r\n\r\nexport interface BoxProps extends HTMLDreamyProps<\"div\"> {}\r\n\r\n/**\r\n * Box component\r\n *\r\n * @See Docs https://dreamy-ui.com/docs/components/box\r\n */\r\nexport function Box(props: BoxProps) {\r\n    return <dreamy.div {...props} />;\r\n}\r\n"
+    "content": "import { type HTMLDreamyProps, dreamy } from \"styled-system/jsx\";\n\nexport interface BoxProps extends HTMLDreamyProps<\"div\"> {}\n\n/**\n * Box component\n *\n * @See Docs https://dreamy-ui.com/docs/components/box\n */\nexport function Box(props: BoxProps) {\n    return <dreamy.div {...props} />;\n}\n"
   },
   "component": "Box",
   "hasRecipe": false,

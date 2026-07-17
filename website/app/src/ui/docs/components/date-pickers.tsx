@@ -11,12 +11,12 @@ export function ControlledDatePicker() {
             value={date}
         >
             <DatePicker.Input />
-            <DatePicker.PopoverContent>
+            <DatePicker.Content>
                 <DatePicker.Header />
                 <DatePicker.Control />
                 <DatePicker.Calendar />
                 <DatePicker.Footer />
-            </DatePicker.PopoverContent>
+            </DatePicker.Content>
         </DatePicker.Root>
     );
 }
@@ -49,12 +49,12 @@ export function DatePickerWithFooter() {
             value={date}
         >
             <DatePicker.Input />
-            <DatePicker.PopoverContent>
+            <DatePicker.Content>
                 <DatePicker.Header />
                 <DatePicker.Control />
                 <DatePicker.Calendar />
                 <DatePicker.Footer />
-            </DatePicker.PopoverContent>
+            </DatePicker.Content>
         </DatePicker.Root>
     );
 }

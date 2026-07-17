@@ -1,4 +1,3 @@
-import type { Ref } from "react";
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type ListVariantProps, list } from "styled-system/recipes";
 
@@ -15,7 +14,6 @@ const StyledList = dreamy("ol", list);
  * @See Docs https://dreamy-ui.com/docs/components/list
  */
 export function Root(props: ListProps) {
-    const { ref } = props;
     const { ordered, unordered, ...rest } = props;
 
     if (ordered && unordered) console.warn("List cannot have both ordered and unordered props");
@@ -24,7 +22,6 @@ export function Root(props: ListProps) {
         <StyledList
             as={ordered ? "ol" : "ul"}
             data-type={ordered ? "ordered" : "unordered"}
-            ref={ref as Ref<HTMLOListElement>}
             {...rest}
         />
     );

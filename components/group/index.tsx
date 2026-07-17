@@ -17,9 +17,17 @@ export interface GroupProps
 const StyledGroup = dreamy("div", group);
 
 /**
- * Group component
+ * Group component — groups related controls with shared styling.
  *
- * @See Docs https://dreamy-ui.com/docs/components/group
+ * @see Docs https://dreamy-ui.com/docs/components/group
+ *
+ * @example
+ * ```tsx
+ * <Group attached>
+ *   <Button>One</Button>
+ *   <Button>Two</Button>
+ * </Group>
+ * ```
  */
 export function Group({ children, skip, ...props }: GroupProps) {
     const [patternProps, restProps] = splitProps(props, [

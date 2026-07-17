@@ -6,9 +6,16 @@ export interface IconProps extends HTMLDreamyProps<"svg">, IconVariantProps {}
 const StyledIcon = dreamy("svg", icon);
 
 /**
- * Icon component
+ * Icon component — styled SVG icon wrapper.
  *
- * @See Docs https://dreamy-ui.com/docs/components/icon
+ * @see Docs https://dreamy-ui.com/docs/components/icon
+ *
+ * @example
+ * ```tsx
+ * <Icon asChild>
+ *   <svg viewBox="0 0 24 24" />
+ * </Icon>
+ * ```
  */
 export function Icon({ ...props }: IconProps) {
     return <StyledIcon {...props} />;

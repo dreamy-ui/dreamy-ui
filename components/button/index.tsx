@@ -48,9 +48,14 @@ export interface ButtonProps
 const StyledButton = dreamy("button", button);
 
 /**
- * Button component
+ * Button component — triggers an action or event.
  *
- * @See Docs https://dreamy-ui.com/docs/components/button
+ * @see Docs https://dreamy-ui.com/docs/components/button
+ *
+ * @example
+ * ```tsx
+ * <Button>Save</Button>
+ * ```
  */
 export function Button({
     isLoading,

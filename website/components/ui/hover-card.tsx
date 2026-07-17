@@ -110,7 +110,7 @@ export interface HoverCardTransitionProps extends Omit<MotionBoxProps, "children
 }
 
 function Transition(props: HoverCardTransitionProps) {
-    const { ref, children, arrowProps, ...rest } = props;
+    const { children, arrowProps, ...rest } = props;
 
     const { isOpen, hasArrow, reduceMotion } = usePopoverContext();
     const { popover } = useMotionVariants();
@@ -134,7 +134,6 @@ export interface HoverCardContentProps extends HoverCardTransitionProps {
 }
 
 export const Content = withContext(function HoverCardContent(props: HoverCardContentProps) {
-    const { ref } = props;
     const { rootProps, motionProps, ...contentProps } = props;
 
     const {
@@ -156,8 +155,7 @@ export const Content = withContext(function HoverCardContent(props: HoverCardCon
                     // interactive tooltips, so default to a non-modal dialog.
                     role: "dialog",
                     ...motionProps,
-                    ...contentProps,
-                    ref
+                    ...contentProps
                 })}
                 onAnimationComplete={callAll(onAnimationComplete, contentProps.onAnimationComplete)}
             />

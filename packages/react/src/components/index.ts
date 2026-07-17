@@ -10,6 +10,7 @@ export * from "./editable";
 export * from "./file-upload";
 export * from "./field";
 export * from "./focus-lock";
+export * from "./icons";
 export * from "./menu";
 export * from "./modal";
 export * from "./pagination";

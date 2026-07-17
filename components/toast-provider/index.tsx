@@ -24,11 +24,26 @@ import type { MotionBoxProps } from "../motion";
 import { Toast } from "../toast";
 
 export interface ToastProviderProps extends PropsWithChildren {
+    /**
+     * Default props applied to every toast created via `useToast().toast()`.
+     */
     defaultToastProps?: Partial<IToast>;
 }
 
 const emptyObject: Partial<IToast> = {};
 
+/**
+ * ToastProvider component — hosts toast state and renders the toast portal.
+ *
+ * @see Docs https://dreamy-ui.com/docs/components/toast
+ *
+ * @example
+ * ```tsx
+ * <ToastProvider>
+ *   <App />
+ * </ToastProvider>
+ * ```
+ */
 export function ToastProvider({ children, defaultToastProps = emptyObject }: ToastProviderProps) {
     const [toasts, setToasts] = useState<IToast[]>([]);
     const timeoutsRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
@@ -197,6 +212,11 @@ const positions = [
     "bottom-right"
 ] as const;
 
+/**
+ * ToastManager — renders active toasts into position groups.
+ *
+ * @internal Prefer using `ToastProvider`, which mounts this for you.
+ */
 export function ToastManager() {
     const { toasts } = useToast();
 

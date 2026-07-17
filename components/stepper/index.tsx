@@ -19,9 +19,23 @@ export interface StepperRootProps
         StepperVariantProps {}
 
 /**
- * Stepper component
+ * Stepper component — multi-step process indicator and navigation.
  *
- * @See Docs https://dreamy-ui.com/docs/components/stepper
+ * @see Docs https://dreamy-ui.com/docs/components/stepper
+ *
+ * @example
+ * ```tsx
+ * <Stepper.Root count={3}>
+ *   <Stepper.List>
+ *     <Stepper.Item>
+ *       <Stepper.Trigger>
+ *         <Stepper.Indicator />
+ *         <Stepper.Title>Step 1</Stepper.Title>
+ *       </Stepper.Trigger>
+ *     </Stepper.Item>
+ *   </Stepper.List>
+ * </Stepper.Root>
+ * ```
  */
 export const Root = withProvider(function StepperRoot(props: StepperRootProps) {
     const {
@@ -58,6 +72,9 @@ export const Root = withProvider(function StepperRoot(props: StepperRootProps) {
 
 export interface StepperListProps extends HTMLDreamyProps<"ol"> {}
 
+/**
+ * Stepper List — ordered list of step items.
+ */
 export const List = withContext(function StepperList(props: StepperListProps) {
     const { getListProps } = useStepperContext();
 
@@ -73,6 +90,9 @@ export interface StepperItemProps extends Omit<HTMLDreamyProps<"li">, "title"> {
     index: number;
 }
 
+/**
+ * Stepper Item — a single step in the sequence.
+ */
 export const Item = withContext(function StepperItem(props: StepperItemProps) {
     const { index, children, ...rest } = props;
     const { getItemProps } = useStepperContext();
@@ -91,6 +111,9 @@ export interface StepperTriggerProps extends HTMLDreamyProps<"div"> {
     index: number;
 }
 
+/**
+ * Stepper Trigger — interactive area for a step.
+ */
 export const Trigger = withContext(function StepperTrigger(props: StepperTriggerProps) {
     const { index, children, ...rest } = props;
     const { getTriggerProps } = useStepperContext();
@@ -114,6 +137,9 @@ export interface StepperIndicatorProps extends HTMLDreamyProps<"div"> {
     icon?: React.ReactNode;
 }
 
+/**
+ * Stepper Indicator — visual marker for step progress.
+ */
 export const Indicator = withContext(function StepperIndicator(props: StepperIndicatorProps) {
     const { index, icon, children, ...rest } = props;
     const { getIndicatorProps, step } = useStepperContext();
@@ -137,12 +163,18 @@ export const Indicator = withContext(function StepperIndicator(props: StepperInd
 
 export interface StepperTitleProps extends HTMLDreamyProps<"p"> {}
 
+/**
+ * Stepper Title — label for a step.
+ */
 export const Title = withContext(function StepperTitle(props: StepperTitleProps) {
     return <dreamy.p {...props} />;
 }, "title");
 
 export interface StepperDescriptionProps extends HTMLDreamyProps<"p"> {}
 
+/**
+ * Stepper Description — supporting text for a step.
+ */
 export const Description = withContext(function StepperDescription(props: StepperDescriptionProps) {
     return <dreamy.p {...props} />;
 }, "description");
@@ -151,6 +183,9 @@ export interface StepperSeparatorProps extends HTMLDreamyProps<"div"> {
     index: number;
 }
 
+/**
+ * Stepper Separator — connector between steps.
+ */
 export const Separator = withContext(function StepperSeparator(props: StepperSeparatorProps) {
     const { index, ...rest } = props;
     const { getSeparatorProps } = useStepperContext();
@@ -167,6 +202,9 @@ export interface StepperContentProps extends HTMLDreamyProps<"div"> {
     index: number;
 }
 
+/**
+ * Stepper Content — panel shown for the active step.
+ */
 export const Content = withContext(function StepperContent(props: StepperContentProps) {
     const { index, ...rest } = props;
     const { getContentProps } = useStepperContext();
@@ -181,6 +219,9 @@ export const Content = withContext(function StepperContent(props: StepperContent
 
 export interface StepperCompletedContentProps extends HTMLDreamyProps<"div"> {}
 
+/**
+ * Stepper Completed Content — content shown after all steps finish.
+ */
 export const CompletedContent = withContext(function StepperCompletedContent(
     props: StepperCompletedContentProps
 ) {
@@ -193,6 +234,9 @@ export const CompletedContent = withContext(function StepperCompletedContent(
 
 export interface StepperNextTriggerProps extends HTMLDreamyProps<"button"> {}
 
+/**
+ * Stepper Next Trigger — advances to the next step.
+ */
 export const NextTrigger = withContext(function StepperNextTrigger(props: StepperNextTriggerProps) {
     const { getNextTriggerProps } = useStepperContext();
 
@@ -206,6 +250,9 @@ export const NextTrigger = withContext(function StepperNextTrigger(props: Steppe
 
 export interface StepperPrevTriggerProps extends HTMLDreamyProps<"button"> {}
 
+/**
+ * Stepper Prev Trigger — returns to the previous step.
+ */
 export const PrevTrigger = withContext(function StepperPrevTrigger(props: StepperPrevTriggerProps) {
     const { getPrevTriggerProps } = useStepperContext();
 
@@ -221,6 +268,9 @@ export interface StepperContextProps {
     children: (ctx: UseStepperReturn) => React.ReactNode;
 }
 
+/**
+ * Stepper Context — render-prop access to stepper state.
+ */
 export function Context({ children }: StepperContextProps) {
     const ctx = useStepperContext();
     return <>{children(ctx)}</>;

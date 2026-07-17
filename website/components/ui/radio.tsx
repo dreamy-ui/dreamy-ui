@@ -28,7 +28,6 @@ const StyledRadio = dreamy("div", radio);
  * @See Docs https://dreamy-ui.com/docs/components/radio
  */
 export function Radio(props: RadioProps) {
-    const { ref } = props;
     const {
         children,
         getRootProps,
@@ -36,7 +35,7 @@ export function Radio(props: RadioProps) {
         getControlProps,
         getInputProps,
         getLabelProps
-    } = useRadio({ ...props, ref });
+    } = useRadio(props);
 
     return (
         <StyledRadio {...getRootProps()}>

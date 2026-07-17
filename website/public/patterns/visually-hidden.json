@@ -3,6 +3,6 @@
   "id": "visually-hidden",
   "file": {
     "name": "visually-hidden.ts",
-    "content": "import { definePattern } from \"@pandacss/dev\";\r\n\r\nexport const visuallyHidden = definePattern({\r\n    jsx: [\"VisuallyHidden\", \"VisuallyHiddenInput\"],\r\n    transform(props) {\r\n        return {\r\n            srOnly: true,\r\n            ...props\r\n        };\r\n    }\r\n});\r\n"
+    "content": "import { definePattern } from \"@pandacss/dev\";\n\nexport const visuallyHidden = definePattern({\n    jsx: [\"VisuallyHidden\", \"VisuallyHiddenInput\"],\n    transform(props) {\n        return {\n            srOnly: true,\n            ...props\n        };\n    }\n});\n"
   }
 }

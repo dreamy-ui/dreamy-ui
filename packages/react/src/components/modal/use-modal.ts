@@ -72,6 +72,11 @@ export interface ModalOptions {
      */
     preserveScrollBarGap?: boolean;
 
+    /**
+     * If `true`, focus lock applies across iframes.
+     *
+     * @default false
+     */
     lockFocusAcrossFrames?: boolean;
 }
 
@@ -126,6 +131,13 @@ export interface UseModalProps {
      * @default true
      */
     useInert?: boolean;
+    /**
+     * Where the modal content scrolls when it overflows.
+     * - `"inside"` — only the modal body scrolls
+     * - `"outside"` — the entire page/overlay area scrolls
+     *
+     * @default "outside"
+     */
     scrollBehavior?: "inside" | "outside";
 }
 

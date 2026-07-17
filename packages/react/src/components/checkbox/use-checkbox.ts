@@ -63,10 +63,34 @@ interface Props extends IconCustomProps {
 }
 
 export interface UseCheckboxProps extends Props, UserFeedbackProps, Record<string, any> {
+	/**
+	 * If `true`, styles and behavior target the checkbox-card layout.
+	 *
+	 * @default false
+	 */
 	isCard?: boolean;
+	/**
+	 * If `true`, checkbox animations are disabled.
+	 * Inherits from the checkbox group or reduced-motion preference when omitted.
+	 *
+	 * @default false
+	 */
 	reduceMotion?: boolean;
+	/**
+	 * If `true`, the checkbox shows an indeterminate state (neither checked nor unchecked).
+	 *
+	 * @default false
+	 */
 	isIndeterminate?: boolean;
+	/**
+	 * If `true`, the checkbox is checked (controlled).
+	 */
 	isChecked?: boolean;
+	/**
+	 * If `true`, the checkbox is checked on initial render (uncontrolled).
+	 *
+	 * @default false
+	 */
 	defaultChecked?: boolean;
 }
 

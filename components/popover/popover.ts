@@ -4,17 +4,19 @@ import { defineSlotRecipe } from "@pandacss/dev";
 export const popover = defineSlotRecipe({
     className: "popover",
     description:
-        "A floating popover panel shared by Popover, Select, Menu, and DatePicker with optional arrow. Uses panel background, blur, border, and shadow — only size changes width, padding, and border radius.",
+        "A floating popover panel shared by Popover, Select, Menu, Autocomplete, DatePicker, and DateRangePicker with optional arrow. Uses panel background, blur, border, and shadow — only size changes width, padding, and border radius.",
     slots: ["content", "body", "header", "footer", "close"],
     jsx: [
         ...mapJsx("Popover", ["Root", "Content", "Body", "Header", "Footer", "CloseButton"]),
-        ...mapJsx("Menu", ["Root", "Trigger", "Content", "Item"]),
+        ...mapJsx("Menu", ["Root", "Trigger", "TriggerItem", "Content", "Item"]),
         ...mapJsx("Select", ["Root", "Trigger", "Content", "VirtualContent"]),
+        ...mapJsx("Autocomplete", ["Root", "Input", "Content", "VirtualContent", "Item"]),
         ...mapJsx("DatePicker", [
             "Root",
             "Trigger",
+            "Input",
             "Control",
-            "Popover",
+            "Content",
             "Calendar",
             "CalendarHeader",
             "CalendarTitle",
@@ -29,6 +31,27 @@ export const popover = defineSlotRecipe({
             "Footer",
             "FooterButton",
             "AIO"
+        ]),
+        ...mapJsx("DateRangePicker", [
+            "Root",
+            "Trigger",
+            "Input",
+            "PopoverContent",
+            "Calendar",
+            "CalendarHeader",
+            "CalendarTitle",
+            "CalendarNav",
+            "CalendarNavButton",
+            "CalendarGrid",
+            "CalendarGridHeader",
+            "CalendarGridHeaderCell",
+            "CalendarGridBody",
+            "CalendarCell",
+            "CalendarCellButton",
+            "RangePreset",
+            "RangePresetButton",
+            "Footer",
+            "FooterButton"
         ])
     ],
     base: {

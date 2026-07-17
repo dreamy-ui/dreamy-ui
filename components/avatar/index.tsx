@@ -186,9 +186,14 @@ export interface AvatarProps
 const StyledBase = dreamy("span", avatar);
 
 /**
- * Avatar component
+ * Avatar component — user or entity image with fallback initials.
  *
- * @See Docs https://dreamy-ui.com/docs/components/avatar
+ * @see Docs https://dreamy-ui.com/docs/components/avatar
+ *
+ * @example
+ * ```tsx
+ * <Avatar name="Jane Doe" src="/avatar.png" />
+ * ```
  */
 export function Avatar({
     src,
@@ -254,7 +259,7 @@ interface AvatarGroupOptions {
 export interface AvatarGroupProps extends AvatarGroupOptions, Omit<FlexProps, "children"> {}
 
 /**
- * AvatarGroup displays a number of avatars grouped together in a stack.
+ * Avatar Group — stacked group of avatars with overflow indicator.
  */
 export function AvatarGroup(props: AvatarGroupProps) {
     const { children, maxAvatars, spacing = "-0.75rem", ...rest } = props;

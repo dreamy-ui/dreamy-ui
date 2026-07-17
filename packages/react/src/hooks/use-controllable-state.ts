@@ -10,9 +10,24 @@ export function useControllableProp<T>(prop: T | undefined, state: T) {
 }
 
 export interface UseControllableStateProps<T> {
+    /**
+     * Controlled value. When provided, the hook does not keep internal state.
+     */
     value?: T;
+    /**
+     * Initial value for uncontrolled usage. May be a value or a lazy initializer.
+     */
     defaultValue?: T | (() => T);
+    /**
+     * Callback fired when the value changes.
+     */
     onChange?: (value: T) => void;
+    /**
+     * Predicate that decides whether a next value should be applied.
+     * Return `false` to skip the update.
+     *
+     * @default (prev, next) => prev !== next
+     */
     shouldUpdate?: (prev: T, next: T) => boolean;
 }
 

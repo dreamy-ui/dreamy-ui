@@ -20,8 +20,8 @@ interface LightDarkColor {
 }
 
 export interface LightDarkNumber {
-    light: number;
-    dark: number;
+    light?: number;
+    dark?: number;
 }
 
 /** Per-token lightness offset for foreground tokens (OKLCH 0–1 scale). */
@@ -162,8 +162,9 @@ export interface PresetOptions {
      */
     buttonSecondaryTextColor: string | LightDarkColor;
     /**
-     * Fine-tune the chroma (color tint intensity) of auto-generated foreground and border tokens.
-     * Useful when the default generation feels too colorful or too neutral for a given background.
+     * Fine-tune auto-generated foreground, border, and alpha tokens.
+     * Useful when default generation feels too colorful, too neutral, or when you want
+     * tinted translucent overlays (e.g. blue-ish `alpha` via chroma + hue).
      */
     colorTuning?: ColorTuning;
 }

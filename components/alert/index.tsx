@@ -28,9 +28,18 @@ export interface AlertProps extends Omit<HTMLDreamyProps<"div">, "title">, Alert
 const StyledAlert = dreamy("div", alert);
 
 /**
- * Alert component
+ * Alert component — displays important status messages.
  *
- * @See Docs https://dreamy-ui.com/docs/components/alert
+ * @see Docs https://dreamy-ui.com/docs/components/alert
+ *
+ * @example
+ * ```tsx
+ * <Alert
+ *   status="warning"
+ *   title="Warning"
+ *   description="Please review your changes."
+ * />
+ * ```
  */
 export function Alert(props: AlertProps) {
     const { status = "info", title, description, ...rest } = props;
@@ -54,6 +63,14 @@ export function Alert(props: AlertProps) {
     );
 }
 
+/**
+ * Alert Status Icon — default icon for each alert status.
+ */
+/**
+ * Default status icon for the alert.
+ *
+ * @internal
+ */
 export function StatusIcon({ status }: { status: Status }) {
     switch (status) {
         case "success":

@@ -1,9 +1,11 @@
 "use client";
 
 import {
+    CalendarIcon,
+    ChevronLeftIcon,
+    ChevronRightIcon,
     type PositioningProps,
     createContext,
-    cx,
     dataAttr,
     useControllableState,
     useFieldContext,
@@ -12,8 +14,6 @@ import {
 import dayjs, { type Dayjs } from "dayjs";
 import * as m from "motion/react-m";
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
-import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
-import { LuCalendar } from "react-icons/lu";
 import { createStyleContext, dreamy } from "styled-system/jsx";
 import { type DatePickerVariantProps, datePicker } from "styled-system/recipes";
 import { Box, type BoxProps } from "./box";
@@ -21,10 +21,17 @@ import { Button, type ButtonProps } from "./button";
 import { Flex, type FlexProps } from "./flex";
 import { Icon } from "./icon";
 import { IconButton, type IconButtonProps } from "./icon-button";
-import { Input as InputComponent, type InputGroupProps, type InputProps } from "./input";
+import {
+    Input as InputComponent,
+    type InputEndAddonProps,
+    type InputGroupProps,
+    type InputProps
+} from "./input";
 import * as Popover from "./popover";
 
 const { withProvider, withContext } = createStyleContext(datePicker, { forwardVariants: ["size"] });
+
+const DatePickerCalendarIcon = withContext(CalendarIcon, "calendarIcon");
 
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] as const;
 
@@ -351,12 +358,12 @@ export const Root = withProvider(
                     onOpen={handleOpen}
                     positioning={positioning}
                     {...popoverProps}
+                    autoFocus
+                    initialFocusRef={calendarInitialFocusRef}
                     portalProps={{
                         zIndex: "var(--z-index-popover)",
                         ...popoverProps?.portalProps
                     }}
-                    autoFocus
-                    initialFocusRef={calendarInitialFocusRef}
                 >
                     <Box {...rest}>{children}</Box>
                 </Popover.Root>
@@ -384,10 +391,20 @@ export const Trigger = withContext(function DatePickerTrigger(props: DatePickerT
     );
 }, "trigger");
 
-export interface DatePickerInputProps extends InputGroupProps {}
+export interface DatePickerInputProps extends InputProps {
+    /**
+     * Props forwarded to the wrapping `Input.Group`.
+     */
+    inputGroupProps?: InputGroupProps;
+    /**
+     * Props forwarded to the calendar `Input.EndAddon`.
+     * Pass `children` to replace the default calendar icon.
+     */
+    endAddonProps?: InputEndAddonProps;
+}
 
 export const Input = withContext(function DatePickerInput(props: DatePickerInputProps) {
-    const { ref: _ref, ...inputProps } = props;
+    const { ref: _ref, inputGroupProps, endAddonProps, ...inputProps } = props;
     const context = useDatePickerContext();
     const field = useFieldContext();
     const formattedDate = useMemo(
@@ -398,30 +415,32 @@ export const Input = withContext(function DatePickerInput(props: DatePickerInput
     );
 
     const size = getInheritedButtonSize(context.size);
+    const { children: endAddonChildren, ...restEndAddonProps } = endAddonProps ?? {};
 
     return (
-        <InputComponent.Group size={size}>
+        <InputComponent.Group
+            size={size}
+            {...inputGroupProps}
+        >
             <Popover.Trigger>
                 <InputComponent
                     id={field?.id}
                     placeholder={context.placeholder}
                     readOnly
                     value={formattedDate}
-                    {...(inputProps as InputProps)}
+                    {...inputProps}
                 />
             </Popover.Trigger>
-            <InputComponent.EndAddon>
-                <LuCalendar aria-hidden="true" />
+            <InputComponent.EndAddon {...restEndAddonProps}>
+                {endAddonChildren ?? <DatePickerCalendarIcon />}
             </InputComponent.EndAddon>
         </InputComponent.Group>
     );
 }, "trigger");
 
-export interface DatePickerPopoverProps extends Omit<Popover.PopoverContentProps, "transition"> {}
+export interface DatePickerContentProps extends Omit<Popover.PopoverContentProps, "transition"> {}
 
-export const PopoverContent = withContext(function DatePickerPopover(
-    props: DatePickerPopoverProps
-) {
+export const Content = withContext(function DatePickerContent(props: DatePickerContentProps) {
     const { onAnimationComplete, ...rest } = props;
     const context = useDatePickerContext();
 
@@ -632,7 +651,7 @@ export const Header = withContext(function DatePickerHeader(props: DatePickerHea
                     type="button"
                     {...previousButtonProps}
                 >
-                    <Icon as={BiChevronLeft} />
+                    <Icon as={ChevronLeftIcon} />
                 </CalendarNavButton>
                 <CalendarTitle {...titleProps}>{title}</CalendarTitle>
                 <CalendarNavButton
@@ -641,7 +660,7 @@ export const Header = withContext(function DatePickerHeader(props: DatePickerHea
                     type="button"
                     {...nextButtonProps}
                 >
-                    <Icon as={BiChevronRight} />
+                    <Icon as={ChevronRightIcon} />
                 </CalendarNavButton>
             </CalendarNav>
         </CalendarHeader>
@@ -1387,30 +1406,24 @@ export const FooterButton = withContext(function DatePickerFooterButton(
 
 export interface DatePickerAIOProps extends DatePickerRootProps {
     inputProps?: DatePickerInputProps;
-    popoverContentProps?: DatePickerPopoverProps;
+    contentProps?: DatePickerContentProps;
     headerProps?: DatePickerHeaderProps;
     calendarProps?: DatePickerCalendarProps;
     footerProps?: DatePickerFooterProps;
 }
 
 export function AIO(props: DatePickerAIOProps) {
-    const {
-        inputProps,
-        popoverContentProps,
-        headerProps,
-        calendarProps,
-        footerProps,
-        ...rootProps
-    } = props;
+    const { inputProps, contentProps, headerProps, calendarProps, footerProps, ...rootProps } =
+        props;
 
     return (
         <Root {...rootProps}>
             <Input {...inputProps} />
-            <PopoverContent {...popoverContentProps}>
+            <Content {...contentProps}>
                 <Header {...headerProps} />
                 <Calendar {...calendarProps} />
                 <Footer {...footerProps} />
-            </PopoverContent>
+            </Content>
         </Root>
     );
 }

@@ -36,6 +36,9 @@ export interface UseRangeSliderProps
 		| "aria-valuetext"
 		| "aria-labelledby"
 	> {
+	/**
+	 * Ref to the range slider root element.
+	 */
 	ref?: ReactRef<HTMLDivElement>;
 	/**
 	 * The minimum allowed value of the slider. Cannot be greater than max.

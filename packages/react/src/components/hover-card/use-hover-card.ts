@@ -13,6 +13,11 @@ export interface UseHoverCardProps extends Omit<UsePopoverProps, "trigger"> {
      * @default 300
      */
     closeDelay?: number;
+    /**
+     * Visual size of the hover card.
+     *
+     * @default "md"
+     */
     size?: "sm" | "md" | "lg";
 }
 

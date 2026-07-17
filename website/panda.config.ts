@@ -23,26 +23,22 @@ export default defineConfig({
     presets: [
         createDreamyPreset({
             backgrounds: {
-                dark: "#080808", // main
-                // dark: "#06050a",
-                // dark: "#1d1929",
-                // dark: "#1a191d",
-                light: "#FFF" // main
-                // light: "#f8f0ff"
+                dark: "#080808",
+                light: "#FFF"
             },
             fonts: {
                 body: "Geist",
                 heading: "Manrope"
             },
             colorTuning: {
-                alpha: {
-                    chroma: {
-                        light: 0.1
-                    }
-                }
+                // alpha: {
+                //     hue: 240,
+                //     chroma: {
+                //         light: 0.02,
+                //         dark: 0.015
+                //     }
+                // }
             },
-            // primaryColor: "#6056aa",
-            // primaryColor: "#6d52b8",
             primaryColor: {
                 light: "#3B82F6",
                 dark: "#74a6f8"

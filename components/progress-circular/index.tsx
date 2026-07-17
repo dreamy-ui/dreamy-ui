@@ -13,9 +13,14 @@ export interface ProgressCircularProps
 const StyledProgressCircular = dreamy("div", progressCircular);
 
 /**
- * ProgressCircular component
+ * ProgressCircular component — circular progress indicator.
  *
- * @See Docs https://dreamy-ui.com/docs/components/progress-circular
+ * @see Docs https://dreamy-ui.com/docs/components/progress-circular
+ *
+ * @example
+ * ```tsx
+ * <ProgressCircular value={75} aria-label="Uploading" />
+ * ```
  */
 export function ProgressCircular(props: ProgressCircularProps) {
     const {

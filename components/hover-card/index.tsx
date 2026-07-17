@@ -66,9 +66,21 @@ export interface HoverCardProps extends UseHoverCardProps {
 }
 
 /**
- * HoverCard component
+ * Hover Card component — rich preview panel shown on hover or focus.
  *
- * @See Docs https://dreamy-ui.com/docs/components/hover-card
+ * @see Docs https://dreamy-ui.com/docs/components/hover-card
+ *
+ * @example
+ * ```tsx
+ * <HoverCard.Root>
+ *   <HoverCard.Trigger>
+ *     <Button>Profile</Button>
+ *   </HoverCard.Trigger>
+ *   <HoverCard.Content>
+ *     <HoverCard.Body>User details</HoverCard.Body>
+ *   </HoverCard.Content>
+ * </HoverCard.Root>
+ * ```
  */
 export const Root = withRootProvider(function HoverCardRoot(props: HoverCardProps) {
     const { children, hasArrow = true, usePortal = true, portalProps, ...rest } = props;
@@ -94,6 +106,9 @@ export const Root = withRootProvider(function HoverCardRoot(props: HoverCardProp
 
 export interface HoverCardArrowProps extends HTMLDreamyProps<"div"> {}
 
+/**
+ * Hover Card Arrow — pointer indicating the trigger element.
+ */
 export function Arrow(props: HoverCardArrowProps) {
     const { getArrowProps, getArrowInnerProps } = usePopoverContext();
 
@@ -133,6 +148,9 @@ export interface HoverCardContentProps extends HoverCardTransitionProps {
     motionProps?: Omit<MotionBoxProps, "children">;
 }
 
+/**
+ * Hover Card Content — positioned panel revealed on hover or focus.
+ */
 export const Content = withContext(function HoverCardContent(props: HoverCardContentProps) {
     const { rootProps, motionProps, ...contentProps } = props;
 
@@ -177,6 +195,9 @@ export const Content = withContext(function HoverCardContent(props: HoverCardCon
 
 export interface HoverCardHeaderProps extends HTMLDreamyProps<"header"> {}
 
+/**
+ * Hover Card Header — top section for title or summary content.
+ */
 export const Header = withContext(function HoverCardHeader(props: HoverCardHeaderProps) {
     const { getHeaderProps } = usePopoverContext();
 
@@ -196,6 +217,9 @@ export const Header = withContext(function HoverCardHeader(props: HoverCardHeade
 
 export interface HoverCardBodyProps extends HTMLDreamyProps<"div"> {}
 
+/**
+ * Hover Card Body — main content area of the hover card.
+ */
 export const Body = withContext(function HoverCardBody(props: HoverCardBodyProps) {
     const { getBodyProps } = usePopoverContext();
 
@@ -204,6 +228,9 @@ export const Body = withContext(function HoverCardBody(props: HoverCardBodyProps
 
 export interface HoverCardFooterProps extends BoxProps {}
 
+/**
+ * Hover Card Footer — bottom section for actions or metadata.
+ */
 export const Footer = withContext(function HoverCardFooter(props: HoverCardFooterProps) {
     return (
         <Box
@@ -214,8 +241,7 @@ export const Footer = withContext(function HoverCardFooter(props: HoverCardFoote
 }, "footer");
 
 /**
- * HoverCardTrigger wraps the element that triggers the hover card.
- * It must be an interactive element such as `button` or `a`.
+ * Hover Card Trigger — interactive element that opens the hover card.
  */
 export function Trigger(props: { children: React.ReactNode }) {
     const child = Children.only(props.children) as React.ReactElement<Record<string, unknown>> & {

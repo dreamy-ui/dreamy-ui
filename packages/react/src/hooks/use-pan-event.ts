@@ -4,11 +4,31 @@ import sync, { cancelSync, getFrameData } from "framesync";
 import { useLayoutEffect, useRef } from "react";
 
 export interface UsePanEventProps {
+	/**
+	 * Called continuously while the pointer is panning.
+	 */
 	onPan?: PanEventHandler;
+	/**
+	 * Called once when a pan gesture starts.
+	 */
 	onPanStart?: PanEventHandler;
+	/**
+	 * Called when a pan gesture ends.
+	 */
 	onPanEnd?: PanEventHandler;
+	/**
+	 * Called when a pan session starts (before movement threshold).
+	 */
 	onPanSessionStart?: PanEventHandler;
+	/**
+	 * Called when a pan session ends.
+	 */
 	onPanSessionEnd?: PanEventHandler;
+	/**
+	 * Movement threshold in pixels before a pan is recognized.
+	 *
+	 * @default 3
+	 */
 	threshold?: number;
 }
 

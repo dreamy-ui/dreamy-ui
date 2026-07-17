@@ -87,7 +87,6 @@ const StyledTooltip = withContext(function TooltipContent(props: MotionBoxProps)
  * @see Docs https://dreamy-ui.com/docs/components/tooltip
  */
 export function Tooltip(props: TooltipProps) {
-    const { ref } = props;
     const {
         children,
         content,
@@ -98,6 +97,7 @@ export function Tooltip(props: TooltipProps) {
         portalProps,
         motionProps,
         disablePortal = false,
+        ref,
         ...rest
     } = props;
 

@@ -9,9 +9,16 @@ export interface DarkThemeProps extends ThemeProps {}
 const StyledTheme = dreamy("div", theme);
 
 /**
- * Dark Theme component
+ * DarkTheme component — forces dark theme tokens for its children.
  *
- * @See Docs https://dreamy-ui.com/docs/components/theme
+ * @see Docs https://dreamy-ui.com/docs/components/theme
+ *
+ * @example
+ * ```tsx
+ * <DarkTheme>
+ *   <Card.Root>Always dark</Card.Root>
+ * </DarkTheme>
+ * ```
  */
 export function DarkTheme(props: ThemeProps) {
     return (
@@ -26,9 +33,16 @@ export function DarkTheme(props: ThemeProps) {
 export interface LightThemeProps extends ThemeProps {}
 
 /**
- * Light Theme component
+ * LightTheme component — forces light theme tokens for its children.
  *
- * @See Docs https://dreamy-ui.com/docs/components/theme
+ * @see Docs https://dreamy-ui.com/docs/components/theme
+ *
+ * @example
+ * ```tsx
+ * <LightTheme>
+ *   <Card.Root>Always light</Card.Root>
+ * </LightTheme>
+ * ```
  */
 export function LightTheme(props: ThemeProps) {
     return (

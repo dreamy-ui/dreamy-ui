@@ -32,9 +32,17 @@ export interface StackProps
         WithSeparator {}
 
 /**
- * Stack component.
+ * Stack component — stacks children vertically or horizontally.
  *
- * @See Docs https://dreamy-ui.com/docs/components/stack
+ * @see Docs https://dreamy-ui.com/docs/components/stack
+ *
+ * @example
+ * ```tsx
+ * <Stack gap="4">
+ *   <Box>First</Box>
+ *   <Box>Second</Box>
+ * </Stack>
+ * ```
  */
 export function Stack({ separator, children, ...props }: StackProps) {
     const [patternProps, restProps] = splitProps(props, ["direction", "gap", "align", "justify"]);
@@ -56,9 +64,17 @@ export interface HStackProps
         HstackProperties,
         WithSeparator {}
 /**
- * Horizontal stack component.
+ * HStack component — horizontal stack layout.
  *
- * @See Docs https://dreamy-ui.com/docs/components/stack
+ * @see Docs https://dreamy-ui.com/docs/components/stack
+ *
+ * @example
+ * ```tsx
+ * <HStack gap="4">
+ *   <Button>Cancel</Button>
+ *   <Button>Save</Button>
+ * </HStack>
+ * ```
  */
 export function HStack({ children, separator, ...props }: HStackProps) {
     const [patternProps, restProps] = splitProps(props, ["gap", "justify", "align"]);
@@ -81,9 +97,17 @@ export interface VStackProps
         WithSeparator {}
 
 /**
- * Vertical stack component.
+ * VStack component — vertical stack layout.
  *
- * @See Docs https://dreamy-ui.com/docs/components/stack
+ * @see Docs https://dreamy-ui.com/docs/components/stack
+ *
+ * @example
+ * ```tsx
+ * <VStack gap="4" align="start">
+ *   <Heading>Title</Heading>
+ *   <Text>Description</Text>
+ * </VStack>
+ * ```
  */
 export function VStack({ children, separator, ...props }: VStackProps) {
     const [patternProps, restProps] = splitProps(props, ["gap", "justify", "align"]);

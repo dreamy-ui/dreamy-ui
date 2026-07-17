@@ -161,8 +161,17 @@ export const [TabsProvider, useTabsContext] = createContext<UseTabsReturn>({
 });
 
 export interface UseTabListProps {
+	/**
+	 * Tab triggers rendered inside the list.
+	 */
 	children?: React.ReactNode;
+	/**
+	 * Additional keydown handler. Arrow/Home/End navigation is composed on top.
+	 */
 	onKeyDown?: React.KeyboardEventHandler;
+	/**
+	 * Ref to the tab list element.
+	 */
 	ref?: React.Ref<any>;
 }
 
@@ -309,6 +318,9 @@ export function useTab<P extends UseTabProps>(props: P) {
 }
 
 export interface UseTabPanelsProps {
+	/**
+	 * Tab panels. Only the selected panel is shown at a time.
+	 */
 	children?: React.ReactNode;
 }
 

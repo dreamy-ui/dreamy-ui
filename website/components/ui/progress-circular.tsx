@@ -18,7 +18,6 @@ const StyledProgressCircular = dreamy("div", progressCircular);
  * @See Docs https://dreamy-ui.com/docs/components/progress-circular
  */
 export function ProgressCircular(props: ProgressCircularProps) {
-    const { ref } = props;
     const {
         label,
         showValueLabel,
@@ -28,7 +27,7 @@ export function ProgressCircular(props: ProgressCircularProps) {
         getIndicatorProps,
         getTrackProps,
         valueText
-    } = useCircularProgress({ ref, ...props });
+    } = useCircularProgress(props);
 
     return (
         <StyledProgressCircular {...getProgressBarProps()}>

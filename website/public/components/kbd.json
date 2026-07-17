@@ -5,7 +5,7 @@
   "id": "kbd",
   "file": {
     "name": "kbd.tsx",
-    "content": "import { type HTMLDreamyProps, dreamy } from \"styled-system/jsx\";\r\nimport { type KbdVariantProps, kbd } from \"styled-system/recipes\";\r\n\r\nexport interface KbdProps extends HTMLDreamyProps<\"div\">, KbdVariantProps {}\r\n\r\nconst StyledKbd = dreamy(\"div\", kbd);\r\n\r\n/**\r\n * Kbd component\r\n *\r\n * @See Docs https://dreamy-ui.com/docs/components/kbd\r\n */\r\nexport function Kbd(props: KbdProps) {\r\n    return <StyledKbd {...props} />;\r\n}\r\n"
+    "content": "import { type HTMLDreamyProps, dreamy } from \"styled-system/jsx\";\nimport { type KbdVariantProps, kbd } from \"styled-system/recipes\";\n\nexport interface KbdProps extends HTMLDreamyProps<\"div\">, KbdVariantProps {}\n\nconst StyledKbd = dreamy(\"div\", kbd);\n\n/**\n * Kbd component\n *\n * @See Docs https://dreamy-ui.com/docs/components/kbd\n */\nexport function Kbd(props: KbdProps) {\n    return <StyledKbd {...props} />;\n}\n"
   },
   "component": "Kbd",
   "hasRecipe": true,

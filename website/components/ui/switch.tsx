@@ -20,7 +20,6 @@ const StyledSwitch = dreamy("label", swittch);
  * @See Docs https://dreamy-ui.com/docs/components/switch
  */
 export function Switch(props: SwitchProps) {
-    const { ref } = props;
     const {
         children,
         icon,
@@ -29,7 +28,7 @@ export function Switch(props: SwitchProps) {
         getInputProps,
         getThumbProps,
         getLabelProps
-    } = useSwitch({ ...props, ref });
+    } = useSwitch(props);
 
     const thumbProps: UseSwitchThumbProps = getThumbProps();
 

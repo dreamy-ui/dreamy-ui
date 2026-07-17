@@ -15,10 +15,10 @@ describe("DatePicker", () => {
                 popoverProps={{ usePortal: false }}
             >
                 <DatePicker.Input />
-                <DatePicker.PopoverContent>
+                <DatePicker.Content>
                     <DatePicker.Header />
                     <DatePicker.Calendar />
-                </DatePicker.PopoverContent>
+                </DatePicker.Content>
             </DatePicker.Root>
         );
 
@@ -42,10 +42,10 @@ describe("DatePicker", () => {
                 <Field.Label>Start date</Field.Label>
                 <DatePicker.Root popoverProps={{ usePortal: false }}>
                     <DatePicker.Input />
-                    <DatePicker.PopoverContent>
+                    <DatePicker.Content>
                         <DatePicker.Header />
                         <DatePicker.Calendar />
-                    </DatePicker.PopoverContent>
+                    </DatePicker.Content>
                 </DatePicker.Root>
             </Field.Root>
         );
@@ -59,10 +59,10 @@ describe("DatePicker", () => {
         render(
             <DatePicker.Root popoverProps={{ usePortal: false }}>
                 <DatePicker.Input />
-                <DatePicker.PopoverContent>
+                <DatePicker.Content>
                     <DatePicker.Header />
                     <DatePicker.Calendar />
-                </DatePicker.PopoverContent>
+                </DatePicker.Content>
             </DatePicker.Root>
         );
 
@@ -90,10 +90,10 @@ describe("DatePicker", () => {
                 popoverProps={{ usePortal: false }}
             >
                 <DatePicker.Input />
-                <DatePicker.PopoverContent>
+                <DatePicker.Content>
                     <DatePicker.Header />
                     <DatePicker.Calendar />
-                </DatePicker.PopoverContent>
+                </DatePicker.Content>
             </DatePicker.Root>
         );
 
@@ -121,10 +121,10 @@ describe("DatePicker", () => {
                 popoverProps={{ usePortal: false }}
             >
                 <DatePicker.Input />
-                <DatePicker.PopoverContent>
+                <DatePicker.Content>
                     <DatePicker.Header />
                     <DatePicker.Calendar />
-                </DatePicker.PopoverContent>
+                </DatePicker.Content>
             </DatePicker.Root>
         );
 
@@ -139,5 +139,23 @@ describe("DatePicker", () => {
         expect(
             screen.getByRole("button", { name: "Thursday, January 15, 2026" })
         ).not.toBeDisabled();
+    });
+
+    it("forwards inputGroupProps and endAddonProps to input parts", () => {
+        const { container } = render(
+            <DatePicker.Root popoverProps={{ usePortal: false }}>
+                <DatePicker.Input
+                    endAddonProps={{ id: "date-picker-end-addon" }}
+                    inputGroupProps={{ w: "full" }}
+                />
+                <DatePicker.Content>
+                    <DatePicker.Header />
+                    <DatePicker.Calendar />
+                </DatePicker.Content>
+            </DatePicker.Root>
+        );
+
+        expect(container.querySelector("[data-input-group]")).toBeInTheDocument();
+        expect(container.querySelector("#date-picker-end-addon")).toBeInTheDocument();
     });
 });

@@ -44,10 +44,34 @@ interface Props extends Record<string, any> {
 }
 
 export interface UseRadioProps extends Props, UserFeedbackProps {
+    /**
+     * If `true`, styles and behavior target the radio-card layout.
+     *
+     * @default false
+     */
     isCard?: boolean;
+    /**
+     * If `true`, radio animations are disabled.
+     * Inherits from the radio group or reduced-motion preference when omitted.
+     *
+     * @default false
+     */
     reduceMotion?: boolean;
+    /**
+     * If `true`, the radio shows an indeterminate visual state.
+     *
+     * @default false
+     */
     isIndeterminate?: boolean;
+    /**
+     * If `true`, the radio is selected (controlled).
+     */
     isChecked?: boolean;
+    /**
+     * If `true`, the radio is selected on initial render (uncontrolled).
+     *
+     * @default false
+     */
     defaultChecked?: boolean;
 }
 

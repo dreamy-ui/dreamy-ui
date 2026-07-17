@@ -63,9 +63,17 @@ export interface SnippetRootProps
         SnippetVariantProps {}
 
 /**
- * Snippet component
+ * Snippet component — copyable code block with header actions.
  *
- * @See Docs https://dreamy-ui.com/docs/components/snippet
+ * @see Docs https://dreamy-ui.com/docs/components/snippet
+ *
+ * @example
+ * ```tsx
+ * <Snippet.Root>
+ *   <Snippet.Header>Install</Snippet.Header>
+ *   <Snippet.Body codeString="npm install @dreamy-ui/react" />
+ * </Snippet.Root>
+ * ```
  */
 export const Root = withProvider(function SnippetRoot(props: SnippetRootProps) {
     const { children, timeout, disableCopy, onCopy, ...rest } = props;
@@ -101,6 +109,9 @@ export interface SnippetHeaderProps extends Omit<HTMLDreamyProps<"div">, "childr
     children?: React.ReactNode;
 }
 
+/**
+ * Snippet Header — title bar with icon and copy button.
+ */
 export const Header = withContext(function SnippetHeader(props: SnippetHeaderProps) {
     const {
         icon: IconComponent = TerminalIcon,
@@ -137,6 +148,9 @@ export interface SnippetBodyProps
     extends UseSnippetBodyProps,
         Omit<HTMLDreamyProps<"div">, keyof UseSnippetBodyProps> {}
 
+/**
+ * Snippet Body — preformatted code content area.
+ */
 export const Body = withContext(function SnippetBody(props: SnippetBodyProps) {
     const { children, codeString, ...rest } = props;
     const { children: bodyChildren, getBodyProps, getPreProps } = useSnippetBody({

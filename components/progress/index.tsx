@@ -56,9 +56,14 @@ export interface ProgressProps
 const StyledProgress = dreamy("div", progress);
 
 /**
- * Progress component
+ * Progress component — linear progress indicator.
  *
- * @See Docs https://dreamy-ui.com/docs/components/progress
+ * @see Docs https://dreamy-ui.com/docs/components/progress
+ *
+ * @example
+ * ```tsx
+ * <Progress value={60} aria-label="Loading" />
+ * ```
  */
 export function Progress(props: ProgressProps) {
     const {

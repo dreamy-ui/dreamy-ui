@@ -1,5 +1,5 @@
 import { getColorSchemes } from "@dreamy-ui/panda-preset";
-import { defineSlotRecipe, type SystemStyleObject } from "@pandacss/dev";
+import { type SystemStyleObject, defineSlotRecipe } from "@pandacss/dev";
 
 export const select = defineSlotRecipe({
     className: "select",

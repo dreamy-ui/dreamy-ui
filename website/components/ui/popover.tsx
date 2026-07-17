@@ -100,7 +100,7 @@ export interface PopoverTransitionProps extends Omit<MotionBoxProps, "children">
 }
 
 function Transition(props: PopoverTransitionProps) {
-    const { ref, children, arrowProps, ...rest } = props;
+    const { children, arrowProps, ...rest } = props;
 
     const { isOpen, hasArrow, reduceMotion } = usePopoverContext();
     const { popover } = useMotionVariants();
@@ -109,7 +109,6 @@ function Transition(props: PopoverTransitionProps) {
         <MotionBox
             animate={isOpen ? "initial" : "exit"}
             initial={false}
-            ref={ref}
             variants={transformReducedMotion(popover, reduceMotion)}
             {...rest}
         >
@@ -125,7 +124,7 @@ export interface PopoverContentProps extends PopoverTransitionProps {
 }
 
 export const Content = withContext(function PopoverContent(props: PopoverContentProps) {
-    const { rootProps, motionProps, ref, ...contentProps } = props;
+    const { rootProps, motionProps, ...contentProps } = props;
 
     const {
         getPopoverProps,
@@ -141,7 +140,7 @@ export const Content = withContext(function PopoverContent(props: PopoverContent
     const content = (
         <div {...getPopoverPositionerProps(rootProps)}>
             <Transition
-                {...getPopoverProps({ ...motionProps, ...contentProps, ref })}
+                {...getPopoverProps({ ...motionProps, ...contentProps })}
                 onAnimationComplete={callAll(onAnimationComplete, contentProps.onAnimationComplete)}
             />
         </div>

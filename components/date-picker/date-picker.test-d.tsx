@@ -1,5 +1,10 @@
 import { assertType } from "vitest";
-import type { DatePickerRootProps } from "./index";
+import type {
+    DatePickerAIOProps,
+    DatePickerContentProps,
+    DatePickerInputProps,
+    DatePickerRootProps
+} from "./index";
 
 type ExpectTrue<T extends true> = T;
 
@@ -44,11 +49,36 @@ type _HasStyleProps = ExpectTrue<
         : false
 >;
 
+type _HasInputGroupProps = ExpectTrue<
+    "inputGroupProps" extends keyof DatePickerInputProps
+        ? "endAddonProps" extends keyof DatePickerInputProps
+            ? "placeholder" extends keyof DatePickerInputProps
+                ? true
+                : false
+            : false
+        : false
+>;
+
+type _HasContentProps = ExpectTrue<"children" extends keyof DatePickerContentProps ? true : false>;
+
+type _HasAIOContentProps = ExpectTrue<"contentProps" extends keyof DatePickerAIOProps ? true : false>;
+
 const _valueProps: _HasValueProps = true;
 const _recipeProps: _HasRecipeProps = true;
 const _styleProps: _HasStyleProps = true;
+const _inputGroupProps: _HasInputGroupProps = true;
+const _contentProps: _HasContentProps = true;
+const _aioContentProps: _HasAIOContentProps = true;
 
-void (_valueProps && _recipeProps && _styleProps && _size);
+void (
+    _valueProps &&
+    _recipeProps &&
+    _styleProps &&
+    _size &&
+    _inputGroupProps &&
+    _contentProps &&
+    _aioContentProps
+);
 
 assertType<DatePickerRootProps>({
     value: new Date(2026, 0, 1),
@@ -67,6 +97,19 @@ assertType<DatePickerRootProps>({
     m: 1,
     w: "full",
     h: "auto"
+});
+
+assertType<DatePickerInputProps>({
+    placeholder: "Pick a date",
+    inputGroupProps: { w: "full" },
+    endAddonProps: { "aria-hidden": true }
+});
+
+assertType<DatePickerAIOProps>({
+    contentProps: {},
+    inputProps: {
+        inputGroupProps: { w: "full" }
+    }
 });
 
 assertType<DatePickerRootProps>({

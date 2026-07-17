@@ -15,9 +15,14 @@ export interface MotionBoxProps
         MotionProps {}
 
 /**
- * MotionBox component. A styled wrapper around the `m.div` component from `motion/react`.
+ * MotionBox component — animated `div` powered by Motion.
  *
- * @See Docs https://dreamy-ui.com/docs/components/motion
+ * @see Docs https://dreamy-ui.com/docs/components/motion
+ *
+ * @example
+ * ```tsx
+ * <MotionBox animate={{ opacity: 1 }} initial={{ opacity: 0 }} />
+ * ```
  */
 export function MotionBox(props: MotionBoxProps) {
     return <StyledMotionBox {...props} />;
@@ -26,9 +31,14 @@ export function MotionBox(props: MotionBoxProps) {
 export interface MotionFlexProps extends Omit<MotionBoxProps, "direction">, FlexProperties {}
 
 /**
- * MotionFlex component
+ * MotionFlex component — animated flex container powered by Motion.
  *
- * @See Docs https://dreamy-ui.com/docs/components/motion
+ * @see Docs https://dreamy-ui.com/docs/components/motion
+ *
+ * @example
+ * ```tsx
+ * <MotionFlex animate={{ x: 0 }} initial={{ x: -8 }} gap="2" />
+ * ```
  */
 export function MotionFlex(props: MotionFlexProps) {
     const [patternProps, restProps] = splitProps(props, [

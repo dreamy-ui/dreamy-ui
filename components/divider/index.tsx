@@ -8,9 +8,14 @@ export interface DividerProps
         DividerProperties {}
 
 /**
- * Divider component
+ * Divider component — visual separator between content.
  *
- * @See Docs https://dreamy-ui.com/docs/components/divider
+ * @see Docs https://dreamy-ui.com/docs/components/divider
+ *
+ * @example
+ * ```tsx
+ * <Divider />
+ * ```
  */
 export function Divider(props: DividerProps) {
     const [patternProps, restProps] = splitProps(props, ["orientation", "thickness", "color"]);

@@ -138,17 +138,16 @@ export const Overlay = withContext(function Component(props: ModalOverlayProps) 
 
 interface ModalContainerProps extends BoxProps {}
 
-const Container = withContext(function Component({ children, ref, ...props }: ModalContainerProps) {
+const Container = withContext(function Component({ children, ...props }: ModalContainerProps) {
     const { getDialogContainerProps } = useModalContext();
 
-    return <Box {...getDialogContainerProps({ ...props, ref })}>{children}</Box>;
+    return <Box {...getDialogContainerProps(props)}>{children}</Box>;
 }, "container");
 
 export interface ModalContentProps extends MotionFlexProps {}
 
 export const Content = withContext(function Component({
     children,
-    ref,
     ...props
 }: ModalContentProps) {
     const { getDialogProps } = useModalContext();
@@ -165,7 +164,7 @@ export const Content = withContext(function Component({
                         initial="initial"
                         transition={transition}
                         variants={modal}
-                        {...getDialogProps({ ...props, ref })}
+                        {...getDialogProps(props)}
                     >
                         {children}
                     </MotionFlex>

@@ -13,9 +13,14 @@ export interface CloseButtonProps extends Omit<IconButtonProps, "aria-label" | "
 }
 
 /**
- * CloseButton component
+ * CloseButton component — icon button for dismissing overlays.
  *
- * @See Docs https://dreamy-ui.com/docs/components/close-button
+ * @see Docs https://dreamy-ui.com/docs/components/close-button
+ *
+ * @example
+ * ```tsx
+ * <CloseButton aria-label="Close dialog" />
+ * ```
  */
 export function CloseButton({
     "aria-label": ariaLabel = "Close",

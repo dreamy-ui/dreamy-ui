@@ -5,7 +5,7 @@
   "id": "span",
   "file": {
     "name": "span.tsx",
-    "content": "import { type HTMLDreamyProps, dreamy } from \"styled-system/jsx\";\r\n\r\nexport interface SpanProps extends HTMLDreamyProps<\"span\"> {}\r\n\r\n/**\r\n * Span component\r\n *\r\n * @See Docs https://dreamy-ui.com/docs/components/span\r\n */\r\nexport function Span(props: SpanProps) {\r\n    return <dreamy.span {...props} />;\r\n}\r\n"
+    "content": "import { type HTMLDreamyProps, dreamy } from \"styled-system/jsx\";\n\nexport interface SpanProps extends HTMLDreamyProps<\"span\"> {}\n\n/**\n * Span component\n *\n * @See Docs https://dreamy-ui.com/docs/components/span\n */\nexport function Span(props: SpanProps) {\n    return <dreamy.span {...props} />;\n}\n"
   },
   "component": "Span",
   "hasRecipe": false,

@@ -82,9 +82,16 @@ const StyledTooltip = withContext(function TooltipContent(props: MotionBoxProps)
 }, "content") as ComponentType<MotionBoxProps>;
 
 /**
- * Tooltips display informative text when users hover, focus on, or tap an element.
+ * Tooltip component — informative text on hover, focus, or tap.
  *
  * @see Docs https://dreamy-ui.com/docs/components/tooltip
+ *
+ * @example
+ * ```tsx
+ * <Tooltip content="Helpful tip">
+ *   <Button>Hover me</Button>
+ * </Tooltip>
+ * ```
  */
 export function Tooltip(props: TooltipProps) {
     const {

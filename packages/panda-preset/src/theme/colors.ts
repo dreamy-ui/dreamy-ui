@@ -303,36 +303,52 @@ const ALPHA_STEPS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950] as co
 export type AlphaStep = (typeof ALPHA_STEPS)[number];
 
 export function resolveModeNumber(
-    val: number | { light: number; dark: number } | undefined,
+    val: number | { light?: number; dark?: number } | undefined,
     mode: "light" | "dark",
     fallback: number
 ): number {
     if (val === undefined) return fallback;
     if (typeof val === "number") return val;
-    return val[mode];
+    return val[mode] ?? fallback;
 }
 
 function genNeutralAlpha(variant: "black" | "white", opacity: number): string {
     return variant === "black" ? `rgba(0, 0, 0, ${opacity})` : `rgba(255, 255, 255, ${opacity})`;
 }
 
+/**
+ * Pure black (L=0) and white (L=1) cannot express hue/chroma in OKLCH — sRGB
+ * collapses them to #000 / #fff. When tinting, lift/drop lightness just enough
+ * for the overlay color to carry a visible tint while staying near-black/near-white.
+ */
+const TINTED_BLACK_ALPHA_L = 0.2;
+const TINTED_WHITE_ALPHA_L = 0.9;
+
 export function genAlphaTokens(
     variant: "black" | "white",
     chroma: number,
     hue: number
 ): Record<AlphaStep, { value: string }> {
-    const lightness = variant === "black" ? 0 : 1;
+    const clampedChroma = Math.max(0, Math.min(chroma, 0.4));
+    const lightness =
+        clampedChroma <= 0
+            ? variant === "black"
+                ? 0
+                : 1
+            : variant === "black"
+              ? TINTED_BLACK_ALPHA_L
+              : TINTED_WHITE_ALPHA_L;
     const tokens = {} as Record<AlphaStep, { value: string }>;
 
     for (const step of ALPHA_STEPS) {
         const opacity = ALPHA_OPACITIES[step];
 
-        if (chroma <= 0) {
+        if (clampedChroma <= 0) {
             tokens[step] = { value: genNeutralAlpha(variant, opacity) };
             continue;
         }
 
-        const color = new Color("oklch", [lightness, Math.min(chroma, 0.4), hue]);
+        const color = new Color("oklch", [lightness, clampedChroma, hue]);
         color.alpha = opacity;
         tokens[step] = { value: color.toString({ format: "oklch" }) };
     }

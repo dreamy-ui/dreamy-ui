@@ -24,14 +24,16 @@ export const datePicker = defineSlotRecipe({
         "calendarCellButton",
         "selectionGrid",
         "footer",
-        "footerButton"
+        "footerButton",
+        "calendarIcon"
     ],
     jsx: mapJsx("DatePicker", [
         "Root",
         "Trigger",
+        "Input",
         "Control",
         "Nav",
-        "Popover",
+        "Content",
         "Calendar",
         "CalendarHeader",
         "CalendarTitle",
@@ -56,6 +58,9 @@ export const datePicker = defineSlotRecipe({
         },
         trigger: {
             width: "full"
+        },
+        calendarIcon: {
+            stroke: "fg.medium"
         },
         control: {
             display: "flex",

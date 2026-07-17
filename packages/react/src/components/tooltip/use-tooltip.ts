@@ -60,17 +60,26 @@ export interface UseTooltipProps {
      */
     defaultIsOpen?: boolean;
     /**
+     * If `true`, the tooltip is disabled and will not open.
+     *
      * @default false
      */
     isDisabled?: boolean;
     /**
+     * If `true`, the tooltip closes when the user scrolls.
+     *
      * @default false
      */
     closeOnScroll?: boolean;
     /**
+     * Size of the tooltip arrow in pixels.
+     *
      * @default 10
      */
     arrowSize?: number;
+    /**
+     * CSS `box-shadow` color applied to the tooltip arrow.
+     */
     arrowShadowColor?: string;
 }
 

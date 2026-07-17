@@ -27,6 +27,9 @@ export const [SliderProvider, useSliderContext] = createContext<SliderContext>({
 
 export interface UseSliderProps
 	extends Omit<ComponentPropsWithoutRef<"div">, "id" | "name" | "onChange"> {
+	/**
+	 * Ref to the slider root element.
+	 */
 	ref?: ReactRef<HTMLDivElement>;
 	/**
 	 * The minimum allowed value of the slider. Cannot be greater than max.
