@@ -1,6 +1,6 @@
 import { exec } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
-import { unlink, writeFile } from "node:fs/promises";
+import { writeFile } from "node:fs/promises";
 import { dirname, join, relative } from "node:path";
 import { promisify } from "node:util";
 import * as p from "@clack/prompts";
@@ -196,7 +196,11 @@ export default defineConfig({
     }
 }
 
-async function setupPostCSS(cwd: string, framework: FrameworkConfig) {
+async function setupPostCSS(
+    cwd: string,
+    framework: FrameworkConfig,
+    options: { skipConfirm?: boolean } = {}
+) {
     try {
         // Next.js needs PostCSS config
         if (framework.type === "nextjs") {
@@ -204,19 +208,22 @@ async function setupPostCSS(cwd: string, framework: FrameworkConfig) {
 
             if (existsSync(postcssPath)) {
                 const content = readFileSync(postcssPath, "utf-8");
-                if (content.includes("@pandacss/postcss")) {
+                if (content.includes("@pandacss/postcss") && !content.includes("tailwindcss")) {
                     p.log.info("⊘ PostCSS already configured for Panda CSS");
                     return true;
                 }
 
-                const shouldUpdate = await p.confirm({
-                    message: "postcss.config.mjs exists but doesn't include Panda CSS. Update it?",
-                    initialValue: true
-                });
+                if (!options.skipConfirm) {
+                    const shouldUpdate = await p.confirm({
+                        message:
+                            "postcss.config.mjs exists but doesn't include Panda CSS. Update it?",
+                        initialValue: true
+                    });
 
-                if (p.isCancel(shouldUpdate) || !shouldUpdate) {
-                    p.log.warn("⊘ Skipped PostCSS configuration");
-                    return false;
+                    if (p.isCancel(shouldUpdate) || !shouldUpdate) {
+                        p.log.warn("⊘ Skipped PostCSS configuration");
+                        return false;
+                    }
                 }
             }
 
@@ -244,7 +251,11 @@ async function setupPostCSS(cwd: string, framework: FrameworkConfig) {
     }
 }
 
-async function updateViteConfig(cwd: string, framework: FrameworkConfig) {
+async function updateViteConfig(
+    cwd: string,
+    framework: FrameworkConfig,
+    options: { skipConfirm?: boolean } = {}
+) {
     try {
         // Only for Vite and React Router
         if (framework.type !== "vite" && framework.type !== "react-router") {
@@ -270,25 +281,29 @@ async function updateViteConfig(cwd: string, framework: FrameworkConfig) {
         const hasPandaPlugin =
             /plugins:\s*\[[^\]]*pandacss[^\]]*\]/.test(content) ||
             /plugins:\s*\[[^\]]*@pandacss\/dev\/postcss[^\]]*\]/.test(content);
+        const hasTailwindPlugin =
+            content.includes("@tailwindcss/vite") || /tailwindcss\(\)/.test(content);
 
-        if (hasPandaPlugin) {
+        if (hasPandaPlugin && !hasTailwindPlugin) {
             p.log.info("⊘ Vite config already configured for Panda CSS");
             return true;
         }
 
-        const shouldUpdate = await p.confirm({
-            message: "Update vite.config to use Panda CSS PostCSS plugin?",
-            initialValue: true
-        });
+        if (!options.skipConfirm) {
+            const shouldUpdate = await p.confirm({
+                message: "Update vite.config to use Panda CSS PostCSS plugin?",
+                initialValue: true
+            });
 
-        if (p.isCancel(shouldUpdate) || !shouldUpdate) {
-            p.log.warn("⊘ Skipped vite.config update");
-            p.log.info(
-                "💡 Manually add Panda CSS PostCSS plugin to your vite.config:\n" +
-                    '   import pandacss from "@pandacss/dev/postcss";\n' +
-                    "   css: { postcss: { plugins: [pandacss] } }"
-            );
-            return false;
+            if (p.isCancel(shouldUpdate) || !shouldUpdate) {
+                p.log.warn("⊘ Skipped vite.config update");
+                p.log.info(
+                    "💡 Manually add Panda CSS PostCSS plugin to your vite.config:\n" +
+                        '   import pandacss from "@pandacss/dev/postcss";\n' +
+                        "   css: { postcss: { plugins: [pandacss] } }"
+                );
+                return false;
+            }
         }
 
         // Remove tailwindcss import and plugin
@@ -515,7 +530,11 @@ async function updateViteConfig(cwd: string, framework: FrameworkConfig) {
     }
 }
 
-async function createCSSFile(cwd: string, framework: FrameworkConfig) {
+async function createCSSFile(
+    cwd: string,
+    framework: FrameworkConfig,
+    options: { skipConfirm?: boolean } = {}
+) {
     try {
         const cssPath = join(cwd, framework.cssPath);
         const cssDir = dirname(cssPath);
@@ -529,14 +548,16 @@ async function createCSSFile(cwd: string, framework: FrameworkConfig) {
                 return true;
             }
 
-            const shouldUpdate = await p.confirm({
-                message: `${framework.cssPath} exists. Replace with Panda CSS layers?`,
-                initialValue: true
-            });
+            if (!options.skipConfirm) {
+                const shouldUpdate = await p.confirm({
+                    message: `${framework.cssPath} exists. Replace with Panda CSS layers?`,
+                    initialValue: true
+                });
 
-            if (p.isCancel(shouldUpdate) || !shouldUpdate) {
-                p.log.warn("⊘ Skipped CSS file update");
-                return false;
+                if (p.isCancel(shouldUpdate) || !shouldUpdate) {
+                    p.log.warn("⊘ Skipped CSS file update");
+                    return false;
+                }
             }
 
             // For Next.js, replace all content with Panda CSS layers only
@@ -574,7 +595,11 @@ async function createCSSFile(cwd: string, framework: FrameworkConfig) {
     }
 }
 
-async function ensureCSSImport(cwd: string, framework: FrameworkConfig) {
+async function ensureCSSImport(
+    cwd: string,
+    framework: FrameworkConfig,
+    options: { skipConfirm?: boolean } = {}
+) {
     try {
         const importPath = join(cwd, framework.cssImportPath);
 
@@ -597,18 +622,20 @@ async function ensureCSSImport(cwd: string, framework: FrameworkConfig) {
             return true;
         }
 
-        const shouldUpdate = await p.confirm({
-            message: `Add CSS import to ${framework.cssImportPath}?`,
-            initialValue: true
-        });
+        if (!options.skipConfirm) {
+            const shouldUpdate = await p.confirm({
+                message: `Add CSS import to ${framework.cssImportPath}?`,
+                initialValue: true
+            });
 
-        if (p.isCancel(shouldUpdate) || !shouldUpdate) {
-            p.log.warn("⊘ Skipped CSS import");
-            p.log.info(
-                `💡 Manually add this import to ${framework.cssImportPath}:\n` +
-                    `   import "./${cssFileName}";`
-            );
-            return false;
+            if (p.isCancel(shouldUpdate) || !shouldUpdate) {
+                p.log.warn("⊘ Skipped CSS import");
+                p.log.info(
+                    `💡 Manually add this import to ${framework.cssImportPath}:\n` +
+                        `   import "./${cssFileName}";`
+                );
+                return false;
+            }
         }
 
         // Add import at the top of the file
@@ -630,38 +657,96 @@ async function ensureCSSImport(cwd: string, framework: FrameworkConfig) {
     }
 }
 
-async function removeTailwindFromReactRouter(cwd: string) {
-    try {
-        const appCssPath = join(cwd, "app/app.css");
-        const rootTsxPath = join(cwd, "app/root.tsx");
-
-        // Remove app.css if it exists
-        if (existsSync(appCssPath)) {
-            await unlink(appCssPath);
-            p.log.success("✓ Removed Tailwind CSS file (app/app.css)");
+function detectTailwind(cwd: string, framework: FrameworkConfig): boolean {
+    const cssPath = join(cwd, framework.cssPath);
+    if (existsSync(cssPath)) {
+        const css = readFileSync(cssPath, "utf-8");
+        if (
+            css.includes("@tailwind") ||
+            css.includes("tailwindcss") ||
+            /@import\s+["']tailwindcss["']/.test(css)
+        ) {
+            return true;
         }
+    }
 
-        // Remove import from root.tsx
-        if (existsSync(rootTsxPath)) {
-            const content = readFileSync(rootTsxPath, "utf-8");
-            if (content.includes("./app.css")) {
-                const updatedContent = content
-                    .split("\n")
-                    .filter((line) => !line.includes("./app.css"))
-                    .join("\n");
-                await writeFile(rootTsxPath, updatedContent, "utf-8");
-                p.log.success("✓ Removed Tailwind CSS import from root.tsx");
+    const viteConfigFiles = globbySync(["vite.config.ts", "vite.config.js", "vite.config.mts"], {
+        cwd
+    });
+    for (const file of viteConfigFiles) {
+        const content = readFileSync(join(cwd, file), "utf-8");
+        if (content.includes("tailwindcss") || content.includes("@tailwindcss")) {
+            return true;
+        }
+    }
+
+    const postcssFiles = globbySync(["postcss.config.*"], { cwd });
+    for (const file of postcssFiles) {
+        const content = readFileSync(join(cwd, file), "utf-8");
+        if (content.includes("tailwindcss")) {
+            return true;
+        }
+    }
+
+    const packageJsonPath = join(cwd, "package.json");
+    if (existsSync(packageJsonPath)) {
+        try {
+            const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf-8"));
+            const deps = {
+                ...packageJson.dependencies,
+                ...packageJson.devDependencies
+            };
+            if (
+                deps.tailwindcss ||
+                deps["@tailwindcss/vite"] ||
+                deps["@tailwindcss/postcss"]
+            ) {
+                return true;
             }
+        } catch {
+            // ignore invalid package.json
         }
+    }
 
-        return true;
-    } catch (error) {
-        p.log.error(
-            `✗ Failed to remove Tailwind CSS: ${error instanceof Error ? error.message : String(error)}`
-        );
-        p.log.warn("💡 You may need to manually remove app/app.css and its import from root.tsx");
+    return false;
+}
+
+async function replaceTailwindWithDreamy(
+    cwd: string,
+    framework: FrameworkConfig,
+    useDefaults: boolean
+): Promise<boolean> {
+    const shouldReplace = useDefaults
+        ? true
+        : await p.confirm({
+              message: "Tailwind CSS detected. Replace it with Dreamy UI and Panda CSS?",
+              initialValue: true
+          });
+
+    if (p.isCancel(shouldReplace) || !shouldReplace) {
+        p.log.warn("⊘ Skipped Tailwind CSS replacement");
         return false;
     }
+
+    const cssPath = join(cwd, framework.cssPath);
+    ensureDir(dirname(cssPath));
+
+    const cssContent = `@layer reset, base, tokens, recipes, utilities;
+`;
+    await writeFile(cssPath, cssContent, "utf-8");
+    p.log.success(`✓ Replaced ${framework.cssPath} with Panda CSS layers`);
+
+    // Keep the existing CSS import in the root/entry file — do not prompt.
+    // Only add the import silently if it is somehow missing.
+    await ensureCSSImport(cwd, framework, { skipConfirm: true });
+
+    if (framework.type === "nextjs") {
+        await setupPostCSS(cwd, framework, { skipConfirm: true });
+    } else {
+        await updateViteConfig(cwd, framework, { skipConfirm: true });
+    }
+
+    return true;
 }
 
 async function createDreamyProvider(
@@ -1516,22 +1601,32 @@ export const InitCommand = new Command("init")
         // Update package.json with prepare script
         await updatePackageJson(cwd);
 
-        // Setup PostCSS (Next.js only)
-        await setupPostCSS(cwd, framework);
+        const useDefaults = flags.yes ?? false;
+        const hasTailwind = detectTailwind(cwd, framework);
 
-        // Update Vite config (Vite and React Router only)
-        await updateViteConfig(cwd, framework);
+        if (hasTailwind) {
+            const replaced = await replaceTailwindWithDreamy(cwd, framework, useDefaults);
 
-        // Remove Tailwind CSS (React Router only)
-        if (framework.type === "react-router") {
-            await removeTailwindFromReactRouter(cwd);
+            if (!replaced) {
+                // User declined Tailwind replacement — still set up Panda alongside it
+                await setupPostCSS(cwd, framework);
+                await updateViteConfig(cwd, framework);
+                await createCSSFile(cwd, framework);
+                await ensureCSSImport(cwd, framework);
+            }
+        } else {
+            // Setup PostCSS (Next.js only)
+            await setupPostCSS(cwd, framework);
+
+            // Update Vite config (Vite and React Router only)
+            await updateViteConfig(cwd, framework);
+
+            // Create CSS file
+            await createCSSFile(cwd, framework);
+
+            // Ensure CSS is imported
+            await ensureCSSImport(cwd, framework);
         }
-
-        // Create CSS file
-        await createCSSFile(cwd, framework);
-
-        // Ensure CSS is imported
-        await ensureCSSImport(cwd, framework);
 
         // Update tsconfig
         if (isTypeScript) {
@@ -1543,7 +1638,7 @@ export const InitCommand = new Command("init")
 
         // Configure the app root with DreamyProvider
         if (providerCreated) {
-            await configureAppRoot(cwd, framework, isTypeScript, flags.yes ?? false);
+            await configureAppRoot(cwd, framework, isTypeScript, useDefaults);
         } else {
             printNextSteps(cwd, framework);
         }
@@ -1557,8 +1652,6 @@ export const InitCommand = new Command("init")
 
         // Run Panda codegen
         await runPandaCodegen(cwd);
-
-        const useDefaults = flags.yes ?? false;
 
         const shouldAddSkills = useDefaults
             ? true
