@@ -113,6 +113,16 @@ npx @dreamy-ui/cli add-mcp
 npx @dreamy-ui/cli add-mcp --client cursor,vscode
 ```
 
+### `add-skill`
+
+Add the Dreamy UI agent skill to your project.
+
+```bash
+npx @dreamy-ui/cli add-skill
+```
+
+This runs `npx skills add dreamy-ui/dreamy-ui --skill dreamy-ui --skill dreamy-ui-frontend --skill dreamy-ui-theming`.
+
 ### `diff`
 
 Compare local components with registry versions.

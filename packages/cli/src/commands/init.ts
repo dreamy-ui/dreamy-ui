@@ -10,6 +10,8 @@ import { detect } from "package-manager-detector";
 import { installCommand, pandaCodegenCommand } from "../utils/codegen-command";
 import { RECOMMENDED_COMPONENTS } from "../utils/components";
 import { ensureDir } from "../utils/io";
+import { installDreamyMcp } from "./add-mcp";
+import { installDreamySkills } from "./add-skill";
 
 const execAsync = promisify(exec);
 
@@ -826,7 +828,7 @@ export function DreamyProvider({ children }) {
     }
 }
 
-async function updateTsConfig(cwd: string, framework: FrameworkConfig) {
+async function updateTsConfig(cwd: string) {
     try {
         const tsconfigPath = join(cwd, "tsconfig.json");
 
@@ -863,7 +865,7 @@ async function updateTsConfig(cwd: string, framework: FrameworkConfig) {
         }
 
         // Add path aliases
-        const componentsPath = "./components/ui/*";
+        const componentsPath = "./components/ui/index";
 
         if (!tsconfig.compilerOptions) {
             tsconfig.compilerOptions = {};
@@ -872,27 +874,27 @@ async function updateTsConfig(cwd: string, framework: FrameworkConfig) {
             tsconfig.compilerOptions.paths = {};
         }
 
-        // Ensure @/ui/* is the first path alias
+        // Ensure @/ui is the first path alias (points to the components index)
         const existingPaths = tsconfig.compilerOptions.paths;
-        const hasUiPath = "@/ui/*" in existingPaths;
+        const hasUiPath = "@/ui" in existingPaths;
 
         if (!hasUiPath) {
             const shouldAddUiPath = await p.confirm({
-                message: "Add @/ui/* path alias to tsconfig.json?",
+                message: "Add @/ui path alias to tsconfig.json?",
                 initialValue: true
             });
 
             if (p.isCancel(shouldAddUiPath) || !shouldAddUiPath) {
-                p.log.warn("⊘ Skipped @/ui/* path alias");
+                p.log.warn("⊘ Skipped @/ui path alias");
                 p.log.info(
-                    '💡 Manually add "@/ui/*": ["./components/ui/*"] to the "paths" object in tsconfig.json compilerOptions'
+                    '💡 Manually add "@/ui": ["./components/ui/index"] to the "paths" object in tsconfig.json compilerOptions'
                 );
                 // Continue with other updates (styled-system, etc.)
             } else {
-                // Create new paths object without @/ui/* if it exists
+                // Drop legacy @/ui/* if present, then put @/ui first
                 const pathsWithoutUi = Object.keys(existingPaths).reduce(
                     (acc, key) => {
-                        if (key !== "@/ui/*") {
+                        if (key !== "@/ui" && key !== "@/ui/*") {
                             acc[key] = existingPaths[key];
                         }
                         return acc;
@@ -900,9 +902,8 @@ async function updateTsConfig(cwd: string, framework: FrameworkConfig) {
                     {} as Record<string, string[]>
                 );
 
-                // Reconstruct paths with @/ui/* first
                 tsconfig.compilerOptions.paths = {
-                    "@/ui/*": [componentsPath],
+                    "@/ui": [componentsPath],
                     ...pathsWithoutUi
                 };
                 needsUpdate = true;
@@ -910,13 +911,12 @@ async function updateTsConfig(cwd: string, framework: FrameworkConfig) {
         } else {
             // Path already exists, just ensure it's first
             const firstKey = Object.keys(existingPaths)[0];
-            const needsReorder = firstKey !== "@/ui/*";
+            const needsReorder = firstKey !== "@/ui";
 
             if (needsReorder) {
-                // Create new paths object without @/ui/* if it exists
                 const pathsWithoutUi = Object.keys(existingPaths).reduce(
                     (acc, key) => {
-                        if (key !== "@/ui/*") {
+                        if (key !== "@/ui" && key !== "@/ui/*") {
                             acc[key] = existingPaths[key];
                         }
                         return acc;
@@ -924,28 +924,25 @@ async function updateTsConfig(cwd: string, framework: FrameworkConfig) {
                     {} as Record<string, string[]>
                 );
 
-                // Reconstruct paths with @/ui/* first
                 tsconfig.compilerOptions.paths = {
-                    "@/ui/*": existingPaths["@/ui/*"],
+                    "@/ui": existingPaths["@/ui"],
                     ...pathsWithoutUi
                 };
                 needsUpdate = true;
             }
         }
 
-        // Add styled-system/* path alias for Next.js (required for Next.js to find types)
-        if (framework.type === "nextjs" && !tsconfig.compilerOptions.paths["styled-system/*"]) {
+        // Add styled-system/* path alias (needed for type resolution)
+        if (!tsconfig.compilerOptions.paths["styled-system/*"]) {
             tsconfig.compilerOptions.paths["styled-system/*"] = ["./styled-system/*"];
             needsUpdate = true;
         }
 
         if (needsUpdate) {
             await writeFile(tsconfigPath, JSON.stringify(tsconfig, null, 2), "utf-8");
-            const message =
-                framework.type === "nextjs"
-                    ? "✓ Updated tsconfig.json with styled-system, styled-system/* path, and @/ui/* path alias"
-                    : "✓ Updated tsconfig.json with styled-system and @/ui/* path alias";
-            p.log.success(message);
+            p.log.success(
+                "✓ Updated tsconfig.json with styled-system include, styled-system/* path, and @/ui path alias"
+            );
         } else {
             p.log.info("⊘ tsconfig.json already configured");
         }
@@ -955,12 +952,8 @@ async function updateTsConfig(cwd: string, framework: FrameworkConfig) {
         p.log.error(
             `✗ Failed to update tsconfig.json: ${error instanceof Error ? error.message : String(error)}`
         );
-        const pathAliasInfo =
-            framework.type === "nextjs"
-                ? '"@/ui/*" and "styled-system/*" path aliases'
-                : '"@/ui/*" path alias';
         p.log.warn(
-            `💡 Manually add "styled-system/**/*" to the "include" array and ${pathAliasInfo} in tsconfig.json`
+            '💡 Manually add "styled-system/**/*" to the "include" array and "@/ui" / "styled-system/*" path aliases in tsconfig.json'
         );
         return false;
     }
@@ -1542,7 +1535,7 @@ export const InitCommand = new Command("init")
 
         // Update tsconfig
         if (isTypeScript) {
-            await updateTsConfig(cwd, framework);
+            await updateTsConfig(cwd);
         }
 
         // Create DreamyProvider
@@ -1565,5 +1558,40 @@ export const InitCommand = new Command("init")
         // Run Panda codegen
         await runPandaCodegen(cwd);
 
+        const useDefaults = flags.yes ?? false;
+
+        const shouldAddSkills = useDefaults
+            ? true
+            : await p.confirm({
+                  message: "Add Dreamy UI agent skills to your project?",
+                  initialValue: true
+              });
+
+        if (!p.isCancel(shouldAddSkills) && shouldAddSkills) {
+            await installDreamySkills(cwd);
+        } else if (p.isCancel(shouldAddSkills) || !shouldAddSkills) {
+            p.log.info(
+                "⊘ Skipped skills. You can add them later with: npx @dreamy-ui/cli add-skill"
+            );
+        }
+
+        const shouldAddMcp = useDefaults
+            ? true
+            : await p.confirm({
+                  message: "Add Dreamy UI MCP server to your AI clients?",
+                  initialValue: true
+              });
+
+        if (!p.isCancel(shouldAddMcp) && shouldAddMcp) {
+            await installDreamyMcp(cwd, { useDefaults });
+        } else if (p.isCancel(shouldAddMcp) || !shouldAddMcp) {
+            p.log.info(
+                "⊘ Skipped MCP setup. You can add it later with: npx @dreamy-ui/cli add-mcp"
+            );
+        }
+
+        p.log.info(
+            "💡 If you see TypeScript errors after init, restart the TS server: press F1, then run \"TypeScript: Restart TS Server\"."
+        );
         p.outro("✨ Dreamy UI initialized successfully!");
     });

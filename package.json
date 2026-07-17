@@ -4,7 +4,7 @@
 	"description": "",
 	"private": true,
 	"packageManager": "pnpm@9.1.4",
-	"workspaces": ["packages/*", "website", "components"],
+	"workspaces": ["packages/*", "website", "components", "apps/*"],
 	"scripts": {
 		"dev:panda-preset": "cd packages/panda-preset && pnpm run dev",
 		"dev:react": "cd packages/react && pnpm run dev",

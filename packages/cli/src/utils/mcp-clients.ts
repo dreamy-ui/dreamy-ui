@@ -50,15 +50,29 @@ export function getClientConfig(client: McpClient): McpClientConfig {
 	return MCP_CLIENTS[client];
 }
 
-export function generateMcpConfig(clientConfig: McpClientConfig) {
-	const serverConfig = {
-		command: "npx",
-		args: ["-y", "@dreamy-ui/mcp"]
+export interface GenerateMcpConfigOptions {
+	includePanda?: boolean;
+}
+
+export function generateMcpConfig(
+	clientConfig: McpClientConfig,
+	options: GenerateMcpConfigOptions = {}
+) {
+	const servers: Record<string, { command: string; args: string[] }> = {
+		"dreamy-ui": {
+			command: "npx",
+			args: ["-y", "@dreamy-ui/mcp"]
+		}
 	};
 
+	if (options.includePanda) {
+		servers.panda = {
+			command: "npx",
+			args: ["panda", "mcp"]
+		};
+	}
+
 	return {
-		[clientConfig.configKey]: {
-			"dreamy-ui": serverConfig
-		}
+		[clientConfig.configKey]: servers
 	};
 }

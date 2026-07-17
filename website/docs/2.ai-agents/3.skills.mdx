@@ -15,11 +15,23 @@ Skills are reusable, shareable capabilities that extend AI assistant functionali
 To add Dreamy UI skills to your project, run:
 
 ```bash
-npx skills add dreamy-ui/dreamy-ui
+npx dreamy add-skill
 ```
 
-This command will install the Dreamy UI skills package, making specialized capabilities available to your AI assistant.
+This installs three skills from `dreamy-ui/dreamy-ui`:
+
+| Skill | Purpose |
+|-------|---------|
+| `dreamy-ui` | When to use Dreamy UI, library rule, Dreamy UI MCP + Panda CSS MCP |
+| `dreamy-ui-frontend` | Writing UI: imports, style props, semantic tokens, fallbacks, `cva` |
+| `dreamy-ui-theming` | Panda config, `createDreamyPreset`, theme and recipe customization |
+
+Equivalent manual command:
+
+```bash
+npx skills add dreamy-ui/dreamy-ui --skill dreamy-ui --skill dreamy-ui-frontend --skill dreamy-ui-theming
+```
 
 ## Usage
 
-Once installed, the skills will be automatically available to your AI assistant. The skills provide enhanced context and capabilities specifically tailored for working with Dreamy UI components and patterns.
+Once installed, the skills are available to your AI assistant. The main skill points at the frontend and theming skills when those topics apply. Prefer Dreamy UI MCP (`list_components`, `get_component`, `list_docs`, `get_doc`) for authoritative APIs and docs.

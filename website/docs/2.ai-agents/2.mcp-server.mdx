@@ -26,12 +26,18 @@ The Dreamy UI MCP exposes the following tools to AI agents:
 
 Aliases: `get_components` → `list_components`, `get_component_example` → `get_component_examples`.
 
+### Documentation Tools
+
+- **`list_docs`**: List non-component docs (guide, ai-agents, frameworks, theming, hooks). Optional `query` to filter. Component docs are excluded — use component tools for those.
+- **`get_doc`**: Fetch a docs page as markdown by id (e.g. `theming/tokens`, `guide/installation`). Use when skills / other tools do not cover the question.
+
 ### Recommended agent flow
 
 1. `list_components` (optionally with `query`) to discover what exists
 2. `get_component` for each component you will use
 3. `get_component_examples` if you need more patterns
-4. `get_component_source` only when editing styles or internals
+4. `list_docs` / `get_doc` for theming, setup, frameworks, hooks, or other non-component docs
+5. `get_component_source` only when editing styles or internals
 
 ## Setup
 

@@ -4,12 +4,15 @@ import { getComponentTool } from "./get-component.js";
 import { getComponentExampleTool, getComponentExamplesTool } from "./get-component-example.js";
 import { getComponentSourceTool } from "./get-component-source.js";
 import { getComponentsTool, listComponentsTool } from "./get-components.js";
+import { getDocTool, listDocsTool } from "./get-docs.js";
 
 const tools: Tool[] = [
 	listComponentsTool,
 	getComponentTool,
 	getComponentExamplesTool,
 	getComponentSourceTool,
+	listDocsTool,
+	getDocTool,
 	// Backward-compatible aliases
 	getComponentsTool,
 	getComponentExampleTool
@@ -22,6 +25,9 @@ function getDefaultToolContext(toolName: string) {
 		case "list_components":
 		case "get_components":
 			return { componentIds: [], components: [] };
+		case "list_docs":
+		case "get_doc":
+			return { docIds: [] };
 		default:
 			return { componentIds: [] };
 	}

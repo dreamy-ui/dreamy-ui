@@ -60,6 +60,36 @@ function stripMdxNoise(text: string): string {
 		.trim();
 }
 
+
+export function parseFrontmatterOnly(mdx: string): { frontmatter: DocsFrontmatter; body: string } {
+	return parseFrontmatter(mdx);
+}
+
+/**
+ * Strip MDX/JSX chrome for LLM consumption while keeping markdown and code fences.
+ */
+export function stripMdxForLlm(mdxBody: string): string {
+	const fences: string[] = [];
+	const withoutFences = mdxBody.replace(/```[\s\S]*?```/g, function (block) {
+		const index = fences.length;
+		fences.push(block);
+		return `@@FENCE_${index}@@`;
+	});
+
+	const cleaned = withoutFences
+		.replace(/<Wrapper>[\s\S]*?<\/Wrapper>/g, "")
+		.replace(/<(Token[A-Za-z]+)[^>]*\/>/g, "")
+		.replace(/<(Token[A-Za-z]+)[\s\S]*?<\/\1>/g, "")
+		.replace(/\{\s*\d+\s*-?\s*\d*\s*\}/g, "")
+		.replace(/<\/?[A-Za-z][^>]*>/g, "")
+		.replace(/\n{3,}/g, "\n\n")
+		.trim();
+
+	return cleaned.replace(/@@FENCE_(\d+)@@/g, function (_match, index) {
+		return fences[Number(index)] ?? "";
+	});
+}
+
 /**
  * Parse MDX docs into structured usage examples for LLMs.
  */

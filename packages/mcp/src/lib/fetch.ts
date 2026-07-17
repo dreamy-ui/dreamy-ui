@@ -305,6 +305,14 @@ export async function getComponentDescriptions(
 	return descriptionsPromise;
 }
 
+
+export async function fetchDocSafe(section: string, page: string): Promise<SafeFetchResult<string>> {
+	return fetchTextSafe(
+		createDreamyUrl(`/docs/${section}/${page}.mdx`),
+		`fetch documentation for ${section}/${page}`
+	);
+}
+
 export function getBaseUrl(): string {
 	return DREAMY_BASE_URL;
 }
