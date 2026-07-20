@@ -36,14 +36,14 @@ npx @dreamy-ui/cli init
 
 **Features:**
 
-- 🔍 Automatically detects your framework (React Router v7, Next.js, or Vite)
+- 🔍 Automatically detects your framework (React Router v7, Next.js, TanStack Start, or Vite)
 - 📦 Installs all required dependencies (Panda CSS + Dreamy UI)
 - ⚙️ Creates and configures `panda.config.ts`
 - 🔧 Updates `vite.config` or `postcss.config` with Panda CSS PostCSS plugin
-- 🧹 Removes default Tailwind CSS (React Router v7 only)
+- 🧹 Removes default Tailwind CSS when detected
 - 🎨 Sets up CSS files with proper imports
 - 🚀 Creates a `DreamyProvider` component
-- 📝 Updates your `tsconfig.json` with `@/*` path alias for components (TypeScript projects)
+- 📝 Updates your `tsconfig.json` with `@/ui` path alias for components (TypeScript projects)
 - 🎯 Runs Panda CSS codegen
 - 🎁 Adds recommended starter components (button, flex, text, heading)
 

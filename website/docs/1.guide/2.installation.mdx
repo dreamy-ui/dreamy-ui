@@ -22,19 +22,19 @@ npx @dreamy-ui/cli init --yes
 
 The CLI will automatically:
 
-1. Detect your framework (React Router v7, Next.js, or Vite)
+1. Detect your framework (React Router v7, Next.js, TanStack Start, or Vite)
 2. Install required dependencies:
    - Dev: `@pandacss/dev`, `@pandacss/postcss`, `@dreamy-ui/cli`
    - Prod: `@dreamy-ui/react`, `@dreamy-ui/panda-preset`, `motion`
 3. Create and configure `panda.config.ts` with the Dreamy preset, patterns, and recipes
 4. Add a `prepare` script (`panda codegen`) to `package.json`
 5. Configure PostCSS (`postcss.config.mjs`) — Next.js only
-6. Update `vite.config` with the Panda CSS PostCSS plugin — Vite and React Router only (removes Tailwind if present)
-7. Remove the default Tailwind CSS setup — React Router v7 only
+6. Update `vite.config` with the Panda CSS PostCSS plugin — Vite, React Router, and TanStack Start (removes Tailwind if present)
+7. Remove the default Tailwind CSS setup when detected
 8. Set up your CSS file with Panda layers and import it in your app entry
 9. Update `tsconfig.json` — add `styled-system/**/*` to `include` and an `@/ui` path alias (Next.js also gets `styled-system/*`)
 10. Create a `components/dreamy-provider.tsx` wrapper component
-11. Wire up `DreamyProvider` in your app root (with SSR color mode for React Router and Next.js)
+11. Wire up `DreamyProvider` in your app root (with SSR color mode for React Router, Next.js, and TanStack Start)
 12. Add recommended starter components (`button`, `flex`, `text`, `heading`)
 13. Run Panda CSS codegen to generate `styled-system`
 
@@ -50,6 +50,7 @@ If you prefer manual installation or need more control, follow the framework-spe
 
 -   [Next.js](/docs/frameworks/next.js)
 -   [React Router](/docs/frameworks/react-router)
+-   [TanStack Start](/docs/frameworks/tanstack)
 -   [Remix](/docs/frameworks/remix)
 -   [Vite](/docs/frameworks/vite)
 

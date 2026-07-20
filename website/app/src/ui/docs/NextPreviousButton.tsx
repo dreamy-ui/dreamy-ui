@@ -15,8 +15,7 @@ export default function NextPreviousButton({ direction, to, label }: NextPreviou
     return (
         <Flex
             as={<Link to={to} />}
-            border={1}
-            borderColor={"border"}
+            border={"default"}
             className="group"
             p={"4!"}
             rounded={"l2"}

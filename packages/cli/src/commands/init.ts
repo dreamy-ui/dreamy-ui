@@ -16,11 +16,50 @@ import { installDreamySkills } from "./add-skill";
 const execAsync = promisify(exec);
 
 interface FrameworkConfig {
-    type: "react-router" | "nextjs" | "vite" | null;
+    type: "react-router" | "nextjs" | "vite" | "tanstack" | null;
     cssPath: string;
     cssImportPath: string;
     providerPath: string;
     includePattern: string;
+}
+
+function isTanStackProject(cwd: string): boolean {
+    if (existsSync(join(cwd, ".cta.json"))) {
+        return true;
+    }
+
+    const packageJsonPath = join(cwd, "package.json");
+    if (existsSync(packageJsonPath)) {
+        try {
+            const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf-8"));
+            const deps = {
+                ...packageJson.dependencies,
+                ...packageJson.devDependencies
+            };
+            if (deps["@tanstack/react-start"] || deps["@tanstack/solid-start"]) {
+                return true;
+            }
+        } catch {
+            // ignore invalid package.json
+        }
+    }
+
+    const viteConfigFiles = globbySync(
+        ["vite.config.ts", "vite.config.js", "vite.config.mts", "vite.config.mjs"],
+        { cwd }
+    );
+    for (const file of viteConfigFiles) {
+        const content = readFileSync(join(cwd, file), "utf-8");
+        if (
+            content.includes("tanstackStart") ||
+            content.includes("@tanstack/react-start") ||
+            content.includes("@tanstack/solid-start")
+        ) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 async function detectFramework(cwd: string): Promise<FrameworkConfig | null> {
@@ -46,6 +85,20 @@ async function detectFramework(cwd: string): Promise<FrameworkConfig | null> {
             cssImportPath: hasSrcDir ? "src/app/layout.tsx" : "app/layout.tsx",
             providerPath: "components/dreamy-provider.tsx",
             includePattern: hasSrcDir ? "./src/**/*.{js,jsx,ts,tsx}" : "./app/**/*.{js,jsx,ts,tsx}"
+        };
+    }
+
+    // Detect TanStack Start before generic Vite (both use vite.config)
+    if (isTanStackProject(cwd)) {
+        const hasSrcDir = existsSync(join(cwd, "src"));
+        return {
+            type: "tanstack",
+            cssPath: hasSrcDir ? "src/styles.css" : "styles.css",
+            cssImportPath: hasSrcDir ? "src/routes/__root.tsx" : "routes/__root.tsx",
+            providerPath: "components/dreamy-provider.tsx",
+            includePattern: hasSrcDir
+                ? "./src/**/*.{js,jsx,ts,tsx}"
+                : "./routes/**/*.{js,jsx,ts,tsx}"
         };
     }
 
@@ -257,8 +310,12 @@ async function updateViteConfig(
     options: { skipConfirm?: boolean } = {}
 ) {
     try {
-        // Only for Vite and React Router
-        if (framework.type !== "vite" && framework.type !== "react-router") {
+        // Only for Vite, React Router, and TanStack Start
+        if (
+            framework.type !== "vite" &&
+            framework.type !== "react-router" &&
+            framework.type !== "tanstack"
+        ) {
             return true;
         }
 
@@ -560,13 +617,12 @@ async function createCSSFile(
                 }
             }
 
-            // For Next.js, replace all content with Panda CSS layers only
+            // For Next.js / TanStack, replace all content with Panda CSS layers only
             // For other frameworks, prepend Panda CSS layers
             const cssContent = `@layer reset, base, tokens, recipes, utilities;
 `;
 
-            if (framework.type === "nextjs") {
-                // Replace entire file content for Next.js
+            if (framework.type === "nextjs" || framework.type === "tanstack") {
                 await writeFile(cssPath, cssContent, "utf-8");
                 p.log.success(`✓ Replaced ${framework.cssPath} with Panda CSS layers`);
             } else {
@@ -619,6 +675,14 @@ async function ensureCSSImport(
 
         if (content.includes(cssFileName || "")) {
             p.log.info("⊘ CSS file is already imported");
+            return true;
+        }
+
+        // TanStack Start loads CSS via `?url` head links — do not add a side-effect import
+        if (framework.type === "tanstack") {
+            p.log.info(
+                "⊘ TanStack Start loads CSS via head links — ensure styles.css is linked in __root.tsx"
+            );
             return true;
         }
 
@@ -770,7 +834,7 @@ async function createDreamyProvider(
 
         let providerContent = "";
 
-        if (framework.type === "react-router") {
+        if (framework.type === "react-router" || framework.type === "tanstack") {
             providerContent = isTypeScript
                 ? `"use client";
 
@@ -913,6 +977,12 @@ export function DreamyProvider({ children }) {
     }
 }
 
+function stripJsonComments(value: string) {
+    return value
+        .replace(/\/\*[\s\S]*?\*\//g, "")
+        .replace(/^\s*\/\/.*$/gm, "");
+}
+
 async function updateTsConfig(cwd: string) {
     try {
         const tsconfigPath = join(cwd, "tsconfig.json");
@@ -923,7 +993,7 @@ async function updateTsConfig(cwd: string) {
         }
 
         const content = readFileSync(tsconfigPath, "utf-8");
-        const tsconfig = JSON.parse(content);
+        const tsconfig = JSON.parse(stripJsonComments(content));
 
         let needsUpdate = false;
 
@@ -1381,6 +1451,139 @@ function addColorModeToNextRoot(content: string, providerImportPath: string) {
     return updatedContent;
 }
 
+function addColorModeToTanStackRoot(content: string, providerImportPath: string) {
+    if (!content.includes("createRootRoute") || !content.includes("shellComponent")) {
+        return null;
+    }
+
+    let updatedContent = content;
+
+    updatedContent = prependImport(
+        updatedContent,
+        `import { DreamyProvider, getColorModeHTMLProps, getSSRColorMode } from "${providerImportPath}";`,
+        "DreamyProvider"
+    );
+    updatedContent = prependImport(
+        updatedContent,
+        'import { createServerFn } from "@tanstack/react-start";',
+        "createServerFn"
+    );
+    updatedContent = prependImport(
+        updatedContent,
+        'import { getRequest } from "@tanstack/react-start/server";',
+        "getRequest"
+    );
+
+    if (!updatedContent.includes("getSSRColorMode(getRequest())")) {
+        const routeExportIndex = updatedContent.indexOf("export const Route");
+        if (routeExportIndex === -1) {
+            return null;
+        }
+
+        const colorModeServerFn = `const getColorMode = createServerFn({ method: "GET" }).handler(async () => {
+  return getSSRColorMode(getRequest());
+});
+
+`;
+        updatedContent =
+            updatedContent.slice(0, routeExportIndex) +
+            colorModeServerFn +
+            updatedContent.slice(routeExportIndex);
+    }
+
+    if (!updatedContent.includes("beforeLoad:")) {
+        updatedContent = updatedContent.replace(
+            /createRootRoute\(\{\s*\n/,
+            `createRootRoute({
+  beforeLoad: async () => {
+    const colorMode = await getColorMode();
+    return { colorMode };
+  },
+`
+        );
+    } else if (!updatedContent.includes("await getColorMode()")) {
+        // beforeLoad already exists — try to inject colorMode into its return
+        const beforeLoadMatch = updatedContent.match(/beforeLoad:\s*async\s*\([^)]*\)\s*=>\s*\{/);
+        if (!beforeLoadMatch) {
+            return null;
+        }
+        const insertAt = updatedContent.indexOf(beforeLoadMatch[0]) + beforeLoadMatch[0].length;
+        updatedContent =
+            updatedContent.slice(0, insertAt) +
+            "\n    const colorMode = await getColorMode();\n" +
+            updatedContent.slice(insertAt);
+
+        const returnObjectMatch = updatedContent
+            .slice(insertAt)
+            .match(/return\s*(\{)/);
+        if (returnObjectMatch && returnObjectMatch.index != null) {
+            const returnBrace =
+                insertAt + returnObjectMatch.index + returnObjectMatch[0].length - 1;
+            updatedContent =
+                updatedContent.slice(0, returnBrace + 1) +
+                "\n      colorMode," +
+                updatedContent.slice(returnBrace + 1);
+        }
+    }
+
+    const rootDocumentMatch = updatedContent.match(
+        /function\s+RootDocument\s*\(\s*\{\s*children\s*\}[^)]*\)\s*\{/
+    );
+    if (!rootDocumentMatch) {
+        return null;
+    }
+
+    const rootDocumentBodyStart =
+        updatedContent.indexOf(rootDocumentMatch[0]) + rootDocumentMatch[0].length;
+
+    if (!updatedContent.includes("Route.useRouteContext()")) {
+        updatedContent =
+            updatedContent.slice(0, rootDocumentBodyStart) +
+            "\n  const { colorMode } = Route.useRouteContext();\n" +
+            updatedContent.slice(rootDocumentBodyStart);
+    }
+
+    if (!updatedContent.includes("{...getColorModeHTMLProps(colorMode)}")) {
+        updatedContent = updatedContent.replace(
+            /<html([^>]*)>/,
+            "<html$1 {...getColorModeHTMLProps(colorMode)}>"
+        );
+    }
+
+    // Remove TanStack starter theme bootstrap script — Dreamy handles color mode
+    updatedContent = updatedContent.replace(
+        /\s*<script\s+dangerouslySetInnerHTML=\{\{\s*__html:\s*THEME_INIT_SCRIPT\s*\}\}\s*\/>\s*/g,
+        "\n        "
+    );
+    updatedContent = updatedContent.replace(/const THEME_INIT_SCRIPT = `[\s\S]*?`;\n?/g, "");
+
+    if (!updatedContent.includes("<DreamyProvider colorMode={colorMode}>")) {
+        // Prefer wrapping the full body contents; fall back to wrapping {children}
+        if (
+            updatedContent.includes("<body") &&
+            updatedContent.includes("</body>") &&
+            !updatedContent.includes("<DreamyProvider")
+        ) {
+            updatedContent = updatedContent.replace(/<body([^>]*)>/, "<body$1>\n        <DreamyProvider colorMode={colorMode}>");
+            updatedContent = updatedContent.replace(
+                /<\/body>/,
+                "        </DreamyProvider>\n      </body>"
+            );
+        } else {
+            const childrenIndex = updatedContent.indexOf("{children}", rootDocumentBodyStart);
+            if (childrenIndex === -1) {
+                return null;
+            }
+            updatedContent =
+                updatedContent.slice(0, childrenIndex) +
+                "<DreamyProvider colorMode={colorMode}>{children}</DreamyProvider>" +
+                updatedContent.slice(childrenIndex + "{children}".length);
+        }
+    }
+
+    return updatedContent;
+}
+
 function addProviderToViteRoot(content: string, providerImportPath: string) {
     const appMatch = content.match(/<App\s*\/>/);
     if (!appMatch) {
@@ -1449,6 +1652,8 @@ async function configureAppRoot(
             );
         } else if (framework.type === "nextjs") {
             updatedContent = addColorModeToNextRoot(currentContent, providerImportPath);
+        } else if (framework.type === "tanstack") {
+            updatedContent = addColorModeToTanStackRoot(currentContent, providerImportPath);
         } else {
             updatedContent = addProviderToViteRoot(currentContent, providerImportPath);
         }
@@ -1503,6 +1708,42 @@ function printNextSteps(cwd: string, framework: FrameworkConfig) {
                 "               <body>\n" +
                 "                   <DreamyProvider colorMode={colorMode}>{children}</DreamyProvider>\n" +
                 "                   <ScrollRestoration />\n" +
+                "                   <Scripts />\n" +
+                "               </body>\n" +
+                "           </html>\n" +
+                "       );\n" +
+                "   }\n"
+        );
+    } else if (framework.type === "tanstack") {
+        p.log.info(
+            "1. Update your src/routes/__root.tsx to use DreamyProvider:\n\n" +
+                `   import { DreamyProvider, getColorModeHTMLProps, getSSRColorMode } from "${providerImportPath}";\n` +
+                '   import { createServerFn } from "@tanstack/react-start";\n' +
+                '   import { getRequest } from "@tanstack/react-start/server";\n' +
+                '   import { HeadContent, Scripts, createRootRoute } from "@tanstack/react-router";\n' +
+                '   import appCss from "../styles.css?url";\n\n' +
+                '   const getColorMode = createServerFn({ method: "GET" }).handler(async () => {\n' +
+                "       return getSSRColorMode(getRequest());\n" +
+                "   });\n\n" +
+                "   export const Route = createRootRoute({\n" +
+                "       beforeLoad: async () => {\n" +
+                "           const colorMode = await getColorMode();\n" +
+                "           return { colorMode };\n" +
+                "       },\n" +
+                "       head: () => ({\n" +
+                '           links: [{ rel: "stylesheet", href: appCss }]\n' +
+                "       }),\n" +
+                "       shellComponent: RootDocument\n" +
+                "   });\n\n" +
+                "   function RootDocument({ children }: { children: React.ReactNode }) {\n" +
+                "       const { colorMode } = Route.useRouteContext();\n" +
+                "       return (\n" +
+                '           <html lang="en" {...getColorModeHTMLProps(colorMode)}>\n' +
+                "               <head>\n" +
+                "                   <HeadContent />\n" +
+                "               </head>\n" +
+                "               <body>\n" +
+                "                   <DreamyProvider colorMode={colorMode}>{children}</DreamyProvider>\n" +
                 "                   <Scripts />\n" +
                 "               </body>\n" +
                 "           </html>\n" +
@@ -1570,12 +1811,13 @@ export const InitCommand = new Command("init")
 
         if (!framework) {
             p.log.error(
-                "✗ Could not detect a supported framework (React Router v7, Next.js, or Vite)"
+                "✗ Could not detect a supported framework (React Router v7, Next.js, TanStack Start, or Vite)"
             );
             p.log.info(
                 "💡 Make sure you have one of these config files:\n" +
                     "   - react-router.config.ts (React Router v7)\n" +
                     "   - next.config.js/ts/mjs (Next.js)\n" +
+                    "   - .cta.json / @tanstack/react-start (TanStack Start)\n" +
                     "   - vite.config.js/ts (Vite)"
             );
             p.outro("Initialization cancelled");

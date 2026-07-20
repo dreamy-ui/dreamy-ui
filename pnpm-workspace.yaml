@@ -2,4 +2,4 @@ packages:
     - "packages/**"
     - "components"
     - "website*"
-    # - "apps/rr"
+    - "apps/*"

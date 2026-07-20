@@ -4,7 +4,7 @@ import { globbySync } from "globby";
 import { lookItUpSync } from "look-it-up";
 
 export interface ProjectScope {
-    framework: "next" | "remix" | "react-router" | "vite" | null;
+    framework: "next" | "remix" | "react-router" | "vite" | "tanstack" | null;
     componentsDir: string;
 }
 
@@ -37,10 +37,20 @@ function getFramework(files: string[], cwd: string) {
             }
         );
         const viteConfig = readFileSync(viteConfigPath, "utf-8");
+        if (
+            viteConfig?.includes("tanstackStart") ||
+            viteConfig?.includes("@tanstack/react-start")
+        ) {
+            return "tanstack";
+        }
         const isRemix =
             !!viteConfig?.includes("@remix-run/dev") ||
             !!viteConfig?.includes("@react-router/dev/vite");
         return isRemix ? "remix" : "vite";
+    }
+
+    if (files.find((file) => file === ".cta.json" || file.startsWith(".cta.json"))) {
+        return "tanstack";
     }
 
     return null;
@@ -72,7 +82,10 @@ export async function getProjectContext(opts: ProjectContextOptions) {
         componentsDir: join("src", "components", "ui")
     };
 
-    const files = globbySync(["next.config.*", "vite.config.*", "react-router.config.*"], { cwd });
+    const files = globbySync(
+        ["next.config.*", "vite.config.*", "react-router.config.*", ".cta.json"],
+        { cwd }
+    );
 
     if (files.length > 0) {
         scope.framework = getFramework(files, cwd);
