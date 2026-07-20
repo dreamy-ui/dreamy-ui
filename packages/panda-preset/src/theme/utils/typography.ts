@@ -19,6 +19,16 @@ export const typographyUtilities: UtilityConfig = {
             };
         }
     },
+    textAlign: {
+        property: "textAlign",
+        shorthand: ["ta", "tAlign"],
+        transform: (value) => {
+            if (!value) return {};
+            return {
+                textAlign: value
+            };
+        }
+    },
     textCenter: {
         values: { type: "boolean" },
         transform: (value) => {

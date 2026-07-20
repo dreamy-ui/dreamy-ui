@@ -14,6 +14,7 @@ export * from "./close-button";
 export * as DatePicker from "./date-picker";
 export * as DateRangePicker from "./date-range-picker";
 export * from "./divider";
+export * as Drawer from "./drawer";
 export * as Editable from "./editable";
 export * as EmptyState from "./empty-state";
 export * as Field from "./field";

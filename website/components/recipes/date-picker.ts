@@ -30,9 +30,10 @@ export const datePicker = defineSlotRecipe({
     jsx: mapJsx("DatePicker", [
         "Root",
         "Trigger",
+        "Input",
         "Control",
         "Nav",
-        "Popover",
+        "Content",
         "Calendar",
         "CalendarHeader",
         "CalendarTitle",

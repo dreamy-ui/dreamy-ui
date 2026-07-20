@@ -6,9 +6,14 @@ import { type TextProperties, text } from "styled-system/patterns";
 export interface HeadingProps extends HTMLDreamyProps<"h3">, TextProperties {}
 
 /**
- * Heading component
+ * Heading component — semantic heading with typographic styles.
  *
- * @See Docs https://dreamy-ui.com/docs/components/heading
+ * @see Docs https://dreamy-ui.com/docs/components/heading
+ *
+ * @example
+ * ```tsx
+ * <Heading size="lg">Title</Heading>
+ * ```
  */
 export function Heading(props: HeadingProps) {
     const [patternProps, restProps] = splitProps(props, ["variant", "size"]);

@@ -12,9 +12,14 @@ export interface LinkProps extends HTMLDreamyProps<"a">, TextProperties {
 }
 
 /**
- * Link component
+ * Link component — styled anchor for navigation.
  *
- * @See Docs https://dreamy-ui.com/docs/components/link
+ * @see Docs https://dreamy-ui.com/docs/components/link
+ *
+ * @example
+ * ```tsx
+ * <Link href="/docs">Documentation</Link>
+ * ```
  */
 export function Link(props: LinkProps) {
     const { isExternal, ...rest } = props;

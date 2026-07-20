@@ -6,9 +6,14 @@ export interface BadgeProps extends HTMLDreamyProps<"div">, BadgeVariantProps {}
 const DreamyBadge = dreamy("div", badge);
 
 /**
- * Badge component
+ * Badge component — highlights a status, count, or label.
  *
- * @See Docs https://dreamy-ui.com/docs/components/badge
+ * @see Docs https://dreamy-ui.com/docs/components/badge
+ *
+ * @example
+ * ```tsx
+ * <Badge>New</Badge>
+ * ```
  */
 export function Badge(props: BadgeProps) {
     return <DreamyBadge {...props} />;

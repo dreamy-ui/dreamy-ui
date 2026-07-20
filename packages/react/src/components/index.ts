@@ -6,6 +6,7 @@ export * from "./avatar";
 export * from "./checkbox";
 export * from "./circular-progress";
 export * from "./descendant";
+export * from "./drawer";
 export * from "./editable";
 export * from "./file-upload";
 export * from "./field";

@@ -5,7 +5,7 @@
   "id": "divider",
   "file": {
     "name": "divider.tsx",
-    "content": "import { splitProps } from \"@dreamy-ui/react/rsc\";\n\nimport { type HTMLDreamyProps, dreamy } from \"styled-system/jsx\";\nimport { type DividerProperties, divider } from \"styled-system/patterns\";\n\nexport interface DividerProps\n    extends Omit<HTMLDreamyProps<\"hr\">, keyof DividerProperties>,\n        DividerProperties {}\n\n/**\n * Divider component\n *\n * @See Docs https://dreamy-ui.com/docs/components/divider\n */\nexport function Divider(props: DividerProps) {\n    const [patternProps, restProps] = splitProps(props, [\"orientation\", \"thickness\", \"color\"]);\n\n    const styleProps = divider.raw(patternProps);\n\n    return (\n        <dreamy.hr\n            {...styleProps}\n            {...restProps}\n        />\n    );\n}\n"
+    "content": "import { splitProps } from \"@dreamy-ui/react/rsc\";\n\nimport { type HTMLDreamyProps, dreamy } from \"styled-system/jsx\";\nimport { type DividerProperties, divider } from \"styled-system/patterns\";\n\nexport interface DividerProps\n    extends Omit<HTMLDreamyProps<\"hr\">, keyof DividerProperties>,\n        DividerProperties {}\n\n/**\n * Divider component — visual separator between content.\n *\n * @see Docs https://dreamy-ui.com/docs/components/divider\n *\n * @example\n * ```tsx\n * <Divider />\n * ```\n */\nexport function Divider(props: DividerProps) {\n    const [patternProps, restProps] = splitProps(props, [\"orientation\", \"thickness\", \"color\"]);\n\n    const styleProps = divider.raw(patternProps);\n\n    return (\n        <dreamy.hr\n            {...styleProps}\n            {...restProps}\n        />\n    );\n}\n"
   },
   "component": "Divider",
   "hasRecipe": false,

@@ -118,7 +118,7 @@ const AutocompleteNoResults = withContext(Box, "noResults");
 export interface AutocompleteProps
     extends Omit<UseAutocompleteProps, "popoverProps">,
         AutocompleteVariantProps,
-        Omit<HTMLDreamyProps<"div">, "children" | "onChange" | "value" | "defaultValue"> {
+        Omit<HTMLDreamyProps<"div">, keyof UseAutocompleteProps | "children" | "onChange"> {
     /**
      * The visual variant forwarded to the inner `Input` component.
      * @default "outline"
@@ -150,10 +150,11 @@ export const Root: (props: AutocompleteProps) => React.JSX.Element = withProvide
         children,
         size = "md",
         triggerVariant = "outline",
+        items,
         ...props
     }: AutocompleteProps) {
         const [cssProps, restProps] = splitCssProps(props);
-        const ctx = useAutocomplete(restProps);
+        const ctx = useAutocomplete({ ...restProps, items });
 
         return (
             <AutocompleteProvider

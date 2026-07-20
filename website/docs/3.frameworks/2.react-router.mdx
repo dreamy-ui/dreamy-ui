@@ -25,7 +25,7 @@ The CLI will automatically:
 5. Update `vite.config` with the Panda CSS PostCSS plugin (removes Tailwind if present)
 6. Remove the default Tailwind CSS setup (`app/app.css` and its import)
 7. Set up `app/app.css` with Panda layers and import it in `app/root.tsx`
-8. Update `tsconfig.json` — add `styled-system/**/*` to `include` and an `@/ui/*` path alias
+8. Update `tsconfig.json` — add `styled-system/**/*` to `include` and an `@/ui` path alias
 9. Create a `components/dreamy-provider.tsx` wrapper component
 10. Wire up `DreamyProvider` in `app/root.tsx` with SSR color mode
 11. Add recommended starter components (`button`, `flex`, `text`, `heading`)
@@ -111,7 +111,7 @@ import "./app.css";
 {
 	"compilerOptions": {
 		"paths": {
-			"@/ui/*": ["./components/ui/*"]
+			"@/ui": ["./components/ui"]
 		}
 	},
 	"include": [

@@ -123,9 +123,17 @@ export interface SelectProps<
 }
 
 /**
- * Select component
+ * Select component — dropdown for choosing one or more options.
  *
- * @See Docs https://dreamy-ui.com/docs/components/select
+ * @see Docs https://dreamy-ui.com/docs/components/select
+ *
+ * @example
+ * ```tsx
+ * <Select.Root items={items}>
+ *   <Select.Trigger />
+ *   <Select.Content />
+ * </Select.Root>
+ * ```
  */
 export const Root: <T extends boolean = false, Item extends SelectItemData = SelectItemData>(
     props: SelectProps<T, Item>
@@ -194,6 +202,9 @@ export interface SelectTriggerProps extends HTMLDreamyProps<"button"> {
     children?: ReactNode;
 }
 
+/**
+ * Select Trigger — button that opens the dropdown.
+ */
 export const Trigger = withContext(function SelectTrigger({
     children,
     placeholder,
@@ -257,6 +268,9 @@ export interface SelectContentProps extends PopoverContentProps {
     showItems?: boolean;
 }
 
+/**
+ * Select Content — dropdown panel listing available options.
+ */
 export const Content = withContext(function SelectContent(props: SelectContentProps) {
     const { showItems = true, children, ...rest } = props;
     const { getContentProps, items, renderItem } = useSelectContext() as ReturnType<
@@ -294,6 +308,9 @@ export interface SelectVirtualContentProps extends PopoverContentProps {
     showItems?: boolean;
 }
 
+/**
+ * Select Virtual Content — virtualized dropdown panel for large option lists.
+ */
 export const VirtualContent = withContext(function SelectVirtualContent(
     props: SelectVirtualContentProps
 ) {

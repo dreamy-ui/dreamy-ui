@@ -28,9 +28,18 @@ export interface PaginationRootProps
         PaginationVariantProps {}
 
 /**
- * Pagination Root component - container for pagination controls
+ * Pagination component — navigate between pages of content.
  *
- * @See Docs https://dreamy-ui.com/docs/components/pagination
+ * @see Docs https://dreamy-ui.com/docs/components/pagination
+ *
+ * @example
+ * ```tsx
+ * <Pagination.Root count={100} pageSize={10}>
+ *   <Pagination.PrevTrigger />
+ *   <Pagination.Items />
+ *   <Pagination.NextTrigger />
+ * </Pagination.Root>
+ * ```
  */
 export const Root = withProvider(function PaginationRoot(props: PaginationRootProps) {
     const {
@@ -70,7 +79,7 @@ export interface PaginationItemProps extends Omit<Partial<IconButtonProps>, "val
 }
 
 /**
- * Pagination Item component - represents a single page number
+ * Pagination Item — a single page number button.
  */
 export const Item = withContext(function PaginationItem(props: PaginationItemProps) {
     const { value, children, ...rest } = props;
@@ -95,7 +104,7 @@ export const Item = withContext(function PaginationItem(props: PaginationItemPro
 export interface PaginationEllipsisProps extends HTMLDreamyProps<"span"> {}
 
 /**
- * Pagination Ellipsis component - indicates skipped pages
+ * Pagination Ellipsis — indicates skipped pages.
  */
 export const Ellipsis = withContext(function PaginationEllipsis(props: PaginationEllipsisProps) {
     const { children = "...", ...rest } = props;
@@ -112,7 +121,7 @@ export const Ellipsis = withContext(function PaginationEllipsis(props: Paginatio
 export interface PaginationPrevTriggerProps extends Partial<IconButtonProps> {}
 
 /**
- * Pagination Prev Trigger component - navigates to previous page
+ * Pagination Prev Trigger — navigates to the previous page.
  */
 export const PrevTrigger = withContext(function PaginationPrevTrigger(
     props: PaginationPrevTriggerProps
@@ -137,7 +146,7 @@ export const PrevTrigger = withContext(function PaginationPrevTrigger(
 export interface PaginationNextTriggerProps extends Partial<IconButtonProps> {}
 
 /**
- * Pagination Next Trigger component - navigates to next page
+ * Pagination Next Trigger — navigates to the next page.
  */
 export const NextTrigger = withContext(function PaginationNextTrigger(
     props: PaginationNextTriggerProps
@@ -207,7 +216,7 @@ export interface PaginationPageTextProps extends HTMLDreamyProps<"span"> {
 }
 
 /**
- * Pagination Page Text component - displays current page information
+ * Pagination Page Text — displays current page information.
  */
 export function PageText(props: PaginationPageTextProps) {
     const { format = "compact", ...rest } = props;
@@ -248,27 +257,7 @@ export interface PaginationItemsProps {
 }
 
 /**
- * Pagination Items component - automatically renders page items and ellipsis
- *
- * This is a shortcut component that handles the rendering of pagination items.
- * It uses the pagination context to determine which pages to show and automatically
- * inserts ellipsis where needed based on the sibling count.
- *
- * @example
- * ```tsx
- * <Pagination.Items
- *   render={(page) => (
- *     <IconButton variant="ghost" _selected={{
- *       bg: "primary.500",
- *       color: "primary.fg",
- *     }}>
- *       {page.value}
- *     </IconButton>
- *   )}
- * />
- * ```
- *
- * @See Docs https://dreamy-ui.com/docs/components/pagination
+ * Pagination Items — automatically renders page items and ellipsis.
  */
 export function Items(props: PaginationItemsProps) {
     const { render } = props;

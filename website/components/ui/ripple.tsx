@@ -16,7 +16,20 @@ export interface RippleProps {
 }
 
 /**
- * Ripple component. Use with `useRipple` hook.
+ * Ripple component — animated touch feedback used with `useRipple`.
+ *
+ * @see Docs https://dreamy-ui.com/docs/components/button
+ *
+ * @example
+ * ```tsx
+ * const { ripples, currentRipple, onClear } = useRipple();
+ *
+ * <Ripple
+ *   ripples={ripples}
+ *   currentRipple={currentRipple}
+ *   onClear={onClear}
+ * />
+ * ```
  */
 export function Ripple(props: RippleProps) {
     const {

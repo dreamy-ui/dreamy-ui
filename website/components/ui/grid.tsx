@@ -13,9 +13,18 @@ export interface GridProps
         GridProperties {}
 
 /**
- * Flex component
+ * Grid component — responsive CSS grid layout container.
  *
- * @See Docs https://dreamy-ui.com/docs/components/grid
+ * @see Docs https://dreamy-ui.com/docs/components/grid
+ *
+ * @example
+ * ```tsx
+ * <Grid columns={3} gap={4}>
+ *   <GridItem>1</GridItem>
+ *   <GridItem>2</GridItem>
+ *   <GridItem>3</GridItem>
+ * </Grid>
+ * ```
  */
 export function Grid(props: GridProps) {
     const [patternProps, restProps] = splitProps(props, [
@@ -41,9 +50,7 @@ export interface GridItemProps
         GridItemProperties {}
 
 /**
- * GridItem component
- *
- * @See Docs https://dreamy-ui.com/docs/components/grid
+ * Grid Item — child cell within a grid layout.
  */
 export function GridItem(props: GridItemProps) {
     const [patternProps, restProps] = splitProps(props, [

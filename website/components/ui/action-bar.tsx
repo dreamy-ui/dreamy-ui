@@ -38,6 +38,21 @@ export interface ActionBarRootProps extends BoxProps, ActionBarVariantProps, Use
     portalProps?: Omit<PortalProps, "children">;
 }
 
+/**
+ * ActionBar component — floating toolbar for bulk selection actions.
+ *
+ * @see Docs https://dreamy-ui.com/docs/components/action-bar
+ *
+ * @example
+ * ```tsx
+ * <ActionBar.Root isOpen={hasSelection}>
+ *   <ActionBar.Content>
+ *     <ActionBar.SelectionTrigger>{count} selected</ActionBar.SelectionTrigger>
+ *     <ActionBar.CloseTrigger />
+ *   </ActionBar.Content>
+ * </ActionBar.Root>
+ * ```
+ */
 export const Root = withProvider(function ActionBarRoot(props: ActionBarRootProps) {
     const { children, isOpen, defaultIsOpen, onOpen, onClose, portalProps, ...rest } = props;
     const actionBarProps = useActionBar({
@@ -73,6 +88,12 @@ export interface ActionBarContentProps extends MotionBoxProps {}
 
 const StyledContent = withContext(MotionBox, "content");
 
+/**
+ * ActionBar Content — animated toolbar panel.
+ */
+/**
+ * Action Bar Content — animated toolbar surface.
+ */
 export const Content = function ActionBarContent(props: ActionBarContentProps) {
     const { children, ...rest } = props;
     const { isOpen, getContentProps } = useActionBarContext();
@@ -104,6 +125,12 @@ export const Content = function ActionBarContent(props: ActionBarContentProps) {
 
 export interface ActionBarSelectionTriggerProps extends HTMLDreamyProps<"span"> {}
 
+/**
+ * ActionBar SelectionTrigger — shows the current selection summary.
+ */
+/**
+ * Action Bar Selection Trigger — displays the selection count or status.
+ */
 export const SelectionTrigger = withContext(function ActionBarSelectionTrigger(
     props: ActionBarSelectionTriggerProps
 ) {
@@ -122,6 +149,12 @@ export const SelectionTrigger = withContext(function ActionBarSelectionTrigger(
 
 export interface ActionBarSeparatorProps extends HTMLDreamyProps<"div"> {}
 
+/**
+ * ActionBar Separator — vertical divider between toolbar sections.
+ */
+/**
+ * Action Bar Separator — vertical divider between toolbar sections.
+ */
 export const Separator = withContext(function ActionBarSeparator(props: ActionBarSeparatorProps) {
     return (
         <Box
@@ -134,6 +167,12 @@ export const Separator = withContext(function ActionBarSeparator(props: ActionBa
 
 export interface ActionBarCloseTriggerProps extends CloseButtonProps {}
 
+/**
+ * ActionBar CloseTrigger — closes the action bar.
+ */
+/**
+ * Action Bar Close Trigger — button that dismisses the action bar.
+ */
 export const CloseTrigger = withContext(function ActionBarCloseTrigger(
     props: ActionBarCloseTriggerProps
 ) {

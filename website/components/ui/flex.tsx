@@ -8,9 +8,16 @@ export interface FlexProps
         FlexProperties {}
 
 /**
- * Flex component
+ * Flex component — flexbox layout container.
  *
- * @See Docs https://dreamy-ui.com/docs/components/flex
+ * @see Docs https://dreamy-ui.com/docs/components/flex
+ *
+ * @example
+ * ```tsx
+ * <Flex gap="4" align="center">
+ *   <Box>Item</Box>
+ * </Flex>
+ * ```
  */
 export function Flex(props: FlexProps) {
     const [patternProps, restProps] = splitProps(props, [

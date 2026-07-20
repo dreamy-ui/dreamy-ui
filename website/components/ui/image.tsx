@@ -48,9 +48,14 @@ export interface ImageProps extends HTMLDreamyProps<"img">, SystemProperties {
 const StyledImage = dreamy("img", image);
 
 /**
- * Native image with useful helpers.
+ * Image component — native image with useful helpers.
  *
- * @See Docs https://dreamy-ui.com/docs/components/image
+ * @see Docs https://dreamy-ui.com/docs/components/image
+ *
+ * @example
+ * ```tsx
+ * <Image src="/photo.jpg" alt="Photo" />
+ * ```
  */
 export function Image(props: ImageProps) {
     const {

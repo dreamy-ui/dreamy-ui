@@ -37,9 +37,23 @@ export interface TabsProps
 }
 
 /**
- * Tabs component
+ * Tabs component — switch between related content panels.
  *
- * @See Docs https://dreamy-ui.com/docs/components/tabs
+ * @see Docs https://dreamy-ui.com/docs/components/tabs
+ *
+ * @example
+ * ```tsx
+ * <Tabs.Root>
+ *   <Tabs.List>
+ *     <Tabs.Tab>One</Tabs.Tab>
+ *     <Tabs.Tab>Two</Tabs.Tab>
+ *   </Tabs.List>
+ *   <Tabs.Panels>
+ *     <Tabs.Panel>Panel one</Tabs.Panel>
+ *     <Tabs.Panel>Panel two</Tabs.Panel>
+ *   </Tabs.Panels>
+ * </Tabs.Root>
+ * ```
  */
 export const Root = withProvider(function Tabs(props: TabsProps) {
     const { children, ...rest } = props;
@@ -57,6 +71,9 @@ export const Root = withProvider(function Tabs(props: TabsProps) {
 
 export interface TabListProps extends UseTabListProps, Omit<FlexProps, "onKeyDown" | "ref"> {}
 
+/**
+ * Tabs List — container for tab triggers.
+ */
 export const List = withContext(function TabList(props: TabListProps) {
     const tablistProps = useTabList(props);
 
@@ -65,6 +82,9 @@ export const List = withContext(function TabList(props: TabListProps) {
 
 export interface TabProps extends UseTabOptions, ButtonProps {}
 
+/**
+ * Tabs Tab — a single tab trigger button.
+ */
 export const Tab = withContext(function Tab(props: TabProps) {
     const { children, ...rest } = props;
 
@@ -85,6 +105,9 @@ export const Tab = withContext(function Tab(props: TabProps) {
 
 export interface TabPanelsProps extends FlexProps {}
 
+/**
+ * Tabs Panels — container for tab panels.
+ */
 export const Panels = withContext(function TabPanels(props: TabPanelsProps) {
     const panelsProps = useTabPanels(props);
 
@@ -93,6 +116,9 @@ export const Panels = withContext(function TabPanels(props: TabPanelsProps) {
 
 export interface TabPanelProps extends HTMLDreamyProps<"div"> {}
 
+/**
+ * Tabs Panel — content for a single tab.
+ */
 export const Panel = withContext(function TabPanel(props: TabPanelProps) {
     const panelProps = useTabPanel(props);
 

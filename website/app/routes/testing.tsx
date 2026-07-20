@@ -84,11 +84,13 @@ export default function Test() {
             </Pagination.Root>
 
             <Button
+                fDir={"col"}
                 isLoading
                 loadingText="Loading..."
                 rightIcon={<Icon as={PiSpinner} />}
                 size={"lg"}
                 variant={"primary"}
+                w={"full"}
             >
                 Primary
             </Button>

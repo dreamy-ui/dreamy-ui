@@ -18,26 +18,26 @@ import { lineHeights } from "./typography/line-heights";
 import { zIndex } from "./z-index";
 
 export function createTokens(): Required<ReturnType<typeof defineTokens>> {
-	const fonts = createFonts();
-	const colors = defineColorTokens();
+    const fonts = createFonts();
+    const colors = defineColorTokens();
 
-	return defineTokens({
-		aspectRatios,
-		blurs,
-		borders,
-		animations,
-		colors,
-		durations,
-		assets,
-		easings,
-		fonts,
-		fontSizes,
-		fontWeights,
-		letterSpacings,
-		lineHeights,
-		radii,
-		sizes,
-		spacing,
-		zIndex
-	});
+    return defineTokens({
+        aspectRatios,
+        blurs,
+        borders,
+        animations,
+        colors,
+        durations,
+        assets,
+        easings,
+        fonts,
+        fontSizes,
+        fontWeights,
+        letterSpacings,
+        lineHeights,
+        radii,
+        sizes,
+        spacing,
+        zIndex
+    });
 }

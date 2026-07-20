@@ -57,9 +57,22 @@ export interface MenuProps extends Omit<UseMenuProps<PopoverProps>, "popoverProp
 }
 
 /**
- * Menu component
+ * Menu component — accessible dropdown menu with keyboard navigation.
  *
- * @See Docs https://dreamy-ui.com/docs/components/menu
+ * @see Docs https://dreamy-ui.com/docs/components/menu
+ *
+ * @example
+ * ```tsx
+ * <Menu.Root>
+ *   <Menu.Trigger>
+ *     <Button>Actions</Button>
+ *   </Menu.Trigger>
+ *   <Menu.Content>
+ *     <Menu.Item>Edit</Menu.Item>
+ *     <Menu.Item>Delete</Menu.Item>
+ *   </Menu.Content>
+ * </Menu.Root>
+ * ```
  */
 export const Root = withProvider(function MenuRoot({
     children,
@@ -96,6 +109,9 @@ export const Root = withProvider(function MenuRoot({
 
 export interface MenuContentProps extends PopoverContentProps {}
 
+/**
+ * Menu Content — dropdown panel containing menu items.
+ */
 export const Content = withContext(function MenuContent(props: MenuContentProps) {
     const { children } = props;
     const { getContentProps, descendants } = useMenuContext();
@@ -126,6 +142,9 @@ export interface MenuButtonProps extends HTMLDreamyProps<"button"> {
     children?: React.ReactNode;
 }
 
+/**
+ * Menu Item — actionable option within the menu.
+ */
 export const Item = withContext(function MenuButton(props: MenuButtonProps) {
     const { icon, command, rightContent, children } = props;
     const buttonProps = useMenuItem(props);
@@ -147,6 +166,9 @@ export interface MenuTriggerProps extends HTMLDreamyProps<"button"> {
     placeholder?: string;
 }
 
+/**
+ * Menu Trigger — element that opens and closes the menu.
+ */
 export function Trigger({ children, placeholder, ...rest }: MenuTriggerProps) {
     const { getTriggerProps } = useMenuContext();
 
@@ -173,17 +195,7 @@ export interface MenuTriggerItemProps extends Omit<MenuButtonProps, "children"> 
 }
 
 /**
- * A menu item that opens a nested sub-menu when clicked.
- * It is registered as a regular item in the parent menu's keyboard navigation.
- *
- * Usage:
- * ```tsx
- * <Menu.TriggerItem label="More options" placement="right-start">
- *   <Menu.Content>
- *     <Menu.Item>Sub item</Menu.Item>
- *   </Menu.Content>
- * </Menu.TriggerItem>
- * ```
+ * Menu Trigger Item — menu item that opens a nested sub-menu.
  */
 export const TriggerItem = withContext(function MenuTriggerItem(props: MenuTriggerItemProps) {
     const {

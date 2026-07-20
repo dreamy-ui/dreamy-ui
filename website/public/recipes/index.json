@@ -66,6 +66,11 @@
   },
   {
     "type": "recipe",
+    "id": "drawer",
+    "file": "drawer.ts"
+  },
+  {
+    "type": "recipe",
     "id": "editable",
     "file": "editable.ts"
   },

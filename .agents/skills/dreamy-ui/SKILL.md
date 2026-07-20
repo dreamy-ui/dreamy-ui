@@ -65,6 +65,17 @@ Useful tools: `get_tokens`, `get_semantic_tokens`, `get_color_palette`, `get_rec
 
 ---
 
+## Useful hooks
+
+Prefer these from `@dreamy-ui/react` when building UI:
+
+- **`useControllable`** — open/close/toggle state for Modal, Drawer, Popover, Menu, Collapse, etc. Prefer over raw `useState` for disclosure patterns.
+- **`useColorMode`** — read and toggle light/dark mode.
+- **`useReducedMotion`** — respect the user's reduced-motion preference.
+- **`useEventListener`** — attach DOM listeners cleanly; easy to wire shortcuts (e.g. toggle color mode with a key combo).
+
+---
+
 ## Related skills (read when relevant)
 
 | Skill | When to read |

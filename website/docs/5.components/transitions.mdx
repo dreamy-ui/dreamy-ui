@@ -21,19 +21,19 @@ Base usage of the Collapse component.
 
 ```tsx
 export function Collapsed() {
-    const [isOpen, setIsOpen] = useState(false);
+    const { isOpen, onToggle } = useControllable();
 
     return (
         <>
             <Button
                 w={"min-content"}
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={onToggle}
             >
                 Toggle
             </Button>
             <Collapse
                 w={"full"}
-                in={isOpen}
+                isOpen={isOpen}
             >
                 <Box
                     bg={"fg"}
@@ -60,19 +60,19 @@ Base usage of the Scale component.
 
 ```tsx
 export function Scaled() {
-    const [isOpen, setIsOpen] = useState(false);
+    const { isOpen, onToggle } = useControllable();
 
     return (
         <>
             <Button
                 w={"min-content"}
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={onToggle}
             >
                 Toggle
             </Button>
             <Scale
                 w={"full"}
-                in={isOpen}
+                isOpen={isOpen}
             >
                 <Box
                     bg={"fg"}
@@ -99,7 +99,7 @@ Use `Collapse` with a fixed `startingHeight` to truncate long text and reveal it
 
 ```tsx
 export function TextCollapsed() {
-    const [isOpen, setIsOpen] = useState(false);
+    const { isOpen, onToggle } = useControllable();
 
     return (
         <VStack alignItems="flex-start" gap={2} w="full">
@@ -126,7 +126,7 @@ export function TextCollapsed() {
             <Button
                 alignSelf="flex-start"
                 color="primary"
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={onToggle}
                 variant="link"
                 whiteSpace="nowrap"
             >
@@ -147,19 +147,19 @@ You can set the starting and ending height of the content by setting the `starti
 
 ```tsx
 export function Collapsed() {
-    const [isOpen, setIsOpen] = useState(false);
+    const { isOpen, onToggle } = useControllable();
 
     return (
         <>
             <Button
                 w={"min-content"}
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={onToggle}
             >
                 Toggle
             </Button>
             <Collapse
                 w={"full"}
-                in={isOpen}
+                isOpen={isOpen}
                 startingHeight={10} 
                 endingHeight={80}
             >
@@ -188,19 +188,19 @@ You can disable the opacity animation by setting the `animateOpacity` prop to `f
 
 ```tsx
 export function Collapsed() {
-    const [isOpen, setIsOpen] = useState(false);
+    const { isOpen, onToggle } = useControllable();
 
     return (
         <>
             <Button
                 w={"min-content"}
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={onToggle}
             >
                 Toggle
             </Button>
             <Collapse
                 w={"full"}
-                in={isOpen}
+                isOpen={isOpen}
                 animateOpacity={false}
             >
                 <Box
@@ -228,19 +228,19 @@ You can unmount component on exit animation by setting the `unmountOnExit` prop 
 
 ```tsx
 export function Collapsed() {
-    const [isOpen, setIsOpen] = useState(false);
+    const { isOpen, onToggle } = useControllable();
 
     return (
         <>
             <Button
                 w={"min-content"}
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={onToggle}
             >
                 Toggle
             </Button>
             <Collapse
                 w={"full"}
-                in={isOpen}
+                isOpen={isOpen}
                 unmountOnExit
             >
                 <Box
@@ -268,19 +268,19 @@ You can set the initial scale of the content by setting the `initialScale` prop.
 
 ```tsx
 export function Scaled() {
-    const [isOpen, setIsOpen] = useState(false);
+    const { isOpen, onToggle } = useControllable();
 
     return (
         <>
             <Button
                 w={"min-content"}
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={onToggle}
             >
                 Toggle
             </Button>
             <Scale
                 w={"full"}
-                in={isOpen}
+                isOpen={isOpen}
                 initialScale={0}
             >
                 <Box

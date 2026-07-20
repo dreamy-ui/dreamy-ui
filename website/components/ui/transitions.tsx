@@ -52,9 +52,14 @@ export interface CollapseOptions {
 export interface CollapseProps extends WithTransitionConfig<MotionBoxProps>, CollapseOptions {}
 
 /**
- * Collapse component.
+ * Collapse component — animates height open/closed.
  *
- * @See Docs https://dreamy-ui.com/docs/components/transitions
+ * @see Docs https://dreamy-ui.com/docs/components/transitions
+ *
+ * @example
+ * ```tsx
+ * <Collapse isOpen={isOpen}>Expanded content</Collapse>
+ * ```
  */
 export function Collapse(props: CollapseProps) {
     const {
@@ -153,6 +158,16 @@ const variants: Variants = {
 
 export interface ScaleProps extends ScaleOptions, WithTransitionConfig<MotionBoxProps> {}
 
+/**
+ * Scale component — animates scale and opacity open/closed.
+ *
+ * @see Docs https://dreamy-ui.com/docs/components/transitions
+ *
+ * @example
+ * ```tsx
+ * <Scale isOpen={isOpen}>Scaled content</Scale>
+ * ```
+ */
 export function Scale(props: ScaleProps) {
     const {
         unmountOnExit,

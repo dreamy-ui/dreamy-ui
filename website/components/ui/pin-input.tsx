@@ -24,9 +24,18 @@ export interface PinInputProps
 }
 
 /**
- * PinInput component
+ * Pin Input component — segmented input for one-time codes.
  *
  * @see Docs https://dreamy-ui.com/docs/components/pin-input
+ *
+ * @example
+ * ```tsx
+ * <PinInput.Root>
+ *   <PinInput.Field />
+ *   <PinInput.Field />
+ *   <PinInput.Field />
+ * </PinInput.Root>
+ * ```
  */
 export function Root(props: PinInputProps) {
     const { children, ref, ...rest } = props;
@@ -49,6 +58,9 @@ export function Root(props: PinInputProps) {
 
 export interface PinInputFieldProps extends InputProps {}
 
+/**
+ * Pin Input Field — a single character input within the pin input group.
+ */
 export function Field(props: InputProps) {
     const inputProps = usePinInputField(props);
 

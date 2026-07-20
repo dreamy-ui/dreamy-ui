@@ -21,9 +21,14 @@ export interface IconButtonProps
         Props {}
 
 /**
- * IconButton component
+ * IconButton component — button that displays an icon.
  *
- * @See Docs https://dreamy-ui.com/docs/components/icon-button
+ * @see Docs https://dreamy-ui.com/docs/components/icon-button
+ *
+ * @example
+ * ```tsx
+ * <IconButton aria-label="Settings" icon={<Icon>...</Icon>} />
+ * ```
  */
 export function IconButton({ icon, children, ...props }: IconButtonProps) {
     return (

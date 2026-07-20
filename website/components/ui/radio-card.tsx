@@ -24,9 +24,19 @@ export interface RadioCardRootProps
         Omit<HTMLDreamyProps<"div">, keyof UseRadioProps> {}
 
 /**
- * RadioCard.Root
+ * Radio Card component — selectable card with a radio indicator.
  *
- * @See Docs https://dreamy-ui.com/docs/components/radio-card
+ * @see Docs https://dreamy-ui.com/docs/components/radio-card
+ *
+ * @example
+ * ```tsx
+ * <RadioCard.Root value="a">
+ *   <RadioCard.Header>
+ *     <RadioCard.Title>Plan A</RadioCard.Title>
+ *   </RadioCard.Header>
+ *   <RadioCard.Radio />
+ * </RadioCard.Root>
+ * ```
  */
 export function Root(props: RadioCardRootProps) {
     const { children, ...rest } = props;
@@ -48,9 +58,7 @@ export interface RadioCardRootProviderProps extends HTMLDreamyProps<"div"> {
 }
 
 /**
- * RadioCard.RootProvider
- *
- * Use when controlling the radio card with the `useRadio` hook externally.
+ * Radio Card Root Provider — provides external `useRadio` state to descendants.
  */
 export function RootProvider(props: RadioCardRootProviderProps) {
     const { value, children, ...rest } = props;
@@ -70,23 +78,37 @@ export function RootProvider(props: RadioCardRootProviderProps) {
 }
 
 export interface RadioCardHeaderProps extends HTMLDreamyProps<"div"> {}
+
+/**
+ * Radio Card Header — top section of the card.
+ */
 export const Header = withContext(dreamy.div, "header");
 
 export interface RadioCardTitleProps extends HTMLDreamyProps<"p"> {}
+
+/**
+ * Radio Card Title — primary label for the card.
+ */
 export const Title = withContext(dreamy.p, "title");
 
 export interface RadioCardDescriptionProps extends HTMLDreamyProps<"p"> {}
+
+/**
+ * Radio Card Description — supporting text for the card.
+ */
 export const Description = withContext(dreamy.p, "description");
 
 export interface RadioCardLabelProps extends HTMLDreamyProps<"label"> {}
+
+/**
+ * Radio Card Label — accessible label wrapper for the card.
+ */
 export const Label = withContext(dreamy.label, "label");
 
 export interface RadioCardRadioProps extends HTMLDreamyProps<"div"> {}
 
 /**
- * RadioCard.Radio
- *
- * The radio indicator. Must be used inside `RadioCard.Root`.
+ * Radio Card Radio — the radio indicator within the card.
  */
 export function Radio(props: RadioCardRadioProps) {
     const context = useRadioCardContext();

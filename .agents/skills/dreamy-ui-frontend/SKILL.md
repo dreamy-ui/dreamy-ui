@@ -58,15 +58,14 @@ Prefer **semantic tokens** over raw design tokens or hardcoded values. Semantic 
 ```tsx
 <Flex
   bg="bg.panel"
-  border="1px solid"
-  borderColor="border"
+  border="default"
   gap={4}
   p={4}
   rounded="l2"
 >
   <Text color="fg">Account settings</Text>
   <Text color="fg.medium">Manage your profile and preferences.</Text>
-  <Button scheme="primary">Save changes</Button>
+  <Button variant="primary">Save changes</Button>
 </Flex>
 ```
 

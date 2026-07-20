@@ -24,7 +24,7 @@ The CLI will automatically:
 4. Add a `prepare` script (`panda codegen`) to `package.json`
 5. Configure PostCSS (`postcss.config.mjs`)
 6. Set up `globals.css` with Panda layers and import it in `layout.tsx`
-7. Update `tsconfig.json` — add `styled-system/**/*` to `include`, `@/ui/*` and `styled-system/*` path aliases
+7. Update `tsconfig.json` — add `styled-system/**/*` to `include`, `@/ui` and `styled-system/*` path aliases
 8. Create a `components/dreamy-provider.tsx` wrapper component
 9. Wire up `DreamyProvider` in `app/layout.tsx` with SSR color mode
 10. Add recommended starter components (`button`, `flex`, `text`, `heading`)
@@ -103,7 +103,7 @@ Make sure `globals.css` is imported in your root `layout.tsx`.
 {
 	"compilerOptions": {
 		"paths": {
-			"@/ui/*": ["./components/ui/*"],
+			"@/ui": ["./components/ui"],
 			"styled-system/*": ["./styled-system/*"]
 		}
 	},

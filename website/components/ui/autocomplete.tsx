@@ -118,7 +118,7 @@ const AutocompleteNoResults = withContext(Box, "noResults");
 export interface AutocompleteProps
     extends Omit<UseAutocompleteProps, "popoverProps">,
         AutocompleteVariantProps,
-        Omit<HTMLDreamyProps<"div">, "children" | "onChange" | "value" | "defaultValue"> {
+        Omit<HTMLDreamyProps<"div">, keyof UseAutocompleteProps | "children" | "onChange"> {
     /**
      * The visual variant forwarded to the inner `Input` component.
      * @default "outline"
@@ -133,19 +133,28 @@ export interface AutocompleteProps
 }
 
 /**
- * Autocomplete component
+ * Autocomplete component — searchable combobox with filtered suggestions.
  *
- * @See Docs https://dreamy-ui.com/docs/components/autocomplete
+ * @see Docs https://dreamy-ui.com/docs/components/autocomplete
+ *
+ * @example
+ * ```tsx
+ * <Autocomplete.Root items={items} onChange={setValue}>
+ *   <Autocomplete.Input placeholder="Search..." />
+ *   <Autocomplete.Content />
+ * </Autocomplete.Root>
+ * ```
  */
 export const Root: (props: AutocompleteProps) => React.JSX.Element = withProvider(
     function AutocompleteRoot({
         children,
         size = "md",
         triggerVariant = "outline",
+        items,
         ...props
     }: AutocompleteProps) {
         const [cssProps, restProps] = splitCssProps(props);
-        const ctx = useAutocomplete(restProps);
+        const ctx = useAutocomplete({ ...restProps, items });
 
         return (
             <AutocompleteProvider
@@ -185,6 +194,9 @@ export interface AutocompleteInputProps
     icon?: ReactNode;
 }
 
+/**
+ * Autocomplete Input — combobox text field and dropdown indicators.
+ */
 export const Input = withContext(function AutocompleteInput({
     icon,
     placeholder,
@@ -230,6 +242,9 @@ export interface AutocompleteContentProps extends Omit<PopoverContentProps, "chi
     renderItem?: (item: AutocompleteItem) => ReactNode;
 }
 
+/**
+ * Autocomplete Content — dropdown list of filtered options.
+ */
 export const Content = withContext(function AutocompleteContent({
     noResultsText = "No results found",
     noResultsContent,
@@ -298,6 +313,9 @@ export interface AutocompleteVirtualContentProps extends Omit<PopoverContentProp
     renderItem?: (item: AutocompleteItem) => ReactNode;
 }
 
+/**
+ * Autocomplete Virtual Content — virtualized dropdown for large option lists.
+ */
 export const VirtualContent = withContext(function AutocompleteVirtualContent({
     estimatedItemHeight = 32,
     overscan = 5,
@@ -426,6 +444,9 @@ export interface AutocompleteItemProps extends HTMLDreamyProps<"button"> {
     index?: number;
 }
 
+/**
+ * Autocomplete Item — selectable option in the dropdown.
+ */
 export const Item = withContext(function AutocompleteItem({
     value,
     index,

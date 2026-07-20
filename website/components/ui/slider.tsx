@@ -40,9 +40,19 @@ const SIZE_CONFIG = {
 } as const;
 
 /**
- * Slider component
+ * Slider component — select a single numeric value on a track.
  *
- * @See Docs https://dreamy-ui.com/docs/components/slider
+ * @see Docs https://dreamy-ui.com/docs/components/slider
+ *
+ * @example
+ * ```tsx
+ * <Slider.Root defaultValue={50}>
+ *   <Slider.Track>
+ *     <Slider.FilledTrack />
+ *   </Slider.Track>
+ *   <Slider.Thumb />
+ * </Slider.Root>
+ * ```
  */
 export const Root = withProvider(function Component(props: SliderProps) {
     const {
@@ -87,6 +97,9 @@ export const Root = withProvider(function Component(props: SliderProps) {
 
 export interface SliderTrackProps extends HTMLDreamyProps<"div"> {}
 
+/**
+ * Slider Track — the full track behind the filled value.
+ */
 export const Track = withContext(function Component(props: SliderTrackProps) {
     const { getTrackProps } = useSliderContext();
 
@@ -95,6 +108,9 @@ export const Track = withContext(function Component(props: SliderTrackProps) {
 
 export interface SliderFilledTrackProps extends HTMLDreamyProps<"div"> {}
 
+/**
+ * Slider Filled Track — the selected portion of the track.
+ */
 export const FilledTrack = withContext(function Component(props: SliderFilledTrackProps) {
     const { getInnerTrackProps } = useSliderContext();
     return <Box {...getInnerTrackProps(props)} />;
@@ -102,6 +118,9 @@ export const FilledTrack = withContext(function Component(props: SliderFilledTra
 
 export interface SliderThumbProps extends HTMLDreamyProps<"div"> {}
 
+/**
+ * Slider Thumb — draggable handle for the current value.
+ */
 export const Thumb = withContext(function Component(props: SliderThumbProps) {
     const { getThumbProps } = useSliderContext();
 
@@ -112,6 +131,9 @@ export interface SliderMarkProps extends HTMLDreamyProps<"div"> {
     value: number;
 }
 
+/**
+ * Slider Mark — label at a specific value on the track.
+ */
 export const Mark = withContext(function Component(props: SliderMarkProps) {
     const { getMarkerProps } = useSliderContext();
 

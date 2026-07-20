@@ -23,9 +23,14 @@ export interface CheckboxProps extends UseCheckboxProps, CheckboxVariantProps {}
 const StyledCheckbox = dreamy("div", checkbox);
 
 /**
- * Checkbox component
+ * Checkbox component — toggles a single boolean option.
  *
- * @See Docs https://dreamy-ui.com/docs/components/checkbox
+ * @see Docs https://dreamy-ui.com/docs/components/checkbox
+ *
+ * @example
+ * ```tsx
+ * <Checkbox defaultChecked>Accept terms</Checkbox>
+ * ```
  */
 export function Checkbox(props: CheckboxProps) {
     const {
@@ -141,6 +146,9 @@ function IndeterminateIcon(props: CheckboxIconProps) {
     );
 }
 
+/**
+ * Checkbox Icon — animated check or indeterminate indicator.
+ */
 export function CheckboxIcon(props: CheckboxIconProps) {
     const { isIndeterminate, ...otherProps } = props;
     const BaseIcon = useMemo(
@@ -157,9 +165,7 @@ export interface CheckboxGroupProps
         Omit<FlexProps, "defaultValue" | "onChange"> {}
 
 /**
- * CheckboxGroup component. Useful for grouping multiple checkboxes together.
- *
- * @See Docs https://dreamy-ui.com/docs/components/checkbox
+ * Checkbox Group — groups related checkboxes with shared state.
  */
 export function CheckboxGroup(props: CheckboxGroupProps) {
     const {

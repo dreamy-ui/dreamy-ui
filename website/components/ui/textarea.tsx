@@ -21,9 +21,14 @@ export interface TextareaProps
 const StyledTextarea = dreamy(TextareaAutosize, textarea);
 
 /**
- * Textarea component
+ * Textarea component — multi-line text input with autosize.
  *
- * @See Docs https://dreamy-ui.com/docs/components/textarea
+ * @see Docs https://dreamy-ui.com/docs/components/textarea
+ *
+ * @example
+ * ```tsx
+ * <Textarea placeholder="Write something…" />
+ * ```
  */
 export function Textarea(props: TextareaProps) {
     const { onChangeValue, onChange, ...restProps } = props;
@@ -54,9 +59,14 @@ export interface TextareaNoAutoSizeProps
 }
 
 /**
- * Textarea component without autosize
+ * TextareaNoAutoSize component — multi-line text input without autosize.
  *
- * @See Docs https://dreamy-ui.com/docs/components/textarea
+ * @see Docs https://dreamy-ui.com/docs/components/textarea
+ *
+ * @example
+ * ```tsx
+ * <TextareaNoAutoSize rows={4} />
+ * ```
  */
 export function TextareaNoAutoSize(props: TextareaNoAutoSizeProps) {
     const { onChangeValue, onChange, ...restProps } = props;

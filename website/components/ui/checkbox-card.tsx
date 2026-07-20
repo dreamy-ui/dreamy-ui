@@ -25,9 +25,19 @@ export interface CheckboxCardRootProps
         Omit<HTMLDreamyProps<"div">, keyof UseCheckboxProps> {}
 
 /**
- * CheckboxCard.Root
+ * Checkbox Card component — selectable card with an embedded checkbox.
  *
- * @See Docs https://dreamy-ui.com/docs/components/checkbox-card
+ * @see Docs https://dreamy-ui.com/docs/components/checkbox-card
+ *
+ * @example
+ * ```tsx
+ * <CheckboxCard.Root>
+ *   <CheckboxCard.Header>
+ *     <CheckboxCard.Title>Pro plan</CheckboxCard.Title>
+ *     <CheckboxCard.Checkbox />
+ *   </CheckboxCard.Header>
+ * </CheckboxCard.Root>
+ * ```
  */
 export function Root(props: CheckboxCardRootProps) {
     const { children, ...rest } = props;
@@ -49,9 +59,7 @@ export interface CheckboxCardRootProviderProps extends HTMLDreamyProps<"div"> {
 }
 
 /**
- * CheckboxCard.RootProvider
- *
- * Use when controlling the checkbox card with the `useCheckbox` hook externally.
+ * Checkbox Card Root Provider — root wrapper when using `useCheckbox` externally.
  */
 export function RootProvider(props: CheckboxCardRootProviderProps) {
     const { value, children, ...rest } = props;
@@ -71,23 +79,37 @@ export function RootProvider(props: CheckboxCardRootProviderProps) {
 }
 
 export interface CheckboxCardHeaderProps extends HTMLDreamyProps<"div"> {}
+
+/**
+ * Checkbox Card Header — top section for title and checkbox indicator.
+ */
 export const Header = withContext(dreamy.div, "header");
 
 export interface CheckboxCardTitleProps extends HTMLDreamyProps<"p"> {}
+
+/**
+ * Checkbox Card Title — primary label for the card.
+ */
 export const Title = withContext(dreamy.p, "title");
 
 export interface CheckboxCardDescriptionProps extends HTMLDreamyProps<"p"> {}
+
+/**
+ * Checkbox Card Description — supporting text for the card option.
+ */
 export const Description = withContext(dreamy.p, "description");
 
 export interface CheckboxCardLabelProps extends HTMLDreamyProps<"label"> {}
+
+/**
+ * Checkbox Card Label — accessible label tied to the card control.
+ */
 export const Label = withContext(dreamy.label, "label");
 
 export interface CheckboxCardCheckboxProps extends HTMLDreamyProps<"div"> {}
 
 /**
- * CheckboxCard.Checkbox
- *
- * The checkbox indicator. Must be used inside `CheckboxCard.Root`.
+ * Checkbox Card Checkbox — checkbox indicator for the card.
  */
 export function Checkbox(props: CheckboxCardCheckboxProps) {
     const context = useCheckboxCardContext();

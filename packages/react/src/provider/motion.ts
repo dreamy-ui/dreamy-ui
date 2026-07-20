@@ -4,6 +4,7 @@ import type { Transition, Variants } from "motion/react";
 
 type VariantKeys =
     | "modal"
+    | "drawer"
     | "overlay"
     | "tooltip"
     | "popover"
@@ -13,6 +14,23 @@ type VariantKeys =
 export type DefaultVariants = Record<VariantKeys, Variants>;
 
 export type MotionVariants = typeof defaultMotionVariants;
+
+interface DrawerMotionCustom {
+    placement?: "left" | "right" | "top" | "bottom";
+}
+
+function getDrawerOffset(placement: DrawerMotionCustom["placement"] = "right") {
+    switch (placement) {
+        case "left":
+            return { x: "-100%", y: 0 };
+        case "top":
+            return { x: 0, y: "-100%" };
+        case "bottom":
+            return { x: 0, y: "100%" };
+        default:
+            return { x: "100%", y: 0 };
+    }
+}
 
 export const defaultMotionVariants: DefaultVariants = {
     modal: {
@@ -27,6 +45,23 @@ export const defaultMotionVariants: DefaultVariants = {
             scale: 0.95,
             transition: TRANSITION_DEFAULTS.exit
         }
+    },
+    drawer: {
+        initial: (custom: DrawerMotionCustom = {}) => ({
+            ...getDrawerOffset(custom.placement),
+            opacity: 0,
+            transition: TRANSITION_DEFAULTS.enter
+        }),
+        animate: {
+            x: 0,
+            y: 0,
+            opacity: 1
+        },
+        exit: (custom: DrawerMotionCustom = {}) => ({
+            ...getDrawerOffset(custom.placement),
+            opacity: 0,
+            transition: TRANSITION_DEFAULTS.exit
+        })
     },
     overlay: {
         initial: {
@@ -159,6 +194,30 @@ export const bouncyMotionVariants: DefaultVariants = {
                 ease: TRANSITION_EASINGS.easeInOut
             }
         }
+    },
+    drawer: {
+        initial: (custom: DrawerMotionCustom = {}) => ({
+            ...getDrawerOffset(custom.placement),
+            opacity: 0
+        }),
+        animate: {
+            x: 0,
+            y: 0,
+            opacity: 1,
+            transition: {
+                type: "spring",
+                stiffness: 380,
+                damping: 22
+            }
+        },
+        exit: (custom: DrawerMotionCustom = {}) => ({
+            ...getDrawerOffset(custom.placement),
+            opacity: 0,
+            transition: {
+                duration: 0.18,
+                ease: TRANSITION_EASINGS.easeInOut
+            }
+        })
     },
     overlay: {
         initial: { opacity: 0 },

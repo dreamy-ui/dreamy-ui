@@ -5,7 +5,7 @@
   "id": "badge",
   "file": {
     "name": "badge.tsx",
-    "content": "import { type BadgeVariantProps, badge } from \"styled-system/recipes\";\nimport { type HTMLDreamyProps, dreamy } from \"styled-system/jsx\";\n\nexport interface BadgeProps extends HTMLDreamyProps<\"div\">, BadgeVariantProps {}\n\nconst DreamyBadge = dreamy(\"div\", badge);\n\n/**\n * Badge component\n *\n * @See Docs https://dreamy-ui.com/docs/components/badge\n */\nexport function Badge(props: BadgeProps) {\n    return <DreamyBadge {...props} />;\n}\n"
+    "content": "import { type BadgeVariantProps, badge } from \"styled-system/recipes\";\nimport { type HTMLDreamyProps, dreamy } from \"styled-system/jsx\";\n\nexport interface BadgeProps extends HTMLDreamyProps<\"div\">, BadgeVariantProps {}\n\nconst DreamyBadge = dreamy(\"div\", badge);\n\n/**\n * Badge component — highlights a status, count, or label.\n *\n * @see Docs https://dreamy-ui.com/docs/components/badge\n *\n * @example\n * ```tsx\n * <Badge>New</Badge>\n * ```\n */\nexport function Badge(props: BadgeProps) {\n    return <DreamyBadge {...props} />;\n}\n"
   },
   "component": "Badge",
   "hasRecipe": true,

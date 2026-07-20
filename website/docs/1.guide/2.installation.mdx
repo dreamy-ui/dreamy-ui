@@ -32,7 +32,7 @@ The CLI will automatically:
 6. Update `vite.config` with the Panda CSS PostCSS plugin — Vite and React Router only (removes Tailwind if present)
 7. Remove the default Tailwind CSS setup — React Router v7 only
 8. Set up your CSS file with Panda layers and import it in your app entry
-9. Update `tsconfig.json` — add `styled-system/**/*` to `include` and an `@/ui/*` path alias (Next.js also gets `styled-system/*`)
+9. Update `tsconfig.json` — add `styled-system/**/*` to `include` and an `@/ui` path alias (Next.js also gets `styled-system/*`)
 10. Create a `components/dreamy-provider.tsx` wrapper component
 11. Wire up `DreamyProvider` in your app root (with SSR color mode for React Router and Next.js)
 12. Add recommended starter components (`button`, `flex`, `text`, `heading`)
@@ -104,13 +104,13 @@ Add Panda codegen to your `package.json` so types are generated after install:
 
 ### 4. Configure TypeScript
 
-Add `styled-system/**/*` to the `include` array and an `@/ui/*` path alias in `tsconfig.json`:
+Add `styled-system/**/*` to the `include` array and an `@/ui` path alias in `tsconfig.json`:
 
 ```json
 {
 	"compilerOptions": {
 		"paths": {
-			"@/ui/*": ["./components/ui/*"]
+			"@/ui": ["./components/ui"]
 		}
 	},
 	"include": ["**/*.ts", "**/*.tsx", "styled-system/**/*"]

@@ -23,10 +23,11 @@ const newComponents = [
     "file upload",
     "hover card",
     "pagination",
-    "stepper"
+    "stepper",
+    "drawer"
 ];
 
-const updatedComponents = ["menu", "tabs"];
+const updatedComponents = ["menu", "tabs", "select"];
 
 export default function SectionsNav() {
     const { sections } = useSections();
@@ -203,8 +204,8 @@ function SectionButton({
             justifyContent={"space-between"}
             key={"doc-" + file.name}
             size={"sm"}
+            truncate
             variant={isCurrent ? "primary" : "ghost"}
-            // variant={isCurrent ? "solid" : "ghost"}
         >
             {file.name === "Llms"
                 ? "LLMs"

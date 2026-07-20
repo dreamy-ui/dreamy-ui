@@ -31,6 +31,9 @@ export interface InputGroupProps
     extends InputGroupProviderContext,
         Omit<HTMLDreamyProps<"div">, keyof InputGroupVariantProps> {}
 
+/**
+ * Input Group — wrapper that groups input parts and addons.
+ */
 const Group = withProvider(function InputGroup(props: InputGroupProps) {
     const [cssProps, { children, ...rest }] = splitCssProps(props);
 
@@ -48,24 +51,41 @@ const Group = withProvider(function InputGroup(props: InputGroupProps) {
 
 export interface InputPrefixProps extends HTMLDreamyProps<"div"> {}
 
+/**
+ * Input Prefix — content placed before the input field.
+ */
 const Prefix = withContext(dreamy.div, "prefix", { defaultProps: { "data-part": "prefix" } });
 
 export interface InputSuffixProps extends HTMLDreamyProps<"div"> {}
 
+/**
+ * Input Suffix — content placed after the input field.
+ */
 const Suffix = withContext(dreamy.div, "suffix", { defaultProps: { "data-part": "suffix" } });
 
 export interface InputStartAddonProps extends HTMLDreamyProps<"div"> {}
 
+/**
+ * Input Start Addon — addon attached to the start of the input group.
+ */
 const StartAddon = withContext(dreamy.div, "startAddon");
 
 export interface InputEndAddonProps extends HTMLDreamyProps<"div"> {}
 
+/**
+ * Input End Addon — addon attached to the end of the input group.
+ */
 const EndAddon = withContext(dreamy.div, "endAddon");
 
 /**
- * Input component
+ * Input component — text field for user input.
  *
- * @See Docs https://dreamy-ui.com/docs/components/input
+ * @see Docs https://dreamy-ui.com/docs/components/input
+ *
+ * @example
+ * ```tsx
+ * <Input placeholder="Email" />
+ * ```
  */
 export function Input(props: InputProps) {
     const { onChangeValue, onChange, ...restProps } = props;

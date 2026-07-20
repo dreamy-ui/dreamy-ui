@@ -32,9 +32,14 @@ export interface SpinnerProps extends BoxProps, SpinnerVariantProps {
 const StyledSpinner = dreamy("div", spinner);
 
 /**
- * Spinner indicates a loading state for a user.
+ * Spinner component — indicates a loading state.
  *
- * @See Docs https://dreamy-ui.com/docs/components/spinner
+ * @see Docs https://dreamy-ui.com/docs/components/spinner
+ *
+ * @example
+ * ```tsx
+ * <Spinner label="Loading" />
+ * ```
  */
 export function Spinner(props: SpinnerProps) {
     const { label, labelProps, speed, style, ...rest } = props;

@@ -191,6 +191,30 @@ const SizeModals = wrapLazy(
     lazy(() => import("~/src/ui/docs/components/modals").then((m) => ({ default: m.SizeModals })))
 );
 
+const BasicDrawer = wrapLazy(
+    lazy(() => import("~/src/ui/docs/components/drawers").then((m) => ({ default: m.BasicDrawer })))
+);
+const VariantDrawers = wrapLazy(
+    lazy(() =>
+        import("~/src/ui/docs/components/drawers").then((m) => ({ default: m.VariantDrawers }))
+    )
+);
+const PlacementDrawers = wrapLazy(
+    lazy(() =>
+        import("~/src/ui/docs/components/drawers").then((m) => ({ default: m.PlacementDrawers }))
+    )
+);
+const SizeDrawers = wrapLazy(
+    lazy(() => import("~/src/ui/docs/components/drawers").then((m) => ({ default: m.SizeDrawers })))
+);
+const ScrollableInsideDrawer = wrapLazy(
+    lazy(() =>
+        import("~/src/ui/docs/components/drawers").then((m) => ({
+            default: m.ScrollableInsideDrawer
+        }))
+    )
+);
+
 const ControlledPopover = wrapLazy(
     lazy(() =>
         import("~/src/ui/docs/components/popovers").then((m) => ({ default: m.ControlledPopover }))
@@ -452,17 +476,13 @@ const CustomCopySnippet = wrapLazy(
 );
 
 const TokenBreakpoints = wrapLazy(
-    lazy(() =>
-        import("./components/token-docs").then((m) => ({ default: m.TokenBreakpoints }))
-    )
+    lazy(() => import("./components/token-docs").then((m) => ({ default: m.TokenBreakpoints })))
 );
 const TokenColors = wrapLazy(
     lazy(() => import("./components/token-docs").then((m) => ({ default: m.TokenColors })))
 );
 const TokenSemanticColors = wrapLazy(
-    lazy(() =>
-        import("./components/token-docs").then((m) => ({ default: m.TokenSemanticColors }))
-    )
+    lazy(() => import("./components/token-docs").then((m) => ({ default: m.TokenSemanticColors })))
 );
 const TokenSpacings = wrapLazy(
     lazy(() => import("./components/token-docs").then((m) => ({ default: m.TokenSpacings })))
@@ -486,9 +506,7 @@ const TokenFontWeights = wrapLazy(
     lazy(() => import("./components/token-docs").then((m) => ({ default: m.TokenFontWeights })))
 );
 const TokenLetterSpacings = wrapLazy(
-    lazy(() =>
-        import("./components/token-docs").then((m) => ({ default: m.TokenLetterSpacings }))
-    )
+    lazy(() => import("./components/token-docs").then((m) => ({ default: m.TokenLetterSpacings })))
 );
 const TokenLineHeights = wrapLazy(
     lazy(() => import("./components/token-docs").then((m) => ({ default: m.TokenLineHeights })))
@@ -584,6 +602,11 @@ const DreamComponents = {
     Spinner,
     SizeModals,
     PlacementModal,
+    BasicDrawer,
+    VariantDrawers,
+    PlacementDrawers,
+    SizeDrawers,
+    ScrollableInsideDrawer,
     Stat,
     PinInput,
     AvatarGroup,

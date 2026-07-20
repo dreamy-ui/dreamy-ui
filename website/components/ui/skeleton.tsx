@@ -6,9 +6,14 @@ export interface SkeletonProps extends HTMLDreamyProps<"div">, SkeletonVariantPr
 const StyledSkeleton = dreamy("div", skeleton);
 
 /**
- * Skeleton component.
+ * Skeleton component — loading placeholder block.
  *
- * @See Docs https://dreamy-ui.com/docs/components/skeleton
+ * @see Docs https://dreamy-ui.com/docs/components/skeleton
+ *
+ * @example
+ * ```tsx
+ * <Skeleton h="4" w="full" />
+ * ```
  */
 export function Skeleton(props: SkeletonProps) {
     return <StyledSkeleton {...props} />;
@@ -23,9 +28,14 @@ export interface SkeletonTextProps extends SkeletonProps {
 }
 
 /**
- * Skeleton Text component.
+ * SkeletonText component — multi-line text loading placeholder.
  *
- * @See Docs https://dreamy-ui.com/docs/components/skeleton
+ * @see Docs https://dreamy-ui.com/docs/components/skeleton
+ *
+ * @example
+ * ```tsx
+ * <SkeletonText lines={3} />
+ * ```
  */
 export function SkeletonText(props: SkeletonTextProps) {
     const { lines = 1, ...rest } = props;

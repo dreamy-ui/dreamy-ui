@@ -6,9 +6,14 @@ import { visuallyHidden } from "styled-system/patterns";
 export interface VisuallyHiddenProps extends HTMLDreamyProps<"span"> {}
 
 /**
- * VisuallyHidden component
+ * VisuallyHidden component — hides content visually while keeping it accessible.
  *
- * @See Docs https://dreamy-ui.com/docs/components/visually-hidden
+ * @see Docs https://dreamy-ui.com/docs/components/visually-hidden
+ *
+ * @example
+ * ```tsx
+ * <VisuallyHidden>Screen reader only</VisuallyHidden>
+ * ```
  */
 export function VisuallyHidden(props: VisuallyHiddenProps) {
     const [patternProps, restProps] = splitProps(props, []);
@@ -26,9 +31,14 @@ export function VisuallyHidden(props: VisuallyHiddenProps) {
 export interface VisuallyHiddenInputProps extends HTMLDreamyProps<"input"> {}
 
 /**
- * VisuallyHiddenInput component
+ * VisuallyHiddenInput component — visually hidden form input for a11y/forms.
  *
- * @See Docs https://dreamy-ui.com/docs/components/visually-hidden
+ * @see Docs https://dreamy-ui.com/docs/components/visually-hidden
+ *
+ * @example
+ * ```tsx
+ * <VisuallyHiddenInput name="token" value={token} />
+ * ```
  */
 export function VisuallyHiddenInput(props: VisuallyHiddenInputProps) {
     const [patternProps, restProps] = splitProps(props, []);

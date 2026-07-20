@@ -6,9 +6,14 @@ import { type TextProperties, text } from "styled-system/patterns";
 export interface TextProps extends HTMLDreamyProps<"p">, TextProperties {}
 
 /**
- * Text component
+ * Text component — paragraph text with typographic styles.
  *
- * @See Docs https://dreamy-ui.com/docs/components/text
+ * @see Docs https://dreamy-ui.com/docs/components/text
+ *
+ * @example
+ * ```tsx
+ * <Text>Body copy</Text>
+ * ```
  */
 export function Text(props: TextProps) {
     const [patternProps, restProps] = splitProps(props, ["variant", "size"]);

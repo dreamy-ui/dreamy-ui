@@ -112,6 +112,22 @@ export interface DateRangePickerRootProps
     popoverProps?: Omit<Popover.PopoverProps, "positioning">;
 }
 
+/**
+ * DateRangePicker component — select a start and end date.
+ *
+ * @see Docs https://dreamy-ui.com/docs/components/date-range-picker
+ *
+ * @example
+ * ```tsx
+ * <DateRangePicker.Root>
+ *   <DateRangePicker.Input />
+ *   <DateRangePicker.Trigger />
+ *   <DateRangePicker.PopoverContent>
+ *     <DateRangePicker.Calendar />
+ *   </DateRangePicker.PopoverContent>
+ * </DateRangePicker.Root>
+ * ```
+ */
 export const Root = withProvider(function DateRangePickerRoot(props: DateRangePickerRootProps) {
     const {
         value: valueProp,
@@ -219,6 +235,9 @@ export const Root = withProvider(function DateRangePickerRoot(props: DateRangePi
 
 export interface DateRangePickerTriggerProps extends ButtonProps {}
 
+/**
+ * DateRangePicker Trigger — opens the range calendar popover.
+ */
 export const Trigger = withContext(function DateRangePickerTrigger(
     props: DateRangePickerTriggerProps
 ) {
@@ -234,6 +253,9 @@ export const Trigger = withContext(function DateRangePickerTrigger(
 
 export interface DateRangePickerInputProps extends InputGroupProps {}
 
+/**
+ * DateRangePicker Input — typed date range field.
+ */
 export const Input = withContext(function DateRangePickerInput(props: DateRangePickerInputProps) {
     const { ref: _ref, ...inputProps } = props;
     const context = useDateRangePickerContext();
@@ -264,6 +286,9 @@ export const Input = withContext(function DateRangePickerInput(props: DateRangeP
 export interface DateRangePickerPopoverProps
     extends Omit<Popover.PopoverContentProps, "transition"> {}
 
+/**
+ * DateRangePicker PopoverContent — floating panel for the calendars.
+ */
 export const PopoverContent = withContext(function DateRangePickerPopover(
     props: DateRangePickerPopoverProps
 ) {
@@ -272,6 +297,9 @@ export const PopoverContent = withContext(function DateRangePickerPopover(
 
 export interface DateRangePickerCalendarProps extends BoxProps {}
 
+/**
+ * DateRangePicker Calendar — dual/month range calendar.
+ */
 export const Calendar = withContext(function DateRangePickerCalendar(
     props: DateRangePickerCalendarProps
 ) {
@@ -400,6 +428,9 @@ export const Calendar = withContext(function DateRangePickerCalendar(
 
 export interface DateRangePickerCalendarHeaderProps extends FlexProps {}
 
+/**
+ * DateRangePicker CalendarHeader — header inside a calendar.
+ */
 export const CalendarHeader = withContext(function DateRangePickerCalendarHeader(
     props: DateRangePickerCalendarHeaderProps
 ) {
@@ -408,6 +439,9 @@ export const CalendarHeader = withContext(function DateRangePickerCalendarHeader
 
 export interface DateRangePickerCalendarTitleProps extends BoxProps {}
 
+/**
+ * DateRangePicker CalendarTitle — current month/year label.
+ */
 export const CalendarTitle = withContext(function DateRangePickerCalendarTitle(
     props: DateRangePickerCalendarTitleProps
 ) {
@@ -416,6 +450,9 @@ export const CalendarTitle = withContext(function DateRangePickerCalendarTitle(
 
 export interface DateRangePickerCalendarNavProps extends FlexProps {}
 
+/**
+ * DateRangePicker CalendarNav — previous/next navigation group.
+ */
 export const CalendarNav = withContext(function DateRangePickerCalendarNav(
     props: DateRangePickerCalendarNavProps
 ) {
@@ -424,6 +461,9 @@ export const CalendarNav = withContext(function DateRangePickerCalendarNav(
 
 export interface DateRangePickerCalendarNavButtonProps extends ButtonProps {}
 
+/**
+ * DateRangePicker CalendarNavButton — previous or next period button.
+ */
 export const CalendarNavButton = withContext(function DateRangePickerCalendarNavButton(
     props: DateRangePickerCalendarNavButtonProps
 ) {
@@ -438,6 +478,9 @@ export const CalendarNavButton = withContext(function DateRangePickerCalendarNav
 
 export interface DateRangePickerCalendarGridProps extends BoxProps {}
 
+/**
+ * DateRangePicker CalendarGrid — day-of-week and date grid.
+ */
 export const CalendarGrid = withContext(function DateRangePickerCalendarGrid(
     props: DateRangePickerCalendarGridProps
 ) {
@@ -446,6 +489,9 @@ export const CalendarGrid = withContext(function DateRangePickerCalendarGrid(
 
 export interface DateRangePickerCalendarGridHeaderProps extends BoxProps {}
 
+/**
+ * DateRangePicker CalendarGridHeader — weekday labels row.
+ */
 export const CalendarGridHeader = withContext(function DateRangePickerCalendarGridHeader(
     props: DateRangePickerCalendarGridHeaderProps
 ) {
@@ -454,6 +500,9 @@ export const CalendarGridHeader = withContext(function DateRangePickerCalendarGr
 
 export interface DateRangePickerCalendarGridHeaderCellProps extends BoxProps {}
 
+/**
+ * DateRangePicker CalendarGridHeaderCell — a weekday label cell.
+ */
 export const CalendarGridHeaderCell = withContext(function DateRangePickerCalendarGridHeaderCell(
     props: DateRangePickerCalendarGridHeaderCellProps
 ) {
@@ -462,6 +511,9 @@ export const CalendarGridHeaderCell = withContext(function DateRangePickerCalend
 
 export interface DateRangePickerCalendarGridBodyProps extends BoxProps {}
 
+/**
+ * DateRangePicker CalendarGridBody — date cells container.
+ */
 export const CalendarGridBody = withContext(function DateRangePickerCalendarGridBody(
     props: DateRangePickerCalendarGridBodyProps
 ) {
@@ -470,6 +522,9 @@ export const CalendarGridBody = withContext(function DateRangePickerCalendarGrid
 
 export interface DateRangePickerCalendarCellProps extends BoxProps {}
 
+/**
+ * DateRangePicker CalendarCell — wrapper for a calendar day.
+ */
 export const CalendarCell = withContext(function DateRangePickerCalendarCell(
     props: DateRangePickerCalendarCellProps
 ) {
@@ -478,6 +533,9 @@ export const CalendarCell = withContext(function DateRangePickerCalendarCell(
 
 export interface DateRangePickerCalendarCellButtonProps extends ButtonProps {}
 
+/**
+ * DateRangePicker CalendarCellButton — selectable day button.
+ */
 export const CalendarCellButton = withContext(function DateRangePickerCalendarCellButton(
     props: DateRangePickerCalendarCellButtonProps
 ) {
@@ -492,6 +550,9 @@ export const CalendarCellButton = withContext(function DateRangePickerCalendarCe
 
 export interface DateRangePickerRangePresetProps extends BoxProps {}
 
+/**
+ * DateRangePicker RangePreset — preset range option group.
+ */
 export const RangePreset = withContext(function DateRangePickerRangePreset(
     props: DateRangePickerRangePresetProps
 ) {
@@ -528,6 +589,9 @@ export interface DateRangePickerRangePresetButtonProps extends Omit<ButtonProps,
     value: DateRange;
 }
 
+/**
+ * DateRangePicker RangePresetButton — applies a preset range.
+ */
 export const RangePresetButton = withContext(function DateRangePickerRangePresetButton(
     props: DateRangePickerRangePresetButtonProps
 ) {
@@ -550,6 +614,9 @@ export const RangePresetButton = withContext(function DateRangePickerRangePreset
 
 export interface DateRangePickerFooterProps extends FlexProps {}
 
+/**
+ * DateRangePicker Footer — actions below the calendars.
+ */
 export const Footer = withContext(function DateRangePickerFooter(
     props: DateRangePickerFooterProps
 ) {
@@ -579,6 +646,9 @@ export const Footer = withContext(function DateRangePickerFooter(
 
 export interface DateRangePickerFooterButtonProps extends ButtonProps {}
 
+/**
+ * DateRangePicker FooterButton — footer action button.
+ */
 export const FooterButton = withContext(function DateRangePickerFooterButton(
     props: DateRangePickerFooterButtonProps
 ) {

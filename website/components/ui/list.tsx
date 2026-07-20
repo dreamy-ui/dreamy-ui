@@ -9,9 +9,17 @@ export interface ListProps extends HTMLDreamyProps<"ol">, ListVariantProps {
 const StyledList = dreamy("ol", list);
 
 /**
- * List component
+ * List component — ordered or unordered list container.
  *
- * @See Docs https://dreamy-ui.com/docs/components/list
+ * @see Docs https://dreamy-ui.com/docs/components/list
+ *
+ * @example
+ * ```tsx
+ * <List.Root>
+ *   <List.Item>First item</List.Item>
+ *   <List.Item>Second item</List.Item>
+ * </List.Root>
+ * ```
  */
 export function Root(props: ListProps) {
     const { ordered, unordered, ...rest } = props;
@@ -30,9 +38,7 @@ export function Root(props: ListProps) {
 export interface ListItemProps extends HTMLDreamyProps<"li"> {}
 
 /**
- * ListItem component
- *
- * @See Docshttps://dreamy-ui.com/docs/components/list
+ * List Item — single entry in the list.
  */
 export function Item(props: ListItemProps) {
     return <dreamy.li {...props} />;

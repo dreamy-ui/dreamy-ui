@@ -1,0 +1,227 @@
+---
+title: Drawer
+description: A slide-over panel for secondary content, forms, and navigation.
+isServerComponent: false
+source: /components/drawer/index.tsx
+themeSource: /components/drawer/drawer.ts
+---
+
+## Installation
+
+```bash
+pnpm dreamy add drawer
+```
+
+## Usage
+
+<Wrapper>
+	<BasicDrawer />
+</Wrapper>
+
+```tsx
+export default function BasicDrawer() {
+    const { isOpen, onClose, onOpen } = useControllable();
+
+    return (
+        <>
+            <Button variant={"primary"} onClick={onOpen}>
+                Open Drawer
+            </Button>
+
+            <Drawer.Root isOpen={isOpen} onClose={onClose}>
+                <Drawer.Overlay />
+                <Drawer.Content>
+                    <Drawer.Header>Drawer Header</Drawer.Header>
+                    <Drawer.CloseButton />
+                    <Drawer.Body>Drawer Body</Drawer.Body>
+                    <Drawer.Footer>
+                        <Button onClick={onClose}>Close</Button>
+                    </Drawer.Footer>
+                </Drawer.Content>
+            </Drawer.Root>
+        </>
+    );
+}
+```
+
+### Automatic overlay stacking
+
+Drawer uses the shared [Portal](/docs/components/portal) stack at the `modal` layer (1400), same as [Modal](/docs/components/modal). Portalled controls inside it stay above the Drawer automatically.
+
+### Variants
+
+Drawer has two visual variants. The default is `inset`, which floats the panel with spacing from the viewport and rounded corners. Use `simple` for a flush panel that touches the screen edges.
+
+<Wrapper>
+	<VariantDrawers />
+</Wrapper>
+
+```tsx
+export function VariantDrawers() {
+    const variants = ["inset", "simple"] as const;
+
+    return (
+        <Flex gap={2} wrapped>
+            {variants.map((variant) => (
+                <DrawerVariant key={variant} variant={variant} />
+            ))}
+        </Flex>
+    );
+}
+
+function DrawerVariant({ variant }: { variant: "inset" | "simple" }) {
+    const { isOpen, onClose, onOpen } = useControllable();
+
+    return (
+        <>
+            <Button variant={"primary"} onClick={onOpen}>
+                Open {variant} Drawer
+            </Button>
+
+            <Drawer.Root isOpen={isOpen} onClose={onClose} variant={variant}>
+                <Drawer.Overlay />
+                <Drawer.Content>
+                    <Drawer.Header>{variant} Drawer</Drawer.Header>
+                    <Drawer.CloseButton />
+                    <Drawer.Body>Drawer body</Drawer.Body>
+                    <Drawer.Footer>
+                        <Button onClick={onClose}>Close</Button>
+                    </Drawer.Footer>
+                </Drawer.Content>
+            </Drawer.Root>
+        </>
+    );
+}
+```
+
+### Placement
+
+By default the drawer slides in from the `right`. You can also place it on the `left`, `top`, or `bottom`.
+
+<Wrapper>
+	<PlacementDrawers />
+</Wrapper>
+
+```tsx
+export function PlacementDrawers() {
+    const placements = ["right", "left", "top", "bottom"] as const;
+
+    return (
+        <Flex gap={2} wrapped>
+            {placements.map((placement) => (
+                <DrawerPlacement key={placement} placement={placement} />
+            ))}
+        </Flex>
+    );
+}
+
+function DrawerPlacement({
+    placement
+}: {
+    placement: "right" | "left" | "top" | "bottom";
+}) {
+    const { isOpen, onClose, onOpen } = useControllable();
+
+    return (
+        <>
+            <Button variant={"primary"} onClick={onOpen}>
+                Open {placement} Drawer
+            </Button>
+
+            <Drawer.Root isOpen={isOpen} onClose={onClose} placement={placement}>
+                <Drawer.Overlay />
+                <Drawer.Content>
+                    <Drawer.Header>{placement} Drawer</Drawer.Header>
+                    <Drawer.CloseButton />
+                    <Drawer.Body>Slides in from the {placement}.</Drawer.Body>
+                    <Drawer.Footer>
+                        <Button onClick={onClose}>Close</Button>
+                    </Drawer.Footer>
+                </Drawer.Content>
+            </Drawer.Root>
+        </>
+    );
+}
+```
+
+### Sizes
+
+Control the drawer width (or height for top/bottom placement) with the `size` prop.
+
+<Wrapper>
+	<SizeDrawers />
+</Wrapper>
+
+```tsx
+export function SizeDrawers() {
+    const sizes = ["xs", "sm", "md", "lg", "xl", "2xl", "full"] as const;
+
+    return (
+        <Flex gap={2} wrapped>
+            {sizes.map((size) => (
+                <DrawerSize key={size} size={size} />
+            ))}
+        </Flex>
+    );
+}
+
+function DrawerSize({ size }: { size: "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "full" }) {
+    const { isOpen, onClose, onOpen } = useControllable();
+
+    return (
+        <>
+            <Button variant={"primary"} onClick={onOpen}>
+                Open {size} Drawer
+            </Button>
+
+            <Drawer.Root isOpen={isOpen} onClose={onClose} size={size}>
+                <Drawer.Overlay />
+                <Drawer.Content>
+                    <Drawer.Header>{size} Drawer</Drawer.Header>
+                    <Drawer.CloseButton />
+                    <Drawer.Body>This is a {size} drawer!</Drawer.Body>
+                    <Drawer.Footer>
+                        <Button onClick={onClose}>Close</Button>
+                    </Drawer.Footer>
+                </Drawer.Content>
+            </Drawer.Root>
+        </>
+    );
+}
+```
+
+### Scroll behavior
+
+Use `scrollBehavior="inside"` (the default) so long content scrolls within the drawer body while the header and footer stay fixed.
+
+<Wrapper>
+	<ScrollableInsideDrawer />
+</Wrapper>
+
+```tsx
+export function ScrollableInsideDrawer() {
+    const { isOpen, onClose, onOpen } = useControllable();
+
+    return (
+        <>
+            <Button variant={"primary"} onClick={onOpen}>
+                Open Drawer
+            </Button>
+
+            <Drawer.Root isOpen={isOpen} onClose={onClose} scrollBehavior="inside" size="lg">
+                <Drawer.Overlay />
+                <Drawer.Content>
+                    <Drawer.Header>Drawer Header</Drawer.Header>
+                    <Drawer.CloseButton />
+                    <Drawer.Body>
+                        {/* long content */}
+                    </Drawer.Body>
+                    <Drawer.Footer>
+                        <Button onClick={onClose}>Close</Button>
+                    </Drawer.Footer>
+                </Drawer.Content>
+            </Drawer.Root>
+        </>
+    );
+}
+```

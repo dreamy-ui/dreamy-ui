@@ -455,22 +455,14 @@ const fruits = [
 ];
 
 export function SelectInModal() {
-    const [isOpen, setIsOpen] = useState(false);
-
-    function openModal() {
-        setIsOpen(true);
-    }
-
-    function closeModal() {
-        setIsOpen(false);
-    }
+    const { isOpen, onOpen, onClose } = useControllable();
 
     return (
         <>
-            <Button onClick={openModal} variant="primary">
+            <Button onClick={onOpen} variant="primary">
                 Open modal
             </Button>
-            <Modal.Root isOpen={isOpen} onClose={closeModal}>
+            <Modal.Root isOpen={isOpen} onClose={onClose}>
                 <Modal.Overlay />
                 <Modal.Content>
                     <Modal.Header>Select in a modal</Modal.Header>
@@ -486,7 +478,7 @@ export function SelectInModal() {
                         </Select.Root>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button onClick={closeModal}>Close</Button>
+                        <Button onClick={onClose}>Close</Button>
                     </Modal.Footer>
                 </Modal.Content>
             </Modal.Root>

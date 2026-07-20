@@ -4,7 +4,7 @@ export const menu = defineSlotRecipe({
     className: "menu",
     description:
         "A dropdown menu for action lists with items, separators, and keyboard navigation. plain pads the content and rounds each item; stretched removes inner padding so items span the full dropdown width edge to edge.",
-    jsx: ["Menu.Root", "Menu.Trigger", "Menu.Content", "Menu.Item"],
+    jsx: ["Menu.Root", "Menu.Trigger", "Menu.TriggerItem", "Menu.Content", "Menu.Item"],
     slots: ["root", "content", "item", "control"],
     base: {
         root: {

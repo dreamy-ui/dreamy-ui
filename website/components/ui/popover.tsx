@@ -52,9 +52,21 @@ export interface PopoverProps extends UsePopoverProps {
 }
 
 /**
- * Popover component
+ * Popover component — floating content anchored to a trigger element.
  *
- * @See Docs https://dreamy-ui.com/docs/components/popover
+ * @see Docs https://dreamy-ui.com/docs/components/popover
+ *
+ * @example
+ * ```tsx
+ * <Popover.Root>
+ *   <Popover.Trigger>
+ *     <Button>Open</Button>
+ *   </Popover.Trigger>
+ *   <Popover.Content>
+ *     <Popover.Body>Content</Popover.Body>
+ *   </Popover.Content>
+ * </Popover.Root>
+ * ```
  */
 export const Root = withRootProvider(function PopoverRoot(props: PopoverProps) {
     const { children, hasArrow, usePortal = true, portalProps, ...rest } = props;
@@ -81,6 +93,9 @@ export const Root = withRootProvider(function PopoverRoot(props: PopoverProps) {
 
 export interface PopoverArrowProps extends HTMLDreamyProps<"div"> {}
 
+/**
+ * Popover Arrow — pointer connecting the popover to its anchor.
+ */
 export function Arrow(props: PopoverArrowProps) {
     const { getArrowProps, getArrowInnerProps } = usePopoverContext();
 
@@ -123,6 +138,9 @@ export interface PopoverContentProps extends PopoverTransitionProps {
     motionProps?: Omit<MotionBoxProps, "children">;
 }
 
+/**
+ * Popover Content — the floating panel rendered in a portal.
+ */
 export const Content = withContext(function PopoverContent(props: PopoverContentProps) {
     const { rootProps, motionProps, ...contentProps } = props;
 
@@ -161,6 +179,9 @@ export const Content = withContext(function PopoverContent(props: PopoverContent
 
 export interface PopoverHeaderProps extends HTMLDreamyProps<"header"> {}
 
+/**
+ * Popover Header — title area at the top of the popover.
+ */
 export const Header = withContext(function PopoverHeader(props: PopoverHeaderProps) {
     const { children } = props;
     const { getHeaderProps } = usePopoverContext();
@@ -186,6 +207,9 @@ export const Header = withContext(function PopoverHeader(props: PopoverHeaderPro
 
 export interface PopoverBodyProps extends HTMLDreamyProps<"div"> {}
 
+/**
+ * Popover Body — main content area of the popover.
+ */
 export const Body = withContext(function PopoverHeader(props: PopoverBodyProps) {
     const { getBodyProps } = usePopoverContext();
 
@@ -194,6 +218,9 @@ export const Body = withContext(function PopoverHeader(props: PopoverBodyProps) 
 
 export interface PopoverFooterProps extends BoxProps {}
 
+/**
+ * Popover Footer — action area at the bottom of the popover.
+ */
 export const Footer = withContext(function PopoverFooter(props: PopoverFooterProps) {
     return (
         <Box
@@ -205,6 +232,9 @@ export const Footer = withContext(function PopoverFooter(props: PopoverFooterPro
 
 export interface PopoverCloseButtonProps extends CloseButtonProps {}
 
+/**
+ * Popover Close Button — dismisses the popover.
+ */
 export const CloseButton = withContext(function PopoverCloseButton(props: PopoverCloseButtonProps) {
     const { onClose } = usePopoverContext();
 
@@ -218,8 +248,7 @@ export const CloseButton = withContext(function PopoverCloseButton(props: Popove
 }, "close");
 
 /**
- * PopoverAnchor is element that is used as the positioning reference
- * for the popover.
+ * Popover Anchor — positioning reference element for the popover.
  */
 export function Anchor(props: React.PropsWithChildren<{}>) {
     const child = Children.only(props.children) as React.ReactElement<Record<string, unknown>> & {
@@ -231,8 +260,7 @@ export function Anchor(props: React.PropsWithChildren<{}>) {
 }
 
 /**
- * PopoverTrigger opens the popover's content. It must be an interactive element
- * such as `button` or `a`.
+ * Popover Trigger — opens the popover when activated.
  */
 export function Trigger(props: { children: React.ReactNode }) {
     const child = Children.only(props.children) as React.ReactElement<Record<string, unknown>> & {

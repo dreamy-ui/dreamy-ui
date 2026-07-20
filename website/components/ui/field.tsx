@@ -17,6 +17,9 @@ export interface FieldLabelProps extends HTMLDreamyProps<"label"> {
     optionalIndicator?: React.ReactNode;
 }
 
+/**
+ * Field Label — accessible label for the form control.
+ */
 export function Label(props: FieldLabelProps) {
     const {
         children,
@@ -42,8 +45,7 @@ export function Label(props: FieldLabelProps) {
 export interface RequiredIndicatorProps extends HTMLDreamyProps<"span"> {}
 
 /**
- * Used to show a "required" text or an asterisks (*) to indicate that
- * a field is required.
+ * Field Required Indicator — marks the field as required.
  */
 export function RequiredIndicator(props: RequiredIndicatorProps) {
     const field = useFieldContext();
@@ -61,6 +63,9 @@ export function RequiredIndicator(props: RequiredIndicatorProps) {
 
 export interface FieldErrorProps extends HTMLDreamyProps<"label"> {}
 
+/**
+ * Field Error — validation message shown when the field is invalid.
+ */
 export function Error(props: FieldErrorProps) {
     const field = useFieldContext();
 
@@ -75,8 +80,7 @@ export function Error(props: FieldErrorProps) {
 }
 
 /**
- * Used as the visual indicator that a field is invalid or
- * a field has incorrect values.
+ * Field Error Icon — visual indicator that the field is invalid.
  */
 export function ErrorIcon(props: IconProps) {
     const field = useFieldContext();
@@ -107,6 +111,9 @@ export function ErrorIcon(props: IconProps) {
 
 export interface FieldHintProps extends HTMLDreamyProps<"div"> {}
 
+/**
+ * Field Hint — helper text shown when the field is valid.
+ */
 export function Hint(props: FieldHintProps) {
     const field = useFieldContext();
 
@@ -144,9 +151,16 @@ export interface FieldProps extends HTMLDreamyProps<"div">, FieldContext, FieldV
 const StyledField = dreamy("div", field);
 
 /**
- * Field component
+ * Field component — wraps a control with label, hint, and error messaging.
  *
- * @See Docs https://dreamy-ui.com/docs/components/field
+ * @see Docs https://dreamy-ui.com/docs/components/field
+ *
+ * @example
+ * ```tsx
+ * <Field.Root label="Email">
+ *   <Input type="email" />
+ * </Field.Root>
+ * ```
  */
 export function Root({ children, label, hint, error, ...props }: FieldProps) {
     const { getRootProps, htmlProps: _, ...context } = useFieldProvider(props);

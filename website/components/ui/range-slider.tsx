@@ -40,9 +40,20 @@ const SIZE_CONFIG = {
 } as const;
 
 /**
- * RangeSlider component
+ * Range Slider component — select a numeric range between two values.
  *
- * @See Docs https://dreamy-ui.com/docs/components/range-slider
+ * @see Docs https://dreamy-ui.com/docs/components/range-slider
+ *
+ * @example
+ * ```tsx
+ * <RangeSlider.Root defaultValue={[25, 75]}>
+ *   <RangeSlider.Track>
+ *     <RangeSlider.FilledTrack />
+ *   </RangeSlider.Track>
+ *   <RangeSlider.Thumb index={0} />
+ *   <RangeSlider.Thumb index={1} />
+ * </RangeSlider.Root>
+ * ```
  */
 export const Root = withProvider(function Component(props: RangeSliderProps) {
     const { size = "md", orientation = "horizontal", focusThumbOnChange, ref, ...restProps } =
@@ -79,6 +90,9 @@ export const Root = withProvider(function Component(props: RangeSliderProps) {
 
 export interface RangeSliderTrackProps extends HTMLDreamyProps<"div"> {}
 
+/**
+ * Range Slider Track — the full track behind the filled range.
+ */
 export const Track = withContext(function Component(props: RangeSliderTrackProps) {
     const { getTrackProps } = useRangeSliderContext();
 
@@ -87,6 +101,9 @@ export const Track = withContext(function Component(props: RangeSliderTrackProps
 
 export interface RangeSliderFilledTrackProps extends HTMLDreamyProps<"div"> {}
 
+/**
+ * Range Slider Filled Track — the selected portion of the track.
+ */
 export const FilledTrack = withContext(function Component(props: RangeSliderFilledTrackProps) {
     const { getInnerTrackProps } = useRangeSliderContext();
     return <Box {...getInnerTrackProps(props)} />;
@@ -99,6 +116,9 @@ export interface RangeSliderThumbProps extends HTMLDreamyProps<"div"> {
     index: 0 | 1;
 }
 
+/**
+ * Range Slider Thumb — draggable handle for a range endpoint.
+ */
 export const Thumb = withContext(function Component(props: RangeSliderThumbProps) {
     const { index, ...rest } = props;
     const { getThumbProps } = useRangeSliderContext();
@@ -110,6 +130,9 @@ export interface RangeSliderMarkProps extends HTMLDreamyProps<"div"> {
     value: number;
 }
 
+/**
+ * Range Slider Mark — label at a specific value on the track.
+ */
 export const Mark = withContext(function Component(props: RangeSliderMarkProps) {
     const { getMarkerProps } = useRangeSliderContext();
 

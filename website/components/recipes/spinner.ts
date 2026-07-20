@@ -13,7 +13,7 @@ export const spinner = defineRecipe({
     description:
         "A dual-ring loading spinner for indicating async operations in buttons or pages. Two rotating borders in currentColor (solid outer, dotted inner) — only size changes dimensions and border width.",
     staticCss: ["*"],
-    jsx: ["Spinner", "Button"],
+    jsx: ["Spinner", "Button", "Toast"],
     base: parts({
         root: {
             display: "inline-flex",

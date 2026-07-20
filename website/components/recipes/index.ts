@@ -12,6 +12,7 @@ import { checkbox } from "./checkbox";
 import { collapse } from "./collapse";
 import { datePicker } from "./date-picker";
 import { dateRangePicker } from "./date-range-picker";
+import { drawer } from "./drawer";
 import { editable } from "./editable";
 import { emptyState } from "./empty-state";
 import { field } from "./field";
@@ -64,6 +65,7 @@ export const recipes = {
     collapse,
     datePicker,
     dateRangePicker,
+    drawer,
     editable,
     emptyState,
     field,

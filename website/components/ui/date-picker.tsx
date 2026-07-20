@@ -202,6 +202,24 @@ export interface DatePickerRootProps
     popoverProps?: Omit<Popover.PopoverProps, "positioning">;
 }
 
+/**
+ * DatePicker component — select a single date from a calendar.
+ *
+ * @see Docs https://dreamy-ui.com/docs/components/date-picker
+ *
+ * @example
+ * ```tsx
+ * <DatePicker.Root>
+ *   <DatePicker.Control>
+ *     <DatePicker.Input />
+ *     <DatePicker.Trigger />
+ *   </DatePicker.Control>
+ *   <DatePicker.Content>
+ *     <DatePicker.Calendar />
+ *   </DatePicker.Content>
+ * </DatePicker.Root>
+ * ```
+ */
 export const Root = withProvider(
     function DatePickerRoot(props: DatePickerRootProps) {
         const {
@@ -376,6 +394,9 @@ export const Root = withProvider(
 
 export interface DatePickerTriggerProps extends ButtonProps {}
 
+/**
+ * DatePicker Trigger — opens the calendar popover.
+ */
 export const Trigger = withContext(function DatePickerTrigger(props: DatePickerTriggerProps) {
     const context = useDatePickerContext();
     const size = getInheritedButtonSize(context.size);
@@ -403,6 +424,9 @@ export interface DatePickerInputProps extends InputProps {
     endAddonProps?: InputEndAddonProps;
 }
 
+/**
+ * DatePicker Input — typed date field.
+ */
 export const Input = withContext(function DatePickerInput(props: DatePickerInputProps) {
     const { ref: _ref, inputGroupProps, endAddonProps, ...inputProps } = props;
     const context = useDatePickerContext();
@@ -440,6 +464,9 @@ export const Input = withContext(function DatePickerInput(props: DatePickerInput
 
 export interface DatePickerContentProps extends Omit<Popover.PopoverContentProps, "transition"> {}
 
+/**
+ * DatePicker Content — popover panel for the calendar.
+ */
 export const Content = withContext(function DatePickerContent(props: DatePickerContentProps) {
     const { onAnimationComplete, ...rest } = props;
     const context = useDatePickerContext();
@@ -462,6 +489,9 @@ export interface DatePickerControlProps extends FlexProps {
     todayButtonProps?: ButtonProps;
 }
 
+/**
+ * DatePicker Control — input + trigger wrapper.
+ */
 export const Control = withContext(function DatePickerControl(props: DatePickerControlProps) {
     const { inputProps, todayButtonProps, ...rest } = props;
     const context = useDatePickerContext();
@@ -579,6 +609,9 @@ export const Control = withContext(function DatePickerControl(props: DatePickerC
 
 export interface DatePickerNavProps extends FlexProps {}
 
+/**
+ * DatePicker Nav — month/year navigation controls.
+ */
 export const Nav = withContext(function DatePickerNav(props: DatePickerNavProps) {
     const { calendarView, setCalendarView, size: ctxSize } = useDatePickerContext();
     const inheritedSize = getInheritedButtonSize(ctxSize);
@@ -611,6 +644,9 @@ export interface DatePickerHeaderProps extends Omit<FlexProps, "direction"> {
     titleProps?: DatePickerCalendarTitleProps;
 }
 
+/**
+ * DatePicker Header — calendar header area.
+ */
 export const Header = withContext(function DatePickerHeader(props: DatePickerHeaderProps) {
     const { previousButtonProps, nextButtonProps, titleProps, ...rest } = props;
     const context = useDatePickerContext();
@@ -1210,6 +1246,9 @@ function YearCalendarView() {
 
 export interface DatePickerCalendarProps extends BoxProps {}
 
+/**
+ * DatePicker Calendar — month grid and selection UI.
+ */
 export const Calendar = withContext(function DatePickerCalendar(props: DatePickerCalendarProps) {
     const { calendarView, hasFooter } = useDatePickerContext();
 
@@ -1227,6 +1266,9 @@ export const Calendar = withContext(function DatePickerCalendar(props: DatePicke
 
 export interface DatePickerCalendarHeaderProps extends Omit<FlexProps, "direction"> {}
 
+/**
+ * DatePicker CalendarHeader — header inside the calendar.
+ */
 export const CalendarHeader = withContext(function DatePickerCalendarHeader(
     props: DatePickerCalendarHeaderProps
 ) {
@@ -1235,6 +1277,9 @@ export const CalendarHeader = withContext(function DatePickerCalendarHeader(
 
 export interface DatePickerCalendarTitleProps extends BoxProps {}
 
+/**
+ * DatePicker CalendarTitle — current month/year label.
+ */
 export const CalendarTitle = withContext(function DatePickerCalendarTitle(
     props: DatePickerCalendarTitleProps
 ) {
@@ -1243,6 +1288,9 @@ export const CalendarTitle = withContext(function DatePickerCalendarTitle(
 
 export interface DatePickerCalendarNavProps extends FlexProps {}
 
+/**
+ * DatePicker CalendarNav — previous/next navigation group.
+ */
 export const CalendarNav = withContext(function DatePickerCalendarNav(
     props: DatePickerCalendarNavProps
 ) {
@@ -1257,6 +1305,9 @@ const sizeMap = {
     lg: "md"
 } as const;
 
+/**
+ * DatePicker CalendarNavButton — previous or next period button.
+ */
 export const CalendarNavButton = withContext(function DatePickerCalendarNavButton(
     props: DatePickerCalendarNavButtonProps
 ) {
@@ -1274,6 +1325,9 @@ export const CalendarNavButton = withContext(function DatePickerCalendarNavButto
 
 export interface DatePickerCalendarGridProps extends BoxProps {}
 
+/**
+ * DatePicker CalendarGrid — day-of-week and date grid.
+ */
 export const CalendarGrid = withContext(function DatePickerCalendarGrid(
     props: DatePickerCalendarGridProps
 ) {
@@ -1282,6 +1336,9 @@ export const CalendarGrid = withContext(function DatePickerCalendarGrid(
 
 export interface DatePickerCalendarGridHeaderProps extends BoxProps {}
 
+/**
+ * DatePicker CalendarGridHeader — weekday labels row.
+ */
 export const CalendarGridHeader = withContext(function DatePickerCalendarGridHeader(
     props: DatePickerCalendarGridHeaderProps
 ) {
@@ -1290,6 +1347,9 @@ export const CalendarGridHeader = withContext(function DatePickerCalendarGridHea
 
 export interface DatePickerCalendarGridHeaderCellProps extends BoxProps {}
 
+/**
+ * DatePicker CalendarGridHeaderCell — a weekday label cell.
+ */
 export const CalendarGridHeaderCell = withContext(function DatePickerCalendarGridHeaderCell(
     props: DatePickerCalendarGridHeaderCellProps
 ) {
@@ -1298,18 +1358,27 @@ export const CalendarGridHeaderCell = withContext(function DatePickerCalendarGri
 
 export interface DatePickerCalendarGridBodyProps extends BoxProps {}
 
+/**
+ * DatePicker CalendarGridBody — date cells container.
+ */
 export const CalendarGridBody = withContext(function DatePickerCalendarGridBody(
     props: DatePickerCalendarGridBodyProps
 ) {
     return <Box {...props} />;
 }, "calendarGridBody");
 
+/**
+ * DatePicker SelectionGrid — year/month selection grid.
+ */
 export const SelectionGrid = withContext(function DatePickerSelectionGrid(props: BoxProps) {
     return <dreamy.div {...props} />;
 }, "selectionGrid");
 
 export interface DatePickerCalendarCellProps extends BoxProps {}
 
+/**
+ * DatePicker CalendarCell — wrapper for a calendar day.
+ */
 export const CalendarCell = withContext(function DatePickerCalendarCell(
     props: DatePickerCalendarCellProps
 ) {
@@ -1320,6 +1389,9 @@ export interface DatePickerCalendarCellButtonProps extends ButtonProps {
     isSelected?: boolean;
 }
 
+/**
+ * DatePicker CalendarCellButton — selectable day button.
+ */
 export const CalendarCellButton = withContext(function DatePickerCalendarCellButton(
     props: DatePickerCalendarCellButtonProps
 ) {
@@ -1354,6 +1426,9 @@ export interface DatePickerFooterProps extends Omit<FlexProps, "direction"> {
     submitButtonProps?: DatePickerFooterButtonProps;
 }
 
+/**
+ * DatePicker Footer — actions below the calendar.
+ */
 export const Footer = withContext(function DatePickerFooter(props: DatePickerFooterProps) {
     const { cancelButtonProps, submitButtonProps, ...rest } = props;
     const context = useDatePickerContext();
@@ -1391,6 +1466,9 @@ export const Footer = withContext(function DatePickerFooter(props: DatePickerFoo
 
 export interface DatePickerFooterButtonProps extends ButtonProps {}
 
+/**
+ * DatePicker FooterButton — footer action button.
+ */
 export const FooterButton = withContext(function DatePickerFooterButton(
     props: DatePickerFooterButtonProps
 ) {
@@ -1412,6 +1490,9 @@ export interface DatePickerAIOProps extends DatePickerRootProps {
     footerProps?: DatePickerFooterProps;
 }
 
+/**
+ * DatePicker AIO — all-in-one composed date picker.
+ */
 export function AIO(props: DatePickerAIOProps) {
     const { inputProps, contentProps, headerProps, calendarProps, footerProps, ...rootProps } =
         props;

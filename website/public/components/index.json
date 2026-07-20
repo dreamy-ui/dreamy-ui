@@ -255,6 +255,25 @@
   },
   {
     "type": "component",
+    "id": "drawer",
+    "file": "drawer.tsx",
+    "component": "Drawer",
+    "npmDependencies": [],
+    "fileDependencies": [
+      "./box",
+      "./close-button",
+      "./flex",
+      "./heading",
+      "./motion"
+    ],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "drawer"
+    ]
+  },
+  {
+    "type": "component",
     "id": "editable",
     "file": "editable.tsx",
     "component": "Editable",
