@@ -1,6 +1,6 @@
 {
 	"name": "next",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"private": true,
 	"scripts": {
 		"dev": "next dev",
@@ -13,7 +13,7 @@
 		"@dreamy-ui/panda-preset": "workspace:*",
 		"@dreamy-ui/react": "workspace:*",
 		"motion": "^12.42.2",
-		"next": "16.2.10",
+		"next": "0.1.1",
 		"react": "19.2.4",
 		"react-dom": "19.2.4"
 	},
@@ -30,6 +30,12 @@
 		"tailwindcss": "^4",
 		"typescript": "^5"
 	},
-	"ignoreScripts": ["sharp", "unrs-resolver"],
-	"trustedDependencies": ["sharp", "unrs-resolver"]
+	"ignoreScripts": [
+		"sharp",
+		"unrs-resolver"
+	],
+	"trustedDependencies": [
+		"sharp",
+		"unrs-resolver"
+	]
 }

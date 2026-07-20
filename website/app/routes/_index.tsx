@@ -1,9 +1,10 @@
+import { readFile } from "node:fs/promises";
 import { Flex } from "@/ui";
 import { Grid } from "@/ui";
 import { data } from "react-router";
 import { CACHE_DURATION, CacheHeaders, cachified } from "~/src/.server/cache";
 import { getLandingPageCodes } from "~/src/.server/codes";
-import { daysToMs, hourToMs } from "~/src/.server/docs";
+import { hourToMs } from "~/src/.server/docs";
 import { env } from "~/src/.server/env";
 import { getGithubStars } from "~/src/.server/github";
 import BuiltFor from "~/src/ui/pages/landing/BuiltFor";
@@ -88,10 +89,14 @@ export async function loader() {
         })
     ]);
 
+    const packageJson = await readFile("package.json", "utf-8");
+    const version = JSON.parse(packageJson as string).version || "2";
+
     return data(
         {
             ...codes,
-            githubStars
+            githubStars,
+            version
         },
         {
             headers: CacheHeaders.cache(CACHE_DURATION.DEFAULT, undefined, true)

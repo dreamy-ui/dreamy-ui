@@ -8,10 +8,13 @@ import { Text } from "@/ui";
 import { BsDiscord } from "react-icons/bs";
 import { IoArrowForward } from "react-icons/io5";
 import { MdOutlineCloud } from "react-icons/md";
-import { Link } from "react-router";
+import { Link, useLoaderData } from "react-router";
+import type { Route } from "rr/app/routes/+types/_index";
 import { LandingSnippet } from "./LandingSnippet";
 
 export default function Main() {
+    const { version } = useLoaderData<Route.ComponentProps["loaderData"]>();
+
     return (
         <Flex
             col
@@ -35,7 +38,7 @@ export default function Main() {
                         as={MdOutlineCloud}
                         boxSize={"4"}
                     />
-                    V2.2 is here with full AI coverage
+                    V{version} is here with full AI coverage
                 </Badge>
 
                 <Flex

@@ -1,5 +1,11 @@
 # @dreamy-ui/system
 
+## 2.1.3
+
+### Patch Changes
+
+-   Add Drawer component & minor fixes
+
 ## 2.1.2
 
 ### Patch Changes
