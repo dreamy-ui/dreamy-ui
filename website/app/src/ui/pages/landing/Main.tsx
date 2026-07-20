@@ -35,7 +35,7 @@ export default function Main() {
                         as={MdOutlineCloud}
                         boxSize={"4"}
                     />
-                    V2 is here with React Server Components support
+                    V2.2 is here with full AI coverage
                 </Badge>
 
                 <Flex

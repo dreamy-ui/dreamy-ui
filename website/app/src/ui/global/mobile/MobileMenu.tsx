@@ -66,7 +66,7 @@ export default function MobileMenu({ isOpen, setIsOpen }: Props) {
                         base: "white",
                         _dark: "bg"
                     }}
-                    borderLeft={"1"}
+                    borderLeft={"default"}
                     flexDir={"column"}
                     gap={10}
                     h="100vh"
