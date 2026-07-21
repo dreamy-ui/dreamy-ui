@@ -1,5 +1,13 @@
 # @dreamy-ui/registry
 
+## 2.1.4
+
+### Patch Changes
+
+-   Updated dependencies
+    -   @dreamy-ui/panda-preset@2.1.4
+    -   @dreamy-ui/react@2.1.4
+
 ## 2.1.3
 
 ### Patch Changes

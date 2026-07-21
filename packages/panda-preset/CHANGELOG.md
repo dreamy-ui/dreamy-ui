@@ -1,5 +1,11 @@
 # @dreamy-ui/system
 
+## 2.1.4
+
+### Patch Changes
+
+-   fix REGISTRY_URL in cli
+
 ## 2.1.3
 
 ### Patch Changes

@@ -7,13 +7,13 @@
 			"outputs": ["dist/**"]
 		},
 		"build:dev": {
-			"dependsOn": ["^build"],
+			"dependsOn": ["^build:dev"],
 			"inputs": ["$TURBO_DEFAULT$", ".env*"],
 			"outputs": ["dist/**"],
 			"env": ["NODE_ENV"]
 		},
 		"build:production": {
-			"dependsOn": ["^build"],
+			"dependsOn": ["^build:production"],
 			"inputs": ["$TURBO_DEFAULT$", ".env*"],
 			"outputs": ["dist/**"],
 			"env": ["NODE_ENV"]
