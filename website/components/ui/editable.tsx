@@ -11,14 +11,15 @@ import {
 } from "@dreamy-ui/react";
 
 import { type HTMLDreamyProps, createStyleContext, dreamy } from "styled-system/jsx";
-import { editable } from "styled-system/recipes";
+import { type EditableVariantProps, editable } from "styled-system/recipes";
 import { Box } from "./box";
 
 type RenderProps = Pick<UseEditableReturn, "isEditing" | "onSubmit" | "onCancel" | "onEdit">;
 
 export interface EditableProps
     extends UseEditableProps,
-        Omit<HTMLDreamyProps<"div">, keyof UseEditableProps | "children"> {
+        Omit<HTMLDreamyProps<"div">, keyof UseEditableProps | "children">,
+        EditableVariantProps {
     children?: MaybeRenderProp<RenderProps>;
 }
 

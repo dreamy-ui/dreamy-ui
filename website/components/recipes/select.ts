@@ -28,7 +28,6 @@ export const select = defineSlotRecipe({
             display: "flex",
             flexDirection: "column",
             gap: "1.5",
-            width: "auto",
             position: "relative"
         },
         trigger: {
@@ -38,7 +37,6 @@ export const select = defineSlotRecipe({
             cursor: "pointer",
             justifyContent: "flex-start",
             gap: 4,
-            width: "full",
             h: "var(--select-trigger-height)",
             minH: "var(--select-trigger-height)",
             px: "var(--select-trigger-padding-x)",

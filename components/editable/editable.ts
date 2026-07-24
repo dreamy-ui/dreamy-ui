@@ -3,7 +3,7 @@ import { defineSlotRecipe } from "@pandacss/dev";
 export const editable = defineSlotRecipe({
     className: "editable",
     description:
-        "An inline editable field that toggles between read-only preview and edit mode with submit/cancel actions. Input gets a rounded focus ring on edit; action buttons appear contextually based on editable state — no visual variants beyond size.",
+        "An inline editable field that toggles between read-only preview and edit mode with submit/cancel actions. plain is text-only with no hover affordance; soft uses a rounded l1 preview that shows an alpha background on hover/focus to signal editability.",
     slots: ["root", "preview", "input", "editButton", "submitButton", "cancelButton"],
     jsx: [
         "Editable.Root",
@@ -70,5 +70,39 @@ export const editable = defineSlotRecipe({
                 color: "fg"
             }
         }
+    },
+    variants: {
+        variant: {
+            plain: {},
+            soft: {
+                preview: {
+                    rounded: "l1",
+                    px: 1,
+                    py: 0.5,
+                    transition: "background-color {durations.normal} {easings.ease-in-out}",
+                    _hover: {
+                        bg: "alpha.50"
+                    },
+                    _focusVisible: {
+                        bg: "alpha.50",
+                        outline: "none"
+                    },
+                    "&[aria-disabled=true]": {
+                        cursor: "not-allowed",
+                        _hover: {
+                            bg: "transparent"
+                        }
+                    }
+                },
+                input: {
+                    rounded: "l1",
+                    px: 1,
+                    py: 0.5
+                }
+            }
+        }
+    },
+    defaultVariants: {
+        variant: "plain"
     }
 });

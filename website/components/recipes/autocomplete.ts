@@ -1,5 +1,5 @@
 import { getColorSchemes } from "@dreamy-ui/panda-preset";
-import { defineSlotRecipe, type SystemStyleObject } from "@pandacss/dev";
+import { type SystemStyleObject, defineSlotRecipe } from "@pandacss/dev";
 
 export const autocomplete = defineSlotRecipe({
     className: "autocomplete",
@@ -30,7 +30,6 @@ export const autocomplete = defineSlotRecipe({
             display: "flex",
             flexDirection: "column",
             gap: "1.5",
-            width: "auto",
             position: "relative"
         },
         // Structural wrapper that anchors the popover; no border/bg (the Input handles that)
@@ -44,12 +43,16 @@ export const autocomplete = defineSlotRecipe({
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            flexShrink: 0,
+            pos: "absolute",
+            left: "0",
+            top: "0",
+            bottom: "0",
+            px: "var(--ac-px)",
             color: "fg.medium",
-            pl: "var(--ac-px)"
+            pointerEvents: "none",
+            zIndex: 1
         },
         input: {
-            width: "full",
             flex: 1
         },
         indicatorGroup: {

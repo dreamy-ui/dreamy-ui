@@ -24,7 +24,6 @@ export const input = defineRecipe({
         transitionTimingFunction: "default",
         transitionProperty: "box-shadow, border-color, background",
         outline: "none",
-        width: "fit-content",
         _disabled: {
             opacity: 0.4,
             cursor: "not-allowed"
@@ -35,7 +34,6 @@ export const input = defineRecipe({
             gap: 2
         },
         "[data-input-group]:has(&)": {
-            width: "fit-content",
             display: "flex",
             position: "relative",
             isolation: "isolate"

@@ -18,6 +18,7 @@ assertType<boolean | undefined>({} as EditableProps["isDisabled"]);
 assertType<boolean | undefined>({} as EditableProps["useDoubleClick"]);
 assertType<boolean | undefined>({} as EditableProps["isPreviewFocusable"]);
 assertType<boolean | undefined>({} as EditableProps["submitOnBlur"]);
+assertType<"plain" | "soft" | undefined>({} as EditableProps["variant"]);
 
 type _HasCallbackProps = ExpectTrue<
     "onChange" extends keyof EditableProps

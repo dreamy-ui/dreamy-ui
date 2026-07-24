@@ -1,4 +1,4 @@
-import { Editable, HStack, Text } from "@/ui";
+import { Editable, Flex, HStack, Text } from "@/ui";
 import type { Meta } from "@storybook/react-vite";
 import { useState } from "react";
 
@@ -20,6 +20,54 @@ export function Base() {
                 <Editable.CancelButton />
             </HStack>
         </Editable.Root>
+    );
+}
+
+export function Variants() {
+    return (
+        <HStack
+            alignItems="flex-start"
+            gap={8}
+        >
+            <Flex
+                flexDirection="column"
+                gap={1}
+            >
+                <Text
+                    color="fg.medium"
+                    fontSize="sm"
+                >
+                    plain
+                </Text>
+                <Editable.Root
+                    defaultValue="Plain"
+                    placeholder="Enter text"
+                    variant="plain"
+                >
+                    <Editable.Preview />
+                    <Editable.Input />
+                </Editable.Root>
+            </Flex>
+            <Flex
+                flexDirection="column"
+                gap={1}
+            >
+                <Text
+                    color="fg.medium"
+                    fontSize="sm"
+                >
+                    soft
+                </Text>
+                <Editable.Root
+                    defaultValue="Soft"
+                    placeholder="Enter text"
+                    variant="soft"
+                >
+                    <Editable.Preview />
+                    <Editable.Input />
+                </Editable.Root>
+            </Flex>
+        </HStack>
     );
 }
 

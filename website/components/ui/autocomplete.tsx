@@ -4,6 +4,7 @@ import {
     type AutocompleteItem,
     AutocompleteProvider,
     type UseAutocompleteProps,
+    dataAttr,
     useAutocomplete,
     useAutocompleteContext
 } from "@dreamy-ui/react";
@@ -207,13 +208,23 @@ export const Input = withContext(function AutocompleteInput({
 
     return (
         <PopoverAnchor>
-            <AutocompleteControl>
+            <AutocompleteControl data-has-icon={dataAttr(!!icon)}>
                 {icon && <AutocompleteIcon>{icon}</AutocompleteIcon>}
                 <BaseInput
                     placeholder={placeholder}
                     size={size === "xs" ? "sm" : size}
                     variant={triggerVariant as InputProps["variant"]}
-                    {...(getInputProps(rest) as InputProps)}
+                    {...(getInputProps({
+                        ...rest,
+                        ...(icon
+                            ? {
+                                  style: {
+                                      ...rest.style,
+                                      paddingInlineStart: "var(--ac-pe)"
+                                  }
+                              }
+                            : {})
+                    }) as InputProps)}
                 />
                 <AutocompleteIndicatorGroup>
                     {isClearable && selectedValue && <AutocompleteClearButton />}

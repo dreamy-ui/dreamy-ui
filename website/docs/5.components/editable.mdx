@@ -42,6 +42,35 @@ The placeholder will be shown in the preview, when the value is empty.
 </Editable.Root>
 ```
 
+### Variants
+
+Use `variant` to change how editability is signaled. `plain` (default) is text-only. `soft` rounds the preview with `l1` and shows an alpha background on hover and focus.
+
+<Wrapper>
+	<HStack alignItems="flex-start" gap={8}>
+		<Editable.Root defaultValue="Plain" placeholder="Enter text" variant="plain">
+			<Editable.Preview />
+			<Editable.Input />
+		</Editable.Root>
+		<Editable.Root defaultValue="Soft" placeholder="Enter text" variant="soft">
+			<Editable.Preview />
+			<Editable.Input />
+		</Editable.Root>
+	</HStack>
+</Wrapper>
+
+```tsx
+<Editable.Root defaultValue="Plain" placeholder="Enter text" variant="plain">
+	<Editable.Preview />
+	<Editable.Input />
+</Editable.Root>
+
+<Editable.Root defaultValue="Soft" placeholder="Enter text" variant="soft">
+	<Editable.Preview />
+	<Editable.Input />
+</Editable.Root>
+```
+
 ### Double Click
 
 Editable can be used to trigger edit mode on double click. Double click the preview to enter edit mode, enter to submit, esc to cancel.
