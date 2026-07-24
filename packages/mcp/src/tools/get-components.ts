@@ -35,7 +35,7 @@ export const listComponentsTool: Tool<ListComponentsContext> = {
 						.string()
 						.optional()
 						.describe(
-							"Optional search filter matched against component id, name, and description (e.g. \"dialog\", \"form\", \"layout\")"
+							'Optional search filter matched against component id, name, and description. Space-separated terms match any term (e.g. "dialog", "button input modal", "layout")'
 						)
 				})
 			},
@@ -47,7 +47,12 @@ export const listComponentsTool: Tool<ListComponentsContext> = {
 				}
 
 				const descriptions = await getComponentDescriptions(ctx.componentIds);
-				const normalizedQuery = query?.trim().toLowerCase();
+				const queryTerms =
+					query
+						?.trim()
+						.toLowerCase()
+						.split(/\s+/)
+						.filter(Boolean) ?? [];
 
 				const items = ctx.components
 					.map(function (component) {
@@ -61,7 +66,7 @@ export const listComponentsTool: Tool<ListComponentsContext> = {
 						};
 					})
 					.filter(function (item) {
-						if (!normalizedQuery) {
+						if (!queryTerms.length) {
 							return true;
 						}
 
@@ -73,15 +78,17 @@ export const listComponentsTool: Tool<ListComponentsContext> = {
 							.join(" ")
 							.toLowerCase();
 
-						return haystack.includes(normalizedQuery);
+						return queryTerms.some(function (term) {
+							return haystack.includes(term);
+						});
 					});
 
 				const lines = [
 					`# Dreamy UI components (${items.length})`,
 					"",
-					normalizedQuery
-						? `Filtered by query: \`${normalizedQuery}\``
-						: "All components. Pass `query` to filter (e.g. \"overlay\", \"input\").",
+					queryTerms.length
+						? `Filtered by query: \`${queryTerms.join(" ")}\``
+						: 'All components. Pass `query` to filter (e.g. "overlay", "button input modal").',
 					"",
 					...items.map(formatComponentListItem),
 					"",
