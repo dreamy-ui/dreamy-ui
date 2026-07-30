@@ -1,5 +1,14 @@
 # dreamy-ui-website
 
+## 2.1.5
+
+### Patch Changes
+
+-   add TimeInput component
+-   Updated dependencies
+    -   @dreamy-ui/panda-preset@2.1.5
+    -   @dreamy-ui/react@2.1.5
+
 ## 2.1.4
 
 ### Patch Changes

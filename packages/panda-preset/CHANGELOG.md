@@ -1,5 +1,11 @@
 # @dreamy-ui/system
 
+## 2.1.5
+
+### Patch Changes
+
+-   add TimeInput component
+
 ## 2.1.4
 
 ### Patch Changes
