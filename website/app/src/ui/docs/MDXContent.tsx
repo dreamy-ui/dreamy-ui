@@ -65,6 +65,7 @@ import {
     Text,
     Textarea,
     TextareaNoAutoSize,
+    TimeInput,
     Tooltip,
     VStack,
     VisuallyHidden,
@@ -392,6 +393,12 @@ const ControlledPinInput = wrapLazy(
     lazy(() => import("./components/inputs").then((m) => ({ default: m.ControlledPinInput })))
 );
 
+const ControlledTimeInput = wrapLazy(
+    lazy(() =>
+        import("./components/time-inputs").then((m) => ({ default: m.ControlledTimeInput }))
+    )
+);
+
 const LinkButton = wrapLazy(
     lazy(() => import("./components/others").then((m) => ({ default: m.LinkButton })))
 );
@@ -704,6 +711,8 @@ const DreamComponents = {
     DatePicker,
     ControlledDatePicker,
     DatePickerWithFooter,
+    TimeInput,
+    ControlledTimeInput,
     FileUploadCustomList,
     Fieldset,
     Pagination,

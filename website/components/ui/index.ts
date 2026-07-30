@@ -59,6 +59,7 @@ export * as Tabs from "./tabs";
 export * from "./text";
 export * from "./textarea";
 export * from "./theme";
+export * as TimeInput from "./time-input";
 export * from "./toast-provider";
 export * from "./toast";
 export * from "./tooltip";

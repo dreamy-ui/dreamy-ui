@@ -34,6 +34,7 @@ You can change the variant of the Button by using the `variant` prop.
     	<Button variant="secondary">Secondary</Button>
 		<Button variant="solid">Solid</Button>
 		<Button variant="outline">Outline</Button>
+		<Button variant="filledOutline">Filled Outline</Button>
 		<Button variant="ghost">Ghost</Button>
 	</Flex>
 </Wrapper>
@@ -44,6 +45,7 @@ You can change the variant of the Button by using the `variant` prop.
   <Button variant="secondary">Secondary</Button>
   <Button variant="solid">Solid</Button>
   <Button variant="outline">Outline</Button>
+  <Button variant="filledOutline">Filled Outline</Button>
   <Button variant="ghost">Ghost</Button>
 </Flex>
 ```
@@ -57,6 +59,8 @@ You can set the size of the Button by using the `size` prop.
 		<Button size="sm">Small</Button>
 		<Button size="md">Medium</Button>
 		<Button size="lg">Large</Button>
+		<Button size="xl">Extra Large</Button>
+		<Button size="2xl">2XL</Button>
 	</Flex>
 </Wrapper>
 
@@ -65,14 +69,16 @@ You can set the size of the Button by using the `size` prop.
   <Button size="sm">Small</Button>
   <Button size="md">Medium</Button>
   <Button size="lg">Large</Button>
+  <Button size="xl">Extra Large</Button>
+  <Button size="2xl">2XL</Button>
 </Flex>
 ``` 
 
 ### Color
 
-When using `solid`, `outline` and `ghost` variants, the button color will follow the current color scheme.
+When using `solid`, `outline`, `filledOutline` and `ghost` variants, the button color will follow the current color scheme.
 
-For `solid` and `ghost` variants, you can just use `color` property, it will work the same. However for `outline` variant, you need to use only `scheme` property.
+For `solid` and `ghost` variants, you can just use `color` property, it will work the same. However for `outline` and `filledOutline` variants, you need to use only `scheme` property.
 
 <Wrapper>
 	<Flex wrapped gap={2}>

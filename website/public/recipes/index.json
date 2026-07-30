@@ -241,6 +241,11 @@
   },
   {
     "type": "recipe",
+    "id": "time-input",
+    "file": "time-input.ts"
+  },
+  {
+    "type": "recipe",
     "id": "toast",
     "file": "toast.ts"
   },

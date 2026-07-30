@@ -1,6 +1,6 @@
 import { execSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
-import { basename, extname, join, normalize } from "node:path";
+import { basename, extname, join, relative } from "node:path";
 import { setTimeout as setTimeoutPromise } from "node:timers/promises";
 import chokidar from "chokidar";
 import { main } from "./components";
@@ -25,6 +25,27 @@ function isPatternFile(content: string) {
     return /definePattern/.test(content);
 }
 
+function shouldIgnorePath(watchedPath: string) {
+    const relativePath = relative(REGISTRY_DIR, watchedPath).replaceAll("\\", "/");
+    if (!relativePath || relativePath === ".") {
+        return false;
+    }
+
+    if (relativePath === "package.json" || relativePath === "tsconfig.json") {
+        return true;
+    }
+
+    if (relativePath === "scripts" || relativePath.startsWith("scripts/")) {
+        return true;
+    }
+
+    if (relativePath === "node_modules" || relativePath.startsWith("node_modules/")) {
+        return true;
+    }
+
+    return false;
+}
+
 while (true) {
     try {
         execSync("curl -s http://localhost:3000");
@@ -39,55 +60,54 @@ setTimeout(() => {
     runAddAllComponents();
 }, 250);
 
+// chokidar v4 no longer supports globs; watch the registry directory recursively
 chokidar
-    .watch([join(REGISTRY_DIR, "*")], {
+    .watch(REGISTRY_DIR, {
         ignoreInitial: true,
-        ignored: [
-            join(REGISTRY_DIR, "scripts", "**"),
-            join(REGISTRY_DIR, "node_modules", "**"),
-            join(REGISTRY_DIR, "package.json"),
-            join(REGISTRY_DIR, "tsconfig.json")
-        ]
+        ignored: shouldIgnorePath,
+        awaitWriteFinish: {
+            stabilityThreshold: 200,
+            pollInterval: 100
+        }
     })
-    .on("change", async (filePath) => {
-        console.log("filePath", filePath);
-        const changed = parseRegistryChange(filePath);
-        console.log("changed", changed);
-        if (!changed) {
-            return;
-        }
+    .on("change", onRegistryFileEvent)
+    .on("add", onRegistryFileEvent);
 
-        console.log(`🔄 Processing ${changed.kind}: ${changed.id}`);
-        await main();
-        await setTimeoutPromise(250);
-        const affectedComponents = getAffectedComponents(changed);
-        if (!affectedComponents.length) {
-            console.log("ℹ️ No affected components detected; skipping add command");
-            return;
-        }
-        runAddComponents(affectedComponents, changed.kind);
-        console.log(
-            `✅ Components synced (${affectedComponents.length ? affectedComponents.join(", ") : "none"})`
-        );
-    });
+async function onRegistryFileEvent(filePath: string) {
+    const changed = parseRegistryChange(filePath);
+    if (!changed) {
+        return;
+    }
+
+    console.log(`🔄 Processing ${changed.kind}: ${changed.id}`);
+    await main();
+    await setTimeoutPromise(250);
+    const affectedComponents = getAffectedComponents(changed);
+    if (!affectedComponents.length) {
+        console.log("ℹ️ No affected components detected; skipping add command");
+        return;
+    }
+    runAddComponents(affectedComponents, changed.kind);
+    console.log(`✅ Components synced (${affectedComponents.join(", ")})`);
+}
 
 function parseRegistryChange(filePath: string): RegistryChange | null {
-    const normalizedPath = normalize(filePath).replaceAll("\\", "/");
-    const fileId = basename(normalizedPath, extname(normalizedPath));
-    const registryPath = normalize(REGISTRY_DIR).replaceAll("\\", "/");
-    const ext = extname(normalizedPath);
+    const relativePath = relative(REGISTRY_DIR, filePath).replaceAll("\\", "/");
+    const segments = relativePath.split("/");
 
-    const match = normalizedPath.match(new RegExp(`${registryPath}/([^/]+)/[^/]+$`));
-    if (!match) {
+    if (segments.length !== 2 || relativePath.startsWith("..") || relativePath.startsWith("/")) {
         return null;
     }
 
-    const folderName = match[1];
+    const [folderName, fileName] = segments;
     if (folderName === "scripts" || folderName === "node_modules") {
         return null;
     }
 
-    if (ext === ".tsx" && normalizedPath.endsWith("/index.tsx")) {
+    const ext = extname(fileName);
+    const fileId = basename(fileName, ext);
+
+    if (ext === ".tsx" && fileName === "index.tsx") {
         return { kind: "component", id: folderName };
     }
 

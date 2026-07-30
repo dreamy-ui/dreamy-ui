@@ -34,7 +34,7 @@ export function Base() {
 export function Size() {
     return (
         <HStack>
-            {(["xs", "sm", "md", "lg"] as const).map((size) => (
+            {(["xs", "sm", "md", "lg", "xl", "2xl"] as const).map((size) => (
                 <Select.Root
                     items={fruits}
                     key={size}
@@ -52,7 +52,7 @@ export function Size() {
 export function TriggerVariant() {
     return (
         <HStack>
-            {(["outline", "solid"] as const).map((triggerVariant) => (
+            {(["outline", "solid", "filledOutline"] as const).map((triggerVariant) => (
                 <Select.Root
                     items={fruits}
                     key={triggerVariant}

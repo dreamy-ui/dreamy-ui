@@ -25,6 +25,14 @@ export function Sizes() {
                 placeholder="Enter your username"
                 size="lg"
             />
+            <Input
+                placeholder="Enter your username"
+                size="xl"
+            />
+            <Input
+                placeholder="Enter your username"
+                size="2xl"
+            />
         </VStack>
     );
 }

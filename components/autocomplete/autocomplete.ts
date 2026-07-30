@@ -226,6 +226,34 @@ export const autocomplete = defineSlotRecipe({
                     p: 2.5,
                     "& svg": { width: "5", height: "5" }
                 }
+            },
+            xl: {
+                root: {
+                    "--ac-px": "{spacing.4}",
+                    "--ac-pe": "{spacing.12}"
+                },
+                content: { textStyle: "md" },
+                item: { py: "2", px: "3" },
+                itemIndicator: { right: "3" },
+                indicator: { width: "5", height: "5" },
+                clearButton: {
+                    p: 2.5,
+                    "& svg": { width: "5", height: "5" }
+                }
+            },
+            "2xl": {
+                root: {
+                    "--ac-px": "{spacing.5}",
+                    "--ac-pe": "{spacing.14}"
+                },
+                content: { textStyle: "lg" },
+                item: { py: "2.5", px: "3.5" },
+                itemIndicator: { right: "3.5" },
+                indicator: { width: "5.5", height: "5.5" },
+                clearButton: {
+                    p: 3,
+                    "& svg": { width: "5.5", height: "5.5" }
+                }
             }
         },
         selectedItemBackgroundScheme: getColorSchemes(

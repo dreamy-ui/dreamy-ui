@@ -49,10 +49,20 @@ export const pagination = defineSlotRecipe({
             },
             md: {
                 ellipsis: {
-                    boxSize: "10"
+                    boxSize: "9"
                 }
             },
             lg: {
+                ellipsis: {
+                    boxSize: "10"
+                }
+            },
+            xl: {
+                ellipsis: {
+                    boxSize: "11"
+                }
+            },
+            "2xl": {
                 ellipsis: {
                     boxSize: "12"
                 }

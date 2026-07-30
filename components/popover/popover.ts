@@ -52,7 +52,8 @@ export const popover = defineSlotRecipe({
             "RangePresetButton",
             "Footer",
             "FooterButton"
-        ])
+        ]),
+        ...mapJsx("TimeInput", ["Root", "Trigger", "Content", "AIO"])
     ],
     base: {
         content: {

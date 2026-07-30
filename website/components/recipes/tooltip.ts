@@ -5,11 +5,8 @@ export const tooltip = defineSlotRecipe({
     description:
         "A compact tooltip for brief contextual hints on hover or focus. Inverted colors with dark background and light text, small shadow, and arrow — no variant options.",
     jsx: ["Tooltip"],
-    slots: ["root", "trigger", "content"],
+    slots: ["trigger", "content"],
     base: {
-        root: {
-            display: "contents"
-        },
         trigger: {
             display: "inline-block"
         },

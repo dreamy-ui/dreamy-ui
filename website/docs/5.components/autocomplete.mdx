@@ -78,10 +78,10 @@ Autocomplete uses the shared Portal stack at the `dropdown` layer (1000). Inside
 
 ### Size
 
-Autocomplete comes with 4 different sizes.
+Autocomplete comes with 6 different sizes.
 
 <Wrapper>
-    {["sm", "md", "lg"].map((size) => (
+    {["sm", "md", "lg", "xl", "2xl"].map((size) => (
         <Autocomplete.Root
             key={size}
             width="xs"
@@ -99,7 +99,7 @@ Autocomplete comes with 4 different sizes.
 </Wrapper>
 
 ```tsx
-{["sm", "md", "lg"].map((size) => (
+{["sm", "md", "lg", "xl", "2xl"].map((size) => (
     <Autocomplete.Root key={size} size={size} items={fruits}>
         <Autocomplete.Input placeholder={`Search (${size})...`} />
         <Autocomplete.Content />

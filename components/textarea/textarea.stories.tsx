@@ -57,6 +57,14 @@ export function Sizes() {
                 placeholder="Enter your bio"
                 size="lg"
             />
+            <Textarea
+                placeholder="Enter your bio"
+                size="xl"
+            />
+            <Textarea
+                placeholder="Enter your bio"
+                size="2xl"
+            />
         </VStack>
     );
 }
@@ -75,6 +83,10 @@ export function Variants() {
             <Textarea
                 placeholder="Enter your bio"
                 variant="flushed"
+            />
+            <Textarea
+                placeholder="Enter your bio"
+                variant="filledOutline"
             />
         </VStack>
     );
@@ -97,6 +109,11 @@ export function Invalid() {
                 isInvalid
                 placeholder="Enter your bio"
                 variant="flushed"
+            />
+            <Textarea
+                isInvalid
+                placeholder="Enter your bio"
+                variant="filledOutline"
             />
         </VStack>
     );

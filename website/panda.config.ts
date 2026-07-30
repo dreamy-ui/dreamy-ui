@@ -140,7 +140,7 @@ export default defineConfig({
                         minW: [20],
                         maxW: ["300px"],
                         bg: ["secondary", "blue.400", "purple.400"],
-                        color: ["white"],
+                        color: ["white", "secondary"],
                         fontWeight: [500],
                         p: [3, 2, 10],
                         justifyContent: ["between"],

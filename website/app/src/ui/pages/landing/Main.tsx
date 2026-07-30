@@ -97,7 +97,7 @@ export default function Main() {
                         }
                         px={6}
                         rightIcon={<IoArrowForward />}
-                        size={"lg"}
+                        size={"2xl"}
                         variant={"primary"}
                     >
                         Get Started
@@ -111,7 +111,7 @@ export default function Main() {
                         }
                         leftIcon={<BsDiscord />}
                         px={6}
-                        size={"lg"}
+                        size={"2xl"}
                         variant={"solid"}
                     >
                         Discord

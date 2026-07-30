@@ -77,7 +77,7 @@ export const menu = defineSlotRecipe({
         size: {
             xs: {
                 root: {
-                    "--menu-trigger-height": "sizes.8",
+                    "--menu-trigger-height": "sizes.7",
                     "--menu-trigger-padding-x": "spacing.2"
                 },
                 content: {
@@ -102,7 +102,7 @@ export const menu = defineSlotRecipe({
             },
             sm: {
                 root: {
-                    "--menu-trigger-height": "sizes.9",
+                    "--menu-trigger-height": "sizes.8",
                     "--menu-trigger-padding-x": "spacing.2.5"
                 },
                 content: {
@@ -127,7 +127,7 @@ export const menu = defineSlotRecipe({
             },
             md: {
                 root: {
-                    "--menu-trigger-height": "sizes.10",
+                    "--menu-trigger-height": "sizes.9",
                     "--menu-trigger-padding-x": "spacing.3"
                 },
                 content: {
@@ -152,7 +152,7 @@ export const menu = defineSlotRecipe({
             },
             lg: {
                 root: {
-                    "--menu-trigger-height": "sizes.12",
+                    "--menu-trigger-height": "sizes.10",
                     "--menu-trigger-padding-x": "spacing.4"
                 },
                 content: {
@@ -177,6 +177,66 @@ export const menu = defineSlotRecipe({
                     _icon: {
                         width: "5",
                         height: "5"
+                    }
+                }
+            },
+            xl: {
+                root: {
+                    "--menu-trigger-height": "sizes.11",
+                    "--menu-trigger-padding-x": "spacing.4"
+                },
+                content: {
+                    textStyle: "md"
+                },
+                item: {
+                    py: "2",
+                    px: "3",
+                    "& span": {
+                        gap: "2.5"
+                    }
+                },
+                trigger: {
+                    textStyle: "lg",
+                    py: "3",
+                    gap: "2.5"
+                },
+                itemIndicator: {
+                    right: "3"
+                },
+                indicator: {
+                    _icon: {
+                        width: "5",
+                        height: "5"
+                    }
+                }
+            },
+            "2xl": {
+                root: {
+                    "--menu-trigger-height": "sizes.12",
+                    "--menu-trigger-padding-x": "spacing.5"
+                },
+                content: {
+                    textStyle: "lg"
+                },
+                item: {
+                    py: "2.5",
+                    px: "3.5",
+                    "& span": {
+                        gap: "3"
+                    }
+                },
+                trigger: {
+                    textStyle: "xl",
+                    py: "3.5",
+                    gap: "3"
+                },
+                itemIndicator: {
+                    right: "3.5"
+                },
+                indicator: {
+                    _icon: {
+                        width: "5.5",
+                        height: "5.5"
                     }
                 }
             }

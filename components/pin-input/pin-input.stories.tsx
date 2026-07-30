@@ -52,6 +52,18 @@ export function Sizes() {
                 <PinInput.Field />
                 <PinInput.Field />
             </PinInput.Root>
+
+            <PinInput.Root size="xl">
+                <PinInput.Field />
+                <PinInput.Field />
+                <PinInput.Field />
+            </PinInput.Root>
+
+            <PinInput.Root size="2xl">
+                <PinInput.Field />
+                <PinInput.Field />
+                <PinInput.Field />
+            </PinInput.Root>
         </VStack>
     );
 }
@@ -72,6 +84,12 @@ export function Variants() {
             </PinInput.Root>
 
             <PinInput.Root variant="flushed">
+                <PinInput.Field />
+                <PinInput.Field />
+                <PinInput.Field />
+            </PinInput.Root>
+
+            <PinInput.Root variant="filledOutline">
                 <PinInput.Field />
                 <PinInput.Field />
                 <PinInput.Field />

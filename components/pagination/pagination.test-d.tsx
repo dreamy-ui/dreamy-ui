@@ -89,5 +89,5 @@ assertType<PaginationRootProps["onPageChange"]>(
 assertType<PaginationRootProps>({
     count: 10,
     // @ts-expect-error invalid size
-    size: "xl"
+    size: "3xl"
 });

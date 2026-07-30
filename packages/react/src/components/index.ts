@@ -30,3 +30,4 @@ export * from "./tabs";
 export * from "./tooltip";
 export * from "./ripple";
 export * from "./toast";
+export * from "./time-input";

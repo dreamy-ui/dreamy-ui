@@ -86,7 +86,7 @@ assertType<TextareaProps["onChange"]>(
 
 assertType<TextareaProps>({
     // @ts-expect-error invalid size
-    size: "xl"
+    size: "3xl"
 });
 
 assertType<TextareaProps>({

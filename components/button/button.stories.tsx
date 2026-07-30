@@ -21,6 +21,7 @@ export function Variants() {
             <Button variant="secondary">Secondary</Button>
             <Button variant="solid">Solid</Button>
             <Button variant="outline">Outline</Button>
+            <Button variant="filledOutline">Filled Outline</Button>
             <Button variant="ghost">Ghost</Button>
         </Flex>
     );
@@ -35,6 +36,8 @@ export function Sizes() {
             <Button size="sm">Small</Button>
             <Button size="md">Medium</Button>
             <Button size="lg">Large</Button>
+            <Button size="xl">Extra Large</Button>
+            <Button size="2xl">2XL</Button>
         </Flex>
     );
 }

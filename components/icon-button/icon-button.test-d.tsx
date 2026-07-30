@@ -79,7 +79,7 @@ assertType<IconButtonProps>({
 assertType<IconButtonProps>({
     "aria-label": "Edit",
     // @ts-expect-error invalid size
-    size: "xl"
+    size: "3xl"
 });
 
 assertType<IconButtonProps>({

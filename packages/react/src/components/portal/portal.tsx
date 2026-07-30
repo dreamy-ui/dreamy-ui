@@ -3,7 +3,7 @@
 import { createContext } from "@/provider/create-context";
 import { useLayoutEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
-import { usePortalManager } from "./portal-manager";
+import { getPortalManager } from "./portal-manager";
 
 export type PortalZIndex = string | number;
 
@@ -158,7 +158,7 @@ function DefaultPortal({
 }>) {
     const [container, setContainer] = useState<HTMLDivElement | null>(null);
     const parentPortal = usePortalContext();
-    const manager = usePortalManager();
+    const manager = getPortalManager();
     const parentContainer = parentPortal?.container;
     const localZIndex = zIndex ?? 0;
     const baseZIndex =
@@ -240,7 +240,7 @@ function ContainerPortal({
 }: ContainerPortalProps) {
     const [container, setContainer] = useState<HTMLDivElement | null>(null);
     const parentPortal = usePortalContext();
-    const manager = usePortalManager();
+    const manager = getPortalManager();
     const localZIndex = zIndex ?? 0;
     const baseZIndex =
         (appendToParentPortal ? parentPortal?.zIndex : undefined) ?? manager?.zIndex ?? 0;

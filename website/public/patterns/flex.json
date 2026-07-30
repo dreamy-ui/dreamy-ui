@@ -3,6 +3,6 @@
   "id": "flex",
   "file": {
     "name": "flex.ts",
-    "content": "import { definePattern } from \"@pandacss/dev\";\n\nexport const flex = definePattern({\n    jsx: [\"Flex\", \"Group\"],\n    transform(props) {\n        return {\n            display: \"flex\",\n            ...props\n        };\n    }\n});\n"
+    "content": "import { definePattern } from \"@pandacss/dev\";\r\n\r\nexport const flex = definePattern({\r\n    jsx: [\"Flex\", \"Group\"],\r\n    transform(props) {\r\n        return {\r\n            display: \"flex\",\r\n            ...props\r\n        };\r\n    }\r\n});\r\n"
   }
 }

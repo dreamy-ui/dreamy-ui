@@ -47,6 +47,7 @@ import { table } from "./table";
 import { tabs } from "./tabs";
 import { textarea } from "./textarea";
 import { theme } from "./theme";
+import { timeInput } from "./time-input";
 import { toast } from "./toast";
 import { tooltip } from "./tooltip";
 
@@ -100,6 +101,7 @@ export const recipes = {
     tabs,
     textarea,
     theme,
+    timeInput,
     toast,
     tooltip
 };

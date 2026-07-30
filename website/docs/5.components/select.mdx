@@ -103,7 +103,7 @@ const fruits = [
 
 ### Size
 
-Select comes with 4 different sizes.
+Select comes with 6 different sizes.
 
 <Wrapper>
     <Select.Root width="xs" size={"xs"} items={[
@@ -138,6 +138,22 @@ Select comes with 4 different sizes.
         <Select.Trigger placeholder="Select a favorite fruit" />
         <Select.Content />
     </Select.Root>
+    <Select.Root width="xs" size={"xl"} items={[
+        { value: "strawberry", label: "Strawberry" },
+        { value: "banana", label: "Banana" },
+        { value: "orange", label: "Orange" },
+    ]}>
+        <Select.Trigger placeholder="Select a favorite fruit" />
+        <Select.Content />
+    </Select.Root>
+    <Select.Root width="xs" size={"2xl"} items={[
+        { value: "strawberry", label: "Strawberry" },
+        { value: "banana", label: "Banana" },
+        { value: "orange", label: "Orange" },
+    ]}>
+        <Select.Trigger placeholder="Select a favorite fruit" />
+        <Select.Content />
+    </Select.Root>
 </Wrapper>
 
 ```tsx
@@ -149,7 +165,7 @@ Select comes with 4 different sizes.
 
 ### Trigger Variant
 
-The trigger can be used in `outline` or `solid` style.
+The trigger can be used in `outline`, `solid`, or `filledOutline` style.
 
 <Wrapper>
     <Select.Root width="xs" triggerVariant={"outline"} items={[
@@ -168,10 +184,28 @@ The trigger can be used in `outline` or `solid` style.
         <Select.Trigger placeholder="Select a favorite fruit" />
         <Select.Content />
     </Select.Root>
+    <Select.Root width="xs" triggerVariant={"filledOutline"} items={[
+        { value: "strawberry", label: "Strawberry" },
+        { value: "banana", label: "Banana" },
+        { value: "orange", label: "Orange" },
+    ]}>
+        <Select.Trigger placeholder="Select a favorite fruit" />
+        <Select.Content />
+    </Select.Root>
 </Wrapper>
 
 ```tsx
 <Select.Root triggerVariant="outline" items={fruits}>
+    <Select.Trigger placeholder="Select a favorite fruit" />
+    <Select.Content />
+</Select.Root>
+
+<Select.Root triggerVariant="solid" items={fruits}>
+    <Select.Trigger placeholder="Select a favorite fruit" />
+    <Select.Content />
+</Select.Root>
+
+<Select.Root triggerVariant="filledOutline" items={fruits}>
     <Select.Trigger placeholder="Select a favorite fruit" />
     <Select.Content />
 </Select.Root>

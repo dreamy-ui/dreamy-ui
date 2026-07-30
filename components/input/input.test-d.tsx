@@ -76,7 +76,7 @@ assertType<InputProps["onChange"]>(
 
 assertType<InputProps>({
     // @ts-expect-error invalid size
-    size: "xl"
+    size: "3xl"
 });
 
 assertType<InputProps>({

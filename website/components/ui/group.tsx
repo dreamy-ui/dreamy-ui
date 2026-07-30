@@ -3,6 +3,7 @@ import { Children, cloneElement, isValidElement, useMemo } from "react";
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type FlexProperties, flex } from "styled-system/patterns";
 import { type GroupVariantProps, group } from "styled-system/recipes";
+import type { SystemStyleObject } from "styled-system/types";
 
 export interface GroupProps
     extends Omit<HTMLDreamyProps<"div">, keyof FlexProperties>,
@@ -39,7 +40,7 @@ export function Group({ children, skip, ...props }: GroupProps) {
         "shrink"
     ]);
 
-    const styles = flex.raw(patternProps);
+    const styles = flex.raw(patternProps) as Omit<SystemStyleObject, "grow">;
 
     const _children = useMemo(() => {
         const childArray = Children.toArray(children).filter(isValidElement);

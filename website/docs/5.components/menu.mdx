@@ -108,10 +108,10 @@ You can change where the Menu is placed by using the `placement` prop. Use `icon
 
 ### Size
 
-Menu comes with 4 different sizes.
+Menu comes with 6 different sizes.
 
 <Wrapper>
-    {["xs", "sm", "md", "lg"].map((size) => (
+    {["xs", "sm", "md", "lg", "xl", "2xl"].map((size) => (
         <Menu.Root key={size} size={size}>
             <Menu.Trigger>
                 <Button w={"fit-content"}>Open {size} Menu</Button>
@@ -127,7 +127,7 @@ Menu comes with 4 different sizes.
 </Wrapper>
 
 ```tsx
-{["xs", "sm", "md", "lg"].map((size) => (
+{["xs", "sm", "md", "lg", "xl", "2xl"].map((size) => (
     <Menu.Root key={size} size={size}>
         <Menu.Trigger>
             <Button>Open Menu</Button>

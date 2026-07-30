@@ -52,8 +52,10 @@ export const input = defineRecipe({
     variants: {
         size: {
             sm: { px: "2", h: "8", minW: "8", fontSize: "xs" },
-            md: { px: "3", h: "10", minW: "10", fontSize: "md" },
-            lg: { px: "4", h: "12", minW: "12", fontSize: "lg" }
+            md: { px: "3", h: "9", minW: "9", fontSize: "md" },
+            lg: { px: "4", h: "10", minW: "10", fontSize: "lg" },
+            xl: { px: "4", h: "11", minW: "11", fontSize: "lg" },
+            "2xl": { px: "5", h: "12", minW: "12", fontSize: "xl" }
         },
         variant: {
             outline: {
@@ -183,6 +185,20 @@ export const input = defineRecipe({
             inputType: "pin",
             css: {
                 fontSize: "md"
+            }
+        },
+        {
+            size: "xl",
+            inputType: "pin",
+            css: {
+                fontSize: "lg"
+            }
+        },
+        {
+            size: "2xl",
+            inputType: "pin",
+            css: {
+                fontSize: "xl"
             }
         }
     ]

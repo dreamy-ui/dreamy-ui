@@ -66,3 +66,30 @@ export function CalendarIcon(props: SVGProps<SVGSVGElement>) {
         </svg>
     );
 }
+
+/**
+ * Lucide clock (`LuClock`).
+ */
+export function ClockIcon(props: SVGProps<SVGSVGElement>) {
+    return (
+        <svg
+            aria-hidden="true"
+            fill="none"
+            height="1em"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+            width="1em"
+            {...props}
+        >
+            <circle
+                cx="12"
+                cy="12"
+                r="10"
+            />
+            <path d="M12 6v6l4 2" />
+        </svg>
+    );
+}

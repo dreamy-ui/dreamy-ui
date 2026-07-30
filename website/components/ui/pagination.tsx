@@ -61,7 +61,7 @@ export const Root = withProvider(function PaginationRoot(props: PaginationRootPr
         pageSize,
         siblingCount,
         onPageChange,
-        size: size as "sm" | "md" | "lg"
+        size: size as "sm" | "md" | "lg" | "xl" | "2xl"
     });
 
     return (

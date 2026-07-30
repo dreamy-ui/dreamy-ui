@@ -75,7 +75,7 @@ assertType<ButtonProps>({
 
 assertType<ButtonProps>({
     // @ts-expect-error invalid size
-    size: "xl"
+    size: "3xl"
 });
 
 assertType<ButtonProps>({

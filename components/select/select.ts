@@ -4,7 +4,7 @@ import { type SystemStyleObject, defineSlotRecipe } from "@pandacss/dev";
 export const select = defineSlotRecipe({
     className: "select",
     description:
-        "A dropdown select for choosing one value from a list with chevron indicator and clear button. triggerVariant outline shows a bordered transparent trigger; solid uses a tinted background with no border; variant plain pads and rounds dropdown items while stretched makes them edge-to-edge; selectedItemBackgroundScheme controls the selected item highlight color.",
+        "A dropdown select for choosing one value from a list with chevron indicator and clear button. triggerVariant outline shows a bordered transparent trigger; solid uses a tinted background with no border; filledOutline combines border and tinted fill; variant plain pads and rounds dropdown items while stretched makes them edge-to-edge; selectedItemBackgroundScheme controls the selected item highlight color.",
     jsx: [
         "Select.Root",
         "Select.Trigger",
@@ -208,12 +208,43 @@ export const select = defineSlotRecipe({
                         boxShadow: "0 0 0 1.5px {colors.error}"
                     }
                 }
+            },
+            filledOutline: {
+                trigger: {
+                    bg: "alpha.50",
+                    borderWidth: "2px",
+                    borderColor: "border",
+                    transition:
+                        "border-color {durations.normal} {easings.ease-in-out}, background {durations.normal} {easings.ease-in-out}",
+                    _hover: {
+                        borderColor: "border.hover",
+                        bg: "alpha.100",
+                        _invalid: {
+                            borderColor: "error"
+                        }
+                    },
+                    _expanded: {
+                        borderColor: "border.hover",
+                        bg: "alpha.100",
+                        _invalid: {
+                            borderColor: "error"
+                        }
+                    },
+                    _focusVisible: {
+                        _invalid: {
+                            boxShadow: "0 0 0 0.5px {colors.error}"
+                        }
+                    },
+                    _invalid: {
+                        borderColor: "error"
+                    }
+                }
             }
         },
         size: {
             xs: {
                 root: {
-                    "--select-trigger-height": "{sizes.8}",
+                    "--select-trigger-height": "{sizes.7}",
                     "--select-trigger-padding-x": "{spacing.2}"
                 },
                 content: {
@@ -275,7 +306,7 @@ export const select = defineSlotRecipe({
             },
             md: {
                 root: {
-                    "--select-trigger-height": "{sizes.10}",
+                    "--select-trigger-height": "{sizes.9}",
                     "--select-trigger-padding-x": "{spacing.3}"
                 },
                 content: {
@@ -306,7 +337,7 @@ export const select = defineSlotRecipe({
             },
             lg: {
                 root: {
-                    "--select-trigger-height": "{sizes.12}",
+                    "--select-trigger-height": "{sizes.10}",
                     "--select-trigger-padding-x": "{spacing.4}"
                 },
                 content: {
@@ -332,6 +363,68 @@ export const select = defineSlotRecipe({
                     "& svg": {
                         width: "5",
                         height: "5"
+                    }
+                }
+            },
+            xl: {
+                root: {
+                    "--select-trigger-height": "{sizes.11}",
+                    "--select-trigger-padding-x": "{spacing.4}"
+                },
+                content: {
+                    textStyle: "md"
+                },
+                item: {
+                    py: "2",
+                    px: "3"
+                },
+                trigger: {
+                    textStyle: "lg",
+                    gap: "3"
+                },
+                itemIndicator: {
+                    right: "3"
+                },
+                indicator: {
+                    width: "5",
+                    height: "5"
+                },
+                clearButton: {
+                    p: 2.5,
+                    "& svg": {
+                        width: "5",
+                        height: "5"
+                    }
+                }
+            },
+            "2xl": {
+                root: {
+                    "--select-trigger-height": "{sizes.12}",
+                    "--select-trigger-padding-x": "{spacing.5}"
+                },
+                content: {
+                    textStyle: "lg"
+                },
+                item: {
+                    py: "2.5",
+                    px: "3.5"
+                },
+                trigger: {
+                    textStyle: "xl",
+                    gap: "3"
+                },
+                itemIndicator: {
+                    right: "3.5"
+                },
+                indicator: {
+                    width: "5.5",
+                    height: "5.5"
+                },
+                clearButton: {
+                    p: 3,
+                    "& svg": {
+                        width: "5.5",
+                        height: "5.5"
                     }
                 }
             }

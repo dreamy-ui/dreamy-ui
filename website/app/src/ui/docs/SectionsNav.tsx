@@ -13,6 +13,7 @@ import { useSections } from "~/src/hooks/useSections";
 import { ReactRouterLink } from "~/src/ui/global/Link";
 
 const newComponents = [
+    "time input",
     "radio card",
     "action bar",
     "empty state",

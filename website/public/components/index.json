@@ -912,6 +912,22 @@
   },
   {
     "type": "component",
+    "id": "time-input",
+    "file": "time-input.tsx",
+    "component": "TimeInput",
+    "npmDependencies": [],
+    "fileDependencies": [
+      "./popover",
+      "./visually-hidden"
+    ],
+    "hasRecipe": true,
+    "hasPattern": false,
+    "recipeIds": [
+      "time-input"
+    ]
+  },
+  {
+    "type": "component",
     "id": "toast",
     "file": "toast.tsx",
     "component": "Toast",

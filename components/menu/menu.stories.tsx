@@ -82,7 +82,7 @@ export function Placement() {
 export function Sizes() {
     return (
         <>
-            {(["xs", "sm", "md", "lg"] as const).map(function mapSize(size) {
+            {(["xs", "sm", "md", "lg", "xl", "2xl"] as const).map(function mapSize(size) {
                 return (
                     <Menu.Root
                         key={size}

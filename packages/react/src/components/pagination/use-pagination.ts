@@ -40,7 +40,7 @@ export interface UsePaginationProps {
      * Size of the pagination controls
      * @default "md"
      */
-    size?: "sm" | "md" | "lg";
+    size?: "sm" | "md" | "lg" | "xl" | "2xl";
 }
 
 export function usePagination(props: UsePaginationProps) {

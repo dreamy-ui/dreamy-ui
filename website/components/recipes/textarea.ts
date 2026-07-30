@@ -3,7 +3,7 @@ import { defineRecipe } from "@pandacss/dev";
 export const textarea = defineRecipe({
     className: "textarea",
     description:
-        "A multi-line text input for longer form content like comments or descriptions. outline has a bordered box; filled uses a tinted background with no border; flushed has only a bottom underline border with no corner radius.",
+        "A multi-line text input for longer form content like comments or descriptions. outline has a bordered box; filled uses a tinted background with no border; flushed has only a bottom underline border with no corner radius; filledOutline combines border and tinted fill.",
     jsx: ["Textarea", "TextareaNoAutoSize"],
     base: {
         appearance: "none",
@@ -35,8 +35,10 @@ export const textarea = defineRecipe({
     variants: {
         size: {
             sm: { p: "2.5", minW: "8", fontSize: "xs", minH: 8 },
-            md: { p: "3", minW: "10", fontSize: "md", minH: 10 },
-            lg: { p: "4", minW: "12", fontSize: "lg", minH: 12 }
+            md: { p: "3", minW: "9", fontSize: "md", minH: 9 },
+            lg: { p: "4", minW: "10", fontSize: "lg", minH: 10 },
+            xl: { p: "4", minW: "11", fontSize: "lg", minH: 11 },
+            "2xl": { p: "5", minW: "12", fontSize: "xl", minH: 12 }
         },
         variant: {
             outline: {
@@ -105,6 +107,33 @@ export const textarea = defineRecipe({
                     },
                     _hover: {
                         borderBottomColor: "{colors.error}"
+                    }
+                }
+            },
+            filledOutline: {
+                borderWidth: "2px",
+                background: "{colors.alpha.50}",
+                borderColor: "{colors.border}",
+                _hover: {
+                    borderColor: "{colors.border.hover}",
+                    background: "{colors.alpha.100}"
+                },
+                _focusWithin: {
+                    boxShadow: "0 0 0 0.5px {colors.primary}",
+                    borderColor: "{colors.primary}",
+                    _hover: {
+                        boxShadow: "0 0 0 0.5px {colors.primary}",
+                        borderColor: "{colors.primary}"
+                    }
+                },
+                "&:user-invalid, &[data-invalid]": {
+                    _focusWithin: {
+                        boxShadow: "0 0 0 0.5px {colors.error} !important"
+                    },
+                    borderColor: "{colors.error} !important",
+                    _hover: {
+                        boxShadow: "0 0 0 0.5px {colors.error}",
+                        borderColor: "{colors.error}"
                     }
                 }
             }

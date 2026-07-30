@@ -64,14 +64,15 @@ export interface TooltipProps
     motionProps?: HTMLMotionProps<"div">;
 }
 
-const { withProvider, withContext } = createStyleContext(tooltip);
+const { withRootProvider, withContext } = createStyleContext(tooltip);
 
-const TooltipRoot = withProvider(function TooltipRootBase({
-    children,
-    ...props
-}: HTMLDreamyProps<"div">) {
-    return <dreamy.div {...props}>{children}</dreamy.div>;
-}, "root");
+const TooltipRoot = withRootProvider(function TooltipRootBase({
+    children
+}: {
+    children: React.ReactNode;
+}) {
+    return children;
+});
 
 const TooltipTrigger = withContext(function TooltipTriggerBase(props: HTMLDreamyProps<"span">) {
     return <dreamy.span {...props} />;

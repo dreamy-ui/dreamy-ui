@@ -161,7 +161,7 @@ export const Root: (props: AutocompleteProps) => React.JSX.Element = withProvide
             <AutocompleteProvider
                 value={{
                     ...ctx,
-                    size: size as "xs" | "sm" | "md" | "lg",
+                    size: size as "xs" | "sm" | "md" | "lg" | "xl" | "2xl",
                     triggerVariant: triggerVariant as string
                 }}
             >

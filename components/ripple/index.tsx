@@ -62,7 +62,7 @@ export function Ripple(props: RippleProps) {
                     exit={{ opacity: 0 }}
                     initial={{
                         scale: 0,
-                        opacity: 0.4
+                        opacity: 0.25
                     }}
                     onAnimationComplete={() => {
                         setTimeout(() => {

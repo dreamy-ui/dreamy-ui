@@ -18,7 +18,7 @@ export { parts as buttonParts };
 export const button = defineRecipe({
     className: "button",
     description:
-        "An interactive button for primary actions, forms, and toolbars, also used by IconButton and CloseButton. primary and secondary are solid filled buttons; solid uses a subtle currentColor tint; outline has a transparent background with a border; ghost is borderless with a hover tint; link looks like inline text with no padding or ripple.",
+        "An interactive button for primary actions, forms, and toolbars, also used by IconButton and CloseButton. primary and secondary are solid filled buttons; solid uses a subtle currentColor tint; outline has a transparent background with a border; filledOutline combines a tinted fill with a border; ghost is borderless with a hover tint; link looks like inline text with no padding or ripple.",
     staticCss: ["*"],
     jsx: [
         "Button",
@@ -34,7 +34,6 @@ export const button = defineRecipe({
             position: "relative",
             display: "inline-flex",
             alignItems: "center",
-            fontWeight: "medium",
             cursor: "pointer",
             borderRadius: "l2",
             isolation: "isolate",
@@ -44,6 +43,7 @@ export const button = defineRecipe({
             transitionDuration: "{durations.normal}",
             transitionTimingFunction: "{easings.ease-in-out}",
             justifyContent: "center",
+            // lineHeight: 0,
             _disabled: {
                 cursor: "not-allowed",
                 opacity: 0.5
@@ -131,6 +131,19 @@ export const button = defineRecipe({
                     }
                 }
             }),
+            filledOutline: parts({
+                root: {
+                    bg: "currentColor/06",
+                    borderWidth: 1,
+                    borderStyle: "solid",
+                    outlineColor: "currentColor",
+                    borderColor: "border",
+                    _hover: {
+                        bg: "currentColor/10",
+                        borderColor: "border.hover"
+                    }
+                }
+            }),
             ghost: parts({
                 root: {
                     bg: "transparent",
@@ -183,7 +196,7 @@ export const button = defineRecipe({
             md: parts({
                 root: {
                     fontSize: "md",
-                    h: 10,
+                    h: 9,
                     px: 4,
                     gap: 2,
                     "--icon-button-icon-size": "24px"
@@ -192,10 +205,28 @@ export const button = defineRecipe({
             lg: parts({
                 root: {
                     fontSize: "lg",
-                    h: 12,
+                    h: 10,
+                    px: 5,
+                    gap: 2.5,
+                    "--icon-button-icon-size": "26px"
+                }
+            }),
+            xl: parts({
+                root: {
+                    fontSize: "lg",
+                    h: 11,
                     px: 5,
                     gap: 3,
                     "--icon-button-icon-size": "28px"
+                }
+            }),
+            "2xl": parts({
+                root: {
+                    fontSize: "xl",
+                    h: 12,
+                    px: 6,
+                    gap: 3,
+                    "--icon-button-icon-size": "30px"
                 }
             })
         },
@@ -203,7 +234,7 @@ export const button = defineRecipe({
     },
     compoundVariants: [
         {
-            variant: ["outline"],
+            variant: ["outline", "filledOutline"],
             scheme: ["error", "warning", "info", "success", "primary", "secondary"],
             css: {
                 color: "var(--button-scheme)",

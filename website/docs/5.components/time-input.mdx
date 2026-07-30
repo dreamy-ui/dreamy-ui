@@ -1,0 +1,188 @@
+---
+title: Time Input
+description: Time Input lets users pick a time with segmented fields and a scroll wheel popover.
+isServerComponent: false
+source: /components/time-input/index.tsx
+themeSource: /components/time-input/time-input.ts
+---
+
+## Installation
+
+```bash
+pnpm dreamy add time-input
+```
+
+## Usage
+
+Click the control to open the time popover. Focus starts on the first field so you can type immediately. Use up and down arrows to change the focused segment, and left and right arrows to move between fields.
+
+<Wrapper>
+    <TimeInput.AIO />
+</Wrapper>
+
+```tsx
+<TimeInput.AIO />
+```
+
+### 12-hour format
+
+Pass `hour12` to show an AM/PM segment and 1-12 hour wheel (only when `hour` is included in `fields`).
+
+<Wrapper>
+    <TimeInput.AIO hour12 />
+</Wrapper>
+
+```tsx
+<TimeInput.AIO hour12 />
+```
+
+### Fields
+
+Use `fields` to choose any combination of `hour`, `minute`, `second`, and `millisecond`. Order is always normalized to hour → minute → second → millisecond. The string value format follows the active fields.
+
+<Wrapper>
+    <VStack alignItems="flex-start" gap={3}>
+        <TimeInput.AIO defaultValue="14:30:45" fields={["hour", "minute", "second"]} hour12 />
+        <TimeInput.AIO
+            defaultValue="14:30:45.100"
+            fields={["hour", "minute", "second", "millisecond"]}
+            millisecondStep={100}
+        />
+        <TimeInput.AIO defaultValue="05:30" fields={["minute", "second"]} />
+        <TimeInput.AIO defaultValue="45.250" fields={["second", "millisecond"]} millisecondStep={50} />
+    </VStack>
+</Wrapper>
+
+```tsx
+<TimeInput.AIO defaultValue="14:30:45" fields={["hour", "minute", "second"]} hour12 />
+<TimeInput.AIO
+  defaultValue="14:30:45.100"
+  fields={["hour", "minute", "second", "millisecond"]}
+  millisecondStep={100}
+/>
+<TimeInput.AIO defaultValue="05:30" fields={["minute", "second"]} />
+<TimeInput.AIO defaultValue="45.250" fields={["second", "millisecond"]} millisecondStep={50} />
+```
+
+### Controlled
+
+The value string matches the active `fields` (for example `"HH:mm"`, `"HH:mm:ss"`, or `"ss.SSS"`), even when `hour12` is enabled.
+
+<Wrapper>
+    <ControlledTimeInput />
+</Wrapper>
+
+```tsx
+const [value, setValue] = useState("14:30");
+
+<TimeInput.AIO hour12 value={value} onChange={setValue} />
+```
+
+### Sizes
+
+<Wrapper>
+    <HStack alignItems="flex-start">
+        <TimeInput.AIO size="sm" hour12 />
+        <TimeInput.AIO size="md" hour12 />
+        <TimeInput.AIO size="lg" hour12 />
+    </HStack>
+</Wrapper>
+
+```tsx
+<TimeInput.AIO size="sm" hour12 />
+<TimeInput.AIO size="md" hour12 />
+<TimeInput.AIO size="lg" hour12 />
+```
+
+### Variants
+
+<Wrapper>
+    <VStack alignItems="flex-start">
+        <TimeInput.AIO variant="outline" hour12 />
+        <TimeInput.AIO variant="solid" hour12 />
+        <TimeInput.AIO variant="filledOutline" hour12 />
+    </VStack>
+</Wrapper>
+
+```tsx
+<TimeInput.AIO variant="outline" hour12 />
+<TimeInput.AIO variant="solid" hour12 />
+<TimeInput.AIO variant="filledOutline" hour12 />
+```
+
+### Steps
+
+Use `minuteStep`, `secondStep`, and `millisecondStep` to snap each field (for example every 5 minutes or every 100ms). Prefer a larger `millisecondStep` when showing milliseconds so the wheel stays usable.
+
+<Wrapper>
+    <HStack alignItems="flex-start">
+        <TimeInput.AIO defaultValue="09:00" hour12 minuteStep={5} />
+        <TimeInput.AIO
+            defaultValue="14:30:00.000"
+            fields={["hour", "minute", "second", "millisecond"]}
+            millisecondStep={100}
+        />
+    </HStack>
+</Wrapper>
+
+```tsx
+<TimeInput.AIO defaultValue="09:00" hour12 minuteStep={5} />
+<TimeInput.AIO
+  defaultValue="14:30:00.000"
+  fields={["hour", "minute", "second", "millisecond"]}
+  millisecondStep={100}
+/>
+```
+
+### Compound API
+
+Compose the parts yourself when you need custom layout.
+
+<Wrapper>
+    <TimeInput.Root defaultValue="16:45:00" fields={["hour", "minute", "second"]} hour12>
+        <TimeInput.Trigger />
+        <TimeInput.Content>
+            <TimeInput.Columns />
+        </TimeInput.Content>
+    </TimeInput.Root>
+</Wrapper>
+
+```tsx
+<TimeInput.Root defaultValue="16:45:00" fields={["hour", "minute", "second"]} hour12>
+    <TimeInput.Trigger />
+    <TimeInput.Content>
+        <TimeInput.Columns />
+    </TimeInput.Content>
+</TimeInput.Root>
+```
+
+### With Field
+
+<Wrapper>
+    <Field.Root>
+        <Field.Label>Appointment time</Field.Label>
+        <TimeInput.AIO hour12 name="appointmentTime" />
+        <Field.Hint>Scroll the wheels or type each segment</Field.Hint>
+    </Field.Root>
+</Wrapper>
+
+```tsx
+<Field.Root>
+    <Field.Label>Appointment time</Field.Label>
+    <TimeInput.AIO hour12 name="appointmentTime" />
+    <Field.Hint>Scroll the wheels or type each segment</Field.Hint>
+</Field.Root>
+```
+
+### Popover props
+
+Use `popoverProps` on `TimeInput.Root` to forward behavior props to the internal [Popover](/docs/components/popover). Keep placement on the root `positioning` prop.
+
+```tsx
+<TimeInput.Root hour12 popoverProps={{ closeOnBlur: false }}>
+    <TimeInput.Trigger />
+    <TimeInput.Content>
+        <TimeInput.Columns />
+    </TimeInput.Content>
+</TimeInput.Root>
+```

@@ -88,7 +88,7 @@ assertType<PinInputProps["onChange"]>(
 assertType<PinInputProps>({
     children: null,
     // @ts-expect-error invalid size
-    size: "xl"
+    size: "3xl"
 });
 
 assertType<PinInputProps>({

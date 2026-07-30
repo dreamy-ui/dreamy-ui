@@ -132,7 +132,7 @@ const [page, setPage] = useState(1);
 
 ### Sizes
 
-Pagination comes with three sizes: `sm`, `md` (default), and `lg`.
+Pagination comes with five sizes: `sm`, `md` (default), `lg`, `xl`, and `2xl`.
 
 <Wrapper>
     <Pagination.Root count={100} pageSize={10} defaultPage={1} size="sm">
@@ -148,6 +148,18 @@ Pagination comes with three sizes: `sm`, `md` (default), and `lg`.
     </Pagination.Root>
 
     <Pagination.Root count={100} pageSize={10} defaultPage={1} size="lg">
+        <Pagination.PrevTrigger />
+        <Pagination.Items />
+        <Pagination.NextTrigger />
+    </Pagination.Root>
+
+    <Pagination.Root count={100} pageSize={10} defaultPage={1} size="xl">
+        <Pagination.PrevTrigger />
+        <Pagination.Items />
+        <Pagination.NextTrigger />
+    </Pagination.Root>
+
+    <Pagination.Root count={100} pageSize={10} defaultPage={1} size="2xl">
         <Pagination.PrevTrigger />
         <Pagination.Items />
         <Pagination.NextTrigger />
@@ -168,6 +180,18 @@ Pagination comes with three sizes: `sm`, `md` (default), and `lg`.
 </Pagination.Root>
 
 <Pagination.Root count={100} pageSize={10} defaultPage={1} size="lg">
+    <Pagination.PrevTrigger />
+    <Pagination.Items />
+    <Pagination.NextTrigger />
+</Pagination.Root>
+
+<Pagination.Root count={100} pageSize={10} defaultPage={1} size="xl">
+    <Pagination.PrevTrigger />
+    <Pagination.Items />
+    <Pagination.NextTrigger />
+</Pagination.Root>
+
+<Pagination.Root count={100} pageSize={10} defaultPage={1} size="2xl">
     <Pagination.PrevTrigger />
     <Pagination.Items />
     <Pagination.NextTrigger />
