@@ -13,6 +13,7 @@ services:
       PORT: 3000
       GITHUB_TOKEN: ${GITHUB_TOKEN:?GITHUB_TOKEN is required}
       VITE_SOURCE_REPO: ${VITE_SOURCE_REPO:-dreamy-ui/dreamy-ui}
+      DATABASE_URL: ${DATABASE_URL:-file:./prisma/data.db}
       # Set REDIS_URL to redis://redis:6379 when running with the redis profile.
       REDIS_URL: ${REDIS_URL:-}
     restart: unless-stopped

@@ -9,3 +9,4 @@ website/dump.rdb
 .DS_Store
 *.tmp.driveupload
 .idea
+.env
