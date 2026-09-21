@@ -37,9 +37,16 @@ RUN bun --filter @dreamy-ui/panda-preset build && \
     bun --filter @dreamy-ui/react build && \
     bun --filter dreamy-ui-website build
 
+# Drop devDependencies before the runner stage. Re-generate Prisma client after prune.
+RUN bun install --frozen-lockfile --production && \
+    cd website && bunx prisma generate
+
+# Single archive avoids Coolify/BuildKit failures copying huge node_modules trees.
+RUN tar -cf /tmp/node_modules.tar node_modules
+
 # =============================================================================
 # Stage 4: Minimal production runner
-# Keep the monorepo layout so workspace symlinks in website/node_modules stay valid.
+# Keep the monorepo layout so workspace symlinks in node_modules stay valid.
 # =============================================================================
 FROM oven/bun:alpine AS runner
 WORKDIR /repo
@@ -47,10 +54,11 @@ WORKDIR /repo
 RUN apk add --no-cache wget
 
 COPY --from=builder /repo/package.json /repo/bun.lock /repo/pnpm-workspace.yaml ./
-COPY --from=builder /repo/node_modules ./node_modules
-COPY --from=builder /repo/packages ./packages
-COPY --from=builder /repo/components ./components
+COPY --from=builder /repo/packages/panda-preset ./packages/panda-preset
+COPY --from=builder /repo/packages/react ./packages/react
 COPY --from=builder /repo/website ./website
+COPY --from=builder /tmp/node_modules.tar /tmp/node_modules.tar
+RUN tar -xf /tmp/node_modules.tar && rm /tmp/node_modules.tar
 
 WORKDIR /repo/website
 
