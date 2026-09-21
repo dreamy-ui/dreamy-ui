@@ -17,7 +17,10 @@ const envSchema = z.object({
     // GitHub repo used for source links in the docs UI
     VITE_SOURCE_REPO: z.string().optional().superRefine(requiredInProduction),
 
-    DATABASE_URL: z.string().default("file:./prisma/dev.db")
+    DATABASE_URL: z.string().default("file:./prisma/dev.db"),
+
+    // When unset or empty, the server uses an in-memory LRU cache instead of Redis.
+    REDIS_URL: z.string().optional()
 });
 
 export const env = envSchema.parse(process.env);

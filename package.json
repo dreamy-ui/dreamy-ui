@@ -30,6 +30,8 @@
 		"components:format": "bun --filter @dreamy-ui/registry format",
 		"components:watch": "bun --filter @dreamy-ui/registry watch",
 		"clean:deps": "node scripts/clean-deps.mjs",
+		"docker:env": "node scripts/ensure-compose-env.mjs",
+		"docker:up": "node scripts/ensure-compose-env.mjs && docker compose up --build",
 		"test": "bun --filter @dreamy-ui/registry test"
 	},
 	"keywords": [],

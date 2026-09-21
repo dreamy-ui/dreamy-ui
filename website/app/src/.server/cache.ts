@@ -1,10 +1,11 @@
-import type { Cache, CacheEntry, CachifiedOptions } from "@epic-web/cachified";
+import type { CacheEntry, CachifiedOptions } from "@epic-web/cachified";
 import { cachified as baseCachified, totalTtl } from "@epic-web/cachified";
 import { remember } from "@epic-web/remember";
 import { LRUCache } from "lru-cache";
 import type { HeadersFunction } from "react-router";
 import { minToMs } from "./docs";
 import { env } from "./env";
+import { createRedisCache, type ClearableCache } from "./redis-cache";
 
 /**
  * Cache control headers
@@ -41,11 +42,11 @@ const lruInstance = remember("lru", () => {
     return new LRUCache<string, CacheEntry>({ max: 1000 });
 });
 
-interface LruCache extends Cache {
+interface LruCache extends ClearableCache {
     clear(): void;
 }
 
-export const lru: LruCache = {
+const lru: LruCache = {
     async set(key, value) {
         const ttl = totalTtl(value?.metadata);
         return lruInstance.set(key, value, {
@@ -64,9 +65,23 @@ export const lru: LruCache = {
     }
 };
 
+function resolveCache(): ClearableCache {
+    const redisUrl = env.REDIS_URL?.trim();
+    if (redisUrl) {
+        return createRedisCache(redisUrl);
+    }
+    return lru;
+}
+
+const appCache = remember("app-cache", resolveCache);
+
+export function clearCache() {
+    void appCache.clear();
+}
+
 export function cachified<Value>(options: Omit<CachifiedOptions<Value>, "cache">) {
     return baseCachified({
-        cache: lru,
+        cache: appCache,
         ttl: env.NODE_ENV === "production" ? minToMs(15) : 0,
         staleWhileRevalidate: env.NODE_ENV === "production" ? minToMs(45) : 0,
         ...options

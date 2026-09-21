@@ -2,7 +2,7 @@ import { isbot } from "isbot";
 import { renderToReadableStream } from "react-dom/server";
 import type { EntryContext, RouterContextProvider } from "react-router";
 import { ServerRouter } from "react-router";
-import { lru } from "~/src/.server/cache";
+import { clearCache } from "~/src/.server/cache";
 
 export const streamTimeout = 5_000;
 
@@ -58,5 +58,5 @@ export default async function handleRequest(
 }
 
 if (process.env.NODE_ENV === "development") {
-    lru.clear();
+    clearCache();
 }

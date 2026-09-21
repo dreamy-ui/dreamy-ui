@@ -49,6 +49,7 @@
 		"react-router": "^undefined",
 		"react-textarea-autosize": "^8.5.9",
 		"recharts": "^3.7.0",
+		"redis": "^6.2.1",
 		"rehype-expressive-code": "^0.35.3",
 		"rehype-pretty-code": "^0.13.2",
 		"remark-gfm": "^4.0.1",
