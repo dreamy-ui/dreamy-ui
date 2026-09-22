@@ -5,6 +5,7 @@ import express from "express";
 import "react-router";
 import type { ServerBuild } from "react-router";
 import { createServer } from "vite";
+import { clearCache } from "~/src/.server/cache";
 
 const PORT = Number.parseInt(process.env.PORT || "3000", 10);
 const HOST = process.env.HOST || "0.0.0.0";
@@ -15,6 +16,8 @@ app.use(compression());
 app.disable("x-powered-by");
 
 console.log("Starting development server");
+
+await clearCache();
 
 const server = http.createServer(app);
 

@@ -75,8 +75,8 @@ function resolveCache(): ClearableCache {
 
 const appCache = remember("app-cache", resolveCache);
 
-export function clearCache() {
-    void appCache.clear();
+export async function clearCache() {
+    await appCache.clear();
 }
 
 export function cachified<Value>(options: Omit<CachifiedOptions<Value>, "cache">) {

@@ -45,6 +45,9 @@ export function createRedisCache(redisUrl: string): ClearableCache {
             return client.del(prefixedKey(key)).then(() => undefined);
         },
         async clear() {
+            if (!client.isOpen) {
+                await client.connect();
+            }
             for await (const key of client.scanIterator({ MATCH: `${KEY_PREFIX}*`, COUNT: 100 })) {
                 await client.del(key);
             }

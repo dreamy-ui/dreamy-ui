@@ -36,6 +36,13 @@ export async function getGithubStars(): Promise<number | null> {
         }
 
         const data = (await response.json()) as GitHubRepoResponse;
+
+        if (!data.stargazers_count) {
+            console.warn(`No stargazers_count found for ${repo}`);
+            console.log(JSON.stringify(data, null, 2));
+            return null;
+        }
+
         return data.stargazers_count ?? null;
     } catch (error) {
         console.warn(`Error fetching GitHub stars for ${repo}:`, error);

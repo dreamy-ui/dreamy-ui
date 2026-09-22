@@ -3,9 +3,11 @@ import { createRequestHandler } from "@react-router/express";
 import compression from "compression";
 import express from "express";
 import "react-router";
+import { clearCache } from "~/src/.server/cache";
 import { syncDocsFromFilesystem } from "~/src/.server/docs-sync";
 
 await syncDocsFromFilesystem();
+await clearCache();
 
 const PORT = Number.parseInt(process.env.PORT || "3000");
 
