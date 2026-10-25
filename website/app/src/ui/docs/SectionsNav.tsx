@@ -155,7 +155,7 @@ export const Section = memo(function Section({ section }: SectionProps) {
                                 // right={"0px"}
                                 // translate={"auto"}
                                 opacity={isCurrent ? 1 : 0}
-                                transition={"all 0.3s {easings.ease-in-out}"}
+                                transition={"all 0.3s {easings.easeInOut}"}
                                 w={"1px"}
                             />
                         </Flex>

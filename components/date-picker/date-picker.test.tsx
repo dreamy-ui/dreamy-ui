@@ -31,7 +31,7 @@ describe("DatePicker", () => {
         expect(screen.getByRole("button", { name: "Previous month" })).toBeInTheDocument();
         expect(screen.getByRole("button", { name: "Next month" })).toBeInTheDocument();
         expect(
-            screen.getByRole("button", { name: "Thursday, January 15, 2026" })
+            screen.getByRole("button", { name: /Thursday, January 15, 2026/i })
         ).toBeInTheDocument();
         expect(screen.getByPlaceholderText("Select date")).toHaveValue("Jan 15, 2026");
     });
@@ -103,7 +103,7 @@ describe("DatePicker", () => {
             expect(screen.getByRole("grid")).toBeInTheDocument();
         });
 
-        await user.click(screen.getByRole("button", { name: "Friday, July 17, 2026" }));
+        await user.click(screen.getByRole("button", { name: /Friday, July 17, 2026/i }));
 
         await waitFor(function assertValue() {
             expect(screen.getByPlaceholderText("Select date")).toHaveValue("Jul 17, 2026");
@@ -134,11 +134,17 @@ describe("DatePicker", () => {
             expect(screen.getByRole("grid")).toBeInTheDocument();
         });
 
-        expect(screen.getByRole("button", { name: "Friday, January 9, 2026" })).toBeDisabled();
-        expect(screen.getByRole("button", { name: "Wednesday, January 21, 2026" })).toBeDisabled();
+        expect(screen.getByRole("button", { name: /Friday, January 9, 2026/i })).toHaveAttribute(
+            "aria-disabled",
+            "true"
+        );
+        expect(screen.getByRole("button", { name: /Wednesday, January 21, 2026/i })).toHaveAttribute(
+            "aria-disabled",
+            "true"
+        );
         expect(
-            screen.getByRole("button", { name: "Thursday, January 15, 2026" })
-        ).not.toBeDisabled();
+            screen.getByRole("button", { name: /Thursday, January 15, 2026/i })
+        ).not.toHaveAttribute("aria-disabled", "true");
     });
 
     it("forwards inputGroupProps and endAddonProps to input parts", () => {

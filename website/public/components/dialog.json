@@ -1,0 +1,15 @@
+{
+  "type": "component",
+  "npmDependencies": [],
+  "fileDependencies": [
+    "./modal"
+  ],
+  "id": "dialog",
+  "file": {
+    "name": "dialog.tsx",
+    "content": "/**\r\n * Dialog is implemented as Modal in Dreamy UI.\r\n * Ark UI `Dialog` primitives power `Modal` behavior.\r\n */\r\nexport * as Dialog from \"./modal\";\r\n"
+  },
+  "component": "Dialog",
+  "hasRecipe": false,
+  "hasPattern": false
+}

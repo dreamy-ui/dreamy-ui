@@ -2,8 +2,8 @@
 title: Hover Card
 description: Displays a card with additional information when hovering over an element.
 isServerComponent: false
-source: /packages/react/src/components/hover-card/use-hover-card.ts
-themeSource: /website/components/recipes/hover-card.ts
+source: /components/hover-card/index.tsx
+themeSource: /components/recipes/hover-card.ts
 ---
 
 ## Installation
@@ -13,6 +13,8 @@ pnpm dreamy add hover-card
 ```
 
 ## Usage
+
+Hover Card uses [Ark UI Hover Card](https://ark-ui.com/docs/components/hover-card) for open/close timing, focus, and positioning. Dreamy provides recipes, `Portal` stacking, Motion on `HoverCard.Content`, and the compound API. Use `open`, `defaultOpen`, and `onOpenChange` for controlled state. `hasArrow` defaults to `true` on the root.
 
 Hover over the username to see a profile card.
 
@@ -331,7 +333,7 @@ Use `openDelay` and `closeDelay` to control how long before the card opens or cl
 
 ### Controlled
 
-Use `isOpen`, `onOpen`, and `onClose` props to control the hover card programmatically.
+Use `open` and `onOpenChange` to control the hover card programmatically.
 
 <Wrapper>
     <ControlledHoverCard />
@@ -339,21 +341,20 @@ Use `isOpen`, `onOpen`, and `onClose` props to control the hover card programmat
 
 ```tsx
 export function ControlledHoverCard() {
-    const { isOpen, onOpen, onClose, onToggle } = useControllable();
+    const [open, setOpen] = useState(false);
 
     return (
         <VStack align="flex-start" gap={4}>
             <Button
                 size="sm"
                 variant="outline"
-                onClick={onToggle}
+                onClick={() => setOpen(!open)}
             >
-                {isOpen ? "Close" : "Open"} hover card
+                {open ? "Close" : "Open"} hover card
             </Button>
             <HoverCard.Root
-                isOpen={isOpen}
-                onClose={onClose}
-                onOpen={onOpen}
+                open={open}
+                onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
             >
                 <HoverCard.Trigger>
                     <Button variant="link">@dreamy_ui</Button>

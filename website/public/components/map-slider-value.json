@@ -1,0 +1,13 @@
+{
+  "type": "module",
+  "npmDependencies": [],
+  "fileDependencies": [],
+  "id": "map-slider-value",
+  "file": {
+    "name": "map-slider-value.ts",
+    "content": "export function toSliderValue(value?: number | number[]): number[] | undefined {\r\n    if (value === undefined) {\r\n        return undefined;\r\n    }\r\n    return Array.isArray(value) ? value : [value];\r\n}\r\n\r\nexport function fromSliderValue(value: number[]): number {\r\n    return value[0] ?? 0;\r\n}\r\n"
+  },
+  "component": "MapSliderValue",
+  "hasRecipe": false,
+  "hasPattern": false
+}

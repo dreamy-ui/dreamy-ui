@@ -2,8 +2,8 @@
 title: Radio
 description: Radio is used to select a single option from a list of options.
 isServerComponent: false
-source: /packages/react/src/components/radio/radio.tsx
-themeSource: /packages/system/src/recipes/radio.ts
+source: /components/radio/index.tsx
+themeSource: /components/recipes/radio.ts
 ---
 
 ## Installation
@@ -13,6 +13,8 @@ pnpm dreamy add radio
 ```
 
 ## Usage
+
+Radio behavior uses [Ark UI Radio Group](https://ark-ui.com/docs/components/radio-group) with Dreamy recipes and `RadioGroup` layout. `isChecked` / `defaultIsChecked` / `onChange` map to Ark checked state and `onCheckedChange`.
 
 Radio buttons allow users to select one option from a set of mutually exclusive choices. Perfect for single-selection scenarios in forms.
 

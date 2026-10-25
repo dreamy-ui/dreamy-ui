@@ -67,16 +67,18 @@ describe("Tabs", () => {
 
         await user.keyboard("{ArrowRight}");
         await waitFor(() => {
-            expect(tabs[1]).toHaveFocus();
-            expect(tabs[1]).toHaveAttribute("aria-selected", "true");
-            expect(tabs[1]).toHaveAttribute("tabIndex", "0");
-            expect(tabs[0]).toHaveAttribute("tabIndex", "-1");
+            const nextTabs = screen.getAllByRole("tab");
+            expect(nextTabs[1]).toHaveFocus();
+            expect(nextTabs[1]).toHaveAttribute("aria-selected", "true");
+            expect(nextTabs[1]).toHaveAttribute("tabIndex", "0");
+            expect(nextTabs[0]).toHaveAttribute("tabIndex", "-1");
         });
 
         await user.keyboard("{ArrowLeft}");
         await waitFor(() => {
-            expect(tabs[0]).toHaveFocus();
-            expect(tabs[0]).toHaveAttribute("aria-selected", "true");
+            const nextTabs = screen.getAllByRole("tab");
+            expect(nextTabs[0]).toHaveFocus();
+            expect(nextTabs[0]).toHaveAttribute("aria-selected", "true");
         });
     });
 
@@ -104,8 +106,9 @@ describe("Tabs", () => {
         await user.keyboard("{ArrowDown}");
 
         await waitFor(() => {
-            expect(tabs[1]).toHaveFocus();
-            expect(tabs[1]).toHaveAttribute("aria-selected", "true");
+            const nextTabs = screen.getAllByRole("tab");
+            expect(nextTabs[1]).toHaveFocus();
+            expect(nextTabs[1]).toHaveAttribute("aria-selected", "true");
         });
     });
 
@@ -140,19 +143,19 @@ describe("Tabs", () => {
         expect(screen.queryByRole("button", { name: "In first" })).not.toBeInTheDocument();
     });
 
-    it("supports controlled index and onChange", async () => {
+    it("supports controlled value and onValueChange", async () => {
         const user = userEvent.setup();
-        const onChange = vi.fn();
+        const onValueChange = vi.fn();
 
         function Fixture() {
-            const [index, setIndex] = useState(0);
+            const [value, setValue] = useState("0");
 
             return (
                 <Tabs.Root
-                    index={index}
-                    onChange={(next) => {
-                        onChange(next);
-                        setIndex(next);
+                    value={value}
+                    onValueChange={(details) => {
+                        onValueChange(details);
+                        setValue(details.value);
                     }}
                 >
                     <Tabs.List>
@@ -170,15 +173,15 @@ describe("Tabs", () => {
         render(<Fixture />);
 
         await user.click(screen.getByRole("tab", { name: "Beta" }));
-        expect(onChange).toHaveBeenCalledWith(1);
+        expect(onValueChange).toHaveBeenCalledWith({ value: "1" });
         expect(screen.getByRole("tab", { name: "Beta" })).toHaveAttribute("aria-selected", "true");
     });
 
-    it("keeps selection manual until activation when isManual", async () => {
+    it("keeps selection manual until activation when manual", async () => {
         const user = userEvent.setup();
 
         render(
-            <Tabs.Root isManual>
+            <Tabs.Root manual>
                 <Tabs.List>
                     <Tabs.Tab>Manual 1</Tabs.Tab>
                     <Tabs.Tab>Manual 2</Tabs.Tab>
@@ -231,8 +234,9 @@ describe("Tabs", () => {
         await user.keyboard("{ArrowRight}");
 
         await waitFor(() => {
-            expect(tabs[2]).toHaveFocus();
-            expect(tabs[2]).toHaveAttribute("aria-selected", "true");
+            const nextTabs = screen.getAllByRole("tab");
+            expect(nextTabs[2]).toHaveFocus();
+            expect(nextTabs[2]).toHaveAttribute("aria-selected", "true");
         });
     });
 });

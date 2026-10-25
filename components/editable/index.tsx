@@ -1,118 +1,145 @@
 "use client";
 
-import {
-    EditableProvider,
-    type MaybeRenderProp,
-    type UseEditableProps,
-    type UseEditableReturn,
-    runIfFn,
-    useEditable,
-    useEditableContext
-} from "@dreamy-ui/react";
-
+import { Editable as ArkEditable, useEditableContext } from "@ark-ui/react/editable";
+import { type MaybeRenderProp, runIfFn, useSafeLayoutEffect } from "@dreamy-ui/react";
+import { useRef } from "react";
 import { type HTMLDreamyProps, createStyleContext, dreamy } from "styled-system/jsx";
 import { type EditableVariantProps, editable } from "styled-system/recipes";
-import { Box } from "../box";
-
-type RenderProps = Pick<UseEditableReturn, "isEditing" | "onSubmit" | "onCancel" | "onEdit">;
+import { mapEditableRootProps } from "./map-editable-props";
 
 export interface EditableProps
-    extends UseEditableProps,
-        Omit<HTMLDreamyProps<"div">, keyof UseEditableProps | "children">,
-        EditableVariantProps {
-    children?: MaybeRenderProp<RenderProps>;
+    extends Omit<
+            React.ComponentProps<typeof ArkEditable.Root>,
+            | "value"
+            | "defaultValue"
+            | "onValueChange"
+            | "onValueCommit"
+            | "onValueRevert"
+            | "defaultEdit"
+            | "edit"
+            | "disabled"
+            | "activationMode"
+            | "submitMode"
+            | "selectOnFocus"
+            | "placeholder"
+            | "translations"
+            | "children"
+        >,
+        EditableVariantProps,
+        Partial<Pick<HTMLDreamyProps<"div">, "bg" | "color" | "p" | "m" | "w" | "h" | "className">> {
+    defaultValue?: string;
+    value?: string;
+    onChange?: (value: string) => void;
+    onSubmit?: (value: string) => void;
+    onCancel?: (previousValue: string) => void;
+    onEdit?: () => void;
+    isEditing?: boolean;
+    defaultIsEditing?: boolean;
+    startWithEditView?: boolean;
+    isDisabled?: boolean;
+    useDoubleClick?: boolean;
+    isPreviewFocusable?: boolean;
+    submitOnBlur?: boolean;
+    selectAllOnFocus?: boolean;
+    placeholder?: string;
+    children?: MaybeRenderProp<{
+        isEditing: boolean;
+        onSubmit: () => void;
+        onCancel: () => void;
+        onEdit: () => void;
+    }>;
 }
 
 const { withProvider, withContext } = createStyleContext(editable);
 
-/**
- * Editable component — inline text that toggles between preview and edit modes.
- *
- * @see Docs https://dreamy-ui.com/docs/components/editable
- *
- * @example
- * ```tsx
- * <Editable.Root defaultValue="Click to edit">
- *   <Editable.Preview />
- *   <Editable.Input />
- *   <Editable.EditButton />
- * </Editable.Root>
- * ```
- */
-export const Root = withProvider(function EditableRoot(props: EditableProps) {
-    const context = useEditable(props);
+function EditableContent(props: { children?: EditableProps["children"] }) {
+    const api = useEditableContext();
+    const contentRef = useRef<HTMLDivElement>(null);
 
-    const { isEditing, onSubmit, onCancel, onEdit } = context;
+    useSafeLayoutEffect(
+        function focusInputOnEdit() {
+            if (!api.editing) return;
+
+            const input = contentRef.current?.querySelector<HTMLInputElement>(
+                '[data-scope="editable"][data-part="input"]'
+            );
+            input?.focus({ preventScroll: true });
+        },
+        [api.editing]
+    );
 
     const children = runIfFn(props.children, {
-        isEditing,
-        onSubmit,
-        onCancel,
-        onEdit
+        isEditing: api.editing,
+        onSubmit: api.submit,
+        onCancel: api.cancel,
+        onEdit: api.edit
     });
 
     return (
-        <EditableProvider value={context}>
-            <Box {...context.getRootProps({ ref: props.ref })}>{children}</Box>
-        </EditableProvider>
+        <dreamy.div
+            ref={contentRef}
+            data-editable-state={api.editing ? "editing" : "view"}
+            data-part="content"
+        >
+            {children}
+        </dreamy.div>
+    );
+}
+
+export const Root = withProvider(function EditableRoot(props: EditableProps) {
+    const { arkProps, children } = mapEditableRootProps(
+        props as Parameters<typeof mapEditableRootProps>[0]
+    );
+
+    return (
+        <ArkEditable.Root {...arkProps}>
+            <EditableContent children={children} />
+        </ArkEditable.Root>
     );
 }, "root");
 
-export interface EditablePreviewProps extends HTMLDreamyProps<"div"> {}
+export interface EditablePreviewProps extends HTMLDreamyProps<"span"> {
+    className?: string;
+}
 
-/**
- * Editable Preview — read-only display shown when not editing.
- */
-export const Preview = withContext(function EditablePreview(props: EditablePreviewProps) {
-    const { getPreviewProps } = useEditableContext();
+export const Preview = withContext(ArkEditable.Preview, "preview");
 
-    return <Box {...getPreviewProps(props)} />;
-}, "preview");
+export interface EditableInputProps extends HTMLDreamyProps<"input"> {
+    className?: string;
+}
 
-export interface EditableInputProps extends HTMLDreamyProps<"input"> {}
+export const Input = withContext(ArkEditable.Input, "input");
 
-/**
- * Editable Input — text field shown in edit mode.
- */
-export const Input = withContext(function EditableInput(props: EditableInputProps) {
-    const { getInputProps } = useEditableContext();
+export interface EditableEditButtonProps extends HTMLDreamyProps<"button"> {
+    className?: string;
+    children?: React.ReactNode;
+}
 
-    return <dreamy.input {...getInputProps(props)} />;
-}, "input");
-
-export interface EditableEditButtonProps extends HTMLDreamyProps<"button"> {}
-
-/**
- * Editable Edit Button — enters edit mode.
- */
 export const EditButton = withContext(function EditableEditButton(props: EditableEditButtonProps) {
-    const { getEditButtonProps } = useEditableContext();
-
-    return <dreamy.button {...getEditButtonProps(props)} />;
+    const { children, ...rest } = props;
+    return <ArkEditable.EditTrigger {...rest}>{children ?? "Edit"}</ArkEditable.EditTrigger>;
 }, "editButton");
 
-interface EditableSubmitButtonProps extends HTMLDreamyProps<"button"> {}
+interface EditableSubmitButtonProps extends HTMLDreamyProps<"button"> {
+    className?: string;
+    children?: React.ReactNode;
+}
 
-/**
- * Editable Submit Button — saves the edited value.
- */
 export const SubmitButton = withContext(function EditableSubmitButton(
     props: EditableSubmitButtonProps
 ) {
-    const { getSubmitButtonProps } = useEditableContext();
-
-    return <dreamy.button {...getSubmitButtonProps(props)} />;
+    const { children, ...rest } = props;
+    return <ArkEditable.SubmitTrigger {...rest}>{children ?? "Submit"}</ArkEditable.SubmitTrigger>;
 }, "submitButton");
 
-interface EditableCancelButtonProps extends HTMLDreamyProps<"button"> {}
+interface EditableCancelButtonProps extends HTMLDreamyProps<"button"> {
+    className?: string;
+    children?: React.ReactNode;
+}
 
-/**
- * Editable Cancel Button — discards edits and returns to preview mode.
- */
 export const CancelButton = withContext(function EditableCancelButton(
     props: EditableCancelButtonProps
 ) {
-    const { getCancelButtonProps } = useEditableContext();
-
-    return <dreamy.button {...getCancelButtonProps(props)} />;
+    const { children, ...rest } = props;
+    return <ArkEditable.CancelTrigger {...rest}>{children ?? "Cancel"}</ArkEditable.CancelTrigger>;
 }, "cancelButton");

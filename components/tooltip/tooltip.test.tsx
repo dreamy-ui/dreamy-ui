@@ -52,14 +52,14 @@ describe("Tooltip", () => {
 
     it("dismisses on Escape while open", async () => {
         const user = userEvent.setup();
-        const onClose = vi.fn();
+        const onOpenChange = vi.fn();
 
         render(
             <Tooltip
                 closeDelay={0}
-                closeOnEsc
+                closeOnEscape
                 content="Esc tip"
-                onClose={onClose}
+                onOpenChange={onOpenChange}
                 openDelay={0}
             >
                 <button type="button">Focus me</button>
@@ -74,7 +74,7 @@ describe("Tooltip", () => {
         await waitFor(() => {
             expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
         });
-        expect(onClose).toHaveBeenCalled();
+        expect(onOpenChange).toHaveBeenCalledWith({ open: false });
     });
 
     it("hides on blur and does not trap focus or set aria-modal", async () => {
@@ -134,13 +134,13 @@ describe("Tooltip", () => {
         expect(await screen.findByRole("tooltip")).toHaveTextContent("Wrapped");
     });
 
-    it("supports placement and isDisabled", async () => {
+    it("supports placement and disabled", async () => {
         const user = userEvent.setup();
 
         render(
             <Tooltip
                 content="Disabled tip"
-                isDisabled
+                disabled
                 openDelay={0}
                 positioning={{ placement: "top" }}
             >
@@ -150,5 +150,36 @@ describe("Tooltip", () => {
 
         await user.hover(screen.getByRole("button", { name: "Disabled tooltip" }));
         expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
+    });
+
+    it("renders an arrow with Ark sizing and background variables when hasArrow is set", async () => {
+        const user = userEvent.setup();
+
+        render(
+            <Tooltip
+                arrowSize={12}
+                closeDelay={0}
+                content="With arrow"
+                hasArrow
+                openDelay={0}
+            >
+                <button type="button">Arrow trigger</button>
+            </Tooltip>
+        );
+
+        await user.hover(screen.getByRole("button", { name: "Arrow trigger" }));
+        await screen.findByRole("tooltip");
+
+        const arrow = document.querySelector("[data-scope='tooltip'][data-part='arrow']");
+        const arrowTip = document.querySelector("[data-scope='tooltip'][data-part='arrow-tip']");
+
+        expect(arrow).toBeTruthy();
+        expect(arrowTip).toBeTruthy();
+
+        const arrowEl = arrow as HTMLElement;
+
+        expect(arrowEl.style.getPropertyValue("--arrow-size")).toBe("12px");
+        expect(arrowEl.style.getPropertyValue("--arrow-background")).toBe("var(--tooltip-bg)");
+        expect(arrowEl.style.width).toBe("var(--arrow-size)");
     });
 });

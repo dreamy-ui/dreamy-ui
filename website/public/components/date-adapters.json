@@ -1,0 +1,15 @@
+{
+  "type": "module",
+  "npmDependencies": [
+    "@internationalized/date"
+  ],
+  "fileDependencies": [],
+  "id": "date-adapters",
+  "file": {
+    "name": "date-adapters.ts",
+    "content": "import { CalendarDate, type DateValue, getLocalTimeZone } from \"@internationalized/date\";\r\n\r\nexport interface DreamyDateRange {\r\n    start: Date | null;\r\n    end: Date | null;\r\n}\r\n\r\nexport function jsDateToCalendarDate(date: Date): CalendarDate {\r\n    return new CalendarDate(date.getFullYear(), date.getMonth() + 1, date.getDate());\r\n}\r\n\r\nexport function calendarDateToJsDate(value: DateValue): Date {\r\n    return value.toDate(getLocalTimeZone());\r\n}\r\n\r\nexport function jsDateToArkValue(date: Date | null | undefined): DateValue[] {\r\n    if (!date) {\r\n        return [];\r\n    }\r\n    return [jsDateToCalendarDate(date)];\r\n}\r\n\r\nexport function arkValueToJsDate(values: DateValue[]): Date | null {\r\n    if (!values[0]) {\r\n        return null;\r\n    }\r\n    return calendarDateToJsDate(values[0]);\r\n}\r\n\r\nexport function rangeToArkValue(range: DreamyDateRange | null | undefined): DateValue[] {\r\n    if (!range) {\r\n        return [];\r\n    }\r\n\r\n    const values: DateValue[] = [];\r\n    if (range.start) {\r\n        values.push(jsDateToCalendarDate(range.start));\r\n    }\r\n    if (range.end) {\r\n        values.push(jsDateToCalendarDate(range.end));\r\n    }\r\n    return values;\r\n}\r\n\r\nexport function arkValueToRange(values: DateValue[]): DreamyDateRange | null {\r\n    if (!values.length) {\r\n        return null;\r\n    }\r\n\r\n    return {\r\n        start: values[0] ? calendarDateToJsDate(values[0]) : null,\r\n        end: values[1] ? calendarDateToJsDate(values[1]) : null\r\n    };\r\n}\r\n\r\nexport function jsDateToArkMinMax(date: Date | undefined): CalendarDate | undefined {\r\n    if (!date) {\r\n        return undefined;\r\n    }\r\n    return jsDateToCalendarDate(date);\r\n}\r\n"
+  },
+  "component": "DateAdapters",
+  "hasRecipe": false,
+  "hasPattern": false
+}

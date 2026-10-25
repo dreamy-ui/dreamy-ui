@@ -1,10 +1,10 @@
 "use client";
 
 import { Avatar, Button, HStack, HoverCard, Text, VStack } from "@/ui";
-import { useControllable } from "@dreamy-ui/react";
+import { useState } from "react";
 
 export function ControlledHoverCard() {
-    const { isOpen, onOpen, onClose, onToggle } = useControllable();
+    const [open, setOpen] = useState(false);
 
     return (
         <VStack
@@ -12,16 +12,15 @@ export function ControlledHoverCard() {
             gap={4}
         >
             <Button
-                onClick={onToggle}
+                onClick={() => setOpen(!open)}
                 size="sm"
                 variant="outline"
             >
-                {isOpen ? "Close" : "Open"} hover card
+                {open ? "Close" : "Open"} hover card
             </Button>
             <HoverCard.Root
-                isOpen={isOpen}
-                onClose={onClose}
-                onOpen={onOpen}
+                open={open}
+                onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
             >
                 <HoverCard.Trigger>
                     <Button variant="link">@dreamy_ui</Button>

@@ -1,27 +1,24 @@
-import createDreamyPreset, { dreamyPlugin } from "@dreamy-ui/panda-preset";
+import { createDreamyPresets, dreamyPlugin, splitThemeRecipes } from "@dreamy-ui/panda-preset";
 import { defineConfig } from "@pandacss/dev";
 import { patterns } from "./components/patterns";
-import { recipes } from "./components/recipes";
+import { recipes as recipeDefinitions } from "./components/recipes";
+
+const { recipes, slotRecipes } = splitThemeRecipes(recipeDefinitions);
 
 export default defineConfig({
     preflight: true,
-    watch: true,
     jsxFramework: "react",
     jsxStyleProps: "all",
     jsxFactory: "dreamy",
-    lightningcss: false,
-    // clean: true,
     outExtension: "js",
     include: [
         "./app/**/*.{js,jsx,ts,tsx}",
-        "./components/**/*.{js,jsx,ts,tsx}",
-        "./docs/**/*.{md,mdx}"
+        "./components/**/*.{js,jsx,ts,tsx}"
         // "../packages/react/dist/**/*.{js,jsx,ts,tsx}",
         // "../packages/panda-preset/dist/**/*.{js,jsx,ts,tsx}" // The preset location
     ],
     exclude: [],
-    presets: [
-        createDreamyPreset({
+    presets: createDreamyPresets({
             backgrounds: {
                 dark: "#080808",
                 light: "#FFF"
@@ -45,14 +42,14 @@ export default defineConfig({
             },
             secondaryColor: "#fd8ebc",
             rounded: "lg"
-        })
-    ],
+        }),
     patterns: {
         extend: patterns
     },
     theme: {
         extend: {
             recipes,
+            slotRecipes,
             semanticTokens: {
                 colors: {
                     tertiary: {
@@ -157,7 +154,6 @@ export default defineConfig({
                         flex: [1, "0 0 auto"],
                         pos: ["relative"],
                         opacity: [0],
-                        op: [0],
                         display: ["flex"],
                         lineHeight: ["normal"],
                         whiteSpace: ["nowrap"],

@@ -1,26 +1,26 @@
 import { Button, Drawer, Flex } from "@/ui";
-import { useControllable } from "@dreamy-ui/react";
 import type { Meta } from "@storybook/react-vite";
+import { useState } from "react";
 
 export default {
     title: "Drawer"
 } satisfies Meta;
 
 export function Base() {
-    const { isOpen, onClose, onOpen } = useControllable();
+    const [open, setOpen] = useState(false);
 
     return (
         <>
             <Button
-                onClick={onOpen}
+                onClick={() => setOpen(true)}
                 variant="primary"
             >
                 Open Drawer
             </Button>
 
             <Drawer.Root
-                isOpen={isOpen}
-                onClose={onClose}
+                open={open}
+                onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
             >
                 <Drawer.Overlay />
                 <Drawer.Content>
@@ -28,7 +28,7 @@ export function Base() {
                     <Drawer.CloseButton />
                     <Drawer.Body>Drawer Body</Drawer.Body>
                     <Drawer.Footer>
-                        <Button onClick={onClose}>Close</Button>
+                        <Button onClick={() => setOpen(false)}>Close</Button>
                     </Drawer.Footer>
                 </Drawer.Content>
             </Drawer.Root>
@@ -40,20 +40,20 @@ export function Variants() {
     const variants = ["inset", "simple"] as const;
 
     function DrawerVariant({ variant }: { variant: (typeof variants)[number] }) {
-        const { isOpen, onClose, onOpen } = useControllable();
+        const [open, setOpen] = useState(false);
 
         return (
             <>
                 <Button
-                    onClick={onOpen}
+                    onClick={() => setOpen(true)}
                     variant="primary"
                 >
                     Open {variant} Drawer
                 </Button>
 
                 <Drawer.Root
-                    isOpen={isOpen}
-                    onClose={onClose}
+                    open={open}
+                    onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
                     variant={variant}
                 >
                     <Drawer.Overlay />
@@ -65,7 +65,7 @@ export function Variants() {
                             simple is flush to the viewport edge.
                         </Drawer.Body>
                         <Drawer.Footer>
-                            <Button onClick={onClose}>Close</Button>
+                            <Button onClick={() => setOpen(false)}>Close</Button>
                         </Drawer.Footer>
                     </Drawer.Content>
                 </Drawer.Root>
@@ -89,20 +89,20 @@ export function Placements() {
     const placements = ["right", "left", "top", "bottom"] as const;
 
     function DrawerPlacement({ placement }: { placement: (typeof placements)[number] }) {
-        const { isOpen, onClose, onOpen } = useControllable();
+        const [open, setOpen] = useState(false);
 
         return (
             <>
                 <Button
-                    onClick={onOpen}
+                    onClick={() => setOpen(true)}
                     variant="primary"
                 >
                     Open {placement} Drawer
                 </Button>
 
                 <Drawer.Root
-                    isOpen={isOpen}
-                    onClose={onClose}
+                    open={open}
+                    onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
                     placement={placement}
                 >
                     <Drawer.Overlay />
@@ -111,7 +111,7 @@ export function Placements() {
                         <Drawer.CloseButton />
                         <Drawer.Body>Slides in from the {placement}.</Drawer.Body>
                         <Drawer.Footer>
-                            <Button onClick={onClose}>Close</Button>
+                            <Button onClick={() => setOpen(false)}>Close</Button>
                         </Drawer.Footer>
                     </Drawer.Content>
                 </Drawer.Root>
@@ -138,20 +138,20 @@ export function Sizes() {
     const sizes = ["xs", "sm", "md", "lg", "xl", "2xl", "full"] as const;
 
     function DrawerSize({ size }: { size: (typeof sizes)[number] }) {
-        const { isOpen, onClose, onOpen } = useControllable();
+        const [open, setOpen] = useState(false);
 
         return (
             <>
                 <Button
-                    onClick={onOpen}
+                    onClick={() => setOpen(true)}
                     variant="primary"
                 >
                     Open {size} Drawer
                 </Button>
 
                 <Drawer.Root
-                    isOpen={isOpen}
-                    onClose={onClose}
+                    open={open}
+                    onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
                     size={size}
                 >
                     <Drawer.Overlay />
@@ -160,7 +160,7 @@ export function Sizes() {
                         <Drawer.CloseButton />
                         <Drawer.Body>This is a {size} drawer.</Drawer.Body>
                         <Drawer.Footer>
-                            <Button onClick={onClose}>Close</Button>
+                            <Button onClick={() => setOpen(false)}>Close</Button>
                         </Drawer.Footer>
                     </Drawer.Content>
                 </Drawer.Root>
@@ -184,20 +184,20 @@ export function Sizes() {
 }
 
 export function ScrollBehaviorInside() {
-    const { isOpen, onClose, onOpen } = useControllable();
+    const [open, setOpen] = useState(false);
 
     return (
         <>
             <Button
-                onClick={onOpen}
+                onClick={() => setOpen(true)}
                 variant="primary"
             >
                 Open Drawer
             </Button>
 
             <Drawer.Root
-                isOpen={isOpen}
-                onClose={onClose}
+                open={open}
+                onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
                 scrollBehavior="inside"
                 size="lg"
             >
@@ -214,7 +214,7 @@ export function ScrollBehaviorInside() {
                         ))}
                     </Drawer.Body>
                     <Drawer.Footer>
-                        <Button onClick={onClose}>Close</Button>
+                        <Button onClick={() => setOpen(false)}>Close</Button>
                     </Drawer.Footer>
                 </Drawer.Content>
             </Drawer.Root>

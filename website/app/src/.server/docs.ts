@@ -145,38 +145,32 @@ export class Docs {
 
     public static async serialize(content: string, options?: { forStorage?: boolean }) {
         const headings = await extractHeadings(content);
-        const previousNodeEnv = process.env.NODE_ENV;
 
-        // next-mdx-remote always compiles with jsxDEV when NODE_ENV !== "production".
-        // Stored docs must use production JSX so MDXRemote can render them in production.
-        if (options?.forStorage) {
-            process.env.NODE_ENV = "production";
+        // forStorage is only used when persisting docs for production SSR (see docs-sync).
+        // Never flip process.env.NODE_ENV here: concurrent dev requests would compile MDX with
+        // production jsx while MDXRemote still uses the development jsx runtime.
+        if (options?.forStorage && env.NODE_ENV !== "production") {
+            throw new Error("Docs.serialize with forStorage requires NODE_ENV=production");
         }
 
-        try {
-            return await serialize(content, {
-                parseFrontmatter: true,
-                scope: {
-                    headings
-                },
-                mdxOptions: {
-                    remarkPlugins: [remarkGfm, remarkDreamyPMTabs],
-                    rehypePlugins: [
-                        [
-                            rehypePrettyCode,
-                            {
-                                defaultLang: "tsx",
-                                theme: cursorDarkTheme as any
-                            } satisfies Options
-                        ]
+        return serialize(content, {
+            parseFrontmatter: true,
+            scope: {
+                headings
+            },
+            mdxOptions: {
+                remarkPlugins: [remarkGfm, remarkDreamyPMTabs],
+                rehypePlugins: [
+                    [
+                        rehypePrettyCode,
+                        {
+                            defaultLang: "tsx",
+                            theme: cursorDarkTheme as any
+                        } satisfies Options
                     ]
-                }
-            });
-        } finally {
-            if (options?.forStorage) {
-                process.env.NODE_ENV = previousNodeEnv;
+                ]
             }
-        }
+        });
     }
 
     private static mapDocPage(doc: {

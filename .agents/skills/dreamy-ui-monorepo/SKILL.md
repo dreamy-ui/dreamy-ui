@@ -70,6 +70,12 @@ Use `withContext(dreamy.button, "option")` (or `dreamy.div`, etc.) for slot elem
 | `packages/cli` | `@dreamy-ui/cli` | Reads registry JSON and writes generated files into consumer projects (including `website/components/`). |
 | `website/` | `dreamy-ui-website` | Docs site. Imports components via `@/ui` → `website/components/ui/`. |
 
+## Overlay modularity (Popover)
+
+Dropdown-style components (**Menu**, **Select**, **Autocomplete**, **DatePicker**, **TimeInput**, etc.) must **compose** [`components/popover/`](../components/popover/) for the floating layer (`Popover.Root`, `Popover.Trigger`, `Popover.Content`). Ark UI handles collection/listbox behavior; Popover handles portal, positioning, panel styling, and enter/exit motion.
+
+See [dreamy-ui-ark-ui-migration](../dreamy-ui-ark-ui-migration/SKILL.md) (Popover composition section) for the full wiring checklist.
+
 ## Recipes vs patterns
 
 | | Recipe | Pattern |
@@ -344,5 +350,6 @@ TypeScript in `components/` resolves `styled-system/*` via `components/tsconfig.
 ## Related skills & rules
 
 - Consumer skills: [dreamy-ui](../../../skills/dreamy-ui/SKILL.md), [dreamy-ui-frontend](../../../skills/dreamy-ui-frontend/SKILL.md), [dreamy-ui-theming](../../../skills/dreamy-ui-theming/SKILL.md) + Dreamy UI MCP
+- Ark UI migration: [dreamy-ui-ark-ui-migration](../dreamy-ui-ark-ui-migration/SKILL.md)
 - Website routing: `.cursor/rules/react-router.mdc`
 - Frontend conventions: `.cursor/rules/dreamy-ui.mdc`

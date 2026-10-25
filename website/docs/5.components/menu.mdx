@@ -2,8 +2,8 @@
 title: Menu
 description: Menu allows to create a dropdown list of options.
 isServerComponent: false
-source: /packages/react/src/components/menu/menu.tsx
-themeSource: /packages/system/src/recipes/menu.ts
+source: /components/menu/index.tsx
+themeSource: /components/recipes/menu.ts
 ---
 
 ## Installation
@@ -46,7 +46,7 @@ Basic usage of Menu.
 
 ### Popover props
 
-Use `popoverProps` on `Menu.Root` to pass behavior props to the internal [Popover](/docs/components/popover). Keep placement options on the root `positioning` prop.
+`popoverProps` configures portal and lazy mount for the menu surface (legacy name): `usePortal`, `portalProps`, `isLazy`, and `reduceMotion`. Placement stays on the root `positioning` prop. Menu keyboard and ARIA use [Ark UI Menu](https://ark-ui.com/docs/components/menu); highlighted items expose `data-highlighted`. Exit motion runs before the surface is hidden (`unmountOnExit` stays off so Motion can finish).
 
 Menu uses the shared Portal stack at the `dropdown` layer (1000). Inside a Dreamy UI overlay, its scope nests automatically and adds 1000 to the parent base; nested menus continue the same scoped behavior. Keep the portal enabled—no manual layer or z-index is needed. For a native or third-party overlay, target its non-scrolling root with `popoverProps={{ portalProps: { containerRef } }}`.
 
@@ -258,7 +258,7 @@ You can use a custom link component with menu item but polymorphic props like `a
 
 ### Controlled
 
-You can control the menu with `isOpen`, `onOpen` and `onClose` props with `useControllable` hook.
+You can control the menu with `open` and `onOpenChange` on `Menu.Root` (for example with `useState`).
 
 <Wrapper>
     <ControlledMenu />
@@ -266,15 +266,14 @@ You can control the menu with `isOpen`, `onOpen` and `onClose` props with `useCo
 
 ```tsx
 export function ControlledMenu() {
-    const { isOpen, onClose, onOpen } = useControllable();
+    const [open, setOpen] = useState(false);
 
     return (
         <Menu.Root
-            isOpen={isOpen}
-            onOpen={onOpen}
-            onClose={onClose}
+            open={open}
+            onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
         >
-            <Text>{isOpen ? "Open" : "Closed"}</Text>
+            <Text>{open ? "Open" : "Closed"}</Text>
             <Menu.Trigger>
                 <Button>Open Menu</Button>
             </Menu.Trigger>

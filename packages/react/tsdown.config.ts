@@ -9,7 +9,7 @@ export default defineConfig((options) => ({
     dts: true,
     sourcemap: !options.watch,
     minify: !options.watch,
-    clean: true,
+    clean: !options.watch,
     splitting: false,
     outDir: "dist",
     ...options

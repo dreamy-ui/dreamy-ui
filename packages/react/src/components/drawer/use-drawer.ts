@@ -26,6 +26,8 @@ export interface UseDrawerReturn extends UseModalReturn {
 
 interface DrawerContext extends DrawerOptions, UseDrawerReturn {
     scrollBehavior?: "inside" | "outside";
+    reduceMotion?: boolean;
+    onExitAnimationComplete?: () => void;
 }
 
 export const [DrawerContextProvider, useDrawerContext] = createContext<DrawerContext>({

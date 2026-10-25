@@ -2,8 +2,8 @@
 title: Checkbox
 description: Checkbox is used to select one or more options from a list.
 isServerComponent: false
-source: /packages/react/src/components/checkbox/checkbox.tsx
-themeSource: /packages/system/src/recipes/checkbox.ts
+source: /components/checkbox/index.tsx
+themeSource: /components/recipes/checkbox.ts
 ---
 
 ## Installation
@@ -13,6 +13,8 @@ pnpm dreamy add checkbox
 ```
 
 ## Usage
+
+Checkbox behavior and keyboard interaction use [Ark UI Checkbox](https://ark-ui.com/docs/components/checkbox). Dreamy provides recipes, `CheckboxGroup`, and motion on the indicator. Controlled props `isChecked`, `defaultIsChecked`, and `onChange` map to Ark `checked`, `defaultChecked`, and `onCheckedChange`.
 
 Checkbox allows users to select multiple options from a list. Use it for multi-selection scenarios and boolean preferences.
 

@@ -21,7 +21,6 @@ export const staticCss: ReturnType<typeof defineConfig>["staticCss"] = {
 					pos: ["relative"],
 					rounded: ["inherit"],
 					opacity: [0],
-					op: [0],
 					px: ["0 !important"],
 					py: ["0 !important"],
 					display: ["flex"],

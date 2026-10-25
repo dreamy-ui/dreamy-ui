@@ -50,7 +50,7 @@ export interface ModalOptions {
      * If `true`, the modal will return focus to the element that triggered it when it closes.
      * @default true
      */
-    returnFocusOnClose?: boolean;
+    restoreFocus?: boolean;
     /**
      * If `true`, scrolling will be disabled on the `body` when the modal opens.
      * @default true
@@ -82,6 +82,8 @@ export interface ModalOptions {
 
 interface ModalContext extends ModalOptions, UseModalReturn {
     scrollBehavior?: "inside" | "outside";
+    reduceMotion?: boolean;
+    onExitAnimationComplete?: () => void;
 }
 
 export const [ModalContextProvider, useModalContext] = createContext<ModalContext>({
@@ -93,35 +95,35 @@ export const [ModalContextProvider, useModalContext] = createContext<ModalContex
 
 export interface UseModalProps {
     /**
-     * If `true`, the modal will be open.
+     * Whether the modal is open.
      */
-    isOpen: boolean;
+    open: boolean;
     /**
      * The `id` of the modal
      */
     id?: string;
     /**
-     * Callback invoked to close the modal.
+     * Callback fired when the open state changes.
      */
-    onClose(): void;
+    onOpenChange?: (details: { open: boolean }) => void;
     /**
      * If `true`, the modal will close when the overlay is clicked
      * @default true
      */
-    closeOnOverlayClick?: boolean;
+    closeOnInteractOutside?: boolean;
     /**
      * If `true`, the modal will close when the `Esc` key is pressed
      * @default true
      */
-    closeOnEsc?: boolean;
+    closeOnEscape?: boolean;
     /**
      * Callback fired when the overlay is clicked.
      */
-    onOverlayClick?(): void;
+    onInteractOutside?(): void;
     /**
      * Callback fired when the escape key is pressed and focus is within modal
      */
-    onEsc?(): void;
+    onEscapeKeyDown?(): void;
     /**
      * A11y: If `true`, the siblings of the `modal` will have `aria-hidden`
      * set to `true` so that screen readers can only see the `modal`.
@@ -139,6 +141,11 @@ export interface UseModalProps {
      * @default "outside"
      */
     scrollBehavior?: "inside" | "outside";
+    /**
+     * Whether the modal layer should stay mounted (for exit motion).
+     * Defaults to `open` when omitted.
+     */
+    present?: boolean;
 }
 
 /**
@@ -149,16 +156,23 @@ export interface UseModalProps {
  */
 export function useModal(props: UseModalProps) {
     const {
-        isOpen,
-        onClose,
+        open,
+        onOpenChange,
         id: idProp,
-        closeOnOverlayClick = true,
-        closeOnEsc = true,
+        closeOnInteractOutside = true,
+        closeOnEscape = true,
         useInert = true,
-        onOverlayClick: onOverlayClickProp,
-        onEsc,
-        scrollBehavior
+        onInteractOutside: onInteractOutsideProp,
+        onEscapeKeyDown,
+        scrollBehavior,
+        present: presentProp
     } = props;
+
+    const present = presentProp ?? open;
+
+    const onClose = useCallback(() => {
+        onOpenChange?.({ open: false });
+    }, [onOpenChange]);
 
     const dialogRef = useRef<HTMLDivElement>(null);
     const overlayRef = useRef<HTMLDivElement>(null);
@@ -176,12 +190,12 @@ export function useModal(props: UseModalProps) {
      *
      * @see https://developer.paciellogroup.com/blog/2018/06/the-current-state-of-modal-dialog-accessibility/
      */
-    useAriaHidden(dialogRef as any, isOpen && useInert);
+    useAriaHidden(dialogRef as any, present && useInert);
 
     /**
      * Hook used to manage multiple or nested modals
      */
-    const index = useModalManager(dialogRef, isOpen);
+    const index = useModalManager(dialogRef, present);
 
     const mouseDownTarget = useRef<EventTarget | null>(null);
 
@@ -194,14 +208,14 @@ export function useModal(props: UseModalProps) {
             if (event.key === "Escape") {
                 event.stopPropagation();
 
-                if (closeOnEsc) {
-                    onClose?.();
+                if (closeOnEscape) {
+                    onClose();
                 }
 
-                onEsc?.();
+                onEscapeKeyDown?.();
             }
         },
-        [closeOnEsc, onClose, onEsc]
+        [closeOnEscape, onClose, onEscapeKeyDown]
     );
 
     const [headerMounted, setHeaderMounted] = useState(false);
@@ -245,13 +259,13 @@ export function useModal(props: UseModalProps) {
              */
             if (!modalManager.isTopModal(dialogRef.current)) return;
 
-            if (closeOnOverlayClick) {
-                onClose?.();
+            if (closeOnInteractOutside) {
+                onClose();
             }
 
-            onOverlayClickProp?.();
+            onInteractOutsideProp?.();
         },
-        [onClose, closeOnOverlayClick, onOverlayClickProp]
+        [onClose, closeOnInteractOutside, onInteractOutsideProp]
     );
 
     const getDialogContainerProps: PropGetter = useCallback(
@@ -274,7 +288,9 @@ export function useModal(props: UseModalProps) {
     );
 
     return {
-        isOpen,
+        open,
+        present,
+        onOpenChange,
         onClose,
         headerId,
         bodyId,

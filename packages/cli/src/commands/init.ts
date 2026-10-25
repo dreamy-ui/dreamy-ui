@@ -173,10 +173,12 @@ async function createPandaConfig(cwd: string, framework: FrameworkConfig, isType
         const componentsImportPath = "./components";
 
         const configContent = isTypeScript
-            ? `import createDreamyPreset, { dreamyPlugin } from "@dreamy-ui/panda-preset";
+            ? `import { createDreamyPresets, dreamyPlugin, splitThemeRecipes } from "@dreamy-ui/panda-preset";
 import { defineConfig } from "@pandacss/dev";
 import { patterns } from "${componentsImportPath}/patterns";
-import { recipes } from "${componentsImportPath}/recipes";
+import { recipes as recipeDefinitions } from "${componentsImportPath}/recipes";
+
+const { recipes, slotRecipes } = splitThemeRecipes(recipeDefinitions);
 
 export default defineConfig({
     preflight: true,
@@ -187,12 +189,13 @@ export default defineConfig({
     include: [
         "${framework.includePattern}"
     ],
-    presets: [createDreamyPreset()],
+    presets: createDreamyPresets(),
     plugins: [dreamyPlugin()],
     patterns,
     theme: {
         extend: {
-            recipes
+            recipes,
+            slotRecipes
         }
     },
     globalCss: {
@@ -203,10 +206,12 @@ export default defineConfig({
     }
 });
 `
-            : `import createDreamyPreset, { dreamyPlugin } from "@dreamy-ui/panda-preset";
+            : `import { createDreamyPresets, dreamyPlugin, splitThemeRecipes } from "@dreamy-ui/panda-preset";
 import { defineConfig } from "@pandacss/dev";
 import { patterns } from "${componentsImportPath}/patterns";
-import { recipes } from "${componentsImportPath}/recipes";
+import { recipes as recipeDefinitions } from "${componentsImportPath}/recipes";
+
+const { recipes, slotRecipes } = splitThemeRecipes(recipeDefinitions);
 
 export default defineConfig({
     preflight: true,
@@ -217,12 +222,13 @@ export default defineConfig({
     include: [
         "${framework.includePattern}"
     ],
-    presets: [createDreamyPreset()],
+    presets: createDreamyPresets(),
     plugins: [dreamyPlugin()],
     patterns,
     theme: {
         extend: {
-            recipes
+            recipes,
+            slotRecipes
         }
     },
     globalCss: {

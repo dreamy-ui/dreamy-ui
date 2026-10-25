@@ -1,25 +1,24 @@
 import { Button } from "@/ui";
 import { Flex } from "@/ui";
 import { Popover } from "@/ui";
-import { type Placement, useControllable } from "@dreamy-ui/react";
-import { useCallback, useRef } from "react";
+import { type Placement } from "@dreamy-ui/react";
+import { useCallback, useRef, useState } from "react";
 
 export function ControlledPopover() {
-    const { isOpen, onOpen, onClose } = useControllable();
+    const [open, setOpen] = useState(false);
 
     const handleDelete = useCallback(() => {
         /**
          * Handle delete logic
          */
-        onClose();
-    }, [onClose]);
+        setOpen(false);
+    }, []);
 
     return (
         <Popover.Root
             hasArrow
-            isOpen={isOpen}
-            onClose={onClose}
-            onOpen={onOpen}
+            open={open}
+            onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
         >
             <Popover.Trigger>
                 <Button
@@ -38,7 +37,7 @@ export function ControlledPopover() {
                 </Popover.Body>
                 <Popover.Footer>
                     <Button
-                        onClick={onClose}
+                        onClick={() => setOpen(false)}
                         variant={"solid"}
                     >
                         Cancel
@@ -56,16 +55,15 @@ export function ControlledPopover() {
 }
 
 export function FocusPopover() {
-    const { isOpen, onOpen, onClose } = useControllable();
+    const [open, setOpen] = useState(false);
     const initialFocusRef = useRef<HTMLButtonElement>(null);
 
     return (
         <Popover.Root
             hasArrow
             initialFocusRef={initialFocusRef}
-            isOpen={isOpen}
-            onClose={onClose}
-            onOpen={onOpen}
+            open={open}
+            onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
         >
             <Popover.Trigger>
                 <Button
@@ -84,7 +82,7 @@ export function FocusPopover() {
                 </Popover.Body>
                 <Popover.Footer>
                     <Button
-                        onClick={onClose}
+                        onClick={() => setOpen(false)}
                         ref={initialFocusRef}
                         variant={"solid"}
                     >

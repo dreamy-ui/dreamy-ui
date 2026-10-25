@@ -18,14 +18,12 @@ export interface HeadingProps extends HTMLDreamyProps<"h3">, TextProperties {}
 export function Heading(props: HeadingProps) {
     const [patternProps, restProps] = splitProps(props, ["variant", "size"]);
 
-    const styleProps = text.raw({
-        variant: "heading",
-        ...patternProps
-    });
-
     return (
         <dreamy.h3
-            {...styleProps}
+            className={text({
+                variant: "heading",
+                ...patternProps
+            })}
             {...restProps}
         />
     );

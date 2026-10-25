@@ -1,0 +1,13 @@
+{
+  "type": "module",
+  "npmDependencies": [],
+  "fileDependencies": [],
+  "id": "select-ui-context",
+  "file": {
+    "name": "select-ui-context.tsx",
+    "content": "\"use client\";\r\n\r\nimport { createContext, useContext } from \"react\";\r\nexport interface SelectItemData {\r\n    value: string;\r\n    label: string;\r\n    disabled?: boolean;\r\n}\r\n\r\nexport interface SelectUiContextValue {\r\n    items: SelectItemData[];\r\n    renderItem?: (item: SelectItemData) => React.ReactNode;\r\n    selectedStrategy: \"checkmark\" | \"background\" | \"both\";\r\n    isClearable: boolean;\r\n    triggerFieldProps: React.HTMLAttributes<HTMLElement>;\r\n    onSingleValueChange?: (value: string) => void;\r\n}\r\n\r\nconst SelectUiContext = createContext<SelectUiContextValue | null>(null);\r\n\r\nexport function SelectUiProvider({\r\n    value,\r\n    children\r\n}: {\r\n    value: SelectUiContextValue;\r\n    children: React.ReactNode;\r\n}) {\r\n    return <SelectUiContext.Provider value={value}>{children}</SelectUiContext.Provider>;\r\n}\r\n\r\nexport function useSelectUi() {\r\n    const context = useContext(SelectUiContext);\r\n    if (!context) {\r\n        throw new Error(\"useSelectUi must be used within Select.Root\");\r\n    }\r\n    return context;\r\n}\r\n"
+  },
+  "component": "SelectUiContext",
+  "hasRecipe": false,
+  "hasPattern": false
+}

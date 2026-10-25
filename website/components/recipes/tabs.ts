@@ -107,7 +107,7 @@ export const tabs = defineSlotRecipe({
                     width: "fit-content"
                 },
                 tabIndicator: {
-                    backgroundColor: "{colors.alpha.50}",
+                    backgroundColor: "{colors.alpha.100}",
                     top: 0,
                     bottom: 0,
                     zIndex: -1

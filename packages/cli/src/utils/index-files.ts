@@ -241,11 +241,17 @@ function parseCustomComponentExportLines(content: string, generatedExportLines: 
     return customExportLines;
 }
 
+interface WriteComponentsIndexFileOptions {
+    excludeFileStems?: Set<string>;
+}
+
 export async function writeComponentsIndexFile(
     componentsDir: string,
     jsx: boolean,
-    debug: Debugger
+    debug: Debugger,
+    options: WriteComponentsIndexFileOptions = {}
 ) {
+    const excludeFileStems = options.excludeFileStems ?? new Set<string>();
     let componentFiles: string[] = [];
 
     try {
@@ -262,10 +268,14 @@ export async function writeComponentsIndexFile(
     const generatedExports: string[] = [];
 
     for (const file of componentFiles) {
+        const fileName = file.replace(/\.(tsx|ts|jsx|js)$/, "");
+        if (excludeFileStems.has(fileName)) {
+            continue;
+        }
+
         try {
             const filePath = join(componentsDir, file);
             const fileContent = await readFile(filePath, "utf-8");
-            const fileName = file.replace(/\.(tsx|ts|jsx|js)$/, "");
             const componentName = toPascalCase(fileName);
             const hasRootExport = /\bexport\s+(?:const|function)\s+Root\b/.test(fileContent);
 

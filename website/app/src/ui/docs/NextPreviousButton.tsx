@@ -41,7 +41,7 @@ export default function NextPreviousButton({ direction, to, label }: NextPreviou
                                 transform: "translateX(-4px)"
                             }}
                             as={BiChevronLeft}
-                            transition={"transform {durations.fast} {easings.ease-in-out}"}
+                            transition={"transform {durations.fast} {easings.easeInOut}"}
                         />
                     )}
                     <Text size={"sm"}>{label}</Text>
@@ -51,7 +51,7 @@ export default function NextPreviousButton({ direction, to, label }: NextPreviou
                                 transform: "translateX(4px)"
                             }}
                             as={BiChevronRight}
-                            transition={"transform {durations.fast} {easings.ease-in-out}"}
+                            transition={"transform {durations.fast} {easings.easeInOut}"}
                         />
                     )}
                 </HStack>

@@ -1,5 +1,6 @@
 import { getColorSchemes } from "@dreamy-ui/panda-preset";
-import { type SystemStyleObject, defineSlotRecipe } from "@pandacss/dev";
+import type { SystemStyleObject } from "@pandacss/types";
+import { defineSlotRecipe } from "@pandacss/dev";
 
 export const select = defineSlotRecipe({
     className: "select",
@@ -34,6 +35,7 @@ export const select = defineSlotRecipe({
             position: "relative",
             display: "flex",
             alignItems: "center",
+            width: "full",
             cursor: "pointer",
             justifyContent: "flex-start",
             gap: 4,
@@ -79,9 +81,9 @@ export const select = defineSlotRecipe({
                 _disabled: "fg.disabled",
                 _invalid: "error"
             },
-            transition: "transform {durations.normal} {easings.ease-in-out}",
+            transition: "transform {durations.normal} {easings.easeInOut}",
             transform: "rotate(0deg)",
-            ".group[data-open] &": {
+            "&[data-state=open]": {
                 transform: "rotate(180deg)"
             }
         },
@@ -93,7 +95,7 @@ export const select = defineSlotRecipe({
             cursor: "pointer",
             isolation: "isolate",
             pointerEvents: "auto",
-            transition: "color {durations.normal} {easings.ease-in-out}",
+            transition: "color {durations.normal} {easings.easeInOut}",
             _hover: {
                 color: "fg"
             },
@@ -104,13 +106,13 @@ export const select = defineSlotRecipe({
         content: {
             display: "flex",
             flexDirection: "column",
-            zIndex: "dropdown",
-            borderRadius: "l2!",
             outline: 0,
             maxH: "96",
             gap: "0 !important",
             overflowY: "auto",
-            boxShadow: "md"
+            borderRadius: "l2!",
+            width: "full",
+            minW: "0"
         },
         item: {
             position: "relative",
@@ -140,14 +142,15 @@ export const select = defineSlotRecipe({
             position: "absolute"
         },
         control: {
-            pos: "relative"
+            pos: "relative",
+            width: "full"
         }
     },
     variants: {
         variant: {
             plain: {
                 content: {
-                    p: "1.5!"
+                    p: "1.5"
                 },
                 item: {
                     borderRadius: "l1"
@@ -155,8 +158,8 @@ export const select = defineSlotRecipe({
             },
             stretched: {
                 content: {
-                    p: "0!",
-                    py: "1!"
+                    p: "0",
+                    py: "1"
                 },
                 item: {
                     borderRadius: "0"
@@ -169,7 +172,7 @@ export const select = defineSlotRecipe({
                     bg: "transparent",
                     borderWidth: "1px",
                     borderColor: "border",
-                    transition: "border-color {durations.normal} {easings.ease-in-out}",
+                    transition: "border-color {durations.normal} {easings.easeInOut}",
                     _hover: {
                         borderColor: "border.hover",
                         _invalid: {
@@ -197,7 +200,7 @@ export const select = defineSlotRecipe({
                     borderWidth: "0px",
                     borderColor: "transparent",
                     bg: "alpha.50",
-                    transition: "background 0.2s {easings.ease-in-out}",
+                    transition: "background 0.2s {easings.easeInOut}",
                     _hover: {
                         bg: "alpha.100"
                     },
@@ -215,7 +218,7 @@ export const select = defineSlotRecipe({
                     borderWidth: "2px",
                     borderColor: "border",
                     transition:
-                        "border-color {durations.normal} {easings.ease-in-out}, background {durations.normal} {easings.ease-in-out}",
+                        "border-color {durations.normal} {easings.easeInOut}, background {durations.normal} {easings.easeInOut}",
                     _hover: {
                         borderColor: "border.hover",
                         bg: "alpha.100",

@@ -4,6 +4,8 @@ import { createSemanticTokens } from "@/theme/semantic-tokens";
 import { createTokens } from "@/theme/tokens";
 import type { BorderRadius, DeepPartial } from "@/types";
 import { type Preset, definePreset } from "@pandacss/dev";
+import pandaBasePreset from "@pandacss/preset-base";
+import pandaPreset from "@pandacss/preset-panda";
 import deepmerge from "deepmerge";
 import { breakpoints } from "./breakpoints";
 import { conditions } from "./conditions";
@@ -209,6 +211,15 @@ export function getPresetOptions(): PresetOptions {
 
 export function setPresetOptions(options: PresetOptions): void {
     void presetStorage.enterWith(options);
+}
+
+/**
+ * Panda v2 does not include default presets when `presets` is set — use this in `panda.config`.
+ */
+export function createDreamyPresets(
+    optionsArg: DeepPartial<PresetOptions> = defaultPresetOptions
+): Preset[] {
+    return [pandaBasePreset, pandaPreset, createDreamyPreset(optionsArg)];
 }
 
 export default function createDreamyPreset(

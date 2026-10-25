@@ -1,52 +1,106 @@
 "use client";
 
-import { type UseCircularProgressProps, useCircularProgress } from "@dreamy-ui/react";
-
+import { Progress as ArkProgress } from "@ark-ui/react/progress";
+import { dataAttr } from "@dreamy-ui/react";
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type ProgressCircularVariantProps, progressCircular } from "styled-system/recipes";
 
+interface ProgressCircularOptions {
+    value?: number;
+    label?: string;
+    showValueLabel?: boolean;
+    valueLabel?: string;
+    minValue?: number;
+    maxValue?: number;
+    isIndeterminate?: boolean;
+    isDisabled?: boolean;
+    speed?: string;
+}
+
 export interface ProgressCircularProps
-    extends UseCircularProgressProps,
-        Omit<HTMLDreamyProps<"div">, keyof UseCircularProgressProps>,
-        ProgressCircularVariantProps {}
+    extends ProgressCircularOptions,
+        Omit<
+            React.ComponentProps<typeof ArkProgress.Root>,
+            "orientation" | "min" | "max" | "defaultValue" | "value"
+        >,
+        ProgressCircularVariantProps,
+        Omit<HTMLDreamyProps<"div">, "defaultValue"> {
+    "aria-label"?: string;
+}
 
-const StyledProgressCircular = dreamy("div", progressCircular);
+const StyledProgressCircular = dreamy(ArkProgress.Root, progressCircular);
 
-/**
- * ProgressCircular component — circular progress indicator.
- *
- * @see Docs https://dreamy-ui.com/docs/components/progress-circular
- *
- * @example
- * ```tsx
- * <ProgressCircular value={75} aria-label="Uploading" />
- * ```
- */
 export function ProgressCircular(props: ProgressCircularProps) {
     const {
         label,
         showValueLabel,
-        getProgressBarProps,
-        getLabelProps,
-        getSvgProps,
-        getIndicatorProps,
-        getTrackProps,
-        valueText
-    } = useCircularProgress(props);
+        valueLabel,
+        value,
+        minValue,
+        maxValue,
+        isIndeterminate: isIndeterminateProp,
+        isDisabled,
+        speed = "1.5s",
+        children,
+        "aria-label": ariaLabel,
+        "aria-valuetext": ariaValueText,
+        style,
+        ...rest
+    } = props;
+
+    const min = minValue ?? 0;
+    const max = maxValue ?? 100;
+    const isIndeterminate = isIndeterminateProp ?? value === undefined;
+    const progressValue = isIndeterminate ? null : value;
 
     return (
-        <StyledProgressCircular {...getProgressBarProps()}>
+        <StyledProgressCircular
+            {...rest}
+            aria-label={ariaLabel}
+            aria-valuemax={max}
+            aria-valuemin={min}
+            aria-valuenow={isIndeterminate ? undefined : value}
+            aria-valuetext={
+                ariaValueText ?? (valueLabel != null ? valueLabel : undefined)
+            }
+            data-disabled={dataAttr(isDisabled)}
+            data-indeterminate={dataAttr(isIndeterminate)}
+            max={max}
+            min={min}
+            orientation="circular"
+            role="progressbar"
+            style={{
+                // @ts-expect-error css variable
+                "--speed": speed,
+                ...style
+            }}
+            value={progressValue}
+        >
             <div>
-                <svg
-                    {...getSvgProps()}
+                <ArkProgress.Circle
                     aria-hidden="true"
+                    aria-label={undefined}
+                    aria-valuemax={undefined}
+                    aria-valuemin={undefined}
+                    aria-valuenow={undefined}
+                    data-part="circle"
+                    role="presentation"
+                    style={{
+                        // @ts-expect-error css variable
+                        "--speed": speed
+                    }}
                 >
-                    <circle {...getTrackProps()} />
-                    <circle {...getIndicatorProps()} />
-                </svg>
-                {showValueLabel && <span data-part="valueText">{valueText}</span>}
+                    <ArkProgress.CircleTrack data-part="circleTrack" />
+                    <ArkProgress.CircleRange data-part="circleRange" />
+                </ArkProgress.Circle>
+                {showValueLabel ? (
+                    <ArkProgress.ValueText data-part="valueText">
+                        {valueLabel}
+                    </ArkProgress.ValueText>
+                ) : null}
             </div>
-            {label && <span {...getLabelProps()}>{label}</span>}
+            {label ? <span data-part="label">{label}</span> : null}
+            {children}
         </StyledProgressCircular>
     );
 }

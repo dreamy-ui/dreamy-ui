@@ -1,5 +1,5 @@
-import { getColorSchemes } from "@dreamy-ui/panda-preset";
-import { defineParts, defineRecipe } from "@pandacss/dev";
+import { defineParts, getColorSchemes } from "@dreamy-ui/panda-preset";
+import { defineRecipe } from "@pandacss/dev";
 
 const parts = defineParts({
     root: {
@@ -17,6 +17,37 @@ const parts = defineParts({
 });
 
 export { parts as switchParts };
+
+const schemeVariants = getColorSchemes(
+    "--switch-bg",
+    (scheme) =>
+        scheme === "primary"
+            ? {
+                  _checked: {
+                      _dark: {
+                          "--switch-thumb-bg": "{colors.primary.fg}"
+                      }
+                  }
+              }
+            : scheme === "secondary"
+              ? {
+                    _checked: {
+                        _dark: {
+                            "--switch-thumb-bg": "{colors.secondary.fg}"
+                        }
+                    }
+                }
+              : scheme === "none"
+                ? {
+                      _checked: {
+                          _dark: {
+                              "--switch-thumb-bg": "black"
+                          }
+                      }
+                  }
+                : {},
+    "root"
+);
 
 export const swittch = defineRecipe({
     className: "switch",
@@ -36,7 +67,10 @@ export const swittch = defineRecipe({
                 cursor: "not-allowed",
                 opacity: 0.6
             },
-            "--switch-thumb-bg": "white"
+            "--switch-thumb-bg": "white",
+            "--switch-thumb-size": "calc(var(--switch-height) * 0.8)",
+            "--switch-thumb-gap": "calc(var(--switch-height) * 0.1)",
+            "--switch-thumb-active-size": "calc(var(--switch-height) * 1.1)"
         },
         control: {
             position: "relative",
@@ -51,31 +85,60 @@ export const swittch = defineRecipe({
             height: "var(--switch-height)",
             width: "var(--switch-width)",
             justifyContent: "flex-start",
-            _focusVisible: {
-                bg: "{colors.border}",
+            "&:is(:focus-visible, [data-focus-visible])": {
                 boxShadow: "0 0 0 1.5px {colors.primary}"
             },
-            ".group:is(:hover)&": {
+            "&:is(:focus-visible, [data-focus-visible]):not([data-state=checked])": {
+                bg: "{colors.border}"
+            },
+            ".group:is([data-checked]) &:is(:focus-visible, [data-focus-visible])": {
+                bg: "var(--switch-bg)"
+            },
+            "&:is(:focus-visible, [data-focus-visible])[data-state=checked]": {
+                bg: "var(--switch-bg)"
+            },
+            ".group:is(:hover) &:not([data-state=checked])": {
                 bg: "alpha.200"
             },
             ".group:is([data-checked])&": {
-                bg: "var(--switch-bg)",
-                justifyContent: "flex-end"
+                bg: "var(--switch-bg)"
+            },
+            "&[data-state=checked]": {
+                bg: "var(--switch-bg)"
             },
             ".group:is([data-invalid])&": {
                 boxShadow: "0 0 0 1.5px {colors.error}"
             }
         },
         thumb: {
+            width: "var(--switch-thumb-size)",
+            height: "var(--switch-thumb-size)",
+            transform: "translateX(var(--switch-thumb-gap))",
+            transformOrigin: "left center",
             ".group:is([data-active])&": {
-                width: "calc(var(--switch-height) * 1.35)"
+                width: "var(--switch-thumb-active-size)"
+            },
+            ".group:is([data-active])&[data-state=checked]": {
+                transform:
+                    "translateX(calc(var(--switch-width) - var(--switch-thumb-active-size) - var(--switch-thumb-gap)))",
+                transformOrigin: "right center"
+            },
+            "&[data-active]": {
+                width: "var(--switch-thumb-active-size)"
+            },
+            "&[data-active][data-state=checked]": {
+                transform:
+                    "translateX(calc(var(--switch-width) - var(--switch-thumb-active-size) - var(--switch-thumb-gap)))",
+                transformOrigin: "right center"
+            },
+            "&[data-state=checked]": {
+                transform:
+                    "translateX(calc(var(--switch-width) - var(--switch-thumb-size) - var(--switch-thumb-gap)))",
+                transformOrigin: "right center"
             },
             transition:
-                "width {durations.fast} {easings.ease-in-out}, background {durations.normal} {easings.ease-in-out}",
+                "transform {durations.fast} {easings.easeInOut}, width {durations.fast} {easings.easeInOut}, background {durations.normal} {easings.easeInOut}",
             bg: "var(--switch-thumb-bg)",
-            height: "var(--switch-height)",
-            width: "var(--switch-height)",
-            scale: 0.8,
             borderRadius: "full",
             display: "flex",
             alignItems: "center",
@@ -123,35 +186,11 @@ export const swittch = defineRecipe({
                 }
             })
         },
-        scheme: getColorSchemes(
-            "--switch-bg",
-            (scheme) =>
-                scheme === "primary"
-                    ? {
-                          _checked: {
-                              _dark: {
-                                  "--switch-thumb-bg": "{colors.primary.fg}"
-                              }
-                          }
-                      }
-                    : scheme === "secondary"
-                      ? {
-                            _checked: {
-                                _dark: {
-                                    "--switch-thumb-bg": "{colors.secondary.fg}"
-                                }
-                            }
-                        }
-                      : scheme === "none"
-                        ? {
-                              _checked: {
-                                  _dark: {
-                                      "--switch-thumb-bg": "black"
-                                  }
-                              }
-                          }
-                        : {},
-            "root"
+        scheme: Object.fromEntries(
+            Object.entries(schemeVariants).map(([name, slotStyles]) => [
+                name,
+                parts(slotStyles as Parameters<typeof parts>[0])
+            ])
         )
     }
 });

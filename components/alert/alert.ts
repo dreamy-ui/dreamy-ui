@@ -1,4 +1,5 @@
-import { defineParts, defineRecipe } from "@pandacss/dev";
+import { defineParts } from "@dreamy-ui/panda-preset";
+import { defineRecipe } from "@pandacss/dev";
 
 const parts = defineParts({
     root: { selector: "&" },

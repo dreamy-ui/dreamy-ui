@@ -29,11 +29,9 @@ export function Wrap(props: WrapProps) {
         "justify"
     ]);
 
-    const styles = wrap.raw(patternProps);
-
     return (
         <dreamy.div
-            {...styles}
+            className={wrap(patternProps)}
             {...restProps}
         />
     );

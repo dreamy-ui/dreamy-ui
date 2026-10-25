@@ -113,14 +113,15 @@ function releaseSharedPortalHost(ownerDocument: Document, host: SharedPortalHost
 function applyPortalLayerStyles(
     element: HTMLDivElement,
     baseZIndex: PortalZIndex,
-    localZIndex: PortalZIndex
+    localZIndex: PortalZIndex,
+    isActive: boolean
 ) {
     element.style.position = "absolute";
     element.style.inset = "0";
     element.style.width = "0";
     element.style.height = "0";
     element.style.overflow = "visible";
-    element.style.pointerEvents = "auto";
+    element.style.pointerEvents = isActive ? "auto" : "none";
     element.style.isolation = "isolate";
     element.style.zIndex = PORTAL_Z_INDEX;
     element.style.setProperty(PORTAL_BASE_Z_INDEX_VAR, String(baseZIndex));
@@ -195,9 +196,9 @@ function DefaultPortal({
     useLayoutEffect(
         function syncPortalLayer() {
             if (!container) return;
-            applyPortalLayerStyles(container, baseZIndex, localZIndex);
+            applyPortalLayerStyles(container, baseZIndex, localZIndex, isActive ?? true);
         },
-        [container, baseZIndex, localZIndex]
+        [container, baseZIndex, localZIndex, isActive]
     );
 
     useLayoutEffect(
@@ -267,9 +268,9 @@ function ContainerPortal({
     useLayoutEffect(
         function syncPortalLayer() {
             if (!container) return;
-            applyPortalLayerStyles(container, baseZIndex, localZIndex);
+            applyPortalLayerStyles(container, baseZIndex, localZIndex, isActive ?? true);
         },
-        [container, baseZIndex, localZIndex]
+        [container, baseZIndex, localZIndex, isActive]
     );
 
     useLayoutEffect(

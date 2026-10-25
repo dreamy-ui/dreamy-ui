@@ -1,6 +1,10 @@
 "use client";
 
 import {
+    Dialog as ArkDialog,
+    type DialogRootProps as ArkDialogRootProps
+} from "@ark-ui/react/dialog";
+import {
     FocusLock,
     ModalContextProvider,
     type ModalOptions,
@@ -8,14 +12,15 @@ import {
     type PortalProps,
     RemoveScroll,
     type UseModalProps,
+    transformReducedMotion,
     useDefaultTransition,
     useModal,
     useModalContext,
     useModalManager,
-    useMotionVariants
+    useMotionVariants,
+    useReducedMotion
 } from "@dreamy-ui/react";
-import { AnimatePresence, usePresence } from "motion/react";
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createStyleContext } from "styled-system/jsx";
 import { modal } from "styled-system/recipes";
 import { Box, type BoxProps } from "../box";
@@ -23,17 +28,23 @@ import { CloseButton as CloseButtonComponent, type CloseButtonProps } from "../c
 import { Flex, type FlexProps } from "../flex";
 import { Heading } from "../heading";
 import { MotionBox, type MotionBoxProps, MotionFlex, type MotionFlexProps } from "../motion";
+import { useFloatingPresent } from "../popover/use-floating-present";
 
 const { withContext, withRootProvider } = createStyleContext(modal);
 
-export interface ModalProps extends UseModalProps, ModalOptions {
+type ScrollBehavior = "inside" | "outside";
+
+export interface ModalProps
+    extends Omit<ArkDialogRootProps, "children">,
+        ModalOptions,
+        Pick<UseModalProps, "useInert"> {
     children: React.ReactNode;
     /**
      * Where scroll behavior should originate.
      * - If set to `inside`, scroll only occurs within the `ModalBody`.
      * - If set to `outside`, the entire `ModalContent` will scroll within the viewport.
      *
-     * @default "outside"
+     * @default "inside"
      */
     scrollBehavior?: ScrollBehavior;
     /**
@@ -53,7 +64,7 @@ export interface ModalProps extends UseModalProps, ModalOptions {
  *
  * @example
  * ```tsx
- * <Modal.Root isOpen={isOpen} onClose={onClose}>
+ * <Modal.Root open={open} onOpenChange={({ open }) => setOpen(open)}>
  *   <Modal.Overlay />
  *   <Modal.Content>
  *     <Modal.Header>Title</Modal.Header>
@@ -67,53 +78,125 @@ export const Root = withRootProvider(function ModalRoot(props: ModalProps) {
         scrollBehavior: "inside",
         autoFocus: true,
         trapFocus: true,
-        returnFocusOnClose: true,
+        restoreFocus: true,
         blockScrollOnMount: true,
         allowPinchZoom: false,
         preserveScrollBarGap: true,
+        closeOnEscape: true,
+        closeOnInteractOutside: true,
         ...props
     };
 
     const {
         children,
+        open: openProp,
+        defaultOpen,
+        onOpenChange,
         autoFocus,
         trapFocus,
         initialFocusRef,
         finalFocusRef,
-        returnFocusOnClose,
+        restoreFocus,
         blockScrollOnMount,
         scrollBehavior,
         allowPinchZoom,
         preserveScrollBarGap,
         onCloseComplete,
-        portalProps
+        portalProps,
+        closeOnEscape,
+        closeOnInteractOutside,
+        useInert,
+        id,
+        ...arkRest
     } = modalProps;
 
-    const modal = useModal(modalProps);
+    const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen ?? false);
+    const isControlled = openProp !== undefined;
+    const open = isControlled ? openProp : uncontrolledOpen;
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+    const handleOpenChange = useCallback(
+        (details: { open: boolean }) => {
+            if (!isControlled) {
+                setUncontrolledOpen(details.open);
+            }
+            onOpenChange?.(details);
+        },
+        [isControlled, onOpenChange]
+    );
+
+    const reduceMotion = useReducedMotion();
+    const { present, handleExitComplete } = useFloatingPresent(open, reduceMotion);
+
+    const handleMotionExitComplete = useCallback(() => {
+        handleExitComplete();
+        onCloseComplete?.();
+    }, [handleExitComplete, onCloseComplete]);
+
+    useEffect(() => {
+        if (!open && reduceMotion) {
+            onCloseComplete?.();
+        }
+    }, [open, onCloseComplete, reduceMotion]);
+
+    const modalState = useModal({
+        open,
+        present,
+        onOpenChange: handleOpenChange,
+        id,
+        closeOnEscape,
+        closeOnInteractOutside,
+        useInert,
+        scrollBehavior
+    });
+
     const context = useMemo(() => {
         return {
-            ...modal,
+            ...modalState,
             autoFocus,
             trapFocus,
             initialFocusRef,
             finalFocusRef,
-            returnFocusOnClose,
+            restoreFocus,
             blockScrollOnMount,
             allowPinchZoom,
             preserveScrollBarGap,
             onCloseComplete,
-            scrollBehavior
+            scrollBehavior,
+            reduceMotion,
+            onExitAnimationComplete: handleMotionExitComplete
         };
-    }, [modal]);
+    }, [
+        allowPinchZoom,
+        autoFocus,
+        blockScrollOnMount,
+        finalFocusRef,
+        handleMotionExitComplete,
+        initialFocusRef,
+        modalState,
+        onCloseComplete,
+        preserveScrollBarGap,
+        reduceMotion,
+        restoreFocus,
+        scrollBehavior,
+        trapFocus
+    ]);
 
     return (
-        <ModalContextProvider value={context}>
-            <AnimatePresence onExitComplete={onCloseComplete}>
-                {context.isOpen && (
+        <ArkDialog.Root
+            {...arkRest}
+            closeOnEscape={closeOnEscape}
+            closeOnInteractOutside={closeOnInteractOutside}
+            defaultOpen={defaultOpen}
+            id={id}
+            onOpenChange={handleOpenChange}
+            open={open}
+            present={present}
+            unmountOnExit={false}
+        >
+            <ModalContextProvider value={context}>
+                {present && (
                     <Portal
-                        isActive={context.isOpen}
+                        isActive={present}
                         key={context.id}
                         zIndex="var(--z-index-modal)"
                         {...portalProps}
@@ -121,8 +204,8 @@ export const Root = withRootProvider(function ModalRoot(props: ModalProps) {
                         {children}
                     </Portal>
                 )}
-            </AnimatePresence>
-        </ModalContextProvider>
+            </ModalContextProvider>
+        </ArkDialog.Root>
     );
 });
 
@@ -132,21 +215,20 @@ export interface ModalOverlayProps extends MotionBoxProps {}
  * Modal Overlay — backdrop behind the dialog content.
  */
 export const Overlay = withContext(function Component(props: ModalOverlayProps) {
-    const { isOpen } = useModalContext();
+    const { open, reduceMotion } = useModalContext();
     const { overlay } = useMotionVariants();
+    const transition = useDefaultTransition();
 
     return (
-        <AnimatePresence>
-            {isOpen && (
-                <MotionBox
-                    animate="animate"
-                    exit="exit"
-                    initial="initial"
-                    variants={overlay}
-                    {...props}
-                />
-            )}
-        </AnimatePresence>
+        <MotionBox
+            animate={open ? "animate" : "exit"}
+            exit="exit"
+            initial={reduceMotion ? false : "initial"}
+            transition={transition}
+            variants={transformReducedMotion(overlay, reduceMotion ?? false)}
+            {...(reduceMotion ? {} : { hidden: false })}
+            {...props}
+        />
     );
 }, "overlay");
 
@@ -167,27 +249,43 @@ export const Content = withContext(function Component({
     children,
     ...props
 }: ModalContentProps) {
-    const { getDialogProps } = useModalContext();
-    const { modal } = useMotionVariants();
+    const { getDialogProps, open, reduceMotion, onExitAnimationComplete } = useModalContext();
+    const { modal: modalVariants } = useMotionVariants();
     const transition = useDefaultTransition();
+    const exitNotifiedRef = useRef(false);
+
+    useEffect(() => {
+        if (open) {
+            exitNotifiedRef.current = false;
+        }
+    }, [open]);
 
     return (
-        <>
+        <ArkDialog.Positioner>
             <ModalFocusScope>
                 <Container>
-                    <MotionFlex
-                        animate="animate"
-                        exit="exit"
-                        initial="initial"
-                        transition={transition}
-                        variants={modal}
-                        {...getDialogProps(props)}
-                    >
-                        {children}
-                    </MotionFlex>
+                    <ArkDialog.Content asChild>
+                        <MotionFlex
+                            animate={open ? "animate" : "exit"}
+                            exit="exit"
+                            initial={reduceMotion ? false : "initial"}
+                            transition={transition}
+                            variants={transformReducedMotion(modalVariants, reduceMotion ?? false)}
+                            onAnimationComplete={() => {
+                                if (!open && !reduceMotion && !exitNotifiedRef.current) {
+                                    exitNotifiedRef.current = true;
+                                    onExitAnimationComplete?.();
+                                }
+                            }}
+                            {...(reduceMotion ? {} : { hidden: false })}
+                            {...getDialogProps(props)}
+                        >
+                            {children}
+                        </MotionFlex>
+                    </ArkDialog.Content>
                 </Container>
             </ModalFocusScope>
-        </>
+        </ArkDialog.Positioner>
     );
 }, "content");
 
@@ -297,22 +395,14 @@ function ModalFocusScope(props: ModalFocusScopeProps) {
         blockScrollOnMount,
         allowPinchZoom,
         finalFocusRef,
-        returnFocusOnClose,
+        restoreFocus,
         preserveScrollBarGap,
         lockFocusAcrossFrames,
         useInert,
-        isOpen
+        present
     } = useModalContext();
 
-    const [isPresent, safeToRemove] = usePresence();
-
-    useEffect(() => {
-        if (!isPresent && safeToRemove) {
-            setTimeout(safeToRemove);
-        }
-    }, [isPresent, safeToRemove]);
-
-    const index = useModalManager(dialogRef, isOpen);
+    const index = useModalManager(dialogRef, present);
 
     return (
         <FocusLock
@@ -322,7 +412,7 @@ function ModalFocusScope(props: ModalFocusScopeProps) {
             initialFocusRef={initialFocusRef}
             isDisabled={!trapFocus}
             lockFocusAcrossFrames={lockFocusAcrossFrames}
-            restoreFocus={returnFocusOnClose}
+            restoreFocus={restoreFocus}
         >
             <RemoveScroll
                 allowPinchZoom={allowPinchZoom}
@@ -337,5 +427,3 @@ function ModalFocusScope(props: ModalFocusScopeProps) {
         </FocusLock>
     );
 }
-
-type ScrollBehavior = "inside" | "outside";

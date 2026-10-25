@@ -62,7 +62,7 @@ export function getComponents(opts: {
     if (all)
         return {
             message: "Adding all components...",
-            items: items.map((item) => item.id)
+            items: items.filter((item) => item.type === "component").map((item) => item.id)
         };
 
     return {

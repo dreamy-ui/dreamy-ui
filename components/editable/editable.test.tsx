@@ -18,9 +18,33 @@ describe("Editable", () => {
         );
 
         expect(screen.getByText("Ada")).toBeInTheDocument();
-        expect(screen.getByRole("button", { name: "Edit" })).toBeInTheDocument();
-        expect(screen.getByRole("button", { name: "Submit" })).toBeInTheDocument();
-        expect(screen.getByRole("button", { name: "Cancel" })).toBeInTheDocument();
+
+        const actionButtons = screen.getAllByRole("button", { hidden: true });
+        expect(actionButtons.map((button) => button.textContent?.trim())).toEqual(
+            expect.arrayContaining(["Edit", "Submit", "Cancel"])
+        );
+    });
+
+    it("enters edit mode when the preview is clicked and focuses the input", async () => {
+        const user = userEvent.setup();
+        const onEdit = vi.fn();
+
+        render(
+            <Editable.Root
+                defaultValue="Ada"
+                onEdit={onEdit}
+            >
+                <Editable.Preview />
+                <Editable.Input />
+            </Editable.Root>
+        );
+
+        await user.click(screen.getByText("Ada"));
+
+        expect(onEdit).toHaveBeenCalled();
+        await waitFor(function waitForInputFocus() {
+            expect(screen.getByDisplayValue("Ada")).toHaveFocus();
+        });
     });
 
     it("enters edit mode from the Edit button and focuses the input", async () => {
@@ -43,7 +67,9 @@ describe("Editable", () => {
         await user.click(screen.getByRole("button", { name: "Edit" }));
 
         expect(onEdit).toHaveBeenCalled();
-        expect(screen.getByDisplayValue("Ada")).toHaveFocus();
+        await waitFor(function waitForInputFocusFromEditButton() {
+            expect(screen.getByDisplayValue("Ada")).toHaveFocus();
+        });
     });
 
     it("submits with Enter and cancels with Escape", async () => {
@@ -56,6 +82,7 @@ describe("Editable", () => {
                 defaultValue="Ada"
                 onCancel={onCancel}
                 onSubmit={onSubmit}
+                submitOnBlur={false}
             >
                 <Editable.Preview />
                 <Editable.Input />
@@ -66,17 +93,29 @@ describe("Editable", () => {
         );
 
         await user.click(screen.getByRole("button", { name: "Edit" }));
-        await user.clear(screen.getByDisplayValue("Ada"));
-        await user.type(screen.getByRole("textbox"), "Grace{Enter}");
+        const input = await screen.findByDisplayValue("Ada");
+        await waitFor(function waitForInputFocusBeforeSubmit() {
+            expect(input).toHaveFocus();
+        });
+        await user.clear(input);
+        await user.type(input, "Grace");
+        await user.keyboard("{Enter}");
 
         await waitFor(function waitForSubmit() {
             expect(onSubmit).toHaveBeenCalledWith("Grace");
         });
-        expect(screen.getByText("Grace")).toBeInTheDocument();
+        await waitFor(function waitForGracePreview() {
+            expect(screen.getByText("Grace")).toBeInTheDocument();
+        });
 
         await user.click(screen.getByRole("button", { name: "Edit" }));
-        await user.clear(screen.getByDisplayValue("Grace"));
-        await user.type(screen.getByRole("textbox"), "Alan{Escape}");
+        const inputAfterSubmit = await screen.findByDisplayValue("Grace");
+        await waitFor(function waitForInputFocusBeforeCancel() {
+            expect(inputAfterSubmit).toHaveFocus();
+        });
+        await user.clear(inputAfterSubmit);
+        await user.type(inputAfterSubmit, "Alan");
+        await user.keyboard("{Escape}");
 
         await waitFor(function waitForCancel() {
             expect(onCancel).toHaveBeenCalledWith("Grace");

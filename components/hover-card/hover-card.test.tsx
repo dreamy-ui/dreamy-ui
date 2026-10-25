@@ -72,13 +72,13 @@ describe("HoverCard", () => {
 
     it("dismisses on Escape", async () => {
         const user = userEvent.setup();
-        const onClose = vi.fn();
+        const onOpenChange = vi.fn();
 
         render(
             <HoverCard.Root
                 closeDelay={0}
-                closeOnEsc
-                onClose={onClose}
+                closeOnEscape
+                onOpenChange={onOpenChange}
                 openDelay={0}
             >
                 <HoverCard.Trigger>
@@ -104,14 +104,14 @@ describe("HoverCard", () => {
             expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
             expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
         });
-        expect(onClose).toHaveBeenCalled();
+        expect(onOpenChange).toHaveBeenCalledWith({ open: false });
     });
 
     it("supports controlled open state and interactive footer without aria-modal", async () => {
         render(
             <HoverCard.Root
                 closeDelay={0}
-                isOpen
+                open
                 openDelay={0}
             >
                 <HoverCard.Trigger>

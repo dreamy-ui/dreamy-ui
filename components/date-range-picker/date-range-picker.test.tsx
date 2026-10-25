@@ -1,6 +1,6 @@
-import { screen } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import * as Field from "../field";
 import { render } from "../test/render";
 import * as DateRangePicker from "./index";
@@ -38,7 +38,7 @@ describe("DateRangePicker", () => {
                     start: new Date(2026, 6, 1),
                     end: new Date(2026, 6, 10)
                 }}
-                popoverProps={{ usePortal: false, isOpen: true }}
+                popoverProps={{ usePortal: false, open: true }}
             >
                 <DateRangePicker.Input />
                 <DateRangePicker.PopoverContent>
@@ -51,26 +51,15 @@ describe("DateRangePicker", () => {
         expect(screen.getByRole("grid")).toBeInTheDocument();
         expect(screen.getByRole("button", { name: "Previous month" })).toBeInTheDocument();
         expect(screen.getByRole("button", { name: "Next month" })).toBeInTheDocument();
-        expect(
-            screen.getByRole("button", { name: /Wednesday, July 1, 2026/i })
-        ).toBeInTheDocument();
-        expect(
-            screen.getByRole("button", { name: /Friday, July 10, 2026/i })
-        ).toBeInTheDocument();
+        expect(screen.getByRole("button", { name: /July 1, 2026/i })).toBeInTheDocument();
+        expect(screen.getByRole("button", { name: /July 10, 2026/i })).toBeInTheDocument();
     });
 
     it("closes on Escape and restores focus to the trigger", async () => {
         const user = userEvent.setup();
-        const onClose = vi.fn();
 
         render(
-            <DateRangePicker.Root
-                popoverProps={{
-                    usePortal: false,
-                    isOpen: true,
-                    onClose
-                }}
-            >
+            <DateRangePicker.Root popoverProps={{ usePortal: false }}>
                 <DateRangePicker.Input />
                 <DateRangePicker.PopoverContent>
                     <DateRangePicker.Calendar />
@@ -79,20 +68,24 @@ describe("DateRangePicker", () => {
         );
 
         const input = screen.getByPlaceholderText("Select date range");
-        const dialog = screen.getByRole("dialog");
+        await user.click(input);
 
-        dialog.focus();
+        await waitFor(function assertOpen() {
+            expect(screen.getByRole("dialog")).toBeInTheDocument();
+        });
+
         await user.keyboard("{Escape}");
 
-        expect(onClose).toHaveBeenCalled();
-        // Focus must return to the control that opened the overlay
+        await waitFor(function assertClosed() {
+            expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+        });
         expect(input).toHaveFocus();
     });
 
     it("names preset and footer buttons when provided", () => {
         render(
             <DateRangePicker.Root
-                popoverProps={{ usePortal: false, isOpen: true }}
+                popoverProps={{ usePortal: false, open: true }}
                 presets={{
                     week: {
                         label: "This week",

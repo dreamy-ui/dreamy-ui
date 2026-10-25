@@ -168,10 +168,15 @@ export const Root = withProvider(function TimeInputRoot({
                 <PopoverRoot
                     autoFocus={false}
                     hasArrow={false}
-                    isOpen={ctx.isOpen}
-                    lazyBehavior="keepMounted"
-                    onClose={ctx.onClose}
-                    onOpen={ctx.onOpen}
+                    lazyMount
+                    open={ctx.isOpen}
+                    onOpenChange={({ open: nextOpen }) => {
+                        if (nextOpen) {
+                            ctx.onOpen();
+                        } else {
+                            ctx.onClose();
+                        }
+                    }}
                     positioning={{ placement: "bottom", ...positioning }}
                     {...popoverProps}
                     portalProps={{

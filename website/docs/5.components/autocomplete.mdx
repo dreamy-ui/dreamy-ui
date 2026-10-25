@@ -47,7 +47,7 @@ const fruits = [
 
 ### Popover props
 
-Use `popoverProps` on `Autocomplete.Root` to pass behavior props to the internal [Popover](/docs/components/popover). Keep placement options on the root `positioning` prop.
+Autocomplete behavior is powered by [Ark UI Combobox](https://ark-ui.com/docs/components/combobox) with Dreamy styling and Motion. Use `popoverProps` for portal options (`usePortal`, `portalProps`, `reduceMotion`). Keep placement on the root `positioning` prop.
 
 Autocomplete uses the shared Portal stack at the `dropdown` layer (1000). Inside a Dreamy UI overlay, its scope nests automatically and adds 1000 to the parent base. Keep the portal enabled—no manual layer or z-index is needed. For a native or third-party overlay, target its non-scrolling root with `popoverProps={{ portalProps: { containerRef } }}`.
 
@@ -59,7 +59,7 @@ Autocomplete uses the shared Portal stack at the `dropdown` layer (1000). Inside
             { value: "banana", label: "Banana" },
             { value: "orange", label: "Orange" },
         ]}
-        popoverProps={{ lazyBehavior: "unmount" }}
+        popoverProps={{ usePortal: true }}
     >
         <Autocomplete.Input placeholder="Search a fruit..." />
         <Autocomplete.Content />
@@ -69,7 +69,7 @@ Autocomplete uses the shared Portal stack at the `dropdown` layer (1000). Inside
 ```tsx
 <Autocomplete.Root
     items={fruits}
-    popoverProps={{ lazyBehavior: "unmount" }}
+    popoverProps={{ usePortal: true }}
 >
     <Autocomplete.Input placeholder="Search a fruit..." />
     <Autocomplete.Content />

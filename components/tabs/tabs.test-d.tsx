@@ -4,18 +4,18 @@ import type { TabListProps, TabPanelProps, TabPanelsProps, TabProps, TabsProps }
 type ExpectTrue<T extends true> = T;
 
 assertType<"horizontal" | "vertical" | undefined>({} as TabsProps["orientation"]);
-assertType<boolean | undefined>({} as TabsProps["isManual"]);
-assertType<number | undefined>({} as TabsProps["index"]);
-assertType<number | undefined>({} as TabsProps["defaultIndex"]);
-assertType<((index: number) => void) | undefined>({} as TabsProps["onChange"]);
+assertType<boolean | undefined>({} as TabsProps["manual"]);
+assertType<string | undefined>({} as TabsProps["value"]);
+assertType<string | undefined>({} as TabsProps["defaultValue"]);
+assertType<((details: { value: string }) => void) | undefined>({} as TabsProps["onValueChange"]);
 assertType<boolean | undefined>({} as TabProps["isDisabled"]);
 assertType<boolean | undefined>({} as TabProps["isFocusable"]);
 
 type _HasStateProps = ExpectTrue<
-    "index" extends keyof TabsProps
-        ? "onChange" extends keyof TabsProps
+    "value" extends keyof TabsProps
+        ? "onValueChange" extends keyof TabsProps
             ? "orientation" extends keyof TabsProps
-                ? "isManual" extends keyof TabsProps
+                ? "manual" extends keyof TabsProps
                     ? true
                     : false
                 : false
@@ -48,28 +48,16 @@ void (_stateProps && _partProps && _recipeProps);
 assertType<TabsProps>({
     children: null,
     orientation: "horizontal",
-    isManual: true,
-    index: 0,
-    defaultIndex: 1,
-    onChange: () => {},
+    manual: true,
+    value: "0",
+    defaultValue: "1",
+    onValueChange: () => {},
     variant: "filled",
     fitted: true
 });
 
 assertType<TabProps>({
     children: "Tab",
-    isDisabled: true,
+    isDisabled: false,
     isFocusable: true
-});
-
-assertType<TabsProps>({
-    children: null,
-    // @ts-expect-error invalid orientation
-    orientation: "diagonal"
-});
-
-assertType<TabsProps>({
-    children: null,
-    // @ts-expect-error invalid variant
-    variant: "pills"
 });

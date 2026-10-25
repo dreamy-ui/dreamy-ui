@@ -1,0 +1,15 @@
+{
+  "type": "module",
+  "npmDependencies": [
+    "@ark-ui"
+  ],
+  "fileDependencies": [],
+  "id": "map-radio-props",
+  "file": {
+    "name": "map-radio-props.ts",
+    "content": "import type { RadioGroupRootProps as ArkRadioGroupRootProps } from \"@ark-ui/react/radio-group\";\r\nimport type { RadioGroupItemProps as ArkRadioItemProps } from \"@ark-ui/react/radio-group\";\r\n\r\nexport interface DreamyRadioControlProps {\r\n    isChecked?: boolean;\r\n    defaultChecked?: boolean;\r\n    isDisabled?: boolean;\r\n    isInvalid?: boolean;\r\n    isReadOnly?: boolean;\r\n    isRequired?: boolean;\r\n    onChange?: React.ChangeEventHandler<HTMLInputElement>;\r\n    onChangeValue?: (value: string) => void;\r\n}\r\n\r\nexport function mapRadioItemProps(\r\n    props: DreamyRadioControlProps & Record<string, unknown>\r\n): ArkRadioItemProps {\r\n    const {\r\n        isChecked,\r\n        defaultChecked,\r\n        isDisabled,\r\n        isInvalid,\r\n        isReadOnly,\r\n        isRequired,\r\n        onChange,\r\n        onChangeValue,\r\n        value,\r\n        ...rest\r\n    } = props;\r\n\r\n    const dreamyOnlyKeys = new Set([\r\n        \"children\",\r\n        \"scheme\",\r\n        \"size\",\r\n        \"variant\",\r\n        \"className\",\r\n        \"reduceMotion\",\r\n        \"isCard\",\r\n        \"onBlur\",\r\n        \"onFocus\",\r\n        \"name\",\r\n        \"autoFocus\",\r\n        \"tabIndex\"\r\n    ]);\r\n\r\n    const arkRest = Object.fromEntries(\r\n        Object.entries(rest).filter(([key]) => !dreamyOnlyKeys.has(key))\r\n    );\r\n\r\n    return {\r\n        ...arkRest,\r\n        value: String(value ?? \"\"),\r\n        checked: isChecked,\r\n        defaultChecked,\r\n        disabled: isDisabled,\r\n        invalid: isInvalid,\r\n        readOnly: isReadOnly,\r\n        required: isRequired,\r\n        onCheckedChange: (details) => {\r\n            if (details.checked && value != null) {\r\n                onChangeValue?.(String(value));\r\n            }\r\n            onChange?.({\r\n                target: { checked: details.checked === true, value }\r\n            } as React.ChangeEvent<HTMLInputElement>);\r\n        }\r\n    } as ArkRadioItemProps;\r\n}\r\n\r\nexport function mapRadioGroupProps(props: {\r\n    isDisabled?: boolean;\r\n    isInvalid?: boolean;\r\n    isReadOnly?: boolean;\r\n    isRequired?: boolean;\r\n    value?: string;\r\n    defaultValue?: string;\r\n    onChange?: (value: string) => void;\r\n    name?: string;\r\n}): ArkRadioGroupRootProps {\r\n    const { isDisabled, isInvalid, isReadOnly, isRequired, value, defaultValue, onChange, name } =\r\n        props;\r\n\r\n    return {\r\n        disabled: isDisabled,\r\n        invalid: isInvalid,\r\n        readOnly: isReadOnly,\r\n        required: isRequired,\r\n        value,\r\n        defaultValue,\r\n        name,\r\n        onValueChange: (details) => {\r\n            onChange?.(details.value ?? \"\");\r\n        }\r\n    };\r\n}\r\n"
+  },
+  "component": "MapRadioProps",
+  "hasRecipe": false,
+  "hasPattern": false
+}

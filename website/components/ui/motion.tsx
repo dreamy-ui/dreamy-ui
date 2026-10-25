@@ -6,7 +6,6 @@ import * as m from "motion/react-m";
 
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type FlexProperties, flex } from "styled-system/patterns";
-import type { SystemStyleObject } from "styled-system/types";
 
 const StyledMotionBox = m.create(dreamy.div);
 
@@ -28,7 +27,9 @@ export function MotionBox(props: MotionBoxProps) {
     return <StyledMotionBox {...props} />;
 }
 
-export interface MotionFlexProps extends Omit<MotionBoxProps, "direction">, FlexProperties {}
+export interface MotionFlexProps
+    extends Omit<MotionBoxProps, "direction" | keyof FlexProperties>,
+        FlexProperties {}
 
 /**
  * MotionFlex component — animated flex container powered by Motion.
@@ -51,11 +52,9 @@ export function MotionFlex(props: MotionFlexProps) {
         "shrink"
     ]);
 
-    const styles = flex.raw(patternProps) as Omit<SystemStyleObject, "transition">;
-
     return (
         <StyledMotionBox
-            {...styles}
+            className={flex(patternProps)}
             {...restProps}
         />
     );

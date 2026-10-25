@@ -35,11 +35,7 @@ export const editable = defineSlotRecipe({
             color: "fg.medium",
             fontWeight: "medium",
             cursor: "pointer",
-            display: "none",
-            transition: "color {durations.normal} {easings.ease-in-out}",
-            "[data-editable-state=editing] &": {
-                display: "block"
-            },
+            transition: "color {durations.normal} {easings.easeInOut}",
             _hover: {
                 color: "fg"
             }
@@ -48,11 +44,7 @@ export const editable = defineSlotRecipe({
             color: "fg.medium",
             fontWeight: "medium",
             cursor: "pointer",
-            display: "none",
-            transition: "color {durations.normal} {easings.ease-in-out}",
-            "[data-editable-state=editing] &": {
-                display: "block"
-            },
+            transition: "color {durations.normal} {easings.easeInOut}",
             _hover: {
                 color: "fg"
             }
@@ -61,11 +53,7 @@ export const editable = defineSlotRecipe({
             color: "fg.medium",
             fontWeight: "medium",
             cursor: "pointer",
-            display: "none",
-            transition: "color {durations.normal} {easings.ease-in-out}",
-            "[data-editable-state=view] &": {
-                display: "block"
-            },
+            transition: "color {durations.normal} {easings.easeInOut}",
             _hover: {
                 color: "fg"
             }
@@ -79,7 +67,7 @@ export const editable = defineSlotRecipe({
                     rounded: "l1",
                     px: 1,
                     py: 0.5,
-                    transition: "background-color {durations.normal} {easings.ease-in-out}",
+                    transition: "background-color {durations.normal} {easings.easeInOut}",
                     _hover: {
                         bg: "alpha.50"
                     },

@@ -1,58 +1,110 @@
 "use client";
 
+import { RadioGroup as ArkRadioGroup } from "@ark-ui/react/radio-group";
 import {
     RadioGroupProvider,
     type UseRadioGroupProps,
     type UseRadioGroupReturn,
     type UseRadioProps,
-    useRadio,
-    useRadioGroup
+    useFieldProps,
+    useRadioGroup,
+    useRadioGroupContext
 } from "@dreamy-ui/react";
 import { useMemo } from "react";
 import { cx } from "styled-system/css";
-import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
+import { dreamy } from "styled-system/jsx";
 import { type RadioVariantProps, radio } from "styled-system/recipes";
 import { Flex, type FlexProps } from "./flex";
-import { VisuallyHiddenInput } from "./visually-hidden";
+import { mapRadioGroupProps } from "./map-radio-props";
+
+const StyledRadioItem = dreamy(ArkRadioGroup.Item, radio);
 
 export interface RadioProps
-    extends UseRadioProps,
-        RadioVariantProps,
-        Omit<HTMLDreamyProps<"input">, keyof UseRadioProps> {}
+    extends Omit<UseRadioProps, "isChecked">,
+        RadioVariantProps {
+    isChecked?: boolean;
+}
 
-const StyledRadio = dreamy("div", radio);
-
-/**
- * Radio component — single option in a mutually exclusive group.
- *
- * @see Docs https://dreamy-ui.com/docs/components/radio
- *
- * @example
- * ```tsx
- * <RadioGroup>
- *   <Radio value="a">Option A</Radio>
- *   <Radio value="b">Option B</Radio>
- * </RadioGroup>
- * ```
- */
-export function Radio(props: RadioProps) {
-    const {
-        children,
-        getRootProps,
-        getWrapperProps,
-        getControlProps,
-        getInputProps,
-        getLabelProps
-    } = useRadio(props);
+function RadioItem(props: RadioProps) {
+    const { children, value, className, name, scheme, size, variant, ...rest } = props;
+    const field = useFieldProps(props);
+    const groupContext = useRadioGroupContext();
 
     return (
-        <StyledRadio {...getRootProps()}>
-            <VisuallyHiddenInput {...getInputProps()} />
-            <span {...getWrapperProps()}>
-                <span {...getControlProps()} />
-            </span>
-            {children && <span {...getLabelProps()}>{children}</span>}
-        </StyledRadio>
+        <StyledRadioItem
+            className={cx("group", className)}
+            data-disabled={field.isDisabled ? "" : undefined}
+            data-invalid={field.isInvalid ? "" : undefined}
+            data-readonly={field.isReadOnly ? "" : undefined}
+            disabled={field.isDisabled}
+            invalid={field.isInvalid}
+            readOnly={field.isReadOnly}
+            required={field.isRequired}
+            scheme={scheme ?? groupContext?.scheme}
+            size={size ?? groupContext?.size}
+            variant={variant ?? groupContext?.variant}
+            value={String(value ?? "")}
+            {...rest}
+        >
+            <ArkRadioGroup.ItemHiddenInput
+                aria-describedby={field["aria-describedby"]}
+                aria-invalid={field.isInvalid ? true : undefined}
+                id={field.id}
+                name={name}
+            />
+            <ArkRadioGroup.ItemControl
+                aria-hidden="true"
+                data-part="wrapper"
+            >
+                <span data-part="control">
+                    <ArkRadioGroup.Indicator />
+                </span>
+            </ArkRadioGroup.ItemControl>
+            {children ? (
+                <ArkRadioGroup.ItemText data-part="label">{children}</ArkRadioGroup.ItemText>
+            ) : null}
+        </StyledRadioItem>
+    );
+}
+
+export function Radio(props: RadioProps) {
+    const { name, value, defaultChecked, isChecked, onChange, onChangeValue, ...rest } = props;
+    const groupContext = useRadioGroupContext();
+
+    if (groupContext) {
+        return (
+            <RadioItem
+                {...rest}
+                name={name}
+                onChange={onChange}
+                onChangeValue={onChangeValue}
+                value={value}
+            />
+        );
+    }
+
+    const defaultValue = defaultChecked ? String(value ?? "") : undefined;
+    const controlledValue = isChecked ? String(value ?? "") : isChecked === false ? "" : undefined;
+
+    return (
+        <ArkRadioGroup.Root
+            defaultValue={defaultValue}
+            name={name}
+            onValueChange={(details) => {
+                if (details.value) {
+                    onChangeValue?.(details.value);
+                }
+                onChange?.({
+                    target: { checked: true, value: details.value }
+                } as React.ChangeEvent<HTMLInputElement>);
+            }}
+            value={controlledValue}
+        >
+            <RadioItem
+                {...rest}
+                value={value}
+            />
+        </ArkRadioGroup.Root>
     );
 }
 
@@ -62,9 +114,6 @@ export interface RadioGroupContext
             "onChange" | "value" | "isDisabled" | "isInvalid" | "isRequired" | "isReadOnly"
         >,
         RadioVariantProps {
-    /**
-     * Should reduce motion
-     */
     reduceMotion?: boolean;
 }
 
@@ -73,9 +122,6 @@ export interface RadioGroupProps
         RadioVariantProps,
         Omit<FlexProps, "defaultValue" | "onChange"> {}
 
-/**
- * Radio Group — groups multiple radios with shared state.
- */
 export function RadioGroup(props: RadioGroupProps) {
     const {
         scheme,
@@ -89,22 +135,30 @@ export function RadioGroup(props: RadioGroupProps) {
         reduceMotion,
         onChange: onChangeProp,
         value: valueProp,
+        defaultValue,
+        name,
         ...rest
     } = props;
 
-    const { value, onChange } = useRadioGroup({
+    const group = useRadioGroup({
         onChange: onChangeProp,
         value: valueProp,
+        defaultValue,
+        name,
+        isDisabled,
+        isRequired,
+        isReadOnly,
+        isInvalid,
         ...props
     });
 
-    const group = useMemo(
+    const providerValue = useMemo(
         () => ({
             size,
             scheme,
             variant,
-            value,
-            onChange,
+            value: group.value,
+            onChange: group.onChange,
             isDisabled,
             isRequired,
             isReadOnly,
@@ -113,9 +167,9 @@ export function RadioGroup(props: RadioGroupProps) {
         }),
         [
             size,
-            onChange,
+            group.onChange,
+            group.value,
             scheme,
-            value,
             variant,
             isDisabled,
             isRequired,
@@ -125,14 +179,27 @@ export function RadioGroup(props: RadioGroupProps) {
         ]
     );
 
+    const arkGroup = mapRadioGroupProps({
+        isDisabled,
+        isInvalid,
+        isReadOnly,
+        isRequired,
+        value: group.value != null ? String(group.value) : undefined,
+        defaultValue: defaultValue != null ? String(defaultValue) : undefined,
+        name,
+        onChange: group.onChange
+    });
+
     return (
-        <RadioGroupProvider value={group}>
-            <Flex
-                {...rest}
-                className={cx("dreamy-radio-group", rest.className)}
-            >
-                {children}
-            </Flex>
+        <RadioGroupProvider value={providerValue}>
+            <ArkRadioGroup.Root {...arkGroup}>
+                <Flex
+                    {...rest}
+                    className={cx("dreamy-radio-group", rest.className)}
+                >
+                    {children}
+                </Flex>
+            </ArkRadioGroup.Root>
         </RadioGroupProvider>
     );
 }

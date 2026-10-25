@@ -1,7 +1,9 @@
-import createDreamyPreset, { dreamyPlugin } from "@dreamy-ui/panda-preset";
+import { createDreamyPresets, dreamyPlugin, splitThemeRecipes } from "@dreamy-ui/panda-preset";
 import { defineConfig } from "@pandacss/dev";
 import { patterns } from "./components/patterns";
-import { recipes } from "./components/recipes";
+import { recipes as recipeDefinitions } from "./components/recipes";
+
+const { recipes, slotRecipes } = splitThemeRecipes(recipeDefinitions);
 
 export default defineConfig({
     preflight: true,
@@ -12,12 +14,13 @@ export default defineConfig({
     include: [
         "./app/**/*.{js,jsx,ts,tsx}"
     ],
-    presets: [createDreamyPreset()],
+    presets: createDreamyPresets(),
     plugins: [dreamyPlugin()],
     patterns,
     theme: {
         extend: {
-            recipes
+            recipes,
+            slotRecipes
         }
     },
     globalCss: {

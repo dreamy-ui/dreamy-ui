@@ -1,36 +1,44 @@
 "use client";
 
 import {
+    HoverCard as ArkHoverCard,
+    type HoverCardRootProps as ArkHoverCardRootProps,
+    useHoverCardContext as useArkHoverCardContext
+} from "@ark-ui/react/hover-card";
+import {
     type MaybeRenderProp,
-    PopoverProvider,
     Portal,
     type PortalProps,
-    type UseHoverCardProps,
-    callAll,
+    type PositioningProps,
+    callAllHandlers,
     runIfFn,
     transformReducedMotion,
-    useHoverCard,
     useMotionVariants,
-    usePopoverContext
+    useReducedMotion
 } from "@dreamy-ui/react";
-import { Children, cloneElement } from "react";
+import { Children, cloneElement, useEffect, useId } from "react";
 import { type HTMLDreamyProps, createStyleContext } from "styled-system/jsx";
+import type { HoverCardVariantProps } from "styled-system/recipes";
 import { hoverCard } from "styled-system/recipes";
 import { Box, type BoxProps } from "./box";
 import { Heading } from "./heading";
 import { MotionBox, type MotionBoxProps } from "./motion";
+import { mapPositioningProps } from "./map-positioning";
+import { HoverCardUiProvider, useHoverCardUi } from "./hover-card-ui-context";
 
 const { withContext, withRootProvider } = createStyleContext(hoverCard, {
     forwardVariants: ["size"]
 });
 
-export interface HoverCardProps extends UseHoverCardProps {
+export interface HoverCardProps
+    extends Omit<ArkHoverCardRootProps, "positioning" | "lazyMount" | "unmountOnExit">,
+        HoverCardVariantProps {
     /**
      * The content of the hover card. Usually `HoverCard.Trigger` and `HoverCard.Content`.
      */
     children?: MaybeRenderProp<{
-        isOpen: boolean;
-        onClose: () => void;
+        open: boolean;
+        setOpen: (open: boolean) => void;
     }>;
     /**
      * If `true`, the hover card will show an arrow pointing to the trigger.
@@ -44,65 +52,76 @@ export interface HoverCardProps extends UseHoverCardProps {
     usePortal?: boolean;
     /**
      * Props forwarded to the `Portal` used by `HoverCard.Content`.
-     * Use `containerRef` to render into a native or third-party top-layer container.
      */
     portalProps?: Omit<PortalProps, "children">;
     /**
-     * Controlled open state of the hover card.
+     * Positioning configuration for the hover card floating element.
      */
-    isOpen?: boolean;
+    positioning?: PositioningProps;
     /**
-     * Initial open state when uncontrolled.
+     * If `true`, hover card open/close animations are disabled.
      */
-    defaultIsOpen?: boolean;
-    /**
-     * Callback fired when the hover card opens.
-     */
-    onOpen?: () => void;
-    /**
-     * Callback fired when the hover card closes.
-     */
-    onClose?: () => void;
+    reduceMotion?: boolean;
+}
+
+function HoverCardRoot(props: HoverCardProps) {
+    const {
+        children,
+        hasArrow = true,
+        usePortal = true,
+        portalProps,
+        positioning,
+        onOpenChange,
+        reduceMotion: reduceMotionProp,
+        openDelay = 300,
+        closeDelay = 300,
+        ...arkRest
+    } = props;
+
+    const globalReduceMotion = useReducedMotion();
+    const reduceMotion = reduceMotionProp ?? globalReduceMotion ?? false;
+
+    const arkRootProps: ArkHoverCardRootProps = {
+        ...arkRest,
+        openDelay,
+        closeDelay,
+        positioning: mapPositioningProps(positioning),
+        onOpenChange
+    };
+
+    return (
+        <HoverCardUiProvider
+            value={{
+                hasArrow,
+                usePortal,
+                portalProps,
+                reduceMotion
+            }}
+        >
+            <ArkHoverCard.Root {...arkRootProps}>
+                {typeof children === "function" ? (
+                    <ArkHoverCard.Context>
+                        {(api) =>
+                            runIfFn(children, {
+                                open: api.open,
+                                setOpen: api.setOpen
+                            })
+                        }
+                    </ArkHoverCard.Context>
+                ) : (
+                    children
+                )}
+            </ArkHoverCard.Root>
+        </HoverCardUiProvider>
+    );
 }
 
 /**
  * Hover Card component — rich preview panel shown on hover or focus.
  *
  * @see Docs https://dreamy-ui.com/docs/components/hover-card
- *
- * @example
- * ```tsx
- * <HoverCard.Root>
- *   <HoverCard.Trigger>
- *     <Button>Profile</Button>
- *   </HoverCard.Trigger>
- *   <HoverCard.Content>
- *     <HoverCard.Body>User details</HoverCard.Body>
- *   </HoverCard.Content>
- * </HoverCard.Root>
- * ```
  */
-export const Root = withRootProvider(function HoverCardRoot(props: HoverCardProps) {
-    const { children, hasArrow = true, usePortal = true, portalProps, ...rest } = props;
-
-    const context = useHoverCard(rest);
-
-    return (
-        <PopoverProvider
-            value={{
-                ...context,
-                hasArrow,
-                usePortal,
-                portalProps
-            }}
-        >
-            {runIfFn(children, {
-                isOpen: context.isOpen,
-                onClose: context.onClose
-            })}
-        </PopoverProvider>
-    );
-});
+export const Root = withRootProvider(HoverCardRoot);
 
 export interface HoverCardArrowProps extends HTMLDreamyProps<"div"> {}
 
@@ -110,12 +129,37 @@ export interface HoverCardArrowProps extends HTMLDreamyProps<"div"> {}
  * Hover Card Arrow — pointer indicating the trigger element.
  */
 export function Arrow(props: HoverCardArrowProps) {
-    const { getArrowProps, getArrowInnerProps } = usePopoverContext();
+    const side = "bottom";
+    const staticSide =
+        ({ top: "bottom", right: "left", bottom: "top", left: "right" } as const)[side] ?? "bottom";
 
     return (
-        <Box {...getArrowProps({ style: { backgroundColor: "transparent" } })}>
-            <Box {...getArrowInnerProps(props)} />
-        </Box>
+        <ArkHoverCard.Arrow
+            data-popper-arrow=""
+            style={{
+                backgroundColor: "transparent",
+                position: "absolute",
+                [staticSide]: "calc(var(--popper-arrow-size, 8px) / -2 + 1px)",
+                width: "var(--popper-arrow-size, 8px)",
+                height: "var(--popper-arrow-size, 8px)",
+                zIndex: -1
+            }}
+        >
+            <Box
+                data-popper-arrow-inner=""
+                style={{
+                    transform: "rotate(45deg)",
+                    background: "var(--popper-arrow-bg, var(--popper-arrow-bg))",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                    position: "absolute",
+                    zIndex: "inherit"
+                }}
+                {...props}
+            />
+        </ArkHoverCard.Arrow>
     );
 }
 
@@ -125,16 +169,27 @@ export interface HoverCardTransitionProps extends Omit<MotionBoxProps, "children
 }
 
 function Transition(props: HoverCardTransitionProps) {
-    const { children, arrowProps, ...rest } = props;
+    const { children, arrowProps, onKeyDown, ...rest } = props;
+    const { hasArrow, reduceMotion, contentLabelId } = useHoverCardUi();
+    const { open, setOpen } = useArkHoverCardContext();
 
-    const { isOpen, hasArrow, reduceMotion } = usePopoverContext();
-    const { popover } = useMotionVariants();
+    const { popover: motionVariants } = useMotionVariants();
 
     return (
         <MotionBox
-            animate={isOpen ? "initial" : "exit"}
+            animate={open ? "initial" : "exit"}
             initial={false}
-            variants={transformReducedMotion(popover, reduceMotion)}
+            variants={transformReducedMotion(motionVariants, reduceMotion)}
+            role="dialog"
+            aria-labelledby={contentLabelId}
+            tabIndex={-1}
+            onKeyDown={(event) => {
+                onKeyDown?.(event);
+                if (event.key === "Escape") {
+                    event.preventDefault();
+                    setOpen(false);
+                }
+            }}
             {...rest}
         >
             {hasArrow && <Arrow {...arrowProps} />}
@@ -152,44 +207,42 @@ export interface HoverCardContentProps extends HoverCardTransitionProps {
  * Hover Card Content — positioned panel revealed on hover or focus.
  */
 export const Content = withContext(function HoverCardContent(props: HoverCardContentProps) {
-    const { rootProps, motionProps, ...contentProps } = props;
+    const { rootProps, motionProps, arrowProps, children, ...contentProps } = props;
+    const { usePortal, portalProps, setContentId } = useHoverCardUi();
+    const { open } = useArkHoverCardContext();
+    const contentId = useId();
 
-    const {
-        getPopoverProps,
-        getPopoverPositionerProps,
-        isOpen,
-        onAnimationComplete,
-        usePortal,
-        portalProps
-    } = usePopoverContext();
+    useEffect(() => {
+        setContentId(contentId);
+    }, [contentId, setContentId]);
 
     if (typeof document === "undefined") return null;
 
-    const content = (
-        <div {...getPopoverPositionerProps(rootProps)}>
-            <Transition
-                {...getPopoverProps({
-                    // Hover cards frequently include interactive content; APG forbids
-                    // interactive tooltips, so default to a non-modal dialog.
-                    role: "dialog",
-                    ...motionProps,
-                    ...contentProps
-                })}
-                onAnimationComplete={callAll(onAnimationComplete, contentProps.onAnimationComplete)}
-            />
-        </div>
+    const rendered = (
+        <ArkHoverCard.Positioner {...rootProps}>
+            <ArkHoverCard.Content asChild>
+                <Transition
+                    id={contentId}
+                    {...motionProps}
+                    {...contentProps}
+                    arrowProps={arrowProps}
+                >
+                    {children}
+                </Transition>
+            </ArkHoverCard.Content>
+        </ArkHoverCard.Positioner>
     );
 
     return usePortal ? (
         <Portal
-            isActive={isOpen}
+            isActive={open}
             zIndex="var(--z-index-popover)"
             {...portalProps}
         >
-            {content}
+            {rendered}
         </Portal>
     ) : (
-        content
+        rendered
     );
 }, "content");
 
@@ -199,17 +252,24 @@ export interface HoverCardHeaderProps extends HTMLDreamyProps<"header"> {}
  * Hover Card Header — top section for title or summary content.
  */
 export const Header = withContext(function HoverCardHeader(props: HoverCardHeaderProps) {
-    const { getHeaderProps } = usePopoverContext();
+    const { children, ...rest } = props;
+    const labelId = useId();
+    const { setContentLabelId } = useHoverCardUi();
+
+    useEffect(() => {
+        setContentLabelId(labelId);
+    }, [labelId, setContentLabelId]);
 
     return (
         <Box
-            as={"header"}
-            {...getHeaderProps(props)}
+            as="header"
+            id={labelId}
+            {...rest}
         >
-            {typeof props.children === "string" ? (
-                <Heading size="md">{props.children}</Heading>
+            {typeof children === "string" ? (
+                <Heading size="md">{children}</Heading>
             ) : (
-                props.children
+                children
             )}
         </Box>
     );
@@ -221,9 +281,7 @@ export interface HoverCardBodyProps extends HTMLDreamyProps<"div"> {}
  * Hover Card Body — main content area of the hover card.
  */
 export const Body = withContext(function HoverCardBody(props: HoverCardBodyProps) {
-    const { getBodyProps } = usePopoverContext();
-
-    return <Box {...getBodyProps(props)} />;
+    return <Box {...props} />;
 }, "body");
 
 export interface HoverCardFooterProps extends BoxProps {}
@@ -234,7 +292,7 @@ export interface HoverCardFooterProps extends BoxProps {}
 export const Footer = withContext(function HoverCardFooter(props: HoverCardFooterProps) {
     return (
         <Box
-            as={"footer"}
+            as="footer"
             {...props}
         />
     );
@@ -247,7 +305,30 @@ export function Trigger(props: { children: React.ReactNode }) {
     const child = Children.only(props.children) as React.ReactElement<Record<string, unknown>> & {
         ref?: React.Ref<Element>;
     };
-    const { getTriggerProps } = usePopoverContext();
+    const { open, setOpen } = useArkHoverCardContext();
+    const { contentId } = useHoverCardUi();
 
-    return <>{cloneElement(child, getTriggerProps({ ...child.props, ref: child.ref }))}</>;
+    return (
+        <ArkHoverCard.Trigger asChild>
+            {cloneElement(child, {
+                ...child.props,
+                ref: child.ref,
+                ...(open && contentId
+                    ? {
+                          "aria-controls": contentId,
+                          "aria-expanded": true
+                      }
+                    : { "aria-expanded": false }),
+                onKeyDown: callAllHandlers(
+                    child.props.onKeyDown as React.KeyboardEventHandler<HTMLElement> | undefined,
+                    (event: React.KeyboardEvent<HTMLElement>) => {
+                        if (event.key === "Escape" && open) {
+                            event.preventDefault();
+                            setOpen(false);
+                        }
+                    }
+                )
+            })}
+        </ArkHoverCard.Trigger>
+    );
 }

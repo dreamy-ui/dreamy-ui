@@ -9,7 +9,8 @@ assertType<ReactNode | undefined>({} as TooltipProps["content"]);
 assertType<string | undefined>({} as TooltipProps["aria-label"]);
 assertType<boolean | undefined>({} as TooltipProps["shouldWrapChildren"]);
 assertType<boolean | undefined>({} as TooltipProps["hasArrow"]);
-assertType<boolean | undefined>({} as TooltipProps["isDisabled"]);
+assertType<boolean | undefined>({} as TooltipProps["disabled"]);
+assertType<number | undefined>({} as TooltipProps["arrowSize"]);
 assertType<boolean | undefined>({} as TooltipProps["disablePortal"]);
 assertType<boolean | undefined>({} as TooltipProps["closeOnEsc"]);
 assertType<number | undefined>({} as TooltipProps["openDelay"]);
@@ -52,7 +53,8 @@ assertType<TooltipProps>({
     "aria-label": "sr tip",
     shouldWrapChildren: true,
     hasArrow: true,
-    isDisabled: false,
+    arrowSize: 12,
+    disabled: false,
     disablePortal: false,
     closeOnEsc: true,
     openDelay: 0,

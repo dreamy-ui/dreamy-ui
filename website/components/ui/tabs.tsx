@@ -1,27 +1,17 @@
 "use client";
 
+import { Tabs as ArkTabs, useTabsContext } from "@ark-ui/react/tabs";
 import {
-    TabsDescendantsProvider,
-    TabsProvider,
     TRANSITION_EASINGS,
-    type UseTabListProps,
-    type UseTabOptions,
-    type UseTabsProps,
     useCanUseDOM,
     useDefaultTransition,
-    useReducedMotion,
-    useTab,
-    useTabList,
-    useTabPanel,
-    useTabPanels,
-    useTabs,
-    useTabsContext
+    useReducedMotion
 } from "@dreamy-ui/react";
-
+import { Children, cloneElement, createContext, isValidElement, useContext } from "react";
 import { type HTMLDreamyProps, createStyleContext } from "styled-system/jsx";
 import { type TabsVariantProps, tabs } from "styled-system/recipes";
 import { Box } from "./box";
-import { Button, type ButtonProps } from "./button";
+import { type ButtonProps } from "./button";
 import { Flex, type FlexProps } from "./flex";
 import { MotionFlex, type MotionFlexProps } from "./motion";
 
@@ -29,133 +19,180 @@ const { withProvider, withContext } = createStyleContext(tabs, {
     forwardVariants: ["orientation"]
 });
 
-export interface TabsProps
-    extends UseTabsProps,
-        Omit<HTMLDreamyProps<"div">, "onChange" | "direction">,
-        TabsVariantProps {
-    children: React.ReactNode;
+const TAB_PART = Symbol.for("dreamy.tabs.tab");
+const PANEL_PART = Symbol.for("dreamy.tabs.panel");
+
+interface TabsActivationContextValue {
+    isManual: boolean;
 }
 
-/**
- * Tabs component — switch between related content panels.
- *
- * @see Docs https://dreamy-ui.com/docs/components/tabs
- *
- * @example
- * ```tsx
- * <Tabs.Root>
- *   <Tabs.List>
- *     <Tabs.Tab>One</Tabs.Tab>
- *     <Tabs.Tab>Two</Tabs.Tab>
- *   </Tabs.List>
- *   <Tabs.Panels>
- *     <Tabs.Panel>Panel one</Tabs.Panel>
- *     <Tabs.Panel>Panel two</Tabs.Panel>
- *   </Tabs.Panels>
- * </Tabs.Root>
- * ```
- */
-export const Root = withProvider(function Tabs(props: TabsProps) {
-    const { children, ...rest } = props;
+const TabsActivationContext = createContext<TabsActivationContextValue>({ isManual: false });
 
-    const { htmlProps, descendants, ...ctx } = useTabs(rest);
+function getIsManual(manual?: boolean, activationMode?: TabsProps["activationMode"]) {
+    if (activationMode) {
+        return activationMode === "manual";
+    }
+    return manual === true;
+}
+
+function assignIndices(children: React.ReactNode, part: symbol) {
+    let index = 0;
+    return Children.map(children, (child) => {
+        if (!isValidElement(child)) {
+            return child;
+        }
+        if ((child.type as { partType?: symbol }).partType === part) {
+            const next = cloneElement(child, { index } as { index: number });
+            index += 1;
+            return next;
+        }
+        return child;
+    });
+}
+
+export interface TabsProps
+    extends Omit<React.ComponentProps<typeof ArkTabs.Root>, "activationMode">,
+        TabsVariantProps {
+    children: React.ReactNode;
+    /**
+     * When true, selection updates on Enter/Space or click, not on focus.
+     * Maps to Ark `activationMode="manual"`.
+     */
+    manual?: boolean;
+    activationMode?: React.ComponentProps<typeof ArkTabs.Root>["activationMode"];
+}
+
+function indexToValue(index: number) {
+    return String(index);
+}
+
+export const Root = withProvider(function Tabs(props: TabsProps) {
+    const { children, manual, activationMode, defaultValue, value, ...rest } = props;
+    const isManual = getIsManual(manual, activationMode);
 
     return (
-        <TabsDescendantsProvider value={descendants}>
-            <TabsProvider value={ctx}>
-                <Box {...htmlProps}>{children}</Box>
-            </TabsProvider>
-        </TabsDescendantsProvider>
+        <ArkTabs.Root
+            activationMode={activationMode ?? (manual ? "manual" : undefined)}
+            defaultValue={value === undefined ? (defaultValue ?? "0") : defaultValue}
+            value={value}
+            {...rest}
+        >
+            <TabsActivationContext.Provider value={{ isManual }}>
+                <Box data-part="root">{children}</Box>
+            </TabsActivationContext.Provider>
+        </ArkTabs.Root>
     );
 }, "root");
 
-export interface TabListProps extends UseTabListProps, Omit<FlexProps, "onKeyDown" | "ref"> {}
+export interface TabListProps extends FlexProps {}
 
-/**
- * Tabs List — container for tab triggers.
- */
 export const List = withContext(function TabList(props: TabListProps) {
-    const tablistProps = useTabList(props);
-
-    return <Flex {...tablistProps} />;
+    const { children, ...rest } = props;
+    return (
+        <ArkTabs.List {...rest}>
+            {assignIndices(children, TAB_PART)}
+            <TabIndicator />
+        </ArkTabs.List>
+    );
 }, "tabList");
 
-export interface TabProps extends UseTabOptions, ButtonProps {}
+export interface TabProps extends ButtonProps {
+    index?: number;
+}
 
-/**
- * Tabs Tab — a single tab trigger button.
- */
-export const Tab = withContext(function Tab(props: TabProps) {
-    const { children, ...rest } = props;
+function TabComponent(props: TabProps) {
+    const {
+        children,
+        index = 0,
+        isDisabled,
+        isLoading,
+        onFocus,
+        disableRipple: _disableRipple,
+        leftIcon: _leftIcon,
+        rightIcon: _rightIcon,
+        loadingText: _loadingText,
+        spinner: _spinner,
+        spinnerPlacement: _spinnerPlacement,
+        ...rest
+    } = props;
+    const value = indexToValue(index);
+    const tabsApi = useTabsContext();
+    const { isManual } = useContext(TabsActivationContext);
 
-    const { isSelected, props: tabProps } = useTab(rest);
+    function handleFocus(event: React.FocusEvent<HTMLButtonElement>) {
+        onFocus?.(event);
+        if (!isManual && !isDisabled && !isLoading) {
+            tabsApi.setValue(value);
+        }
+    }
 
     return (
-        <Button
-            disableRipple
-            size={"sm"}
-            variant={"ghost"}
-            {...tabProps}
+        <ArkTabs.Trigger
+            disabled={isDisabled || isLoading}
+            type="button"
+            value={value}
+            {...rest}
+            onFocus={handleFocus}
         >
             {children}
-            {isSelected && <Indicator />}
-        </Button>
+        </ArkTabs.Trigger>
     );
-}, "tab");
+}
+
+export const Tab = withContext(TabComponent, "tab");
+Tab.partType = TAB_PART;
 
 export interface TabPanelsProps extends FlexProps {}
 
-/**
- * Tabs Panels — container for tab panels.
- */
 export const Panels = withContext(function TabPanels(props: TabPanelsProps) {
-    const panelsProps = useTabPanels(props);
-
-    return <Flex {...panelsProps} />;
+    const { children, ...rest } = props;
+    return <Flex {...rest}>{assignIndices(children, PANEL_PART)}</Flex>;
 }, "tabPanels");
 
-export interface TabPanelProps extends HTMLDreamyProps<"div"> {}
+export interface TabPanelProps extends HTMLDreamyProps<"div"> {
+    index?: number;
+}
 
-/**
- * Tabs Panel — content for a single tab.
- */
-export const Panel = withContext(function TabPanel(props: TabPanelProps) {
-    const panelProps = useTabPanel(props);
+function TabPanelComponent(props: TabPanelProps) {
+    const { children, index = 0, ...rest } = props;
 
-    return <Flex {...panelProps} />;
-}, "tabPanel");
+    return (
+        <ArkTabs.Content
+            value={indexToValue(index)}
+            {...rest}
+        >
+            <Flex>{children}</Flex>
+        </ArkTabs.Content>
+    );
+}
 
-export interface TabIndicatorProps extends MotionFlexProps {}
+export const Panel = withContext(TabPanelComponent, "tabPanel");
+Panel.partType = PANEL_PART;
 
-/**
- * Used inside Tab components
- * @internal
- */
-const Indicator = withContext(function TabIndicator(props: TabIndicatorProps) {
-    const { id, selectedIndex } = useTabsContext();
+const TabIndicator = withContext(function TabIndicator() {
     const transition = useDefaultTransition();
     const reduceMotion = useReducedMotion();
     const domAvailable = useCanUseDOM();
 
     return (
-        <MotionFlex
-            {...props}
-            animate={{ opacity: 1, scale: 1 }}
-            initial={!domAvailable ? { opacity: 0, scale: 0.95 } : undefined}
-            layout={reduceMotion ? false : "position"}
-            layoutDependency={selectedIndex}
-            layoutId={`${id}-indicator`}
-            transition={
-                reduceMotion
-                    ? { duration: 0 }
-                    : {
-                          ...transition,
-                          layout: {
-                              duration: (transition?.duration ?? 0.2) * 1.5,
-                              ease: TRANSITION_EASINGS.easeInOut
+        <ArkTabs.Indicator asChild>
+            <MotionFlex
+                animate={{ opacity: 1, scale: 1 }}
+                initial={!domAvailable ? { opacity: 0, scale: 0.95 } : undefined}
+                layout={reduceMotion ? false : "position"}
+                layoutId={"dreamy-tab-indicator"}
+                transition={
+                    reduceMotion
+                        ? { duration: 0 }
+                        : {
+                              ...transition,
+                              layout: {
+                                  duration: (transition?.duration ?? 0.2) * 1.5,
+                                  ease: TRANSITION_EASINGS.easeInOut
+                              }
                           }
-                      }
-            }
-        />
+                }
+            />
+        </ArkTabs.Indicator>
     );
 }, "tabIndicator");

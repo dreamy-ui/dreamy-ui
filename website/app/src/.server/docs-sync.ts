@@ -129,25 +129,17 @@ async function upsertDocPage(filepath: string, content: string) {
         }
     });
 
-    const mdxContentForStorage = await Docs.serialize(content, { forStorage: true });
-    const mdxFrontmatterDescriptionForStorage =
-        mdxContentForStorage.frontmatter.description &&
-        typeof mdxContentForStorage.frontmatter.description === "string"
-            ? await Docs.serialize(mdxContentForStorage.frontmatter.description, {
-                  forStorage: true
-              })
-            : null;
-
     const mdxContent =
         env.NODE_ENV === "development"
             ? await Docs.serialize(content)
-            : mdxContentForStorage;
+            : await Docs.serialize(content, { forStorage: true });
+
     const mdxFrontmatterDescription =
         mdxContent.frontmatter.description &&
         typeof mdxContent.frontmatter.description === "string"
             ? env.NODE_ENV === "development"
                 ? await Docs.serialize(mdxContent.frontmatter.description)
-                : mdxFrontmatterDescriptionForStorage
+                : await Docs.serialize(mdxContent.frontmatter.description, { forStorage: true })
             : null;
 
     const pageIndex = getIndex(filename);
@@ -175,9 +167,9 @@ async function upsertDocPage(filepath: string, content: string) {
         slug: pageSlug,
         filepath,
         content,
-        mdxContent: JSON.stringify(mdxContentForStorage),
-        mdxFrontmatterDescription: mdxFrontmatterDescriptionForStorage
-            ? JSON.stringify(mdxFrontmatterDescriptionForStorage)
+        mdxContent: JSON.stringify(mdxContent),
+        mdxFrontmatterDescription: mdxFrontmatterDescription
+            ? JSON.stringify(mdxFrontmatterDescription)
             : null,
         headings: JSON.stringify(headings),
         searchText: extractSearchText(content),

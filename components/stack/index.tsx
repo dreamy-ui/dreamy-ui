@@ -47,11 +47,9 @@ export interface StackProps
 export function Stack({ separator, children, ...props }: StackProps) {
     const [patternProps, restProps] = splitProps(props, ["direction", "gap", "align", "justify"]);
 
-    const styles = stack.raw(patternProps);
-
     return (
         <dreamy.div
-            {...styles}
+            className={stack(patternProps)}
             {...restProps}
         >
             {renderSeparator(separator, children)}
@@ -79,11 +77,9 @@ export interface HStackProps
 export function HStack({ children, separator, ...props }: HStackProps) {
     const [patternProps, restProps] = splitProps(props, ["gap", "justify", "align"]);
 
-    const styles = hstack.raw(patternProps);
-
     return (
         <dreamy.div
-            {...styles}
+            className={hstack(patternProps)}
             {...restProps}
         >
             {renderSeparator(separator, children)}
@@ -112,11 +108,9 @@ export interface VStackProps
 export function VStack({ children, separator, ...props }: VStackProps) {
     const [patternProps, restProps] = splitProps(props, ["gap", "justify", "align"]);
 
-    const styles = vstack.raw(patternProps);
-
     return (
         <dreamy.div
-            {...styles}
+            className={vstack(patternProps)}
             {...restProps}
         >
             {renderSeparator(separator, children)}

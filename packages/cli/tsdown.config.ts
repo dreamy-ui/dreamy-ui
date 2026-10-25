@@ -39,7 +39,7 @@ export default defineConfig((options) => ({
 		HTTPS_PROXY: process.env.HTTPS_PROXY ?? ""
 	},
 	outDir: "dist",
-	clean: true,
+	clean: !options.watch,
 	minify: true,
 	splitting: false,
 	banner: {

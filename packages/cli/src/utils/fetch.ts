@@ -2,6 +2,7 @@ import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { HttpsProxyAgent } from "https-proxy-agent";
 import fetch from "node-fetch";
+import { normalizeCompositionId } from "./normalize-composition-id";
 import {
 	type PatternFile,
 	type RecipeFile,
@@ -29,7 +30,8 @@ export async function fetchCompositions() {
 
 export async function fetchComposition(id: string) {
 	try {
-		const res = await fetch(`${env.REGISTRY_URL}/components/${id}.json`, {
+		const compositionId = normalizeCompositionId(id);
+		const res = await fetch(`${env.REGISTRY_URL}/components/${compositionId}.json`, {
 			agent
 		});
 		const json = await res.json();

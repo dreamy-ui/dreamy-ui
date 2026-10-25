@@ -1,18 +1,34 @@
 "use client";
 
 import {
+    DatePicker as ArkDatePicker,
+    type DatePickerRootProps as ArkDatePickerRootProps,
+    type OpenChangeDetails,
+    type ValueChangeDetails,
+} from "@ark-ui/react/date-picker";
+import {
     CalendarIcon,
-    ChevronLeftIcon,
-    ChevronRightIcon,
-    type PositioningProps,
     createContext,
+    type PositioningProps,
     useControllableState,
     useFieldContext
 } from "@dreamy-ui/react";
-import dayjs, { type Dayjs } from "dayjs";
-import { useEffect, useMemo, useState } from "react";
+import dayjs from "dayjs";
+import { useCallback, useEffect, useId, useMemo, useState } from "react";
 import { createStyleContext } from "styled-system/jsx";
 import { type DateRangePickerVariantProps, dateRangePicker } from "styled-system/recipes";
+import { ArkPickerCalendar, ArkPickerHeader } from "../date-picker/ark-calendar";
+import {
+    type DreamyDateRange,
+    arkValueToRange,
+    calendarDateToJsDate,
+    jsDateToArkMinMax,
+    rangeToArkValue
+} from "../date-picker/date-adapters";
+import {
+    DatePickerUiProvider,
+    useDatePickerUi
+} from "../date-picker/date-picker-ui-context";
 import { Box, type BoxProps } from "../box";
 import { Button, type ButtonProps } from "../button";
 import { Flex, type FlexProps } from "../flex";
@@ -21,114 +37,38 @@ import * as Popover from "../popover";
 
 const { withProvider, withContext } = createStyleContext(dateRangePicker);
 
-const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-interface DateRange {
-    start: Date | null;
-    end: Date | null;
-}
-
-interface DateRangePickerContextValue {
-    value: DateRange | null;
-    setValue: (range: DateRange | null) => void;
-    viewDate: Dayjs;
-    setViewDate: (date: Dayjs) => void;
-    selectingStart: boolean;
-    setSelectingStart: (selecting: boolean) => void;
-    minDate?: Date;
-    maxDate?: Date;
-    dateFormat: string;
-    placeholder: string;
+interface DateRangePickerUiExtras {
+    rangeValue: DreamyDateRange | null;
+    setRangeValue: (range: DreamyDateRange | null) => void;
     showFooter: boolean;
-    presets?: Record<string, { label: string; value: DateRange }>;
-    onApply?: () => void;
-    onCancel?: () => void;
+    presets?: Record<string, { label: string; value: DreamyDateRange }>;
+    closePopover: () => void;
 }
 
-const [DateRangePickerProvider, useDateRangePickerContext] =
-    createContext<DateRangePickerContextValue>({
-        strict: true,
-        name: "DateRangePickerContext"
-    });
+const [DateRangePickerUiProvider, useDateRangePickerUi] = createContext<DateRangePickerUiExtras>({
+    strict: true,
+    name: "DateRangePickerUiContext"
+});
 
 export interface DateRangePickerRootProps
     extends Omit<BoxProps, "defaultValue" | "onChange" | "value">,
         DateRangePickerVariantProps {
-    /**
-     * The selected date range value
-     */
-    value?: DateRange | null;
-    /**
-     * The default selected date range value
-     */
-    defaultValue?: DateRange | null;
-    /**
-     * Callback fired when the date range changes
-     */
-    onChange?: (range: DateRange | null) => void;
-    /**
-     * The function to call when the apply button is clicked
-     */
+    value?: DreamyDateRange | null;
+    defaultValue?: DreamyDateRange | null;
+    onChange?: (range: DreamyDateRange | null) => void;
     onApply?: () => void;
-    /**
-     * The function to call when the cancel button is clicked
-     */
     onCancel?: () => void;
-    /**
-     * Format string for displaying the date in the input
-     * @default "MMM D, YYYY"
-     */
     dateFormat?: string;
-    /**
-     * Placeholder text for the input
-     * @default "Select date range"
-     */
     placeholder?: string;
-    /**
-     * Minimum selectable date
-     */
     minDate?: Date;
-    /**
-     * Maximum selectable date
-     */
     maxDate?: Date;
-    /**
-     * Whether to show the footer with Cancel/Apply buttons
-     * @default false
-     */
     showFooter?: boolean;
-    /**
-     * Date range presets to display
-     */
-    presets?: Record<string, { label: string; value: DateRange }>;
-    /**
-     * Positioning configuration for the date range picker popover.
-     */
+    presets?: Record<string, { label: string; value: DreamyDateRange }>;
     positioning?: PositioningProps;
-    /**
-     * Props forwarded to the internal `Popover.Root`.
-     * Set `usePortal` to `false` to render the calendar in place.
-     */
     popoverProps?: Omit<Popover.PopoverProps, "positioning">;
 }
 
-/**
- * DateRangePicker component — select a start and end date.
- *
- * @see Docs https://dreamy-ui.com/docs/components/date-range-picker
- *
- * @example
- * ```tsx
- * <DateRangePicker.Root>
- *   <DateRangePicker.Input />
- *   <DateRangePicker.Trigger />
- *   <DateRangePicker.PopoverContent>
- *     <DateRangePicker.Calendar />
- *   </DateRangePicker.PopoverContent>
- * </DateRangePicker.Root>
- * ```
- */
-export const Root = withProvider(function DateRangePickerRoot(props: DateRangePickerRootProps) {
+function DateRangePickerRoot(props: DateRangePickerRootProps) {
     const {
         value: valueProp,
         defaultValue,
@@ -144,100 +84,181 @@ export const Root = withProvider(function DateRangePickerRoot(props: DateRangePi
         positioning,
         popoverProps,
         children,
+        size,
         ...rest
     } = props;
 
-    const [value, setValue] = useControllableState<DateRange | null>({
+    const id = useId();
+
+    const focusCalendar = useCallback(
+        function focusCalendar() {
+            document.getElementById(`${id}-calendar-grid`)?.focus();
+        },
+        [id]
+    );
+
+    const [value, setValue] = useControllableState<DreamyDateRange | null>({
         value: valueProp,
         defaultValue: defaultValue ?? null,
         onChange
     });
 
-    const [isOpen, setIsOpen] = useState(function getInitialOpen() {
-        return popoverProps?.isOpen ?? false;
-    });
-    const [viewDate, setViewDate] = useState(() => {
-        if (value?.start) return dayjs(value.start);
-        return dayjs();
-    });
-    const [selectingStart, setSelectingStart] = useState(true);
+    const [open, setOpen] = useState(popoverProps?.defaultOpen ?? false);
 
     useEffect(
         function syncOpenFromPopoverProps() {
-            if (typeof popoverProps?.isOpen === "boolean") {
-                setIsOpen(popoverProps.isOpen);
+            if (typeof popoverProps?.open === "boolean") {
+                setOpen(popoverProps.open);
             }
         },
-        [popoverProps?.isOpen]
+        [popoverProps?.open]
     );
 
-    function handleApply() {
-        onApply?.();
-        setIsOpen(false);
-    }
+    const arkValue = useMemo(
+        function mapArkValue() {
+            return rangeToArkValue(value);
+        },
+        [value]
+    );
 
-    function handleCancel() {
-        onCancel?.();
-        setIsOpen(false);
-    }
+    const closePopover = useCallback(
+        function closePopover() {
+            setOpen(false);
+            popoverProps?.onOpenChange?.({ open: false });
+        },
+        [popoverProps]
+    );
 
-    function handleOpen() {
-        setIsOpen(true);
-        popoverProps?.onOpen?.();
-    }
+    const handleArkValueChange = useCallback(
+        function handleArkValueChange(details: ValueChangeDetails) {
+            const next = arkValueToRange(details.value);
+            setValue(next);
+            if (!showFooter && next?.start && next?.end) {
+                closePopover();
+            }
+        },
+        [setValue, showFooter, closePopover]
+    );
 
-    function handleClose() {
-        setIsOpen(false);
-        popoverProps?.onClose?.();
-        onCancel?.();
-    }
+    const handleOpenChange = useCallback(
+        function handleOpenChange(details: OpenChangeDetails) {
+            setOpen(details.open);
+            popoverProps?.onOpenChange?.(details);
+        },
+        [popoverProps]
+    );
 
-    return (
-        <DateRangePickerProvider
-            value={{
-                value,
-                setValue: function handleSetValue(range) {
-                    setValue(range);
-                    if (!showFooter && range?.start && range?.end) {
-                        setIsOpen(false);
-                    }
-                },
-                viewDate,
-                setViewDate,
-                selectingStart,
-                setSelectingStart,
-                minDate,
-                maxDate,
+    const handleApply = useCallback(
+        function handleApply() {
+            onApply?.();
+            closePopover();
+        },
+        [onApply, closePopover]
+    );
+
+    const handleCancel = useCallback(
+        function handleCancel() {
+            onCancel?.();
+            closePopover();
+        },
+        [onCancel, closePopover]
+    );
+
+    const pickerUi = useMemo(
+        function createPickerUi() {
+            return {
+                id,
+                value: value?.start ?? null,
+                setValue: function noop() {},
                 dateFormat,
                 placeholder,
+                size,
+                minDate,
+                maxDate,
+                hasFooter: showFooter,
+                setHasFooter: function noop() {},
+                onApply: handleApply,
+                onCancel: handleCancel,
+                focusCalendar
+            };
+        },
+        [
+            id,
+            value?.start,
+            dateFormat,
+            placeholder,
+            size,
+            minDate,
+            maxDate,
+            showFooter,
+            handleApply,
+            handleCancel,
+            focusCalendar
+        ]
+    );
+
+    const rangeUi = useMemo(
+        function createRangeUi() {
+            return {
+                rangeValue: value,
+                setRangeValue: setValue,
                 showFooter,
                 presets,
-                onApply: handleApply,
-                onCancel: handleCancel
-            }}
-        >
-            <Popover.Root
-                positioning={positioning}
-                {...popoverProps}
-                isOpen={isOpen}
-                onClose={handleClose}
-                onOpen={handleOpen}
-                portalProps={{
-                    zIndex: "var(--z-index-popover)",
-                    ...popoverProps?.portalProps
-                }}
-            >
-                <Box {...rest}>{children}</Box>
-            </Popover.Root>
-        </DateRangePickerProvider>
+                closePopover
+            };
+        },
+        [value, setValue, showFooter, presets, closePopover]
     );
-}, "root");
+
+    const arkRootProps: ArkDatePickerRootProps = {
+        id,
+        value: arkValue,
+        onValueChange: handleArkValueChange,
+        open,
+        onOpenChange: handleOpenChange,
+        openOnClick: false,
+        closeOnSelect: !showFooter,
+        startOfWeek: 1,
+        min: jsDateToArkMinMax(minDate),
+        max: jsDateToArkMinMax(maxDate),
+        selectionMode: "range",
+        format: function formatArkDate(date) {
+            return dayjs(calendarDateToJsDate(date)).format(dateFormat);
+        }
+    };
+
+    return (
+        <ArkDatePicker.Root {...arkRootProps}>
+            <DatePickerUiProvider value={pickerUi}>
+                <DateRangePickerUiProvider value={rangeUi}>
+                    <Popover.Root
+                        open={open}
+                        onOpenChange={(details) => {
+                            setOpen(details.open);
+                            popoverProps?.onOpenChange?.(details);
+                            if (!details.open) {
+                                onCancel?.();
+                            }
+                        }}
+                        positioning={positioning}
+                        {...popoverProps}
+                        portalProps={{
+                            zIndex: "var(--z-index-popover)",
+                            ...popoverProps?.portalProps
+                        }}
+                    >
+                        <Box {...rest}>{children}</Box>
+                    </Popover.Root>
+                </DateRangePickerUiProvider>
+            </DatePickerUiProvider>
+        </ArkDatePicker.Root>
+    );
+}
+
+export const Root = withProvider(DateRangePickerRoot, "root");
 
 export interface DateRangePickerTriggerProps extends ButtonProps {}
 
-/**
- * DateRangePicker Trigger — opens the range calendar popover.
- */
 export const Trigger = withContext(function DateRangePickerTrigger(
     props: DateRangePickerTriggerProps
 ) {
@@ -253,22 +274,22 @@ export const Trigger = withContext(function DateRangePickerTrigger(
 
 export interface DateRangePickerInputProps extends InputGroupProps {}
 
-/**
- * DateRangePicker Input — typed date range field.
- */
 export const Input = withContext(function DateRangePickerInput(props: DateRangePickerInputProps) {
     const { ref: _ref, ...inputProps } = props;
-    const context = useDateRangePickerContext();
+    const context = useDatePickerUi();
+    const { rangeValue } = useDateRangePickerUi();
     const field = useFieldContext();
+
     const formattedRange =
-        context.value?.start && context.value?.end
-            ? `${dayjs(context.value.start).format(context.dateFormat)} – ${dayjs(context.value.end).format(context.dateFormat)}`
+        rangeValue?.start && rangeValue?.end
+            ? `${dayjs(rangeValue.start).format(context.dateFormat)} – ${dayjs(rangeValue.end).format(context.dateFormat)}`
             : "";
 
     return (
         <InputComponent.Group>
             <Popover.Trigger>
                 <InputComponent
+                    aria-labelledby={field?.labelId}
                     id={field?.id}
                     placeholder={context.placeholder}
                     readOnly
@@ -286,294 +307,74 @@ export const Input = withContext(function DateRangePickerInput(props: DateRangeP
 export interface DateRangePickerPopoverProps
     extends Omit<Popover.PopoverContentProps, "transition"> {}
 
-/**
- * DateRangePicker PopoverContent — floating panel for the calendars.
- */
 export const PopoverContent = withContext(function DateRangePickerPopover(
     props: DateRangePickerPopoverProps
 ) {
-    return <Popover.Content {...props} />;
+    const { children, onAnimationComplete, ...rest } = props;
+    const ui = useDatePickerUi();
+
+    return (
+        <Popover.Content
+            role="dialog"
+            {...rest}
+            onAnimationComplete={function handleAnimationComplete(definition) {
+                ui.focusCalendar();
+                onAnimationComplete?.(definition);
+            }}
+        >
+            <ArkDatePicker.Content>{children}</ArkDatePicker.Content>
+        </Popover.Content>
+    );
 }, "popover");
+
+export const CalendarHeader = withContext(Flex, "calendarHeader");
+export const CalendarTitle = withContext(Box, "calendarTitle");
+export const CalendarNav = withContext(Flex, "calendarNav");
+export const CalendarNavButton = withContext(Button, "calendarNavButton");
+export const CalendarGrid = withContext(Box, "calendarGrid");
+export const CalendarGridHeader = withContext(Box, "calendarGridHeader");
+export const CalendarGridHeaderCell = withContext(Box, "calendarGridHeaderCell");
+export const CalendarGridBody = withContext(Box, "calendarGridBody");
+export const CalendarCell = withContext(Box, "calendarCell");
+export const CalendarCellButton = withContext(Button, "calendarCellButton");
 
 export interface DateRangePickerCalendarProps extends BoxProps {}
 
-/**
- * DateRangePicker Calendar — dual/month range calendar.
- */
 export const Calendar = withContext(function DateRangePickerCalendar(
     props: DateRangePickerCalendarProps
 ) {
-    const context = useDateRangePickerContext();
-    const {
-        value,
-        setValue,
-        viewDate,
-        setViewDate,
-        selectingStart,
-        setSelectingStart,
-        minDate,
-        maxDate
-    } = context;
-
-    const calendarDays = useMemo(() => {
-        const startOfMonth = viewDate.startOf("month");
-        const endOfMonth = viewDate.endOf("month");
-        const startOfCalendar = startOfMonth.startOf("week");
-        const endOfCalendar = endOfMonth.endOf("week");
-
-        const days: Dayjs[] = [];
-        let current = startOfCalendar;
-
-        while (current.isBefore(endOfCalendar) || current.isSame(endOfCalendar, "day")) {
-            days.push(current);
-            current = current.add(1, "day");
-        }
-
-        return days;
-    }, [viewDate]);
-
-    const handlePreviousMonth = () => {
-        setViewDate(viewDate.subtract(1, "month"));
-    };
-
-    const handleNextMonth = () => {
-        setViewDate(viewDate.add(1, "month"));
-    };
-
-    const handleDateClick = (date: Dayjs) => {
-        if (minDate && date.isBefore(dayjs(minDate), "day")) return;
-        if (maxDate && date.isAfter(dayjs(maxDate), "day")) return;
-
-        const currentRange = value || { start: null, end: null };
-
-        if (selectingStart || !currentRange.start) {
-            setValue({ start: date.toDate(), end: null });
-            setSelectingStart(false);
-        } else {
-            if (date.isBefore(dayjs(currentRange.start), "day")) {
-                setValue({ start: date.toDate(), end: currentRange.start });
-            } else {
-                setValue({ start: currentRange.start, end: date.toDate() });
-            }
-        }
-    };
-
-    const isToday = (date: Dayjs) => date.isSame(dayjs(), "day");
-    const isStart = (date: Dayjs) => value?.start && dayjs(value.start).isSame(date, "day");
-    const isEnd = (date: Dayjs) => value?.end && dayjs(value.end).isSame(date, "day");
-    const isInRange = (date: Dayjs) => {
-        if (!value?.start || !value?.end) return false;
-        const start = dayjs(value.start);
-        const end = dayjs(value.end);
-        return date.isAfter(start, "day") && date.isBefore(end, "day");
-    };
-    const isOutsideMonth = (date: Dayjs) => !date.isSame(viewDate, "month");
-    const isDisabled = (date: Dayjs) => {
-        if (minDate && date.isBefore(dayjs(minDate), "day")) return true;
-        if (maxDate && date.isAfter(dayjs(maxDate), "day")) return true;
-        return false;
-    };
+    const ui = useDatePickerUi();
 
     return (
         <Box {...props}>
             <CalendarHeader>
-                <CalendarNav>
-                    <CalendarNavButton
-                        aria-label="Previous month"
-                        onClick={handlePreviousMonth}
-                        type="button"
-                    >
-                        <ChevronLeftIcon aria-hidden="true" />
-                    </CalendarNavButton>
-                    <CalendarTitle>{viewDate.format("MMMM YYYY")}</CalendarTitle>
-                    <CalendarNavButton
-                        aria-label="Next month"
-                        onClick={handleNextMonth}
-                        type="button"
-                    >
-                        <ChevronRightIcon aria-hidden="true" />
-                    </CalendarNavButton>
-                </CalendarNav>
+                <ArkPickerHeader />
             </CalendarHeader>
-            <CalendarGrid role="grid">
-                <CalendarGridHeader>
-                    {WEEKDAYS.map((day) => (
-                        <CalendarGridHeaderCell key={day}>{day}</CalendarGridHeaderCell>
-                    ))}
-                </CalendarGridHeader>
-                <CalendarGridBody>
-                    {calendarDays.map((date) => (
-                        <CalendarCell key={date.format("YYYY-MM-DD")}>
-                            <CalendarCellButton
-                                aria-label={date.format("dddd, MMMM D, YYYY")}
-                                data-in-range={isInRange(date) ? "" : undefined}
-                                data-outside-month={isOutsideMonth(date) ? "" : undefined}
-                                data-range-end={isEnd(date) ? "" : undefined}
-                                data-range-start={isStart(date) ? "" : undefined}
-                                data-selected={isStart(date) || isEnd(date) ? "" : undefined}
-                                data-today={isToday(date) ? "" : undefined}
-                                disabled={isDisabled(date)}
-                                onClick={() => handleDateClick(date)}
-                                type="button"
-                            >
-                                {date.format("D")}
-                            </CalendarCellButton>
-                        </CalendarCell>
-                    ))}
-                </CalendarGridBody>
-            </CalendarGrid>
+            <ArkPickerCalendar gridId={`${ui.id}-calendar-grid`} />
         </Box>
     );
 }, "calendar");
 
-export interface DateRangePickerCalendarHeaderProps extends FlexProps {}
-
-/**
- * DateRangePicker CalendarHeader — header inside a calendar.
- */
-export const CalendarHeader = withContext(function DateRangePickerCalendarHeader(
-    props: DateRangePickerCalendarHeaderProps
-) {
-    return <Flex {...props} />;
-}, "calendarHeader");
-
-export interface DateRangePickerCalendarTitleProps extends BoxProps {}
-
-/**
- * DateRangePicker CalendarTitle — current month/year label.
- */
-export const CalendarTitle = withContext(function DateRangePickerCalendarTitle(
-    props: DateRangePickerCalendarTitleProps
-) {
-    return <Box {...props} />;
-}, "calendarTitle");
-
-export interface DateRangePickerCalendarNavProps extends FlexProps {}
-
-/**
- * DateRangePicker CalendarNav — previous/next navigation group.
- */
-export const CalendarNav = withContext(function DateRangePickerCalendarNav(
-    props: DateRangePickerCalendarNavProps
-) {
-    return <Flex {...props} />;
-}, "calendarNav");
-
-export interface DateRangePickerCalendarNavButtonProps extends ButtonProps {}
-
-/**
- * DateRangePicker CalendarNavButton — previous or next period button.
- */
-export const CalendarNavButton = withContext(function DateRangePickerCalendarNavButton(
-    props: DateRangePickerCalendarNavButtonProps
-) {
-    return (
-        <Button
-            size="sm"
-            variant="ghost"
-            {...props}
-        />
-    );
-}, "calendarNavButton");
-
-export interface DateRangePickerCalendarGridProps extends BoxProps {}
-
-/**
- * DateRangePicker CalendarGrid — day-of-week and date grid.
- */
-export const CalendarGrid = withContext(function DateRangePickerCalendarGrid(
-    props: DateRangePickerCalendarGridProps
-) {
-    return <Box {...props} />;
-}, "calendarGrid");
-
-export interface DateRangePickerCalendarGridHeaderProps extends BoxProps {}
-
-/**
- * DateRangePicker CalendarGridHeader — weekday labels row.
- */
-export const CalendarGridHeader = withContext(function DateRangePickerCalendarGridHeader(
-    props: DateRangePickerCalendarGridHeaderProps
-) {
-    return <Box {...props} />;
-}, "calendarGridHeader");
-
-export interface DateRangePickerCalendarGridHeaderCellProps extends BoxProps {}
-
-/**
- * DateRangePicker CalendarGridHeaderCell — a weekday label cell.
- */
-export const CalendarGridHeaderCell = withContext(function DateRangePickerCalendarGridHeaderCell(
-    props: DateRangePickerCalendarGridHeaderCellProps
-) {
-    return <Box {...props} />;
-}, "calendarGridHeaderCell");
-
-export interface DateRangePickerCalendarGridBodyProps extends BoxProps {}
-
-/**
- * DateRangePicker CalendarGridBody — date cells container.
- */
-export const CalendarGridBody = withContext(function DateRangePickerCalendarGridBody(
-    props: DateRangePickerCalendarGridBodyProps
-) {
-    return <Box {...props} />;
-}, "calendarGridBody");
-
-export interface DateRangePickerCalendarCellProps extends BoxProps {}
-
-/**
- * DateRangePicker CalendarCell — wrapper for a calendar day.
- */
-export const CalendarCell = withContext(function DateRangePickerCalendarCell(
-    props: DateRangePickerCalendarCellProps
-) {
-    return <Box {...props} />;
-}, "calendarCell");
-
-export interface DateRangePickerCalendarCellButtonProps extends ButtonProps {}
-
-/**
- * DateRangePicker CalendarCellButton — selectable day button.
- */
-export const CalendarCellButton = withContext(function DateRangePickerCalendarCellButton(
-    props: DateRangePickerCalendarCellButtonProps
-) {
-    return (
-        <Button
-            size="sm"
-            variant="ghost"
-            {...props}
-        />
-    );
-}, "calendarCellButton");
-
 export interface DateRangePickerRangePresetProps extends BoxProps {}
 
-/**
- * DateRangePicker RangePreset — preset range option group.
- */
 export const RangePreset = withContext(function DateRangePickerRangePreset(
     props: DateRangePickerRangePresetProps
 ) {
-    const context = useDateRangePickerContext();
+    const { presets, setRangeValue, showFooter, closePopover } = useDateRangePickerUi();
 
-    if (!context.presets) {
+    if (!presets) {
         return null;
     }
 
     return (
         <Box {...props}>
-            {Object.values(context.presets).map((preset) => (
+            {Object.values(presets).map((preset) => (
                 <RangePresetButton
                     key={preset.label}
-                    onClick={() => {
-                        context.setValue(preset.value);
-                        if (preset.value.start) {
-                            context.setViewDate(dayjs(preset.value.start));
-                        }
-                        if (!context.showFooter) {
-                            // Close popover - need to access it from context
+                    onClick={function handlePresetClick() {
+                        setRangeValue(preset.value);
+                        if (!showFooter && preset.value.start && preset.value.end) {
+                            closePopover();
                         }
                     }}
                     value={preset.value}
@@ -586,22 +387,19 @@ export const RangePreset = withContext(function DateRangePickerRangePreset(
 }, "rangePreset");
 
 export interface DateRangePickerRangePresetButtonProps extends Omit<ButtonProps, "value"> {
-    value: DateRange;
+    value: DreamyDateRange;
 }
 
-/**
- * DateRangePicker RangePresetButton — applies a preset range.
- */
 export const RangePresetButton = withContext(function DateRangePickerRangePresetButton(
     props: DateRangePickerRangePresetButtonProps
 ) {
-    const context = useDateRangePickerContext();
+    const { rangeValue } = useDateRangePickerUi();
     const { value: dateRangeValue, ...restProps } = props;
     const isSelected =
-        context.value?.start &&
-        context.value?.end &&
-        dayjs(context.value.start).isSame(dayjs(dateRangeValue.start), "day") &&
-        dayjs(context.value.end).isSame(dayjs(dateRangeValue.end), "day");
+        rangeValue?.start &&
+        rangeValue?.end &&
+        dayjs(rangeValue.start).isSame(dayjs(dateRangeValue.start), "day") &&
+        dayjs(rangeValue.end).isSame(dayjs(dateRangeValue.end), "day");
 
     return (
         <Button
@@ -614,28 +412,29 @@ export const RangePresetButton = withContext(function DateRangePickerRangePreset
 
 export interface DateRangePickerFooterProps extends FlexProps {}
 
-/**
- * DateRangePicker Footer — actions below the calendars.
- */
 export const Footer = withContext(function DateRangePickerFooter(
     props: DateRangePickerFooterProps
 ) {
-    const context = useDateRangePickerContext();
+    const { showFooter, onApply, onCancel } = {
+        showFooter: useDateRangePickerUi().showFooter,
+        onApply: useDatePickerUi().onApply,
+        onCancel: useDatePickerUi().onCancel
+    };
 
-    if (!context.showFooter) {
+    if (!showFooter) {
         return null;
     }
 
     return (
         <Flex {...props}>
             <FooterButton
-                onClick={context.onCancel}
+                onClick={onCancel}
                 variant="outline"
             >
                 Cancel
             </FooterButton>
             <FooterButton
-                onClick={context.onApply}
+                onClick={onApply}
                 variant="solid"
             >
                 Apply
@@ -644,13 +443,4 @@ export const Footer = withContext(function DateRangePickerFooter(
     );
 }, "footer");
 
-export interface DateRangePickerFooterButtonProps extends ButtonProps {}
-
-/**
- * DateRangePicker FooterButton — footer action button.
- */
-export const FooterButton = withContext(function DateRangePickerFooterButton(
-    props: DateRangePickerFooterButtonProps
-) {
-    return <Button {...props} />;
-}, "footerButton");
+export const FooterButton = withContext(Button, "footerButton");

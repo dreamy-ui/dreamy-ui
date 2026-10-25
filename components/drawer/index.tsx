@@ -1,6 +1,10 @@
 "use client";
 
 import {
+    Drawer as ArkDrawer,
+    type DrawerRootProps as ArkDrawerRootProps
+} from "@ark-ui/react/drawer";
+import {
     DrawerContextProvider,
     type DrawerOptions,
     type DrawerPlacement,
@@ -9,14 +13,15 @@ import {
     type PortalProps,
     RemoveScroll,
     type UseDrawerProps,
+    transformReducedMotion,
     useDefaultTransition,
     useDrawer,
     useDrawerContext,
     useDrawerManager,
-    useMotionVariants
+    useMotionVariants,
+    useReducedMotion
 } from "@dreamy-ui/react";
-import { AnimatePresence, usePresence } from "motion/react";
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createStyleContext } from "styled-system/jsx";
 import { drawer } from "styled-system/recipes";
 import { Box, type BoxProps } from "../box";
@@ -24,12 +29,18 @@ import { CloseButton as CloseButtonComponent, type CloseButtonProps } from "../c
 import { Flex, type FlexProps } from "../flex";
 import { Heading } from "../heading";
 import { MotionBox, type MotionBoxProps, MotionFlex, type MotionFlexProps } from "../motion";
+import { useFloatingPresent } from "../popover/use-floating-present";
 
 const { withContext, withRootProvider } = createStyleContext(drawer, {
     forwardVariants: ["placement"]
 });
 
-export interface DrawerProps extends UseDrawerProps, DrawerOptions {
+type ScrollBehavior = "inside" | "outside";
+
+export interface DrawerProps
+    extends Omit<ArkDrawerRootProps, "children">,
+        DrawerOptions,
+        Pick<UseDrawerProps, "useInert"> {
     children: React.ReactNode;
     /**
      * Where scroll behavior should originate.
@@ -56,7 +67,7 @@ export interface DrawerProps extends UseDrawerProps, DrawerOptions {
  *
  * @example
  * ```tsx
- * <Drawer.Root isOpen={isOpen} onClose={onClose}>
+ * <Drawer.Root open={open} onOpenChange={({ open }) => setOpen(open)}>
  *   <Drawer.Overlay />
  *   <Drawer.Content>
  *     <Drawer.Header>Title</Drawer.Header>
@@ -70,33 +81,80 @@ export const Root = withRootProvider(function DrawerRoot(props: DrawerProps) {
         scrollBehavior: "inside",
         autoFocus: true,
         trapFocus: true,
-        returnFocusOnClose: true,
+        restoreFocus: true,
         blockScrollOnMount: true,
         allowPinchZoom: false,
         preserveScrollBarGap: true,
         placement: "right",
+        closeOnEscape: true,
+        closeOnInteractOutside: true,
         ...props
     };
 
     const {
         children,
+        open: openProp,
+        defaultOpen,
+        onOpenChange,
         autoFocus,
         trapFocus,
         initialFocusRef,
         finalFocusRef,
-        returnFocusOnClose,
+        restoreFocus,
         blockScrollOnMount,
         scrollBehavior,
         allowPinchZoom,
         preserveScrollBarGap,
         onCloseComplete,
         portalProps,
-        placement
+        placement,
+        closeOnEscape,
+        closeOnInteractOutside,
+        useInert,
+        id,
+        ...arkRest
     } = drawerProps;
 
-    const drawerState = useDrawer(drawerProps);
+    const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen ?? false);
+    const isControlled = openProp !== undefined;
+    const open = isControlled ? openProp : uncontrolledOpen;
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: context should update when drawer state changes
+    const handleOpenChange = useCallback(
+        (details: { open: boolean }) => {
+            if (!isControlled) {
+                setUncontrolledOpen(details.open);
+            }
+            onOpenChange?.(details);
+        },
+        [isControlled, onOpenChange]
+    );
+
+    const reduceMotion = useReducedMotion();
+    const { present, handleExitComplete } = useFloatingPresent(open, reduceMotion);
+
+    const handleMotionExitComplete = useCallback(() => {
+        handleExitComplete();
+        onCloseComplete?.();
+    }, [handleExitComplete, onCloseComplete]);
+
+    useEffect(() => {
+        if (!open && reduceMotion) {
+            onCloseComplete?.();
+        }
+    }, [open, onCloseComplete, reduceMotion]);
+
+    const drawerState = useDrawer({
+        open,
+        present,
+        onOpenChange: handleOpenChange,
+        id,
+        closeOnEscape,
+        closeOnInteractOutside,
+        useInert,
+        scrollBehavior,
+        placement
+    });
+
     const context = useMemo(() => {
         return {
             ...drawerState,
@@ -104,22 +162,50 @@ export const Root = withRootProvider(function DrawerRoot(props: DrawerProps) {
             trapFocus,
             initialFocusRef,
             finalFocusRef,
-            returnFocusOnClose,
+            restoreFocus,
             blockScrollOnMount,
             allowPinchZoom,
             preserveScrollBarGap,
             onCloseComplete,
             scrollBehavior,
-            placement: placement ?? "right"
+            placement: placement ?? "right",
+            reduceMotion,
+            onExitAnimationComplete: handleMotionExitComplete
         };
-    }, [drawerState]);
+    }, [
+        allowPinchZoom,
+        autoFocus,
+        blockScrollOnMount,
+        drawerState,
+        finalFocusRef,
+        handleMotionExitComplete,
+        initialFocusRef,
+        onCloseComplete,
+        placement,
+        preserveScrollBarGap,
+        reduceMotion,
+        restoreFocus,
+        scrollBehavior,
+        trapFocus
+    ]);
 
     return (
-        <DrawerContextProvider value={context}>
-            <AnimatePresence onExitComplete={onCloseComplete}>
-                {context.isOpen && (
+        <ArkDrawer.Root
+            {...arkRest}
+            closeOnEscape={closeOnEscape}
+            closeOnInteractOutside={closeOnInteractOutside}
+            defaultOpen={defaultOpen}
+            id={id}
+            onOpenChange={handleOpenChange}
+            open={open}
+            placement={placement}
+            present={present}
+            unmountOnExit={false}
+        >
+            <DrawerContextProvider value={context}>
+                {present && (
                     <Portal
-                        isActive={context.isOpen}
+                        isActive={present}
                         key={context.id}
                         zIndex="var(--z-index-modal)"
                         {...portalProps}
@@ -127,8 +213,8 @@ export const Root = withRootProvider(function DrawerRoot(props: DrawerProps) {
                         {children}
                     </Portal>
                 )}
-            </AnimatePresence>
-        </DrawerContextProvider>
+            </DrawerContextProvider>
+        </ArkDrawer.Root>
     );
 });
 
@@ -138,21 +224,22 @@ export interface DrawerOverlayProps extends MotionBoxProps {}
  * Drawer Overlay — backdrop behind the panel content.
  */
 export const Overlay = withContext(function Component(props: DrawerOverlayProps) {
-    const { isOpen } = useDrawerContext();
+    const { open, reduceMotion } = useDrawerContext();
     const { overlay } = useMotionVariants();
+    const transition = useDefaultTransition();
 
     return (
-        <AnimatePresence>
-            {isOpen && (
-                <MotionBox
-                    animate="animate"
-                    exit="exit"
-                    initial="initial"
-                    variants={overlay}
-                    {...props}
-                />
-            )}
-        </AnimatePresence>
+        <ArkDrawer.Backdrop asChild>
+            <MotionBox
+                animate={open ? "animate" : "exit"}
+                exit="exit"
+                initial={reduceMotion ? false : "initial"}
+                transition={transition}
+                variants={transformReducedMotion(overlay, reduceMotion ?? false)}
+                {...(reduceMotion ? {} : { hidden: false })}
+                {...props}
+            />
+        </ArkDrawer.Backdrop>
     );
 }, "overlay");
 
@@ -173,26 +260,45 @@ export const Content = withContext(function Component({
     children,
     ...props
 }: DrawerContentProps) {
-    const { getDialogProps, placement } = useDrawerContext();
-    const { drawer } = useMotionVariants();
+    const { getDialogProps, placement, open, reduceMotion, onExitAnimationComplete } =
+        useDrawerContext();
+    const { drawer: drawerVariants } = useMotionVariants();
     const transition = useDefaultTransition();
+    const exitNotifiedRef = useRef(false);
+
+    useEffect(() => {
+        if (open) {
+            exitNotifiedRef.current = false;
+        }
+    }, [open]);
 
     return (
-        <DrawerFocusScope>
-            <Container>
-                <MotionFlex
-                    animate="animate"
-                    custom={{ placement }}
-                    exit="exit"
-                    initial="initial"
-                    transition={transition}
-                    variants={drawer}
-                    {...getDialogProps(props)}
-                >
-                    {children}
-                </MotionFlex>
-            </Container>
-        </DrawerFocusScope>
+        <ArkDrawer.Positioner>
+            <DrawerFocusScope>
+                <Container>
+                    <ArkDrawer.Content asChild>
+                        <MotionFlex
+                            animate={open ? "animate" : "exit"}
+                            custom={{ placement }}
+                            exit="exit"
+                            initial={reduceMotion ? false : "initial"}
+                            transition={transition}
+                            variants={transformReducedMotion(drawerVariants, reduceMotion ?? false)}
+                            onAnimationComplete={() => {
+                                if (!open && !reduceMotion && !exitNotifiedRef.current) {
+                                    exitNotifiedRef.current = true;
+                                    onExitAnimationComplete?.();
+                                }
+                            }}
+                            {...(reduceMotion ? {} : { hidden: false })}
+                            {...getDialogProps(props)}
+                        >
+                            {children}
+                        </MotionFlex>
+                    </ArkDrawer.Content>
+                </Container>
+            </DrawerFocusScope>
+        </ArkDrawer.Positioner>
     );
 }, "content");
 
@@ -301,22 +407,14 @@ function DrawerFocusScope(props: DrawerFocusScopeProps) {
         blockScrollOnMount,
         allowPinchZoom,
         finalFocusRef,
-        returnFocusOnClose,
+        restoreFocus,
         preserveScrollBarGap,
         lockFocusAcrossFrames,
         useInert,
-        isOpen
+        present
     } = useDrawerContext();
 
-    const [isPresent, safeToRemove] = usePresence();
-
-    useEffect(() => {
-        if (!isPresent && safeToRemove) {
-            setTimeout(safeToRemove);
-        }
-    }, [isPresent, safeToRemove]);
-
-    const index = useDrawerManager(dialogRef, isOpen);
+    const index = useDrawerManager(dialogRef, present);
 
     return (
         <FocusLock
@@ -326,7 +424,7 @@ function DrawerFocusScope(props: DrawerFocusScopeProps) {
             initialFocusRef={initialFocusRef}
             isDisabled={!trapFocus}
             lockFocusAcrossFrames={lockFocusAcrossFrames}
-            restoreFocus={returnFocusOnClose}
+            restoreFocus={restoreFocus}
         >
             <RemoveScroll
                 allowPinchZoom={allowPinchZoom}
@@ -340,7 +438,5 @@ function DrawerFocusScope(props: DrawerFocusScopeProps) {
         </FocusLock>
     );
 }
-
-type ScrollBehavior = "inside" | "outside";
 
 export type { DrawerPlacement };

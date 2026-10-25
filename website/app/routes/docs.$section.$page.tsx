@@ -231,7 +231,7 @@ export default function DocsSectionPage() {
                                     leftIcon={<BiLogoGithub />}
                                     size={"sm"}
                                     transition={
-                                        "translate {durations.fast} {easings.ease-in-out}, background-color {durations.normal} {easings.ease-in-out}"
+                                        "translate {durations.fast} {easings.easeInOut}, background-color {durations.normal} {easings.easeInOut}"
                                     }
                                     translate={"auto"}
                                 >
@@ -253,7 +253,7 @@ export default function DocsSectionPage() {
                             scheme={frontmatter.isServerComponent ? "info" : undefined}
                             size={"sm"}
                             transition={
-                                "translate {durations.fast} {easings.ease-in-out}, background-color {durations.normal} {easings.ease-in-out}"
+                                "translate {durations.fast} {easings.easeInOut}, background-color {durations.normal} {easings.easeInOut}"
                             }
                             translate={"auto"}
                         >

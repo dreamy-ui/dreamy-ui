@@ -274,7 +274,7 @@ export default function Search() {
                                 gap={2}
                                 key={"docs-" + debouncedQuery}
                                 opacity={fetcher.state !== "idle" ? 0.5 : 1}
-                                transition={"opacity 0.2s {easings.ease-in-out"}
+                                transition={"opacity 0.2s {easings.easeInOut}"}
                             >
                                 {fetcher.data.docs.map((doc: DocSearchResult, i: number) => {
                                     return (
@@ -390,7 +390,7 @@ function SearchDoc({ doc, isActive, isRecent, ...rest }: SearchDocProps) {
                 <Text
                     color={isActive ? "{colors.white/87}" : "fg"}
                     fontWeight={"semibold"}
-                    transition={"color 0.15s {easings.ease-in-out}"}
+                    transition={"color 0.15s {easings.easeInOut}"}
                 >
                     {doc.title}
                 </Text>
@@ -403,7 +403,7 @@ function SearchDoc({ doc, isActive, isRecent, ...rest }: SearchDocProps) {
                     }}
                     fontSize={"small"}
                     fontWeight={"normal"}
-                    transition={"color 0.15s {easings.ease-in-out}"}
+                    transition={"color 0.15s {easings.easeInOut}"}
                 >
                     {subtitle}
                 </Text>

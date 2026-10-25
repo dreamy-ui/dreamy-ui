@@ -1,14 +1,11 @@
 import createDebug from "debug";
+import { normalizeCompositionId } from "./normalize-composition-id";
 import type { Compositions } from "./schema";
 
 const debug = createDebug("dreamy-ui:dependencies");
 
 export const findCompositionById = (compositions: Compositions, id: string) => {
-    // Normalize the ID by removing common prefixes and extensions
-    const normalizedId = id
-        .replace(/^\.\//, "") // Remove ./ prefix
-        .replace(/^compositions\/ui\//, "") // Remove compositions/ui/ prefix
-        .replace(/\.(tsx|ts|jsx|js)$/, ""); // Remove file extension
+    const normalizedId = normalizeCompositionId(id);
 
     debug(`Looking for composition with ID: "${id}" (normalized: "${normalizedId}")`);
 
@@ -47,7 +44,7 @@ export const getFileDependencies = (compositions: Compositions, id: string) => {
 
     // Normalize dependency paths
     const normalizePath = (path: string) => {
-        return path.replace(/^\.\//, "").replace(/^compositions\/ui\//, "");
+        return normalizeCompositionId(path);
     };
 
     composition.fileDependencies.forEach((dep) => {

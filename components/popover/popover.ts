@@ -5,9 +5,17 @@ export const popover = defineSlotRecipe({
     className: "popover",
     description:
         "A floating popover panel shared by Popover, Select, Menu, Autocomplete, DatePicker, and DateRangePicker with optional arrow. Uses panel background, blur, border, and shadow — only size changes width, padding, and border radius.",
-    slots: ["content", "body", "header", "footer", "close"],
+    slots: ["content", "body", "header", "footer", "close", "arrow"],
     jsx: [
-        ...mapJsx("Popover", ["Root", "Content", "Body", "Header", "Footer", "CloseButton"]),
+        ...mapJsx("Popover", [
+            "Root",
+            "Content",
+            "Body",
+            "Header",
+            "Footer",
+            "CloseButton",
+            "Arrow"
+        ]),
         ...mapJsx("Menu", ["Root", "Trigger", "TriggerItem", "Content", "Item"]),
         ...mapJsx("Select", ["Root", "Trigger", "Content", "VirtualContent"]),
         ...mapJsx("Autocomplete", ["Root", "Input", "Content", "VirtualContent", "Item"]),
@@ -58,14 +66,13 @@ export const popover = defineSlotRecipe({
     base: {
         content: {
             "--popper-z-index": "{zIndex.popover}",
+            "--arrow-size": "8px",
+            "--arrow-background": "{colors.bg.panel}",
             maxW: "100vw",
-            "--popper-arrow-bg": "{colors.bg.panel}",
-            "& [data-popper-arrow-inner]": {
-                backdropFilter: "blur({blurs.base})"
-            },
             display: "flex",
             flexDirection: "column",
             position: "relative",
+            overflow: "visible",
             backgroundColor: "bg.panel",
             backdropFilter: "blur({blurs.base})",
             boxShadow: "sm",
@@ -100,6 +107,19 @@ export const popover = defineSlotRecipe({
             position: "absolute",
             top: 2,
             insetInlineEnd: 2
+        },
+        arrow: {
+            "--arrow-size": "8px",
+            "--arrow-background": "{colors.bg.panel}",
+            zIndex: -1,
+            "& [data-part=arrow-tip]": {
+                backdropFilter: "blur({blurs.base})",
+                borderTopWidth: "1px",
+                borderInlineStartWidth: "1px",
+                borderStyle: "solid",
+                borderColor: "border",
+                boxShadow: "var(--popper-arrow-shadow, none)"
+            }
         }
     },
     variants: {
@@ -116,6 +136,16 @@ export const popover = defineSlotRecipe({
                     "--popover-padding": "spacing.4",
                     width: "md",
                     borderRadius: "p-4"
+                }
+            },
+            reference: {
+                content: {
+                    "--popover-padding": "spacing.4",
+                    borderRadius: "l2",
+                    gap: "0",
+                    width: "100%",
+                    boxSizing: "border-box",
+                    minW: "0"
                 }
             },
             lg: {

@@ -1,5 +1,5 @@
 import { Button, Drawer, Flex, Text } from "@/ui";
-import { useControllable } from "@dreamy-ui/react";
+import { useState } from "react";
 
 function LoremIpsum({ p = 1 }: { p?: number }) {
     const lorem =
@@ -9,12 +9,12 @@ function LoremIpsum({ p = 1 }: { p?: number }) {
 }
 
 export function BasicDrawer() {
-    const { isOpen, onClose, onOpen } = useControllable();
+    const [open, setOpen] = useState(false);
 
     return (
         <>
             <Button
-                onClick={onOpen}
+                onClick={() => setOpen(true)}
                 variant={"primary"}
                 w="fit-content"
             >
@@ -22,8 +22,8 @@ export function BasicDrawer() {
             </Button>
 
             <Drawer.Root
-                isOpen={isOpen}
-                onClose={onClose}
+                open={open}
+                onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
             >
                 <Drawer.Overlay />
                 <Drawer.Content>
@@ -31,7 +31,7 @@ export function BasicDrawer() {
                     <Drawer.CloseButton />
                     <Drawer.Body>Drawer Body</Drawer.Body>
                     <Drawer.Footer>
-                        <Button onClick={onClose}>Close</Button>
+                        <Button onClick={() => setOpen(false)}>Close</Button>
                     </Drawer.Footer>
                 </Drawer.Content>
             </Drawer.Root>
@@ -43,12 +43,12 @@ export function VariantDrawers() {
     const variants = ["inset", "simple"] as const;
 
     function DrawerVariant({ variant }: { variant: (typeof variants)[number] }) {
-        const { isOpen, onClose, onOpen } = useControllable();
+        const [open, setOpen] = useState(false);
 
         return (
             <>
                 <Button
-                    onClick={onOpen}
+                    onClick={() => setOpen(true)}
                     variant={"primary"}
                     w="fit-content"
                 >
@@ -56,8 +56,8 @@ export function VariantDrawers() {
                 </Button>
 
                 <Drawer.Root
-                    isOpen={isOpen}
-                    onClose={onClose}
+                    open={open}
+                    onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
                     variant={variant}
                 >
                     <Drawer.Overlay />
@@ -70,7 +70,7 @@ export function VariantDrawers() {
                                 : "Simple sits flush against the viewport edge with no rounding."}
                         </Drawer.Body>
                         <Drawer.Footer>
-                            <Button onClick={onClose}>Close</Button>
+                            <Button onClick={() => setOpen(false)}>Close</Button>
                         </Drawer.Footer>
                     </Drawer.Content>
                 </Drawer.Root>
@@ -97,12 +97,12 @@ export function PlacementDrawers() {
     const placements = ["right", "left", "top", "bottom"] as const;
 
     function DrawerPlacement({ placement }: { placement: (typeof placements)[number] }) {
-        const { isOpen, onClose, onOpen } = useControllable();
+        const [open, setOpen] = useState(false);
 
         return (
             <>
                 <Button
-                    onClick={onOpen}
+                    onClick={() => setOpen(true)}
                     variant={"primary"}
                     w="fit-content"
                 >
@@ -110,8 +110,8 @@ export function PlacementDrawers() {
                 </Button>
 
                 <Drawer.Root
-                    isOpen={isOpen}
-                    onClose={onClose}
+                    open={open}
+                    onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
                     placement={placement}
                 >
                     <Drawer.Overlay />
@@ -120,7 +120,7 @@ export function PlacementDrawers() {
                         <Drawer.CloseButton />
                         <Drawer.Body>Slides in from the {placement}.</Drawer.Body>
                         <Drawer.Footer>
-                            <Button onClick={onClose}>Close</Button>
+                            <Button onClick={() => setOpen(false)}>Close</Button>
                         </Drawer.Footer>
                     </Drawer.Content>
                 </Drawer.Root>
@@ -147,12 +147,12 @@ export function SizeDrawers() {
     const sizes = ["xs", "sm", "md", "lg", "xl", "2xl", "full"] as const;
 
     function DrawerSize({ size }: { size: (typeof sizes)[number] }) {
-        const { isOpen, onClose, onOpen } = useControllable();
+        const [open, setOpen] = useState(false);
 
         return (
             <>
                 <Button
-                    onClick={onOpen}
+                    onClick={() => setOpen(true)}
                     variant={"primary"}
                     w="fit-content"
                 >
@@ -160,8 +160,8 @@ export function SizeDrawers() {
                 </Button>
 
                 <Drawer.Root
-                    isOpen={isOpen}
-                    onClose={onClose}
+                    open={open}
+                    onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
                     size={size}
                 >
                     <Drawer.Overlay />
@@ -170,7 +170,7 @@ export function SizeDrawers() {
                         <Drawer.CloseButton />
                         <Drawer.Body>This is a {size} drawer!</Drawer.Body>
                         <Drawer.Footer>
-                            <Button onClick={onClose}>Close</Button>
+                            <Button onClick={() => setOpen(false)}>Close</Button>
                         </Drawer.Footer>
                     </Drawer.Content>
                 </Drawer.Root>
@@ -194,12 +194,12 @@ export function SizeDrawers() {
 }
 
 export function ScrollableInsideDrawer() {
-    const { isOpen, onClose, onOpen } = useControllable();
+    const [open, setOpen] = useState(false);
 
     return (
         <>
             <Button
-                onClick={onOpen}
+                onClick={() => setOpen(true)}
                 variant={"primary"}
                 w="fit-content"
             >
@@ -207,8 +207,8 @@ export function ScrollableInsideDrawer() {
             </Button>
 
             <Drawer.Root
-                isOpen={isOpen}
-                onClose={onClose}
+                open={open}
+                onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
                 scrollBehavior="inside"
                 size={"lg"}
             >
@@ -225,7 +225,7 @@ export function ScrollableInsideDrawer() {
                         ))}
                     </Drawer.Body>
                     <Drawer.Footer>
-                        <Button onClick={onClose}>Close</Button>
+                        <Button onClick={() => setOpen(false)}>Close</Button>
                     </Drawer.Footer>
                 </Drawer.Content>
             </Drawer.Root>

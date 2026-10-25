@@ -1,0 +1,13 @@
+{
+  "type": "module",
+  "npmDependencies": [],
+  "fileDependencies": [],
+  "id": "autocomplete-ui-context",
+  "file": {
+    "name": "autocomplete-ui-context.tsx",
+    "content": "\"use client\";\r\n\r\nimport { createContext, useContext } from \"react\";\r\n\r\nexport interface AutocompleteItem {\r\n    value: string;\r\n    label: string;\r\n}\r\n\r\nexport interface AutocompleteUiContextValue {\r\n    visibleItems: AutocompleteItem[];\r\n    size: \"xs\" | \"sm\" | \"md\" | \"lg\" | \"xl\" | \"2xl\";\r\n    triggerVariant: string;\r\n    isClearable: boolean;\r\n    inputFieldProps: React.InputHTMLAttributes<HTMLInputElement>;\r\n    onInputValueChange: (inputValue: string) => void;\r\n    onChangeValue?: (value: string | null) => void;\r\n}\r\n\r\nconst AutocompleteUiContext = createContext<AutocompleteUiContextValue | null>(null);\r\n\r\nexport function AutocompleteUiProvider({\r\n    value,\r\n    children\r\n}: {\r\n    value: AutocompleteUiContextValue;\r\n    children: React.ReactNode;\r\n}) {\r\n    return <AutocompleteUiContext.Provider value={value}>{children}</AutocompleteUiContext.Provider>;\r\n}\r\n\r\nexport function useAutocompleteUi() {\r\n    const context = useContext(AutocompleteUiContext);\r\n    if (!context) {\r\n        throw new Error(\"useAutocompleteUi must be used within Autocomplete.Root\");\r\n    }\r\n    return context;\r\n}\r\n"
+  },
+  "component": "AutocompleteUiContext",
+  "hasRecipe": false,
+  "hasPattern": false
+}

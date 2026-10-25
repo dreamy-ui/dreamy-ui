@@ -175,7 +175,7 @@ export const datePicker = defineSlotRecipe({
                 color: "primary.fg!",
                 // borderColor: "primary!",
                 // scale: "0.95",
-                // transition: "scale {durations.fast} {easings.ease-in-out}",
+                // transition: "scale {durations.fast} {easings.easeInOut}",
                 _hover: {
                     backgroundColor: "primary.hover!",
                     borderColor: "primary.hover!"

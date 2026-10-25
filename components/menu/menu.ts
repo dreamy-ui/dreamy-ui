@@ -31,13 +31,13 @@ export const menu = defineSlotRecipe({
             display: "flex",
             alignItems: "center",
             gap: "2",
-            fontWeight: "semibold",
+            // fontWeight: "semibold",
             cursor: "pointer",
             justifyContent: "space-between",
             flex: "1",
             textAlign: "start",
             width: "full",
-            "&[data-focused]": {
+            "&[data-focused], &[data-highlighted]": {
                 bg: "alpha.50"
             },
             _disabled: {

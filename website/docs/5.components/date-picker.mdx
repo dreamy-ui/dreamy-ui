@@ -2,8 +2,8 @@
 title: Date Picker
 description: Date Picker allows users to select a date from a calendar popover.
 isServerComponent: false
-source: /packages/react/src/components/date-picker/date-picker.tsx
-themeSource: /packages/system/src/recipes/date-picker.ts
+source: /components/date-picker/index.tsx
+themeSource: /components/recipes/date-picker.ts
 ---
 
 ## Installation
@@ -15,6 +15,8 @@ pnpm dreamy add date-picker
 ## Usage
 
 Date Picker provides a calendar interface for selecting dates. It can be used with either an input field or a button trigger.
+
+Calendar keyboard interaction and grid semantics are provided by [Ark UI `DatePicker`](https://ark-ui.com/docs/components/date-picker). The popover shell uses Dreamy `Popover` for motion, positioning, and portal stacking. Day cells expose accessible names in the form **Choose {full date}** (for example, `Choose Thursday, January 15, 2026`).
 
 ### With Input
 

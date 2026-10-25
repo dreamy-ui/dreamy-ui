@@ -35,11 +35,9 @@ export function Grid(props: GridProps) {
         "minChildWidth"
     ]);
 
-    const styles = grid.raw(patternProps);
-
     return (
         <dreamy.div
-            {...styles}
+            className={grid(patternProps)}
             {...restProps}
         />
     );
@@ -62,11 +60,9 @@ export function GridItem(props: GridItemProps) {
         "rowEnd"
     ]);
 
-    const styles = gridItem.raw(patternProps);
-
     return (
         <dreamy.div
-            {...styles}
+            className={gridItem(patternProps)}
             {...restProps}
         />
     );

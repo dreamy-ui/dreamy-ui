@@ -4,9 +4,10 @@
     "id": "accordion",
     "file": "accordion.tsx",
     "component": "Accordion",
-    "npmDependencies": [],
+    "npmDependencies": [
+      "@ark-ui"
+    ],
     "fileDependencies": [
-      "./box",
       "./icon",
       "./transitions"
     ],
@@ -55,12 +56,15 @@
     "file": "autocomplete.tsx",
     "component": "Autocomplete",
     "npmDependencies": [
+      "@ark-ui",
+      "match-sorter",
       "@tanstack/react-virtual"
     ],
     "fileDependencies": [
       "./box",
       "./input",
-      "./popover"
+      "./popover",
+      "./autocomplete-ui-context"
     ],
     "hasRecipe": true,
     "hasPattern": false,
@@ -73,7 +77,9 @@
     "id": "avatar",
     "file": "avatar.tsx",
     "component": "Avatar",
-    "npmDependencies": [],
+    "npmDependencies": [
+      "@ark-ui"
+    ],
     "fileDependencies": [
       "./box",
       "./flex",
@@ -157,10 +163,12 @@
     "id": "checkbox",
     "file": "checkbox.tsx",
     "component": "Checkbox",
-    "npmDependencies": [],
+    "npmDependencies": [
+      "@ark-ui"
+    ],
     "fileDependencies": [
       "./flex",
-      "./visually-hidden"
+      "./map-checkbox-props"
     ],
     "hasRecipe": true,
     "hasPattern": false,
@@ -202,16 +210,19 @@
     "file": "date-picker.tsx",
     "component": "DatePicker",
     "npmDependencies": [
+      "@ark-ui",
       "dayjs"
     ],
     "fileDependencies": [
       "./box",
       "./button",
       "./flex",
-      "./icon",
       "./icon-button",
       "./input",
-      "./popover"
+      "./popover",
+      "./ark-calendar",
+      "./date-adapters",
+      "./date-picker-ui-context"
     ],
     "hasRecipe": true,
     "hasPattern": false,
@@ -225,9 +236,13 @@
     "file": "date-range-picker.tsx",
     "component": "DateRangePicker",
     "npmDependencies": [
+      "@ark-ui",
       "dayjs"
     ],
     "fileDependencies": [
+      "./ark-calendar",
+      "./date-adapters",
+      "./date-picker-ui-context",
       "./box",
       "./button",
       "./flex",
@@ -239,6 +254,18 @@
     "recipeIds": [
       "date-range-picker"
     ]
+  },
+  {
+    "type": "component",
+    "id": "dialog",
+    "file": "dialog.tsx",
+    "component": "Dialog",
+    "npmDependencies": [],
+    "fileDependencies": [
+      "./modal"
+    ],
+    "hasRecipe": false,
+    "hasPattern": false
   },
   {
     "type": "component",
@@ -258,13 +285,16 @@
     "id": "drawer",
     "file": "drawer.tsx",
     "component": "Drawer",
-    "npmDependencies": [],
+    "npmDependencies": [
+      "@ark-ui"
+    ],
     "fileDependencies": [
       "./box",
       "./close-button",
       "./flex",
       "./heading",
-      "./motion"
+      "./motion",
+      "./use-floating-present"
     ],
     "hasRecipe": true,
     "hasPattern": false,
@@ -277,9 +307,11 @@
     "id": "editable",
     "file": "editable.tsx",
     "component": "Editable",
-    "npmDependencies": [],
+    "npmDependencies": [
+      "@ark-ui"
+    ],
     "fileDependencies": [
-      "./box"
+      "./map-editable-props"
     ],
     "hasRecipe": true,
     "hasPattern": false,
@@ -403,11 +435,15 @@
     "id": "hover-card",
     "file": "hover-card.tsx",
     "component": "HoverCard",
-    "npmDependencies": [],
+    "npmDependencies": [
+      "@ark-ui"
+    ],
     "fileDependencies": [
       "./box",
       "./heading",
-      "./motion"
+      "./motion",
+      "./map-positioning",
+      "./hover-card-ui-context"
     ],
     "hasRecipe": true,
     "hasPattern": false,
@@ -513,11 +549,13 @@
     "id": "menu",
     "file": "menu.tsx",
     "component": "Menu",
-    "npmDependencies": [],
+    "npmDependencies": [
+      "@ark-ui"
+    ],
     "fileDependencies": [
-      "./box",
       "./kbd",
-      "./popover"
+      "./popover",
+      "./map-positioning"
     ],
     "hasRecipe": true,
     "hasPattern": false,
@@ -530,13 +568,16 @@
     "id": "modal",
     "file": "modal.tsx",
     "component": "Modal",
-    "npmDependencies": [],
+    "npmDependencies": [
+      "@ark-ui"
+    ],
     "fileDependencies": [
       "./box",
       "./close-button",
       "./flex",
       "./heading",
-      "./motion"
+      "./motion",
+      "./use-floating-present"
     ],
     "hasRecipe": true,
     "hasPattern": false,
@@ -592,12 +633,16 @@
     "id": "popover",
     "file": "popover.tsx",
     "component": "Popover",
-    "npmDependencies": [],
+    "npmDependencies": [
+      "@ark-ui"
+    ],
     "fileDependencies": [
-      "./box",
       "./close-button",
-      "./heading",
-      "./motion"
+      "./motion",
+      "./map-positioning",
+      "./popover-ui-context",
+      "./use-floating-present",
+      "./use-hover-open"
     ],
     "hasRecipe": true,
     "hasPattern": false,
@@ -610,10 +655,10 @@
     "id": "progress",
     "file": "progress.tsx",
     "component": "Progress",
-    "npmDependencies": [],
-    "fileDependencies": [
-      "./box"
+    "npmDependencies": [
+      "@ark-ui"
     ],
+    "fileDependencies": [],
     "hasRecipe": true,
     "hasPattern": false,
     "recipeIds": [
@@ -625,7 +670,9 @@
     "id": "progress-circular",
     "file": "progress-circular.tsx",
     "component": "ProgressCircular",
-    "npmDependencies": [],
+    "npmDependencies": [
+      "@ark-ui"
+    ],
     "fileDependencies": [],
     "hasRecipe": true,
     "hasPattern": false,
@@ -638,10 +685,12 @@
     "id": "radio",
     "file": "radio.tsx",
     "component": "Radio",
-    "npmDependencies": [],
+    "npmDependencies": [
+      "@ark-ui"
+    ],
     "fileDependencies": [
       "./flex",
-      "./visually-hidden"
+      "./map-radio-props"
     ],
     "hasRecipe": true,
     "hasPattern": false,
@@ -669,10 +718,11 @@
     "id": "range-slider",
     "file": "range-slider.tsx",
     "component": "RangeSlider",
-    "npmDependencies": [],
+    "npmDependencies": [
+      "@ark-ui"
+    ],
     "fileDependencies": [
-      "./box",
-      "./visually-hidden"
+      "./box"
     ],
     "hasRecipe": true,
     "hasPattern": false,
@@ -698,12 +748,13 @@
     "file": "select.tsx",
     "component": "Select",
     "npmDependencies": [
+      "@ark-ui",
       "@tanstack/react-virtual"
     ],
     "fileDependencies": [
       "./box",
       "./popover",
-      "./visually-hidden"
+      "./select-ui-context"
     ],
     "hasRecipe": true,
     "hasPattern": false,
@@ -729,10 +780,12 @@
     "id": "slider",
     "file": "slider.tsx",
     "component": "Slider",
-    "npmDependencies": [],
+    "npmDependencies": [
+      "@ark-ui"
+    ],
     "fileDependencies": [
       "./box",
-      "./visually-hidden"
+      "./map-slider-value"
     ],
     "hasRecipe": true,
     "hasPattern": false,
@@ -827,10 +880,11 @@
     "id": "switch",
     "file": "switch.tsx",
     "component": "Switch",
-    "npmDependencies": [],
+    "npmDependencies": [
+      "@ark-ui"
+    ],
     "fileDependencies": [
-      "./motion",
-      "./visually-hidden"
+      "./motion"
     ],
     "hasRecipe": true,
     "hasPattern": false,
@@ -856,7 +910,9 @@
     "id": "tabs",
     "file": "tabs.tsx",
     "component": "Tabs",
-    "npmDependencies": [],
+    "npmDependencies": [
+      "@ark-ui"
+    ],
     "fileDependencies": [
       "./box",
       "./button",
@@ -963,10 +1019,14 @@
     "id": "tooltip",
     "file": "tooltip.tsx",
     "component": "Tooltip",
-    "npmDependencies": [],
+    "npmDependencies": [
+      "@ark-ui"
+    ],
     "fileDependencies": [
       "./box",
-      "./motion"
+      "./motion",
+      "./map-positioning",
+      "./use-floating-present"
     ],
     "hasRecipe": true,
     "hasPattern": false,
@@ -1014,5 +1074,175 @@
     "patternIds": [
       "wrap"
     ]
+  },
+  {
+    "type": "module",
+    "id": "autocomplete-ui-context",
+    "file": "autocomplete-ui-context.tsx",
+    "component": "AutocompleteUiContext",
+    "npmDependencies": [],
+    "fileDependencies": [],
+    "hasRecipe": false,
+    "hasPattern": false
+  },
+  {
+    "type": "module",
+    "id": "map-checkbox-props",
+    "file": "map-checkbox-props.ts",
+    "component": "MapCheckboxProps",
+    "npmDependencies": [
+      "@ark-ui"
+    ],
+    "fileDependencies": [],
+    "hasRecipe": false,
+    "hasPattern": false
+  },
+  {
+    "type": "module",
+    "id": "ark-calendar",
+    "file": "ark-calendar.tsx",
+    "component": "ArkCalendar",
+    "npmDependencies": [
+      "@ark-ui",
+      "@internationalized/date"
+    ],
+    "fileDependencies": [
+      "./box",
+      "./button",
+      "./flex",
+      "./icon",
+      "./icon-button",
+      "./date-picker-ui-context"
+    ],
+    "hasRecipe": false,
+    "hasPattern": false
+  },
+  {
+    "type": "module",
+    "id": "date-adapters",
+    "file": "date-adapters.ts",
+    "component": "DateAdapters",
+    "npmDependencies": [
+      "@internationalized/date"
+    ],
+    "fileDependencies": [],
+    "hasRecipe": false,
+    "hasPattern": false
+  },
+  {
+    "type": "module",
+    "id": "date-picker-ui-context",
+    "file": "date-picker-ui-context.tsx",
+    "component": "DatePickerUiContext",
+    "npmDependencies": [],
+    "fileDependencies": [],
+    "hasRecipe": false,
+    "hasPattern": false
+  },
+  {
+    "type": "module",
+    "id": "map-editable-props",
+    "file": "map-editable-props.ts",
+    "component": "MapEditableProps",
+    "npmDependencies": [
+      "@ark-ui"
+    ],
+    "fileDependencies": [],
+    "hasRecipe": false,
+    "hasPattern": false
+  },
+  {
+    "type": "module",
+    "id": "hover-card-ui-context",
+    "file": "hover-card-ui-context.tsx",
+    "component": "HoverCardUiContext",
+    "npmDependencies": [],
+    "fileDependencies": [],
+    "hasRecipe": false,
+    "hasPattern": false
+  },
+  {
+    "type": "module",
+    "id": "menu-ui-context",
+    "file": "menu-ui-context.tsx",
+    "component": "MenuUiContext",
+    "npmDependencies": [],
+    "fileDependencies": [],
+    "hasRecipe": false,
+    "hasPattern": false
+  },
+  {
+    "type": "module",
+    "id": "map-positioning",
+    "file": "map-positioning.ts",
+    "component": "MapPositioning",
+    "npmDependencies": [
+      "@ark-ui"
+    ],
+    "fileDependencies": [],
+    "hasRecipe": false,
+    "hasPattern": false
+  },
+  {
+    "type": "module",
+    "id": "popover-ui-context",
+    "file": "popover-ui-context.tsx",
+    "component": "PopoverUiContext",
+    "npmDependencies": [],
+    "fileDependencies": [],
+    "hasRecipe": false,
+    "hasPattern": false
+  },
+  {
+    "type": "module",
+    "id": "use-floating-present",
+    "file": "use-floating-present.ts",
+    "component": "UseFloatingPresent",
+    "npmDependencies": [],
+    "fileDependencies": [],
+    "hasRecipe": false,
+    "hasPattern": false
+  },
+  {
+    "type": "module",
+    "id": "use-hover-open",
+    "file": "use-hover-open.ts",
+    "component": "UseHoverOpen",
+    "npmDependencies": [],
+    "fileDependencies": [],
+    "hasRecipe": false,
+    "hasPattern": false
+  },
+  {
+    "type": "module",
+    "id": "map-radio-props",
+    "file": "map-radio-props.ts",
+    "component": "MapRadioProps",
+    "npmDependencies": [
+      "@ark-ui"
+    ],
+    "fileDependencies": [],
+    "hasRecipe": false,
+    "hasPattern": false
+  },
+  {
+    "type": "module",
+    "id": "select-ui-context",
+    "file": "select-ui-context.tsx",
+    "component": "SelectUiContext",
+    "npmDependencies": [],
+    "fileDependencies": [],
+    "hasRecipe": false,
+    "hasPattern": false
+  },
+  {
+    "type": "module",
+    "id": "map-slider-value",
+    "file": "map-slider-value.ts",
+    "component": "MapSliderValue",
+    "npmDependencies": [],
+    "fileDependencies": [],
+    "hasRecipe": false,
+    "hasPattern": false
   }
 ]

@@ -1,5 +1,5 @@
-import { getColorSchemes } from "@dreamy-ui/panda-preset";
-import { defineParts, defineRecipe } from "@pandacss/dev";
+import { defineParts, getColorSchemes } from "@dreamy-ui/panda-preset";
+import { defineRecipe } from "@pandacss/dev";
 
 const parts = defineParts({
     root: {
@@ -67,7 +67,10 @@ export const radio = defineRecipe({
             ".group:is(:hover)&": {
                 bg: "{colors.alpha.50}"
             },
-            ".group:is([data-checked])&": {
+            ".group:is([data-state=checked])&": {
+                borderColor: "var(--radio-bg)"
+            },
+            "[data-part=wrapper][data-state=checked]": {
                 borderColor: "var(--radio-bg)"
             }
         },
@@ -79,7 +82,7 @@ export const radio = defineRecipe({
             borderRadius: "full",
             transition: "opacity 0.1s, scale 0.2s",
             transitionTimingFunction: "ease-in-out",
-            ".group:is([data-checked])&": {
+            ".group:is([data-state=checked])&": {
                 opacity: 1,
                 scale: 1
             }
@@ -142,25 +145,33 @@ export const radio = defineRecipe({
             solid: parts({
                 control: {
                     background: "var(--radio-bg)",
-                    ".group:is([data-checked])&": {
-                        ".group:is(:active, [data-active])&": {
-                            opacity: 1
-                        }
+                    ".group:is([data-state=checked])&": {
+                        opacity: 1,
+                        scale: 1
                     },
-                    ".group:is(:active, [data-active])&": {
+                    ".group:is(:active) &, [data-part=wrapper][data-active] &": {
                         scale: 0.5,
                         opacity: 0.5,
                         background: "var(--radio-bg)"
-                    }
+                    },
+                    ".group:is([data-state=checked]):is(:active) &, .group:is([data-state=checked]) [data-part=wrapper][data-active] &":
+                        {
+                            opacity: 1,
+                            scale: 1
+                        }
                 },
                 wrapper: {
-                    ".group:is([data-checked])&": {
-                        ".group:is(:active, [data-active])&": {
-                            borderColor: "var(--radio-bg)"
-                        }
+                    ".group:is([data-state=checked])&": {
+                        borderColor: "var(--radio-bg)"
                     },
-                    ".group:is(:active, [data-active])&": {
+                    "&[data-state=checked]": {
+                        borderColor: "var(--radio-bg)"
+                    },
+                    ".group:is(:active) &, &[data-active]": {
                         borderColor: "var(--radio-bg)/50"
+                    },
+                    ".group:is([data-state=checked]):is(:active) &, &[data-state=checked][data-active]": {
+                        borderColor: "var(--radio-bg)"
                     }
                 }
             })

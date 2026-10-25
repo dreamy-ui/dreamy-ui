@@ -1,9 +1,10 @@
-import { getColorSchemes } from "@dreamy-ui/panda-preset";
-import { defineParts, defineRecipe } from "@pandacss/dev";
+import { defineParts, getColorSchemes } from "@dreamy-ui/panda-preset";
+import { defineRecipe } from "@pandacss/dev";
 
 const parts = defineParts({
     root: { selector: "&" },
-    filledTrack: { selector: "& [data-part=filled-track]" }
+    track: { selector: "& [data-part=track]" },
+    range: { selector: "& [data-part=range]" }
 });
 
 export { parts as progressParts };
@@ -11,7 +12,7 @@ export { parts as progressParts };
 export const progress = defineRecipe({
     className: "progress",
     description:
-        "A horizontal progress bar for showing completion percentage or loading state. isIndeterminate runs a sliding 50%-width animation on the fill track instead of a fixed percentage width.",
+        "A horizontal progress bar for showing completion percentage or loading state. isIndeterminate runs a sliding 50%-width animation on the range instead of a fixed percentage width.",
     jsx: ["Progress", "CircularProgress"],
     base: parts({
         root: {
@@ -20,21 +21,26 @@ export const progress = defineRecipe({
             overflow: "hidden",
             position: "relative"
         },
-        filledTrack: {
+        track: {
+            width: "full",
+            height: "full",
+            position: "relative"
+        },
+        range: {
             bg: "var(--progress-color)",
-            transition: "width 0.3s {easings.ease-in-out}",
+            transition: "width 0.3s {easings.easeInOut}",
             height: "full"
         }
     }),
     variants: {
         isIndeterminate: {
             true: parts({
-                filledTrack: {
+                range: {
                     position: "absolute",
                     willChange: "left",
                     minWidth: "50%",
                     animation:
-                        "progress var(--speed) {easings.ease-in-out} infinite normal none running"
+                        "progress var(--speed) {easings.easeInOut} infinite normal none running"
                 }
             })
         },

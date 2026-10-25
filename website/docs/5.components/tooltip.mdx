@@ -2,8 +2,8 @@
 title: Tooltip
 description: Tooltip is an interactive component that displays information when hovering over an element.
 isServerComponent: false
-source: /packages/react/src/components/tooltip/tooltip.tsx
-themeSource: /packages/system/src/recipes/tooltip.ts
+source: /components/tooltip/index.tsx
+themeSource: /components/recipes/tooltip.ts
 ---
 
 ## Installation
@@ -13,6 +13,8 @@ pnpm dreamy add tooltip
 ```
 
 ## Usage
+
+Tooltip behavior is powered by [Ark UI Tooltip](https://ark-ui.com/docs/components/tooltip) with Dreamy styling and Motion on the floating surface. Use `open`, `defaultOpen`, and `onOpenChange` for controlled state. An `id` is required by Ark and is generated automatically when omitted. `hasArrow` defaults to `true`.
 
 Base usage of a Tooltip.
 
@@ -52,7 +54,7 @@ You can control the open and close delay of the tooltip by using the `openDelay`
 
 ### Close handlers
 
-You can control the close behavior of the tooltip by using the `closeOnClick`, `closeOnPointerDown`, `closeOnEsc`, and `closeOnScroll` props.
+You can control the close behavior of the tooltip by using the `closeOnClick`, `closeOnPointerDown`, `closeOnEscape`, and `closeOnScroll` props.
 
 By default, the tooltip will close on click, pointer down, esc key, but not on scroll.
 
@@ -63,7 +65,7 @@ By default, the tooltip will close on click, pointer down, esc key, but not on s
 	<Tooltip content="I am not closed on pointer down" closeOnPointerDown={false}>
 		<Text w="fit-content">Close on pointer down false</Text>
 	</Tooltip>
-	<Tooltip content="I am not closed on esc key" closeOnEsc={false}>
+	<Tooltip content="I am not closed on esc key" closeOnEscape={false}>
 		<Text w="fit-content">Close on esc key false</Text>
 	</Tooltip>
 	<Tooltip content="I am closed on scroll" closeOnScroll>
@@ -78,7 +80,7 @@ By default, the tooltip will close on click, pointer down, esc key, but not on s
 <Tooltip content="I am not closed on pointer down" closeOnPointerDown={false}>
     <Text>Close on pointer down false</Text>
 </Tooltip>
-<Tooltip content="I am not closed on esc key" closeOnEsc={false}>
+<Tooltip content="I am not closed on esc key" closeOnEscape={false}>
     <Text>Close on esc key false</Text>
 </Tooltip>
 <Tooltip content="I am closed on scroll" closeOnScroll>

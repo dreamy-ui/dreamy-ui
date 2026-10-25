@@ -1,0 +1,15 @@
+{
+  "type": "module",
+  "npmDependencies": [
+    "@ark-ui"
+  ],
+  "fileDependencies": [],
+  "id": "map-positioning",
+  "file": {
+    "name": "map-positioning.ts",
+    "content": "import type { PositioningProps } from \"@dreamy-ui/react\";\r\nimport type { PopoverRootProps } from \"@ark-ui/react/popover\";\r\n\r\nexport type MappedPositioning = NonNullable<PopoverRootProps[\"positioning\"]>;\r\n\r\nfunction resolveOffset(\r\n    offset: PositioningProps[\"offset\"],\r\n    gutter: number\r\n): MappedPositioning[\"offset\"] {\r\n    if (offset === undefined) {\r\n        return { mainAxis: gutter };\r\n    }\r\n    if (typeof offset === \"number\") {\r\n        return { mainAxis: offset };\r\n    }\r\n    return {\r\n        mainAxis: offset.mainAxis,\r\n        crossAxis: offset.crossAxis\r\n    };\r\n}\r\n\r\nexport function mapPositioningProps(positioning?: PositioningProps): MappedPositioning | undefined {\r\n    if (!positioning) return undefined;\r\n\r\n    const {\r\n        placement,\r\n        gutter = 8,\r\n        offset,\r\n        flip = true,\r\n        shift = true,\r\n        shiftPadding = 8,\r\n        matchWidth,\r\n        strategy,\r\n        boundary,\r\n        arrowPadding\r\n    } = positioning;\r\n\r\n    const mapped: MappedPositioning = {\r\n        placement,\r\n        offset: resolveOffset(offset, gutter),\r\n        strategy,\r\n        boundary,\r\n        arrowPadding\r\n    };\r\n\r\n    if (matchWidth !== undefined) {\r\n        mapped.sameWidth = matchWidth;\r\n    }\r\n\r\n    if (!flip) {\r\n        mapped.flip = false;\r\n    }\r\n\r\n    if (shift) {\r\n        mapped.shift = shiftPadding;\r\n    } else {\r\n        mapped.shift = false;\r\n    }\r\n\r\n    return mapped;\r\n}\r\n"
+  },
+  "component": "MapPositioning",
+  "hasRecipe": false,
+  "hasPattern": false
+}

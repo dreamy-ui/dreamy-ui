@@ -1,4 +1,5 @@
-import { defineParts, defineRecipe } from "@pandacss/dev";
+import { defineParts } from "@dreamy-ui/panda-preset";
+import { defineRecipe } from "@pandacss/dev";
 
 const parts = defineParts({
     zoomedWrapper: { selector: '[data-part="wrapper-zoomed"]:has(&)' },
@@ -20,7 +21,7 @@ export const image = defineRecipe({
     base: parts({
         image: {
             "&[data-zoomed]": {
-                transition: "transform {durations.normal} {easings.ease-in-out}",
+                transition: "transform {durations.normal} {easings.easeInOut}",
                 _hover: {
                     transform: "scale(var(--hover-zoom-scale, 1.1))"
                 }

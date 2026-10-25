@@ -10,12 +10,12 @@ describe("Accordion", () => {
         const user = userEvent.setup();
 
         render(
-            <Accordion.Root reduceMotion>
-                <Accordion.Item>
+            <Accordion.Root>
+                <Accordion.Item value="one">
                     <Accordion.Trigger>Section one</Accordion.Trigger>
                     <Accordion.Content>Panel one content</Accordion.Content>
                 </Accordion.Item>
-                <Accordion.Item>
+                <Accordion.Item value="two">
                     <Accordion.Trigger>Section two</Accordion.Trigger>
                     <Accordion.Content>Panel two content</Accordion.Content>
                 </Accordion.Item>
@@ -51,11 +51,8 @@ describe("Accordion", () => {
         const user = userEvent.setup();
 
         render(
-            <Accordion.Root
-                allowToggle
-                reduceMotion
-            >
-                <Accordion.Item>
+            <Accordion.Root collapsible>
+                <Accordion.Item value="keyboard">
                     <Accordion.Trigger>Keyboard section</Accordion.Trigger>
                     <Accordion.Content>Keyboard panel</Accordion.Content>
                 </Accordion.Item>
@@ -80,16 +77,16 @@ describe("Accordion", () => {
         const user = userEvent.setup();
 
         render(
-            <Accordion.Root reduceMotion>
-                <Accordion.Item>
+            <Accordion.Root>
+                <Accordion.Item value="first">
                     <Accordion.Trigger>First</Accordion.Trigger>
                     <Accordion.Content>A</Accordion.Content>
                 </Accordion.Item>
-                <Accordion.Item>
+                <Accordion.Item value="second">
                     <Accordion.Trigger>Second</Accordion.Trigger>
                     <Accordion.Content>B</Accordion.Content>
                 </Accordion.Item>
-                <Accordion.Item>
+                <Accordion.Item value="third">
                     <Accordion.Trigger>Third</Accordion.Trigger>
                     <Accordion.Content>C</Accordion.Content>
                 </Accordion.Item>
@@ -121,18 +118,14 @@ describe("Accordion", () => {
         const user = userEvent.setup();
 
         render(
-            <Accordion.Root
-                allowMultiple={false}
-                defaultIndex={0}
-                reduceMotion
-            >
-                <Accordion.Item>
+            <Accordion.Root defaultValue={["open"]}>
+                <Accordion.Item value="open">
                     <Accordion.Trigger>Open</Accordion.Trigger>
                     <Accordion.Content>
                         <button type="button">Inside open</button>
                     </Accordion.Content>
                 </Accordion.Item>
-                <Accordion.Item>
+                <Accordion.Item value="closed">
                     <Accordion.Trigger>Closed</Accordion.Trigger>
                     <Accordion.Content>
                         <button type="button">Inside closed</button>
@@ -155,27 +148,26 @@ describe("Accordion", () => {
         expect(screen.getByRole("button", { name: "Inside closed" })).toBeVisible();
     });
 
-    it("supports controlled index and onChange", async () => {
+    it("supports controlled value and onValueChange", async () => {
         const user = userEvent.setup();
-        const onChange = vi.fn();
+        const onValueChange = vi.fn();
 
         function Fixture() {
-            const [index, setIndex] = useState<number | number[]>(0);
+            const [value, setValue] = useState<string[]>(["one"]);
 
             return (
                 <Accordion.Root
-                    index={index}
-                    onChange={(next) => {
-                        onChange(next);
-                        setIndex(next);
+                    value={value}
+                    onValueChange={(details) => {
+                        onValueChange(details.value);
+                        setValue(details.value);
                     }}
-                    reduceMotion
                 >
-                    <Accordion.Item>
+                    <Accordion.Item value="one">
                         <Accordion.Trigger>One</Accordion.Trigger>
                         <Accordion.Content>1</Accordion.Content>
                     </Accordion.Item>
-                    <Accordion.Item>
+                    <Accordion.Item value="two">
                         <Accordion.Trigger>Two</Accordion.Trigger>
                         <Accordion.Content>2</Accordion.Content>
                     </Accordion.Item>
@@ -186,7 +178,7 @@ describe("Accordion", () => {
         render(<Fixture />);
 
         await user.click(screen.getByRole("button", { name: /Two/ }));
-        expect(onChange).toHaveBeenCalled();
+        expect(onValueChange).toHaveBeenCalled();
         await waitFor(() => {
             expect(screen.getByRole("button", { name: /Two/ })).toHaveAttribute(
                 "aria-expanded",
@@ -197,8 +189,8 @@ describe("Accordion", () => {
 
     it("marks the chevron icon as aria-hidden", () => {
         render(
-            <Accordion.Root reduceMotion>
-                <Accordion.Item>
+            <Accordion.Root>
+                <Accordion.Item value="icon">
                     <Accordion.Trigger>Icon check</Accordion.Trigger>
                     <Accordion.Content>Body</Accordion.Content>
                 </Accordion.Item>
@@ -214,8 +206,11 @@ describe("Accordion", () => {
         const user = userEvent.setup();
 
         render(
-            <Accordion.Root reduceMotion>
-                <Accordion.Item isDisabled>
+            <Accordion.Root>
+                <Accordion.Item
+                    disabled
+                    value="disabled"
+                >
                     <Accordion.Trigger>Disabled</Accordion.Trigger>
                     <Accordion.Content>Nope</Accordion.Content>
                 </Accordion.Item>

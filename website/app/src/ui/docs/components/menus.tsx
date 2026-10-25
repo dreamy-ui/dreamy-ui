@@ -2,21 +2,21 @@ import { Button } from "@/ui";
 import { Flex } from "@/ui";
 import { Menu } from "@/ui";
 import { Text } from "@/ui";
-import { getActionKeyCode, useControllable, useEventListener } from "@dreamy-ui/react";
+import { getActionKeyCode, useEventListener } from "@dreamy-ui/react";
+import { useState } from "react";
 import { IoAdd } from "react-icons/io5";
 import { LuAlarmClock, LuBattery, LuTrash, LuWarehouse } from "react-icons/lu";
 import { Link, useNavigate } from "react-router";
 
 export function ControlledMenu() {
-    const { isOpen, onClose, onOpen } = useControllable();
+    const [open, setOpen] = useState(false);
 
     return (
         <Menu.Root
-            isOpen={isOpen}
-            onClose={onClose}
-            onOpen={onOpen}
+            open={open}
+            onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
         >
-            <Text>{isOpen ? "Open" : "Closed"}</Text>
+            <Text>{open ? "Open" : "Closed"}</Text>
             <Menu.Trigger>
                 <Button w={"fit-content"}>Open Menu</Button>
             </Menu.Trigger>

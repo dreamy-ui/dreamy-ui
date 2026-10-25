@@ -41,13 +41,13 @@ describe("Popover", () => {
 
     it("closes on Escape and returns focus to the trigger", async () => {
         const user = userEvent.setup();
-        const onClose = vi.fn();
+        const onOpenChange = vi.fn();
 
         render(
             <Popover.Root
-                closeOnEsc
-                onClose={onClose}
-                returnFocusOnClose
+                closeOnEscape
+                onOpenChange={onOpenChange}
+                restoreFocus
             >
                 <Popover.Trigger>
                     <button type="button">Trigger</button>
@@ -69,7 +69,7 @@ describe("Popover", () => {
         await user.keyboard("{Escape}");
 
         await waitFor(() => {
-            expect(onClose).toHaveBeenCalled();
+            expect(onOpenChange).toHaveBeenCalledWith({ open: false });
         });
         await waitFor(() => {
             expect(trigger).toHaveAttribute("aria-expanded", "false");
@@ -105,16 +105,14 @@ describe("Popover", () => {
         });
     });
 
-    it("supports controlled isOpen and onOpen / onClose", async () => {
+    it("supports controlled open and onOpenChange", async () => {
         const user = userEvent.setup();
-        const onOpen = vi.fn();
-        const onClose = vi.fn();
+        const onOpenChange = vi.fn();
 
         const { rerender } = render(
             <Popover.Root
-                isOpen={false}
-                onClose={onClose}
-                onOpen={onOpen}
+                open={false}
+                onOpenChange={onOpenChange}
             >
                 <Popover.Trigger>
                     <button type="button">Controlled</button>
@@ -128,13 +126,12 @@ describe("Popover", () => {
         expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
 
         await user.click(screen.getByRole("button", { name: "Controlled" }));
-        expect(onOpen).toHaveBeenCalled();
+        expect(onOpenChange).toHaveBeenCalledWith({ open: true });
 
         rerender(
             <Popover.Root
-                isOpen
-                onClose={onClose}
-                onOpen={onOpen}
+                open
+                onOpenChange={onOpenChange}
             >
                 <Popover.Trigger>
                     <button type="button">Controlled</button>
@@ -148,12 +145,44 @@ describe("Popover", () => {
         expect(await screen.findByRole("dialog")).toBeInTheDocument();
     });
 
-    it("respects placement and closeOnEsc props", async () => {
+    it("renders an arrow with Ark sizing and background variables when hasArrow is set", async () => {
+        const user = userEvent.setup();
+
+        render(
+            <Popover.Root hasArrow>
+                <Popover.Trigger>
+                    <button type="button">Arrow trigger</button>
+                </Popover.Trigger>
+                <Popover.Content>
+                    <Popover.Body>With arrow</Popover.Body>
+                </Popover.Content>
+            </Popover.Root>
+        );
+
+        await user.click(screen.getByRole("button", { name: "Arrow trigger" }));
+        await screen.findByRole("dialog");
+
+        const arrow = document.querySelector("[data-scope='popover'][data-part='arrow']");
+        const arrowTip = document.querySelector("[data-scope='popover'][data-part='arrow-tip']");
+
+        expect(arrow).toBeTruthy();
+        expect(arrowTip).toBeTruthy();
+
+        const arrowEl = arrow as HTMLElement;
+
+        expect(arrowEl.style.getPropertyValue("--arrow-size")).toBe("8px");
+        expect(arrowEl.style.getPropertyValue("--arrow-background")).toBe(
+            "var(--colors-bg-panel)"
+        );
+        expect(arrowEl.style.width).toBe("var(--arrow-size)");
+    });
+
+    it("respects placement and closeOnEscape props", async () => {
         const user = userEvent.setup();
 
         render(
             <Popover.Root
-                closeOnEsc={false}
+                closeOnEscape={false}
                 positioning={{ placement: "bottom-start" }}
             >
                 <Popover.Trigger>

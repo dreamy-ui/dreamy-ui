@@ -36,6 +36,25 @@ describe("Switch", () => {
         expect(onChangeValue).toHaveBeenCalledWith(true);
     });
 
+    it("toggles when clicking the label in uncontrolled mode", async () => {
+        const user = userEvent.setup();
+        const onChangeValue = vi.fn();
+
+        render(
+            <Switch
+                defaultChecked={false}
+                onChangeValue={onChangeValue}
+            >
+                Notifications
+            </Switch>
+        );
+
+        await user.click(screen.getByText("Notifications"));
+
+        expect(onChangeValue).toHaveBeenCalledWith(true);
+        expect(getSwitchInput(/notifications/i)).toBeChecked();
+    });
+
     it("forwards inputProps to the hidden input", () => {
         render(
             <Switch

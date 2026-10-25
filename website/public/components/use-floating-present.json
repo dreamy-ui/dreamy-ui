@@ -1,0 +1,13 @@
+{
+  "type": "module",
+  "npmDependencies": [],
+  "fileDependencies": [],
+  "id": "use-floating-present",
+  "file": {
+    "name": "use-floating-present.ts",
+    "content": "import { useRef, useState } from \"react\";\r\n\r\n/**\r\n * Keeps the floating layer mounted while Motion runs the exit animation.\r\n */\r\nexport function useFloatingPresent(open: boolean, reduceMotion: boolean) {\r\n    const hasBeenOpenRef = useRef(false);\r\n    const [exitDone, setExitDone] = useState(false);\r\n\r\n    if (open) {\r\n        hasBeenOpenRef.current = true;\r\n        if (exitDone) {\r\n            setExitDone(false);\r\n        }\r\n    }\r\n\r\n    const isExiting = !open && hasBeenOpenRef.current && !reduceMotion && !exitDone;\r\n    const present = open || isExiting;\r\n\r\n    function handleExitComplete() {\r\n        setExitDone(true);\r\n    }\r\n\r\n    return { present, handleExitComplete };\r\n}\r\n"
+  },
+  "component": "UseFloatingPresent",
+  "hasRecipe": false,
+  "hasPattern": false
+}

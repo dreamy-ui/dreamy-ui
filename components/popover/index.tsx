@@ -1,42 +1,95 @@
 "use client";
 
 import {
+    Popover as ArkPopover,
+    type PopoverRootProps as ArkPopoverRootProps,
+    usePopoverContext as useArkPopoverContext
+} from "@ark-ui/react/popover";
+import {
     type MaybeRenderProp,
-    PopoverProvider,
     Portal,
     type PortalProps,
-    type UsePopoverProps,
-    callAll,
+    type PositioningProps,
     callAllHandlers,
     runIfFn,
     transformReducedMotion,
     useMotionVariants,
-    usePopover,
-    usePopoverContext
+    useReducedMotion
 } from "@dreamy-ui/react";
-import { Children, cloneElement } from "react";
-import { type HTMLDreamyProps, createStyleContext } from "styled-system/jsx";
+import {
+    Children,
+    cloneElement,
+    useCallback,
+    useMemo,
+    useState,
+    type CSSProperties
+} from "react";
+import { type HTMLDreamyProps, createStyleContext, dreamy } from "styled-system/jsx";
+import type { PopoverVariantProps } from "styled-system/recipes";
 import { popover } from "styled-system/recipes";
-import { Box, type BoxProps } from "../box";
 import { CloseButton as CloseButtonComponent, type CloseButtonProps } from "../close-button";
-import { Heading } from "../heading";
 import { MotionBox, type MotionBoxProps } from "../motion";
+import { mapPositioningProps } from "./map-positioning";
+import { PopoverUiProvider, usePopoverUi } from "./popover-ui-context";
+import { useFloatingPresent } from "./use-floating-present";
+import { useHoverOpen } from "./use-hover-open";
 
 const { withContext, withRootProvider } = createStyleContext(popover);
 
-export interface PopoverProps extends UsePopoverProps {
+export interface PopoverProps
+    extends Omit<
+            ArkPopoverRootProps,
+            "positioning" | "portalled" | "initialFocusEl" | "children" | "unmountOnExit"
+        >,
+        PopoverVariantProps {
     /**
      * The content of the popover. It is usually the `PopoverTrigger`,
      * and `PopoverContent`
      */
     children?: MaybeRenderProp<{
-        isOpen: boolean;
-        onClose: () => void;
-        forceUpdate: (() => void) | undefined;
+        open: boolean;
+        setOpen: (open: boolean) => void;
     }>;
     /**
+     * Positioning configuration for the popover floating element.
+     */
+    positioning?: PositioningProps;
+    /**
+     * The `ref` of the element that should receive focus when the popover opens.
+     */
+    initialFocusRef?: React.RefObject<{ focus(): void } | null>;
+    /**
+     * The size of the popover arrow
+     */
+    arrowSize?: number;
+    /**
+     * The `box-shadow` of the popover arrow
+     */
+    arrowShadowColor?: string;
+    /**
+     * The interaction that triggers the popover.
+     * @default "click"
+     */
+    trigger?: "click" | "hover";
+    /**
+     * Delay in milliseconds before the popover opens after a trigger event.
+     * Only works when `trigger="hover"`
+     * @default 200
+     */
+    openDelay?: number;
+    /**
+     * Delay in milliseconds before the popover closes after a trigger event.
+     * Only works when `trigger="hover"`
+     * @default 200
+     */
+    closeDelay?: number;
+    /**
+     * If `true`, popover open/close animations are disabled.
+     */
+    reduceMotion?: boolean;
+    /**
      * If `true`, the popover will have an arrow pointing to the trigger
-     * @default true
+     * @default false
      */
     hasArrow?: boolean;
     /**
@@ -46,86 +99,223 @@ export interface PopoverProps extends UsePopoverProps {
     usePortal?: boolean;
     /**
      * Props forwarded to the `Portal` used by `Popover.Content`.
-     * Use `containerRef` to render into a native or third-party top-layer container.
      */
     portalProps?: Omit<PortalProps, "children">;
+}
+
+function PopoverRoot(props: PopoverProps) {
+    const {
+        children,
+        hasArrow,
+        usePortal = true,
+        portalProps,
+        positioning,
+        open: openProp,
+        defaultOpen,
+        onOpenChange,
+        initialFocusRef,
+        restoreFocus = true,
+        autoFocus = true,
+        closeOnInteractOutside = true,
+        closeOnEscape = true,
+        arrowSize,
+        arrowShadowColor,
+        trigger = "click",
+        openDelay = 200,
+        closeDelay = 200,
+        lazyMount,
+        reduceMotion: reduceMotionProp,
+        ...arkRest
+    } = props;
+
+    const globalReduceMotion = useReducedMotion();
+    const reduceMotion = reduceMotionProp ?? globalReduceMotion ?? false;
+    const [trackedOpen, setTrackedOpen] = useState(defaultOpen ?? false);
+
+    const hover = useHoverOpen({
+        enabled: trigger === "hover",
+        open: openProp,
+        defaultOpen,
+        openDelay,
+        closeDelay,
+        onOpenChange
+    });
+
+    const handleOpenChange = useCallback(
+        (details: { open: boolean }) => {
+            if (openProp === undefined) {
+                setTrackedOpen(details.open);
+            }
+            onOpenChange?.(details);
+            if (trigger === "hover") {
+                hover.setOpen(details.open);
+            }
+        },
+        [hover, onOpenChange, openProp, trigger]
+    );
+
+    const rootOpen =
+        trigger === "hover"
+            ? (openProp ?? hover.open ?? trackedOpen)
+            : (openProp ?? trackedOpen);
+
+    const { present, handleExitComplete } = useFloatingPresent(rootOpen, reduceMotion);
+
+    const arkRootProps: ArkPopoverRootProps = {
+        ...arkRest,
+        positioning: mapPositioningProps(positioning),
+        ...(rootOpen !== undefined ? { open: rootOpen } : {}),
+        ...(trigger !== "hover" && openProp === undefined ? { defaultOpen } : {}),
+        onOpenChange: handleOpenChange,
+        closeOnEscape,
+        closeOnInteractOutside,
+        restoreFocus,
+        autoFocus,
+        lazyMount,
+        present,
+        onExitComplete: handleExitComplete,
+        unmountOnExit: false,
+        portalled: false,
+        initialFocusEl: initialFocusRef
+            ? () => (initialFocusRef.current as HTMLElement | null)
+            : undefined
+    };
+
+    const dismiss = useCallback(() => {
+        if (trigger === "hover") {
+            hover.setOpen(false);
+        }
+    }, [hover, trigger]);
+
+    const uiValue = useMemo(
+        () => ({
+            hasArrow: hasArrow ?? false,
+            usePortal,
+            portalProps,
+            reduceMotion,
+            arrowSize,
+            arrowShadowColor,
+            trigger,
+            contentHoverProps: hover.contentHoverProps,
+            triggerHoverProps: hover.triggerHoverProps,
+            onClose: dismiss,
+            onExitComplete: handleExitComplete,
+            present
+        }),
+        [
+            arrowShadowColor,
+            arrowSize,
+            dismiss,
+            handleExitComplete,
+            hasArrow,
+            present,
+            hover.contentHoverProps,
+            hover.triggerHoverProps,
+            portalProps,
+            reduceMotion,
+            trigger,
+            usePortal
+        ]
+    );
+
+    return (
+        <PopoverUiProvider value={uiValue}>
+            <ArkPopover.Root {...arkRootProps}>
+                {typeof children === "function" ? (
+                    <ArkPopover.Context>
+                        {(api) =>
+                            runIfFn(children, {
+                                open: api.open,
+                                setOpen: api.setOpen
+                            })
+                        }
+                    </ArkPopover.Context>
+                ) : (
+                    children
+                )}
+            </ArkPopover.Root>
+        </PopoverUiProvider>
+    );
 }
 
 /**
  * Popover component — floating content anchored to a trigger element.
  *
  * @see Docs https://dreamy-ui.com/docs/components/popover
- *
- * @example
- * ```tsx
- * <Popover.Root>
- *   <Popover.Trigger>
- *     <Button>Open</Button>
- *   </Popover.Trigger>
- *   <Popover.Content>
- *     <Popover.Body>Content</Popover.Body>
- *   </Popover.Content>
- * </Popover.Root>
- * ```
  */
-export const Root = withRootProvider(function PopoverRoot(props: PopoverProps) {
-    const { children, hasArrow, usePortal = true, portalProps, ...rest } = props;
-
-    const context = usePopover(rest);
-
-    return (
-        <PopoverProvider
-            value={{
-                ...context,
-                hasArrow: hasArrow ?? false,
-                usePortal,
-                portalProps
-            }}
-        >
-            {runIfFn(children, {
-                isOpen: context.isOpen,
-                onClose: context.onClose,
-                forceUpdate: context.forceUpdate
-            })}
-        </PopoverProvider>
-    );
-});
+export const Root = withRootProvider(PopoverRoot);
 
 export interface PopoverArrowProps extends HTMLDreamyProps<"div"> {}
 
 /**
  * Popover Arrow — pointer connecting the popover to its anchor.
  */
-export function Arrow(props: PopoverArrowProps) {
-    const { getArrowProps, getArrowInnerProps } = usePopoverContext();
+export const Arrow = withContext(function PopoverArrow(props: PopoverArrowProps) {
+    const { arrowSize, arrowShadowColor } = usePopoverUi();
+
+    const arrowStyle = {
+        "--arrow-size": `${arrowSize ?? 8}px`,
+        "--arrow-background": "var(--colors-bg-panel)",
+        ...(arrowShadowColor ? { "--popper-arrow-shadow": arrowShadowColor } : {})
+    } satisfies CSSProperties;
 
     return (
-        <Box {...getArrowProps({ style: { backgroundColor: "transparent" } })}>
-            <Box {...getArrowInnerProps(props)} />
-        </Box>
+        <ArkPopover.Arrow
+            {...props}
+            style={{ ...arrowStyle, ...props.style }}
+        >
+            <ArkPopover.ArrowTip />
+        </ArkPopover.Arrow>
     );
-}
+}, "arrow");
 
 export interface PopoverTransitionProps extends Omit<MotionBoxProps, "children"> {
     children?: React.ReactNode;
-    /**
-     * Props to be forwarded to the arrow component
-     */
     arrowProps?: PopoverArrowProps;
 }
 
-function Transition(props: PopoverTransitionProps) {
-    const { children, arrowProps, ...rest } = props;
+export interface PopoverPositionerProps {
+    className?: string;
+    style?: React.CSSProperties;
+}
 
-    const { isOpen, hasArrow, reduceMotion } = usePopoverContext();
-    const { popover } = useMotionVariants();
+export interface PopoverContentProps extends PopoverTransitionProps {
+    rootProps?: PopoverPositionerProps;
+    motionProps?: Omit<MotionBoxProps, "children">;
+}
+
+/**
+ * Popover Content — the floating panel rendered in a portal.
+ */
+function PopoverTransition(props: PopoverTransitionProps) {
+    const { children, arrowProps, onAnimationComplete, ...rest } = props;
+    const { hasArrow, reduceMotion, contentHoverProps, arrowSize, onExitComplete } =
+        usePopoverUi();
+    const { open } = useArkPopoverContext();
+    const { popover: motionVariants } = useMotionVariants();
+
+    const motionStyle: CSSProperties = {
+        "--arrow-size": `${arrowSize ?? 8}px`,
+        "--arrow-background": "var(--colors-bg-panel)",
+        ...rest.style
+    };
 
     return (
         <MotionBox
-            animate={isOpen ? "initial" : "exit"}
-            initial={false}
-            variants={transformReducedMotion(popover, reduceMotion)}
+            animate={open ? "initial" : "exit"}
+            exit="exit"
+            initial={reduceMotion ? false : "exit"}
+            variants={transformReducedMotion(motionVariants, reduceMotion)}
+            onAnimationComplete={(definition) => {
+                onAnimationComplete?.(definition);
+                if (!open && !reduceMotion) {
+                    onExitComplete();
+                }
+            }}
+            {...contentHoverProps}
             {...rest}
+            {...(reduceMotion ? {} : { hidden: false })}
+            style={motionStyle}
         >
             {hasArrow && <Arrow {...arrowProps} />}
             {children}
@@ -133,47 +323,55 @@ function Transition(props: PopoverTransitionProps) {
     );
 }
 
-export interface PopoverContentProps extends PopoverTransitionProps {
-    rootProps?: HTMLDreamyProps<"div">;
-    motionProps?: Omit<MotionBoxProps, "children">;
-}
-
-/**
- * Popover Content — the floating panel rendered in a portal.
- */
 export const Content = withContext(function PopoverContent(props: PopoverContentProps) {
-    const { rootProps, motionProps, ...contentProps } = props;
+    const { rootProps, motionProps, arrowProps, onAnimationComplete, children, ...contentProps } =
+        props;
 
-    const {
-        getPopoverProps,
-        getPopoverPositionerProps,
-        isOpen,
-        onAnimationComplete,
-        usePortal,
-        portalProps
-    } = usePopoverContext();
+    const { usePortal, portalProps, trigger, present } = usePopoverUi();
+    const { open } = useArkPopoverContext();
 
-    if (typeof document === "undefined") return null;
+    if (typeof document === "undefined") {
+        return null;
+    }
 
-    const content = (
-        <div {...getPopoverPositionerProps(rootProps)}>
-            <Transition
-                {...getPopoverProps({ ...motionProps, ...contentProps })}
-                onAnimationComplete={callAll(onAnimationComplete, contentProps.onAnimationComplete)}
-            />
-        </div>
+    const resolvedRole =
+        trigger === "hover" ? "tooltip" : (contentProps.role as string | undefined);
+
+    const { style: rootStyle, ...restRootProps } = rootProps ?? {};
+
+    const rendered = (
+        <ArkPopover.Positioner
+            {...restRootProps}
+            style={{
+                pointerEvents: open ? undefined : "none",
+                ...rootStyle
+            }}
+        >
+            <ArkPopover.Content asChild>
+                <PopoverTransition
+                    {...motionProps}
+                    {...contentProps}
+                    arrowProps={arrowProps}
+                    onAnimationComplete={onAnimationComplete}
+                    role={resolvedRole}
+                    tabIndex={contentProps.tabIndex}
+                >
+                    {children}
+                </PopoverTransition>
+            </ArkPopover.Content>
+        </ArkPopover.Positioner>
     );
 
     return usePortal ? (
         <Portal
-            isActive={isOpen}
+            isActive={present}
             zIndex="var(--z-index-popover)"
             {...portalProps}
         >
-            {content}
+            {rendered}
         </Portal>
     ) : (
-        content
+        rendered
     );
 }, "content");
 
@@ -183,25 +381,12 @@ export interface PopoverHeaderProps extends HTMLDreamyProps<"header"> {}
  * Popover Header — title area at the top of the popover.
  */
 export const Header = withContext(function PopoverHeader(props: PopoverHeaderProps) {
-    const { children } = props;
-    const { getHeaderProps } = usePopoverContext();
+    const { children, ...rest } = props;
 
     return (
-        <Box
-            as={"header"}
-            {...getHeaderProps(props)}
-        >
-            {typeof children === "string" ? (
-                <Heading
-                    size="md"
-                    variant={"heading"}
-                >
-                    {children}
-                </Heading>
-            ) : (
-                children
-            )}
-        </Box>
+        <ArkPopover.Title asChild>
+            <dreamy.header {...rest}>{children}</dreamy.header>
+        </ArkPopover.Title>
     );
 }, "header");
 
@@ -210,24 +395,21 @@ export interface PopoverBodyProps extends HTMLDreamyProps<"div"> {}
 /**
  * Popover Body — main content area of the popover.
  */
-export const Body = withContext(function PopoverHeader(props: PopoverBodyProps) {
-    const { getBodyProps } = usePopoverContext();
-
-    return <Box {...getBodyProps(props)} />;
+export const Body = withContext(function PopoverBody(props: PopoverBodyProps) {
+    return (
+        <ArkPopover.Description asChild>
+            <dreamy.div {...props} />
+        </ArkPopover.Description>
+    );
 }, "body");
 
-export interface PopoverFooterProps extends BoxProps {}
+export interface PopoverFooterProps extends HTMLDreamyProps<"footer"> {}
 
 /**
  * Popover Footer — action area at the bottom of the popover.
  */
 export const Footer = withContext(function PopoverFooter(props: PopoverFooterProps) {
-    return (
-        <Box
-            as={"footer"}
-            {...props}
-        />
-    );
+    return <dreamy.footer {...props} />;
 }, "footer");
 
 export interface PopoverCloseButtonProps extends CloseButtonProps {}
@@ -236,13 +418,13 @@ export interface PopoverCloseButtonProps extends CloseButtonProps {}
  * Popover Close Button — dismisses the popover.
  */
 export const CloseButton = withContext(function PopoverCloseButton(props: PopoverCloseButtonProps) {
-    const { onClose } = usePopoverContext();
+    const api = useArkPopoverContext();
 
     return (
         <CloseButtonComponent
             {...props}
-            onClick={callAllHandlers(props.onClick, onClose)}
-            size={"sm"}
+            onClick={callAllHandlers(props.onClick, () => api.setOpen(false))}
+            size="sm"
         />
     );
 }, "close");
@@ -250,13 +432,16 @@ export const CloseButton = withContext(function PopoverCloseButton(props: Popove
 /**
  * Popover Anchor — positioning reference element for the popover.
  */
-export function Anchor(props: React.PropsWithChildren<{}>) {
+export function Anchor(props: React.PropsWithChildren) {
     const child = Children.only(props.children) as React.ReactElement<Record<string, unknown>> & {
         ref?: React.Ref<Element>;
     };
-    const { getAnchorProps } = usePopoverContext();
 
-    return <>{cloneElement(child, getAnchorProps({ ...child.props, ref: child.ref }))}</>;
+    return (
+        <ArkPopover.Anchor asChild>
+            {cloneElement(child, { ...child.props, ref: child.ref })}
+        </ArkPopover.Anchor>
+    );
 }
 
 /**
@@ -266,7 +451,29 @@ export function Trigger(props: { children: React.ReactNode }) {
     const child = Children.only(props.children) as React.ReactElement<Record<string, unknown>> & {
         ref?: React.Ref<Element>;
     };
-    const { getTriggerProps } = usePopoverContext();
+    const { triggerHoverProps, trigger } = usePopoverUi();
 
-    return <>{cloneElement(child, getTriggerProps({ ...child.props, ref: child.ref }))}</>;
+    if (trigger === "hover" && triggerHoverProps) {
+        return (
+            <ArkPopover.Trigger asChild>
+                {cloneElement(child, {
+                    ...child.props,
+                    ...triggerHoverProps,
+                    onClick: callAllHandlers(
+                        child.props.onClick as React.MouseEventHandler<HTMLElement> | undefined,
+                        (event: React.MouseEvent<HTMLElement>) => {
+                            event.preventDefault();
+                        }
+                    ),
+                    ref: child.ref
+                })}
+            </ArkPopover.Trigger>
+        );
+    }
+
+    return (
+        <ArkPopover.Trigger asChild>
+            {cloneElement(child, { ...child.props, ref: child.ref })}
+        </ArkPopover.Trigger>
+    );
 }

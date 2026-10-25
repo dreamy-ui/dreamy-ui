@@ -4,7 +4,7 @@ export const accordion = defineSlotRecipe({
     className: "accordion",
     description:
         "A collapsible accordion for showing and hiding sections of related content, such as FAQs or settings panels. The outline variant separates items with bottom border dividers only; solid wraps the whole list in a tinted rounded panel with padded items; subtle uses gap between items and highlights the expanded item with a soft background tint.",
-    slots: ["root", "item", "trigger", "content", "icon"],
+    slots: ["root", "item", "trigger", "content", "body", "icon"],
     jsx: [
         "Accordion.Root",
         "Accordion.Item",
@@ -36,6 +36,9 @@ export const accordion = defineSlotRecipe({
             textAlign: "left"
         },
         content: {
+            overflow: "hidden"
+        },
+        body: {
             textAlign: "left",
             color: "fg.medium",
             paddingBottom: "calc(var(--accordion-padding-y) * 2)"
@@ -45,8 +48,11 @@ export const accordion = defineSlotRecipe({
             height: 4,
             transition: "transform 0.2s {easings.default}",
             color: "fg.medium",
-            "[data-expanded] &": {
+            "&[data-state=open]": {
                 transform: "rotate(180deg)"
+            },
+            "@media (prefers-reduced-motion: reduce)": {
+                transition: "none"
             }
         }
     },
@@ -97,14 +103,14 @@ export const accordion = defineSlotRecipe({
                 item: {
                     borderRadius: "l1",
                     transition: "background-color 0.2s {easings.default}",
-                    _expanded: {
+                    "&[data-state=open]": {
                         bg: "{colors.alpha.50}"
                     }
                 },
                 trigger: {
                     paddingX: "var(--accordion-padding-y)"
                 },
-                content: {
+                body: {
                     paddingX: "var(--accordion-padding-y)"
                 }
             }

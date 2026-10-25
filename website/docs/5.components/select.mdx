@@ -45,7 +45,7 @@ const fruits = [
 
 ### Popover props
 
-Use `popoverProps` on `Select.Root` to pass behavior props to the internal [Popover](/docs/components/popover). Keep placement options on the root `positioning` prop. The dropdown joins the shared Portal stack automatically; use `popoverProps.portalProps.containerRef` only for a native or third-party overlay root.
+Select dropdown behavior is powered by [Ark UI Select](https://ark-ui.com/docs/components/select) with Dreamy styling and Motion. Use `popoverProps` for portal options (`usePortal`, `portalProps`, `reduceMotion`). Keep placement on the root `positioning` prop. The dropdown joins the shared Portal stack automatically; use `popoverProps.portalProps.containerRef` only for a native or third-party overlay root.
 
 <Wrapper>
     <Select.Root
@@ -55,7 +55,7 @@ Use `popoverProps` on `Select.Root` to pass behavior props to the internal [Popo
             { value: "banana", label: "Banana" },
             { value: "orange", label: "Orange" },
         ]}
-        popoverProps={{ lazyBehavior: "unmount" }}
+        popoverProps={{ usePortal: true }}
     >
         <Select.Trigger placeholder="Select a favorite fruit" />
         <Select.Content />
@@ -65,7 +65,7 @@ Use `popoverProps` on `Select.Root` to pass behavior props to the internal [Popo
 ```tsx
 <Select.Root
     items={fruits}
-    popoverProps={{ lazyBehavior: "unmount" }}
+    popoverProps={{ usePortal: true }}
 >
     <Select.Trigger placeholder="Select a favorite fruit" />
     <Select.Content />
@@ -489,14 +489,17 @@ const fruits = [
 ];
 
 export function SelectInModal() {
-    const { isOpen, onOpen, onClose } = useControllable();
+    const [open, setOpen] = useState(false);
 
     return (
         <>
-            <Button onClick={onOpen} variant="primary">
+            <Button onClick={() => setOpen(true)} variant="primary">
                 Open modal
             </Button>
-            <Modal.Root isOpen={isOpen} onClose={onClose}>
+            <Modal.Root
+                open={open}
+                onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
+            >
                 <Modal.Overlay />
                 <Modal.Content>
                     <Modal.Header>Select in a modal</Modal.Header>
@@ -512,7 +515,7 @@ export function SelectInModal() {
                         </Select.Root>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button onClick={onClose}>Close</Button>
+                        <Button onClick={() => setOpen(false)}>Close</Button>
                     </Modal.Footer>
                 </Modal.Content>
             </Modal.Root>

@@ -20,11 +20,9 @@ export interface DividerProps
 export function Divider(props: DividerProps) {
     const [patternProps, restProps] = splitProps(props, ["orientation", "thickness", "color"]);
 
-    const styleProps = divider.raw(patternProps);
-
     return (
         <dreamy.hr
-            {...styleProps}
+            className={divider(patternProps)}
             {...restProps}
         />
     );

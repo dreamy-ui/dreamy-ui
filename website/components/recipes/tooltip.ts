@@ -5,7 +5,8 @@ export const tooltip = defineSlotRecipe({
     description:
         "A compact tooltip for brief contextual hints on hover or focus. Inverted colors with dark background and light text, small shadow, and arrow — no variant options.",
     jsx: ["Tooltip"],
-    slots: ["trigger", "content"],
+    slots: ["trigger", "content", "arrow"],
+    jsx: ["Tooltip", "TooltipArrow"],
     base: {
         trigger: {
             display: "inline-block"
@@ -13,7 +14,8 @@ export const tooltip = defineSlotRecipe({
         content: {
             "--tooltip-bg": "{colors.fg.max}",
             "--tooltip-color": "{colors.bg}",
-            "--popper-arrow-bg": "var(--tooltip-bg)",
+            "--arrow-size": "8px",
+            "--arrow-background": "var(--tooltip-bg)",
             bg: "var(--tooltip-bg)",
             color: "var(--tooltip-color)",
             px: 2,
@@ -22,7 +24,14 @@ export const tooltip = defineSlotRecipe({
             rounded: "l1",
             boxShadow: "md",
             maxW: "xs",
-            zIndex: "{zIndex.tooltip}"
+            zIndex: "{zIndex.tooltip}",
+            position: "relative",
+            overflow: "visible"
+        },
+        arrow: {
+            "--arrow-size": "8px",
+            "--arrow-background": "var(--tooltip-bg)",
+            zIndex: -1
         }
     }
 });

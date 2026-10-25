@@ -1,21 +1,12 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
-export async function removeFactoryFromStyleContext(jsxFolder: string) {
-    const files = await fs
-        .readdir(jsxFolder)
-        .then((files) => files.filter((file) => !file.endsWith("d.ts")));
-    const styleContextFile = files.find((file) => file.startsWith("create-style-context"));
-
-    if (!styleContextFile) {
-        throw new Error(`create-style-context.js file not found in ${jsxFolder}`);
-    }
-
-    const newContent = `"use client";
+const createStyleContextSource = `"use client";
 
 import { createContext, createElement, forwardRef, useContext } from "react";
 import { cx, sva } from "../css/index.js";
-import { getDisplayName } from "./factory-helper.js";
+import { dreamy } from "./factory.js";
+import { getDisplayName } from "./helper.js";
 
 function createSafeContext(contextName) {
     const Context = createContext(undefined);
@@ -24,7 +15,6 @@ function createSafeContext(contextName) {
         if (context === undefined) {
             const componentInfo = componentName ? \`Component "\${componentName}"\` : "A component";
             const slotInfo = slot ? \` (slot: "\${slot}")\` : "";
-
             throw new Error(
                 \`\${componentInfo}\${slotInfo} cannot access \${contextName} because it's missing its Provider.\`
             );
@@ -34,20 +24,25 @@ function createSafeContext(contextName) {
     return [Context, useStyleContext];
 }
 
-export function createStyleContext(recipe, styleContextOptions = {}) {
-    const isConfigRecipe = "__recipe__" in recipe;
-    const recipeName = isConfigRecipe && recipe.__name__ ? recipe.__name__ : undefined;
-    const contextName = recipeName ? \`createStyleContext("\${recipeName}")\` : "createStyleContext";
-    const forwardVariants = styleContextOptions.forwardVariants ?? [];
+function resolveSlotRecipe(recipe) {
+    if (recipe == null) throw new Error("createStyleContext requires a slot recipe");
+    if (typeof recipe.splitVariantProps === "function") return recipe;
+    if (recipe.slots) return recipe;
+    throw new Error("createStyleContext requires a slot recipe");
+}
 
-    const [StyleContext, useStyleContext] = createSafeContext(contextName);
-    const svaFn = isConfigRecipe ? recipe : sva(recipe.config);
+export function createStyleContext(recipeInput, styleContextOptions = {}) {
+    const forwardVariants = styleContextOptions.forwardVariants ?? [];
+    const recipe = resolveSlotRecipe(recipeInput);
+    const isRuntimeRecipe = typeof recipe.splitVariantProps === "function";
+    const isConfigRecipe = isRuntimeRecipe && recipe.__recipe__ !== undefined;
+    const recipeName = isRuntimeRecipe && recipe.__name__ ? recipe.__name__ : undefined;
+    const contextName = recipeName ? \`createStyleContext("\${recipeName}")\` : "createStyleContext";
+    const [SlotStylesContext, useSlotStylesContext] = createSafeContext(contextName);
+    const slotRecipeFn = isRuntimeRecipe ? recipe : sva(recipe.config ?? recipe);
 
     function getForwardedVariantProps(variantProps) {
-        if (!forwardVariants.length) {
-            return {};
-        }
-
+        if (!forwardVariants.length) return {};
         return forwardVariants.reduce((accumulator, variantKey) => {
             if (variantProps[variantKey] !== undefined) {
                 accumulator[variantKey] = variantProps[variantKey];
@@ -56,91 +51,78 @@ export function createStyleContext(recipe, styleContextOptions = {}) {
         }, {});
     }
 
-    const getResolvedProps = (props, slotStyles) => {
+    const resolveProps = (props, slotStyles) => {
         const { unstyled, ...restProps } = props;
         if (unstyled) return restProps;
-        if (isConfigRecipe) {
-            return { ...restProps, className: cx(slotStyles, restProps.className) };
-        }
+        if (isConfigRecipe) return { ...restProps, className: cx(slotStyles, restProps.className) };
         return { ...slotStyles, ...restProps };
     };
 
     const withRootProvider = (Component, options) => {
         const WithRootProvider = (props) => {
-            const [variantProps, otherProps] = svaFn.splitVariantProps(props);
+            const [variantProps, otherProps] = slotRecipeFn.splitVariantProps(props);
             const forwardedVariantProps = getForwardedVariantProps(variantProps);
-
-            const slotStyles = isConfigRecipe ? svaFn(variantProps) : svaFn.raw(variantProps);
-            slotStyles._classNameMap = svaFn.classNameMap;
-
+            const resolvedSlots = isConfigRecipe ? slotRecipeFn(variantProps) : slotRecipeFn.raw(variantProps);
             const mergedProps = options?.defaultProps
-                ? { ...options.defaultProps, ...otherProps }
-                : otherProps;
-
-            return createElement(StyleContext.Provider, {
-                value: slotStyles,
-                children: createElement(Component, { ...mergedProps, ...forwardedVariantProps })
+                ? { ...options.defaultProps, ...otherProps, ...forwardedVariantProps }
+                : { ...otherProps, ...forwardedVariantProps };
+            return createElement(SlotStylesContext.Provider, {
+                value: resolvedSlots,
+                children: createElement(Component, mergedProps)
             });
         };
-
         const componentName = getDisplayName(Component);
         WithRootProvider.displayName = \`withRootProvider(\${componentName})\`;
-
         return WithRootProvider;
     };
 
     const withProvider = (Component, slot, options) => {
-        const WithProvider = forwardRef((props, ref) => {
-            const [variantProps, restProps] = svaFn.splitVariantProps(props);
+        const StyledComponent = dreamy(Component, {}, options);
+        const WithProvider = forwardRef(function WithProvider(props, ref) {
+            const [variantProps, restProps] = slotRecipeFn.splitVariantProps(props);
             const forwardedVariantProps = getForwardedVariantProps(variantProps);
-
-            const slotStyles = isConfigRecipe ? svaFn(variantProps) : svaFn.raw(variantProps);
-            slotStyles._classNameMap = svaFn.classNameMap;
-
-            const propsWithClass = {
-                ...restProps,
-                ...options?.defaultProps,
-                ...forwardedVariantProps,
-                className: restProps.className ?? options?.defaultProps?.className
-            };
-            const resolvedProps = getResolvedProps(propsWithClass, slotStyles[slot]);
-            return createElement(StyleContext.Provider, {
-                value: slotStyles,
-                children: createElement(Component, {
+            const resolvedSlots = isConfigRecipe ? slotRecipeFn(variantProps) : slotRecipeFn.raw(variantProps);
+            if (restProps.className == null && options?.defaultProps?.className) {
+                restProps.className = options.defaultProps.className;
+            }
+            const resolvedProps = resolveProps(
+                { ...restProps, ...forwardedVariantProps },
+                resolvedSlots[slot]
+            );
+            options?.forwardProps?.forEach((key) => {
+                if (key in variantProps) resolvedProps[key] = variantProps[key];
+            });
+            return createElement(SlotStylesContext.Provider, {
+                value: resolvedSlots,
+                children: createElement(StyledComponent, {
                     ...resolvedProps,
-                    className: cx(resolvedProps.className, slotStyles._classNameMap[slot]),
+                    "data-slot": slot,
                     ref
                 })
             });
         });
-
         const componentName = getDisplayName(Component);
         WithProvider.displayName = \`withProvider(\${componentName})\`;
-
         return WithProvider;
     };
 
     const withContext = (Component, slot, options) => {
+        const StyledComponent = dreamy(Component, {}, options);
         const componentName = getDisplayName(Component);
-
-        const WithContext = forwardRef((props, ref) => {
-            const slotStyles = useStyleContext(componentName, slot);
-
-            const propsWithClass = {
-                ...props,
-                ...options?.defaultProps,
-                className: props.className ?? options?.defaultProps?.className
-            };
-            const resolvedProps = getResolvedProps(propsWithClass, slotStyles[slot]);
-            return createElement(Component, {
+        const WithContext = forwardRef(function WithContext(props, ref) {
+            const resolvedSlots = useSlotStylesContext(componentName, slot);
+            const nextProps =
+                props.className == null && options?.defaultProps?.className
+                    ? { ...props, className: options.defaultProps.className }
+                    : props;
+            const resolvedProps = resolveProps(nextProps, resolvedSlots[slot]);
+            return createElement(StyledComponent, {
                 ...resolvedProps,
-                className: cx(resolvedProps.className, slotStyles._classNameMap[slot]),
+                "data-slot": slot,
                 ref
             });
         });
-
         WithContext.displayName = \`withContext(\${componentName})\`;
-
         return WithContext;
     };
 
@@ -152,50 +134,66 @@ export function createStyleContext(recipe, styleContextOptions = {}) {
 }
 `;
 
-    await fs.writeFile(path.join(jsxFolder, styleContextFile), newContent);
+export async function writeDreamyStyleContext(jsxFolder: string) {
+    await fs.writeFile(path.join(jsxFolder, "create-style-context.js"), createStyleContextSource);
 }
 
 export async function updateStyleContextTypes(jsxFolder: string) {
+    const slotDts = path.join(jsxFolder, "create-slot-recipe-context.d.ts");
     const dtsPath = path.join(jsxFolder, "create-style-context.d.ts");
+
+    let content: string;
     try {
-        let content = await fs.readFile(dtsPath, "utf-8");
+        content = await fs.readFile(slotDts, "utf-8");
+    } catch {
+        try {
+            content = await fs.readFile(dtsPath, "utf-8");
+        } catch (error) {
+            if ((error as NodeJS.ErrnoException).code === "ENOENT") return;
+            throw error;
+        }
+    }
 
-        // Undo legacy patches that stripped JsxStyleProps and broke prop inference.
-        content = content
-            .replace(
-                /Assign<RecipeVariantProps<R>>/g,
-                "Assign<RecipeVariantProps<R>, JsxStyleProps>"
-            )
-            .replace(
-                /JsxHTMLProps<ComponentProps<T> & UnstyledProps & AsProps>(?!\s*,)/g,
-                "JsxHTMLProps<ComponentProps<T> & UnstyledProps & AsProps, JsxStyleProps>"
-            );
+    content = content.replace(/createSlotRecipeContext/g, "createStyleContext");
+    content = content.replace(/SlotRecipeContextInput/g, "StyleContextInput");
+    content = content.replace(/SlotRecipeContext/g, "StyleContext");
 
-        const styleContextOptionsInterface = `interface StyleContextOptions {
+    if (!content.includes("| RecipeRuntimeFn<")) {
+        content = content.replace(
+            "import type { RecipeSelection",
+            "import type { RecipeRuntimeFn, RecipeSelection"
+        );
+        content = content.replace(
+            "type StyleContextInput = SlotRecipeRuntimeFn<string, any, any> | RuntimeSlotRecipeFn | AnySlotRecipeDefinition",
+            "type StyleContextInput = SlotRecipeRuntimeFn<string, any, any> | RuntimeSlotRecipeFn | AnySlotRecipeDefinition | RecipeRuntimeFn<any, any>"
+        );
+        content = content.replace(
+            `: R extends SlotRecipeRuntimeFn<any, infer P, any>
+    ? P
+    : R extends SlotRecipeDefinition<any, infer T>`,
+            `: R extends SlotRecipeRuntimeFn<any, infer P, any>
+    ? P
+    : R extends RecipeRuntimeFn<infer P, any>
+      ? P
+    : R extends SlotRecipeDefinition<any, infer T>`
+        );
+    }
+
+    if (!content.includes("interface StyleContextOptions")) {
+        content = content.replace(
+            "export interface StyleContext<R extends StyleContextInput>",
+            `interface StyleContextOptions {
   forwardVariants?: string[] | undefined
 }
 
-`;
-
-        if (!content.includes("interface StyleContextOptions {")) {
-            content = content.replace(
-                "export interface StyleContext<R extends SlotRecipe>",
-                `${styleContextOptionsInterface}export interface StyleContext<R extends SlotRecipe>`
-            );
-        }
-
-        if (!content.includes("options?: StyleContextOptions")) {
-            content = content.replace(
-                /export declare function createStyleContext<R extends SlotRecipe>\(recipe: R\): StyleContext<R>/,
-                "export declare function createStyleContext<R extends SlotRecipe>(recipe: R, options?: StyleContextOptions | undefined): StyleContext<R>"
-            );
-        }
-
-        await fs.writeFile(dtsPath, content);
-    } catch (error) {
-        if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
-            throw error;
-        }
-        // create-style-context.d.ts not generated yet (e.g. first run), skip
+export interface StyleContext<R extends StyleContextInput>`
+        );
     }
+
+    content = content.replace(
+        "export declare function createStyleContext<R extends StyleContextInput>(recipe: R): StyleContext<R>",
+        "export declare function createStyleContext<R extends StyleContextInput>(recipe: R, options?: StyleContextOptions | undefined): StyleContext<R>"
+    );
+
+    await fs.writeFile(dtsPath, content);
 }

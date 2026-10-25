@@ -1,0 +1,13 @@
+{
+  "type": "module",
+  "npmDependencies": [],
+  "fileDependencies": [],
+  "id": "menu-ui-context",
+  "file": {
+    "name": "menu-ui-context.tsx",
+    "content": "\"use client\";\r\n\r\nimport type { PortalProps } from \"@dreamy-ui/react\";\r\nimport { createContext, useContext } from \"react\";\r\n\r\nexport interface MenuUiContextValue {\r\n    reduceMotion: boolean;\r\n    usePortal: boolean;\r\n    portalProps?: Omit<PortalProps, \"children\">;\r\n}\r\n\r\nconst MenuUiContext = createContext<MenuUiContextValue | null>(null);\r\n\r\nexport function MenuUiProvider({\r\n    value,\r\n    children\r\n}: {\r\n    value: MenuUiContextValue;\r\n    children: React.ReactNode;\r\n}) {\r\n    return <MenuUiContext.Provider value={value}>{children}</MenuUiContext.Provider>;\r\n}\r\n\r\nexport function useMenuUi() {\r\n    const context = useContext(MenuUiContext);\r\n    if (!context) {\r\n        throw new Error(\"useMenuUi must be used within Menu.Root\");\r\n    }\r\n    return context;\r\n}\r\n"
+  },
+  "component": "MenuUiContext",
+  "hasRecipe": false,
+  "hasPattern": false
+}

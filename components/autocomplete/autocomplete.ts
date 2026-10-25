@@ -1,5 +1,6 @@
 import { getColorSchemes } from "@dreamy-ui/panda-preset";
-import { type SystemStyleObject, defineSlotRecipe } from "@pandacss/dev";
+import type { SystemStyleObject } from "@pandacss/types";
+import { defineSlotRecipe } from "@pandacss/dev";
 
 export const autocomplete = defineSlotRecipe({
     className: "autocomplete",
@@ -74,9 +75,9 @@ export const autocomplete = defineSlotRecipe({
                 base: "fg.medium",
                 _disabled: "fg.disabled"
             },
-            transition: "transform {durations.normal} {easings.ease-in-out}",
+            transition: "transform {durations.normal} {easings.easeInOut}",
             transform: "rotate(0deg)",
-            "[data-open] &": {
+            "&[data-state=open]": {
                 transform: "rotate(180deg)"
             }
         },
@@ -88,7 +89,7 @@ export const autocomplete = defineSlotRecipe({
             cursor: "pointer",
             isolation: "isolate",
             pointerEvents: "auto",
-            transition: "color {durations.normal} {easings.ease-in-out}",
+            transition: "color {durations.normal} {easings.easeInOut}",
             _hover: {
                 color: "fg"
             },
@@ -99,13 +100,13 @@ export const autocomplete = defineSlotRecipe({
         content: {
             display: "flex",
             flexDirection: "column",
-            zIndex: "dropdown",
-            borderRadius: "l2!",
             outline: 0,
             maxH: "96",
             gap: "0 !important",
             overflowY: "auto",
-            boxShadow: "md"
+            borderRadius: "l2!",
+            width: "full",
+            minW: "0"
         },
         item: {
             position: "relative",
@@ -152,7 +153,7 @@ export const autocomplete = defineSlotRecipe({
         variant: {
             plain: {
                 content: {
-                    p: "1.5!"
+                    p: "1.5"
                 },
                 item: {
                     borderRadius: "l1"
@@ -160,8 +161,8 @@ export const autocomplete = defineSlotRecipe({
             },
             stretched: {
                 content: {
-                    p: "0!",
-                    py: "1!"
+                    p: "0",
+                    py: "1"
                 },
                 item: {
                     borderRadius: "0"

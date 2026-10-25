@@ -18,11 +18,9 @@ export interface VisuallyHiddenProps extends HTMLDreamyProps<"span"> {}
 export function VisuallyHidden(props: VisuallyHiddenProps) {
     const [patternProps, restProps] = splitProps(props, []);
 
-    const styleProps = visuallyHidden.raw(patternProps);
-
     return (
         <dreamy.span
-            {...styleProps}
+            className={visuallyHidden(patternProps)}
             {...restProps}
         />
     );
@@ -43,12 +41,10 @@ export interface VisuallyHiddenInputProps extends HTMLDreamyProps<"input"> {}
 export function VisuallyHiddenInput(props: VisuallyHiddenInputProps) {
     const [patternProps, restProps] = splitProps(props, []);
 
-    const styleProps = visuallyHidden.raw(patternProps);
-
     return (
         <dreamy.input
             readOnly
-            {...styleProps}
+            className={visuallyHidden(patternProps)}
             {...restProps}
         />
     );

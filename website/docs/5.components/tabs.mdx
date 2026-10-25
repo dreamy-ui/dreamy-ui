@@ -270,7 +270,7 @@ Add `fitted` prop, to fit the tabs width to the container.
 
 ### Controlled
 
-You can control the selected tab by passing the `index` and `onChange` props to the `Tabs.Root` component.
+You can control the selected tab by passing `value`, `defaultValue`, and `onValueChange` to `Tabs.Root`. Tab values are `"0"`, `"1"`, and so on for each tab in order.
 
 <Wrapper>
 	<ControlledTabs />
@@ -278,14 +278,17 @@ You can control the selected tab by passing the `index` and `onChange` props to 
 
 ```tsx
 function ControlledTabs() {
-    const [index, setIndex] = useState(0);
+    const [value, setValue] = useState("0");
     const tabs = ["Dashboard", "AI Chat", "Security"];
 
     return (
         <>
-            <Text bold>Current Tab: {tabs[index]}</Text>
+            <Text bold>Current Tab: {tabs[Number(value)]}</Text>
 
-            <Tabs.Root index={index} onChange={setIndex}>
+            <Tabs.Root
+                value={value}
+                onValueChange={({ value: nextValue }) => setValue(nextValue)}
+            >
                 <Tabs.List>
                     <Tabs.Tab>
                         <HStack gap={1.5}><LuLayoutDashboard />Dashboard</HStack>

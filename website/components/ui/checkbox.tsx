@@ -1,77 +1,217 @@
 "use client";
 
 import {
+    Checkbox as ArkCheckbox,
+    useCheckboxContext as useArkCheckboxContext,
+    type CheckboxRootProps as ArkCheckboxRootProps
+} from "@ark-ui/react/checkbox";
+import {
     CheckboxGroupProvider,
     TRANSITION_EASINGS,
     type UseCheckboxGroupProps,
-    type UseCheckboxProps,
     type UseCheckboxReturn,
-    useCheckbox,
     useCheckboxGroup,
-    useMotionVariants
+    useFieldProps,
+    useMotionVariants,
+    useReducedMotion
 } from "@dreamy-ui/react";
 import { type SVGMotionProps, m } from "motion/react";
-import { type ReactElement, cloneElement, useMemo } from "react";
+import {
+    type PointerEvent,
+    type ReactElement,
+    cloneElement,
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState
+} from "react";
 import { cx } from "styled-system/css";
 import { dreamy } from "styled-system/jsx";
 import { type CheckboxVariantProps, checkbox } from "styled-system/recipes";
 import { Flex, type FlexProps } from "./flex";
-import { VisuallyHiddenInput } from "./visually-hidden";
+import { mapCheckboxRootProps } from "./map-checkbox-props";
 
-export interface CheckboxProps extends UseCheckboxProps, CheckboxVariantProps {}
+const StyledCheckbox = dreamy(ArkCheckbox.Root, checkbox);
 
-const StyledCheckbox = dreamy("div", checkbox);
+export interface CheckboxProps
+    extends Omit<
+            ArkCheckboxRootProps,
+            | "checked"
+            | "defaultChecked"
+            | "disabled"
+            | "invalid"
+            | "readOnly"
+            | "required"
+            | "onCheckedChange"
+        >,
+        CheckboxVariantProps {
+    isChecked?: boolean;
+    defaultChecked?: boolean;
+    isDisabled?: boolean;
+    isInvalid?: boolean;
+    isReadOnly?: boolean;
+    isRequired?: boolean;
+    isIndeterminate?: boolean;
+    onChange?: React.ChangeEventHandler<HTMLInputElement>;
+    onChangeValue?: (value: boolean) => void;
+    icon?: React.ReactNode | ((props: CheckboxIconProps) => React.ReactNode);
+    reduceMotion?: boolean;
+    animationTime?: number;
+    pathProps?: SVGMotionProps<SVGPathElement>;
+}
 
 /**
  * Checkbox component — toggles a single boolean option.
  *
  * @see Docs https://dreamy-ui.com/docs/components/checkbox
- *
- * @example
- * ```tsx
- * <Checkbox defaultChecked>Accept terms</Checkbox>
- * ```
  */
 export function Checkbox(props: CheckboxProps) {
+    const reduceMotionGlobal = useReducedMotion();
     const {
         children,
         icon = <CheckboxIcon />,
-        getRootProps,
-        getWrapperProps,
-        getInputProps,
-        getIconProps,
-        getLabelProps
-    } = useCheckbox(props);
+        isChecked: isCheckedProp,
+        defaultChecked,
+        isIndeterminate,
+        reduceMotion = reduceMotionGlobal ?? false,
+        animationTime,
+        pathProps,
+        className,
+        onPointerDown,
+        onPointerUp,
+        onPointerLeave,
+        ...rest
+    } = props;
 
-    const clonedIcon = useMemo(() => {
-        return typeof icon === "function"
-            ? icon(getIconProps())
-            : cloneElement(icon as ReactElement, getIconProps());
-    }, [getIconProps, icon]);
+    const field = useFieldProps(props);
+    const inputRef = useRef<HTMLInputElement>(null);
+    const isInteractionDisabled = field.isDisabled || field.isReadOnly;
+    const isControlled = isCheckedProp !== undefined;
+    const [uncontrolledChecked, setUncontrolledChecked] = useState(!!defaultChecked);
+    const [isActive, setIsActive] = useState(false);
+    const active = isActive && !isInteractionDisabled;
+    const isChecked = isControlled ? isCheckedProp : uncontrolledChecked;
+    const showCheckedData = isChecked || isIndeterminate;
+
+    const arkProps = mapCheckboxRootProps({
+        isChecked: isCheckedProp,
+        isIndeterminate,
+        ...props,
+        onChangeValue: props.onChangeValue,
+        onChange: props.onChange
+    });
+
+    useEffect(() => {
+        if (inputRef.current) {
+            inputRef.current.indeterminate = Boolean(isIndeterminate);
+        }
+    }, [isIndeterminate, isChecked]);
+
+    const handleCheckedChange = arkProps.onCheckedChange;
 
     return (
-        <StyledCheckbox {...getRootProps()}>
-            <VisuallyHiddenInput {...getInputProps()} />
-            <span {...getWrapperProps()}>{clonedIcon}</span>
-            {children && <span {...getLabelProps()}>{children}</span>}
+        <StyledCheckbox
+            {...arkProps}
+            {...rest}
+            className={cx("group", className)}
+            data-checked={showCheckedData ? "" : undefined}
+            data-disabled={field.isDisabled ? "" : undefined}
+            data-indeterminate={isIndeterminate ? "" : undefined}
+            data-invalid={field.isInvalid ? "" : undefined}
+            data-readonly={field.isReadOnly ? "" : undefined}
+            onCheckedChange={(details) => {
+                if (!isControlled) {
+                    setUncontrolledChecked(details.checked === true);
+                }
+                handleCheckedChange?.(details);
+            }}
+            onPointerDown={(event: PointerEvent<HTMLLabelElement>) => {
+                onPointerDown?.(event);
+                if (!isInteractionDisabled) {
+                    setIsActive(true);
+                }
+            }}
+            onPointerLeave={(event: PointerEvent<HTMLLabelElement>) => {
+                onPointerLeave?.(event);
+                setIsActive(false);
+            }}
+            onPointerUp={(event: PointerEvent<HTMLLabelElement>) => {
+                onPointerUp?.(event);
+                setIsActive(false);
+            }}
+        >
+            <ArkCheckbox.HiddenInput
+                aria-describedby={field["aria-describedby"]}
+                aria-invalid={field.isInvalid ? true : undefined}
+                id={field.id}
+                ref={inputRef}
+                required={field.isRequired}
+            />
+            <ArkCheckbox.Control
+                aria-hidden="true"
+                data-part="control"
+            >
+                <CheckboxIndicator
+                    active={active}
+                    animationTime={animationTime}
+                    icon={icon}
+                    pathProps={pathProps}
+                    reduceMotion={reduceMotion}
+                />
+            </ArkCheckbox.Control>
+            {children ? <ArkCheckbox.Label data-part="label">{children}</ArkCheckbox.Label> : null}
         </StyledCheckbox>
     );
 }
 
-export interface IconCustomProps {
-    /**
-     * Animation time in milliseconds.
-     * @default 200
-     */
+interface CheckboxIndicatorProps {
+    icon: CheckboxProps["icon"];
+    active?: boolean;
+    reduceMotion?: boolean;
     animationTime?: number;
-    /**
-     * Props to pass to the animated path
-     */
+    pathProps?: SVGMotionProps<SVGPathElement>;
+}
+
+function CheckboxIndicator(props: CheckboxIndicatorProps) {
+    const { icon, active, reduceMotion, animationTime, pathProps } = props;
+    const api = useArkCheckboxContext();
+    const iconProps = useMemo(
+        () => ({
+            isChecked: api.checked === true,
+            isIndeterminate: api.indeterminate,
+            active,
+            reduceMotion,
+            animationTime,
+            pathProps,
+            "data-part": "icon"
+        }),
+        [api.checked, api.indeterminate, active, reduceMotion, animationTime, pathProps]
+    );
+
+    const content =
+        typeof icon === "function" ? icon(iconProps) : cloneElement(icon as ReactElement, iconProps);
+
+    return (
+        <ArkCheckbox.Indicator
+            aria-hidden="true"
+            data-part="icon"
+            hidden={false}
+        >
+            {content}
+        </ArkCheckbox.Indicator>
+    );
+}
+
+export interface IconCustomProps {
+    animationTime?: number;
     pathProps?: SVGMotionProps<SVGPathElement>;
 }
 
 interface CheckboxIconProps
-    extends Partial<ReturnType<UseCheckboxReturn["getIconProps"]> & IconCustomProps> {}
+    extends Partial<ReturnType<UseCheckboxReturn["getIconProps"]> & IconCustomProps> {
+    active?: boolean;
+}
 
 function CheckIcon(props: CheckboxIconProps) {
     const {
@@ -146,9 +286,6 @@ function IndeterminateIcon(props: CheckboxIconProps) {
     );
 }
 
-/**
- * Checkbox Icon — animated check or indeterminate indicator.
- */
 export function CheckboxIcon(props: CheckboxIconProps) {
     const { isIndeterminate, ...otherProps } = props;
     const BaseIcon = useMemo(
@@ -164,9 +301,6 @@ export interface CheckboxGroupProps
         CheckboxVariantProps,
         Omit<FlexProps, "defaultValue" | "onChange"> {}
 
-/**
- * Checkbox Group — groups related checkboxes with shared state.
- */
 export function CheckboxGroup(props: CheckboxGroupProps) {
     const {
         scheme,
@@ -180,23 +314,27 @@ export function CheckboxGroup(props: CheckboxGroupProps) {
         reduceMotion,
         onChange: onChangeProp,
         defaultValue,
+        value: valueProp,
         ...rest
     } = props;
-    const { value, onChange } = useCheckboxGroup({
+
+    const group = useCheckboxGroup({
         onChange: onChangeProp,
         defaultValue,
+        value: valueProp,
+        isDisabled,
+        isRequired,
+        isReadOnly,
+        isInvalid,
+        reduceMotion,
         ...props
     });
 
-    const group = useMemo(
+    const providerValue = useMemo(
         () => ({
-            variants: {
-                size,
-                scheme,
-                variant
-            },
-            value,
-            onChange,
+            variants: { size, scheme, variant },
+            value: group.value,
+            onChange: group.onChange,
             isDisabled,
             isRequired,
             isReadOnly,
@@ -205,9 +343,9 @@ export function CheckboxGroup(props: CheckboxGroupProps) {
         }),
         [
             size,
-            onChange,
+            group.onChange,
+            group.value,
             scheme,
-            value,
             variant,
             isDisabled,
             isRequired,
@@ -217,14 +355,29 @@ export function CheckboxGroup(props: CheckboxGroupProps) {
         ]
     );
 
+    const handleValueChange = useCallback(
+        (details: { value: string[] }) => {
+            group.setValue(details.value);
+        },
+        [group]
+    );
+
     return (
-        <CheckboxGroupProvider value={group}>
-            <Flex
-                {...rest}
-                className={cx("dreamy-checkbox-group", rest.className)}
+        <CheckboxGroupProvider value={providerValue}>
+            <ArkCheckbox.Group
+                disabled={isDisabled}
+                invalid={isInvalid}
+                onValueChange={handleValueChange}
+                readOnly={isReadOnly}
+                value={group.value.map(String)}
             >
-                {children}
-            </Flex>
+                <Flex
+                    {...rest}
+                    className={cx("dreamy-checkbox-group", rest.className)}
+                >
+                    {children}
+                </Flex>
+            </ArkCheckbox.Group>
         </CheckboxGroupProvider>
     );
 }

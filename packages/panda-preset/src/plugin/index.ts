@@ -1,10 +1,14 @@
+import path from "node:path";
 import { type Config, definePlugin } from "@pandacss/dev";
 import type { PandaPlugin } from "@pandacss/types";
 import chalk from "chalk";
 import { updateFactory } from "./factory";
-import { removeJsxElements } from "./remove-jsx-elements";
+import { removeGeneratedRecipeContextFiles, removeJsxElements } from "./remove-jsx-elements";
 import { ensureJsxFolderExists, ensureStyledSystemExists, ensureTypesFolderExists } from "./system";
-import { removeFactoryFromStyleContext, updateStyleContextTypes } from "./update-style-context";
+import { updateIsValidProp } from "./update-is-valid-prop";
+import { updateSplitJsxProps } from "./update-split-jsx-props";
+import { updateJsxStyleProps, updatePatternTypeImports } from "./update-system-types";
+import { updateStyleContextTypes, writeDreamyStyleContext } from "./update-style-context";
 
 export interface DreamyPluginOptions {
     /**
@@ -59,20 +63,27 @@ export function dreamyPlugin(options?: DreamyPluginOptions): PandaPlugin {
                 const start = performance.now();
 
                 const styledFolder = await ensureStyledSystemExists(cwd);
+                const patternsFolder = path.join(styledFolder, "patterns");
                 const [jsxFolder, typesFolder] = await Promise.all([
                     ensureJsxFolderExists(styledFolder),
                     updateFactoryOption ? ensureTypesFolderExists(styledFolder) : null
                 ]);
 
-                await Promise.all([
-                    removeJsxElementsOption && removeJsxElements(jsxFolder),
-                    updateFactoryOption && updateFactory(jsxFolder, typesFolder!),
-                    removeFactoryFromStyleContextOption &&
-                        (async () => {
-                            await removeFactoryFromStyleContext(jsxFolder);
-                            await updateStyleContextTypes(jsxFolder);
-                        })()
-                ]);
+                if (removeFactoryFromStyleContextOption) {
+                    await updateStyleContextTypes(jsxFolder);
+                    await writeDreamyStyleContext(jsxFolder);
+                    await removeGeneratedRecipeContextFiles(jsxFolder);
+                }
+                if (removeJsxElementsOption) {
+                    await removeJsxElements(jsxFolder);
+                }
+                if (updateFactoryOption && typesFolder) {
+                    await updateFactory(jsxFolder, typesFolder);
+                    await updateJsxStyleProps(typesFolder);
+                    await updatePatternTypeImports(patternsFolder);
+                    await updateIsValidProp(typesFolder, jsxFolder);
+                    await updateSplitJsxProps(jsxFolder);
+                }
 
                 const end = performance.now();
 
@@ -87,16 +98,6 @@ export function dreamyPlugin(options?: DreamyPluginOptions): PandaPlugin {
                     );
                 }
             },
-            "cssgen:done": ({ artifact, content }) => {
-                if (artifact !== "styles.css") return;
-
-                // LightningCSS removes the unprefixed `backdrop-filter`, leaving only
-                // `-webkit-backdrop-filter`. This adds it back after the prefixed version.
-                return content.replace(
-                    /(-webkit-backdrop-filter:\s*)([^;]+;)(?!\s*backdrop-filter:)/g,
-                    "$1$2\n  backdrop-filter: $2"
-                );
-            }
         }
     });
 }

@@ -64,30 +64,25 @@ describe("Menu", () => {
 
         const trigger = screen.getByRole("button", { name: "Actions" });
         await user.click(trigger);
-        await waitFor(() => {
-            expect(getMenuSurface()).toBeTruthy();
-        });
+        const menu = await screen.findByRole("menu");
+        menu.focus();
+
+        async function expectActiveItem(name: string) {
+            await waitFor(() => {
+                const activeId = menu.getAttribute("aria-activedescendant");
+                expect(activeId).toBeTruthy();
+                expect(document.getElementById(activeId!)).toHaveAccessibleName(name);
+            });
+        }
 
         await user.keyboard("{ArrowDown}");
-        await waitFor(() => {
-            expect(screen.getByRole("menuitem", { name: "Add new" })).toHaveAttribute(
-                "data-focused"
-            );
-        });
+        await expectActiveItem("Add new");
 
         await user.keyboard("{ArrowDown}");
-        await waitFor(() => {
-            expect(screen.getByRole("menuitem", { name: "Set alarm" })).toHaveAttribute(
-                "data-focused"
-            );
-        });
+        await expectActiveItem("Set alarm");
 
         await user.keyboard("{ArrowUp}");
-        await waitFor(() => {
-            expect(screen.getByRole("menuitem", { name: "Add new" })).toHaveAttribute(
-                "data-focused"
-            );
-        });
+        await expectActiveItem("Add new");
 
         await user.keyboard("{Enter}");
         expect(onAdd).toHaveBeenCalled();
@@ -95,10 +90,10 @@ describe("Menu", () => {
 
     it("closes on Escape and returns focus to the trigger", async () => {
         const user = userEvent.setup();
-        const onClose = vi.fn();
+        const onOpenChange = vi.fn();
 
         render(
-            <Menu.Root onClose={onClose}>
+            <Menu.Root onOpenChange={onOpenChange}>
                 <Menu.Trigger>
                     <button type="button">Menu</button>
                 </Menu.Trigger>
@@ -118,7 +113,7 @@ describe("Menu", () => {
         await user.keyboard("{Escape}");
 
         await waitFor(() => {
-            expect(onClose).toHaveBeenCalled();
+            expect(onOpenChange).toHaveBeenCalledWith({ open: false });
         });
         await waitFor(() => {
             expect(trigger).toHaveAttribute("aria-expanded", "false");

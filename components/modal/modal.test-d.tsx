@@ -12,19 +12,18 @@ import type {
 
 type ExpectTrue<T extends true> = T;
 
-assertType<boolean>({} as ModalProps["isOpen"]);
-assertType<() => void>({} as ModalProps["onClose"]);
-assertType<boolean | undefined>({} as ModalProps["closeOnEsc"]);
-assertType<boolean | undefined>({} as ModalProps["closeOnOverlayClick"]);
+assertType<boolean | undefined>({} as ModalProps["open"]);
+assertType<boolean | undefined>({} as ModalProps["defaultOpen"]);
+assertType<((details: { open: boolean }) => void) | undefined>({} as ModalProps["onOpenChange"]);
+assertType<boolean | undefined>({} as ModalProps["closeOnEscape"]);
+assertType<boolean | undefined>({} as ModalProps["closeOnInteractOutside"]);
 assertType<boolean | undefined>({} as ModalProps["trapFocus"]);
 assertType<boolean | undefined>({} as ModalProps["autoFocus"]);
-assertType<boolean | undefined>({} as ModalProps["returnFocusOnClose"]);
+assertType<boolean | undefined>({} as ModalProps["restoreFocus"]);
 assertType<boolean | undefined>({} as ModalProps["blockScrollOnMount"]);
 assertType<boolean | undefined>({} as ModalProps["useInert"]);
 assertType<"inside" | "outside" | undefined>({} as ModalProps["scrollBehavior"]);
 assertType<(() => void) | undefined>({} as ModalProps["onCloseComplete"]);
-assertType<(() => void) | undefined>({} as ModalProps["onEsc"]);
-assertType<(() => void) | undefined>({} as ModalProps["onOverlayClick"]);
 
 assertType<RefObject<{ focus(): void } | null> | undefined>({} as ModalProps["initialFocusRef"]);
 assertType<RefObject<{ focus(): void } | null> | undefined>({} as ModalProps["finalFocusRef"]);
@@ -33,7 +32,7 @@ type _HasFocusProps = ExpectTrue<
     "initialFocusRef" extends keyof ModalProps
         ? "finalFocusRef" extends keyof ModalProps
             ? "trapFocus" extends keyof ModalProps
-                ? "returnFocusOnClose" extends keyof ModalProps
+                ? "restoreFocus" extends keyof ModalProps
                     ? true
                     : false
                 : false
@@ -63,33 +62,31 @@ const _partProps: _HasPartProps = true;
 void (_focusProps && _partProps);
 
 assertType<ModalProps>({
-    isOpen: true,
-    onClose: () => {},
-    closeOnEsc: true,
-    closeOnOverlayClick: true,
+    open: true,
+    onOpenChange: () => {},
+    closeOnEscape: true,
+    closeOnInteractOutside: true,
     trapFocus: true,
     autoFocus: true,
-    returnFocusOnClose: true,
+    restoreFocus: true,
     blockScrollOnMount: true,
     scrollBehavior: "inside",
     useInert: true,
     onCloseComplete: () => {},
-    onEsc: () => {},
-    onOverlayClick: () => {},
     children: null
 });
 
 assertType<ModalProps>({
-    isOpen: false,
-    onClose: () => {},
+    open: false,
+    onOpenChange: () => {},
     children: null,
     // @ts-expect-error scrollBehavior must be inside or outside
     scrollBehavior: "center"
 });
 
 assertType<ModalProps>({
-    isOpen: true,
-    onClose: () => {},
+    open: true,
+    onOpenChange: () => {},
     children: null,
     // @ts-expect-error trapFocus must be boolean
     trapFocus: "yes"

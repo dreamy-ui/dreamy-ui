@@ -1,4 +1,4 @@
-import type { SystemStyleObject } from "@pandacss/dev";
+import type { SystemStyleObject } from "@pandacss/types";
 
 const schemeNames = [
     "primary",

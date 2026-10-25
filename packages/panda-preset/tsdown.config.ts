@@ -14,7 +14,7 @@ export default defineConfig((options) => ({
     },
     sourcemap: true,
     minify: true,
-    clean: true,
+    clean: !options.watch,
     splitting: false,
     outDir: "dist",
     ...options

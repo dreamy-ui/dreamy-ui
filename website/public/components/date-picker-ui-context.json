@@ -1,0 +1,13 @@
+{
+  "type": "module",
+  "npmDependencies": [],
+  "fileDependencies": [],
+  "id": "date-picker-ui-context",
+  "file": {
+    "name": "date-picker-ui-context.tsx",
+    "content": "\"use client\";\r\n\r\nimport { createContext } from \"@dreamy-ui/react\";\r\nimport type { DatePickerVariantProps } from \"styled-system/recipes\";\r\n\r\nexport interface DatePickerUiContextValue {\r\n    id: string;\r\n    value: Date | null;\r\n    setValue: React.Dispatch<React.SetStateAction<Date | null>>;\r\n    dateFormat: string;\r\n    placeholder: string;\r\n    size?: DatePickerVariantProps[\"size\"];\r\n    minDate?: Date;\r\n    maxDate?: Date;\r\n    hasFooter: boolean;\r\n    setHasFooter: React.Dispatch<React.SetStateAction<boolean>>;\r\n    onApply?: () => void;\r\n    onCancel?: () => void;\r\n    focusCalendar: () => void;\r\n}\r\n\r\nexport const [DatePickerUiProvider, useDatePickerUi] = createContext<DatePickerUiContextValue>({\r\n    strict: true,\r\n    name: \"DatePickerUiContext\"\r\n});\r\n"
+  },
+  "component": "DatePickerUiContext",
+  "hasRecipe": false,
+  "hasPattern": false
+}

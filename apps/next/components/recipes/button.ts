@@ -1,5 +1,5 @@
-import { getColorSchemes } from "@dreamy-ui/panda-preset";
-import { defineParts, defineRecipe } from "@pandacss/dev";
+import { defineParts, getColorSchemes } from "@dreamy-ui/panda-preset";
+import { defineRecipe } from "@pandacss/dev";
 
 const parts = defineParts({
     root: { selector: "&" },
@@ -42,7 +42,7 @@ export const button = defineRecipe({
             userSelect: "none",
             transitionProperty: "background-color, color, border-color, fill",
             transitionDuration: "{durations.normal}",
-            transitionTimingFunction: "{easings.ease-in-out}",
+            transitionTimingFunction: "{easings.easeInOut}",
             justifyContent: "center",
             _disabled: {
                 cursor: "not-allowed",

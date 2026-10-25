@@ -1,5 +1,4 @@
 import { Button, HStack, Modal, Select, Spinner, Text } from "@/ui";
-import { useControllable } from "@dreamy-ui/react";
 import { useState } from "react";
 import { LuBanana, LuCherry, LuCitrus } from "react-icons/lu";
 
@@ -28,20 +27,20 @@ export function ItemsSelect() {
 }
 
 export function SelectInModal() {
-    const { isOpen, onOpen, onClose } = useControllable();
+    const [open, setOpen] = useState(false);
 
     return (
         <>
             <Button
-                onClick={onOpen}
+                onClick={() => setOpen(true)}
                 variant="primary"
                 w="fit-content"
             >
                 Open modal
             </Button>
             <Modal.Root
-                isOpen={isOpen}
-                onClose={onClose}
+                open={open}
+                onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
             >
                 <Modal.Overlay />
                 <Modal.Content>
@@ -58,7 +57,7 @@ export function SelectInModal() {
                         </Select.Root>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button onClick={onClose}>Close</Button>
+                        <Button onClick={() => setOpen(false)}>Close</Button>
                     </Modal.Footer>
                 </Modal.Content>
             </Modal.Root>

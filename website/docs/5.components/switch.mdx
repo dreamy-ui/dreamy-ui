@@ -2,8 +2,8 @@
 title: Switch
 description: Switch is used to select one or more options from a list.
 isServerComponent: false
-source: /packages/react/src/components/switch/switch.tsx
-themeSource: /packages/system/src/recipes/switch.ts
+source: /components/switch/index.tsx
+themeSource: /components/recipes/swittch.ts
 ---
 
 ## Installation
@@ -13,6 +13,8 @@ pnpm dreamy add switch
 ```
 
 ## Usage
+
+Switch behavior uses [Ark UI Switch](https://ark-ui.com/docs/components/switch). Dreamy maps `isChecked`, `defaultIsChecked`, and `onChange` to Ark `checked`, `defaultChecked`, and `onCheckedChange`.
 
 Switch allows users to toggle between two states (on/off). Use it for boolean settings and preferences in forms or configuration panels.
 

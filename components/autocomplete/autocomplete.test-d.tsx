@@ -11,9 +11,11 @@ assertType<((value: string | null) => void) | undefined>({} as AutocompleteProps
 assertType<string | null | undefined>({} as AutocompleteProps["value"]);
 assertType<string | undefined>({} as AutocompleteProps["defaultValue"]);
 assertType<boolean | undefined>({} as AutocompleteProps["isClearable"]);
-assertType<boolean | undefined>({} as AutocompleteProps["isOpen"]);
-assertType<(() => void) | undefined>({} as AutocompleteProps["onOpen"]);
-assertType<(() => void) | undefined>({} as AutocompleteProps["onClose"]);
+assertType<boolean | undefined>({} as AutocompleteProps["open"]);
+assertType<boolean | undefined>({} as AutocompleteProps["defaultOpen"]);
+assertType<
+    ((details: Parameters<NonNullable<AutocompleteProps["onOpenChange"]>>[0]) => void) | undefined
+>({} as AutocompleteProps["onOpenChange"]);
 
 assertType<string | undefined>({} as AutocompleteInputProps["placeholder"]);
 assertType<string | undefined>({} as AutocompleteContentProps["noResultsText"]);
@@ -23,8 +25,8 @@ const _variant: AutocompleteProps["variant"] = "plain";
 
 type _HasCallbackProps = ExpectTrue<
     "onChangeValue" extends keyof AutocompleteProps
-        ? "onOpen" extends keyof AutocompleteProps
-            ? "onClose" extends keyof AutocompleteProps
+        ? "onOpenChange" extends keyof AutocompleteProps
+            ? "open" extends keyof AutocompleteProps
                 ? true
                 : false
             : false

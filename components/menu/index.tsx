@@ -1,164 +1,212 @@
 "use client";
 
 import {
+    Menu as ArkMenu,
+    type MenuRootProps as ArkMenuRootProps,
+    useMenuContext as useArkMenuContext,
+    useMenuItemContext as useArkMenuItemContext
+} from "@ark-ui/react/menu";
+import {
     ChevronRightIcon,
-    MenuDescendantsProvider,
-    MenuProvider,
     type PositioningProps,
-    type UseMenuProps,
-    callAllHandlers,
+    dataAttr,
     runIfFn,
     useActionKey,
-    useMenu,
-    useMenuContext,
-    useMenuItem
+    useControllableState,
+    useReducedMotion
 } from "@dreamy-ui/react";
-import { Children, type ReactElement, type ReactNode, cloneElement, useEffect } from "react";
-import { type HTMLDreamyProps, createStyleContext, dreamy } from "styled-system/jsx";
-import { menu } from "styled-system/recipes";
-import { Box } from "../box";
-import { Kbd } from "../kbd";
 import {
-    Anchor as PopoverAnchor,
-    Content as PopoverContent,
-    type PopoverContentProps,
-    type PopoverProps,
-    Root as PopoverRoot,
-    Trigger as PopoverTrigger
-} from "../popover";
-
-function mergeRefs<T>(...refs: (React.Ref<T> | undefined | null)[]): React.RefCallback<T> {
-    return (value: T | null) => {
-        refs.forEach((ref) => {
-            if (typeof ref === "function") {
-                ref(value);
-            } else if (ref != null) {
-                (ref as React.MutableRefObject<T | null>).current = value;
-            }
-        });
-    };
-}
+    Children,
+    type ReactElement,
+    type ReactNode,
+    cloneElement,
+    useCallback,
+    useId,
+    useState
+} from "react";
+import { type HTMLDreamyProps, createStyleContext, dreamy } from "styled-system/jsx";
+import type { MenuVariantProps } from "styled-system/recipes";
+import { menu } from "styled-system/recipes";
+import { Kbd } from "../kbd";
+import * as Popover from "../popover";
+import type { PopoverContentProps, PopoverProps } from "../popover";
+import { mapPositioningProps } from "../popover/map-positioning";
 
 const { withProvider, withContext } = createStyleContext(menu);
 
-export interface MenuProps extends Omit<UseMenuProps<PopoverProps>, "popoverProps"> {
+export interface MenuProps
+    extends Omit<ArkMenuRootProps, "positioning" | "closeOnSelect" | "lazyMount" | "unmountOnExit">,
+        MenuVariantProps {
     /**
      * Positioning configuration for the menu dropdown.
      * @default { placement: "bottom" }
      */
     positioning?: PositioningProps;
     /**
-     * Props forwarded to the internal `Popover.Root`.
-     * Set `usePortal` to `false` to render the menu in place.
+     * Props forwarded to the internal `Popover.Root` (portal, motion, lazyMount, etc.).
      */
-    popoverProps?: Omit<PopoverProps, "positioning">;
+    popoverProps?: Omit<PopoverProps, "positioning" | "open" | "defaultOpen" | "onOpenChange">;
     children?: ReactNode;
     className?: string;
+    /**
+     * Whether to close the menu when an item is activated.
+     * @default true
+     */
+    closeOnClick?: boolean;
+    /**
+     * If `true`, menu open/close animations are disabled.
+     */
+    reduceMotion?: boolean;
 }
 
 /**
  * Menu component — accessible dropdown menu with keyboard navigation.
  *
  * @see Docs https://dreamy-ui.com/docs/components/menu
- *
- * @example
- * ```tsx
- * <Menu.Root>
- *   <Menu.Trigger>
- *     <Button>Actions</Button>
- *   </Menu.Trigger>
- *   <Menu.Content>
- *     <Menu.Item>Edit</Menu.Item>
- *     <Menu.Item>Delete</Menu.Item>
- *   </Menu.Content>
- * </Menu.Root>
- * ```
  */
 export const Root = withProvider(function MenuRoot({
     children,
     className,
     positioning,
-    ...props
+    popoverProps,
+    open,
+    defaultOpen,
+    onOpenChange,
+    closeOnClick = true,
+    reduceMotion: reduceMotionProp,
+    ...arkRest
 }: MenuProps) {
-    const { rest, ...ctx } = useMenu(props);
+    const globalReduceMotion = useReducedMotion();
+    const reduceMotion = reduceMotionProp ?? globalReduceMotion ?? false;
+
+    const [menuOpen, setMenuOpen] = useControllableState({
+        value: open,
+        defaultValue: defaultOpen
+    });
+
+    const handleOpenChange = useCallback(
+        (details: Parameters<NonNullable<ArkMenuRootProps["onOpenChange"]>>[0]) => {
+            setMenuOpen(details.open);
+            onOpenChange?.(details);
+        },
+        [onOpenChange, setMenuOpen]
+    );
+
+    const popoverPositioning = mapPositioningProps({ placement: "bottom", ...positioning });
+
+    const arkRootProps: ArkMenuRootProps = {
+        ...arkRest,
+        closeOnSelect: closeOnClick,
+        lazyMount: popoverProps?.lazyMount ?? true,
+        onOpenChange: handleOpenChange,
+        open: menuOpen,
+        unmountOnExit: false
+    };
 
     return (
-        <MenuProvider value={ctx}>
-            <Box {...ctx.getRootProps({ className })}>
-                <PopoverRoot
-                    hasArrow={false}
-                    initialFocusRef={ctx.triggerRef}
-                    isOpen={ctx.isOpen}
-                    lazyBehavior="keepMounted"
-                    onClose={ctx.onClose}
-                    onOpen={ctx.onOpen}
-                    positioning={{ placement: "bottom", ...positioning }}
-                    reduceMotion={ctx.reduceMotion}
-                    {...props.popoverProps}
-                    portalProps={{
-                        zIndex: "var(--z-index-dropdown)",
-                        ...props.popoverProps?.portalProps
-                    }}
-                >
-                    {children}
-                </PopoverRoot>
-            </Box>
-        </MenuProvider>
+        <ArkMenu.Root
+            {...arkRootProps}
+            data-slot="root"
+        >
+            <Popover.Root
+                {...popoverProps}
+                autoFocus={false}
+                closeOnEscape={false}
+                closeOnInteractOutside={false}
+                open={menuOpen}
+                onOpenChange={handleOpenChange}
+                portalProps={{
+                    zIndex: "var(--z-index-dropdown)",
+                    ...popoverProps?.portalProps
+                }}
+                positioning={popoverPositioning as PositioningProps}
+                reduceMotion={reduceMotion}
+                restoreFocus={false}
+            >
+                {children}
+            </Popover.Root>
+        </ArkMenu.Root>
     );
 }, "root");
 
-export interface MenuContentProps extends PopoverContentProps {}
+export interface MenuContentProps extends Omit<PopoverContentProps, "children" | "transition"> {
+    children?: ReactNode;
+}
 
 /**
  * Menu Content — dropdown panel containing menu items.
  */
 export const Content = withContext(function MenuContent(props: MenuContentProps) {
-    const { children } = props;
-    const { getContentProps, descendants } = useMenuContext();
+    const { children, rootProps, motionProps, ...contentProps } = props;
 
     return (
-        <PopoverContent {...getContentProps(props)}>
-            <MenuDescendantsProvider value={descendants}>{children}</MenuDescendantsProvider>
-        </PopoverContent>
+        <Popover.Content
+            motionProps={motionProps}
+            rootProps={rootProps}
+            {...contentProps}
+        >
+            <ArkMenu.Content>{children}</ArkMenu.Content>
+        </Popover.Content>
     );
 }, "content");
 
 export interface MenuButtonProps extends HTMLDreamyProps<"button"> {
-    /**
-     * Icon to display on the left side of the menu item
-     */
     icon?: React.ReactNode | (() => React.ReactNode);
-    /**
-     * Command to display on the right side of the menu item
-     */
     command?: string;
-    /**
-     * The content to display on the right side of the menu item
-     */
     rightContent?: React.ReactNode | (() => React.ReactNode);
-    /**
-     * Children to render in the menu item
-     */
     children?: React.ReactNode;
+    isDisabled?: boolean;
 }
 
 /**
  * Menu Item — actionable option within the menu.
  */
-export const Item = withContext(function MenuButton(props: MenuButtonProps) {
-    const { icon, command, rightContent, children } = props;
-    const buttonProps = useMenuItem(props);
+function MenuItemButton({
+    icon,
+    command,
+    rightContent,
+    children,
+    isDisabled,
+    disabled,
+    ...rest
+}: MenuButtonProps) {
     const actionKey = useActionKey();
+    const isItemDisabled = isDisabled || disabled;
+    const { highlighted } = useArkMenuItemContext();
 
     return (
-        <dreamy.button {...buttonProps}>
+        <dreamy.button
+            data-focused={dataAttr(highlighted)}
+            data-highlighted={dataAttr(highlighted)}
+            disabled={isItemDisabled}
+            type="button"
+            {...rest}
+        >
             <span>
                 {runIfFn(icon)}
                 {children}
             </span>
-            {command && <Kbd size={"sm"}>{command.replaceAll("{actionKey}", actionKey)}</Kbd>}
+            {command && <Kbd size="sm">{command.replaceAll("{actionKey}", actionKey)}</Kbd>}
             {rightContent && runIfFn(rightContent)}
         </dreamy.button>
+    );
+}
+
+export const Item = withContext(function MenuButton(props: MenuButtonProps) {
+    const { children, isDisabled, disabled } = props;
+    const isItemDisabled = isDisabled || disabled;
+    const generatedValue = useId();
+    const value = typeof children === "string" ? children : generatedValue;
+
+    return (
+        <ArkMenu.Item
+            asChild
+            disabled={isItemDisabled}
+            value={value}
+            valueText={typeof children === "string" ? children : undefined}
+        >
+            <MenuItemButton {...props} />
+        </ArkMenu.Item>
     );
 }, "item");
 
@@ -169,28 +217,24 @@ export interface MenuTriggerProps extends HTMLDreamyProps<"button"> {
 /**
  * Menu Trigger — element that opens and closes the menu.
  */
-export function Trigger({ children, placeholder, ...rest }: MenuTriggerProps) {
-    const { getTriggerProps } = useMenuContext();
+export function Trigger({ children, ...rest }: MenuTriggerProps) {
+    const child = Children.only(children) as ReactElement<Record<string, unknown>>;
 
-    const child = Children.only(children) as ReactElement;
-    const trigger = cloneElement(child, getTriggerProps(rest));
-
-    return <PopoverTrigger {...rest}>{trigger}</PopoverTrigger>;
+    return (
+        <Popover.Anchor>
+            <ArkMenu.Trigger asChild>
+                {cloneElement(child, {
+                    ...rest,
+                    ...(child.props as Record<string, unknown>)
+                })}
+            </ArkMenu.Trigger>
+        </Popover.Anchor>
+    );
 }
 
 export interface MenuTriggerItemProps extends Omit<MenuButtonProps, "children"> {
-    /**
-     * Positioning configuration for the sub-menu.
-     * @default { placement: "right-start" }
-     */
     positioning?: PositioningProps;
-    /**
-     * The label to display inside the trigger button.
-     */
     label?: React.ReactNode;
-    /**
-     * The sub-menu content. Should contain a `Menu.Content` component.
-     */
     children?: React.ReactNode;
 }
 
@@ -205,114 +249,67 @@ export const TriggerItem = withContext(function MenuTriggerItem(props: MenuTrigg
         label,
         children,
         positioning,
-        onClick: userOnClick,
+        isDisabled,
+        disabled,
         ...rest
     } = props;
 
-    // All hooks below read from the PARENT menu context (called before any nested context
-    // is rendered), so this button is correctly registered in the parent menu's descendants
-    // list and participates in its keyboard navigation (ArrowUp/Down/Enter).
-    const { isOpen: parentIsOpen, triggerRef: parentTriggerRef } = useMenuContext();
-    const buttonProps = useMenuItem(props);
     const actionKey = useActionKey();
+    const globalReduceMotion = useReducedMotion();
+    const reduceMotion = globalReduceMotion ?? false;
 
-    const { rest: _unused, ...nestedCtx } = useMenu({});
-    const { onKeyDown: nestedOnKeyDown } = nestedCtx.getTriggerProps();
+    const [subOpen, setSubOpen] = useState(false);
 
-    // Close nested menu when the parent menu closes.
-    useEffect(() => {
-        if (!parentIsOpen) nestedCtx.onClose();
-    }, [parentIsOpen, nestedCtx.onClose]);
+    const handleSubOpenChange = useCallback(
+        (details: { open: boolean }) => {
+            setSubOpen(details.open);
+        },
+        []
+    );
 
-    // Close nested menu when this item loses virtual focus in the parent menu
-    // (e.g. user navigates to a different item with ArrowDown).
-    const isFocusedAttr = (buttonProps as Record<string, unknown>)["data-focused"];
-    useEffect(() => {
-        if (isFocusedAttr === undefined) nestedCtx.onClose();
-    }, [isFocusedAttr, nestedCtx.onClose]);
-
-    // ArrowRight while this item is virtually focused opens the sub-menu. The real DOM focus
-    // is on the parent trigger at this point, so we listen at the document level.
-    useEffect(() => {
-        function handleArrowRight(e: KeyboardEvent) {
-            if (e.key !== "ArrowRight") return;
-            const btn = nestedCtx.triggerRef.current;
-            if (!btn?.hasAttribute("data-focused")) return;
-            e.preventDefault();
-            nestedCtx.onOpen();
-        }
-        document.addEventListener("keydown", handleArrowRight);
-        return () => document.removeEventListener("keydown", handleArrowRight);
-    }, [nestedCtx.triggerRef, nestedCtx.onOpen]);
-
-    // ArrowLeft or Escape while the sub-menu is open closes it and returns real DOM
-    // focus to the parent menu trigger so ArrowUp/Down navigation continues there.
-    function handleButtonKeyDown(e: React.KeyboardEvent<HTMLButtonElement>) {
-        if (!nestedCtx.isOpen) return;
-        if (e.key === "ArrowLeft" || e.key === "Escape") {
-            e.preventDefault();
-            nestedCtx.onClose();
-            parentTriggerRef.current?.focus();
-        }
-    }
+    const popoverPositioning = mapPositioningProps({ placement: "right-start", ...positioning });
 
     return (
-        <MenuProvider value={nestedCtx}>
-            {/*
-             * returnFocusOnClose={false} so we control focus ourselves — when the sub-menu
-             * closes via ArrowLeft/Escape we focus the parent trigger, not the button.
-             * initialFocusRef={nestedCtx.triggerRef} moves DOM focus to this button when
-             * the sub-menu opens (via ArrowRight or click), enabling nested keyboard nav.
-             */}
-            <PopoverRoot
-                hasArrow={false}
-                initialFocusRef={nestedCtx.triggerRef}
-                isOpen={nestedCtx.isOpen}
-                lazyBehavior="keepMounted"
-                onClose={nestedCtx.onClose}
-                onOpen={nestedCtx.onOpen}
-                portalProps={{ zIndex: "var(--z-index-dropdown)" }}
-                positioning={{ placement: "right-start", ...positioning }}
-                reduceMotion={nestedCtx.reduceMotion}
-                returnFocusOnClose={false}
+        <ArkMenu.Root
+            lazyMount
+            onOpenChange={handleSubOpenChange}
+            open={subOpen}
+            unmountOnExit={false}
+        >
+            <Popover.Root
+                autoFocus={false}
+                closeOnEscape={false}
+                closeOnInteractOutside={false}
+                open={subOpen}
+                onOpenChange={handleSubOpenChange}
+                portalProps={{
+                    zIndex: "var(--z-index-dropdown)"
+                }}
+                positioning={popoverPositioning as PositioningProps}
+                reduceMotion={reduceMotion}
+                restoreFocus={false}
             >
-                <PopoverAnchor>
-                    <dreamy.button
-                        {...buttonProps}
-                        onClick={callAllHandlers(
-                            userOnClick as React.MouseEventHandler<HTMLButtonElement> | undefined,
-                            nestedCtx.onToggle
-                        )}
-                        onKeyDown={callAllHandlers(
-                            buttonProps.onKeyDown as
-                                | React.KeyboardEventHandler<HTMLButtonElement>
-                                | undefined,
-                            nestedOnKeyDown as
-                                | React.KeyboardEventHandler<HTMLButtonElement>
-                                | undefined,
-                            handleButtonKeyDown
-                        )}
-                        onPointerEnter={callAllHandlers(
-                            buttonProps.onPointerEnter as
-                                | React.PointerEventHandler<HTMLButtonElement>
-                                | undefined,
-                            nestedCtx.onOpen
-                        )}
-                        ref={mergeRefs(buttonProps.ref, nestedCtx.triggerRef)}
-                    >
-                        <span>
-                            {runIfFn(icon)}
-                            {label}
-                        </span>
-                        {command && (
-                            <Kbd size={"sm"}>{command.replaceAll("{actionKey}", actionKey)}</Kbd>
-                        )}
-                        {rightContent && runIfFn(rightContent)}
-                        <ChevronRightIcon />
-                    </dreamy.button>
-                </PopoverAnchor>
+                <Popover.Anchor>
+                    <ArkMenu.TriggerItem asChild>
+                        <dreamy.button
+                            disabled={isDisabled || disabled}
+                            type="button"
+                            {...rest}
+                        >
+                            <span>
+                                {runIfFn(icon)}
+                                {label}
+                            </span>
+                            {command && (
+                                <Kbd size="sm">{command.replaceAll("{actionKey}", actionKey)}</Kbd>
+                            )}
+                            {rightContent && runIfFn(rightContent)}
+                            <ChevronRightIcon />
+                        </dreamy.button>
+                    </ArkMenu.TriggerItem>
+                </Popover.Anchor>
                 {children}
-            </PopoverRoot>
-        </MenuProvider>
+            </Popover.Root>
+        </ArkMenu.Root>
     );
 }, "item");

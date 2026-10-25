@@ -1,0 +1,13 @@
+{
+  "type": "module",
+  "npmDependencies": [],
+  "fileDependencies": [],
+  "id": "hover-card-ui-context",
+  "file": {
+    "name": "hover-card-ui-context.tsx",
+    "content": "\"use client\";\r\n\r\nimport type { PortalProps } from \"@dreamy-ui/react\";\r\nimport { createContext, useContext, useMemo, useState } from \"react\";\r\n\r\nexport interface HoverCardUiContextValue {\r\n    hasArrow: boolean;\r\n    usePortal: boolean;\r\n    portalProps?: Omit<PortalProps, \"children\">;\r\n    reduceMotion: boolean;\r\n    contentLabelId: string | undefined;\r\n    setContentLabelId: (id: string) => void;\r\n    contentId: string | undefined;\r\n    setContentId: (id: string) => void;\r\n}\r\n\r\nconst HoverCardUiContext = createContext<HoverCardUiContextValue | null>(null);\r\n\r\nexport function HoverCardUiProvider({\r\n    value,\r\n    children\r\n}: {\r\n    value: Omit<\r\n        HoverCardUiContextValue,\r\n        \"contentLabelId\" | \"setContentLabelId\" | \"contentId\" | \"setContentId\"\r\n    >;\r\n    children: React.ReactNode;\r\n}) {\r\n    const [contentLabelId, setContentLabelId] = useState<string>();\r\n    const [contentId, setContentId] = useState<string>();\r\n\r\n    const merged = useMemo(\r\n        () => ({\r\n            ...value,\r\n            contentLabelId,\r\n            setContentLabelId,\r\n            contentId,\r\n            setContentId\r\n        }),\r\n        [contentId, contentLabelId, value]\r\n    );\r\n\r\n    return (\r\n        <HoverCardUiContext.Provider value={merged}>{children}</HoverCardUiContext.Provider>\r\n    );\r\n}\r\n\r\nexport function useHoverCardUi() {\r\n    const context = useContext(HoverCardUiContext);\r\n    if (!context) {\r\n        throw new Error(\"useHoverCardUi must be used within HoverCard.Root\");\r\n    }\r\n    return context;\r\n}\r\n"
+  },
+  "component": "HoverCardUiContext",
+  "hasRecipe": false,
+  "hasPattern": false
+}

@@ -27,11 +27,11 @@ describe("RangeSlider", () => {
 
         expect(minThumb).toHaveAttribute("aria-valuenow", "20");
         expect(minThumb).toHaveAttribute("aria-valuemin", "0");
-        expect(minThumb).toHaveAttribute("aria-valuemax", "100");
+        expect(minThumb).toHaveAttribute("aria-valuemax", "80");
         expect(minThumb).toHaveAttribute("aria-orientation", "horizontal");
 
         expect(maxThumb).toHaveAttribute("aria-valuenow", "80");
-        expect(maxThumb).toHaveAttribute("aria-valuemin", "0");
+        expect(maxThumb).toHaveAttribute("aria-valuemin", "20");
         expect(maxThumb).toHaveAttribute("aria-valuemax", "100");
     });
 

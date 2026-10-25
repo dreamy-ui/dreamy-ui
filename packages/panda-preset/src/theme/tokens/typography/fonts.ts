@@ -1,5 +1,5 @@
 import { getPresetOptions } from "@/theme/preset";
-import type { Tokens } from "@pandacss/dev";
+import type { Tokens } from "@pandacss/types";
 
 export function createFonts(): Tokens["fonts"] {
     const {

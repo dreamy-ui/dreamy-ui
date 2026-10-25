@@ -1,6 +1,9 @@
 import type { UtilityConfig } from "@pandacss/types";
 
 export const commonUtilities: UtilityConfig = {
+	opacity: {
+		shorthand: ["op"]
+	},
 	// spacing: {
 	//     shorthand: "space"
 	// },

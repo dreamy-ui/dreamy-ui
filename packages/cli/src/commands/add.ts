@@ -78,16 +78,23 @@ export const AddCommand = new Command("add")
         ensureDir(patternsDir);
 
         const items = await fetchCompositions();
+        const moduleFileStems = new Set(
+            items
+                .filter((item) => item.type === "module")
+                .map((item) => item.file.replace(/\.(tsx|ts|jsx|js)$/, ""))
+        );
 
         // If no components specified and --all flag not set, prompt user to select
         if (selectedComponents.length === 0 && !all) {
             p.intro("Select components to add");
 
-            const options = items.map((item) => ({
-                value: item.id,
-                label: item.component,
-                hint: item.type
-            }));
+            const options = items
+                .filter((item) => item.type === "component")
+                .map((item) => ({
+                    value: item.id,
+                    label: item.component,
+                    hint: item.type
+                }));
 
             const selected = await p.multiselect({
                 message: "Pick components to add",
@@ -400,7 +407,9 @@ export const AddCommand = new Command("add")
                 title: "Generating components index file",
                 enabled: !dryRun,
                 task: async () => {
-                    await writeComponentsIndexFile(outdir, jsx, debug);
+                    await writeComponentsIndexFile(outdir, jsx, debug, {
+                        excludeFileStems: moduleFileStems
+                    });
 
                     return "Components index file generated";
                 }

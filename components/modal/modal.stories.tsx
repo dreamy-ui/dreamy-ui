@@ -1,26 +1,26 @@
 import { Button, Modal } from "@/ui";
-import { useControllable } from "@dreamy-ui/react";
 import type { Meta } from "@storybook/react-vite";
+import { useState } from "react";
 
 export default {
     title: "Modal"
 } satisfies Meta;
 
 export function Base() {
-    const { isOpen, onClose, onOpen } = useControllable();
+    const [open, setOpen] = useState(false);
 
     return (
         <>
             <Button
-                onClick={onOpen}
+                onClick={() => setOpen(true)}
                 variant="primary"
             >
                 Open Modal
             </Button>
 
             <Modal.Root
-                isOpen={isOpen}
-                onClose={onClose}
+                open={open}
+                onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
             >
                 <Modal.Overlay />
                 <Modal.Content>
@@ -28,7 +28,7 @@ export function Base() {
                     <Modal.CloseButton />
                     <Modal.Body>Modal Body</Modal.Body>
                     <Modal.Footer>
-                        <Button onClick={onClose}>Close</Button>
+                        <Button onClick={() => setOpen(false)}>Close</Button>
                     </Modal.Footer>
                 </Modal.Content>
             </Modal.Root>
@@ -52,20 +52,20 @@ export function Sizes() {
     ] as const;
 
     function ModalSize({ size }: { size: (typeof sizes)[number] }) {
-        const { isOpen, onClose, onOpen } = useControllable();
+        const [open, setOpen] = useState(false);
 
         return (
             <>
                 <Button
-                    onClick={onOpen}
+                    onClick={() => setOpen(true)}
                     variant="primary"
                 >
                     Open {size} Modal
                 </Button>
 
                 <Modal.Root
-                    isOpen={isOpen}
-                    onClose={onClose}
+                    open={open}
+                    onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
                     size={size}
                 >
                     <Modal.Overlay />
@@ -74,7 +74,7 @@ export function Sizes() {
                         <Modal.CloseButton />
                         <Modal.Body>This is a {size} modal!</Modal.Body>
                         <Modal.Footer>
-                            <Button onClick={onClose}>Close</Button>
+                            <Button onClick={() => setOpen(false)}>Close</Button>
                         </Modal.Footer>
                     </Modal.Content>
                 </Modal.Root>
@@ -95,20 +95,20 @@ export function Sizes() {
 }
 
 export function ScrollBehaviorInside() {
-    const { isOpen, onClose, onOpen } = useControllable();
+    const [open, setOpen] = useState(false);
 
     return (
         <>
             <Button
-                onClick={onOpen}
+                onClick={() => setOpen(true)}
                 variant="primary"
             >
                 Open Modal
             </Button>
 
             <Modal.Root
-                isOpen={isOpen}
-                onClose={onClose}
+                open={open}
+                onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
                 scrollBehavior="inside"
             >
                 <Modal.Overlay />
@@ -117,7 +117,7 @@ export function ScrollBehaviorInside() {
                     <Modal.CloseButton />
                     <Modal.Body>Modal Body</Modal.Body>
                     <Modal.Footer>
-                        <Button onClick={onClose}>Close</Button>
+                        <Button onClick={() => setOpen(false)}>Close</Button>
                     </Modal.Footer>
                 </Modal.Content>
             </Modal.Root>
@@ -126,20 +126,20 @@ export function ScrollBehaviorInside() {
 }
 
 export function ScrollBehaviorOutside() {
-    const { isOpen, onClose, onOpen } = useControllable();
+    const [open, setOpen] = useState(false);
 
     return (
         <>
             <Button
-                onClick={onOpen}
+                onClick={() => setOpen(true)}
                 variant="primary"
             >
                 Open Modal
             </Button>
 
             <Modal.Root
-                isOpen={isOpen}
-                onClose={onClose}
+                open={open}
+                onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
                 placement="top"
                 scrollBehavior="outside"
                 size="lg"
@@ -157,7 +157,7 @@ export function ScrollBehaviorOutside() {
                         ))}
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button onClick={onClose}>Close</Button>
+                        <Button onClick={() => setOpen(false)}>Close</Button>
                     </Modal.Footer>
                 </Modal.Content>
             </Modal.Root>
@@ -166,20 +166,20 @@ export function ScrollBehaviorOutside() {
 }
 
 export function Placement() {
-    const { isOpen, onClose, onOpen } = useControllable();
+    const [open, setOpen] = useState(false);
 
     return (
         <>
             <Button
-                onClick={onOpen}
+                onClick={() => setOpen(true)}
                 variant="primary"
             >
                 Open Modal
             </Button>
 
             <Modal.Root
-                isOpen={isOpen}
-                onClose={onClose}
+                open={open}
+                onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
                 placement="top"
             >
                 <Modal.Overlay />
@@ -188,7 +188,7 @@ export function Placement() {
                     <Modal.CloseButton />
                     <Modal.Body>Modal Body</Modal.Body>
                     <Modal.Footer>
-                        <Button onClick={onClose}>Close</Button>
+                        <Button onClick={() => setOpen(false)}>Close</Button>
                     </Modal.Footer>
                 </Modal.Content>
             </Modal.Root>

@@ -1,5 +1,5 @@
-import { getColorSchemes } from "@dreamy-ui/panda-preset";
-import { defineParts, defineRecipe } from "@pandacss/dev";
+import { defineParts, getColorSchemes } from "@dreamy-ui/panda-preset";
+import { defineRecipe } from "@pandacss/dev";
 
 const parts = defineParts({
     root: {
@@ -110,10 +110,16 @@ export const checkbox = defineRecipe({
             outline: parts({
                 control: {
                     borderColor: "{colors.border}",
-                    ".group:is([data-checked])&": {
+                    ".group:is([data-state=checked], [data-state=indeterminate])&": {
                         borderColor: "var(--checkbox-bg)"
                     },
-                    ".group:is(:active)&": {
+                    "&[data-state=checked], &[data-state=indeterminate]": {
+                        borderColor: "var(--checkbox-bg)"
+                    },
+                    ".group:is(:active, [data-active])&": {
+                        borderColor: "var(--checkbox-bg)"
+                    },
+                    "&[data-active]": {
                         borderColor: "var(--checkbox-bg)"
                     },
                     ".group:is([data-invalid])&": {
@@ -124,12 +130,20 @@ export const checkbox = defineRecipe({
             }),
             solid: parts({
                 control: {
-                    ".group:is([data-checked])&": {
+                    ".group:is([data-state=checked], [data-state=indeterminate])&": {
                         background: "var(--checkbox-bg)",
                         borderColor: "var(--checkbox-bg)"
                     },
-                    ".group:is(:active)&": {
-                        background: "var(--checkbox-bg)/50",
+                    "&[data-state=checked], &[data-state=indeterminate]": {
+                        background: "var(--checkbox-bg)",
+                        borderColor: "var(--checkbox-bg)"
+                    },
+                    ".group:is(:active, [data-active])&:not([data-state=checked], [data-state=indeterminate])":
+                        {
+                            background: "var(--checkbox-bg)/50",
+                            borderColor: "var(--checkbox-bg)"
+                        },
+                    ".group:is(:active, [data-active])&": {
                         borderColor: "var(--checkbox-bg)"
                     },
                     borderColor: "{colors.border}",

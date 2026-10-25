@@ -9,14 +9,14 @@ describe("Drawer", () => {
     it("exposes dialog role, aria-modal, and accessible name from Header", async () => {
         render(
             <Drawer.Root
-                isOpen
-                onClose={() => {}}
+                open
+                onOpenChange={() => {}}
             >
                 <Drawer.Overlay />
                 <Drawer.Content>
-                    <Drawer.Header>Edit settings</Drawer.Header>
+                    <Drawer.Header>Confirm delete</Drawer.Header>
                     <Drawer.CloseButton />
-                    <Drawer.Body>Adjust your preferences.</Drawer.Body>
+                    <Drawer.Body>This action cannot be undone.</Drawer.Body>
                 </Drawer.Content>
             </Drawer.Root>
         );
@@ -25,18 +25,18 @@ describe("Drawer", () => {
 
         expect(dialog).toHaveAttribute("aria-modal", "true");
         expect(dialog).toHaveAttribute("tabIndex", "-1");
-        expect(dialog).toHaveAccessibleName("Edit settings");
+        expect(dialog).toHaveAccessibleName("Confirm delete");
 
         const labelledBy = dialog.getAttribute("aria-labelledby");
         expect(labelledBy).toBeTruthy();
-        expect(document.getElementById(labelledBy!)).toHaveTextContent("Edit settings");
+        expect(document.getElementById(labelledBy!)).toHaveTextContent("Confirm delete");
     });
 
     it("associates Body via aria-describedby when present", async () => {
         render(
             <Drawer.Root
-                isOpen
-                onClose={() => {}}
+                open
+                onOpenChange={() => {}}
             >
                 <Drawer.Content>
                     <Drawer.Header>Title</Drawer.Header>
@@ -61,8 +61,8 @@ describe("Drawer", () => {
             return (
                 <Drawer.Root
                     initialFocusRef={inputRef}
-                    isOpen
-                    onClose={() => {}}
+                    open
+                    onOpenChange={() => {}}
                 >
                     <Drawer.Content>
                         <Drawer.Header>Edit profile</Drawer.Header>
@@ -89,26 +89,26 @@ describe("Drawer", () => {
 
     it("closes on Escape and returns focus to the trigger", async () => {
         const user = userEvent.setup();
-        const onClose = vi.fn();
+        const onOpenChange = vi.fn();
 
         function Fixture() {
-            const [isOpen, setIsOpen] = useState(false);
+            const [open, setOpen] = useState(false);
 
             return (
                 <>
                     <button
-                        onClick={() => setIsOpen(true)}
+                        onClick={() => setOpen(true)}
                         type="button"
                     >
-                        Open drawer
+                        Open Drawer
                     </button>
                     <Drawer.Root
-                        isOpen={isOpen}
-                        onClose={() => {
-                            onClose();
-                            setIsOpen(false);
+                        open={open}
+                        onOpenChange={(details) => {
+                            onOpenChange(details);
+                            setOpen(details.open);
                         }}
-                        returnFocusOnClose
+                        restoreFocus
                     >
                         <Drawer.Content>
                             <Drawer.Header>Keyboard dismiss</Drawer.Header>
@@ -122,7 +122,7 @@ describe("Drawer", () => {
 
         render(<Fixture />);
 
-        const trigger = screen.getByRole("button", { name: "Open drawer" });
+        const trigger = screen.getByRole("button", { name: "Open Drawer" });
         await user.click(trigger);
 
         const dialog = await screen.findByRole("dialog");
@@ -130,7 +130,7 @@ describe("Drawer", () => {
         await user.keyboard("{Escape}");
 
         await waitFor(() => {
-            expect(onClose).toHaveBeenCalled();
+            expect(onOpenChange).toHaveBeenCalledWith({ open: false });
         });
         await waitFor(() => {
             expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
@@ -142,12 +142,12 @@ describe("Drawer", () => {
 
     it("closes via CloseButton which has an accessible name", async () => {
         const user = userEvent.setup();
-        const onClose = vi.fn();
+        const onOpenChange = vi.fn();
 
         render(
             <Drawer.Root
-                isOpen
-                onClose={onClose}
+                open
+                onOpenChange={onOpenChange}
             >
                 <Drawer.Content>
                     <Drawer.Header>Closeable</Drawer.Header>
@@ -160,20 +160,18 @@ describe("Drawer", () => {
         const close = await screen.findByRole("button", { name: "Close" });
         await user.click(close);
 
-        expect(onClose).toHaveBeenCalledTimes(1);
+        expect(onOpenChange).toHaveBeenCalledWith({ open: false });
     });
 
-    it("calls onClose when closeOnEsc is enabled and Escape is pressed", async () => {
+    it("calls onOpenChange when closeOnEscape is enabled and Escape is pressed", async () => {
         const user = userEvent.setup();
-        const onClose = vi.fn();
-        const onEsc = vi.fn();
+        const onOpenChange = vi.fn();
 
         render(
             <Drawer.Root
-                closeOnEsc
-                isOpen
-                onClose={onClose}
-                onEsc={onEsc}
+                closeOnEscape
+                open
+                onOpenChange={onOpenChange}
             >
                 <Drawer.Content>
                     <Drawer.Header>Esc</Drawer.Header>
@@ -188,19 +186,18 @@ describe("Drawer", () => {
         await user.click(screen.getByRole("button", { name: "Focusable" }));
         await user.keyboard("{Escape}");
 
-        expect(onClose).toHaveBeenCalled();
-        expect(onEsc).toHaveBeenCalled();
+        expect(onOpenChange).toHaveBeenCalledWith({ open: false });
     });
 
-    it("does not close on Escape when closeOnEsc is false", async () => {
+    it("does not close on Escape when closeOnEscape is false", async () => {
         const user = userEvent.setup();
-        const onClose = vi.fn();
+        const onOpenChange = vi.fn();
 
         render(
             <Drawer.Root
-                closeOnEsc={false}
-                isOpen
-                onClose={onClose}
+                closeOnEscape={false}
+                open
+                onOpenChange={onOpenChange}
             >
                 <Drawer.Content>
                     <Drawer.Header>Stay open</Drawer.Header>
@@ -215,7 +212,7 @@ describe("Drawer", () => {
         await user.click(screen.getByRole("button", { name: "Focusable" }));
         await user.keyboard("{Escape}");
 
-        expect(onClose).not.toHaveBeenCalled();
+        expect(onOpenChange).not.toHaveBeenCalledWith({ open: false });
         expect(screen.getByRole("dialog")).toBeInTheDocument();
     });
 
@@ -223,7 +220,7 @@ describe("Drawer", () => {
         const user = userEvent.setup();
 
         function Fixture() {
-            const [isOpen, setIsOpen] = useState(true);
+            const [open, setOpen] = useState(true);
             const finalRef = useRef<HTMLButtonElement>(null);
 
             return (
@@ -236,9 +233,9 @@ describe("Drawer", () => {
                     </button>
                     <Drawer.Root
                         finalFocusRef={finalRef}
-                        isOpen={isOpen}
-                        onClose={() => setIsOpen(false)}
-                        returnFocusOnClose
+                        open={open}
+                        onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
+                        restoreFocus
                     >
                         <Drawer.Content>
                             <Drawer.Header>Final focus</Drawer.Header>
@@ -260,21 +257,19 @@ describe("Drawer", () => {
         });
     });
 
-    it("forwards placement, variant, and modality props without throwing", async () => {
+    it("forwards trapFocus and related Drawerity props without throwing", async () => {
         render(
             <Drawer.Root
                 autoFocus
                 blockScrollOnMount
-                isOpen
-                onClose={() => {}}
-                placement="left"
+                open
+                onOpenChange={() => {}}
                 preserveScrollBarGap
                 scrollBehavior="inside"
                 trapFocus
-                variant="simple"
             >
-                <Drawer.Overlay data-testid="drawer-overlay" />
-                <Drawer.Content data-testid="drawer-content">
+                <Drawer.Overlay data-testid="Drawer-overlay" />
+                <Drawer.Content data-testid="Drawer-content">
                     <Drawer.Header>Props</Drawer.Header>
                     <Drawer.Footer>
                         <button type="button">OK</button>
@@ -283,8 +278,8 @@ describe("Drawer", () => {
             </Drawer.Root>
         );
 
-        expect(await screen.findByTestId("drawer-content")).toBeInTheDocument();
-        expect(screen.getByTestId("drawer-overlay")).toBeInTheDocument();
+        expect(await screen.findByTestId("Drawer-content")).toBeInTheDocument();
+        expect(screen.getByTestId("Drawer-overlay")).toBeInTheDocument();
         expect(screen.getByRole("button", { name: "OK" })).toBeInTheDocument();
     });
 });

@@ -11,13 +11,12 @@ import type {
 
 type ExpectTrue<T extends true> = T;
 
-assertType<boolean | undefined>({} as PopoverProps["isOpen"]);
-assertType<boolean | undefined>({} as PopoverProps["defaultIsOpen"]);
-assertType<(() => void) | undefined>({} as PopoverProps["onOpen"]);
-assertType<(() => void) | undefined>({} as PopoverProps["onClose"]);
-assertType<boolean | undefined>({} as PopoverProps["closeOnEsc"]);
-assertType<boolean | undefined>({} as PopoverProps["closeOnBlur"]);
-assertType<boolean | undefined>({} as PopoverProps["returnFocusOnClose"]);
+assertType<boolean | undefined>({} as PopoverProps["open"]);
+assertType<boolean | undefined>({} as PopoverProps["defaultOpen"]);
+assertType<((details: { open: boolean }) => void) | undefined>({} as PopoverProps["onOpenChange"]);
+assertType<boolean | undefined>({} as PopoverProps["closeOnEscape"]);
+assertType<boolean | undefined>({} as PopoverProps["closeOnInteractOutside"]);
+assertType<boolean | undefined>({} as PopoverProps["restoreFocus"]);
 assertType<boolean | undefined>({} as PopoverProps["autoFocus"]);
 assertType<boolean | undefined>({} as PopoverProps["hasArrow"]);
 assertType<boolean | undefined>({} as PopoverProps["usePortal"]);
@@ -27,12 +26,10 @@ assertType<number | undefined>({} as PopoverProps["closeDelay"]);
 assertType<RefObject<{ focus(): void } | null> | undefined>({} as PopoverProps["initialFocusRef"]);
 
 type _HasOpenProps = ExpectTrue<
-    "isOpen" extends keyof PopoverProps
-        ? "onOpen" extends keyof PopoverProps
-            ? "onClose" extends keyof PopoverProps
-                ? "closeOnEsc" extends keyof PopoverProps
-                    ? true
-                    : false
+    "open" extends keyof PopoverProps
+        ? "onOpenChange" extends keyof PopoverProps
+            ? "closeOnEscape" extends keyof PopoverProps
+                ? true
                 : false
             : false
         : false
@@ -58,13 +55,12 @@ const _partProps: _HasPartProps = true;
 void (_openProps && _partProps);
 
 assertType<PopoverProps>({
-    isOpen: true,
-    defaultIsOpen: false,
-    onOpen: () => {},
-    onClose: () => {},
-    closeOnEsc: true,
-    closeOnBlur: true,
-    returnFocusOnClose: true,
+    open: true,
+    defaultOpen: false,
+    onOpenChange: () => {},
+    closeOnEscape: true,
+    closeOnInteractOutside: true,
+    restoreFocus: true,
     autoFocus: true,
     hasArrow: true,
     usePortal: true,

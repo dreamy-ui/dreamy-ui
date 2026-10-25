@@ -26,10 +26,47 @@ describe("Select", () => {
             </Field.Root>
         );
 
-        const trigger = screen.getByRole("button", { name: /fruit|select a fruit/i });
+        const trigger = screen.getByRole("combobox", { name: /fruit|select a fruit/i });
 
         expect(trigger).toHaveAttribute("aria-haspopup", "listbox");
         expect(trigger).toHaveAttribute("aria-expanded", "false");
+    });
+
+    it("navigates options with the keyboard and returns focus to the trigger", async () => {
+        const user = userEvent.setup();
+        const onChangeValue = vi.fn();
+
+        render(
+            <Select.Root
+                items={fruits}
+                onChangeValue={onChangeValue}
+                popoverProps={{ usePortal: false, reduceMotion: true }}
+            >
+                <Select.Trigger
+                    aria-label="Fruit"
+                    placeholder="Select a fruit"
+                />
+                <Select.Content />
+            </Select.Root>
+        );
+
+        const trigger = screen.getByRole("combobox", { name: "Fruit" });
+
+        trigger.focus();
+        await user.keyboard("{ArrowDown}");
+
+        expect(trigger).toHaveAttribute("aria-expanded", "true");
+        expect(await screen.findByRole("listbox")).toBeInTheDocument();
+
+        await user.keyboard("{Enter}");
+
+        await waitFor(function waitForSelection() {
+            expect(onChangeValue).toHaveBeenCalled();
+        });
+        expect(trigger).toHaveAttribute("aria-expanded", "false");
+        await waitFor(function waitForTriggerFocus() {
+            expect(trigger).toHaveFocus();
+        });
     });
 
     it("opens a listbox of options and selects with keyboard", async () => {
@@ -50,7 +87,7 @@ describe("Select", () => {
             </Select.Root>
         );
 
-        const trigger = screen.getByRole("button", { name: "Fruit" });
+        const trigger = screen.getByRole("combobox", { name: "Fruit" });
 
         await user.click(trigger);
 
@@ -66,6 +103,9 @@ describe("Select", () => {
             expect(onChangeValue).toHaveBeenCalledWith("banana");
         });
         expect(trigger).toHaveAttribute("aria-expanded", "false");
+        await waitFor(function waitForTriggerFocus() {
+            expect(trigger).toHaveFocus();
+        });
     });
 
     it("selects an item by pointer when the menu is open", async () => {
@@ -86,7 +126,7 @@ describe("Select", () => {
             </Select.Root>
         );
 
-        await user.click(screen.getByRole("button", { name: "Fruit" }));
+        await user.click(screen.getByRole("combobox", { name: "Fruit" }));
         await user.click(screen.getByRole("option", { name: "Banana" }));
 
         await waitFor(function waitForSelection() {
@@ -100,7 +140,7 @@ describe("Select", () => {
         render(
             <Select.Root
                 items={fruits}
-                popoverProps={{ usePortal: false }}
+                popoverProps={{ usePortal: false, reduceMotion: true }}
             >
                 <Select.Trigger
                     aria-label="Fruit"
@@ -110,7 +150,7 @@ describe("Select", () => {
             </Select.Root>
         );
 
-        const trigger = screen.getByRole("button", { name: "Fruit" });
+        const trigger = screen.getByRole("combobox", { name: "Fruit" });
 
         await user.click(trigger);
         expect(trigger).toHaveAttribute("aria-expanded", "true");
@@ -120,7 +160,9 @@ describe("Select", () => {
         await waitFor(function waitForClose() {
             expect(trigger).toHaveAttribute("aria-expanded", "false");
         });
-        expect(trigger).toHaveFocus();
+        await waitFor(function waitForFocus() {
+            expect(trigger).toHaveFocus();
+        });
     });
 
     it("wires Field describedby and expects Field invalid on the trigger", () => {
@@ -138,7 +180,7 @@ describe("Select", () => {
             </Field.Root>
         );
 
-        const trigger = screen.getByRole("button", { name: /country|select/i });
+        const trigger = screen.getByRole("combobox", { name: /country|select/i });
 
         expect(trigger.getAttribute("aria-describedby")).toBeTruthy();
         expect(trigger).toHaveAttribute("aria-invalid", "true");
@@ -158,7 +200,7 @@ describe("Select", () => {
             </Select.Root>
         );
 
-        const svgs = screen.getByRole("button", { name: "Fruit" }).querySelectorAll("svg");
+        const svgs = screen.getByRole("combobox", { name: "Fruit" }).querySelectorAll("svg");
 
         for (const svg of svgs) {
             expect(svg).toHaveAttribute("aria-hidden", "true");
@@ -180,7 +222,7 @@ describe("Select", () => {
             </Select.Root>
         );
 
-        expect(screen.getByRole("button", { name: "Fruit" })).toHaveTextContent("Banana");
+        expect(screen.getByRole("combobox", { name: "Fruit" })).toHaveTextContent("Banana");
 
         rerender(
             <Select.Root
@@ -196,7 +238,7 @@ describe("Select", () => {
             </Select.Root>
         );
 
-        expect(screen.getByRole("button", { name: "Fruit" })).toHaveTextContent("Orange");
+        expect(screen.getByRole("combobox", { name: "Fruit" })).toHaveTextContent("Orange");
     });
 
     it("exposes a named clear button and keeps the hidden select out of the tab order", async () => {

@@ -1,11 +1,12 @@
-import createDreamyPreset, { dreamyPlugin } from "@dreamy-ui/panda-preset";
+import { createDreamyPresets, dreamyPlugin, splitThemeRecipes } from "@dreamy-ui/panda-preset";
 import { defineConfig } from "@pandacss/dev";
 import { patterns } from "../components/patterns";
-import { recipes } from "../components/recipes";
+import { recipes as recipeDefinitions } from "../components/recipes";
+
+const { recipes, slotRecipes } = splitThemeRecipes(recipeDefinitions);
 
 export default defineConfig({
     preflight: true,
-    watch: true,
     jsxFramework: "react",
     jsxStyleProps: "all",
     jsxFactory: "dreamy",
@@ -18,20 +19,19 @@ export default defineConfig({
         // "../packages/panda-preset/dist/**/*.{js,jsx,ts,tsx}" // The preset location
     ],
     exclude: [],
-    presets: [
-        createDreamyPreset({
-            fonts: {
-                body: "Geist",
-                heading: "Manrope"
-            }
-        })
-    ],
+    presets: createDreamyPresets({
+        fonts: {
+            body: "Geist",
+            heading: "Manrope"
+        }
+    }),
     patterns: {
         extend: patterns
     },
     theme: {
         extend: {
             recipes,
+            slotRecipes,
             keyframes: {
                 downUp: {
                     "0%": { transform: "translateY(0)" },
@@ -129,7 +129,6 @@ export default defineConfig({
                         flex: [1, "0 0 auto"],
                         pos: ["relative"],
                         opacity: [0],
-                        op: [0],
                         display: ["flex"],
                         lineHeight: ["normal"],
                         whiteSpace: ["nowrap"],

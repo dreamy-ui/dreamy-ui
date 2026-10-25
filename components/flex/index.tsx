@@ -30,11 +30,9 @@ export function Flex(props: FlexProps) {
         "shrink"
     ]);
 
-    const styles = flex.raw(patternProps);
-
     return (
         <dreamy.div
-            {...styles}
+            className={flex(patternProps)}
             {...restProps}
         />
     );

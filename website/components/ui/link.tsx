@@ -26,15 +26,13 @@ export function Link(props: LinkProps) {
 
     const [patternProps, restProps] = splitProps(rest, ["variant", "size"]);
 
-    const styleProps = text.raw({
-        variant: "link",
-        ...patternProps
-    });
-
     return (
         <dreamy.a
             target={isExternal ? "_blank" : undefined}
-            {...styleProps}
+            className={text({
+                variant: "link",
+                ...patternProps
+            })}
             {...restProps}
         />
     );

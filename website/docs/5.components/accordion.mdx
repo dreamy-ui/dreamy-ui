@@ -2,8 +2,8 @@
 title: Accordion
 description: Accordion is set of components that allow you to create toggleable content.
 isServerComponent: false
-source: /packages/react/src/components/accordion/accordion.tsx
-themeSource: /packages/system/src/recipes/accordion.ts
+source: /components/accordion/index.tsx
+themeSource: /components/accordion/accordion.ts
 ---
 
 ## Installation
@@ -14,12 +14,12 @@ pnpm dreamy add accordion
 
 ## Usage
 
-Accordion is a component that allows you to toggle the visibility of content.
+Each item needs a unique `value`. By default, only one panel can be open at a time.
 
 <Wrapper>
   	<Accordion.Root>
-		{Array.from({ length: 3 }).map((_, index) => (
-			<Accordion.Item key={index}>
+		{["item-1", "item-2", "item-3"].map((value, index) => (
+			<Accordion.Item key={value} value={value}>
 				<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
 				<Accordion.Content>Hi!</Accordion.Content>
 			</Accordion.Item>
@@ -29,8 +29,8 @@ Accordion is a component that allows you to toggle the visibility of content.
 
 ```tsx
 <Accordion.Root>
-	{Array.from({ length: 3 }).map((_, index) => (
-		<Accordion.Item key={index}>
+	{["item-1", "item-2", "item-3"].map((value, index) => (
+		<Accordion.Item key={value} value={value}>
 			<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
 			<Accordion.Content>Hi!</Accordion.Content>
 		</Accordion.Item>
@@ -38,43 +38,14 @@ Accordion is a component that allows you to toggle the visibility of content.
 </Accordion.Root>
 ```
 
-### Allow Multiple Open
+### Multiple panels
 
-By default, multiple accordion items can be expanded at once. Opening a new item does not close the others.
-
-### Allow Single Open
-
-To allow only one item open at a time, set `allowMultiple` to `false`.
+Set `multiple` to allow more than one panel to stay open.
 
 <Wrapper>
-	<Accordion.Root allowMultiple={false}>
-		{Array.from({ length: 3 }).map((_, index) => (
-			<Accordion.Item key={index}>
-				<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
-				<Accordion.Content>Hi!</Accordion.Content>
-			</Accordion.Item>
-		))}
-	</Accordion.Root>
-</Wrapper>
-```tsx
-<Accordion.Root allowMultiple={false}>
-	{Array.from({ length: 3 }).map((_, index) => (
-		<Accordion.Item key={index}>
-			<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
-			<Accordion.Content>Hi!</Accordion.Content>
-		</Accordion.Item>
-	))}
-</Accordion.Root>
-```
-
-### Allow Toggle
-
-You can allow toggle single item by using the `allowToggle` prop. With `allowMultiple` prop, it will be always possible to toggle them.
-
-<Wrapper>
-	<Accordion.Root allowToggle>
-		{Array.from({ length: 3 }).map((_, index) => (
-			<Accordion.Item key={index}>
+	<Accordion.Root multiple>
+		{["item-1", "item-2", "item-3"].map((value, index) => (
+			<Accordion.Item key={value} value={value}>
 				<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
 				<Accordion.Content>Hi!</Accordion.Content>
 			</Accordion.Item>
@@ -83,9 +54,35 @@ You can allow toggle single item by using the `allowToggle` prop. With `allowMul
 </Wrapper>
 
 ```tsx
-<Accordion.Root allowToggle>
-	{Array.from({ length: 3 }).map((_, index) => (
-		<Accordion.Item key={index}>
+<Accordion.Root multiple>
+	{["item-1", "item-2", "item-3"].map((value, index) => (
+		<Accordion.Item key={value} value={value}>
+			<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
+			<Accordion.Content>Hi!</Accordion.Content>
+		</Accordion.Item>
+	))}
+</Accordion.Root>
+```
+
+### Collapsible
+
+Use `collapsible` so the open panel can be closed again when only one panel is allowed.
+
+<Wrapper>
+	<Accordion.Root collapsible>
+		{["item-1", "item-2", "item-3"].map((value, index) => (
+			<Accordion.Item key={value} value={value}>
+				<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
+				<Accordion.Content>Hi!</Accordion.Content>
+			</Accordion.Item>
+		))}
+	</Accordion.Root>
+</Wrapper>
+
+```tsx
+<Accordion.Root collapsible>
+	{["item-1", "item-2", "item-3"].map((value, index) => (
+		<Accordion.Item key={value} value={value}>
 			<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
 			<Accordion.Content>Hi!</Accordion.Content>
 		</Accordion.Item>
@@ -95,7 +92,7 @@ You can allow toggle single item by using the `allowToggle` prop. With `allowMul
 
 ### Controlled
 
-You can control the Accordion by using the `onValueChange` prop.
+Control expanded panels with `value` and `onValueChange`.
 
 <Wrapper>
 	<ControlledAccordion />
@@ -103,15 +100,15 @@ You can control the Accordion by using the `onValueChange` prop.
 
 ```tsx
 export function ControlledAccordion() {
-    const [value, setValue] = useState<number | number[]>([0]);
+    const [value, setValue] = useState<string[]>(["item-1"]);
 
     return (
         <Accordion.Root
-            index={value}
-            onChange={(i) => setValue(i)}
+            value={value}
+            onValueChange={(details) => setValue(details.value)}
         >
-            {Array.from({ length: 3 }).map((_, index) => (
-                <Accordion.Item key={index}>
+            {["item-1", "item-2", "item-3"].map((itemValue, index) => (
+                <Accordion.Item key={itemValue} value={itemValue}>
                     <Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
                     <Accordion.Content>Hi!</Accordion.Content>
                 </Accordion.Item>
@@ -124,9 +121,9 @@ export function ControlledAccordion() {
 ### With icon
 
 <Wrapper>
-	<Accordion.Root>
-		{Array.from({ length: 3 }).map((_, index) => (
-			<Accordion.Item key={index}>
+	<Accordion.Root multiple>
+		{["item-1", "item-2", "item-3"].map((value, index) => (
+			<Accordion.Item key={value} value={value}>
 				<Accordion.Trigger>
 					<HStack>
 						<Icon as={<PiConfetti />} color="fg.medium" />
@@ -140,9 +137,9 @@ export function ControlledAccordion() {
 </Wrapper>
 
 ```tsx
-<Accordion.Root>
-	{Array.from({ length: 3 }).map((_, index) => (
-		<Accordion.Item key={index}>
+<Accordion.Root multiple>
+	{["item-1", "item-2", "item-3"].map((value, index) => (
+		<Accordion.Item key={value} value={value}>
 			<Accordion.Trigger>
 				<HStack>
 					<Icon as={PiConfetti} color="fg.medium" />
@@ -153,7 +150,7 @@ export function ControlledAccordion() {
 		</Accordion.Item>
 	))}
 </Accordion.Root>
-	```
+```
 
 ### Variants
 
@@ -163,9 +160,9 @@ You can change the variant of the Accordion by using the `variant` prop.
 	<VStack w="full" gap={6}>
 		<Flex col gap={2} full>
 			<Text bold>Outline</Text>
-			<Accordion.Root variant="outline">
-				{Array.from({ length: 3 }).map((_, index) => (
-					<Accordion.Item key={index}>
+			<Accordion.Root multiple variant="outline">
+				{["item-1", "item-2", "item-3"].map((value, index) => (
+					<Accordion.Item key={value} value={value}>
 						<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
 						<Accordion.Content>Hi!</Accordion.Content>
 					</Accordion.Item>
@@ -175,9 +172,9 @@ You can change the variant of the Accordion by using the `variant` prop.
 
 		<Flex col gap={2} full>
 			<Text bold>Solid</Text>
-			<Accordion.Root variant="solid">
-			{Array.from({ length: 3 }).map((_, index) => (
-				<Accordion.Item key={index}>
+			<Accordion.Root multiple variant="solid">
+			{["item-1", "item-2", "item-3"].map((value, index) => (
+				<Accordion.Item key={value} value={value}>
 					<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
 					<Accordion.Content>Hi!</Accordion.Content>
 				</Accordion.Item>
@@ -187,9 +184,9 @@ You can change the variant of the Accordion by using the `variant` prop.
 
 		<Flex col gap={2} full>
 			<Text bold>Subtle</Text>
-			<Accordion.Root variant="subtle">
-				{Array.from({ length: 3 }).map((_, index) => (
-					<Accordion.Item key={index}>
+			<Accordion.Root multiple variant="subtle">
+				{["item-1", "item-2", "item-3"].map((value, index) => (
+					<Accordion.Item key={value} value={value}>
 						<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
 						<Accordion.Content>Hi!</Accordion.Content>
 					</Accordion.Item>
@@ -198,13 +195,14 @@ You can change the variant of the Accordion by using the `variant` prop.
 		</Flex>
 	</VStack>
 </Wrapper>
+
 ```tsx
 <VStack w="full" gap={6}>
 	<Flex col gap={2}>
 		<Text bold>Outline</Text>
-		<Accordion.Root variant="outline">
-			{Array.from({ length: 3 }).map((_, index) => (
-				<Accordion.Item key={index}>
+		<Accordion.Root multiple variant="outline">
+			{["item-1", "item-2", "item-3"].map((value, index) => (
+				<Accordion.Item key={value} value={value}>
 					<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
 					<Accordion.Content>Hi!</Accordion.Content>
 				</Accordion.Item>
@@ -214,9 +212,9 @@ You can change the variant of the Accordion by using the `variant` prop.
 
 	<Flex col gap={2}>
 		<Text bold>Solid</Text>
-		<Accordion.Root variant="solid">
-		{Array.from({ length: 3 }).map((_, index) => (
-			<Accordion.Item key={index}>
+		<Accordion.Root multiple variant="solid">
+		{["item-1", "item-2", "item-3"].map((value, index) => (
+			<Accordion.Item key={value} value={value}>
 				<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
 				<Accordion.Content>Hi!</Accordion.Content>
 			</Accordion.Item>
@@ -226,9 +224,9 @@ You can change the variant of the Accordion by using the `variant` prop.
 
 	<Flex col gap={2}>
 		<Text bold>Subtle</Text>
-		<Accordion.Root variant="subtle">
-			{Array.from({ length: 3 }).map((_, index) => (
-				<Accordion.Item key={index}>
+		<Accordion.Root multiple variant="subtle">
+			{["item-1", "item-2", "item-3"].map((value, index) => (
+				<Accordion.Item key={value} value={value}>
 					<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
 					<Accordion.Content>Hi!</Accordion.Content>
 				</Accordion.Item>
@@ -244,9 +242,9 @@ You can change the size of the Accordion by using the `size` prop.
 
 <Wrapper>
 	<Text bold mt={4}>Small</Text>
-	<Accordion.Root size="sm">
-		{Array.from({ length: 3 }).map((_, index) => (
-			<Accordion.Item key={index}>
+	<Accordion.Root multiple size="sm">
+		{["item-1", "item-2", "item-3"].map((value, index) => (
+			<Accordion.Item key={value} value={value}>
 				<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
 				<Accordion.Content>Hi!</Accordion.Content>
 			</Accordion.Item>
@@ -254,9 +252,9 @@ You can change the size of the Accordion by using the `size` prop.
 	</Accordion.Root>
 
 	<Text bold mt={4}>Medium</Text>
-	<Accordion.Root size="md">
-		{Array.from({ length: 3 }).map((_, index) => (
-			<Accordion.Item key={index}>
+	<Accordion.Root multiple size="md">
+		{["item-1", "item-2", "item-3"].map((value, index) => (
+			<Accordion.Item key={value} value={value}>
 				<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
 				<Accordion.Content>Hi!</Accordion.Content>
 			</Accordion.Item>
@@ -264,9 +262,9 @@ You can change the size of the Accordion by using the `size` prop.
 	</Accordion.Root>
 
 	<Text bold mt={4}>Large</Text>
-	<Accordion.Root size="lg">
-		{Array.from({ length: 3 }).map((_, index) => (
-			<Accordion.Item key={index}>
+	<Accordion.Root multiple size="lg">
+		{["item-1", "item-2", "item-3"].map((value, index) => (
+			<Accordion.Item key={value} value={value}>
 				<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
 				<Accordion.Content>Hi!</Accordion.Content>
 			</Accordion.Item>
@@ -276,9 +274,9 @@ You can change the size of the Accordion by using the `size` prop.
 
 ```tsx
 <Text bold>Small</Text>
-<Accordion.Root size="sm">
-	{Array.from({ length: 3 }).map((_, index) => (
-		<Accordion.Item key={index}>
+<Accordion.Root multiple size="sm">
+	{["item-1", "item-2", "item-3"].map((value, index) => (
+		<Accordion.Item key={value} value={value}>
 			<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
 			<Accordion.Content>Hi!</Accordion.Content>
 		</Accordion.Item>
@@ -286,9 +284,9 @@ You can change the size of the Accordion by using the `size` prop.
 </Accordion.Root>
 
 <Text bold>Medium</Text>
-<Accordion.Root size="md">
-	{Array.from({ length: 3 }).map((_, index) => (
-		<Accordion.Item key={index}>
+<Accordion.Root multiple size="md">
+	{["item-1", "item-2", "item-3"].map((value, index) => (
+		<Accordion.Item key={value} value={value}>
 			<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
 			<Accordion.Content>Hi!</Accordion.Content>
 		</Accordion.Item>
@@ -296,9 +294,9 @@ You can change the size of the Accordion by using the `size` prop.
 </Accordion.Root>
 
 <Text bold>Large</Text>
-<Accordion.Root size="lg">
-	{Array.from({ length: 3 }).map((_, index) => (
-		<Accordion.Item key={index}>
+<Accordion.Root multiple size="lg">
+	{["item-1", "item-2", "item-3"].map((value, index) => (
+		<Accordion.Item key={value} value={value}>
 			<Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
 			<Accordion.Content>Hi!</Accordion.Content>
 		</Accordion.Item>

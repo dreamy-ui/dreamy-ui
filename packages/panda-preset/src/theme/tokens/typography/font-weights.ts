@@ -1,4 +1,4 @@
-import type { Tokens } from "@pandacss/dev";
+import type { Tokens } from "@pandacss/types";
 
 export const fontWeights: Tokens["fontWeights"] = {
 	thin: { value: "100" },

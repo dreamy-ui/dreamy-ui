@@ -18,11 +18,9 @@ export interface TextProps extends HTMLDreamyProps<"p">, TextProperties {}
 export function Text(props: TextProps) {
     const [patternProps, restProps] = splitProps(props, ["variant", "size"]);
 
-    const styleProps = text.raw(patternProps);
-
     return (
         <dreamy.p
-            {...styleProps}
+            className={text(patternProps)}
             {...restProps}
         />
     );

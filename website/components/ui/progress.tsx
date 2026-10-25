@@ -1,59 +1,29 @@
-import { valueToPercent } from "@dreamy-ui/react";
-import { useMemo } from "react";
+"use client";
+
+import {
+    Progress as ArkProgress,
+    type ProgressRootProps as ArkProgressRootProps
+} from "@ark-ui/react/progress";
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type ProgressVariantProps, progress } from "styled-system/recipes";
-import { Box } from "./box";
-
-interface ProgressFilledTrackProps extends HTMLDreamyProps<"div">, GetProgressPropsOptions {}
-
-function ProgressFilledTrack(props: ProgressFilledTrackProps) {
-    const { min, max, value, isIndeterminate, role, valueText, getValueText, ...rest } = props;
-    const progress = useMemo(
-        () => getProgressProps({ value, min, max, isIndeterminate, role, valueText, getValueText }),
-        [value, min, max, isIndeterminate, role, valueText, getValueText]
-    );
-
-    return (
-        <Box
-            data-part="filled-track"
-            {...rest}
-            style={{ width: `${progress.percent}%`, ...rest.style }}
-            {...progress.bind}
-        />
-    );
-}
 
 interface ProgressOptions {
     /**
-     * The `value` of the progress indicator.
-     * If `undefined` the progress bar will be in `indeterminate` state
-     */
-    value?: number;
-    /**
-     * The minimum value of the progress
-     * @default 0
-     */
-    min?: number;
-    /**
-     * The maximum value of the progress
-     * @default 100
-     */
-    max?: number;
-    /**
-     * The speed of indeterminate progress
-     * @default 1s
+     * Speed of the indeterminate range animation.
+     * @default "1s"
      */
     speed?: string;
 }
 
 export interface ProgressProps
     extends ProgressOptions,
+        ArkProgressRootProps,
         ProgressVariantProps,
-        HTMLDreamyProps<"div"> {
+        Omit<HTMLDreamyProps<"div">, keyof ArkProgressRootProps | "defaultValue"> {
     "aria-label": string;
 }
 
-const StyledProgress = dreamy("div", progress);
+const StyledProgress = dreamy(ArkProgress.Root, progress);
 
 /**
  * Progress component — linear progress indicator.
@@ -71,79 +41,39 @@ export function Progress(props: ProgressProps) {
         min = 0,
         max = 100,
         children,
+        isIndeterminate: isIndeterminateProp,
         "aria-label": ariaLabel,
         "aria-labelledby": ariaLabelledBy,
         "aria-valuetext": ariaValueText,
-        title,
-        role,
         style,
         speed = "1s",
         ...rest
     } = props;
 
+    const isIndeterminate = isIndeterminateProp ?? value == null;
+
     return (
         <StyledProgress
             {...rest}
             data-speed={speed}
+            isIndeterminate={isIndeterminate}
+            max={max}
+            min={min}
             style={{
-                // @ts-expect-error
+                // @ts-expect-error css variable
                 "--speed": speed,
                 ...style
             }}
+            value={isIndeterminate ? null : value}
         >
-            <ProgressFilledTrack
+            <ArkProgress.Track
                 aria-label={ariaLabel}
                 aria-labelledby={ariaLabelledBy}
-                max={max}
-                min={min}
-                role={role}
-                title={title}
-                value={value}
-                valueText={ariaValueText}
-            />
+                aria-valuetext={ariaValueText}
+            >
+                <ArkProgress.Range data-indeterminate={isIndeterminate ? "" : undefined} />
+            </ArkProgress.Track>
             {children}
         </StyledProgress>
     );
-}
-
-interface GetProgressPropsOptions {
-    value?: number;
-    min: number;
-    max: number;
-    valueText?: string;
-    getValueText?(value: number, percent: number): string;
-    isIndeterminate?: boolean;
-    role?: React.AriaRole;
-}
-
-function getProgressProps(options: GetProgressPropsOptions) {
-    const {
-        value = 0,
-        min,
-        max,
-        valueText,
-        getValueText,
-        isIndeterminate,
-        role = "progressbar"
-    } = options;
-
-    const percent = valueToPercent(value, min, max);
-
-    const getAriaValueText = () => {
-        if (value == null) return undefined;
-        return typeof getValueText === "function" ? getValueText(value, percent) : valueText;
-    };
-
-    return {
-        bind: {
-            "data-indeterminate": isIndeterminate ? "" : undefined,
-            "aria-valuemax": max,
-            "aria-valuemin": min,
-            "aria-valuenow": isIndeterminate ? undefined : value,
-            "aria-valuetext": getAriaValueText(),
-            role
-        },
-        percent,
-        value
-    };
 }

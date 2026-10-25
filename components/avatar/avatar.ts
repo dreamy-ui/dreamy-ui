@@ -1,5 +1,5 @@
-import { getColorSchemes } from "@dreamy-ui/panda-preset";
-import { defineParts, defineRecipe } from "@pandacss/dev";
+import { defineParts, getColorSchemes } from "@dreamy-ui/panda-preset";
+import { defineRecipe } from "@pandacss/dev";
 
 const parts = defineParts({
     root: {
@@ -14,6 +14,11 @@ const parts = defineParts({
 
 export { parts as avatarParts };
 
+const schemeVariants = getColorSchemes("--avatar-scheme", undefined, "root", true);
+
+const fallbackVisibleSelector =
+    '&:has([data-scope="avatar"][data-part="name"][data-state="visible"])';
+
 export const avatar = defineRecipe({
     className: "avatar",
     description:
@@ -26,7 +31,7 @@ export const avatar = defineRecipe({
             justifyContent: "center",
             borderRadius: "full",
             overflow: "hidden"
-            // transition: "transform 0.2s {easings.ease-in-out}",
+            // transition: "transform 0.2s {easings.easeInOut}",
             // _hover: {
             //     '[data-part="group"]:has(&) &': {
             //         transform: "translateX(-0.75rem)"
@@ -112,11 +117,16 @@ export const avatar = defineRecipe({
                 }
             })
         },
-        scheme: getColorSchemes("--avatar-scheme", undefined, "root", true),
+        scheme: Object.fromEntries(
+            Object.entries(schemeVariants).map(([name, slotStyles]) => [
+                name,
+                parts(slotStyles as Parameters<typeof parts>[0])
+            ])
+        ),
         variant: {
             filled: parts({
                 root: {
-                    "&:not([data-loaded])": {
+                    [fallbackVisibleSelector]: {
                         bg: "var(--avatar-scheme)",
                         color: "var(--avatar-scheme-fg)"
                     }
@@ -124,7 +134,7 @@ export const avatar = defineRecipe({
             }),
             subtle: parts({
                 root: {
-                    "&:not([data-loaded])": {
+                    [fallbackVisibleSelector]: {
                         bg: "{colors.alpha.100}",
                         color: "fg"
                     }
@@ -132,7 +142,7 @@ export const avatar = defineRecipe({
             }),
             outline: parts({
                 root: {
-                    "&:not([data-loaded])": {
+                    [fallbackVisibleSelector]: {
                         borderWidth: "1px",
                         borderStyle: "solid",
                         borderColor: "{colors.border}",

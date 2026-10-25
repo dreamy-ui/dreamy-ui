@@ -7,11 +7,16 @@ export default {
     title: "Accordion"
 } satisfies Meta;
 
+const items = ["item-1", "item-2", "item-3"];
+
 export function Base() {
     return (
-        <Accordion.Root>
-            {Array.from({ length: 3 }).map((_, index) => (
-                <Accordion.Item key={index}>
+        <Accordion.Root multiple>
+            {items.map((value, index) => (
+                <Accordion.Item
+                    key={value}
+                    value={value}
+                >
                     <Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
                     <Accordion.Content>Hi!</Accordion.Content>
                 </Accordion.Item>
@@ -22,9 +27,12 @@ export function Base() {
 
 export function AllowSingle() {
     return (
-        <Accordion.Root allowMultiple={false}>
-            {Array.from({ length: 3 }).map((_, index) => (
-                <Accordion.Item key={index}>
+        <Accordion.Root>
+            {items.map((value, index) => (
+                <Accordion.Item
+                    key={value}
+                    value={value}
+                >
                     <Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
                     <Accordion.Content>Hi!</Accordion.Content>
                 </Accordion.Item>
@@ -33,11 +41,14 @@ export function AllowSingle() {
     );
 }
 
-export function AllowToggle() {
+export function Collapsible() {
     return (
-        <Accordion.Root allowToggle>
-            {Array.from({ length: 3 }).map((_, index) => (
-                <Accordion.Item key={index}>
+        <Accordion.Root collapsible>
+            {items.map((value, index) => (
+                <Accordion.Item
+                    key={value}
+                    value={value}
+                >
                     <Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
                     <Accordion.Content>Hi!</Accordion.Content>
                 </Accordion.Item>
@@ -47,15 +58,18 @@ export function AllowToggle() {
 }
 
 export function Controlled() {
-    const [value, setValue] = useState<number | number[]>([0]);
+    const [value, setValue] = useState<string[]>(["item-1"]);
 
     return (
         <Accordion.Root
-            index={value}
-            onChange={(i) => setValue(i)}
+            value={value}
+            onValueChange={(details) => setValue(details.value)}
         >
-            {Array.from({ length: 3 }).map((_, index) => (
-                <Accordion.Item key={index}>
+            {items.map((itemValue, index) => (
+                <Accordion.Item
+                    key={itemValue}
+                    value={itemValue}
+                >
                     <Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
                     <Accordion.Content>Hi!</Accordion.Content>
                 </Accordion.Item>
@@ -66,9 +80,12 @@ export function Controlled() {
 
 export function WithIcon() {
     return (
-        <Accordion.Root>
-            {Array.from({ length: 3 }).map((_, index) => (
-                <Accordion.Item key={index}>
+        <Accordion.Root multiple>
+            {items.map((value, index) => (
+                <Accordion.Item
+                    key={value}
+                    value={value}
+                >
                     <Accordion.Trigger>
                         <HStack>
                             <Icon
@@ -89,9 +106,15 @@ export function Variants() {
     return (
         <>
             <Text bold>Outline</Text>
-            <Accordion.Root variant="outline">
-                {Array.from({ length: 3 }).map((_, index) => (
-                    <Accordion.Item key={index}>
+            <Accordion.Root
+                multiple
+                variant="outline"
+            >
+                {items.map((value, index) => (
+                    <Accordion.Item
+                        key={value}
+                        value={value}
+                    >
                         <Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
                         <Accordion.Content>Hi!</Accordion.Content>
                     </Accordion.Item>
@@ -99,9 +122,15 @@ export function Variants() {
             </Accordion.Root>
 
             <Text bold>Solid</Text>
-            <Accordion.Root variant="solid">
-                {Array.from({ length: 3 }).map((_, index) => (
-                    <Accordion.Item key={index}>
+            <Accordion.Root
+                multiple
+                variant="solid"
+            >
+                {items.map((value, index) => (
+                    <Accordion.Item
+                        key={value}
+                        value={value}
+                    >
                         <Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
                         <Accordion.Content>Hi!</Accordion.Content>
                     </Accordion.Item>
@@ -109,9 +138,15 @@ export function Variants() {
             </Accordion.Root>
 
             <Text bold>Subtle</Text>
-            <Accordion.Root variant="subtle">
-                {Array.from({ length: 3 }).map((_, index) => (
-                    <Accordion.Item key={index}>
+            <Accordion.Root
+                multiple
+                variant="subtle"
+            >
+                {items.map((value, index) => (
+                    <Accordion.Item
+                        key={value}
+                        value={value}
+                    >
                         <Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
                         <Accordion.Content>Hi!</Accordion.Content>
                     </Accordion.Item>
@@ -130,9 +165,15 @@ export function Sizes() {
             >
                 Small
             </Text>
-            <Accordion.Root size="sm">
-                {Array.from({ length: 3 }).map((_, index) => (
-                    <Accordion.Item key={index}>
+            <Accordion.Root
+                multiple
+                size="sm"
+            >
+                {items.map((value, index) => (
+                    <Accordion.Item
+                        key={value}
+                        value={value}
+                    >
                         <Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
                         <Accordion.Content>Hi!</Accordion.Content>
                     </Accordion.Item>
@@ -145,9 +186,15 @@ export function Sizes() {
             >
                 Medium
             </Text>
-            <Accordion.Root size="md">
-                {Array.from({ length: 3 }).map((_, index) => (
-                    <Accordion.Item key={index}>
+            <Accordion.Root
+                multiple
+                size="md"
+            >
+                {items.map((value, index) => (
+                    <Accordion.Item
+                        key={value}
+                        value={value}
+                    >
                         <Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
                         <Accordion.Content>Hi!</Accordion.Content>
                     </Accordion.Item>
@@ -160,9 +207,15 @@ export function Sizes() {
             >
                 Large
             </Text>
-            <Accordion.Root size="lg">
-                {Array.from({ length: 3 }).map((_, index) => (
-                    <Accordion.Item key={index}>
+            <Accordion.Root
+                multiple
+                size="lg"
+            >
+                {items.map((value, index) => (
+                    <Accordion.Item
+                        key={value}
+                        value={value}
+                    >
                         <Accordion.Trigger>Item {index + 1}</Accordion.Trigger>
                         <Accordion.Content>Hi!</Accordion.Content>
                     </Accordion.Item>

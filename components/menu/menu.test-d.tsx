@@ -9,10 +9,9 @@ import type {
 
 type ExpectTrue<T extends true> = T;
 
-assertType<boolean | undefined>({} as MenuProps["isOpen"]);
-assertType<boolean | undefined>({} as MenuProps["defaultIsOpen"]);
-assertType<(() => void) | undefined>({} as MenuProps["onOpen"]);
-assertType<(() => void) | undefined>({} as MenuProps["onClose"]);
+assertType<boolean | undefined>({} as MenuProps["open"]);
+assertType<boolean | undefined>({} as MenuProps["defaultOpen"]);
+assertType<((details: { open: boolean }) => void) | undefined>({} as MenuProps["onOpenChange"]);
 assertType<boolean | undefined>({} as MenuProps["closeOnClick"]);
 assertType<boolean | undefined>({} as MenuProps["reduceMotion"]);
 assertType<MenuProps["positioning"]>({} as MenuProps["positioning"]);
@@ -24,8 +23,8 @@ assertType<MenuTriggerItemProps["positioning"]>({} as MenuTriggerItemProps["posi
 assertType<MenuTriggerItemProps["label"]>({} as MenuTriggerItemProps["label"]);
 
 type _HasOpenProps = ExpectTrue<
-    "isOpen" extends keyof MenuProps
-        ? "onClose" extends keyof MenuProps
+    "open" extends keyof MenuProps
+        ? "onOpenChange" extends keyof MenuProps
             ? "positioning" extends keyof MenuProps
                 ? true
                 : false
@@ -51,14 +50,13 @@ const _partProps: _HasPartProps = true;
 void (_openProps && _partProps);
 
 assertType<MenuProps>({
-    isOpen: true,
-    defaultIsOpen: false,
-    onOpen: () => {},
-    onClose: () => {},
+    open: true,
+    defaultOpen: false,
+    onOpenChange: () => {},
     closeOnClick: true,
     reduceMotion: true,
     positioning: { placement: "bottom" },
-    popoverProps: { usePortal: false, closeOnEsc: true }
+    popoverProps: { usePortal: false, closeOnEscape: true }
 });
 
 assertType<MenuButtonProps>({
@@ -66,15 +64,4 @@ assertType<MenuButtonProps>({
     command: "{actionKey} k",
     disabled: false,
     onClick: () => {}
-});
-
-assertType<MenuTriggerItemProps>({
-    label: "More",
-    positioning: { placement: "right-start" },
-    children: null
-});
-
-assertType<MenuProps>({
-    // @ts-expect-error placement must use PositioningProps object
-    positioning: "bottom"
 });

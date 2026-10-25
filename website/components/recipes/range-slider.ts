@@ -89,7 +89,7 @@ export const rangeSlider = defineSlotRecipe({
                 display: "block",
                 bg: "{colors.bg}",
                 borderRadius: "full",
-                transition: "scale 0.2s {easings.ease-in-out}"
+                transition: "scale 0.2s {easings.easeInOut}"
             },
             _active: {
                 cursor: "grabbing",

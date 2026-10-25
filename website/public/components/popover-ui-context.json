@@ -1,0 +1,13 @@
+{
+  "type": "module",
+  "npmDependencies": [],
+  "fileDependencies": [],
+  "id": "popover-ui-context",
+  "file": {
+    "name": "popover-ui-context.tsx",
+    "content": "\"use client\";\r\n\r\nimport type { PortalProps } from \"@dreamy-ui/react\";\r\nimport { createContext, useContext } from \"react\";\r\n\r\nexport type PopoverTriggerMode = \"click\" | \"hover\";\r\n\r\nexport interface PopoverUiContextValue {\r\n    hasArrow: boolean;\r\n    usePortal: boolean;\r\n    portalProps?: Omit<PortalProps, \"children\">;\r\n    reduceMotion: boolean;\r\n    arrowSize?: number;\r\n    arrowShadowColor?: string;\r\n    trigger: PopoverTriggerMode;\r\n    contentHoverProps?: {\r\n        onPointerEnter?: React.PointerEventHandler<HTMLElement>;\r\n        onPointerLeave?: React.PointerEventHandler<HTMLElement>;\r\n    };\r\n    triggerHoverProps?: {\r\n        onPointerEnter?: React.PointerEventHandler<HTMLElement>;\r\n        onPointerLeave?: React.PointerEventHandler<HTMLElement>;\r\n        onFocus?: React.FocusEventHandler<HTMLElement>;\r\n        onBlur?: React.FocusEventHandler<HTMLElement>;\r\n        onKeyDown?: React.KeyboardEventHandler<HTMLElement>;\r\n    };\r\n    onClose: () => void;\r\n    onExitComplete: () => void;\r\n    present: boolean;\r\n}\r\n\r\nconst PopoverUiContext = createContext<PopoverUiContextValue | null>(null);\r\n\r\nexport function PopoverUiProvider({\r\n    value,\r\n    children\r\n}: {\r\n    value: PopoverUiContextValue;\r\n    children: React.ReactNode;\r\n}) {\r\n    return <PopoverUiContext.Provider value={value}>{children}</PopoverUiContext.Provider>;\r\n}\r\n\r\nexport function usePopoverUi() {\r\n    const context = useContext(PopoverUiContext);\r\n    if (!context) {\r\n        throw new Error(\"usePopoverUi must be used within Popover.Root\");\r\n    }\r\n    return context;\r\n}\r\n"
+  },
+  "component": "PopoverUiContext",
+  "hasRecipe": false,
+  "hasPattern": false
+}

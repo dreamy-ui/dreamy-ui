@@ -66,7 +66,7 @@ describe("Avatar", () => {
         );
 
         const root = screen.getByTestId("avatar-root");
-        expect(root.tagName).toBe("SPAN");
+        expect(root.tagName).toBe("DIV");
         expect(root).toHaveClass("custom-avatar");
     });
 });

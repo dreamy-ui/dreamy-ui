@@ -1,5 +1,5 @@
-import { getColorSchemes } from "@dreamy-ui/panda-preset";
-import { defineParts, defineRecipe } from "@pandacss/dev";
+import { defineParts, getColorSchemes } from "@dreamy-ui/panda-preset";
+import { defineRecipe } from "@pandacss/dev";
 
 const parts = defineParts({
     root: {
@@ -26,6 +26,7 @@ export { parts as progressCircularParts };
 
 export const progressCircular = defineRecipe({
     className: "progress-circular",
+    jsx: ["ProgressCircular"],
     description:
         "A circular SVG progress indicator with optional value text in the center. Track stroke is soft gray and range stroke uses the scheme color; indeterminate mode spins the circle — only size changes diameter.",
     base: parts({

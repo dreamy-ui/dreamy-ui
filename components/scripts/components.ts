@@ -4,7 +4,7 @@ import { basename, extname, join } from "node:path";
 import { consola } from "consola";
 import { ensureDirSync } from "fs-extra";
 import {
-    WEBSITE_DIR,
+    REGISTRY_DIR,
     getComponentDirectories,
     getPublicDirectory
 } from "./paths";
@@ -40,6 +40,11 @@ function normalizeFileDependency(importPath: string) {
         return `./${siblingMatch[1]}`;
     }
 
+    const crossModuleMatch = importPath.match(/^\.\.\/[^/]+\/([^/]+?)(?:\.(?:tsx|ts|jsx|js))?$/);
+    if (crossModuleMatch) {
+        return `./${crossModuleMatch[1]}`;
+    }
+
     const folderMatch = importPath.match(/^\.\.\/([^/]+)$/);
     if (folderMatch) {
         return `./${folderMatch[1]}`;
@@ -61,6 +66,10 @@ function transformContentForOutput(content: string) {
     return content
         .replace(
             /from (["'])\.\.\/([^/"']+)\/\2(?:\.(?:tsx|ts|jsx|js))?\1/g,
+            "from $1./$2$1"
+        )
+        .replace(
+            /from (["'])\.\.\/[^/"']+\/([^/"']+)(?:\.(?:tsx|ts|jsx|js))?\1/g,
             "from $1./$2$1"
         )
         .replace(/from (["'])\.\.\/([^/"']+)\1/g, "from $1./$2$1")
@@ -307,10 +316,54 @@ function getComponentFiles() {
     return files;
 }
 
+function isAuxiliarySourceFile(file: string, content: string) {
+    if (file === "index.tsx") {
+        return false;
+    }
+
+    if (/\.(test|test-d|stories)\.(tsx|ts)$/.test(file)) {
+        return false;
+    }
+
+    if (!file.endsWith(".tsx") && !file.endsWith(".ts")) {
+        return false;
+    }
+
+    if (file.endsWith(".ts") && (isRecipeFile(content) || isPatternFile(content))) {
+        return false;
+    }
+
+    return true;
+}
+
+function getModuleFiles() {
+    const files: Array<{ moduleId: string; filePath: string; fileName: string }> = [];
+
+    for (const componentDir of getComponentDirectories()) {
+        const indexPath = join(componentDir, "index.tsx");
+        if (!existsSync(indexPath)) {
+            continue;
+        }
+
+        for (const file of readdirSync(componentDir, { encoding: "utf-8" })) {
+            const filePath = join(componentDir, file);
+            const content = readFileSync(filePath, "utf-8");
+            if (!isAuxiliarySourceFile(file, content)) {
+                continue;
+            }
+
+            const moduleId = getFileName(file);
+            files.push({ moduleId, filePath, fileName: file });
+        }
+    }
+
+    return files;
+}
+
 export async function main() {
     const publicDir = getPublicDirectory();
 
-    const pkgJson = readFileSync(join(WEBSITE_DIR, "package.json"), "utf-8");
+    const pkgJson = readFileSync(join(REGISTRY_DIR, "package.json"), "utf-8");
 
     const dependencies = Object.keys(JSON.parse(pkgJson).dependencies || {}).filter(
         (dep) => !excludedDependencies.includes(dep)
@@ -352,10 +405,38 @@ export async function main() {
         };
     });
 
-    components.push({
+    const moduleFiles = getModuleFiles();
+    const modules = moduleFiles.map(({ moduleId, filePath, fileName }) => {
+        const content = readFileSync(filePath, "utf-8");
+        const { fileDependencies, npmDependencies } = getDependencies(
+            getImports(content),
+            dependencies
+        );
+
+        return {
+            path: join(publicDir, "components", setFileExtension(fileName, ".json")),
+            data: {
+                type: "module",
+                npmDependencies: Array.from(npmDependencies),
+                fileDependencies: Array.from(fileDependencies),
+                id: moduleId,
+                file: {
+                    name: fileName,
+                    content: transformContentForOutput(content)
+                },
+                component: getComponentName(fileName),
+                hasRecipe: false,
+                hasPattern: false
+            }
+        };
+    });
+
+    const registryCompositions = [...components, ...modules];
+
+    const indexFile = {
         path: join(publicDir, "components", "index.json"),
         // @ts-expect-error
-        data: components.map(({ data }) => ({
+        data: registryCompositions.map(({ data }) => ({
             type: data.type,
             id: data.id,
             file: data.file.name,
@@ -367,7 +448,7 @@ export async function main() {
             ...(data.recipeIds && { recipeIds: data.recipeIds }),
             ...(data.patternIds && { patternIds: data.patternIds })
         }))
-    });
+    };
 
     const recipes = generateRecipes(publicDir);
     const patterns = generatePatterns(publicDir);
@@ -376,7 +457,7 @@ export async function main() {
     ensureDirSync(join(publicDir, "recipes"));
     ensureDirSync(join(publicDir, "patterns"));
 
-    const allFiles = [...components, ...recipes, ...patterns];
+    const allFiles = [...registryCompositions, indexFile, ...recipes, ...patterns];
     const promises = allFiles.map(({ path, data }) => {
         const content = JSON.stringify(data, null, 2);
         return writeFile(path, content);
@@ -385,7 +466,7 @@ export async function main() {
     await Promise.all(promises);
 
     consola.success(
-        `Generated ${components.length - 1} components, ${
+        `Generated ${components.length} components, ${modules.length} modules, ${
             recipes.length - 1
         } recipes, and ${patterns.length - 1} patterns 🎉. Happy coding!`
     );

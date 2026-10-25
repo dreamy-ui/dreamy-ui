@@ -17,28 +17,28 @@ const commandMap: Record<string, PackageManager> = {
 		add: (args: string[], isDev?: boolean) =>
 			`npm install ${isDev ? "-D" : ""}${args.join(" ")}`,
 		install: "npm install",
-		codegen: "npx panda codegen --silent"
+		codegen: "npx panda codegen --log-level silent"
 	},
 	yarn: {
 		run: (script: string, args: string) => `yarn ${script} ${args}`,
 		add: (args: string[], isDev?: boolean) =>
 			`yarn add ${isDev ? "-D" : ""}${args.join(" ")}`,
 		install: "yarn",
-		codegen: "yarn panda codegen --silent"
+		codegen: "yarn panda codegen --log-level silent"
 	},
 	pnpm: {
 		run: (script: string, args: string) => `pnpm run ${script} -- ${args}`,
 		add: (args: string[], isDev?: boolean) =>
 			`pnpm add ${isDev ? "-D" : ""}${args.join(" ")}`,
 		install: "pnpm install",
-		codegen: "pnpm panda codegen --silent"
+		codegen: "pnpm panda codegen --log-level silent"
 	},
 	bun: {
 		run: (script: string, args: string) => `bun run ${script} -- ${args}`,
 		add: (args: string[], isDev?: boolean) =>
 			`bun install ${isDev ? "-D" : ""}${args.join(" ")}`,
 		install: "bun install",
-		codegen: "bun panda codegen --silent"
+		codegen: "bun panda codegen --log-level silent"
 	}
 };
 
