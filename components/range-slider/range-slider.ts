@@ -4,7 +4,7 @@ import { defineSlotRecipe } from "@pandacss/dev";
 export const rangeSlider = defineSlotRecipe({
     className: "rangeSlider",
     description:
-        "A dual-thumb range slider for selecting a min-max value interval. Filled track and thumbs use the scheme color with a white inner dot on each thumb that shrinks when dragging — no variants beyond scheme.",
+        "A dual-thumb range slider for selecting a min-max value interval. Filled track and thumbs use the scheme color with a white inner dot on each thumb that shrinks when dragging - no variants beyond scheme.",
     jsx: [
         "RangeSlider.Root",
         "RangeSlider.Track",
@@ -12,49 +12,43 @@ export const rangeSlider = defineSlotRecipe({
         "RangeSlider.Thumb",
         "RangeSlider.Mark"
     ],
-    slots: ["root", "track", "trackFilled", "thumb", "marker"],
+    slots: ["root", "control", "track", "trackFilled", "thumb", "marker"],
     base: {
         root: {
             display: "flex",
             alignItems: "center",
             position: "relative",
             width: "full",
-            "&[aria-disabled='true']": {
+            userSelect: "none",
+            touchAction: "none",
+            "&[data-disabled]": {
                 cursor: "not-allowed",
                 opacity: 0.5
             }
         },
-        track: {
-            touchAction: "none",
+        control: {
             position: "relative",
             width: "full",
-            bg: "alpha.100",
-            borderRadius: "full",
             height: "full",
             cursor: "pointer",
-            display: "flex",
-            "[aria-disabled='true'] &": {
+            touchAction: "none",
+            "[data-disabled] &": {
                 cursor: "not-allowed"
-            },
-            "[data-reversed] &": {
-                flexDirection: "row-reverse"
-            },
-            "[data-orientation=vertical] &": {
-                borderYColor: "transparent",
-                borderYWidth: "calc(var(--range-slider-thumb-size) / 2)",
-                flexDirection: "column-reverse"
-            },
-            "[data-orientation=vertical][data-reversed] &": {
-                flexDirection: "column",
-                borderBottomColor: "transparent"
-            },
+            }
+        },
+        track: {
+            position: "relative",
+            width: "full",
+            height: "full",
+            bg: "alpha.100",
+            borderRadius: "full",
             "[data-orientation=horizontal] &": {
                 borderXColor: "transparent",
                 borderXWidth: "calc(var(--range-slider-thumb-size) / 2)"
             },
-            "[data-orientation=horizontal][data-reversed] &": {
-                flexDirection: "row-reverse",
-                borderInlineStartColor: "transparent"
+            "[data-orientation=vertical] &": {
+                borderYColor: "transparent",
+                borderYWidth: "calc(var(--range-slider-thumb-size) / 2)"
             }
         },
         trackFilled: {
@@ -73,8 +67,6 @@ export const rangeSlider = defineSlotRecipe({
             width: "var(--range-slider-thumb-size)",
             height: "var(--range-slider-thumb-size)",
             borderRadius: "full",
-            translate: "auto",
-            scale: "auto",
             cursor: "grab",
             display: "flex",
             alignItems: "center",
@@ -91,27 +83,23 @@ export const rangeSlider = defineSlotRecipe({
                 borderRadius: "full",
                 transition: "scale 0.2s {easings.easeInOut}"
             },
-            _active: {
+            "&[data-dragging]": {
                 cursor: "grabbing",
-                "[aria-disabled='true'] &": {
-                    cursor: "not-allowed"
-                },
                 _after: {
                     scale: 0.8
                 }
             },
-            "[aria-disabled='true'] &": {
+            "[data-disabled] &": {
                 cursor: "not-allowed"
             },
+            // Ark already shifts the thumb along the track axis, so only center it on the cross axis.
             "[data-orientation=horizontal] &": {
                 top: "50%",
-                translateY: "-50%",
-                translateX: "-50%"
+                translate: "0 -50%"
             },
             "[data-orientation=vertical] &": {
                 left: "50%",
-                translateY: "50%",
-                translateX: "-50%"
+                translate: "-50% 0"
             }
         },
         marker: {}

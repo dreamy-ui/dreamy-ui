@@ -4,9 +4,9 @@ import { defineSlotRecipe } from "@pandacss/dev";
 export const slider = defineSlotRecipe({
     className: "slider",
     description:
-        "A single-thumb slider for selecting a numeric value along a track. Filled range and thumb use the scheme color; thumb has a white inner circle that shrinks when dragging — no variants beyond scheme.",
+        "A single-thumb slider for selecting a numeric value along a track. Filled range and thumb use the scheme color; thumb has a white inner circle that shrinks when dragging - no variants beyond scheme.",
     jsx: ["Slider.Root", "Slider.Track", "Slider.TrackFilled", "Slider.Thumb", "Slider.Mark"],
-    slots: ["root", "track", "trackFilled", "thumb", "marker"],
+    slots: ["root", "control", "track", "trackFilled", "thumb", "marker"],
     staticCss: ["*"],
     base: {
         root: {
@@ -14,48 +14,38 @@ export const slider = defineSlotRecipe({
             alignItems: "center",
             position: "relative",
             width: "full",
-            "&[aria-disabled='true']": {
+            userSelect: "none",
+            touchAction: "none",
+            "&[data-disabled]": {
                 cursor: "not-allowed",
                 opacity: 0.5
-            },
-            userSelect: "none",
-            touchAction: "none"
+            }
         },
-        track: {
-            touchAction: "none",
+        control: {
             position: "relative",
             width: "full",
-            bg: "alpha.100",
-            borderRadius: "full",
             height: "full",
             cursor: "pointer",
-            display: "flex",
-            "[aria-disabled='true'] &": {
+            touchAction: "none",
+            "[data-disabled] &": {
                 cursor: "not-allowed"
-            },
-            "[data-reversed] &": {
-                flexDirection: "row-reverse"
-            },
-            "[data-orientation=vertical] &": {
-                borderYColor: "transparent",
-                borderYWidth: "calc(var(--slider-thumb-size) / 2)",
-                flexDirection: "column-reverse",
-                borderBottomColor: "var(--slider-color)"
-            },
-            "[data-orientation=vertical][data-reversed] &": {
-                flexDirection: "column",
-                borderBottomColor: "transparent",
-                borderTopColor: "var(--slider-color)"
-            },
+            }
+        },
+        track: {
+            position: "relative",
+            width: "full",
+            height: "full",
+            bg: "alpha.100",
+            borderRadius: "full",
             "[data-orientation=horizontal] &": {
                 borderXColor: "transparent",
                 borderXWidth: "calc(var(--slider-thumb-size) / 2)",
                 borderInlineStartColor: "var(--slider-color)"
             },
-            "[data-orientation=horizontal][data-reversed] &": {
-                flexDirection: "row-reverse",
-                borderInlineStartColor: "transparent",
-                borderInlineEndColor: "var(--slider-color)"
+            "[data-orientation=vertical] &": {
+                borderYColor: "transparent",
+                borderYWidth: "calc(var(--slider-thumb-size) / 2)",
+                borderBottomColor: "var(--slider-color)"
             },
             "[data-hide-thumb] &": {
                 borderWidth: "0",
@@ -63,6 +53,7 @@ export const slider = defineSlotRecipe({
             }
         },
         trackFilled: {
+            position: "absolute",
             bg: "var(--slider-color)",
             "[data-hide-thumb] &": {
                 borderRadius: "full"
@@ -80,8 +71,6 @@ export const slider = defineSlotRecipe({
             width: "var(--slider-thumb-size)",
             height: "var(--slider-thumb-size)",
             borderRadius: "full",
-            translate: "auto",
-            scale: "auto",
             cursor: "grab",
             display: "flex",
             alignItems: "center",
@@ -98,27 +87,23 @@ export const slider = defineSlotRecipe({
                 borderRadius: "full",
                 transition: "scale 0.2s {easings.easeInOut}"
             },
-            _active: {
+            "&[data-dragging]": {
                 cursor: "grabbing",
-                "[aria-disabled='true'] &": {
-                    cursor: "not-allowed"
-                },
                 _after: {
                     scale: 0.8
                 }
             },
-            "[aria-disabled='true'] &": {
+            "[data-disabled] &": {
                 cursor: "not-allowed"
             },
+            // Ark already shifts the thumb along the track axis, so only center it on the cross axis.
             "[data-orientation=horizontal] &": {
                 top: "50%",
-                translateY: "-50%",
-                translateX: "-50%"
+                translate: "0 -50%"
             },
             "[data-orientation=vertical] &": {
                 left: "50%",
-                translateY: "50%",
-                translateX: "-50%"
+                translate: "-50% 0"
             },
             "[data-hide-thumb] &": {
                 display: "none",

@@ -360,6 +360,22 @@ function getModuleFiles() {
     return files;
 }
 
+interface RegistryFileData {
+    type: string;
+    npmDependencies: string[];
+    fileDependencies: string[];
+    id: string;
+    file: {
+        name: string;
+        content: string;
+    };
+    component: string;
+    hasRecipe: boolean;
+    hasPattern: boolean;
+    recipeIds?: string[];
+    patternIds?: string[];
+}
+
 export async function main() {
     const publicDir = getPublicDirectory();
 
@@ -401,7 +417,7 @@ export async function main() {
                 hasPattern,
                 ...(recipeIds.length > 0 && { recipeIds }),
                 ...(patternIds.length > 0 && { patternIds })
-            }
+            } satisfies RegistryFileData
         };
     });
 
@@ -427,7 +443,7 @@ export async function main() {
                 component: getComponentName(fileName),
                 hasRecipe: false,
                 hasPattern: false
-            }
+            } satisfies RegistryFileData
         };
     });
 
@@ -435,7 +451,6 @@ export async function main() {
 
     const indexFile = {
         path: join(publicDir, "components", "index.json"),
-        // @ts-expect-error
         data: registryCompositions.map(({ data }) => ({
             type: data.type,
             id: data.id,

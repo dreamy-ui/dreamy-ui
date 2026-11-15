@@ -4,7 +4,21 @@ export const drawer = defineSlotRecipe({
     className: "drawer",
     description:
         "A slide-over panel anchored to a viewport edge with overlay, header, body, footer, and close button. variant inset floats the panel with spacing and rounding; variant simple is flush to the viewport — placement sets the edge, size sets the panel width or height.",
-    slots: ["overlay", "container", "content", "body", "header", "footer", "close"],
+    slots: [
+        "overlay",
+        "container",
+        "content",
+        "body",
+        "header",
+        "footer",
+        "close",
+        "grabber",
+        "grabberIndicator",
+        "trigger",
+        "title",
+        "description",
+        "swipeArea"
+    ],
     jsx: [
         "Drawer.Root",
         "Drawer.Overlay",
@@ -12,7 +26,13 @@ export const drawer = defineSlotRecipe({
         "Drawer.Body",
         "Drawer.Header",
         "Drawer.Footer",
-        "Drawer.CloseButton"
+        "Drawer.CloseButton",
+        "Drawer.Grabber",
+        "Drawer.GrabberIndicator",
+        "Drawer.Trigger",
+        "Drawer.Title",
+        "Drawer.Description",
+        "Drawer.SwipeArea"
     ],
     base: {
         overlay: {
@@ -41,7 +61,43 @@ export const drawer = defineSlotRecipe({
             backgroundColor: "bg.panel",
             backdropFilter: "blur({blurs.base})",
             boxShadow: "md",
-            overflow: "hidden"
+            overflow: "hidden",
+            touchAction: "pan-y",
+            "&[data-dragging]": {
+                touchAction: "none"
+            }
+        },
+        grabber: {
+            display: "flex",
+            width: "100%",
+            justifyContent: "center",
+            alignItems: "center",
+            paddingY: 2,
+            flexShrink: 0,
+            cursor: "grab",
+            touchAction: "none"
+        },
+        grabberIndicator: {
+            width: 10,
+            height: 1,
+            borderRadius: "full",
+            backgroundColor: "fg.muted"
+        },
+        trigger: {},
+        title: {
+            width: "100%"
+        },
+        description: {
+            width: "100%",
+            color: "fg.muted"
+        },
+        swipeArea: {
+            position: "absolute",
+            inset: 0,
+            touchAction: "none",
+            "&[data-disabled]": {
+                pointerEvents: "none"
+            }
         },
         header: {
             display: "flex",
@@ -125,7 +181,9 @@ export const drawer = defineSlotRecipe({
                 },
                 content: {
                     width: "100%",
-                    maxWidth: "100%"
+                    maxWidth: "100%",
+                    maxHeight: "100dvh",
+                    height: "100%"
                 }
             },
             bottom: {
@@ -136,7 +194,9 @@ export const drawer = defineSlotRecipe({
                 },
                 content: {
                     width: "100%",
-                    maxWidth: "100%"
+                    maxWidth: "100%",
+                    maxHeight: "100dvh",
+                    height: "100%"
                 }
             }
         },

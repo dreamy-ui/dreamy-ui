@@ -8,6 +8,8 @@ export interface HoverCardUiContextValue {
     usePortal: boolean;
     portalProps?: Omit<PortalProps, "children">;
     reduceMotion: boolean;
+    present: boolean;
+    onExitComplete: () => void;
     contentLabelId: string | undefined;
     setContentLabelId: (id: string) => void;
     contentId: string | undefined;

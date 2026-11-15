@@ -8,6 +8,9 @@ assertType<MouseEventHandler<HTMLButtonElement> | undefined>({} as ButtonProps["
 assertType<boolean | undefined>({} as ButtonProps["isDisabled"]);
 assertType<boolean | undefined>({} as ButtonProps["isLoading"]);
 assertType<ReactNode | undefined>({} as ButtonProps["loadingText"]);
+assertType<boolean | undefined>({} as ButtonProps["isSuccess"]);
+assertType<ReactNode | undefined>({} as ButtonProps["successText"]);
+assertType<ReactNode | undefined>({} as ButtonProps["successIcon"]);
 assertType<ReactNode | undefined>({} as ButtonProps["leftIcon"]);
 assertType<ReactNode | undefined>({} as ButtonProps["rightIcon"]);
 assertType<"button" | "submit" | "reset" | undefined>({} as ButtonProps["type"]);

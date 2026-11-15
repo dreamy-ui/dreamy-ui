@@ -191,8 +191,8 @@ export interface StyleContext<R extends StyleContextInput>`
     }
 
     content = content.replace(
-        "export declare function createStyleContext<R extends StyleContextInput>(recipe: R): StyleContext<R>",
-        "export declare function createStyleContext<R extends StyleContextInput>(recipe: R, options?: StyleContextOptions | undefined): StyleContext<R>"
+        /export declare function createStyleContext<R extends StyleContextInput>\(\s*(?:recipe|recipeInput):\s*R\s*\): StyleContext<R>;?/,
+        "export declare function createStyleContext<R extends StyleContextInput>(recipeInput: R, options?: StyleContextOptions | undefined): StyleContext<R>;"
     );
 
     await fs.writeFile(dtsPath, content);

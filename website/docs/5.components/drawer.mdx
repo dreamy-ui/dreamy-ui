@@ -190,6 +190,31 @@ function DrawerSize({ size }: { size: "xs" | "sm" | "md" | "lg" | "xl" | "2xl" |
 }
 ```
 
+### Snap points and grabber
+
+Bottom (and top) drawers support Ark UI snap points and drag-to-resize. Set `placement="bottom"`, pass `snapPoints` and optional `defaultSnapPoint`, and add `Drawer.Grabber` with `Drawer.GrabberIndicator` at the top of the content.
+
+```tsx
+<Drawer.Root
+    placement="bottom"
+    snapPoints={[0.25, 0.5, 1]}
+    defaultSnapPoint={0.5}
+    open={open}
+    onOpenChange={({ open }) => setOpen(open)}
+>
+    <Drawer.Overlay />
+    <Drawer.Content>
+        <Drawer.Grabber>
+            <Drawer.GrabberIndicator />
+        </Drawer.Grabber>
+        <Drawer.Title>Sheet</Drawer.Title>
+        <Drawer.Body>Drag the grabber or swipe to dismiss.</Drawer.Body>
+    </Drawer.Content>
+</Drawer.Root>
+```
+
+`Drawer.Root` also forwards Ark props such as `draggable` on `Drawer.Content`, `closeThreshold`, `swipeVelocityThreshold`, `onSnapPointChange`, `modal={false}`, and `Drawer.Trigger` with `value` for multiple triggers. Use `useDrawerStore` from the drawer module for imperative control via `Drawer.RootProvider`.
+
 ### Scroll behavior
 
 Use `scrollBehavior="inside"` (the default) so long content scrolls within the drawer body while the header and footer stay fixed.

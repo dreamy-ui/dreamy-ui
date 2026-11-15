@@ -6,6 +6,8 @@ import chokidar from "chokidar";
 import { main } from "./components";
 import { REGISTRY_DIR, WEBSITE_DIR, getPublicDirectory } from "./paths";
 
+const REGISTRY_URL = process.env.REGISTRY_URL ?? "http://localhost:3002";
+
 interface ComponentIndexItem {
     id: string;
     recipeIds?: string[];
@@ -48,10 +50,10 @@ function shouldIgnorePath(watchedPath: string) {
 
 while (true) {
     try {
-        execSync("curl -s http://localhost:3000");
+        execSync(`curl -s ${REGISTRY_URL}`);
         break;
     } catch {
-        console.log("Waiting for localhost:3000 to be running...");
+        console.log(`Waiting for ${REGISTRY_URL} to be running...`);
         await setTimeoutPromise(1000);
     }
 }
@@ -149,15 +151,20 @@ function getAffectedComponents(change: RegistryChange): string[] {
         .map((item) => item.id);
 }
 
+function getDreamyAddEnv() {
+    return { ...process.env, REGISTRY_URL };
+}
+
 function runAddComponents(componentIds: string[], changeKind: RegistryChange["kind"]) {
     const skipCodegen = changeKind === "component" ? " --skip-codegen" : "";
     const command = `pnpm dreamy add ${componentIds.join(" ")} --force --skip-install${skipCodegen}`;
-    execSync(command, { stdio: "inherit", cwd: WEBSITE_DIR });
+    execSync(command, { stdio: "inherit", cwd: WEBSITE_DIR, env: getDreamyAddEnv() });
 }
 
 function runAddAllComponents() {
     execSync("pnpm dreamy add --all --force --skip-install", {
         stdio: "inherit",
-        cwd: WEBSITE_DIR
+        cwd: WEBSITE_DIR,
+        env: getDreamyAddEnv()
     });
 }

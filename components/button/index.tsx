@@ -1,6 +1,16 @@
 "use client";
 
-import { dataAttr, isMobile, nextTick, useRipple } from "@dreamy-ui/react";
+import {
+    type ButtonSuccessIconPart,
+    dataAttr,
+    defaultMotionVariants,
+    isMobile,
+    nextTick,
+    useMotionVariants,
+    useReducedMotion,
+    useRipple
+} from "@dreamy-ui/react";
+import { m } from "motion/react";
 import { cloneElement, isValidElement, useCallback, useMemo, type ReactElement } from "react";
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type ButtonVariantProps, button } from "styled-system/recipes";
@@ -25,6 +35,15 @@ export interface UniversalButtonProps extends ButtonSpinnerOptions {
      * The spinner to be displayed instead of the default spinner
      */
     spinner?: React.ReactNode;
+    /**
+     * Transforms the button into a success state with a success background and an animated check icon.
+     * `isLoading` takes precedence when both are set.
+     */
+    isSuccess?: boolean;
+    /**
+     * The icon to be displayed instead of the default animated check icon in the success state
+     */
+    successIcon?: React.ReactNode;
 }
 
 export interface ButtonProps
@@ -43,6 +62,10 @@ export interface ButtonProps
      * The loading text to be displayed
      */
     loadingText?: React.ReactNode;
+    /**
+     * The text to be displayed next to the check icon in the success state
+     */
+    successText?: React.ReactNode;
 }
 
 const StyledButton = dreamy("button", button);
@@ -60,6 +83,9 @@ const StyledButton = dreamy("button", button);
 export function Button({
     isLoading,
     loadingText,
+    isSuccess,
+    successText,
+    successIcon,
     isDisabled,
     rightIcon,
     leftIcon,
@@ -68,6 +94,7 @@ export function Button({
     spinner,
     spinnerPlacement,
     disabled,
+    scheme,
     ...rest
 }: ButtonProps) {
     const {
@@ -80,6 +107,10 @@ export function Button({
     } = useRipple();
 
     isDisabled = isDisabled || disabled;
+
+    const showSuccess = !!isSuccess && !isLoading;
+    const isContentHidden = isLoading || showSuccess;
+    const statusText = isLoading ? loadingText : showSuccess ? successText : undefined;
 
     const handleClick = useCallback(
         (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -138,15 +169,18 @@ export function Button({
         <StyledButton
             data-disabled={dataAttr(isDisabled)}
             data-loading={dataAttr(isLoading)}
+            data-success={dataAttr(showSuccess)}
             disabled={isDisabled || isLoading}
             {...rest}
+            // Scheme compound styles would override the success colors
+            scheme={showSuccess ? undefined : scheme}
             onClick={handleClick}
             onPointerDown={onPointerDown}
             type={rest.type || "button"}
         >
             {leftIcon &&
-                !loadingText &&
-                (isLoading ? <span style={{ opacity: 0 }}>{LeftIcon}</span> : LeftIcon)}
+                !statusText &&
+                (isContentHidden ? <span style={{ opacity: 0 }}>{LeftIcon}</span> : LeftIcon)}
 
             {isLoading && spinnerPlacement !== "end" && (
                 <ButtonSpinner
@@ -157,7 +191,18 @@ export function Button({
                 </ButtonSpinner>
             )}
 
-            {isLoading ? loadingText || <span style={{ opacity: 0 }}>{children}</span> : children}
+            {showSuccess && (
+                <ButtonIcon
+                    data-has-success-text={dataAttr(!!successText)}
+                    data-success-icon=""
+                >
+                    {successIcon ?? <ButtonSuccessCheckIcon />}
+                </ButtonIcon>
+            )}
+
+            {isContentHidden
+                ? statusText || <span style={{ opacity: 0 }}>{children}</span>
+                : children}
 
             {isLoading && spinnerPlacement === "end" && (
                 <ButtonSpinner
@@ -168,8 +213,8 @@ export function Button({
                 </ButtonSpinner>
             )}
             {rightIcon &&
-                !loadingText &&
-                (isLoading ? <span style={{ opacity: 0 }}>{RightIcon}</span> : RightIcon)}
+                !statusText &&
+                (isContentHidden ? <span style={{ opacity: 0 }}>{RightIcon}</span> : RightIcon)}
 
             {!disableRipple && (
                 <div data-part="ripple-container">
@@ -249,4 +294,39 @@ function ButtonIcon(props: ButtonIconProps) {
         : children;
 
     return <Span {...rest}>{_children}</Span>;
+}
+
+function ButtonSuccessCheckIcon() {
+    const motionVariants = useMotionVariants();
+    const reduceMotion = useReducedMotion();
+    const variants = motionVariants.buttonSuccessIcon ?? defaultMotionVariants.buttonSuccessIcon;
+
+    return (
+        <m.svg
+            animate="animate"
+            aria-hidden
+            custom={"root" satisfies ButtonSuccessIconPart}
+            data-success-check=""
+            fill="none"
+            focusable={false}
+            initial={reduceMotion ? false : "initial"}
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2.25}
+            variants={variants}
+            viewBox="0 0 24 24"
+        >
+            <m.path
+                custom={"circle" satisfies ButtonSuccessIconPart}
+                d="M12 2a10 10 0 1 1 0 20a10 10 0 1 1 0-20"
+                variants={variants}
+            />
+            <m.path
+                custom={"check" satisfies ButtonSuccessIconPart}
+                d="m7.75 12.25 2.75 2.75 5.75-6"
+                variants={variants}
+            />
+        </m.svg>
+    );
 }

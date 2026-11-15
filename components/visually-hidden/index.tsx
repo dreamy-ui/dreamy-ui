@@ -1,5 +1,6 @@
 import { splitProps } from "@dreamy-ui/react/rsc";
 
+import { cx } from "styled-system/css";
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { visuallyHidden } from "styled-system/patterns";
 
@@ -16,12 +17,12 @@ export interface VisuallyHiddenProps extends HTMLDreamyProps<"span"> {}
  * ```
  */
 export function VisuallyHidden(props: VisuallyHiddenProps) {
-    const [patternProps, restProps] = splitProps(props, []);
+    const [patternProps, { className, ...restProps }] = splitProps(props, []);
 
     return (
         <dreamy.span
-            className={visuallyHidden(patternProps)}
             {...restProps}
+            className={cx(visuallyHidden(patternProps), className)}
         />
     );
 }
@@ -39,13 +40,13 @@ export interface VisuallyHiddenInputProps extends HTMLDreamyProps<"input"> {}
  * ```
  */
 export function VisuallyHiddenInput(props: VisuallyHiddenInputProps) {
-    const [patternProps, restProps] = splitProps(props, []);
+    const [patternProps, { className, ...restProps }] = splitProps(props, []);
 
     return (
         <dreamy.input
             readOnly
-            className={visuallyHidden(patternProps)}
             {...restProps}
+            className={cx(visuallyHidden(patternProps), className)}
         />
     );
 }

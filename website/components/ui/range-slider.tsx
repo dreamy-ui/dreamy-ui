@@ -1,8 +1,21 @@
 "use client";
 
-import { Slider as ArkSlider, useSliderContext } from "@ark-ui/react/slider";
+import { useLocaleContext } from "@ark-ui/react/locale";
+import {
+    Slider as ArkSlider,
+    type UseSliderProps,
+    useSlider,
+    useSliderContext
+} from "@ark-ui/react/slider";
 import { useFieldContext, useFieldProps } from "@dreamy-ui/react";
-import { Children, cloneElement, createContext, isValidElement, useContext } from "react";
+import {
+    Children,
+    cloneElement,
+    createContext,
+    isValidElement,
+    useContext,
+    useId
+} from "react";
 import { type HTMLDreamyProps, createStyleContext } from "styled-system/jsx";
 import { rangeSlider } from "styled-system/recipes";
 import { Box } from "./box";
@@ -71,9 +84,17 @@ function mergeRootThumbsIntoTrack(children: React.ReactNode) {
 export interface RangeSliderProps
     extends Omit<
         React.ComponentProps<typeof ArkSlider.Root>,
-        "value" | "defaultValue" | "onValueChange" | "onValueChangeEnd"
+        "value" | "defaultValue" | "onValueChange" | "onValueChangeEnd" | "thumbSize"
     > {
     size?: "sm" | "md" | "lg";
+    /**
+     * Thumb diameter in pixels. Overrides the thumb size of the `size` variant.
+     */
+    thumbSize?: number;
+    /**
+     * Places the minimum value on the right. Only applies to horizontal sliders.
+     */
+    isReversed?: boolean;
     value?: [number, number];
     defaultValue?: [number, number];
     onChange?: (value: [number, number]) => void;
@@ -103,6 +124,9 @@ export const Root = withProvider(function Component(props: RangeSliderProps) {
     const {
         size = "md",
         orientation = "horizontal",
+        thumbSize: thumbSizeProp,
+        isReversed = false,
+        dir,
         value,
         defaultValue,
         onChange,
@@ -119,12 +143,32 @@ export const Root = withProvider(function Component(props: RangeSliderProps) {
         disabled,
         invalid,
         readOnly,
-        required,
         ids,
+        id,
+        "aria-label": ariaLabel,
+        "aria-labelledby": ariaLabelledBy,
+        form,
+        getAriaValueText,
+        largeStep,
+        max,
+        min,
+        minStepsBetweenThumbs,
+        name,
+        onFocusChange,
+        origin,
+        step,
+        thumbAlignment,
+        thumbCollisionBehavior,
         ...restProps
     } = props;
 
     const config = SIZE_CONFIG[size];
+    const thumbSize = thumbSizeProp ?? config.thumbSize;
+    const generatedId = useId();
+    const locale = useLocaleContext();
+    const isRtl = (dir ?? locale.dir) === "rtl";
+    const resolvedDir =
+        isReversed && orientation === "horizontal" ? (isRtl ? "ltr" : "rtl") : isRtl ? "rtl" : "ltr";
     const rootIds =
         fieldContext?.labelId != null ? { ...ids, label: fieldContext.labelId } : ids;
     const sliderState: RangeSliderState = {
@@ -132,29 +176,48 @@ export const Root = withProvider(function Component(props: RangeSliderProps) {
         isReadOnly: Boolean(readOnly ?? isReadOnly ?? field.isReadOnly)
     };
 
+    const sliderProps: UseSliderProps & { dir?: "ltr" | "rtl" } = {
+        "aria-label": ariaLabel,
+        "aria-labelledby": ariaLabelledBy,
+        defaultValue: toTuple(defaultValue) ?? [min ?? 0, max ?? 100],
+        dir: resolvedDir,
+        disabled: disabled ?? isDisabled ?? field.isDisabled,
+        form,
+        getAriaValueText,
+        id: field.id ?? id ?? generatedId,
+        ids: rootIds,
+        invalid: invalid ?? isInvalid ?? field.isInvalid,
+        largeStep,
+        max,
+        min,
+        minStepsBetweenThumbs,
+        name,
+        onFocusChange,
+        onValueChange: (details) => {
+            const tuple = details.value as [number, number];
+            onChange?.(tuple);
+            onChangeValue?.(tuple);
+        },
+        onValueChangeEnd: (details) => {
+            onChangeEnd?.(details.value as [number, number]);
+        },
+        orientation,
+        origin,
+        readOnly: readOnly ?? isReadOnly ?? field.isReadOnly,
+        step,
+        thumbAlignment,
+        thumbCollisionBehavior,
+        thumbSize: { width: thumbSize, height: thumbSize },
+        value: toTuple(value)
+    };
+    const slider = useSlider(sliderProps);
+
     return (
-        <ArkSlider.Root
+        <ArkSlider.RootProvider
             {...restProps}
             asChild
-            defaultValue={toTuple(defaultValue)}
-            disabled={disabled ?? isDisabled ?? field.isDisabled}
-            id={field.id ?? restProps.id}
-            ids={rootIds}
-            invalid={invalid ?? isInvalid ?? field.isInvalid}
-            onValueChange={(details) => {
-                const tuple = details.value as [number, number];
-                onChange?.(tuple);
-                onChangeValue?.(tuple);
-            }}
-            onValueChangeEnd={(details) => {
-                onChangeEnd?.(details.value as [number, number]);
-            }}
-            orientation={orientation}
-            readOnly={readOnly ?? isReadOnly ?? field.isReadOnly}
             ref={ref}
-            required={required ?? isRequired ?? field.isRequired}
-            thumbSize={config.thumbSize}
-            value={toTuple(value)}
+            value={slider}
         >
             <Box
                 className={className}
@@ -162,7 +225,7 @@ export const Root = withProvider(function Component(props: RangeSliderProps) {
                 style={
                     {
                         ...style,
-                        "--range-slider-thumb-size": `${config.thumbSize}px`,
+                        "--range-slider-thumb-size": `${thumbSize}px`,
                         ...(orientation === "horizontal"
                             ? { height: config.trackSize }
                             : { width: config.trackSize })
@@ -173,7 +236,7 @@ export const Root = withProvider(function Component(props: RangeSliderProps) {
                     {mergeRootThumbsIntoTrack(children)}
                 </RangeSliderStateContext.Provider>
             </Box>
-        </ArkSlider.Root>
+        </ArkSlider.RootProvider>
     );
 }, "root");
 
@@ -194,17 +257,23 @@ function splitTrackChildren(children: React.ReactNode) {
 
 export interface RangeSliderTrackProps extends HTMLDreamyProps<"div"> {}
 
+const TrackBar = withContext(ArkSlider.Track, "track");
+
+/**
+ * Layout props (e.g. `maxW`) land on the Ark control, so thumb positioning
+ * and pointer hit-testing always match the visible track.
+ */
 export const Track = withContext(function Component(props: RangeSliderTrackProps) {
     const { children, ...rest } = props;
     const { trackChildren, thumbs } = splitTrackChildren(children);
 
     return (
-        <ArkSlider.Control>
-            <ArkSlider.Track {...rest}>{trackChildren}</ArkSlider.Track>
+        <ArkSlider.Control {...rest}>
+            <TrackBar>{trackChildren}</TrackBar>
             {thumbs}
         </ArkSlider.Control>
     );
-}, "track");
+}, "control");
 
 (Track as { trackType?: symbol }).trackType = RANGE_TRACK_TYPE;
 

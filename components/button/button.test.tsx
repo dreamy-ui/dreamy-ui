@@ -74,6 +74,78 @@ describe("Button", () => {
         expect(onClick).not.toHaveBeenCalled();
     });
 
+    it("shows a decorative success icon, keeps its name and stays interactive when successful", async () => {
+        const user = userEvent.setup();
+        const onClick = vi.fn();
+
+        render(
+            <Button
+                isSuccess
+                onClick={onClick}
+            >
+                Save
+            </Button>
+        );
+
+        const button = screen.getByRole("button", { name: "Save" });
+
+        expect(button).toHaveAttribute("data-success");
+        expect(button).toBeEnabled();
+        expect(button.querySelector("[data-success-check]")).toHaveAttribute("aria-hidden", "true");
+        await user.click(button);
+        expect(onClick).toHaveBeenCalledTimes(1);
+    });
+
+    it("uses successText as the accessible name and renders a custom success icon", () => {
+        render(
+            <Button
+                isSuccess
+                leftIcon={<span data-testid="left-icon">L</span>}
+                successIcon={<span data-testid="success-icon">S</span>}
+                successText="Saved"
+            >
+                Save
+            </Button>
+        );
+
+        expect(screen.getByRole("button", { name: "Saved" })).toBeInTheDocument();
+        expect(screen.getByTestId("success-icon")).toHaveAttribute("aria-hidden", "true");
+        expect(screen.queryByTestId("left-icon")).not.toBeInTheDocument();
+    });
+
+    it("gives loading precedence over success", () => {
+        render(
+            <Button
+                isLoading
+                isSuccess
+                loadingText="Saving"
+                successText="Saved"
+            >
+                Save
+            </Button>
+        );
+
+        const button = screen.getByRole("button", { name: "Saving" });
+
+        expect(button).not.toHaveAttribute("data-success");
+        expect(button.querySelector("[data-success-icon]")).toBeNull();
+    });
+
+    it("keeps icons visible when status texts are set but no status is active", () => {
+        render(
+            <Button
+                leftIcon={<span data-testid="left-icon">L</span>}
+                loadingText="Saving"
+                successText="Saved"
+            >
+                Save
+            </Button>
+        );
+
+        expect(screen.getByTestId("left-icon")).toBeInTheDocument();
+        expect(screen.getByRole("button", { name: "Save" })).toBeInTheDocument();
+    });
+
     it("respects explicit type=submit", () => {
         render(<Button type="submit">Submit</Button>);
 

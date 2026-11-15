@@ -52,9 +52,10 @@ export function mapPositioningProps(positioning?: PositioningProps): MappedPosit
     }
 
     if (shift) {
-        mapped.shift = shiftPadding;
+        mapped.slide = true;
+        mapped.overflowPadding = shiftPadding;
     } else {
-        mapped.shift = false;
+        mapped.slide = false;
     }
 
     return mapped;

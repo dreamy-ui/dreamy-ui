@@ -148,4 +148,18 @@ describe("Checkbox", () => {
         expect(screen.getByRole("group", { name: "Features" })).toBeInTheDocument();
         expect(screen.getAllByRole("checkbox", { hidden: true })).toHaveLength(2);
     });
+
+    it("forwards CheckboxGroup recipe variants to each checkbox", () => {
+        const { container } = render(
+            <CheckboxGroup
+                scheme="success"
+                defaultValue={["a"]}
+            >
+                <Checkbox value="a">Alpha</Checkbox>
+            </CheckboxGroup>
+        );
+
+        const label = container.querySelector("label");
+        expect(label?.className).toContain("checkbox--scheme_success");
+    });
 });

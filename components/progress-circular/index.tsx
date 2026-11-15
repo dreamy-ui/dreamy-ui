@@ -21,7 +21,14 @@ export interface ProgressCircularProps
     extends ProgressCircularOptions,
         Omit<
             React.ComponentProps<typeof ArkProgress.Root>,
-            "orientation" | "min" | "max" | "defaultValue" | "value"
+            | "color"
+            | "content"
+            | "defaultValue"
+            | "max"
+            | "min"
+            | "orientation"
+            | "translate"
+            | "value"
         >,
         ProgressCircularVariantProps,
         Omit<HTMLDreamyProps<"div">, "defaultValue"> {
@@ -67,7 +74,6 @@ export function ProgressCircular(props: ProgressCircularProps) {
             data-indeterminate={dataAttr(isIndeterminate)}
             max={max}
             min={min}
-            orientation="circular"
             role="progressbar"
             style={{
                 // @ts-expect-error css variable

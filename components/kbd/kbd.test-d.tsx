@@ -42,6 +42,15 @@ assertType<KbdProps>({
 });
 
 assertType<KbdProps>({
+    variant: "plain"
+});
+
+assertType<KbdProps>({
+    // @ts-expect-error invalid variant
+    variant: "solid"
+});
+
+assertType<KbdProps>({
     // @ts-expect-error invalid size
     size: "xl"
 });

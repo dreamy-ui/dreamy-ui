@@ -1,6 +1,7 @@
 import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
+import { Button } from "../button";
 import { render } from "../test/render";
 import * as Stepper from "./index";
 
@@ -74,6 +75,65 @@ describe("Stepper", () => {
         expect(next).not.toBeDisabled();
 
         await user.click(next);
+        expect(onStepChange).toHaveBeenCalledWith(1);
+    });
+
+    it("navigates steps when triggers render a Button with asChild", async () => {
+        const user = userEvent.setup();
+        const onStepChange = vi.fn();
+
+        render(
+            <Stepper.Root
+                count={2}
+                onStepChange={onStepChange}
+            >
+                <Stepper.Content index={0}>Content one</Stepper.Content>
+                <Stepper.Content index={1}>Content two</Stepper.Content>
+                <Stepper.CompletedContent>All done</Stepper.CompletedContent>
+                <Stepper.PrevTrigger asChild>
+                    <Button variant="outline">Previous</Button>
+                </Stepper.PrevTrigger>
+                <Stepper.NextTrigger asChild>
+                    <Button>Next</Button>
+                </Stepper.NextTrigger>
+            </Stepper.Root>
+        );
+
+        const prev = screen.getByRole("button", { name: "Previous" });
+        const next = screen.getByRole("button", { name: "Next" });
+
+        expect(screen.getAllByRole("button")).toHaveLength(2);
+        expect(prev).toBeDisabled();
+
+        await user.click(next);
+        expect(onStepChange).toHaveBeenCalledWith(1);
+        expect(screen.getByText("Content two")).toBeVisible();
+        expect(prev).not.toBeDisabled();
+
+        await user.click(next);
+        expect(screen.getByText("All done")).toBeInTheDocument();
+        expect(next).toBeDisabled();
+
+        await user.click(prev);
+        expect(screen.getByText("Content two")).toBeVisible();
+    });
+
+    it("calls a user onClick alongside step navigation", async () => {
+        const user = userEvent.setup();
+        const onClick = vi.fn();
+        const onStepChange = vi.fn();
+
+        render(
+            <Stepper.Root
+                count={2}
+                onStepChange={onStepChange}
+            >
+                <Stepper.NextTrigger onClick={onClick}>Next</Stepper.NextTrigger>
+            </Stepper.Root>
+        );
+
+        await user.click(screen.getByRole("button", { name: "Next" }));
+        expect(onClick).toHaveBeenCalledTimes(1);
         expect(onStepChange).toHaveBeenCalledWith(1);
     });
 

@@ -247,22 +247,29 @@ export const Root = withRootProvider(PopoverRoot);
 
 export interface PopoverArrowProps extends HTMLDreamyProps<"div"> {}
 
+interface PopoverArrowStyle extends CSSProperties {
+    "--arrow-size"?: string;
+    "--arrow-background"?: string;
+    "--popper-arrow-shadow"?: string;
+}
+
 /**
  * Popover Arrow — pointer connecting the popover to its anchor.
  */
 export const Arrow = withContext(function PopoverArrow(props: PopoverArrowProps) {
     const { arrowSize, arrowShadowColor } = usePopoverUi();
+    const { translate: _translate, style, ...arrowProps } = props;
 
-    const arrowStyle = {
+    const arrowStyle: PopoverArrowStyle = {
         "--arrow-size": `${arrowSize ?? 8}px`,
         "--arrow-background": "var(--colors-bg-panel)",
         ...(arrowShadowColor ? { "--popper-arrow-shadow": arrowShadowColor } : {})
-    } satisfies CSSProperties;
+    };
 
     return (
         <ArkPopover.Arrow
-            {...props}
-            style={{ ...arrowStyle, ...props.style }}
+            {...arrowProps}
+            style={{ ...arrowStyle, ...style } as CSSProperties}
         >
             <ArkPopover.ArrowTip />
         </ArkPopover.Arrow>
@@ -294,7 +301,7 @@ function PopoverTransition(props: PopoverTransitionProps) {
     const { open } = useArkPopoverContext();
     const { popover: motionVariants } = useMotionVariants();
 
-    const motionStyle: CSSProperties = {
+    const motionStyle: PopoverArrowStyle = {
         "--arrow-size": `${arrowSize ?? 8}px`,
         "--arrow-background": "var(--colors-bg-panel)",
         ...rest.style
@@ -315,7 +322,7 @@ function PopoverTransition(props: PopoverTransitionProps) {
             {...contentHoverProps}
             {...rest}
             {...(reduceMotion ? {} : { hidden: false })}
-            style={motionStyle}
+            style={motionStyle as CSSProperties}
         >
             {hasArrow && <Arrow {...arrowProps} />}
             {children}

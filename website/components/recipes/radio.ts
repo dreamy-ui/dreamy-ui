@@ -24,6 +24,8 @@ const parts = defineParts({
 
 export { parts as radioParts };
 
+const schemeVariants = getColorSchemes("--radio-bg", undefined, "root");
+
 export const radio = defineRecipe({
     className: "radio",
     description:
@@ -45,6 +47,16 @@ export const radio = defineRecipe({
             _disabled: {
                 cursor: "not-allowed",
                 opacity: 0.6
+            },
+            "&:hover [data-part=wrapper]": {
+                bg: "{colors.alpha.50}"
+            },
+            "&[data-state=checked] [data-part=wrapper]": {
+                borderColor: "var(--radio-bg)"
+            },
+            "&[data-state=checked] [data-part=control]": {
+                opacity: 1,
+                scale: 1
             }
         },
         wrapper: {
@@ -63,15 +75,6 @@ export const radio = defineRecipe({
             _focusVisible: {
                 bg: "{colors.border}",
                 boxShadow: "0 0 0 1.5px {colors.primary}"
-            },
-            ".group:is(:hover)&": {
-                bg: "{colors.alpha.50}"
-            },
-            ".group:is([data-state=checked])&": {
-                borderColor: "var(--radio-bg)"
-            },
-            "[data-part=wrapper][data-state=checked]": {
-                borderColor: "var(--radio-bg)"
             }
         },
         control: {
@@ -81,11 +84,7 @@ export const radio = defineRecipe({
             transformOrigin: "center",
             borderRadius: "full",
             transition: "opacity 0.1s, scale 0.2s",
-            transitionTimingFunction: "ease-in-out",
-            ".group:is([data-state=checked])&": {
-                opacity: 1,
-                scale: 1
-            }
+            transitionTimingFunction: "ease-in-out"
         },
         label: {
             position: "relative",
@@ -143,39 +142,32 @@ export const radio = defineRecipe({
         },
         variant: {
             solid: parts({
-                control: {
-                    background: "var(--radio-bg)",
-                    ".group:is([data-state=checked])&": {
-                        opacity: 1,
-                        scale: 1
-                    },
-                    ".group:is(:active) &, [data-part=wrapper][data-active] &": {
+                root: {
+                    "&:is(:active, [data-active]) [data-part=control]": {
                         scale: 0.5,
-                        opacity: 0.5,
-                        background: "var(--radio-bg)"
+                        opacity: 0.5
                     },
-                    ".group:is([data-state=checked]):is(:active) &, .group:is([data-state=checked]) [data-part=wrapper][data-active] &":
-                        {
-                            opacity: 1,
-                            scale: 1
-                        }
-                },
-                wrapper: {
-                    ".group:is([data-state=checked])&": {
-                        borderColor: "var(--radio-bg)"
+                    "&[data-state=checked]:is(:active, [data-active]) [data-part=control]": {
+                        scale: 0.5,
+                        opacity: 1
                     },
-                    "&[data-state=checked]": {
-                        borderColor: "var(--radio-bg)"
-                    },
-                    ".group:is(:active) &, &[data-active]": {
+                    "&:is(:active, [data-active]) [data-part=wrapper]": {
                         borderColor: "var(--radio-bg)/50"
                     },
-                    ".group:is([data-state=checked]):is(:active) &, &[data-state=checked][data-active]": {
+                    "&[data-state=checked]:is(:active, [data-active]) [data-part=wrapper]": {
                         borderColor: "var(--radio-bg)"
                     }
+                },
+                control: {
+                    background: "var(--radio-bg)"
                 }
             })
         },
-        scheme: getColorSchemes("--radio-bg", undefined, "root")
+        scheme: Object.fromEntries(
+            Object.entries(schemeVariants).map(([name, slotStyles]) => [
+                name,
+                parts(slotStyles as Parameters<typeof parts>[0])
+            ])
+        )
     }
 });

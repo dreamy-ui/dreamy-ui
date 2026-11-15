@@ -183,6 +183,43 @@ export function Sizes() {
     );
 }
 
+export function SnapPointsBottomSheet() {
+    const [open, setOpen] = useState(false);
+
+    return (
+        <>
+            <Button
+                onClick={() => setOpen(true)}
+                variant="primary"
+            >
+                Open bottom sheet
+            </Button>
+
+            <Drawer.Root
+                defaultSnapPoint={0.5}
+                open={open}
+                onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
+                placement="bottom"
+                snapPoints={[0.25, 0.5, 1]}
+                size="full"
+            >
+                <Drawer.Overlay />
+                <Drawer.Content>
+                    <Drawer.Grabber>
+                        <Drawer.GrabberIndicator />
+                    </Drawer.Grabber>
+                    <Drawer.Header>Snap points</Drawer.Header>
+                    <Drawer.CloseButton />
+                    <Drawer.Body>
+                        Drag the grabber or swipe to move between 25%, 50%, and full height. Swipe
+                        down to dismiss.
+                    </Drawer.Body>
+                </Drawer.Content>
+            </Drawer.Root>
+        </>
+    );
+}
+
 export function ScrollBehaviorInside() {
     const [open, setOpen] = useState(false);
 

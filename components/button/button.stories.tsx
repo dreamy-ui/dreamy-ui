@@ -1,7 +1,8 @@
-import { Button, Flex, Group } from "@/ui";
+import { Button, Flex, Group, IconButton } from "@/ui";
 import type { Meta } from "@storybook/react-vite";
+import { useEffect, useRef, useState } from "react";
 import { HiOutlineMail } from "react-icons/hi";
-import { IoClose } from "react-icons/io5";
+import { IoCheckmarkDone, IoClose, IoCopyOutline } from "react-icons/io5";
 
 export default {
     title: "Button"
@@ -150,6 +151,120 @@ export function LoadingWithLabelEnd() {
             w="fit-content"
         >
             Loading
+        </Button>
+    );
+}
+
+export function Success() {
+    return (
+        <Flex
+            gap={2}
+            wrapped
+        >
+            <Button
+                isSuccess
+                variant="primary"
+            >
+                Save
+            </Button>
+            <Button
+                isSuccess
+                successText="Saved"
+                variant="outline"
+            >
+                Save
+            </Button>
+            <Button
+                isSuccess
+                successIcon={<IoCheckmarkDone />}
+                successText="Done"
+                variant="ghost"
+            >
+                Mark as done
+            </Button>
+            <IconButton
+                aria-label="Copy"
+                icon={<IoCopyOutline />}
+                isSuccess
+                variant="outline"
+            />
+        </Flex>
+    );
+}
+
+export function SuccessVariants() {
+    return (
+        <Flex
+            gap={2}
+            wrapped
+        >
+            <Button
+                isSuccess
+                successText="Primary"
+                variant="primary"
+            />
+            <Button
+                isSuccess
+                successText="Secondary"
+                variant="secondary"
+            />
+            <Button
+                isSuccess
+                successText="Solid"
+                variant="solid"
+            />
+            <Button
+                isSuccess
+                successText="Outline"
+                variant="outline"
+            />
+            <Button
+                isSuccess
+                successText="Filled Outline"
+                variant="filledOutline"
+            />
+            <Button
+                isSuccess
+                successText="Ghost"
+                variant="ghost"
+            />
+            <Button
+                isSuccess
+                successText="Link"
+                variant="link"
+            />
+        </Flex>
+    );
+}
+
+type SaveStatus = "idle" | "loading" | "success";
+
+export function SuccessFlow() {
+    const [status, setStatus] = useState<SaveStatus>("idle");
+    const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+
+    useEffect(() => () => clearTimeout(timeoutRef.current), []);
+
+    function handleClick() {
+        clearTimeout(timeoutRef.current);
+        setStatus("loading");
+        timeoutRef.current = setTimeout(() => {
+            setStatus("success");
+            timeoutRef.current = setTimeout(() => setStatus("idle"), 2000);
+        }, 1200);
+    }
+
+    return (
+        <Button
+            isLoading={status === "loading"}
+            isSuccess={status === "success"}
+            loadingText="Saving"
+            onClick={handleClick}
+            successText="Saved"
+            variant="primary"
+            w="fit-content"
+        >
+            Save changes
         </Button>
     );
 }

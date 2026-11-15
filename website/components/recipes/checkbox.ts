@@ -21,6 +21,25 @@ const parts = defineParts({
 
 export { parts as checkboxParts };
 
+const schemeVariants = getColorSchemes(
+    "--checkbox-bg",
+    (scheme) => {
+        return {
+            color:
+                scheme === "primary"
+                    ? "{colors.primary.fg}"
+                    : scheme === "secondary"
+                      ? "{colors.secondary.fg}"
+                      : scheme === "success" || scheme === "warning" || scheme === "info"
+                        ? "black/87"
+                        : scheme === "none"
+                          ? "var(--colors-bg)"
+                          : "white/87"
+        };
+    },
+    "root"
+);
+
 export const checkbox = defineRecipe({
     className: "checkbox",
     description:
@@ -42,6 +61,9 @@ export const checkbox = defineRecipe({
             _disabled: {
                 cursor: "not-allowed",
                 opacity: 0.6
+            },
+            "&:hover [data-part=control]": {
+                bg: "alpha.50"
             }
         },
         control: {
@@ -59,9 +81,6 @@ export const checkbox = defineRecipe({
             _focusVisible: {
                 bg: "{colors.border}",
                 boxShadow: "0 0 0 1.5px {colors.primary}"
-            },
-            ".group:is(:hover)&": {
-                bg: "alpha.50"
             }
         },
         label: {
@@ -110,66 +129,46 @@ export const checkbox = defineRecipe({
             outline: parts({
                 control: {
                     borderColor: "{colors.border}",
-                    ".group:is([data-state=checked], [data-state=indeterminate])&": {
-                        borderColor: "var(--checkbox-bg)"
-                    },
-                    "&[data-state=checked], &[data-state=indeterminate]": {
-                        borderColor: "var(--checkbox-bg)"
-                    },
-                    ".group:is(:active, [data-active])&": {
-                        borderColor: "var(--checkbox-bg)"
-                    },
-                    "&[data-active]": {
-                        borderColor: "var(--checkbox-bg)"
-                    },
-                    ".group:is([data-invalid])&": {
-                        borderColor: "error"
-                    },
                     color: "var(--checkbox-bg)"
+                },
+                root: {
+                    "&[data-state=checked] [data-part=control], &[data-state=indeterminate] [data-part=control]":
+                        {
+                            borderColor: "var(--checkbox-bg)"
+                        },
+                    "&:is(:active, [data-active]) [data-part=control]": {
+                        borderColor: "var(--checkbox-bg)"
+                    },
+                    "&[data-invalid] [data-part=control]": {
+                        borderColor: "error"
+                    }
                 }
             }),
             solid: parts({
                 control: {
-                    ".group:is([data-state=checked], [data-state=indeterminate])&": {
-                        background: "var(--checkbox-bg)",
-                        borderColor: "var(--checkbox-bg)"
-                    },
-                    "&[data-state=checked], &[data-state=indeterminate]": {
-                        background: "var(--checkbox-bg)",
-                        borderColor: "var(--checkbox-bg)"
-                    },
-                    ".group:is(:active, [data-active])&:not([data-state=checked], [data-state=indeterminate])":
+                    borderColor: "{colors.border}"
+                },
+                root: {
+                    "&[data-state=checked] [data-part=control], &[data-state=indeterminate] [data-part=control]":
                         {
-                            background: "var(--checkbox-bg)/50",
+                            background: "var(--checkbox-bg)",
                             borderColor: "var(--checkbox-bg)"
                         },
-                    ".group:is(:active, [data-active])&": {
+                    "&:is(:active, [data-active]) [data-part=control]": {
+                        background: "var(--checkbox-bg)/50",
                         borderColor: "var(--checkbox-bg)"
                     },
-                    borderColor: "{colors.border}",
-                    ".group:is([data-invalid])&": {
+                    "&[data-invalid] [data-part=control]": {
                         borderColor: "error"
                     }
                 }
             })
         },
-        scheme: getColorSchemes(
-            "--checkbox-bg",
-            (scheme) => {
-                return {
-                    color:
-                        scheme === "primary"
-                            ? "{colors.primary.fg}"
-                            : scheme === "secondary"
-                              ? "{colors.secondary.fg}"
-                              : scheme === "success" || scheme === "warning" || scheme === "info"
-                                ? "black/87"
-                                : scheme === "none"
-                                  ? "var(--colors-bg)"
-                                  : "white/87"
-                };
-            },
-            "root"
+        scheme: Object.fromEntries(
+            Object.entries(schemeVariants).map(([name, slotStyles]) => [
+                name,
+                parts(slotStyles as Parameters<typeof parts>[0])
+            ])
         )
     }
 });

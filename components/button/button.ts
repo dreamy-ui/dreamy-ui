@@ -10,15 +10,34 @@ const parts = defineParts({
     icons: {
         selector: '& [data-part="icon-left"], & [data-part="icon-right"]'
     },
-    spinner: { selector: '& [data-spinner]' }
+    spinner: { selector: '& [data-spinner]' },
+    successIcon: { selector: "& [data-success-icon]" },
+    successCheck: { selector: "& [data-success-check]" }
 });
 
 export { parts as buttonParts };
 
+/**
+ * Lives inside every variant (not `base`) so it outranks the variant's own styles,
+ * since `base` is emitted in a lower cascade sublayer.
+ */
+const successRoot = {
+    "&[data-success]": {
+        bg: "success",
+        color: "{colors.success.fg}",
+        borderColor: "transparent",
+        outlineColor: "success",
+        _hover: {
+            bg: "success/90",
+            borderColor: "transparent"
+        }
+    }
+};
+
 export const button = defineRecipe({
     className: "button",
     description:
-        "An interactive button for primary actions, forms, and toolbars, also used by IconButton and CloseButton. primary and secondary are solid filled buttons; solid uses a subtle currentColor tint; outline has a transparent background with a border; filledOutline combines a tinted fill with a border; ghost is borderless with a hover tint; link looks like inline text with no padding or ripple.",
+        "An interactive button for primary actions, forms, and toolbars, also used by IconButton and CloseButton. primary and secondary are solid filled buttons; solid uses a subtle currentColor tint; outline has a transparent background with a border; filledOutline combines a tinted fill with a border; ghost is borderless with a hover tint; link looks like inline text with no padding or ripple. The success state (data-success) turns any variant into a filled success button with an animated check icon.",
     staticCss: ["*"],
     jsx: [
         "Button",
@@ -55,6 +74,9 @@ export const button = defineRecipe({
             },
             "& > [data-spinner]:not([data-has-loading-text])": {
                 position: "absolute"
+            },
+            "& > [data-success-icon]:not([data-has-success-text])": {
+                position: "absolute"
             }
         },
         icons: {
@@ -72,6 +94,18 @@ export const button = defineRecipe({
             justifyContent: "center",
             flexShrink: 0,
             lineHeight: 0
+        },
+        successIcon: {
+            display: "inline-flex",
+            alignSelf: "center",
+            alignItems: "center",
+            justifyContent: "center",
+            flexShrink: 0,
+            lineHeight: 0
+        },
+        successCheck: {
+            width: "1.25em",
+            height: "1.25em"
         },
         rippleContainer: {
             position: "absolute",
@@ -96,7 +130,8 @@ export const button = defineRecipe({
                     color: "{colors.primary.fg}",
                     _hover: {
                         bg: "{colors.primary.hover}"
-                    }
+                    },
+                    ...successRoot
                 }
             }),
             secondary: parts({
@@ -106,7 +141,8 @@ export const button = defineRecipe({
                     color: "{colors.secondary.fg}",
                     _hover: {
                         bg: "{colors.secondary.hover}"
-                    }
+                    },
+                    ...successRoot
                 }
             }),
             solid: parts({
@@ -115,7 +151,8 @@ export const button = defineRecipe({
                     outlineColor: "currentColor",
                     _hover: {
                         bg: "currentColor/10"
-                    }
+                    },
+                    ...successRoot
                 }
             }),
             outline: parts({
@@ -128,7 +165,8 @@ export const button = defineRecipe({
                     _hover: {
                         bg: "currentColor/04",
                         borderColor: "border.hover"
-                    }
+                    },
+                    ...successRoot
                 }
             }),
             filledOutline: parts({
@@ -141,7 +179,8 @@ export const button = defineRecipe({
                     _hover: {
                         bg: "currentColor/10",
                         borderColor: "border.hover"
-                    }
+                    },
+                    ...successRoot
                 }
             }),
             ghost: parts({
@@ -150,7 +189,8 @@ export const button = defineRecipe({
                     outlineColor: "currentColor",
                     _hover: {
                         bg: "currentColor/08"
-                    }
+                    },
+                    ...successRoot
                 }
             }),
             link: parts({
@@ -164,6 +204,12 @@ export const button = defineRecipe({
                     _hover: {
                         bg: "transparent",
                         color: "fg.max"
+                    },
+                    "&[data-success]": {
+                        color: "success",
+                        _hover: {
+                            color: "success"
+                        }
                     }
                 },
                 ripple: {

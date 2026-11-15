@@ -11,6 +11,7 @@ import {
     type UseCheckboxGroupProps,
     type UseCheckboxReturn,
     useCheckboxGroup,
+    useCheckboxGroupContext,
     useFieldProps,
     useMotionVariants,
     useReducedMotion
@@ -68,6 +69,7 @@ export interface CheckboxProps
  */
 export function Checkbox(props: CheckboxProps) {
     const reduceMotionGlobal = useReducedMotion();
+    const groupContext = useCheckboxGroupContext();
     const {
         children,
         icon = <CheckboxIcon />,
@@ -77,12 +79,19 @@ export function Checkbox(props: CheckboxProps) {
         reduceMotion = reduceMotionGlobal ?? false,
         animationTime,
         pathProps,
+        scheme,
+        size,
+        variant,
         className,
         onPointerDown,
         onPointerUp,
         onPointerLeave,
         ...rest
     } = props;
+
+    const resolvedScheme = scheme ?? groupContext?.variants?.scheme;
+    const resolvedSize = size ?? groupContext?.variants?.size;
+    const resolvedVariant = variant ?? groupContext?.variants?.variant;
 
     const field = useFieldProps(props);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -115,6 +124,10 @@ export function Checkbox(props: CheckboxProps) {
             {...arkProps}
             {...rest}
             className={cx("group", className)}
+            scheme={resolvedScheme}
+            size={resolvedSize}
+            variant={resolvedVariant}
+            data-active={active ? "" : undefined}
             data-checked={showCheckedData ? "" : undefined}
             data-disabled={field.isDisabled ? "" : undefined}
             data-indeterminate={isIndeterminate ? "" : undefined}

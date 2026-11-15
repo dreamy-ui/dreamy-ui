@@ -3,18 +3,26 @@ import { defineRecipe } from "@pandacss/dev";
 export const kbd = defineRecipe({
     className: "kbd",
     description:
-        "Inline keyboard key styling that visually represents shortcuts or key presses. Soft tinted background with rounded corners — only size changes padding, font size, and border radius.",
+        "Inline keyboard key styling that visually represents shortcuts or key presses. The subtle variant has a soft tinted background with rounded corners, the plain variant has no background and muted text. Size changes padding, font size, and border radius.",
     jsx: ["Kbd", "Menu", "MenuButton", "MenuItem"],
     staticCss: ["*"],
     base: {
         display: "inline-flex",
         gap: 0.5,
         alignItems: "center",
-        bg: "alpha.100",
         width: "fit-content",
         fontWeight: "normal"
     },
     variants: {
+        variant: {
+            subtle: {
+                bg: "alpha.100"
+            },
+            plain: {
+                bg: "transparent",
+                color: "fg.medium"
+            }
+        },
         size: {
             sm: {
                 px: 1,
@@ -37,6 +45,7 @@ export const kbd = defineRecipe({
         }
     },
     defaultVariants: {
+        variant: "subtle",
         size: "md"
     }
 });

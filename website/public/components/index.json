@@ -294,7 +294,9 @@
       "./flex",
       "./heading",
       "./motion",
-      "./use-floating-present"
+      "./text",
+      "./use-floating-present",
+      "./map-placement"
     ],
     "hasRecipe": true,
     "hasPattern": false,
@@ -443,6 +445,7 @@
       "./heading",
       "./motion",
       "./map-positioning",
+      "./use-floating-present",
       "./hover-card-ui-context"
     ],
     "hasRecipe": true,
@@ -603,7 +606,9 @@
     "id": "pagination",
     "file": "pagination.tsx",
     "component": "Pagination",
-    "npmDependencies": [],
+    "npmDependencies": [
+      "@ark-ui"
+    ],
     "fileDependencies": [
       "./icon",
       "./icon-button"
@@ -1134,6 +1139,16 @@
     "id": "date-picker-ui-context",
     "file": "date-picker-ui-context.tsx",
     "component": "DatePickerUiContext",
+    "npmDependencies": [],
+    "fileDependencies": [],
+    "hasRecipe": false,
+    "hasPattern": false
+  },
+  {
+    "type": "module",
+    "id": "map-placement",
+    "file": "map-placement.ts",
+    "component": "MapPlacement",
     "npmDependencies": [],
     "fileDependencies": [],
     "hasRecipe": false,

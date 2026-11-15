@@ -10,7 +10,7 @@ import {
     useRadioGroup,
     useRadioGroupContext
 } from "@dreamy-ui/react";
-import { useMemo } from "react";
+import { type KeyboardEvent, type PointerEvent, useMemo, useState } from "react";
 import { cx } from "styled-system/css";
 import { dreamy } from "styled-system/jsx";
 import { type RadioVariantProps, radio } from "styled-system/recipes";
@@ -26,13 +26,31 @@ export interface RadioProps
 }
 
 function RadioItem(props: RadioProps) {
-    const { children, value, className, name, scheme, size, variant, ...rest } = props;
+    const {
+        children,
+        value,
+        className,
+        name,
+        scheme,
+        size,
+        variant,
+        onPointerDown,
+        onPointerUp,
+        onPointerLeave,
+        onKeyDown,
+        onKeyUp,
+        ...rest
+    } = props;
     const field = useFieldProps(props);
     const groupContext = useRadioGroupContext();
+    const isInteractionDisabled = field.isDisabled || field.isReadOnly;
+    const [isActive, setIsActive] = useState(false);
+    const active = isActive && !isInteractionDisabled;
 
     return (
         <StyledRadioItem
             className={cx("group", className)}
+            data-active={active ? "" : undefined}
             data-disabled={field.isDisabled ? "" : undefined}
             data-invalid={field.isInvalid ? "" : undefined}
             data-readonly={field.isReadOnly ? "" : undefined}
@@ -44,6 +62,32 @@ function RadioItem(props: RadioProps) {
             size={size ?? groupContext?.size}
             variant={variant ?? groupContext?.variant}
             value={String(value ?? "")}
+            onPointerDown={(event: PointerEvent<HTMLLabelElement>) => {
+                onPointerDown?.(event);
+                if (!isInteractionDisabled) {
+                    setIsActive(true);
+                }
+            }}
+            onPointerUp={(event: PointerEvent<HTMLLabelElement>) => {
+                onPointerUp?.(event);
+                setIsActive(false);
+            }}
+            onPointerLeave={(event: PointerEvent<HTMLLabelElement>) => {
+                onPointerLeave?.(event);
+                setIsActive(false);
+            }}
+            onKeyDown={(event: KeyboardEvent<HTMLLabelElement>) => {
+                onKeyDown?.(event);
+                if (event.key === " " && !isInteractionDisabled) {
+                    setIsActive(true);
+                }
+            }}
+            onKeyUp={(event: KeyboardEvent<HTMLLabelElement>) => {
+                onKeyUp?.(event);
+                if (event.key === " ") {
+                    setIsActive(false);
+                }
+            }}
             {...rest}
         >
             <ArkRadioGroup.ItemHiddenInput
@@ -56,9 +100,7 @@ function RadioItem(props: RadioProps) {
                 aria-hidden="true"
                 data-part="wrapper"
             >
-                <span data-part="control">
-                    <ArkRadioGroup.Indicator />
-                </span>
+                <span data-part="control" />
             </ArkRadioGroup.ItemControl>
             {children ? (
                 <ArkRadioGroup.ItemText data-part="label">{children}</ArkRadioGroup.ItemText>

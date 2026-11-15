@@ -149,6 +149,12 @@ const PlatformSpecificKbd = wrapLazy(
     )
 );
 
+const SuccessFlowButton = wrapLazy(
+    lazy(() =>
+        import("~/src/ui/docs/components/buttons").then((m) => ({ default: m.SuccessFlowButton }))
+    )
+);
+
 const ControlledMenu = wrapLazy(
     lazy(() =>
         import("~/src/ui/docs/components/menus").then((m) => ({ default: m.ControlledMenu }))
@@ -625,6 +631,7 @@ const DreamComponents = {
     PlacementPopovers,
     Kbd,
     PlatformSpecificKbd,
+    SuccessFlowButton,
     ControlledSlider,
     MaxMinSlider,
     Slider,

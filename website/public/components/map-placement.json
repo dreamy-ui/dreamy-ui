@@ -1,0 +1,13 @@
+{
+  "type": "module",
+  "npmDependencies": [],
+  "fileDependencies": [],
+  "id": "map-placement",
+  "file": {
+    "name": "map-placement.ts",
+    "content": "import type { DrawerPlacement } from \"@dreamy-ui/react\";\n\ntype SwipeDirection = \"start\" | \"end\" | \"up\" | \"down\";\n\nexport function placementToSwipeDirection(placement: DrawerPlacement): SwipeDirection {\n    switch (placement) {\n        case \"left\":\n            return \"start\";\n        case \"right\":\n            return \"end\";\n        case \"top\":\n            return \"up\";\n        case \"bottom\":\n            return \"down\";\n        default:\n            return \"end\";\n    }\n}\n"
+  },
+  "component": "MapPlacement",
+  "hasRecipe": false,
+  "hasPattern": false
+}

@@ -1,5 +1,10 @@
 import type { UtilityConfig } from "@pandacss/types";
 
+/** `0` is a meaningful value for grow, shrink and basis, so only skip nullish or empty values. */
+function isEmptyValue(value: unknown) {
+    return value === undefined || value === null || value === "";
+}
+
 export const flexboxUtilities: UtilityConfig = {
     alignItems: {
         property: "alignItems",
@@ -47,7 +52,7 @@ export const flexboxUtilities: UtilityConfig = {
         property: "flexBasis",
         shorthand: ["basis"],
         transform: (value) => {
-            if (!value) return {};
+            if (isEmptyValue(value)) return {};
             return {
                 flexBasis: value
             };
@@ -57,7 +62,7 @@ export const flexboxUtilities: UtilityConfig = {
         property: "flexGrow",
         shorthand: ["grow"],
         transform: (value) => {
-            if (!value) return {};
+            if (isEmptyValue(value)) return {};
             return {
                 flexGrow: value
             };
@@ -67,7 +72,7 @@ export const flexboxUtilities: UtilityConfig = {
         property: "flexShrink",
         shorthand: ["shrink"],
         transform: (value) => {
-            if (!value) return {};
+            if (isEmptyValue(value)) return {};
             return {
                 flexShrink: value
             };

@@ -1,12 +1,7 @@
 "use client";
 
 import { Tabs as ArkTabs, useTabsContext } from "@ark-ui/react/tabs";
-import {
-    TRANSITION_EASINGS,
-    useCanUseDOM,
-    useDefaultTransition,
-    useReducedMotion
-} from "@dreamy-ui/react";
+import { useCanUseDOM, useDefaultTransition, useReducedMotion } from "@dreamy-ui/react";
 import { Children, cloneElement, createContext, isValidElement, useContext } from "react";
 import { type HTMLDreamyProps, createStyleContext } from "styled-system/jsx";
 import { type TabsVariantProps, tabs } from "styled-system/recipes";
@@ -169,7 +164,7 @@ function TabPanelComponent(props: TabPanelProps) {
 export const Panel = withContext(TabPanelComponent, "tabPanel");
 Panel.partType = PANEL_PART;
 
-const TabIndicator = withContext(function TabIndicator() {
+const TabIndicator = withContext(function TabIndicator(props: MotionFlexProps) {
     const transition = useDefaultTransition();
     const reduceMotion = useReducedMotion();
     const domAvailable = useCanUseDOM();
@@ -177,21 +172,15 @@ const TabIndicator = withContext(function TabIndicator() {
     return (
         <ArkTabs.Indicator asChild>
             <MotionFlex
+                {...props}
                 animate={{ opacity: 1, scale: 1 }}
                 initial={!domAvailable ? { opacity: 0, scale: 0.95 } : undefined}
-                layout={reduceMotion ? false : "position"}
-                layoutId={"dreamy-tab-indicator"}
-                transition={
+                style={
                     reduceMotion
-                        ? { duration: 0 }
-                        : {
-                              ...transition,
-                              layout: {
-                                  duration: (transition?.duration ?? 0.2) * 1.5,
-                                  ease: TRANSITION_EASINGS.easeInOut
-                              }
-                          }
+                        ? ({ "--transition-duration": "0ms" } as React.CSSProperties)
+                        : undefined
                 }
+                transition={reduceMotion ? { duration: 0 } : transition}
             />
         </ArkTabs.Indicator>
     );

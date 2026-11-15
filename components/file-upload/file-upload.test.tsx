@@ -1,6 +1,7 @@
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
+import { Button } from "../button";
 import * as Field from "../field";
 import { render } from "../test/render";
 import * as FileUpload from "./index";
@@ -36,6 +37,20 @@ describe("FileUpload", () => {
         // Field must wire id / describedby onto the authoritative file input
         expect(fileInput).toHaveAttribute("id", "resume");
         expect(fileInput).toHaveAttribute("aria-describedby", "resume-hint");
+    });
+
+    it("renders a Button trigger via asChild", () => {
+        render(
+            <FileUpload.Root>
+                <FileUpload.Trigger asChild>
+                    <Button variant="outline">Upload file</Button>
+                </FileUpload.Trigger>
+            </FileUpload.Root>
+        );
+
+        const trigger = screen.getByRole("button", { name: "Upload file" });
+        expect(trigger).toHaveAttribute("data-part", "trigger");
+        expect(trigger).not.toHaveAttribute("aschild");
     });
 
     it("keeps a keyboard-accessible trigger as the drag alternative", () => {

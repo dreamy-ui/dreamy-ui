@@ -14,7 +14,7 @@ pnpm dreamy add pagination
 
 ## Usage
 
-Pagination is used to navigate through pages of content when you have too much data to display on a single page.
+Pagination is used to navigate through pages of content when you have too much data to display on a single page. Behavior and accessibility come from [Ark UI Pagination](https://ark-ui.com/docs/components/pagination), so `Pagination.Root` accepts the same state props (`page`, `defaultPage`, `pageSize`, `defaultPageSize`, `onPageChange`, `onPageSizeChange`, `siblingCount`, `boundaryCount`, `translations`).
 
 <Wrapper>
     <Pagination.Root count={100} pageSize={10} defaultPage={1}>
@@ -29,6 +29,30 @@ Pagination is used to navigate through pages of content when you have too much d
     <Pagination.PrevTrigger />
     <Pagination.Items />
     <Pagination.NextTrigger />
+</Pagination.Root>
+```
+
+### First and Last Triggers
+
+Use `FirstTrigger` and `LastTrigger` to jump to the edges of the page range.
+
+<Wrapper>
+    <Pagination.Root count={100} pageSize={10} defaultPage={5}>
+        <Pagination.FirstTrigger />
+        <Pagination.PrevTrigger />
+        <Pagination.Items />
+        <Pagination.NextTrigger />
+        <Pagination.LastTrigger />
+    </Pagination.Root>
+</Wrapper>
+
+```tsx
+<Pagination.Root count={100} pageSize={10} defaultPage={5}>
+    <Pagination.FirstTrigger />
+    <Pagination.PrevTrigger />
+    <Pagination.Items />
+    <Pagination.NextTrigger />
+    <Pagination.LastTrigger />
 </Pagination.Root>
 ```
 
@@ -56,7 +80,7 @@ You can display the current page information using the `PageText` component.
 
 ### Automatic Ellipsis
 
-The `Items` component automatically handles ellipsis placement based on the current page and `siblingCount`. This eliminates the need to manually manage which pages to show.
+The `Items` component automatically handles ellipsis placement based on the current page, `siblingCount`, and `boundaryCount`. This eliminates the need to manually manage which pages to show.
 
 <Wrapper>
     <Pagination.Root count={200} pageSize={10} defaultPage={10} siblingCount={1}>
@@ -76,17 +100,17 @@ The `Items` component automatically handles ellipsis placement based on the curr
 
 ### Manual Items and Ellipsis
 
-If you need full control, you can still manually specify items and ellipsis.
+If you need full control, you can still manually specify items and ellipsis. Give each `Ellipsis` a unique `index`.
 
 <Wrapper>
     <Pagination.Root count={100} page={5}>
         <Pagination.PrevTrigger />
         <Pagination.Item value={1} />
-        <Pagination.Ellipsis />
+        <Pagination.Ellipsis index={1} />
         <Pagination.Item value={4} />
         <Pagination.Item value={5} />
         <Pagination.Item value={6} />
-        <Pagination.Ellipsis />
+        <Pagination.Ellipsis index={5} />
         <Pagination.Item value={10} />
         <Pagination.NextTrigger />
     </Pagination.Root>
@@ -96,13 +120,45 @@ If you need full control, you can still manually specify items and ellipsis.
 <Pagination.Root count={100} page={5}>
     <Pagination.PrevTrigger />
     <Pagination.Item value={1} />
-    <Pagination.Ellipsis />
+    <Pagination.Ellipsis index={1} />
     <Pagination.Item value={4} />
     <Pagination.Item value={5} />
     <Pagination.Item value={6} />
-    <Pagination.Ellipsis />
+    <Pagination.Ellipsis index={5} />
     <Pagination.Item value={10} />
     <Pagination.NextTrigger />
+</Pagination.Root>
+```
+
+### Custom Rendering
+
+Use `Pagination.Context` to read the Ark pagination API (`page`, `pages`, `totalPages`, `pageRange`, `setPage`, `slice`, ...) and build your own layout.
+
+<Wrapper>
+    <Pagination.Root count={100} pageSize={10} defaultPage={2}>
+        <Pagination.Context>
+            {(pagination) => (
+                <>
+                    <Pagination.PrevTrigger />
+                    <span>Page {pagination.page} of {pagination.totalPages}</span>
+                    <Pagination.NextTrigger />
+                </>
+            )}
+        </Pagination.Context>
+    </Pagination.Root>
+</Wrapper>
+
+```tsx
+<Pagination.Root count={100} pageSize={10} defaultPage={2}>
+    <Pagination.Context>
+        {(pagination) => (
+            <>
+                <Pagination.PrevTrigger />
+                <span>Page {pagination.page} of {pagination.totalPages}</span>
+                <Pagination.NextTrigger />
+            </>
+        )}
+    </Pagination.Context>
 </Pagination.Root>
 ```
 
@@ -271,27 +327,28 @@ The `PageText` component supports three different formats.
 </Pagination.Root>
 ```
 
-## Hooks
+### Translations
 
-### usePaginationRange
-
-A hook that generates the pagination range based on the current page and total pages. This hook is used internally by the `Items` component, but you can also use it directly for custom implementations.
+Accessible labels default to "Pagination", "First page", "Previous page", "Next page", "Last page", and "Page N". Override any of them with `translations`.
 
 ```tsx
-const pages = usePaginationRange({
-    page: 5,
-    totalPages: 10,
-    siblingCount: 1
-});
-
-// Returns an array like:
-// [
-//   { type: 'page', value: 1 },
-//   { type: 'ellipsis', value: 0 },
-//   { type: 'page', value: 4 },
-//   { type: 'page', value: 5 },
-//   { type: 'page', value: 6 },
-//   { type: 'ellipsis', value: 0 },
-//   { type: 'page', value: 10 }
-// ]
+<Pagination.Root
+    count={100}
+    translations={{
+        prevTriggerLabel: "Précédent",
+        nextTriggerLabel: "Suivant",
+        itemLabel: ({ page }) => `Page ${page}`
+    }}
+>
+    <Pagination.PrevTrigger />
+    <Pagination.Items />
+    <Pagination.NextTrigger />
+</Pagination.Root>
 ```
+
+## Migrating from the hook-based Pagination
+
+- `onPageChange` now receives `{ page, pageSize }`.
+- `count` is optional (Ark defaults it to `1`), and `boundaryCount`, `defaultPageSize`, `onPageSizeChange`, and `translations` are new.
+- `Pagination.Ellipsis` accepts an `index` (pass a unique one when rendering ellipses manually).
+- `usePaginationRange` is no longer used by the component. Read `pages` from `Pagination.Context` instead.

@@ -10,10 +10,21 @@ type VariantKeys =
     | "popover"
     | "collapse"
     | "checkboxCheckIcon"
+    | "buttonSuccessIcon"
     | "actionBar";
 export type DefaultVariants = Record<VariantKeys, Variants>;
 
 export type MotionVariants = typeof defaultMotionVariants;
+
+/**
+ * Element of the button success icon a `buttonSuccessIcon` variant is resolved for.
+ * Passed as the motion `custom` prop.
+ */
+export type ButtonSuccessIconPart = "root" | "circle" | "check";
+
+function getButtonSuccessIconInitial(part: ButtonSuccessIconPart) {
+    return part === "root" ? { scale: 0.5, opacity: 0 } : { pathLength: 0, opacity: 0 };
+}
 
 interface DrawerMotionCustom {
     placement?: "left" | "right" | "top" | "bottom";
@@ -161,6 +172,33 @@ export const defaultMotionVariants: DefaultVariants = {
                 ease: TRANSITION_EASINGS.easeInOut
             }
         })
+    },
+    buttonSuccessIcon: {
+        initial: getButtonSuccessIconInitial,
+        animate: (part: ButtonSuccessIconPart) => {
+            if (part === "root") {
+                return {
+                    scale: 1,
+                    opacity: 1,
+                    transition: { duration: 0.2, ease: TRANSITION_EASINGS.easeOut }
+                };
+            }
+
+            const delay = part === "check" ? 0.25 : 0.05;
+
+            return {
+                pathLength: 1,
+                opacity: 1,
+                transition: {
+                    pathLength: {
+                        duration: part === "check" ? 0.2 : 0.3,
+                        ease: TRANSITION_EASINGS.easeOut,
+                        delay
+                    },
+                    opacity: { duration: 0.01, delay }
+                }
+            };
+        }
     },
     actionBar: {
         initial: { y: 100, opacity: 0, transition: TRANSITION_DEFAULTS.enter },
@@ -315,6 +353,35 @@ export const bouncyMotionVariants: DefaultVariants = {
                         : animationTime / 4) / 1000
             }
         })
+    },
+    buttonSuccessIcon: {
+        initial: getButtonSuccessIconInitial,
+        animate: (part: ButtonSuccessIconPart) => {
+            if (part === "root") {
+                return {
+                    scale: 1,
+                    opacity: 1,
+                    transition: {
+                        scale: { type: "spring", stiffness: 520, damping: 14 },
+                        opacity: { duration: 0.12, ease: TRANSITION_EASINGS.easeOut }
+                    }
+                };
+            }
+
+            const delay = part === "check" ? 0.2 : 0.04;
+
+            return {
+                pathLength: 1,
+                opacity: 1,
+                transition: {
+                    pathLength:
+                        part === "check"
+                            ? { type: "spring", stiffness: 420, damping: 22, delay }
+                            : { duration: 0.28, ease: TRANSITION_EASINGS.easeOut, delay },
+                    opacity: { duration: 0.01, delay }
+                }
+            };
+        }
     },
     actionBar: {
         initial: { y: 80, opacity: 0 },

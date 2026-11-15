@@ -24,7 +24,8 @@ export const tabs = defineSlotRecipe({
             overflowX: "clip",
             overflowClipMargin: "10px",
             overflowY: "visible",
-            position: "relative"
+            position: "relative",
+            isolation: "isolate"
         },
         tab: {
             position: "relative",
@@ -39,8 +40,9 @@ export const tabs = defineSlotRecipe({
         tabPanel: {},
         tabIndicator: {
             position: "absolute",
-            left: 0,
-            right: 0,
+            top: "var(--top)",
+            width: "var(--width)",
+            height: "var(--height)",
             borderRadius: "inherit"
         }
     },
@@ -65,8 +67,7 @@ export const tabs = defineSlotRecipe({
                 },
                 tabIndicator: {
                     backgroundColor: { _dark: "alpha.100", _light: "bg" },
-                    top: 0,
-                    bottom: 0,
+                    borderRadius: "l2",
                     zIndex: -1
                 }
             },
@@ -80,6 +81,7 @@ export const tabs = defineSlotRecipe({
                 tabIndicator: {
                     backgroundColor: "{colors.primary}",
                     height: "2px",
+                    top: "auto",
                     bottom: "-1px",
                     zIndex: 1
                 },
@@ -108,8 +110,7 @@ export const tabs = defineSlotRecipe({
                 },
                 tabIndicator: {
                     backgroundColor: "{colors.alpha.100}",
-                    top: 0,
-                    bottom: 0,
+                    borderRadius: "l2",
                     zIndex: -1
                 }
             }
@@ -191,9 +192,8 @@ export const tabs = defineSlotRecipe({
                 },
                 tabIndicator: {
                     left: "auto",
-                    height: "100%",
+                    height: "var(--height)",
                     right: "-1px",
-                    top: 0,
                     width: "2px"
                 }
             }

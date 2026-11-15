@@ -21,8 +21,8 @@ After a migration, set **Done**, note the Ark import path, and run `pnpm compone
 
 | Status | Count |
 |--------|------:|
-| Done | 22 |
-| Pending | 11 |
+| Done | 23 |
+| Pending | 10 |
 | N/A | 36 |
 
 ---
@@ -43,6 +43,7 @@ After a migration, set **Done**, note the Ark import path, and run `pnpm compone
 | [hover-card](../../components/hover-card/) | `@ark-ui/react/hover-card` | |
 | [menu](../../components/menu/) | `@ark-ui/react/menu` | Composes popover |
 | [modal](../../components/modal/) | `@ark-ui/react/dialog` | |
+| [pagination](../../components/pagination/) | `@ark-ui/react/pagination` | Ark parts `asChild` onto `IconButton`; adds `FirstTrigger` / `LastTrigger`, `Context`, `translations` |
 | [popover](../../components/popover/) | `@ark-ui/react/popover` | Shared floating layer for dropdown-style UIs |
 | [progress](../../components/progress/) | `@ark-ui/react/progress` | |
 | [progress-circular](../../components/progress-circular/) | `@ark-ui/react/progress` | Same Ark primitive as linear progress |
@@ -66,7 +67,6 @@ These still rely on `@dreamy-ui/react` hooks (or local context) for behavior. Ar
 | [checkbox-card](../../components/checkbox-card/) | Compose migrated [checkbox](../../components/checkbox/) | Still uses `useCheckbox` from `@dreamy-ui/react` |
 | [field](../../components/field/) | `@ark-ui/react/field` | Form labeling / error wiring |
 | [file-upload](../../components/file-upload/) | `@ark-ui/react/file-upload` | `useFileUpload` |
-| [pagination](../../components/pagination/) | `@ark-ui/react/pagination` | `usePagination` |
 | [pin-input](../../components/pin-input/) | `@ark-ui/react/pin-input` | `usePinInput` |
 | [radio-card](../../components/radio-card/) | Compose migrated [radio](../../components/radio/) | `useRadioCardContext` / legacy card pattern |
 | [stepper](../../components/stepper/) | `@ark-ui/react/steps` | `useStepper` |
@@ -127,7 +127,7 @@ Rough priority after popover-family work is largely done:
 
 1. **Toast** + **toast-provider** (global patterns, isolated from form controls)
 2. **Field** (unblocks consistent form integration across inputs)
-3. **Pin input**, **pagination**, **file-upload**, **stepper**
+3. **Pin input**, **file-upload**, **stepper**
 4. **Time input** (popover composition + segments)
 5. **Checkbox card** / **radio card** (thin wrappers over migrated checkbox / radio)
 6. **Action bar** (evaluate whether Ark fits or stays custom)
@@ -140,3 +140,4 @@ Rough priority after popover-family work is largely done:
 |------|--------|
 | 2026-10-22 | Initial tracker from repo inventory |
 | 2026-10-22 | Modal and Drawer public API aligned with Ark (`open`, `onOpenChange`, `restoreFocus`, `closeOnEscape`); docs and doc-site examples updated |
+| 2026-11-09 | Pagination migrated to `@ark-ui/react/pagination` (`onPageChange` details now include `pageSize`) |

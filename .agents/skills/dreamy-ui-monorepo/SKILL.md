@@ -7,7 +7,23 @@ description: Navigate and edit the Dreamy UI monorepo correctly — registry sou
 
 ## Overview
 
-This is a pnpm + Turbo monorepo. UI is split across **source registry**, **published logic**, and a **generated website copy**.
+This is a Bun + Turbo monorepo. UI is split across **source registry**, **published logic**, and a **generated website copy**.
+
+## Package manager: always Bun
+
+**Always use Bun in this repository — never pnpm, npm, or yarn.** This applies to installs, package scripts, and local binaries:
+
+| Task | Command |
+|------|---------|
+| Install dependencies | `bun install` |
+| Add a dependency | `bun add <pkg>` / `bun add -d <pkg>` |
+| Run a root/workspace script | `bun run <script>` |
+| Run a script in one package | `bun --filter <package> <script>` |
+| Run a local binary | `bun run <binary> [args]` |
+| Execute a one-off package binary | `bunx <binary> [args]` |
+
+- `bun.lock` is the lockfile of record. Do **not** run `pnpm install`, generate/update `pnpm-lock.yaml`, or use `pnpm`/`npx` anywhere in the workflow.
+- Inside another package directory, still use `bun run <script>` (or `bun --filter` from the root).
 
 ```
 dreamy-ui/
@@ -99,17 +115,17 @@ Raw source in `components/` is **not** used directly by the website. It flows th
 ```
 components/ui|recipes|patterns
         │
-        ▼  pnpm components  (or components:watch)
+        ▼  bun run components  (or components:watch)
 website/public/components|recipes|patterns/*.json
         │
-        ▼  pnpm dreamy add (triggered by watch script)
+        ▼  bun run dreamy add (triggered by watch script)
 website/components/ui|recipes|patterns
 ```
 
-1. **`pnpm components`** — one-shot: serializes `components/` into JSON under `website/public/`.
-2. **`pnpm components:watch`** — watches `components/`, re-runs the build on change, then runs `pnpm dreamy add` in `website/` to regenerate `website/components/`, `website/recipes/`, and `website/patterns/`.
+1. **`bun run components`** — one-shot: serializes `components/` into JSON under `website/public/`.
+2. **`bun run components:watch`** — watches `components/`, re-runs the build on change, then runs `bun run dreamy add` in `website/` to regenerate `website/components/`, `website/recipes/`, and `website/patterns/`.
 
-The watch script expects the website dev server on `localhost:3000` (`pnpm dev`).
+The watch script expects the website dev server on `localhost:3000` (`bun run dev`).
 
 ### Do NOT edit (generated)
 
@@ -143,7 +159,7 @@ When the user asks to add a variant, size, prop, behavior, or fix a component �
 3. **Update Storybook automatically** — `website/stories/<name>.stories.tsx`. Add/update stories for every new variant, size, color scheme, or feature. **Do this without the user asking.**
 4. **Update docs automatically** — `website/docs/5.components/<name>.mdx`. Add sections, live `<Wrapper>` demos, and code snippets for every new API surface. **Do this without the user asking.**
 5. **Update interactive demos if needed** — for complex components, add demos in `website/app/src/ui/docs/components/<plural>.tsx` and register them in `website/app/src/ui/docs/MDXContent.tsx`.
-6. Remind the developer to run `pnpm components:watch` + `pnpm dev` if changes are not visible — **do not** manually copy into `website/components/` or run `dreamy add` yourself.
+6. Remind the developer to run `bun run components:watch` + `bun run dev` if changes are not visible — **do not** manually copy into `website/components/` or run `dreamy add` yourself.
 
 ### Storybook conventions
 
@@ -157,7 +173,7 @@ When the user asks to add a variant, size, prop, behavior, or fix a component �
 
 - Path: `website/docs/5.components/<kebab-name>.mdx`
 - Frontmatter: `title`, `description`, `isServerComponent`, `source`, `themeSource`
-- Structure: Installation (`pnpm dreamy add <name>`) → Usage → subsections per feature
+- Structure: Installation (`bun run dreamy add <name>`) → Usage → subsections per feature
 - Each subsection: description → `<Wrapper>` live demo → fenced `tsx` code block
 - Complex demos: lazy-load from `website/app/src/ui/docs/components/` via `MDXContent.tsx`
 
@@ -295,6 +311,7 @@ For complex interactive examples, create `website/app/src/ui/docs/components/<pl
 
 ### Always do (component work)
 
+- **Use Bun for every install, script, and binary** — `bun install`, `bun run <script>`, `bun --filter`, `bunx`
 - Edit root `components/` and `packages/react/` for component changes
 - **Automatically** update `website/stories/<name>.stories.tsx` when the component API or visuals change
 - **Automatically** update `website/docs/5.components/<name>.mdx` (and interactive demos if needed) — **never wait for the user to ask**
@@ -306,14 +323,14 @@ For complex interactive examples, create `website/app/src/ui/docs/components/<pl
 ### Never do
 
 - Manually copy files from `components/` into `website/components/`
-- Run `pnpm dreamy add` yourself to sync the website
+- Run `bun run dreamy add` yourself to sync the website
 - Edit `website/components/`, `website/recipes/`, or `website/patterns/` as a shortcut
 - Ship a component change without matching Storybook and docs updates
 - Put heavy logic or utility functions in `components/ui/*.tsx`
 
 ### Registry watch
 
-Assume the developer runs `pnpm components:watch` during component work. Only suggest `pnpm components` (one-shot) when watch is clearly not running. Do **not** start or suggest `components:watch` when not working on components.
+Assume the developer runs `bun run components:watch` during component work. Only suggest `bun run components` (one-shot) when watch is clearly not running. Do **not** start or suggest `components:watch` when not working on components.
 
 ### Imports
 
@@ -330,7 +347,7 @@ import { button } from "styled-system/recipes";
 import { flex } from "styled-system/patterns";
 ```
 
-TypeScript in `components/` resolves `styled-system/*` via `components/tsconfig.json` → `website/styled-system/*`. Run `pnpm codegen` in the website if those types are missing.
+TypeScript in `components/` resolves `styled-system/*` via `components/tsconfig.json` → `website/styled-system/*`. Run `bun run codegen` from the repo root if those types are missing.
 
 ---
 
@@ -338,12 +355,12 @@ TypeScript in `components/` resolves `styled-system/*` via `components/tsconfig.
 
 | Script | When |
 |--------|------|
-| `pnpm dev` | Start website (and turbo dev tasks) |
-| `pnpm dev:lib` | Watch-build react, cli, panda-preset |
-| `pnpm components:watch` | Developer runs while editing registry — agent should not duplicate this |
-| `pnpm components` | One-shot registry JSON build |
-| `pnpm build:dev` | Build all packages for local development |
-| `pnpm typecheck` | Typecheck packages + website |
+| `bun run dev` | Start website (and turbo dev tasks) |
+| `bun run dev:lib` | Watch-build react, cli, panda-preset |
+| `bun run components:watch` | Developer runs while editing registry — agent should not duplicate this |
+| `bun run components` | One-shot registry JSON build |
+| `bun run build:dev` | Build all packages for local development |
+| `bun run typecheck` | Typecheck packages + website |
 
 ---
 

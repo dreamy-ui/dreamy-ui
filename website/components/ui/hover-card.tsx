@@ -16,7 +16,7 @@ import {
     useMotionVariants,
     useReducedMotion
 } from "@dreamy-ui/react";
-import { Children, cloneElement, useEffect, useId } from "react";
+import { Children, cloneElement, useCallback, useEffect, useId, useMemo, useState } from "react";
 import { type HTMLDreamyProps, createStyleContext } from "styled-system/jsx";
 import type { HoverCardVariantProps } from "styled-system/recipes";
 import { hoverCard } from "styled-system/recipes";
@@ -24,6 +24,7 @@ import { Box, type BoxProps } from "./box";
 import { Heading } from "./heading";
 import { MotionBox, type MotionBoxProps } from "./motion";
 import { mapPositioningProps } from "./map-positioning";
+import { useFloatingPresent } from "./use-floating-present";
 import { HoverCardUiProvider, useHoverCardUi } from "./hover-card-ui-context";
 
 const { withContext, withRootProvider } = createStyleContext(hoverCard, {
@@ -75,29 +76,55 @@ function HoverCardRoot(props: HoverCardProps) {
         reduceMotion: reduceMotionProp,
         openDelay = 300,
         closeDelay = 300,
+        open: openProp,
+        defaultOpen,
         ...arkRest
     } = props;
 
     const globalReduceMotion = useReducedMotion();
     const reduceMotion = reduceMotionProp ?? globalReduceMotion ?? false;
 
+    const [trackedOpen, setTrackedOpen] = useState(defaultOpen ?? false);
+    const rootOpen = openProp ?? trackedOpen;
+
+    const { present, handleExitComplete } = useFloatingPresent(rootOpen, reduceMotion);
+
+    const handleOpenChange = useCallback(
+        (details: { open: boolean }) => {
+            if (openProp === undefined) {
+                setTrackedOpen(details.open);
+            }
+            onOpenChange?.(details);
+        },
+        [onOpenChange, openProp]
+    );
+
     const arkRootProps: ArkHoverCardRootProps = {
         ...arkRest,
         openDelay,
         closeDelay,
         positioning: mapPositioningProps(positioning),
-        onOpenChange
+        open: rootOpen,
+        onOpenChange: handleOpenChange,
+        present,
+        onExitComplete: handleExitComplete,
+        unmountOnExit: false
     };
 
+    const uiValue = useMemo(
+        () => ({
+            hasArrow,
+            usePortal,
+            portalProps,
+            reduceMotion,
+            present,
+            onExitComplete: handleExitComplete
+        }),
+        [handleExitComplete, hasArrow, portalProps, present, reduceMotion, usePortal]
+    );
+
     return (
-        <HoverCardUiProvider
-            value={{
-                hasArrow,
-                usePortal,
-                portalProps,
-                reduceMotion
-            }}
-        >
+        <HoverCardUiProvider value={uiValue}>
             <ArkHoverCard.Root {...arkRootProps}>
                 {typeof children === "function" ? (
                     <ArkHoverCard.Context>
@@ -169,8 +196,8 @@ export interface HoverCardTransitionProps extends Omit<MotionBoxProps, "children
 }
 
 function Transition(props: HoverCardTransitionProps) {
-    const { children, arrowProps, onKeyDown, ...rest } = props;
-    const { hasArrow, reduceMotion, contentLabelId } = useHoverCardUi();
+    const { children, arrowProps, onKeyDown, onAnimationComplete, ...rest } = props;
+    const { hasArrow, reduceMotion, contentLabelId, onExitComplete } = useHoverCardUi();
     const { open, setOpen } = useArkHoverCardContext();
 
     const { popover: motionVariants } = useMotionVariants();
@@ -178,8 +205,14 @@ function Transition(props: HoverCardTransitionProps) {
     return (
         <MotionBox
             animate={open ? "initial" : "exit"}
-            initial={false}
+            initial={reduceMotion ? false : "exit"}
             variants={transformReducedMotion(motionVariants, reduceMotion)}
+            onAnimationComplete={(definition) => {
+                onAnimationComplete?.(definition);
+                if (!open && !reduceMotion) {
+                    onExitComplete();
+                }
+            }}
             role="dialog"
             aria-labelledby={contentLabelId}
             tabIndex={-1}
@@ -191,6 +224,7 @@ function Transition(props: HoverCardTransitionProps) {
                 }
             }}
             {...rest}
+            {...(reduceMotion ? {} : { hidden: false })}
         >
             {hasArrow && <Arrow {...arrowProps} />}
             {children}
@@ -208,7 +242,7 @@ export interface HoverCardContentProps extends HoverCardTransitionProps {
  */
 export const Content = withContext(function HoverCardContent(props: HoverCardContentProps) {
     const { rootProps, motionProps, arrowProps, children, ...contentProps } = props;
-    const { usePortal, portalProps, setContentId } = useHoverCardUi();
+    const { usePortal, portalProps, setContentId, present } = useHoverCardUi();
     const { open } = useArkHoverCardContext();
     const contentId = useId();
 
@@ -218,8 +252,16 @@ export const Content = withContext(function HoverCardContent(props: HoverCardCon
 
     if (typeof document === "undefined") return null;
 
+    const { style: rootStyle, ...restRootProps } = rootProps ?? {};
+
     const rendered = (
-        <ArkHoverCard.Positioner {...rootProps}>
+        <ArkHoverCard.Positioner
+            {...restRootProps}
+            style={{
+                pointerEvents: open ? undefined : "none",
+                ...rootStyle
+            }}
+        >
             <ArkHoverCard.Content asChild>
                 <Transition
                     id={contentId}
@@ -235,7 +277,7 @@ export const Content = withContext(function HoverCardContent(props: HoverCardCon
 
     return usePortal ? (
         <Portal
-            isActive={open}
+            isActive={present}
             zIndex="var(--z-index-popover)"
             {...portalProps}
         >

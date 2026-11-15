@@ -1,18 +1,13 @@
 "use client";
 
 import {
-    PaginationProvider,
-    type UsePaginationProps,
-    usePagination,
-    usePaginationContext,
-    usePaginationIndicator,
-    usePaginationItem,
-    usePaginationNextTrigger,
-    usePaginationPrevTrigger,
-    usePaginationRange
-} from "@dreamy-ui/react";
+    Pagination as ArkPagination,
+    type PaginationEllipsisProps as ArkPaginationEllipsisProps,
+    type PaginationRootProps as ArkPaginationRootProps,
+    usePaginationContext
+} from "@ark-ui/react/pagination";
 import * as m from "motion/react-m";
-import { useMemo } from "react";
+import { createContext, useContext, useId, useMemo } from "react";
 import { type HTMLDreamyProps, createStyleContext, dreamy } from "styled-system/jsx";
 import { type PaginationVariantProps, pagination } from "styled-system/recipes";
 import { Icon } from "./icon";
@@ -22,9 +17,30 @@ const { withProvider, withContext } = createStyleContext(pagination, {
     forwardVariants: ["size"]
 });
 
+type PaginationTranslations = Required<NonNullable<ArkPaginationRootProps["translations"]>>;
+
+const DEFAULT_TRANSLATIONS: PaginationTranslations = {
+    rootLabel: "Pagination",
+    firstTriggerLabel: "First page",
+    prevTriggerLabel: "Previous page",
+    nextTriggerLabel: "Next page",
+    lastTriggerLabel: "Last page",
+    itemLabel: ({ page }) => `Page ${page}`
+};
+
+interface PaginationUIContextValue {
+    size: IconButtonProps["size"];
+    translations: PaginationTranslations;
+}
+
+const PaginationUIContext = createContext<PaginationUIContextValue>({
+    size: "md",
+    translations: DEFAULT_TRANSLATIONS
+});
+
 export interface PaginationRootProps
-    extends Omit<UsePaginationProps, "size">,
-        Omit<HTMLDreamyProps<"nav">, keyof UsePaginationProps>,
+    extends Omit<ArkPaginationRootProps, "type" | "getPageUrl">,
+        Omit<HTMLDreamyProps<"nav">, keyof ArkPaginationRootProps>,
         PaginationVariantProps {}
 
 /**
@@ -42,36 +58,37 @@ export interface PaginationRootProps
  * ```
  */
 export const Root = withProvider(function PaginationRoot(props: PaginationRootProps) {
-    const {
-        children,
-        count,
-        page,
-        defaultPage,
-        pageSize,
-        siblingCount,
-        onPageChange,
-        size = "md",
-        ...rest
-    } = props;
+    const { size = "md", translations: translationsProp, ...rest } = props;
 
-    const context = usePagination({
-        count,
-        page,
-        defaultPage,
-        pageSize,
-        siblingCount,
-        onPageChange,
-        size: size as "sm" | "md" | "lg" | "xl" | "2xl"
-    });
+    const translations = useMemo(
+        () => ({ ...DEFAULT_TRANSLATIONS, ...translationsProp }) as PaginationTranslations,
+        [translationsProp]
+    );
+
+    const uiContext = useMemo(
+        () => ({ size: size as PaginationUIContextValue["size"], translations }),
+        [size, translations]
+    );
 
     return (
-        <PaginationProvider value={context}>
-            <dreamy.nav {...rest}>{children}</dreamy.nav>
-        </PaginationProvider>
+        <PaginationUIContext.Provider value={uiContext}>
+            <ArkPagination.Root
+                translations={translations}
+                {...rest}
+            />
+        </PaginationUIContext.Provider>
     );
-}, "root");
+}, "root", {
+    // `page` is also a CSS property, so the style factory would strip it otherwise.
+    forwardProps: ["page"]
+});
 
-export interface PaginationItemProps extends Omit<Partial<IconButtonProps>, "value"> {
+/**
+ * Render prop component that exposes the Ark pagination API (`page`, `pages`, `setPage`, ...).
+ */
+export const Context = ArkPagination.Context;
+
+export interface PaginationItemProps extends Omit<Partial<IconButtonProps>, "value" | "type"> {
     /**
      * The page value for this item
      */
@@ -83,40 +100,81 @@ export interface PaginationItemProps extends Omit<Partial<IconButtonProps>, "val
  */
 export const Item = withContext(function PaginationItem(props: PaginationItemProps) {
     const { value, children, ...rest } = props;
-    const itemProps = usePaginationItem({ value });
-    const indicatorProps = usePaginationIndicator();
-
-    const { page, size } = usePaginationContext();
+    const { size, translations } = useContext(PaginationUIContext);
+    const { page, totalPages } = usePaginationContext();
 
     return (
-        <IconButton
-            size={size}
-            variant="ghost"
-            {...itemProps}
-            {...rest}
+        <ArkPagination.Item
+            asChild
+            type="page"
+            value={value}
         >
-            {children ?? value}
-            {page === value && <m.div {...indicatorProps} />}
-        </IconButton>
+            <IconButton
+                aria-label={translations.itemLabel({ page: value, totalPages })}
+                size={size}
+                variant="ghost"
+                {...rest}
+            >
+                {children ?? value}
+                {page === value && <m.div data-part="indicator" />}
+            </IconButton>
+        </ArkPagination.Item>
     );
 }, "item");
 
-export interface PaginationEllipsisProps extends HTMLDreamyProps<"span"> {}
+export interface PaginationEllipsisProps
+    extends Omit<HTMLDreamyProps<"span">, keyof ArkPaginationEllipsisProps>,
+        Partial<Pick<ArkPaginationEllipsisProps, "index">> {
+    children?: React.ReactNode;
+}
 
 /**
  * Pagination Ellipsis — indicates skipped pages.
  */
 export const Ellipsis = withContext(function PaginationEllipsis(props: PaginationEllipsisProps) {
-    const { children = "...", ...rest } = props;
+    const { children = "...", index, ...rest } = props;
+    const fallbackId = useId();
+
     return (
-        <dreamy.span
-            aria-hidden="true"
-            {...rest}
+        <ArkPagination.Ellipsis
+            asChild
+            index={index ?? 0}
         >
-            {children}
-        </dreamy.span>
+            <dreamy.span
+                aria-hidden="true"
+                {...(index === undefined && { id: fallbackId })}
+                {...rest}
+            >
+                {children}
+            </dreamy.span>
+        </ArkPagination.Ellipsis>
     );
 }, "ellipsis");
+
+export interface PaginationFirstTriggerProps extends Partial<IconButtonProps> {}
+
+/**
+ * Pagination First Trigger - navigates to the first page.
+ */
+export const FirstTrigger = withContext(function PaginationFirstTrigger(
+    props: PaginationFirstTriggerProps
+) {
+    const { children, ...rest } = props;
+    const { size, translations } = useContext(PaginationUIContext);
+
+    return (
+        <ArkPagination.FirstTrigger asChild>
+            <IconButton
+                aria-label={translations.firstTriggerLabel}
+                size={size}
+                variant="ghost"
+                {...rest}
+            >
+                {children ?? <ChevronsLeftIcon />}
+            </IconButton>
+        </ArkPagination.FirstTrigger>
+    );
+}, "firstTrigger");
 
 export interface PaginationPrevTriggerProps extends Partial<IconButtonProps> {}
 
@@ -127,19 +185,19 @@ export const PrevTrigger = withContext(function PaginationPrevTrigger(
     props: PaginationPrevTriggerProps
 ) {
     const { children, ...rest } = props;
-    const prevProps = usePaginationPrevTrigger({});
-
-    const { size } = usePaginationContext();
+    const { size, translations } = useContext(PaginationUIContext);
 
     return (
-        <IconButton
-            size={size}
-            variant="ghost"
-            {...prevProps}
-            {...rest}
-        >
-            {children ?? <ChevronLeftIcon />}
-        </IconButton>
+        <ArkPagination.PrevTrigger asChild>
+            <IconButton
+                aria-label={translations.prevTriggerLabel}
+                size={size}
+                variant="ghost"
+                {...rest}
+            >
+                {children ?? <ChevronLeftIcon />}
+            </IconButton>
+        </ArkPagination.PrevTrigger>
     );
 }, "prevTrigger");
 
@@ -152,23 +210,55 @@ export const NextTrigger = withContext(function PaginationNextTrigger(
     props: PaginationNextTriggerProps
 ) {
     const { children, ...rest } = props;
-    const nextProps = usePaginationNextTrigger({});
-
-    const { size } = usePaginationContext();
+    const { size, translations } = useContext(PaginationUIContext);
 
     return (
-        <IconButton
-            size={size}
-            variant="ghost"
-            {...nextProps}
-            {...rest}
-        >
-            {children ?? <ChevronRightIcon />}
-        </IconButton>
+        <ArkPagination.NextTrigger asChild>
+            <IconButton
+                aria-label={translations.nextTriggerLabel}
+                size={size}
+                variant="ghost"
+                {...rest}
+            >
+                {children ?? <ChevronRightIcon />}
+            </IconButton>
+        </ArkPagination.NextTrigger>
     );
 }, "nextTrigger");
 
-function ChevronLeftIcon() {
+export interface PaginationLastTriggerProps extends Partial<IconButtonProps> {}
+
+/**
+ * Pagination Last Trigger - navigates to the last page.
+ */
+export const LastTrigger = withContext(function PaginationLastTrigger(
+    props: PaginationLastTriggerProps
+) {
+    const { children, ...rest } = props;
+    const { size, translations } = useContext(PaginationUIContext);
+
+    return (
+        <ArkPagination.LastTrigger asChild>
+            <IconButton
+                aria-label={translations.lastTriggerLabel}
+                size={size}
+                variant="ghost"
+                {...rest}
+            >
+                {children ?? <ChevronsRightIcon />}
+            </IconButton>
+        </ArkPagination.LastTrigger>
+    );
+}, "lastTrigger");
+
+interface ChevronIconProps {
+    title: string;
+    paths: string[];
+}
+
+function ChevronIcon(props: ChevronIconProps) {
+    const { title, paths } = props;
+
     return (
         <Icon
             aria-hidden="true"
@@ -180,27 +270,50 @@ function ChevronLeftIcon() {
             strokeWidth="2"
             viewBox="0 0 24 24"
         >
-            <title>Previous</title>
-            <path d="m15 18-6-6 6-6" />
+            <title>{title}</title>
+            {paths.map((d) => (
+                <path
+                    d={d}
+                    key={d}
+                />
+            ))}
         </Icon>
+    );
+}
+
+function ChevronsLeftIcon() {
+    return (
+        <ChevronIcon
+            paths={["m11 17-5-5 5-5", "m18 17-5-5 5-5"]}
+            title="First"
+        />
+    );
+}
+
+function ChevronLeftIcon() {
+    return (
+        <ChevronIcon
+            paths={["m15 18-6-6 6-6"]}
+            title="Previous"
+        />
     );
 }
 
 function ChevronRightIcon() {
     return (
-        <Icon
-            aria-hidden="true"
-            boxSize={"6"}
-            fill="none"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-        >
-            <title>Next</title>
-            <path d="m9 18 6-6-6-6" />
-        </Icon>
+        <ChevronIcon
+            paths={["m9 18 6-6-6-6"]}
+            title="Next"
+        />
+    );
+}
+
+function ChevronsRightIcon() {
+    return (
+        <ChevronIcon
+            paths={["m6 17 5-5-5-5", "m13 17 5-5-5-5"]}
+            title="Last"
+        />
     );
 }
 
@@ -220,8 +333,7 @@ export interface PaginationPageTextProps extends HTMLDreamyProps<"span"> {
  */
 export function PageText(props: PaginationPageTextProps) {
     const { format = "compact", ...rest } = props;
-    const context = usePaginationContext();
-    const { page, totalPages, pageSize, count } = context;
+    const { page, totalPages, pageRange, count } = usePaginationContext();
 
     const content = useMemo(() => {
         if (format === "short") {
@@ -230,10 +342,8 @@ export function PageText(props: PaginationPageTextProps) {
         if (format === "compact") {
             return `${page} of ${totalPages}`;
         }
-        const start = (page - 1) * pageSize + 1;
-        const end = Math.min(page * pageSize, count);
-        return `${start}-${end} of ${count}`;
-    }, [format, page, totalPages, pageSize, count]);
+        return `${pageRange.start + 1}-${pageRange.end} of ${count}`;
+    }, [format, page, totalPages, pageRange, count]);
 
     return <dreamy.span {...rest}>{content}</dreamy.span>;
 }
@@ -246,7 +356,7 @@ export interface PageItem {
     /**
      * The type of the page item
      */
-    type: "page" | "ellipsis";
+    type: "page";
 }
 
 export interface PaginationItemsProps {
@@ -261,30 +371,17 @@ export interface PaginationItemsProps {
  */
 export function Items(props: PaginationItemsProps) {
     const { render } = props;
-    const context = usePaginationContext();
-    const { page, totalPages, siblingCount } = context;
-
-    const pages = usePaginationRange({
-        page,
-        totalPages,
-        siblingCount
-    });
+    const { pages } = usePaginationContext();
 
     return (
         <>
             {pages.map((pageItem, index) => {
                 if (pageItem.type === "ellipsis") {
-                    return <Ellipsis key={`ellipsis-${index}`} />;
-                }
-
-                if (render) {
                     return (
-                        <Item
-                            key={pageItem.value}
-                            value={pageItem.value}
-                        >
-                            {render(pageItem)}
-                        </Item>
+                        <Ellipsis
+                            index={index}
+                            key={`ellipsis-${index}`}
+                        />
                     );
                 }
 
@@ -292,7 +389,9 @@ export function Items(props: PaginationItemsProps) {
                     <Item
                         key={pageItem.value}
                         value={pageItem.value}
-                    />
+                    >
+                        {render?.(pageItem)}
+                    </Item>
                 );
             })}
         </>

@@ -170,6 +170,7 @@ export const input = defineRecipe({
             size: "sm",
             inputType: "pin",
             css: {
+                px: "0",
                 fontSize: "xs"
             }
         },
@@ -177,6 +178,7 @@ export const input = defineRecipe({
             size: "md",
             inputType: "pin",
             css: {
+                px: "0",
                 fontSize: "sm"
             }
         },
@@ -184,6 +186,7 @@ export const input = defineRecipe({
             size: "lg",
             inputType: "pin",
             css: {
+                px: "0",
                 fontSize: "md"
             }
         },
@@ -191,6 +194,7 @@ export const input = defineRecipe({
             size: "xl",
             inputType: "pin",
             css: {
+                px: "0",
                 fontSize: "lg"
             }
         },
@@ -198,6 +202,7 @@ export const input = defineRecipe({
             size: "2xl",
             inputType: "pin",
             css: {
+                px: "0",
                 fontSize: "xl"
             }
         }

@@ -34,10 +34,6 @@ export default defineConfig((options) => ({
 	dts: true,
 	sourcemap: false,
 	treeshake: true,
-	env: {
-		REGISTRY_URL: process.env.REGISTRY_URL || "http://localhost:3000",
-		HTTPS_PROXY: process.env.HTTPS_PROXY ?? ""
-	},
 	outDir: "dist",
 	clean: !options.watch,
 	minify: true,

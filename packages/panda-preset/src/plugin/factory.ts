@@ -118,6 +118,10 @@ function styledFn(BaseComponent, recipeOrConfig = {}, options = {}) {
         if (hasDefaultProps) {
             const { as, unstyled: _u, children: _c, asChild: _a, ...restProps } = props;
             combinedProps = Object.assign({}, defaultProps, restProps);
+        } else if (asChild !== undefined) {
+            // asChild must not be forwarded, or the cloned child would treat itself as asChild too
+            const { asChild: _a, ...restProps } = props;
+            combinedProps = restProps;
         }
 
         const [htmlProps, forwardedProps, variantProps, propStyles, cssStyles, elementProps] = splitJsxProps(

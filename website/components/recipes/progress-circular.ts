@@ -24,6 +24,13 @@ const parts = defineParts({
 
 export { parts as progressCircularParts };
 
+const progressCircularSchemeVariants = Object.fromEntries(
+    Object.entries(getColorSchemes("--track-color")).map(([name, styles]) => [
+        name,
+        parts({ root: styles })
+    ])
+);
+
 export const progressCircular = defineRecipe({
     className: "progress-circular",
     jsx: ["ProgressCircular"],
@@ -71,7 +78,7 @@ export const progressCircular = defineRecipe({
 
     variants: {
         size: {
-            xs: {
+            xs: parts({
                 circle: {
                     "--size": "24px",
                     "--thickness": "2px"
@@ -79,8 +86,8 @@ export const progressCircular = defineRecipe({
                 valueText: {
                     textStyle: "2xs"
                 }
-            },
-            sm: {
+            }),
+            sm: parts({
                 circle: {
                     "--size": "32px",
                     "--thickness": "3px"
@@ -88,8 +95,8 @@ export const progressCircular = defineRecipe({
                 valueText: {
                     textStyle: "2xs"
                 }
-            },
-            md: {
+            }),
+            md: parts({
                 circle: {
                     "--size": "40px",
                     "--thickness": "4px"
@@ -97,8 +104,8 @@ export const progressCircular = defineRecipe({
                 valueText: {
                     textStyle: "xs"
                 }
-            },
-            lg: {
+            }),
+            lg: parts({
                 circle: {
                     "--size": "48px",
                     "--thickness": "5px"
@@ -106,8 +113,8 @@ export const progressCircular = defineRecipe({
                 valueText: {
                     textStyle: "sm"
                 }
-            },
-            xl: {
+            }),
+            xl: parts({
                 circle: {
                     "--size": "64px",
                     "--thickness": "6px"
@@ -115,9 +122,9 @@ export const progressCircular = defineRecipe({
                 valueText: {
                     textStyle: "sm"
                 }
-            }
+            })
         },
-        scheme: getColorSchemes("--track-color", undefined, "root")
+        scheme: progressCircularSchemeVariants
     },
 
     defaultVariants: {

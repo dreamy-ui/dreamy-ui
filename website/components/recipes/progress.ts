@@ -9,6 +9,13 @@ const parts = defineParts({
 
 export { parts as progressParts };
 
+const progressSchemeVariants = Object.fromEntries(
+    Object.entries(getColorSchemes("--progress-color")).map(([name, styles]) => [
+        name,
+        parts({ root: styles })
+    ])
+);
+
 export const progress = defineRecipe({
     className: "progress",
     description:
@@ -55,7 +62,7 @@ export const progress = defineRecipe({
                 root: { h: "4", rounded: "l1" }
             })
         },
-        scheme: getColorSchemes("--progress-color", undefined, "root")
+        scheme: progressSchemeVariants
     },
     defaultVariants: {
         size: "md",

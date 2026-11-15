@@ -10,6 +10,15 @@ export function Base() {
     return <Kbd>^i</Kbd>;
 }
 
+export function Variants() {
+    return (
+        <>
+            <Kbd variant="subtle">Esc</Kbd>
+            <Kbd variant="plain">Esc</Kbd>
+        </>
+    );
+}
+
 export function Sizes() {
     return (
         <>

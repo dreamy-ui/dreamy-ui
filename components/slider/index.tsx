@@ -1,8 +1,9 @@
 "use client";
 
-import { Slider as ArkSlider } from "@ark-ui/react/slider";
+import { useLocaleContext } from "@ark-ui/react/locale";
+import { Slider as ArkSlider, type UseSliderProps, useSlider } from "@ark-ui/react/slider";
 import { ariaAttr, dataAttr, useFieldContext, useFieldProps } from "@dreamy-ui/react";
-import { Children, createContext, isValidElement, useContext } from "react";
+import { Children, createContext, isValidElement, useContext, useId } from "react";
 import { type HTMLDreamyProps, createStyleContext } from "styled-system/jsx";
 import { slider } from "styled-system/recipes";
 import { Box } from "../box";
@@ -22,10 +23,18 @@ const { withProvider, withContext } = createStyleContext(slider);
 export interface SliderProps
     extends Omit<
         React.ComponentProps<typeof ArkSlider.Root>,
-        "value" | "defaultValue" | "onValueChange" | "onValueChangeEnd"
+        "value" | "defaultValue" | "onValueChange" | "onValueChangeEnd" | "thumbSize"
     > {
     size?: "sm" | "md" | "lg";
     hideThumb?: boolean;
+    /**
+     * Thumb diameter in pixels. Overrides the thumb size of the `size` variant.
+     */
+    thumbSize?: number;
+    /**
+     * Places the minimum value on the right. Only applies to horizontal sliders.
+     */
+    isReversed?: boolean;
     value?: number;
     defaultValue?: number;
     onChange?: (value: number) => void;
@@ -52,6 +61,9 @@ export const Root = withProvider(function Component(props: SliderProps) {
         size = "md",
         orientation = "horizontal",
         hideThumb = false,
+        thumbSize: thumbSizeProp,
+        isReversed = false,
+        dir,
         value,
         defaultValue,
         onChange,
@@ -68,13 +80,32 @@ export const Root = withProvider(function Component(props: SliderProps) {
         disabled,
         invalid,
         readOnly,
-        required,
         ids,
+        id,
+        "aria-label": ariaLabel,
+        "aria-labelledby": ariaLabelledBy,
+        form,
+        getAriaValueText,
+        largeStep,
+        max,
+        min,
+        minStepsBetweenThumbs,
+        name,
+        onFocusChange,
+        origin,
+        step,
+        thumbAlignment,
+        thumbCollisionBehavior,
         ...restProps
     } = props;
 
     const config = SIZE_CONFIG[size];
-    const thumbSize = hideThumb ? 0 : config.thumbSize;
+    const thumbSize = hideThumb ? 0 : (thumbSizeProp ?? config.thumbSize);
+    const generatedId = useId();
+    const locale = useLocaleContext();
+    const isRtl = (dir ?? locale.dir) === "rtl";
+    const resolvedDir =
+        isReversed && orientation === "horizontal" ? (isRtl ? "ltr" : "rtl") : isRtl ? "rtl" : "ltr";
     const rootIds =
         fieldContext?.labelId != null
             ? { ...ids, label: fieldContext.labelId }
@@ -84,29 +115,48 @@ export const Root = withProvider(function Component(props: SliderProps) {
         isReadOnly: Boolean(readOnly ?? isReadOnly ?? field.isReadOnly)
     };
 
+    const sliderProps: UseSliderProps & { dir?: "ltr" | "rtl" } = {
+        "aria-label": ariaLabel,
+        "aria-labelledby": ariaLabelledBy,
+        defaultValue: toSliderValue(defaultValue),
+        dir: resolvedDir,
+        disabled: disabled ?? isDisabled ?? field.isDisabled,
+        form,
+        getAriaValueText,
+        id: field.id ?? id ?? generatedId,
+        ids: rootIds,
+        invalid: invalid ?? isInvalid ?? field.isInvalid,
+        largeStep,
+        max,
+        min,
+        minStepsBetweenThumbs,
+        name,
+        onFocusChange,
+        onValueChange: (details) => {
+            const next = fromSliderValue(details.value);
+            onChange?.(next);
+            onChangeValue?.(next);
+        },
+        onValueChangeEnd: (details) => {
+            onChangeEnd?.(fromSliderValue(details.value));
+        },
+        orientation,
+        origin,
+        readOnly: readOnly ?? isReadOnly ?? field.isReadOnly,
+        step,
+        thumbAlignment,
+        thumbCollisionBehavior,
+        thumbSize: { width: thumbSize, height: thumbSize },
+        value: toSliderValue(value)
+    };
+    const slider = useSlider(sliderProps);
+
     return (
-        <ArkSlider.Root
+        <ArkSlider.RootProvider
             {...restProps}
             asChild
-            defaultValue={toSliderValue(defaultValue)}
-            disabled={disabled ?? isDisabled ?? field.isDisabled}
-            id={field.id ?? restProps.id}
-            ids={rootIds}
-            invalid={invalid ?? isInvalid ?? field.isInvalid}
-            onValueChange={(details) => {
-                const next = fromSliderValue(details.value);
-                onChange?.(next);
-                onChangeValue?.(next);
-            }}
-            onValueChangeEnd={(details) => {
-                onChangeEnd?.(fromSliderValue(details.value));
-            }}
-            orientation={orientation}
-            readOnly={readOnly ?? isReadOnly ?? field.isReadOnly}
             ref={ref}
-            required={required ?? isRequired ?? field.isRequired}
-            thumbSize={hideThumb ? undefined : config.thumbSize}
-            value={toSliderValue(value)}
+            value={slider}
         >
             <Box
                 className={className}
@@ -127,7 +177,7 @@ export const Root = withProvider(function Component(props: SliderProps) {
                     {children}
                 </SliderControlContext.Provider>
             </Box>
-        </ArkSlider.Root>
+        </ArkSlider.RootProvider>
     );
 }, "root");
 
@@ -148,17 +198,23 @@ function splitTrackChildren(children: React.ReactNode) {
     return { trackChildren, thumbs };
 }
 
+const TrackBar = withContext(ArkSlider.Track, "track");
+
+/**
+ * Layout props (e.g. `maxW`) land on the Ark control, so thumb positioning
+ * and pointer hit-testing always match the visible track.
+ */
 export const Track = withContext(function Component(props: SliderTrackProps) {
     const { children, ...rest } = props;
     const { trackChildren, thumbs } = splitTrackChildren(children);
 
     return (
-        <ArkSlider.Control>
-            <ArkSlider.Track {...rest}>{trackChildren}</ArkSlider.Track>
+        <ArkSlider.Control {...rest}>
+            <TrackBar>{trackChildren}</TrackBar>
             {thumbs}
         </ArkSlider.Control>
     );
-}, "track");
+}, "control");
 
 export interface SliderFilledTrackProps extends HTMLDreamyProps<"div"> {}
 

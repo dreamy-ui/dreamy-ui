@@ -136,14 +136,21 @@ export default defineConfig({
                         animationDelay: ["0s", "0.5s", "1s", "1.5s", "2s"],
                         minW: [20],
                         maxW: ["300px"],
-                        bg: ["secondary", "blue.400", "purple.400"],
-                        color: ["white", "secondary"],
+                        bg: ["secondary", "blue.400", "purple.400", "green.400"],
+                        color: ["white", "secondary", "black/87"],
                         fontWeight: [500],
                         p: [3, 2, 10],
-                        justifyContent: ["between"],
+                        justifyContent: ["between", "center"],
+                        alignItems: ["center"],
+                        flexDirection: ["column"],
+                        flexWrap: ["wrap"],
+                        // @ts-expect-error - boolean utilities work
+                        center: [true],
+                        full: [true],
+                        wrapped: [true],
                         rounded: ["md", "inherit"],
-                        w: ["250px", "100px", "1/3", "auto", "xs", "sm"],
-                        h: ["100px"],
+                        w: ["250px", "100px", "1/3", "auto", "xs", "sm", "full"],
+                        h: ["100px", "150px", "200px", "300px", 4, 6, 8],
                         resize: ["none", "vertical", "horizontal", "both"],
                         position: ["absolute", "relative"],
                         top: [0, "50%"],
@@ -161,7 +168,7 @@ export default defineConfig({
                         marginEnd: ["-0.75rem"],
                         marginStart: ["-0.75rem"],
                         visibility: ["visible", "hidden"],
-                        gap: [6]
+                        gap: [6, 4, 10]
                     }
                 }
             ]

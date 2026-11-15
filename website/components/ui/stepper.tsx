@@ -2,6 +2,7 @@
 
 import {
     StepperProvider,
+    callAllHandlers,
     type UseStepperProps,
     type UseStepperReturn,
     useStepper,
@@ -232,37 +233,48 @@ export const CompletedContent = withContext(function StepperCompletedContent(
     return <dreamy.div {...props} />;
 }, "completedContent");
 
+const NextTriggerSlot = withContext(dreamy.button, "nextTrigger");
+const PrevTriggerSlot = withContext(dreamy.button, "prevTrigger");
+
 export interface StepperNextTriggerProps extends HTMLDreamyProps<"button"> {}
 
 /**
  * Stepper Next Trigger — advances to the next step.
+ * Use `asChild` to render your own element (e.g. a `Button`) as the trigger.
  */
-export const NextTrigger = withContext(function StepperNextTrigger(props: StepperNextTriggerProps) {
+export function NextTrigger(props: StepperNextTriggerProps) {
+    const { onClick, ...rest } = props;
     const { getNextTriggerProps } = useStepperContext();
+    const triggerProps = getNextTriggerProps();
 
     return (
-        <dreamy.button
-            {...getNextTriggerProps()}
-            {...props}
+        <NextTriggerSlot
+            {...triggerProps}
+            {...rest}
+            onClick={callAllHandlers(onClick, triggerProps.onClick)}
         />
     );
-}, "nextTrigger");
+}
 
 export interface StepperPrevTriggerProps extends HTMLDreamyProps<"button"> {}
 
 /**
  * Stepper Prev Trigger — returns to the previous step.
+ * Use `asChild` to render your own element (e.g. a `Button`) as the trigger.
  */
-export const PrevTrigger = withContext(function StepperPrevTrigger(props: StepperPrevTriggerProps) {
+export function PrevTrigger(props: StepperPrevTriggerProps) {
+    const { onClick, ...rest } = props;
     const { getPrevTriggerProps } = useStepperContext();
+    const triggerProps = getPrevTriggerProps();
 
     return (
-        <dreamy.button
-            {...getPrevTriggerProps()}
-            {...props}
+        <PrevTriggerSlot
+            {...triggerProps}
+            {...rest}
+            onClick={callAllHandlers(onClick, triggerProps.onClick)}
         />
     );
-}, "prevTrigger");
+}
 
 export interface StepperContextProps {
     children: (ctx: UseStepperReturn) => React.ReactNode;

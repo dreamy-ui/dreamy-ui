@@ -30,14 +30,13 @@ export interface AvatarOptions {
     referrerPolicy?: React.HTMLAttributeReferrerPolicy;
 }
 
-const GenericAvatarIcon = (props: HTMLDreamyProps<"svg">) => {
+function GenericAvatarIcon(props: HTMLDreamyProps<"svg">) {
     return (
         <Icon
-            aria-label="Avatar"
             data-part="fallback-icon"
-            role="img"
             viewBox="0 0 128 128"
             {...props}
+            aria-hidden
         >
             <path
                 d="M103,102.1388 C93.094,111.92 79.3504,118 64.1638,118 C48.8056,118 34.9294,111.768 25,101.7892 L25,95.2 C25,86.8096 31.981,80 40.6,80 L87.4,80 C96.019,80 103,86.8096 103,95.2 L103,102.1388 Z"
@@ -49,10 +48,10 @@ const GenericAvatarIcon = (props: HTMLDreamyProps<"svg">) => {
             />
         </Icon>
     );
-};
+}
 
 export interface AvatarProps
-    extends Omit<HTMLDreamyProps<"span">, "onError" | keyof AvatarOptions | keyof AvatarVariantProps>,
+    extends Omit<HTMLDreamyProps<"div">, "onError" | keyof AvatarOptions | keyof AvatarVariantProps>,
         AvatarOptions,
         AvatarVariantProps {
     crossOrigin?: HTMLDreamyProps<"img">["crossOrigin"];
@@ -95,12 +94,11 @@ export function Avatar({
             }}
         >
             <ArkAvatar.Fallback
-                aria-label={name}
+                aria-label={name ? name : iconLabel}
                 data-part="name"
-                name={name}
-                role={name ? "img" : undefined}
+                role="img"
             >
-                {name ? getInitials(name) : cloneElement(icon, { role: "img", "aria-label": iconLabel })}
+                {name ? getInitials(name) : icon}
             </ArkAvatar.Fallback>
             {src ? (
                 <ArkAvatar.Image

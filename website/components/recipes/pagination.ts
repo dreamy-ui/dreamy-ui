@@ -4,13 +4,15 @@ export const pagination = defineSlotRecipe({
     className: "pagination",
     description:
         "Page navigation controls with previous/next triggers and numbered page items. The active page shows a primary-filled pill indicator behind the number — only size affects dimensions.",
-    slots: ["root", "item", "ellipsis", "prevTrigger", "nextTrigger"],
+    slots: ["root", "item", "ellipsis", "firstTrigger", "prevTrigger", "nextTrigger", "lastTrigger"],
     jsx: [
         "Pagination.Root",
         "Pagination.Item",
         "Pagination.Ellipsis",
+        "Pagination.FirstTrigger",
         "Pagination.PrevTrigger",
-        "Pagination.NextTrigger"
+        "Pagination.NextTrigger",
+        "Pagination.LastTrigger"
     ],
     base: {
         root: {
@@ -37,8 +39,10 @@ export const pagination = defineSlotRecipe({
             justifyContent: "center",
             color: "fg.medium"
         },
+        firstTrigger: {},
         prevTrigger: {},
-        nextTrigger: {}
+        nextTrigger: {},
+        lastTrigger: {}
     },
     variants: {
         size: {

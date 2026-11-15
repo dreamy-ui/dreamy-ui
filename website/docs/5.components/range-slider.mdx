@@ -15,7 +15,7 @@ pnpm dreamy add range-slider
 ## Usage
 
 <Wrapper>
-	<RangeSlider.Root maxW="xs">
+	<RangeSlider.Root w="xs">
 		<RangeSlider.Track>
 			<RangeSlider.FilledTrack />
 			<RangeSlider.Thumb index={0} />
@@ -265,7 +265,7 @@ You can change the orientation of the Range Slider by using the `orientation` pr
 
 ### Reversed
 
-You can reverse the Range Slider by using the `isReversed` prop.
+You can reverse the Range Slider by using the `isReversed` prop. The minimum value moves to the right and arrow keys follow the visual direction. This applies to horizontal sliders only.
 
 <Wrapper>	
 	<RangeSlider.Root isReversed maxW="xs">

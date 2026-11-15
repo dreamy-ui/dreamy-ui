@@ -14,7 +14,7 @@ import {
 } from "./schema";
 
 const env = processEnvSchema.parse({
-	REGISTRY_URL: process.env.REGISTRY_URL || "http://localhost:3000",
+	REGISTRY_URL: process.env.REGISTRY_URL || "http://localhost:3002",
 	HTTPS_PROXY: process.env.HTTPS_PROXY || undefined
 });
 
