@@ -98,23 +98,23 @@ Pass `resize` prop to the `Textarea` to enable resizing.
 
 ### Invalid
 
-Pass `isInvalid` prop to the `Textarea` to show the error state.
+Pass `aria-invalid` prop to the `Textarea` to show the error state.
 
 <Wrapper>	
 	<VStack w="full">
-		<Textarea placeholder="Enter your bio" variant="outline" isInvalid />
-		<Textarea placeholder="Enter your bio" variant="filled" isInvalid />
-		<Textarea placeholder="Enter your bio" variant="flushed" isInvalid />
-		<Textarea placeholder="Enter your bio" variant="filledOutline" isInvalid />
+		<Textarea placeholder="Enter your bio" variant="outline" aria-invalid />
+		<Textarea placeholder="Enter your bio" variant="filled" aria-invalid />
+		<Textarea placeholder="Enter your bio" variant="flushed" aria-invalid />
+		<Textarea placeholder="Enter your bio" variant="filledOutline" aria-invalid />
 	</VStack>
 </Wrapper>
 
 ```tsx
 <VStack w="full">
-	<Textarea placeholder="Enter your bio" variant="outline" isInvalid />
-	<Textarea placeholder="Enter your bio" variant="filled" isInvalid />
-	<Textarea placeholder="Enter your bio" variant="flushed" isInvalid />
-	<Textarea placeholder="Enter your bio" variant="filledOutline" isInvalid />
+	<Textarea placeholder="Enter your bio" variant="outline" aria-invalid />
+	<Textarea placeholder="Enter your bio" variant="filled" aria-invalid />
+	<Textarea placeholder="Enter your bio" variant="flushed" aria-invalid />
+	<Textarea placeholder="Enter your bio" variant="filledOutline" aria-invalid />
 </VStack>
 ```
 

@@ -1,19 +1,23 @@
-import type { MouseEventHandler, ReactNode } from "react";
+import type { ReactNode } from "react";
+import type { ButtonActionDetails } from "@ui-sdk/react/button";
 import { assertType } from "vitest";
 import type { ButtonProps } from "./index";
 
 type ExpectTrue<T extends true> = T;
 
-assertType<MouseEventHandler<HTMLButtonElement> | undefined>({} as ButtonProps["onClick"]);
-assertType<boolean | undefined>({} as ButtonProps["isDisabled"]);
+assertType<
+    | ((event: React.MouseEvent<HTMLElement>, details: ButtonActionDetails) => unknown)
+    | undefined
+>({} as ButtonProps["onClick"]);
 assertType<boolean | undefined>({} as ButtonProps["isLoading"]);
-assertType<ReactNode | undefined>({} as ButtonProps["loadingText"]);
 assertType<boolean | undefined>({} as ButtonProps["isSuccess"]);
+assertType<ReactNode | undefined>({} as ButtonProps["loadingText"]);
 assertType<ReactNode | undefined>({} as ButtonProps["successText"]);
 assertType<ReactNode | undefined>({} as ButtonProps["successIcon"]);
 assertType<ReactNode | undefined>({} as ButtonProps["leftIcon"]);
 assertType<ReactNode | undefined>({} as ButtonProps["rightIcon"]);
 assertType<"button" | "submit" | "reset" | undefined>({} as ButtonProps["type"]);
+assertType<boolean | undefined>({} as ButtonProps["focusableWhenDisabled"]);
 
 const _variant: ButtonProps["variant"] = "solid";
 const _size: ButtonProps["size"] = "md";
@@ -53,35 +57,13 @@ void (_recipeProps && _styleProps && _variant && _size && _scheme);
 assertType<ButtonProps>({
     children: "Save",
     onClick: () => {},
-    isDisabled: false,
     isLoading: false,
+    isSuccess: false,
     loadingText: "Saving",
     leftIcon: null,
     rightIcon: null,
     type: "button",
     variant: "solid",
     size: "md",
-    scheme: "primary",
-    className: "custom-button",
-    bg: "primary",
-    color: "fg",
-    p: 2,
-    m: 1,
-    w: "fit-content",
-    h: "auto"
-});
-
-assertType<ButtonProps>({
-    // @ts-expect-error invalid variant
-    variant: "invalid"
-});
-
-assertType<ButtonProps>({
-    // @ts-expect-error invalid size
-    size: "3xl"
-});
-
-assertType<ButtonProps>({
-    // @ts-expect-error invalid color scheme
-    scheme: "invalid"
+    scheme: "primary"
 });

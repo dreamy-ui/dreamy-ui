@@ -1,5 +1,6 @@
 "use client";
 
+import { Button as UiSdkButton, type ButtonActionDetails } from "@ui-sdk/react/button";
 import {
     type ButtonSuccessIconPart,
     dataAttr,
@@ -11,18 +12,23 @@ import {
     useRipple
 } from "@dreamy-ui/react";
 import { m } from "motion/react";
-import { cloneElement, isValidElement, useCallback, useMemo, type ReactElement } from "react";
+import {
+    cloneElement,
+    isValidElement,
+    useCallback,
+    useMemo,
+    type ComponentProps,
+    type ReactElement
+} from "react";
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type ButtonVariantProps, button } from "styled-system/recipes";
 import { Ripple } from "./ripple";
 import { Span } from "./span";
 import { Spinner } from "./spinner";
 
+const StyledButton = dreamy(UiSdkButton, button);
+
 export interface UniversalButtonProps extends ButtonSpinnerOptions {
-    /**
-     * Disables the whole button
-     */
-    isDisabled?: boolean;
     /**
      * Transforms the button into a loading state and disables the button
      */
@@ -47,9 +53,36 @@ export interface UniversalButtonProps extends ButtonSpinnerOptions {
 }
 
 export interface ButtonProps
-    extends HTMLDreamyProps<"button">,
+    extends Omit<HTMLDreamyProps<"button">, "onClick" | "type">,
         ButtonVariantProps,
         UniversalButtonProps {
+    /**
+     * Runs when the button is pressed. Return a Promise and the button stays
+     * pending — `aria-busy`, `aria-disabled` and `data-pending` — until it
+     * settles, and ignores further presses meanwhile.
+     */
+    onClick?: (event: React.MouseEvent<HTMLElement>, details: ButtonActionDetails) => unknown;
+    /**
+     * What a native button does in a form: `"submit"` submits it and `"reset"`
+     * resets it.
+     * @defaultValue "button"
+     */
+    type?: "button" | "submit" | "reset";
+    /**
+     * Keeps a disabled button in the tab order with `aria-disabled` instead of
+     * the native attribute, so it can host a tooltip that says why.
+     */
+    focusableWhenDisabled?: boolean;
+    /**
+     * What screen readers hear once an async press has been pending for a
+     * second.
+     */
+    pendingAnnouncement?: string;
+    /**
+     * Renders the button as another element, like a link.
+     */
+    render?: ComponentProps<typeof UiSdkButton>["render"];
+    debug?: boolean;
     /**
      * The icon to be displayed on the right side of the button
      */
@@ -68,8 +101,6 @@ export interface ButtonProps
     successText?: React.ReactNode;
 }
 
-const StyledButton = dreamy("button", button);
-
 /**
  * Button component — triggers an action or event.
  *
@@ -86,7 +117,6 @@ export function Button({
     isSuccess,
     successText,
     successIcon,
-    isDisabled,
     rightIcon,
     leftIcon,
     children,
@@ -94,6 +124,13 @@ export function Button({
     spinner,
     spinnerPlacement,
     disabled,
+    focusableWhenDisabled,
+    pendingAnnouncement,
+    render,
+    debug,
+    type,
+    onClick,
+    onPointerDown: onPointerDownProp,
     scheme,
     ...rest
 }: ButtonProps) {
@@ -106,52 +143,67 @@ export function Button({
         isDisabled: isDisabledRipple
     } = useRipple();
 
-    isDisabled = isDisabled || disabled;
+    const isDisabled = disabled || isLoading;
 
     const showSuccess = !!isSuccess && !isLoading;
     const isContentHidden = isLoading || showSuccess;
     const statusText = isLoading ? loadingText : showSuccess ? successText : undefined;
 
     const handleClick = useCallback(
-        (e: React.MouseEvent<HTMLButtonElement>) => {
-            rest.onClick?.(e);
-            if (disableRipple || isDisabled || isDisabledRipple) return;
+        (event: React.MouseEvent<HTMLElement>, details: ButtonActionDetails) => {
+            const result = onClick?.(event, details);
+            if (disableRipple || isDisabled || isDisabledRipple || isLoading) return result;
 
-            if (isLoading) return;
             if (isMobile()) {
-                onPointerDownRipple(e);
+                onPointerDownRipple(
+                    event as unknown as React.PointerEvent<HTMLButtonElement>
+                );
                 nextTick(() => {
                     nextTick(() => {
-                        onRippleClickHandler(e);
+                        onRippleClickHandler(
+                            event as unknown as React.MouseEvent<HTMLButtonElement>
+                        );
                     });
                 });
             } else {
-                onRippleClickHandler(e);
+                onRippleClickHandler(
+                    event as unknown as React.MouseEvent<HTMLButtonElement>
+                );
             }
+            return result;
         },
         [
             disableRipple,
             isDisabled,
+            onClick,
             onRippleClickHandler,
             isDisabledRipple,
-            rest.onClick,
             onPointerDownRipple,
             isLoading
         ]
     );
 
     const onPointerDown = useCallback(
-        (e: React.PointerEvent<HTMLButtonElement>) => {
-            rest.onPointerDown?.(e);
-            if (disableRipple || isDisabled || isDisabledRipple || isMobile() || isLoading) return;
-            onPointerDownRipple(e);
+        (event: React.PointerEvent<HTMLButtonElement>) => {
+            (onPointerDownProp as React.PointerEventHandler<HTMLButtonElement> | undefined)?.(
+                event
+            );
+            if (
+                disableRipple ||
+                isDisabled ||
+                isDisabledRipple ||
+                isMobile() ||
+                isLoading
+            )
+                return;
+            onPointerDownRipple(event);
         },
         [
             disableRipple,
             isDisabled,
             onPointerDownRipple,
             isDisabledRipple,
-            rest.onPointerDown,
+            onPointerDownProp,
             isLoading
         ]
     );
@@ -167,16 +219,20 @@ export function Button({
 
     return (
         <StyledButton
-            data-disabled={dataAttr(isDisabled)}
+            data-disabled={dataAttr(disabled === true)}
             data-loading={dataAttr(isLoading)}
             data-success={dataAttr(showSuccess)}
-            disabled={isDisabled || isLoading}
+            debug={debug}
+            disabled={isDisabled}
+            focusableWhenDisabled={focusableWhenDisabled}
+            pendingAnnouncement={pendingAnnouncement}
+            render={render}
             {...rest}
             // Scheme compound styles would override the success colors
             scheme={showSuccess ? undefined : scheme}
             onClick={handleClick}
             onPointerDown={onPointerDown}
-            type={rest.type || "button"}
+            type={type ?? "button"}
         >
             {leftIcon &&
                 !statusText &&
@@ -201,7 +257,7 @@ export function Button({
             )}
 
             {isContentHidden
-                ? statusText || <span style={{ opacity: 0 }}>{children}</span>
+                ? statusText || <span style={{ opacity: 0 }}>{children as React.ReactNode}</span>
                 : children}
 
             {isLoading && spinnerPlacement === "end" && (

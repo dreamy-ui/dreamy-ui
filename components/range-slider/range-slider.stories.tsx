@@ -30,7 +30,7 @@ export function MaxMinStep() {
             <RangeSlider.Root
                 max={50}
                 min={0}
-                onChangeValue={setValue}
+                onValueChange={setValue}
                 step={5}
                 value={value}
             >
@@ -198,7 +198,7 @@ export function Controlled() {
             </Text>
 
             <RangeSlider.Root
-                onChangeValue={setValue}
+                onValueChange={setValue}
                 value={value}
             >
                 <RangeSlider.Track maxW="xs">

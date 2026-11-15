@@ -96,22 +96,22 @@ export function Invalid() {
     return (
         <VStack w="full">
             <Textarea
-                isInvalid
+                aria-invalid
                 placeholder="Enter your bio"
                 variant="outline"
             />
             <Textarea
-                isInvalid
+                aria-invalid
                 placeholder="Enter your bio"
                 variant="filled"
             />
             <Textarea
-                isInvalid
+                aria-invalid
                 placeholder="Enter your bio"
                 variant="flushed"
             />
             <Textarea
-                isInvalid
+                aria-invalid
                 placeholder="Enter your bio"
                 variant="filledOutline"
             />

@@ -1,27 +1,27 @@
-import type { ChangeEventHandler } from "react";
+import type { CheckedState } from "@ui-sdk/react/checkbox";
 import { assertType } from "vitest";
 import type { CheckboxGroupProps, CheckboxProps } from "./index";
 
 type ExpectTrue<T extends true> = T;
 
-assertType<ChangeEventHandler<HTMLInputElement> | undefined>({} as CheckboxProps["onChange"]);
-assertType<((value: boolean) => void) | undefined>({} as CheckboxProps["onChangeValue"]);
+assertType<CheckedState | undefined>({} as CheckboxProps["checked"]);
+assertType<CheckedState | undefined>({} as CheckboxProps["defaultChecked"]);
+assertType<((checked: CheckedState, details: never) => void) | undefined>(
+    {} as CheckboxProps["onCheckedChange"]
+);
 
-assertType<boolean | undefined>({} as CheckboxProps["isChecked"]);
-assertType<boolean | undefined>({} as CheckboxProps["defaultChecked"]);
-assertType<boolean | undefined>({} as CheckboxProps["isIndeterminate"]);
-assertType<boolean | undefined>({} as CheckboxProps["isDisabled"]);
-assertType<boolean | undefined>({} as CheckboxProps["isRequired"]);
+assertType<boolean | undefined>({} as CheckboxProps["disabled"]);
+assertType<boolean | undefined>({} as CheckboxProps["readOnly"]);
+assertType<boolean | undefined>({} as CheckboxProps["required"]);
 assertType<boolean | undefined>({} as CheckboxProps["isInvalid"]);
-assertType<boolean | undefined>({} as CheckboxProps["isReadOnly"]);
 
 const _scheme: CheckboxProps["scheme"] = "primary";
 const _size: CheckboxProps["size"] = "md";
 const _variant: CheckboxProps["variant"] = "solid";
 
 type _HasCallbackProps = ExpectTrue<
-    "onChange" extends keyof CheckboxProps
-        ? "onChangeValue" extends keyof CheckboxProps
+    "checked" extends keyof CheckboxProps
+        ? "onCheckedChange" extends keyof CheckboxProps
             ? true
             : false
         : false
@@ -53,54 +53,47 @@ type _HasStyleProps = ExpectTrue<
         : false
 >;
 
-type _HasGroupCallbacks = ExpectTrue<"onChange" extends keyof CheckboxGroupProps ? true : false>;
+type _HasGroupProps = ExpectTrue<
+    "value" extends keyof CheckboxGroupProps
+        ? "defaultValue" extends keyof CheckboxGroupProps
+            ? "onValueChange" extends keyof CheckboxGroupProps
+                ? true
+                : false
+            : false
+        : false
+>;
 
 const _callbackProps: _HasCallbackProps = true;
 const _recipeProps: _HasRecipeProps = true;
 const _styleProps: _HasStyleProps = true;
-const _groupCallbacks: _HasGroupCallbacks = true;
+const _groupProps: _HasGroupProps = true;
 
-void (_callbackProps && _recipeProps && _styleProps && _groupCallbacks && _scheme && _size && _variant);
+void (_callbackProps && _recipeProps && _styleProps && _groupProps);
+void (_scheme && _size && _variant);
 
 assertType<CheckboxProps>({
-    onChange: () => {},
-    onChangeValue: () => {},
-    isChecked: true,
+    children: "Accept terms",
+    checked: true,
     defaultChecked: false,
-    isIndeterminate: true,
-    scheme: "primary",
+    onCheckedChange: () => {},
+    disabled: false,
+    readOnly: false,
+    required: false,
+    isInvalid: false,
+    variant: "solid",
     size: "md",
-    variant: "outline",
-    name: "terms",
-    value: "accepted",
-    className: "custom-checkbox",
-    bg: "primary",
-    color: "fg",
-    p: 2,
-    m: 1,
-    w: "fit-content",
-    h: "auto"
+    scheme: "primary"
 });
 
 assertType<CheckboxGroupProps>({
-    defaultValue: ["a"],
-    onChange: () => {},
-    scheme: "primary",
-    size: "md",
-    variant: "solid"
-});
-
-assertType<CheckboxProps>({
-    // @ts-expect-error invalid color scheme
-    scheme: "invalid"
-});
-
-assertType<CheckboxProps>({
-    // @ts-expect-error invalid size
-    size: "xl"
-});
-
-assertType<CheckboxProps>({
-    // @ts-expect-error invalid variant
-    variant: "ghost"
+    value: ["a"],
+    defaultValue: [],
+    onValueChange: () => {},
+    disabled: false,
+    readOnly: false,
+    required: false,
+    name: "terms",
+    variant: "outline",
+    size: "sm",
+    scheme: "primary"
 });

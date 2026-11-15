@@ -208,7 +208,9 @@ export function useFieldProvider(props: FieldContext) {
 	};
 }
 
-export interface UseFieldProps<T extends HTMLElement> extends UserFeedbackProps {
+export interface UseFieldProps<T extends HTMLElement>
+	extends UserFeedbackProps,
+		React.AriaAttributes {
 	/**
 	 * Custom id for the field control. Used to wire label, hint, and error message ids.
 	 */
@@ -310,6 +312,16 @@ export function useFieldProps<T extends HTMLElement>(props: UseFieldProps<T>) {
 		labelIds.push(field.hintId);
 	}
 
+	const ariaInvalid = rest["aria-invalid"];
+	const dataInvalid = (rest as Record<string, unknown>)["data-invalid"];
+	const hasExplicitInvalid = ariaInvalid !== undefined || dataInvalid !== undefined;
+	const invalidFromAttributes =
+		dataInvalid !== undefined ||
+		(ariaInvalid !== undefined && ariaInvalid !== false && ariaInvalid !== "false");
+	const resolvedInvalid = hasExplicitInvalid
+		? invalidFromAttributes
+		: isInvalid ?? field?.isInvalid;
+
 	return {
 		...omitDreamyProps(rest),
 		"aria-describedby": labelIds.join(" ") || undefined,
@@ -317,7 +329,7 @@ export function useFieldProps<T extends HTMLElement>(props: UseFieldProps<T>) {
 		isDisabled: disabled ?? isDisabled ?? field?.isDisabled,
 		isReadOnly: readOnly ?? isReadOnly ?? field?.isReadOnly,
 		isRequired: required ?? isRequired ?? field?.isRequired,
-		isInvalid: isInvalid ?? field?.isInvalid,
+		isInvalid: resolvedInvalid,
 		onFocus: callAllHandlers(field?.onFocus, onFocus),
 		onBlur: callAllHandlers(field?.onBlur, onBlur)
 	};

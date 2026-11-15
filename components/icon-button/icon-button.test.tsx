@@ -79,7 +79,7 @@ describe("IconButton", () => {
             <IconButton
                 aria-label="Edit"
                 icon={<EditIcon />}
-                isDisabled
+                disabled
                 onClick={onClick}
             />
         );

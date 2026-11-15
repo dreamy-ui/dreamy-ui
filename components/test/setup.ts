@@ -22,6 +22,12 @@ Object.defineProperty(window, "matchMedia", {
 
 Element.prototype.scrollIntoView = function scrollIntoView() {};
 
+if (typeof Element.prototype.getAnimations !== "function") {
+    Element.prototype.getAnimations = function getAnimations() {
+        return [];
+    };
+}
+
 class ResizeObserverMock {
     private callback: ResizeObserverCallback;
 

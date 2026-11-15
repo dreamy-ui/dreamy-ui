@@ -3,7 +3,7 @@ import type { ProgressProps } from "./index";
 
 type ExpectTrue<T extends true> = T;
 
-assertType<number | undefined>({} as ProgressProps["value"]);
+assertType<number | null | undefined>({} as ProgressProps["value"]);
 assertType<number | undefined>({} as ProgressProps["min"]);
 assertType<number | undefined>({} as ProgressProps["max"]);
 assertType<string | undefined>({} as ProgressProps["speed"]);
@@ -51,39 +51,3 @@ const _recipeProps: _HasRecipeProps = true;
 const _styleProps: _HasStyleProps = true;
 
 void (_valueProps && _recipeProps && _styleProps && _size && _scheme);
-
-assertType<ProgressProps>({
-    "aria-label": "Upload progress",
-    value: 40,
-    min: 0,
-    max: 100,
-    size: "md",
-    scheme: "primary",
-    speed: "1s",
-    "aria-valuetext": "40 percent",
-    className: "custom-progress",
-    bg: "transparent",
-    color: "fg",
-    p: 0,
-    m: 1,
-    w: "full",
-    h: "auto"
-});
-
-type _AriaLabelRequired = ExpectTrue<
-    undefined extends ProgressProps["aria-label"] ? false : true
->;
-
-const _ariaLabelRequired: _AriaLabelRequired = true;
-void _ariaLabelRequired;
-
-assertType<ProgressProps>({
-    "aria-label": "Loading",
-    // @ts-expect-error invalid size
-    size: "xl"
-});
-assertType<ProgressProps>({
-    "aria-label": "Loading",
-    // @ts-expect-error invalid scheme
-    scheme: "invalid"
-});

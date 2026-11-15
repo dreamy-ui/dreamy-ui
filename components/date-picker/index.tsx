@@ -43,6 +43,16 @@ const DatePickerCalendarIcon = withContext(CalendarIcon, "calendarIcon");
 
 type WeekStartsOn = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
+type PopoverChangeDetails = Parameters<
+    NonNullable<Popover.PopoverProps["onOpenChange"]>
+>[1];
+
+const imperativePopoverDetails = {
+    reason: "imperative",
+    cancel: () => {},
+    canceled: false
+} as PopoverChangeDetails;
+
 function getInheritedButtonSize(
     size: DatePickerVariantProps["size"]
 ): "sm" | "md" | "lg" | undefined {
@@ -162,7 +172,10 @@ function DatePickerRoot(props: DatePickerRootProps) {
     const handleOpenChange = useCallback(
         function handleOpenChange(details: OpenChangeDetails) {
             setOpen(details.open);
-            popoverProps?.onOpenChange?.(details);
+            popoverProps?.onOpenChange?.(
+                details.open,
+                details as unknown as PopoverChangeDetails
+            );
         },
         [popoverProps]
     );
@@ -171,7 +184,7 @@ function DatePickerRoot(props: DatePickerRootProps) {
         function handleApply() {
             onApply?.();
             setOpen(false);
-            popoverProps?.onOpenChange?.({ open: false });
+            popoverProps?.onOpenChange?.(false, imperativePopoverDetails);
         },
         [onApply, popoverProps]
     );
@@ -180,7 +193,7 @@ function DatePickerRoot(props: DatePickerRootProps) {
         function handleCancel() {
             onCancel?.();
             setOpen(false);
-            popoverProps?.onOpenChange?.({ open: false });
+            popoverProps?.onOpenChange?.(false, imperativePopoverDetails);
         },
         [onCancel, popoverProps]
     );
@@ -242,9 +255,9 @@ function DatePickerRoot(props: DatePickerRootProps) {
                 <Popover.Root
                     autoFocus
                     open={open}
-                    onOpenChange={(details) => {
-                        setOpen(details.open);
-                        popoverProps?.onOpenChange?.(details);
+                    onOpenChange={(nextOpen, details) => {
+                        setOpen(nextOpen);
+                        popoverProps?.onOpenChange?.(nextOpen, details);
                     }}
                     positioning={positioning}
                     {...popoverProps}
@@ -444,7 +457,7 @@ export const Control = withContext(function DatePickerControl(props: DatePickerC
                 {...inputProps}
             />
             <Button
-                isDisabled={isTodayDisabled}
+                disabled={isTodayDisabled}
                 onClick={handleSetToday}
                 size={size}
                 type="button"

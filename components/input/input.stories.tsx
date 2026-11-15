@@ -64,22 +64,22 @@ export function Invalid() {
     return (
         <VStack w="full">
             <Input
-                isInvalid
+                aria-invalid
                 placeholder="Enter your username"
                 variant="outline"
             />
             <Input
-                isInvalid
+                aria-invalid
                 placeholder="Enter your username"
                 variant="filled"
             />
             <Input
-                isInvalid
+                aria-invalid
                 placeholder="Enter your username"
                 variant="flushed"
             />
             <Input
-                isInvalid
+                aria-invalid
                 placeholder="Enter your username"
                 variant="filledOutline"
             />

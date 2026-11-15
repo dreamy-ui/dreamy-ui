@@ -1,25 +1,57 @@
 "use client";
 
-import { Switch as ArkSwitch } from "@ark-ui/react/switch";
-import {
-    type UseSwitchProps,
-    useFieldProps,
-    useFocusRing,
-    useReducedMotion
-} from "@dreamy-ui/react";
+import { Switch as UiSdkSwitch, SwitchThumb as UiSdkSwitchThumb } from "@ui-sdk/react/switch";
+import { dataAttr, useFieldProps } from "@dreamy-ui/react";
 import type { MotionProps } from "motion/react";
+import { m } from "motion/react";
 import { useState } from "react";
 import { cx } from "styled-system/css";
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type SwittchVariantProps, swittch } from "styled-system/recipes";
-import { MotionBox } from "./motion";
 
 export interface SwitchProps
-    extends UseSwitchProps,
-        SwittchVariantProps,
-        Omit<HTMLDreamyProps<"label">, keyof UseSwitchProps | keyof SwittchVariantProps> {}
+    extends SwittchVariantProps,
+        Omit<
+            HTMLDreamyProps<"label">,
+            | "defaultValue"
+            | "onChange"
+            | "onChangeValue"
+            | "isChecked"
+            | "defaultChecked"
+            | "isDisabled"
+            | "isReadOnly"
+            | "isRequired"
+            | "isIndeterminate"
+        >,
+        Pick<
+            React.ComponentProps<typeof UiSdkSwitch>,
+            | "checked"
+            | "defaultChecked"
+            | "onCheckedChange"
+            | "disabled"
+            | "readOnly"
+            | "required"
+            | "name"
+            | "value"
+            | "form"
+            | "controller"
+            | "debug"
+        > {
+    /**
+     * Marks the switch as invalid for styling purposes.
+     */
+    isInvalid?: boolean;
+    /**
+     * Icon rendered inside the thumb.
+     */
+    icon?: React.ReactNode;
+    /**
+     * Motion props applied to the thumb content.
+     */
+    thumbProps?: MotionProps;
+}
 
-const StyledSwitch = dreamy(ArkSwitch.Root, swittch);
+const StyledSwitch = dreamy("label", swittch);
 
 /**
  * Switch component — toggle between two states.
@@ -32,186 +64,114 @@ const StyledSwitch = dreamy(ArkSwitch.Root, swittch);
  * ```
  */
 export function Switch(props: SwitchProps) {
-    const reduceMotionGlobal = useReducedMotion();
     const field = useFieldProps(props);
 
     const {
         children,
         icon,
+        thumbProps,
         ref,
-        isChecked: isCheckedProp,
+        checked,
         defaultChecked,
-        isDisabled: isDisabledProp,
-        isReadOnly: isReadOnlyProp,
-        isRequired: isRequiredProp,
+        onCheckedChange,
+        disabled: disabledProp,
+        readOnly: readOnlyProp,
+        required: requiredProp,
         isInvalid: isInvalidProp,
-        isIndeterminate = false,
-        reduceMotion = reduceMotionGlobal ?? false,
-        onChange,
-        onChangeValue,
         name,
         value,
-        tabIndex,
+        form,
+        controller,
+        debug,
         autoFocus,
-        inputProps,
-        wrapperProps,
-        labelProps,
-        thumbProps,
+        tabIndex,
         className,
+        "aria-label": ariaLabel,
+        "aria-labelledby": ariaLabelledby,
         onClick,
         onPointerDown,
         onPointerUp,
         onPointerLeave,
-        onBlur,
-        onFocus,
-        onKeyDown,
-        onKeyUp,
         ...rest
     } = props;
 
-    const isDisabled = isDisabledProp ?? field.isDisabled;
-    const isReadOnly = isReadOnlyProp ?? field.isReadOnly;
-    const isRequired = isRequiredProp ?? field.isRequired;
+    const isDisabled = disabledProp ?? field.isDisabled;
+    const isReadOnly = readOnlyProp ?? field.isReadOnly;
+    const isRequired = requiredProp ?? field.isRequired;
     const isInvalid = isInvalidProp ?? field.isInvalid;
     const isInteractionDisabled = isDisabled || isReadOnly;
 
     const [isActive, setIsActive] = useState(false);
     const active = isActive && !isInteractionDisabled;
 
-    const { isFocusVisible, focusProps } = useFocusRing({ autoFocus });
-
-    const isControlled = isCheckedProp !== undefined;
-    const [uncontrolledChecked, setUncontrolledChecked] = useState(!!defaultChecked);
-    const isChecked = isControlled ? isCheckedProp : uncontrolledChecked;
-
-    const checkedProps = isControlled
-        ? { checked: isCheckedProp }
-        : defaultChecked !== undefined
-          ? { defaultChecked }
-          : {};
-
     return (
         <StyledSwitch
             {...rest}
-            {...checkedProps}
-            className={cx("group", className)}
+            ref={ref}
+            className={cx("group", className as string)}
             data-active={active ? "" : undefined}
-            data-checked={isChecked || isIndeterminate ? "" : undefined}
-            data-disabled={isDisabled ? "" : undefined}
-            data-indeterminate={isIndeterminate ? "" : undefined}
-            data-invalid={isInvalid ? "" : undefined}
-            data-readonly={isReadOnly ? "" : undefined}
-            disabled={isDisabled}
-            invalid={isInvalid}
-            onCheckedChange={(details) => {
-                if (!isControlled) {
-                    setUncontrolledChecked(details.checked === true);
-                }
-                onChangeValue?.(details.checked === true);
-                onChange?.({
-                    target: { checked: details.checked === true }
-                } as React.ChangeEvent<HTMLInputElement>);
-            }}
+            data-disabled={dataAttr(isDisabled)}
+            data-invalid={dataAttr(isInvalid)}
+            data-readonly={dataAttr(isReadOnly)}
+            data-required={dataAttr(isRequired)}
             onClick={onClick}
-            onPointerDown={(event) => {
-                onPointerDown?.(event);
+            onPointerDown={(event: React.PointerEvent<HTMLLabelElement>) => {
+                (onPointerDown as ((e: React.PointerEvent<HTMLLabelElement>) => void) | undefined)?.(
+                    event
+                );
                 if (!isInteractionDisabled) {
                     setIsActive(true);
                 }
             }}
-            onPointerLeave={(event) => {
-                onPointerLeave?.(event);
+            onPointerLeave={(event: React.PointerEvent<HTMLLabelElement>) => {
+                (onPointerLeave as ((e: React.PointerEvent<HTMLLabelElement>) => void) | undefined)?.(
+                    event
+                );
                 setIsActive(false);
             }}
-            onPointerUp={(event) => {
-                onPointerUp?.(event);
+            onPointerUp={(event: React.PointerEvent<HTMLLabelElement>) => {
+                (onPointerUp as ((e: React.PointerEvent<HTMLLabelElement>) => void) | undefined)?.(
+                    event
+                );
                 setIsActive(false);
             }}
-            readOnly={isReadOnly}
-            required={isRequired}
         >
-            <ArkSwitch.HiddenInput
-                {...inputProps}
-                {...focusProps}
-                aria-describedby={inputProps?.["aria-describedby"] ?? field["aria-describedby"]}
-                aria-invalid={
-                    field.isInvalid ? true : inputProps?.["aria-invalid"]
-                }
+            <UiSdkSwitch
+                aria-describedby={field["aria-describedby"]}
+                aria-invalid={isInvalid ? true : undefined}
+                aria-label={ariaLabel as string | undefined}
+                aria-labelledby={ariaLabelledby as string | undefined}
                 autoFocus={autoFocus}
-                id={inputProps?.id ?? field.id}
-                name={inputProps?.name ?? name}
-                onBlur={(event) => {
-                    focusProps.onBlur?.(event);
-                    field.onBlur?.(event);
-                    onBlur?.(event);
-                    inputProps?.onBlur?.(event);
-                }}
-                onFocus={(event) => {
-                    focusProps.onFocus?.(event);
-                    field.onFocus?.(event);
-                    onFocus?.(event);
-                    inputProps?.onFocus?.(event);
-                }}
-                onKeyDown={(event) => {
-                    inputProps?.onKeyDown?.(event);
-                    onKeyDown?.(event);
-                    if (event.key === " " && !isInteractionDisabled) {
-                        setIsActive(true);
-                    }
-                }}
-                onKeyUp={(event) => {
-                    inputProps?.onKeyUp?.(event);
-                    onKeyUp?.(event);
-                    if (event.key === " ") {
-                        setIsActive(false);
-                    }
-                }}
-                ref={ref}
-                required={isRequired}
-                role="switch"
-                tabIndex={tabIndex}
-                value={value}
-            />
-            <ArkSwitch.Control
-                aria-hidden="true"
-                data-focus-visible={isFocusVisible ? "" : undefined}
+                checked={checked as boolean | undefined}
                 data-part="control"
-                {...wrapperProps}
+                data-invalid={dataAttr(isInvalid)}
+                debug={debug}
+                defaultChecked={defaultChecked}
+                disabled={isDisabled}
+                form={form}
+                id={field.id}
+                name={name}
+                onBlur={field.onBlur}
+                onCheckedChange={onCheckedChange}
+                onFocus={field.onFocus}
+                readOnly={isReadOnly}
+                required={isRequired}
+                tabIndex={tabIndex as number | undefined}
+                value={value as string | undefined}
+                controller={controller}
             >
-                <SwitchThumb
-                    icon={icon}
-                    thumbProps={thumbProps}
-                />
-            </ArkSwitch.Control>
-            {children ? (
-                <ArkSwitch.Label
-                    data-part="label"
-                    {...labelProps}
-                >
-                    {children}
-                </ArkSwitch.Label>
-            ) : null}
+                <UiSdkSwitchThumb data-part="thumb">
+                    {icon != null || thumbProps ? (
+                        <m.span
+                            data-part="thumb-content"
+                            {...thumbProps}
+                        >
+                            {icon}
+                        </m.span>
+                    ) : null}
+                </UiSdkSwitchThumb>
+            </UiSdkSwitch>
+            {children ? <span data-part="label">{children as React.ReactNode}</span> : null}
         </StyledSwitch>
-    );
-}
-
-interface SwitchThumbProps {
-    icon?: React.ReactNode;
-    thumbProps?: Partial<MotionProps>;
-}
-
-function SwitchThumb(props: SwitchThumbProps) {
-    const { icon, thumbProps } = props;
-
-    return (
-        <ArkSwitch.Thumb asChild>
-            <MotionBox
-                data-part="thumb"
-                layout={false}
-                {...thumbProps}
-            >
-                {icon}
-            </MotionBox>
-        </ArkSwitch.Thumb>
     );
 }

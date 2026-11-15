@@ -8,7 +8,7 @@ export default defineConfig({
         headless: true
     },
     webServer: {
-        command: "pnpm exec storybook dev -p 6006 --ci --no-open",
+        command: "bunx storybook dev -p 6006 --ci --no-open",
         url: "http://localhost:6006",
         reuseExistingServer: !process.env.CI,
         timeout: 120_000

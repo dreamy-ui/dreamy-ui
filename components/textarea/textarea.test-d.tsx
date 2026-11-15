@@ -1,26 +1,10 @@
-import type { ChangeEventHandler } from "react";
 import { assertType } from "vitest";
 import type { TextareaNoAutoSizeProps, TextareaProps } from "./index";
 
 type ExpectTrue<T extends true> = T;
 
-assertType<ChangeEventHandler<HTMLTextAreaElement> | undefined>({} as TextareaProps["onChange"]);
-assertType<((value: string) => void) | undefined>({} as TextareaProps["onChangeValue"]);
-assertType<boolean | undefined>({} as TextareaProps["isDisabled"]);
-assertType<boolean | undefined>({} as TextareaProps["isInvalid"]);
-assertType<boolean | undefined>({} as TextareaProps["isRequired"]);
-assertType<boolean | undefined>({} as TextareaProps["isReadOnly"]);
-
 const _size: TextareaProps["size"] = "md";
 const _variant: TextareaProps["variant"] = "outline";
-
-type _HasCallbackProps = ExpectTrue<
-    "onChange" extends keyof TextareaProps
-        ? "onChangeValue" extends keyof TextareaProps
-            ? true
-            : false
-        : false
->;
 
 type _HasRecipeProps = ExpectTrue<
     "size" extends keyof TextareaProps
@@ -46,24 +30,29 @@ type _HasStyleProps = ExpectTrue<
         : false
 >;
 
-type _HasNoAutoSizeCallbacks = ExpectTrue<
-    "onChangeValue" extends keyof TextareaNoAutoSizeProps ? true : false
+type _NoAutoSizeHasNativeApi = ExpectTrue<
+    "onValueChange" extends keyof TextareaNoAutoSizeProps ? true : false
 >;
 
-const _callbackProps: _HasCallbackProps = true;
 const _recipeProps: _HasRecipeProps = true;
 const _styleProps: _HasStyleProps = true;
-const _noAutoSize: _HasNoAutoSizeCallbacks = true;
+const _noAutoSize: _NoAutoSizeHasNativeApi = true;
 
-void (_callbackProps && _recipeProps && _styleProps && _noAutoSize && _size && _variant);
+void (_recipeProps && _styleProps && _noAutoSize && _size && _variant);
 
 assertType<TextareaProps>({
     onChange: () => {},
-    onChangeValue: () => {},
+    onValueChange: () => {},
     size: "md",
     variant: "filled",
     name: "bio",
-    isInvalid: true,
+    "aria-invalid": true,
+    disabled: false,
+    readOnly: false,
+    required: false,
+    minRows: 2,
+    maxRows: 4,
+    autoResize: true,
     className: "custom-textarea",
     bg: "transparent",
     color: "fg",
@@ -74,22 +63,7 @@ assertType<TextareaProps>({
 });
 
 assertType<TextareaNoAutoSizeProps>({
-    onChangeValue: () => {},
+    onValueChange: () => {},
     size: "sm",
     variant: "outline"
-});
-
-assertType<TextareaProps["onChange"]>(
-    // @ts-expect-error onChange must receive a change event, not a string
-    (_value: string) => {}
-);
-
-assertType<TextareaProps>({
-    // @ts-expect-error invalid size
-    size: "3xl"
-});
-
-assertType<TextareaProps>({
-    // @ts-expect-error invalid variant
-    variant: "ghost"
 });

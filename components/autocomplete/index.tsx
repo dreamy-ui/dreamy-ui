@@ -168,12 +168,23 @@ function AutocompleteRoot(props: AutocompleteProps) {
         defaultValue: defaultOpen
     });
 
+    type ComboboxOpenChangeDetails = Parameters<
+        NonNullable<ArkComboboxRootProps<AutocompleteItem>["onOpenChange"]>
+    >[0];
+
     const handleOpenChange = useCallback(
-        (details: Parameters<NonNullable<ArkComboboxRootProps<AutocompleteItem>["onOpenChange"]>>[0]) => {
+        (details: ComboboxOpenChangeDetails) => {
             setOpen(details.open);
             onOpenChange?.(details);
         },
         [onOpenChange, setOpen]
+    );
+
+    const handlePopoverOpenChange = useCallback(
+        (nextOpen: boolean) => {
+            handleOpenChange({ open: nextOpen } as ComboboxOpenChangeDetails);
+        },
+        [handleOpenChange]
     );
 
     const popoverPositioning = useMemo(
@@ -254,7 +265,7 @@ function AutocompleteRoot(props: AutocompleteProps) {
                     closeOnInteractOutside={false}
                     modal={false}
                     open={open}
-                    onOpenChange={handleOpenChange}
+                    onOpenChange={handlePopoverOpenChange}
                     positioning={popoverPositioning}
                     reduceMotion={reduceMotion}
                     restoreFocus={false}

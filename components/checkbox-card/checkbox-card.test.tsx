@@ -134,7 +134,7 @@ describe("CheckboxCard", () => {
         expect(screen.getByRole("checkbox", { hidden: true })).not.toBeChecked();
     });
 
-    it("uses Field or aria-label for the accessible name", () => {
+    it("uses Field or aria-label for the accessible name", async () => {
         render(
             <Field.Root>
                 <Field.Label>Add-ons</Field.Label>
@@ -147,6 +147,6 @@ describe("CheckboxCard", () => {
             </Field.Root>
         );
 
-        expect(screen.getByRole("checkbox", { name: /add-ons|analytics/i, hidden: true })).toBeInTheDocument();
+        expect(await screen.findByRole("checkbox", { name: /add-ons|analytics/i, hidden: true })).toBeInTheDocument();
     });
 });

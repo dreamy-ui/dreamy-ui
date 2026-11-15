@@ -1,41 +1,68 @@
 "use client";
 
-import { Progress as ArkProgress } from "@ark-ui/react/progress";
+import {
+    Progress as UiSdkProgress,
+    type NumberFormat
+} from "@ui-sdk/react/progress";
 import { dataAttr } from "@dreamy-ui/react";
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type ProgressCircularVariantProps, progressCircular } from "styled-system/recipes";
 
 interface ProgressCircularOptions {
-    value?: number;
+    value?: number | null;
     label?: string;
     showValueLabel?: boolean;
     valueLabel?: string;
-    minValue?: number;
-    maxValue?: number;
+    min?: number;
+    max?: number;
+    /**
+     * Forces the indeterminate animation. Otherwise a `null` or missing
+     * `value` is indeterminate.
+     */
     isIndeterminate?: boolean;
-    isDisabled?: boolean;
+    disabled?: boolean;
+    /**
+     * Speed of the indeterminate animation.
+     * @default "1.5s"
+     */
     speed?: string;
 }
 
 export interface ProgressCircularProps
     extends ProgressCircularOptions,
         Omit<
-            React.ComponentProps<typeof ArkProgress.Root>,
-            | "color"
-            | "content"
+            HTMLDreamyProps<"div">,
             | "defaultValue"
-            | "max"
+            | "onChange"
             | "min"
-            | "orientation"
-            | "translate"
+            | "max"
             | "value"
+            | "aria-valuemax"
+            | "aria-valuemin"
+            | "aria-valuenow"
         >,
-        ProgressCircularVariantProps,
-        Omit<HTMLDreamyProps<"div">, "defaultValue"> {
+        ProgressCircularVariantProps {
     "aria-label"?: string;
+    /**
+     * How the value reads for screen readers.
+     */
+    format?: NumberFormat;
+    /**
+     * The locale the value is formatted in.
+     */
+    locale?: string;
 }
 
-const StyledProgressCircular = dreamy(ArkProgress.Root, progressCircular);
+const StyledProgressCircular = dreamy(UiSdkProgress, progressCircular);
+
+const CIRCLE_STYLE = {
+    "--radius": "calc(var(--size) / 2 - var(--thickness) / 2)",
+    cx: "calc(var(--size) / 2)",
+    cy: "calc(var(--size) / 2)",
+    r: "var(--radius)",
+    fill: "transparent",
+    strokeWidth: "var(--thickness)"
+} as React.CSSProperties;
 
 export function ProgressCircular(props: ProgressCircularProps) {
     const {
@@ -43,66 +70,93 @@ export function ProgressCircular(props: ProgressCircularProps) {
         showValueLabel,
         valueLabel,
         value,
-        minValue,
-        maxValue,
+        min = 0,
+        max = 100,
         isIndeterminate: isIndeterminateProp,
-        isDisabled,
+        disabled,
         speed = "1.5s",
         children,
         "aria-label": ariaLabel,
         "aria-valuetext": ariaValueText,
+        format,
+        locale,
         style,
         ...rest
     } = props;
 
-    const min = minValue ?? 0;
-    const max = maxValue ?? 100;
-    const isIndeterminate = isIndeterminateProp ?? value === undefined;
+    const isIndeterminate = isIndeterminateProp ?? value == null;
     const progressValue = isIndeterminate ? null : value;
+    const range = max - min;
+    const percent =
+        progressValue == null || range === 0
+            ? 0
+            : Math.min(100, Math.max(0, ((progressValue - min) / range) * 100));
 
     return (
         <StyledProgressCircular
             {...rest}
             aria-label={ariaLabel}
-            aria-valuemax={max}
-            aria-valuemin={min}
-            aria-valuenow={isIndeterminate ? undefined : value}
-            aria-valuetext={
-                ariaValueText ?? (valueLabel != null ? valueLabel : undefined)
-            }
-            data-disabled={dataAttr(isDisabled)}
+            data-disabled={dataAttr(disabled)}
             data-indeterminate={dataAttr(isIndeterminate)}
+            format={format}
+            getValueLabel={
+                ariaValueText != null || valueLabel != null
+                    ? () => ariaValueText ?? valueLabel ?? ""
+                    : undefined
+            }
+            locale={locale}
             max={max}
             min={min}
-            role="progressbar"
-            style={{
-                // @ts-expect-error css variable
-                "--speed": speed,
-                ...style
-            }}
+            style={
+                {
+                    "--speed": speed,
+                    ...(style as React.CSSProperties)
+                } as React.CSSProperties
+            }
             value={progressValue}
         >
             <div>
-                <ArkProgress.Circle
+                <svg
                     aria-hidden="true"
-                    aria-label={undefined}
-                    aria-valuemax={undefined}
-                    aria-valuemin={undefined}
-                    aria-valuenow={undefined}
+                    data-indeterminate={dataAttr(isIndeterminate)}
                     data-part="circle"
-                    role="presentation"
-                    style={{
-                        // @ts-expect-error css variable
-                        "--speed": speed
-                    }}
+                    style={
+                        {
+                            width: "var(--size)",
+                            height: "var(--size)",
+                            "--speed": speed
+                        } as React.CSSProperties
+                    }
                 >
-                    <ArkProgress.CircleTrack data-part="circleTrack" />
-                    <ArkProgress.CircleRange data-part="circleRange" />
-                </ArkProgress.Circle>
+                    <circle
+                        data-part="circleTrack"
+                        style={CIRCLE_STYLE}
+                    />
+                    <circle
+                        data-indeterminate={dataAttr(isIndeterminate)}
+                        data-part="circleRange"
+                        style={
+                            {
+                                ...CIRCLE_STYLE,
+                                "--percent": percent,
+                                "--circumference":
+                                    "calc(2 * 3.14159 * var(--radius))",
+                                "--offset":
+                                    "calc(var(--circumference) * (100 - var(--percent)) / 100)",
+                                strokeDashoffset:
+                                    "calc(var(--circumference) * ((100 - var(--percent)) / 100))",
+                                strokeDasharray: isIndeterminate
+                                    ? undefined
+                                    : "var(--circumference)",
+                                transformOrigin: "center",
+                                transform: "rotate(-90deg)",
+                                opacity: progressValue === 0 ? 0 : undefined
+                            } as React.CSSProperties
+                        }
+                    />
+                </svg>
                 {showValueLabel ? (
-                    <ArkProgress.ValueText data-part="valueText">
-                        {valueLabel}
-                    </ArkProgress.ValueText>
+                    <span data-part="valueText">{valueLabel}</span>
                 ) : null}
             </div>
             {label ? <span data-part="label">{label}</span> : null}

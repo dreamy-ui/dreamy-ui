@@ -1,3 +1,5 @@
+import type { ChangeDetails } from "@ui-sdk/core";
+import type { PopoverOpenChangeReason } from "@ui-sdk/react/popover";
 import type { RefObject } from "react";
 import { assertType } from "vitest";
 import type {
@@ -13,7 +15,9 @@ type ExpectTrue<T extends true> = T;
 
 assertType<boolean | undefined>({} as PopoverProps["open"]);
 assertType<boolean | undefined>({} as PopoverProps["defaultOpen"]);
-assertType<((details: { open: boolean }) => void) | undefined>({} as PopoverProps["onOpenChange"]);
+assertType<
+    ((open: boolean, details: ChangeDetails<PopoverOpenChangeReason>) => void) | undefined
+>({} as PopoverProps["onOpenChange"]);
 assertType<boolean | undefined>({} as PopoverProps["closeOnEscape"]);
 assertType<boolean | undefined>({} as PopoverProps["closeOnInteractOutside"]);
 assertType<boolean | undefined>({} as PopoverProps["restoreFocus"]);

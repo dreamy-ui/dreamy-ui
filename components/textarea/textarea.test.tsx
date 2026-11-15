@@ -1,9 +1,16 @@
-import { screen } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it, vi } from "vitest";
+import { beforeAll, describe, expect, it, vi } from "vitest";
 import * as Field from "../field";
 import { render } from "../test/render";
 import { Textarea, TextareaNoAutoSize } from "./index";
+
+beforeAll(() => {
+    const css = globalThis.CSS as { supports?: unknown } | undefined;
+    if (css && typeof css.supports !== "function") {
+        css.supports = () => true;
+    }
+});
 
 describe("Textarea", () => {
     it("exposes a native multiline textbox", () => {
@@ -15,7 +22,7 @@ describe("Textarea", () => {
         expect(textarea).not.toHaveAttribute("role");
     });
 
-    it("wires Field label, hint/error, and invalid state", () => {
+    it("wires Field label, hint/error, and invalid state", async () => {
         render(
             <Field.Root isInvalid>
                 <Field.Label>Bio</Field.Label>
@@ -27,7 +34,9 @@ describe("Textarea", () => {
         const textarea = screen.getByRole("textbox", { name: "Bio" });
         const label = screen.getByText("Bio");
 
-        expect(label).toHaveAttribute("for", textarea.id);
+        await waitFor(() => {
+            expect(label).toHaveAttribute("for", textarea.id);
+        });
         expect(textarea).toHaveAttribute("aria-invalid", "true");
         expect(textarea.getAttribute("aria-describedby")).toBeTruthy();
     });
@@ -35,13 +44,13 @@ describe("Textarea", () => {
     it("inserts newlines on Enter and calls value callbacks", async () => {
         const user = userEvent.setup();
         const onChange = vi.fn();
-        const onChangeValue = vi.fn();
+        const onValueChange = vi.fn();
 
         render(
             <Textarea
                 aria-label="Bio"
                 onChange={onChange}
-                onChangeValue={onChangeValue}
+                onValueChange={onValueChange}
             />
         );
 
@@ -51,7 +60,8 @@ describe("Textarea", () => {
 
         expect(textarea).toHaveValue("line1\nline2");
         expect(onChange).toHaveBeenCalled();
-        expect(onChangeValue).toHaveBeenCalled();
+        expect(onValueChange).toHaveBeenCalled();
+        expect(onValueChange.mock.calls.at(-1)?.[0]).toBe("line1\nline2");
     });
 
     it("respects disabled and required from Field", () => {

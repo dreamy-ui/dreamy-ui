@@ -58,7 +58,7 @@ export const checkbox = defineRecipe({
             cursor: "pointer",
             WebkitTapHighlightColor: "transparent",
             maxWidth: "fit-content",
-            _disabled: {
+            "&[data-disabled]": {
                 cursor: "not-allowed",
                 opacity: 0.6
             },
@@ -132,7 +132,7 @@ export const checkbox = defineRecipe({
                     color: "var(--checkbox-bg)"
                 },
                 root: {
-                    "&[data-state=checked] [data-part=control], &[data-state=indeterminate] [data-part=control]":
+                    "& [data-part=control][data-checked], & [data-part=control][data-indeterminate]":
                         {
                             borderColor: "var(--checkbox-bg)"
                         },
@@ -149,7 +149,7 @@ export const checkbox = defineRecipe({
                     borderColor: "{colors.border}"
                 },
                 root: {
-                    "&[data-state=checked] [data-part=control], &[data-state=indeterminate] [data-part=control]":
+                    "& [data-part=control][data-checked], & [data-part=control][data-indeterminate]":
                         {
                             background: "var(--checkbox-bg)",
                             borderColor: "var(--checkbox-bg)"

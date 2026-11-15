@@ -1,32 +1,27 @@
 "use client";
 
-import type { PortalProps } from "@dreamy-ui/react";
+import type { PositioningProps } from "@dreamy-ui/react";
+import type {
+    PopoverFinalFocus,
+    PopoverInitialFocus
+} from "@ui-sdk/react/popover";
 import { createContext, useContext } from "react";
 
 export type PopoverTriggerMode = "click" | "hover";
 
 export interface PopoverUiContextValue {
     hasArrow: boolean;
-    usePortal: boolean;
-    portalProps?: Omit<PortalProps, "children">;
-    reduceMotion: boolean;
     arrowSize?: number;
     arrowShadowColor?: string;
     trigger: PopoverTriggerMode;
-    contentHoverProps?: {
-        onPointerEnter?: React.PointerEventHandler<HTMLElement>;
-        onPointerLeave?: React.PointerEventHandler<HTMLElement>;
-    };
-    triggerHoverProps?: {
-        onPointerEnter?: React.PointerEventHandler<HTMLElement>;
-        onPointerLeave?: React.PointerEventHandler<HTMLElement>;
-        onFocus?: React.FocusEventHandler<HTMLElement>;
-        onBlur?: React.FocusEventHandler<HTMLElement>;
-        onKeyDown?: React.KeyboardEventHandler<HTMLElement>;
-    };
-    onClose: () => void;
-    onExitComplete: () => void;
-    present: boolean;
+    reduceMotion: boolean;
+    positioning?: PositioningProps;
+    initialFocus?: PopoverInitialFocus;
+    finalFocus?: PopoverFinalFocus;
+    keepMounted?: boolean;
+    container?: Element | DocumentFragment | null;
+    anchor: HTMLElement | null;
+    setAnchor: (element: HTMLElement | null) => void;
 }
 
 const PopoverUiContext = createContext<PopoverUiContextValue | null>(null);

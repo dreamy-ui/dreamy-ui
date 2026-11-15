@@ -170,7 +170,7 @@ export const Root = withProvider(function TimeInputRoot({
                     hasArrow={false}
                     lazyMount
                     open={ctx.isOpen}
-                    onOpenChange={({ open: nextOpen }) => {
+                    onOpenChange={(nextOpen) => {
                         if (nextOpen) {
                             ctx.onOpen();
                         } else {
@@ -214,6 +214,7 @@ export const Trigger = withContext(function TimeInputTrigger({
         <PopoverTrigger>
             <dreamy.div
                 {...(getTriggerProps({
+                    "aria-label": "Choose time",
                     ...rest,
                     "data-open": dataAttr(isOpen)
                 }) as HTMLDreamyProps<"div">)}

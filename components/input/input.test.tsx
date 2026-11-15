@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import * as Field from "../field";
@@ -15,7 +15,7 @@ describe("Input", () => {
         expect(input).not.toHaveAttribute("role");
     });
 
-    it("wires Field label, hint, error, and invalid state", () => {
+    it("wires Field label, hint, error, and invalid state", async () => {
         render(
             <Field.Root isInvalid>
                 <Field.Label>Email</Field.Label>
@@ -30,7 +30,9 @@ describe("Input", () => {
         const input = screen.getByRole("textbox", { name: "Email" });
         const label = screen.getByText("Email");
 
-        expect(label).toHaveAttribute("for", input.id);
+        await waitFor(() => {
+            expect(label).toHaveAttribute("for", input.id);
+        });
         expect(input).toHaveAttribute("type", "email");
         expect(input).toHaveAttribute("autocomplete", "email");
         expect(input).toHaveAttribute("aria-invalid", "true");
@@ -52,24 +54,24 @@ describe("Input", () => {
         expect(input.getAttribute("aria-describedby")).toContain(hint.id);
     });
 
-    it("calls onChange and onChangeValue when typing", async () => {
+    it("calls onChange and onValueChange when typing", async () => {
         const user = userEvent.setup();
         const onChange = vi.fn();
-        const onChangeValue = vi.fn();
+        const onValueChange = vi.fn();
 
         render(
             <Input
                 aria-label="Username"
                 onChange={onChange}
-                onChangeValue={onChangeValue}
+                onValueChange={onValueChange}
             />
         );
 
         await user.type(screen.getByRole("textbox", { name: "Username" }), "ada");
 
         expect(onChange).toHaveBeenCalled();
-        expect(onChangeValue).toHaveBeenCalledWith("a");
-        expect(onChangeValue).toHaveBeenLastCalledWith("ada");
+        expect(onValueChange).toHaveBeenCalled();
+        expect(onValueChange.mock.calls.at(-1)?.[0]).toBe("ada");
     });
 
     it("respects disabled and required from Field", () => {

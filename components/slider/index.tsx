@@ -1,29 +1,77 @@
 "use client";
 
-import { useLocaleContext } from "@ark-ui/react/locale";
-import { Slider as ArkSlider, type UseSliderProps, useSlider } from "@ark-ui/react/slider";
-import { ariaAttr, dataAttr, useFieldContext, useFieldProps } from "@dreamy-ui/react";
-import { Children, createContext, isValidElement, useContext, useId } from "react";
+import {
+    Slider as UiSdkSlider,
+    SliderControl as UiSdkSliderControl,
+    SliderIndicator as UiSdkSliderIndicator,
+    SliderThumb as UiSdkSliderThumb,
+    SliderTrack as UiSdkSliderTrack,
+    type SliderController,
+    type SliderOptions,
+    type SliderValueChangeDetails,
+    type SliderValueCommitDetails
+} from "@ui-sdk/react/slider";
+import { dataAttr, useFieldProps } from "@dreamy-ui/react";
+import { Children, createContext, isValidElement, useContext } from "react";
 import { type HTMLDreamyProps, createStyleContext } from "styled-system/jsx";
 import { slider } from "styled-system/recipes";
 import { Box } from "../box";
-import { fromSliderValue, toSliderValue } from "./map-slider-value";
 
 const SLIDER_THUMB_TYPE = Symbol.for("dreamy.slider.thumb");
+
+interface SliderThumbAria {
+    label?: string;
+    labelledby?: string;
+    describedby?: string;
+}
 
 interface SliderControlState {
     isInvalid?: boolean;
     isReadOnly?: boolean;
+    thumbAria?: SliderThumbAria;
 }
 
 const SliderControlContext = createContext<SliderControlState>({});
 
+interface SliderMarkContextValue {
+    min: number;
+    max: number;
+    orientation: "horizontal" | "vertical";
+    reversed: boolean;
+}
+
+const SliderMarkContext = createContext<SliderMarkContextValue>({
+    min: 0,
+    max: 100,
+    orientation: "horizontal",
+    reversed: false
+});
+
 const { withProvider, withContext } = createStyleContext(slider);
+
+type UiSdkSliderProps = SliderOptions<number> &
+    Omit<
+        React.ComponentProps<typeof UiSdkSlider>,
+        "value" | "defaultValue" | "onValueChange" | "onValueCommit"
+    >;
 
 export interface SliderProps
     extends Omit<
-        React.ComponentProps<typeof ArkSlider.Root>,
-        "value" | "defaultValue" | "onValueChange" | "onValueChangeEnd" | "thumbSize"
+        UiSdkSliderProps,
+        | "value"
+        | "defaultValue"
+        | "onValueChange"
+        | "onValueCommit"
+        | "min"
+        | "max"
+        | "orientation"
+        | "disabled"
+        | "readOnly"
+        | "required"
+        | "isDisabled"
+        | "isInvalid"
+        | "isReadOnly"
+        | "isRequired"
     > {
     size?: "sm" | "md" | "lg";
     hideThumb?: boolean;
@@ -35,16 +83,21 @@ export interface SliderProps
      * Places the minimum value on the right. Only applies to horizontal sliders.
      */
     isReversed?: boolean;
+    /**
+     * Marks the slider as invalid for styling purposes.
+     */
+    isInvalid?: boolean;
+    disabled?: boolean;
+    readOnly?: boolean;
+    required?: boolean;
     value?: number;
     defaultValue?: number;
-    onChange?: (value: number) => void;
-    onChangeValue?: (value: number) => void;
-    onChangeEnd?: (value: number) => void;
-    focusThumbOnChange?: boolean;
-    isDisabled?: boolean;
-    isInvalid?: boolean;
-    isReadOnly?: boolean;
-    isRequired?: boolean;
+    onValueChange?: (value: number, details: SliderValueChangeDetails) => void;
+    onValueCommit?: (value: number, details: SliderValueCommitDetails) => void;
+    min?: number;
+    max?: number;
+    orientation?: "horizontal" | "vertical";
+    controller?: SliderController<number>;
 }
 
 const SIZE_CONFIG = {
@@ -55,7 +108,6 @@ const SIZE_CONFIG = {
 
 export const Root = withProvider(function Component(props: SliderProps) {
     const field = useFieldProps(props);
-    const fieldContext = useFieldContext();
 
     const {
         size = "md",
@@ -64,120 +116,93 @@ export const Root = withProvider(function Component(props: SliderProps) {
         thumbSize: thumbSizeProp,
         isReversed = false,
         dir,
+        "aria-label": ariaLabel,
+        "aria-labelledby": ariaLabelledby,
+        "aria-describedby": _ariaDescribedby,
         value,
         defaultValue,
-        onChange,
-        onChangeValue,
-        onChangeEnd,
+        onValueChange,
+        onValueCommit,
         ref,
         className,
         style,
         children,
-        isDisabled,
-        isInvalid,
-        isReadOnly,
-        isRequired,
-        disabled,
-        invalid,
-        readOnly,
-        ids,
-        id,
-        "aria-label": ariaLabel,
-        "aria-labelledby": ariaLabelledBy,
-        form,
-        getAriaValueText,
-        largeStep,
-        max,
-        min,
-        minStepsBetweenThumbs,
-        name,
-        onFocusChange,
-        origin,
-        step,
-        thumbAlignment,
-        thumbCollisionBehavior,
-        ...restProps
+        isInvalid: isInvalidProp,
+        disabled: disabledProp,
+        readOnly: readOnlyProp,
+        required: requiredProp,
+        min = 0,
+        max = 100,
+        ...rest
     } = props;
 
     const config = SIZE_CONFIG[size];
     const thumbSize = hideThumb ? 0 : (thumbSizeProp ?? config.thumbSize);
-    const generatedId = useId();
-    const locale = useLocaleContext();
-    const isRtl = (dir ?? locale.dir) === "rtl";
-    const resolvedDir =
-        isReversed && orientation === "horizontal" ? (isRtl ? "ltr" : "rtl") : isRtl ? "rtl" : "ltr";
-    const rootIds =
-        fieldContext?.labelId != null
-            ? { ...ids, label: fieldContext.labelId }
-            : ids;
-    const controlState = {
-        isInvalid: Boolean(invalid ?? isInvalid ?? field.isInvalid),
-        isReadOnly: Boolean(readOnly ?? isReadOnly ?? field.isReadOnly)
+    const isInvalid = Boolean(isInvalidProp ?? field.isInvalid);
+    const isDisabled = Boolean(disabledProp ?? field.isDisabled);
+    const isReadOnly = Boolean(readOnlyProp ?? field.isReadOnly);
+    const isRequired = Boolean(requiredProp ?? field.isRequired);
+    const reversed = isReversed && orientation === "horizontal";
+    const resolvedDir = reversed ? (dir === "rtl" ? "ltr" : "rtl") : dir;
+
+    const controlState: SliderControlState = {
+        isInvalid,
+        isReadOnly,
+        thumbAria: {
+            label: ariaLabel,
+            labelledby:
+                ariaLabelledby ??
+                (ariaLabel || !field.id ? undefined : `${field.id}-label`),
+            describedby: field["aria-describedby"]
+        }
     };
 
-    const sliderProps: UseSliderProps & { dir?: "ltr" | "rtl" } = {
-        "aria-label": ariaLabel,
-        "aria-labelledby": ariaLabelledBy,
-        defaultValue: toSliderValue(defaultValue),
-        dir: resolvedDir,
-        disabled: disabled ?? isDisabled ?? field.isDisabled,
-        form,
-        getAriaValueText,
-        id: field.id ?? id ?? generatedId,
-        ids: rootIds,
-        invalid: invalid ?? isInvalid ?? field.isInvalid,
-        largeStep,
-        max,
+    const markContext: SliderMarkContextValue = {
         min,
-        minStepsBetweenThumbs,
-        name,
-        onFocusChange,
-        onValueChange: (details) => {
-            const next = fromSliderValue(details.value);
-            onChange?.(next);
-            onChangeValue?.(next);
-        },
-        onValueChangeEnd: (details) => {
-            onChangeEnd?.(fromSliderValue(details.value));
-        },
+        max,
         orientation,
-        origin,
-        readOnly: readOnly ?? isReadOnly ?? field.isReadOnly,
-        step,
-        thumbAlignment,
-        thumbCollisionBehavior,
-        thumbSize: { width: thumbSize, height: thumbSize },
-        value: toSliderValue(value)
+        reversed: isReversed && orientation === "horizontal"
     };
-    const slider = useSlider(sliderProps);
 
     return (
-        <ArkSlider.RootProvider
-            {...restProps}
-            asChild
+        <UiSdkSlider
+            {...rest}
             ref={ref}
-            value={slider}
+            className={className}
+            data-hide-thumb={hideThumb ? "" : undefined}
+            data-invalid={dataAttr(isInvalid)}
+            defaultValue={defaultValue}
+            dir={resolvedDir}
+            disabled={isDisabled}
+            id={field.id}
+            max={max}
+            min={min}
+            onValueChange={(next, details) => {
+                onValueChange?.(next as number, details);
+            }}
+            onValueCommit={(next, details) => {
+                onValueCommit?.(next as number, details);
+            }}
+            orientation={orientation}
+            readOnly={isReadOnly}
+            required={isRequired}
+            style={
+                {
+                    ...style,
+                    "--slider-thumb-size": `${thumbSize}px`,
+                    ...(orientation === "horizontal"
+                        ? { height: config.trackSize }
+                        : { width: config.trackSize })
+                } as unknown as React.CSSProperties
+            }
+            value={value}
         >
-            <Box
-                className={className}
-                data-hide-thumb={hideThumb ? "" : undefined}
-                data-part="root"
-                style={
-                    {
-                        ...style,
-                        // @ts-expect-error css vars
-                        "--slider-thumb-size": `${thumbSize}px`,
-                        ...(orientation === "horizontal"
-                            ? { height: config.trackSize }
-                            : { width: config.trackSize })
-                    } as React.CSSProperties
-                }
-            >
-                <SliderControlContext.Provider value={controlState}>
-                    {children}
-                </SliderControlContext.Provider>
-            </Box>
-        </ArkSlider.RootProvider>
+            <SliderControlContext.Provider value={controlState}>
+                <SliderMarkContext.Provider value={markContext}>
+                    {children as React.ReactNode}
+                </SliderMarkContext.Provider>
+            </SliderControlContext.Provider>
+        </UiSdkSlider>
     );
 }, "root");
 
@@ -188,7 +213,10 @@ function splitTrackChildren(children: React.ReactNode) {
     const thumbs: React.ReactNode[] = [];
 
     Children.forEach(children, (child) => {
-        if (isValidElement(child) && (child.type as { thumbType?: symbol }).thumbType === SLIDER_THUMB_TYPE) {
+        if (
+            isValidElement(child) &&
+            (child.type as { thumbType?: symbol }).thumbType === SLIDER_THUMB_TYPE
+        ) {
             thumbs.push(child);
             return;
         }
@@ -198,44 +226,53 @@ function splitTrackChildren(children: React.ReactNode) {
     return { trackChildren, thumbs };
 }
 
-const TrackBar = withContext(ArkSlider.Track, "track");
+const TrackBar = withContext(UiSdkSliderTrack, "track");
 
 /**
- * Layout props (e.g. `maxW`) land on the Ark control, so thumb positioning
+ * Layout props (e.g. `maxW`) land on the UI SDK control, so thumb positioning
  * and pointer hit-testing always match the visible track.
  */
 export const Track = withContext(function Component(props: SliderTrackProps) {
     const { children, ...rest } = props;
-    const { trackChildren, thumbs } = splitTrackChildren(children);
+    const { trackChildren, thumbs } = splitTrackChildren(children as React.ReactNode);
 
     return (
-        <ArkSlider.Control {...rest}>
+        <UiSdkSliderControl {...rest}>
             <TrackBar>{trackChildren}</TrackBar>
             {thumbs}
-        </ArkSlider.Control>
+        </UiSdkSliderControl>
     );
 }, "control");
 
 export interface SliderFilledTrackProps extends HTMLDreamyProps<"div"> {}
 
 export const FilledTrack = withContext(function Component(props: SliderFilledTrackProps) {
-    return <ArkSlider.Range {...props} />;
+    return <UiSdkSliderIndicator {...props} />;
 }, "trackFilled");
 
 export interface SliderThumbProps extends HTMLDreamyProps<"div"> {}
 
 function SliderThumbComponent(props: SliderThumbProps) {
     const control = useContext(SliderControlContext);
+    const {
+        "aria-readonly": ariaReadonly,
+        "aria-label": ariaLabel,
+        "aria-labelledby": ariaLabelledby,
+        "aria-describedby": ariaDescribedby,
+        ...rest
+    } = props;
+    const thumbAria = control.thumbAria;
 
     return (
-        <ArkSlider.Thumb
-            aria-readonly={ariaAttr(control.isReadOnly)}
+        <UiSdkSliderThumb
+            aria-describedby={ariaDescribedby ?? thumbAria?.describedby}
+            aria-label={ariaLabel ?? thumbAria?.label}
+            aria-labelledby={ariaLabelledby ?? thumbAria?.labelledby}
+            aria-readonly={ariaReadonly ?? (control.isReadOnly || undefined)}
             data-invalid={dataAttr(control.isInvalid)}
             index={0}
-            {...props}
-        >
-            <ArkSlider.HiddenInput />
-        </ArkSlider.Thumb>
+            {...rest}
+        />
     );
 }
 
@@ -250,11 +287,30 @@ export interface SliderMarkProps extends HTMLDreamyProps<"div"> {
 }
 
 export const Mark = withContext(function Component(props: SliderMarkProps) {
-    const { value, ...rest } = props;
+    const { value, children, style, ...rest } = props;
+    const { min, max, orientation, reversed } = useContext(SliderMarkContext);
+    const range = max - min;
+    const percent = range === 0 ? 0 : ((value - min) / range) * 100;
+    const position = reversed ? 100 - percent : percent;
+    const horizontal = orientation === "horizontal";
+
     return (
-        <ArkSlider.Marker
-            value={value}
+        <Box
+            data-part="marker"
             {...rest}
-        />
+            style={{
+                position: "absolute",
+                ...(horizontal
+                    ? { left: `${position}%`, top: "50%", translate: "-50% -50%" }
+                    : {
+                          bottom: `${position}%`,
+                          left: "50%",
+                          translate: "-50% 50%"
+                      }),
+                ...(style as React.CSSProperties)
+            }}
+        >
+            {children as React.ReactNode}
+        </Box>
     );
 }, "marker");

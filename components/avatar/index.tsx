@@ -1,6 +1,13 @@
 "use client";
 
-import { Avatar as ArkAvatar } from "@ark-ui/react/avatar";
+import {
+    Avatar as UiSdkAvatar,
+    AvatarFallback as UiSdkAvatarFallback,
+    AvatarImage as UiSdkAvatarImage,
+    type AvatarLoadingStatus,
+    type AvatarLoadingStatusChangeReason
+} from "@ui-sdk/react/avatar";
+import type { ChangeDetails } from "@ui-sdk/core";
 import {
     callAllHandlers,
     compact,
@@ -11,11 +18,10 @@ import {
 import { cloneElement, useEffect, useState } from "react";
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type AvatarVariantProps, avatar } from "styled-system/recipes";
-import type { SystemProperties, SystemStyleObject } from "styled-system/types";
+import type { SystemProperties } from "styled-system/types";
 import { Box } from "../box";
 import { Flex, type FlexProps } from "../flex";
 import { Icon } from "../icon";
-import { Image, type ImageProps } from "../image";
 
 export interface AvatarOptions {
     name?: string;
@@ -25,6 +31,14 @@ export interface AvatarOptions {
     loading?: "eager" | "lazy";
     borderColor?: SystemProperties["borderColor"];
     onError?: () => void;
+    /**
+     * Runs when the image's loading status changes: `"loading"`, `"loaded"`,
+     * `"error"`, and `"idle"` when it leaves the page.
+     */
+    onLoadingStatusChange?: (
+        status: AvatarLoadingStatus,
+        details: ChangeDetails<AvatarLoadingStatusChangeReason>
+    ) => void;
     icon?: React.ReactElement;
     getInitials?: (name: string) => string;
     referrerPolicy?: React.HTMLAttributeReferrerPolicy;
@@ -35,7 +49,7 @@ function GenericAvatarIcon(props: HTMLDreamyProps<"svg">) {
         <Icon
             data-part="fallback-icon"
             viewBox="0 0 128 128"
-            {...props}
+            {...(props as React.ComponentProps<typeof Icon>)}
             aria-hidden
         >
             <path
@@ -51,14 +65,14 @@ function GenericAvatarIcon(props: HTMLDreamyProps<"svg">) {
 }
 
 export interface AvatarProps
-    extends Omit<HTMLDreamyProps<"div">, "onError" | keyof AvatarOptions | keyof AvatarVariantProps>,
+    extends Omit<HTMLDreamyProps<"span">, "onError" | keyof AvatarOptions | keyof AvatarVariantProps>,
         AvatarOptions,
         AvatarVariantProps {
-    crossOrigin?: HTMLDreamyProps<"img">["crossOrigin"];
+    crossOrigin?: "" | "anonymous" | "use-credentials";
     iconLabel?: string;
 }
 
-const StyledBase = dreamy(ArkAvatar.Root, avatar);
+const StyledAvatar = dreamy(UiSdkAvatar, avatar);
 
 export function Avatar({
     src,
@@ -66,6 +80,7 @@ export function Avatar({
     name,
     onError,
     onLoad: onLoadProp,
+    onLoadingStatusChange,
     getInitials = initials,
     icon = <GenericAvatarIcon />,
     iconLabel = " avatar",
@@ -82,38 +97,45 @@ export function Avatar({
     }, [src]);
 
     return (
-        <StyledBase
+        <StyledAvatar
             {...rest}
             data-loaded={dataAttr(isLoaded)}
             data-part="root"
-            onStatusChange={(details) => {
-                setIsLoaded(details.status === "loaded");
-                if (details.status === "error") {
+            onLoadingStatusChange={(
+                status: AvatarLoadingStatus,
+                details: ChangeDetails<AvatarLoadingStatusChangeReason>
+            ) => {
+                setIsLoaded(status === "loaded");
+                if (status === "error") {
                     onError?.();
                 }
+                onLoadingStatusChange?.(status, details);
             }}
         >
-            <ArkAvatar.Fallback
+            <UiSdkAvatarFallback
                 aria-label={name ? name : iconLabel}
                 data-part="name"
                 role="img"
             >
                 {name ? getInitials(name) : icon}
-            </ArkAvatar.Fallback>
+            </UiSdkAvatarFallback>
             {src ? (
-                <ArkAvatar.Image
+                <UiSdkAvatarImage
                     alt={name}
                     crossOrigin={crossOrigin}
                     data-part="image"
                     loading={loading}
-                    onLoad={callAllHandlers(onLoadProp, () => setIsLoaded(true))}
+                    onLoad={callAllHandlers(
+                        onLoadProp as React.ReactEventHandler<HTMLImageElement> | undefined,
+                        () => setIsLoaded(true)
+                    )}
                     referrerPolicy={referrerPolicy}
                     src={src}
                     srcSet={srcSet}
                 />
             ) : null}
             {children}
-        </StyledBase>
+        </StyledAvatar>
     );
 }
 

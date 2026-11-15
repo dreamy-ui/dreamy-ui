@@ -69,7 +69,10 @@ describe("Popover", () => {
         await user.keyboard("{Escape}");
 
         await waitFor(() => {
-            expect(onOpenChange).toHaveBeenCalledWith({ open: false });
+            expect(onOpenChange).toHaveBeenCalledWith(
+                false,
+                expect.objectContaining({ reason: "escape-key" })
+            );
         });
         await waitFor(() => {
             expect(trigger).toHaveAttribute("aria-expanded", "false");
@@ -126,7 +129,10 @@ describe("Popover", () => {
         expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
 
         await user.click(screen.getByRole("button", { name: "Controlled" }));
-        expect(onOpenChange).toHaveBeenCalledWith({ open: true });
+        expect(onOpenChange).toHaveBeenCalledWith(
+            true,
+            expect.objectContaining({ reason: "trigger-press" })
+        );
 
         rerender(
             <Popover.Root
@@ -145,7 +151,7 @@ describe("Popover", () => {
         expect(await screen.findByRole("dialog")).toBeInTheDocument();
     });
 
-    it("renders an arrow with Ark sizing and background variables when hasArrow is set", async () => {
+    it("renders an arrow with sizing and background variables when hasArrow is set", async () => {
         const user = userEvent.setup();
 
         render(
@@ -162,11 +168,9 @@ describe("Popover", () => {
         await user.click(screen.getByRole("button", { name: "Arrow trigger" }));
         await screen.findByRole("dialog");
 
-        const arrow = document.querySelector("[data-scope='popover'][data-part='arrow']");
-        const arrowTip = document.querySelector("[data-scope='popover'][data-part='arrow-tip']");
+        const arrow = document.querySelector("[data-slot='popover-arrow']");
 
         expect(arrow).toBeTruthy();
-        expect(arrowTip).toBeTruthy();
 
         const arrowEl = arrow as HTMLElement;
 
@@ -174,7 +178,8 @@ describe("Popover", () => {
         expect(arrowEl.style.getPropertyValue("--arrow-background")).toBe(
             "var(--colors-bg-panel)"
         );
-        expect(arrowEl.style.width).toBe("var(--arrow-size)");
+        expect(arrowEl).toHaveAttribute("data-side");
+        expect(arrowEl).toHaveAttribute("aria-hidden", "true");
     });
 
     it("respects placement and closeOnEscape props", async () => {

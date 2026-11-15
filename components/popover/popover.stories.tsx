@@ -60,7 +60,7 @@ export function ControlledPopover() {
         <Popover.Root
             hasArrow
             open={open}
-            onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
+            onOpenChange={(nextOpen) => setOpen(nextOpen)}
         >
             <Popover.Trigger>
                 <Button variant="primary">Open Popover</Button>
@@ -100,7 +100,7 @@ export function InitialFocus() {
             hasArrow
             initialFocusRef={initialFocusRef}
             open={open}
-            onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
+            onOpenChange={(nextOpen) => setOpen(nextOpen)}
         >
             <Popover.Trigger>
                 <Button variant="primary">Open Popover</Button>

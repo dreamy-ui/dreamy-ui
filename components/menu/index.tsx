@@ -30,7 +30,6 @@ import { menu } from "styled-system/recipes";
 import { Kbd } from "../kbd";
 import * as Popover from "../popover";
 import type { PopoverContentProps, PopoverProps } from "../popover";
-import { mapPositioningProps } from "../popover/map-positioning";
 
 const { withProvider, withContext } = createStyleContext(menu);
 
@@ -84,15 +83,26 @@ export const Root = withProvider(function MenuRoot({
         defaultValue: defaultOpen
     });
 
+    type MenuOpenChangeDetails = Parameters<
+        NonNullable<ArkMenuRootProps["onOpenChange"]>
+    >[0];
+
     const handleOpenChange = useCallback(
-        (details: Parameters<NonNullable<ArkMenuRootProps["onOpenChange"]>>[0]) => {
+        (details: MenuOpenChangeDetails) => {
             setMenuOpen(details.open);
             onOpenChange?.(details);
         },
         [onOpenChange, setMenuOpen]
     );
 
-    const popoverPositioning = mapPositioningProps({ placement: "bottom", ...positioning });
+    const handlePopoverOpenChange = useCallback(
+        (nextOpen: boolean) => {
+            handleOpenChange({ open: nextOpen } as MenuOpenChangeDetails);
+        },
+        [handleOpenChange]
+    );
+
+    const popoverPositioning: PositioningProps = { placement: "bottom", ...positioning };
 
     const arkRootProps: ArkMenuRootProps = {
         ...arkRest,
@@ -114,12 +124,12 @@ export const Root = withProvider(function MenuRoot({
                 closeOnEscape={false}
                 closeOnInteractOutside={false}
                 open={menuOpen}
-                onOpenChange={handleOpenChange}
+                onOpenChange={handlePopoverOpenChange}
                 portalProps={{
                     zIndex: "var(--z-index-dropdown)",
                     ...popoverProps?.portalProps
                 }}
-                positioning={popoverPositioning as PositioningProps}
+                positioning={popoverPositioning}
                 reduceMotion={reduceMotion}
                 restoreFocus={false}
             >
@@ -267,7 +277,10 @@ export const TriggerItem = withContext(function MenuTriggerItem(props: MenuTrigg
         []
     );
 
-    const popoverPositioning = mapPositioningProps({ placement: "right-start", ...positioning });
+    const popoverPositioning: PositioningProps = {
+        placement: "right-start",
+        ...positioning
+    };
 
     return (
         <ArkMenu.Root
@@ -281,11 +294,11 @@ export const TriggerItem = withContext(function MenuTriggerItem(props: MenuTrigg
                 closeOnEscape={false}
                 closeOnInteractOutside={false}
                 open={subOpen}
-                onOpenChange={handleSubOpenChange}
+                onOpenChange={(nextOpen) => handleSubOpenChange({ open: nextOpen })}
                 portalProps={{
                     zIndex: "var(--z-index-dropdown)"
                 }}
-                positioning={popoverPositioning as PositioningProps}
+                positioning={popoverPositioning}
                 reduceMotion={reduceMotion}
                 restoreFocus={false}
             >

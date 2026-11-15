@@ -25,14 +25,14 @@ describe("RangeSlider", () => {
         const minThumb = screen.getByRole("slider", { name: "Minimum price" });
         const maxThumb = screen.getByRole("slider", { name: "Maximum price" });
 
-        expect(minThumb).toHaveAttribute("aria-valuenow", "20");
-        expect(minThumb).toHaveAttribute("aria-valuemin", "0");
-        expect(minThumb).toHaveAttribute("aria-valuemax", "80");
+        expect(minThumb).toHaveValue("20");
+        expect(minThumb).toHaveAttribute("min", "0");
+        expect(minThumb).toHaveAttribute("max", "80");
         expect(minThumb).toHaveAttribute("aria-orientation", "horizontal");
 
-        expect(maxThumb).toHaveAttribute("aria-valuenow", "80");
-        expect(maxThumb).toHaveAttribute("aria-valuemin", "20");
-        expect(maxThumb).toHaveAttribute("aria-valuemax", "100");
+        expect(maxThumb).toHaveValue("80");
+        expect(maxThumb).toHaveAttribute("min", "20");
+        expect(maxThumb).toHaveAttribute("max", "100");
     });
 
     it("keeps distinct thumb names when composed inside Field", () => {
@@ -79,7 +79,7 @@ describe("RangeSlider", () => {
 
     it("tabs between thumbs and adjusts the focused thumb with arrows", async () => {
         const user = userEvent.setup();
-        const onChangeValue = vi.fn();
+        const onValueChange = vi.fn();
 
         render(
             <RangeSlider.Root
@@ -87,7 +87,7 @@ describe("RangeSlider", () => {
                 defaultValue={[30, 70]}
                 max={100}
                 min={0}
-                onChangeValue={onChangeValue}
+                onValueChange={onValueChange}
                 step={1}
             >
                 <RangeSlider.Track>
@@ -103,26 +103,26 @@ describe("RangeSlider", () => {
 
         minThumb.focus();
         await user.keyboard("{ArrowRight}");
-        expect(minThumb).toHaveAttribute("aria-valuenow", "31");
-        expect(onChangeValue).toHaveBeenLastCalledWith([31, 70]);
+        expect(minThumb).toHaveValue("31");
+        expect(onValueChange.mock.calls.at(-1)?.[0]).toEqual([31, 70]);
 
         await user.tab();
         expect(maxThumb).toHaveFocus();
 
         await user.keyboard("{ArrowLeft}");
-        expect(maxThumb).toHaveAttribute("aria-valuenow", "69");
+        expect(maxThumb).toHaveValue("69");
     });
 
     it("does not change values when disabled", async () => {
         const user = userEvent.setup();
-        const onChangeValue = vi.fn();
+        const onValueChange = vi.fn();
 
         render(
             <RangeSlider.Root
                 aria-label={["Minimum", "Maximum"]}
                 defaultValue={[25, 75]}
-                isDisabled
-                onChangeValue={onChangeValue}
+                disabled
+                onValueChange={onValueChange}
             >
                 <RangeSlider.Track>
                     <RangeSlider.FilledTrack />
@@ -134,11 +134,11 @@ describe("RangeSlider", () => {
 
         const minThumb = screen.getByRole("slider", { name: "Minimum" });
 
-        expect(minThumb).toHaveAttribute("aria-disabled", "true");
+        expect(minThumb).toBeDisabled();
         minThumb.focus();
         await user.keyboard("{ArrowRight}");
-        expect(onChangeValue).not.toHaveBeenCalled();
-        expect(minThumb).toHaveAttribute("aria-valuenow", "25");
+        expect(onValueChange).not.toHaveBeenCalled();
+        expect(minThumb).toHaveValue("25");
     });
 
     it("reflects read-only and invalid state on thumbs", () => {
@@ -147,7 +147,7 @@ describe("RangeSlider", () => {
                 aria-label={["Minimum price", "Maximum price"]}
                 defaultValue={[20, 80]}
                 isInvalid
-                isReadOnly
+                readOnly
             >
                 <RangeSlider.Track>
                     <RangeSlider.FilledTrack />
@@ -159,7 +159,7 @@ describe("RangeSlider", () => {
 
         for (const thumb of screen.getAllByRole("slider")) {
             expect(thumb).toHaveAttribute("aria-readonly", "true");
-            expect(thumb).toHaveAttribute("data-invalid");
+            expect(thumb.closest('[data-slot="slider-thumb"]')).toHaveAttribute("data-invalid");
         }
     });
 });

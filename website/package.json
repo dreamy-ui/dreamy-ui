@@ -31,6 +31,8 @@
 		"@react-router/node": "^8.2.0",
 		"@resvg/resvg-js": "^2.6.2",
 		"@tanstack/react-virtual": "^3.13.18",
+		"@ui-sdk/core": "0.1.0-beta.1",
+		"@ui-sdk/react": "0.1.0-beta.1",
 		"bright": "^0.8.5",
 		"compression": "^1.7.4",
 		"dayjs": "^1.11.19",

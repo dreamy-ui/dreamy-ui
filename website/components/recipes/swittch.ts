@@ -63,7 +63,7 @@ export const swittch = defineRecipe({
             cursor: "pointer",
             WebkitTapHighlightColor: "transparent",
             maxWidth: "fit-content",
-            _disabled: {
+            "&[data-disabled]": {
                 cursor: "not-allowed",
                 opacity: 0.6
             },
@@ -88,25 +88,19 @@ export const swittch = defineRecipe({
             "&:is(:focus-visible, [data-focus-visible])": {
                 boxShadow: "0 0 0 1.5px {colors.primary}"
             },
-            "&:is(:focus-visible, [data-focus-visible]):not([data-state=checked])": {
+            "&:is(:focus-visible, [data-focus-visible]):not([data-checked])": {
                 bg: "{colors.border}"
             },
-            ".group:is([data-checked]) &:is(:focus-visible, [data-focus-visible])": {
+            "&:is(:focus-visible, [data-focus-visible])[data-checked]": {
                 bg: "var(--switch-bg)"
             },
-            "&:is(:focus-visible, [data-focus-visible])[data-state=checked]": {
-                bg: "var(--switch-bg)"
-            },
-            ".group:is(:hover) &:not([data-state=checked])": {
+            ".group:is(:hover) &:not([data-checked])": {
                 bg: "alpha.200"
             },
-            ".group:is([data-checked])&": {
+            "&[data-checked]": {
                 bg: "var(--switch-bg)"
             },
-            "&[data-state=checked]": {
-                bg: "var(--switch-bg)"
-            },
-            ".group:is([data-invalid])&": {
+            "&[data-invalid]": {
                 boxShadow: "0 0 0 1.5px {colors.error}"
             }
         },
@@ -118,20 +112,12 @@ export const swittch = defineRecipe({
             ".group:is([data-active])&": {
                 width: "var(--switch-thumb-active-size)"
             },
-            ".group:is([data-active])&[data-state=checked]": {
+            ".group:is([data-active]) &[data-checked]": {
                 transform:
                     "translateX(calc(var(--switch-width) - var(--switch-thumb-active-size) - var(--switch-thumb-gap)))",
                 transformOrigin: "right center"
             },
-            "&[data-active]": {
-                width: "var(--switch-thumb-active-size)"
-            },
-            "&[data-active][data-state=checked]": {
-                transform:
-                    "translateX(calc(var(--switch-width) - var(--switch-thumb-active-size) - var(--switch-thumb-gap)))",
-                transformOrigin: "right center"
-            },
-            "&[data-state=checked]": {
+            "&[data-checked]": {
                 transform:
                     "translateX(calc(var(--switch-width) - var(--switch-thumb-size) - var(--switch-thumb-gap)))",
                 transformOrigin: "right center"

@@ -50,6 +50,16 @@ const [DateRangePickerUiProvider, useDateRangePickerUi] = createContext<DateRang
     name: "DateRangePickerUiContext"
 });
 
+type PopoverChangeDetails = Parameters<
+    NonNullable<Popover.PopoverProps["onOpenChange"]>
+>[1];
+
+const imperativePopoverDetails = {
+    reason: "imperative",
+    cancel: () => {},
+    canceled: false
+} as PopoverChangeDetails;
+
 export interface DateRangePickerRootProps
     extends Omit<BoxProps, "defaultValue" | "onChange" | "value">,
         DateRangePickerVariantProps {
@@ -124,7 +134,7 @@ function DateRangePickerRoot(props: DateRangePickerRootProps) {
     const closePopover = useCallback(
         function closePopover() {
             setOpen(false);
-            popoverProps?.onOpenChange?.({ open: false });
+            popoverProps?.onOpenChange?.(false, imperativePopoverDetails);
         },
         [popoverProps]
     );
@@ -143,7 +153,10 @@ function DateRangePickerRoot(props: DateRangePickerRootProps) {
     const handleOpenChange = useCallback(
         function handleOpenChange(details: OpenChangeDetails) {
             setOpen(details.open);
-            popoverProps?.onOpenChange?.(details);
+            popoverProps?.onOpenChange?.(
+                details.open,
+                details as unknown as PopoverChangeDetails
+            );
         },
         [popoverProps]
     );
@@ -233,10 +246,10 @@ function DateRangePickerRoot(props: DateRangePickerRootProps) {
                 <DateRangePickerUiProvider value={rangeUi}>
                     <Popover.Root
                         open={open}
-                        onOpenChange={(details) => {
-                            setOpen(details.open);
-                            popoverProps?.onOpenChange?.(details);
-                            if (!details.open) {
+                        onOpenChange={(nextOpen, details) => {
+                            setOpen(nextOpen);
+                            popoverProps?.onOpenChange?.(nextOpen, details);
+                            if (!nextOpen) {
                                 onCancel?.();
                             }
                         }}

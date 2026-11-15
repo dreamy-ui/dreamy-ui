@@ -31,7 +31,7 @@ describe("DateRangePicker", () => {
         expect(input).toHaveAccessibleName(/Stay dates/i);
     });
 
-    it("exposes a calendar grid with labelled nav and full-date day names when open", () => {
+    it("exposes a calendar grid with labelled nav and full-date day names when open", async () => {
         render(
             <DateRangePicker.Root
                 defaultValue={{
@@ -47,12 +47,20 @@ describe("DateRangePicker", () => {
             </DateRangePicker.Root>
         );
 
-        expect(screen.getByRole("dialog")).toBeInTheDocument();
-        expect(screen.getByRole("grid")).toBeInTheDocument();
-        expect(screen.getByRole("button", { name: "Previous month" })).toBeInTheDocument();
-        expect(screen.getByRole("button", { name: "Next month" })).toBeInTheDocument();
-        expect(screen.getByRole("button", { name: /July 1, 2026/i })).toBeInTheDocument();
-        expect(screen.getByRole("button", { name: /July 10, 2026/i })).toBeInTheDocument();
+        expect(await screen.findByRole("dialog")).toBeInTheDocument();
+        expect(await screen.findByRole("grid")).toBeInTheDocument();
+        expect(
+            await screen.findByRole("button", { name: "Previous month" })
+        ).toBeInTheDocument();
+        expect(
+            await screen.findByRole("button", { name: "Next month" })
+        ).toBeInTheDocument();
+        expect(
+            await screen.findByRole("button", { name: /July 1, 2026/i })
+        ).toBeInTheDocument();
+        expect(
+            await screen.findByRole("button", { name: /July 10, 2026/i })
+        ).toBeInTheDocument();
     });
 
     it("closes on Escape and restores focus to the trigger", async () => {
@@ -82,7 +90,7 @@ describe("DateRangePicker", () => {
         expect(input).toHaveFocus();
     });
 
-    it("names preset and footer buttons when provided", () => {
+    it("names preset and footer buttons when provided", async () => {
         render(
             <DateRangePicker.Root
                 popoverProps={{ usePortal: false, open: true }}
@@ -106,8 +114,14 @@ describe("DateRangePicker", () => {
             </DateRangePicker.Root>
         );
 
-        expect(screen.getByRole("button", { name: "This week" })).toBeInTheDocument();
-        expect(screen.getByRole("button", { name: "Cancel" })).toBeInTheDocument();
-        expect(screen.getByRole("button", { name: "Apply" })).toBeInTheDocument();
+        expect(
+            await screen.findByRole("button", { name: "This week" })
+        ).toBeInTheDocument();
+        expect(
+            await screen.findByRole("button", { name: "Cancel" })
+        ).toBeInTheDocument();
+        expect(
+            await screen.findByRole("button", { name: "Apply" })
+        ).toBeInTheDocument();
     });
 });

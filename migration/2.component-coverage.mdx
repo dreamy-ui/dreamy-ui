@@ -1,0 +1,81 @@
+---
+title: UI SDK Component Coverage
+description: Maps Dreamy UI components to UI SDK coverage and migration strategy.
+---
+
+# UI SDK Component Coverage
+
+This matrix is the current migration map. Update it whenever a component changes strategy or a UI SDK beta adds/removes coverage.
+
+## Direct UI SDK React coverage
+
+These Dreamy components have a direct UI SDK counterpart and should wrap `@ui-sdk/react/<entry>`.
+
+| Dreamy component | UI SDK entry | Migration notes |
+| --- | --- | --- |
+| `accordion` | `accordion` | Replace Ark accordion; keep Dreamy items/triggers/content names and Motion collapse. |
+| `autocomplete` | `autocomplete` | Replace Ark combobox; compose popup/list/typeahead behavior through UI SDK. |
+| `avatar` | `avatar` | Replace Ark avatar; preserve initials/icon fallback, group, image states. |
+| `button` | `button` | Wrap UI SDK Button for pending/disabled/focusable-disabled behavior; keep Dreamy loading/success/ripple presentation. |
+| `checkbox` | `checkbox` | Use `checked`/`defaultChecked`/`onCheckedChange`; support `"indeterminate"`; keep label/control/indicator styling. |
+| `checkbox-card` | `checkbox` + Dreamy card | Compose UI SDK Checkbox inside Dreamy card presentation; no duplicate checkbox logic. |
+| `date-picker` | `date-picker`, `calendar`, `date-input` | Replace Ark date picker/calendar; verify range mode for `date-range-picker`. |
+| `date-range-picker` | `date-picker` | Use UI SDK range mode and shared calendar/input parts. |
+| `dialog` | `dialog` | Use UI SDK Dialog primitives; keep Dreamy modal aliases where needed. |
+| `drawer` | `drawer` | Replace Ark drawer; preserve placement, sizing, and motion. |
+| `editable` | verify closest primitive | No confirmed direct UI SDK editable component in beta; use Input/text behavior or `@ui-sdk/core` composition. |
+| `field` | `field`, `label` | Foundation migration; preserve Dreamy helper/error presentation while adopting UI SDK field semantics. |
+| `file-upload` | `file-input` | Replace custom dropzone/file validation logic where UI SDK File Input covers it. |
+| `hover-card` | `hover-card` | Replace Ark hover card; preserve open delay/positioning presentation. |
+| `input` | `input` | Use `value`/`defaultValue`/`onValueChange`; keep Input.Group/Prefix/Suffix/StartAddon/EndAddon composition. |
+| `menu` | `menu` | Replace Ark menu; preserve nested menus, icons, and Dreamy item styling. |
+| `modal` | `dialog` | Modal can remain a Dreamy wrapper over the same Dialog implementation. |
+| `pagination` | `pagination` | Replace Ark pagination; preserve Dreamy sizing/variant styling. |
+| `pin-input` | `otp-input` | Replace custom pin input hook with OTP Input behavior. |
+| `popover` | `popover` | Foundation overlay; other popup components should compose this behavior instead of duplicating it. |
+| `progress` | `progress` | Use Progress/Track/Indicator/Label/Value parts; preserve indeterminate animation. |
+| `progress-circular` | `progress` + custom SVG | UI SDK Progress covers state/ARIA; Dreamy supplies circular SVG styling. |
+| `radio` | `radio` | Use `checked`/`defaultChecked`/`onCheckedChange`; keep group semantics. |
+| `radio-card` | `radio` + Dreamy card | Compose UI SDK Radio inside Dreamy card presentation. |
+| `range-slider` | `slider` | Use array `value` and `onValueChange`; preserve two-thumb styling. |
+| `select` | `select` | Replace Ark select; preserve items, multiple/clearable APIs mapped to UI SDK props, trigger/content styling. |
+| `slider` | `slider` | Use numeric `value`/`defaultValue`/`onValueChange`; preserve marks/orientation styling. |
+| `switch` | `switch` | Use `checked`/`defaultChecked`/`onCheckedChange`; keep thumb motion and label styling. |
+| `tabs` | `tabs` | Use `value`/`defaultValue`/`onValueChange`; preserve tab/list/panel styling and keyboard behavior. |
+| `textarea` | `textarea` | Use `value`/`defaultValue`/`onValueChange` and autosize options where supported. |
+| `time-input` | `time-input` | Replace custom time parsing/focus logic with UI SDK Time Input. |
+| `toast` | `toast` | Replace custom toast visuals/behavior with UI SDK Toast parts. |
+| `toast-provider` | `toast` | Provider/root wrapper around UI SDK toaster/region behavior. |
+| `tooltip` | `tooltip` | Replace Ark tooltip; preserve delay/placement styling. |
+
+## UI SDK core composition candidates
+
+These Dreamy components have real behavior but no exact ready-made UI SDK React counterpart in the current beta. Build them from `@ui-sdk/core` primitives/behaviors.
+
+| Dreamy component | Strategy | Notes |
+| --- | --- | --- |
+| `action-bar` | Core composition | Floating selection/action toolbar; likely popup/layer + roving focus/toolbar behavior. |
+| `stepper` | Core composition | Step navigation/progress; likely roving focus + selection/state primitives. |
+| `editable` | Core composition or closest primitive | Confirm whether UI SDK Input/Textarea primitives can cover edit/read modes cleanly. |
+| `checkbox-card` / `radio-card` | Direct primitive + Dreamy layout | Behavior comes from Checkbox/Radio; card is presentation composition. |
+
+## Panda-only / static components
+
+These should remain styled-only unless implementation reveals real interactive behavior.
+
+`alert`, `badge`, `box`, `breadcrumb`, `card`, `close-button`, `divider`, `empty-state`, `fieldset`, `flex`, `grid`, `group`, `heading`, `icon`, `icon-button`, `image`, `kbd`, `link`, `list`, `motion`, `ripple`, `skeleton`, `snippet`, `span`, `spinner`, `stack`, `stat`, `table`, `text`, `theme`, `transitions`, `visually-hidden`, `wrap`
+
+Notes:
+
+- `breadcrumb` is static markup today; if overflow/collapse behavior is added later, compose UI SDK list/menu behavior.
+- `image` has loading/fallback state; keep Dreamy implementation unless a reusable UI SDK image primitive is needed. Avatar fallback is covered by UI SDK Avatar.
+- `portal` is not a registry component source file today; Dreamy Portal remains for app-level layering. UI SDK popups generally use top-layer placement and should not be wrapped in Portal by default.
+- `motion` and `transitions` remain Dreamy utilities.
+
+## UI SDK components not currently exposed by Dreamy
+
+These are future opportunities, not automatic additions:
+
+`alert-dialog`, `calendar`, `carousel`, `collapsible`, `color-picker`, `combobox`, `command`, `date-input`, `menubar`, `meter`, `navigation-menu`, `number-input`, `password-input`, `preferences`, `rating`, `resizable`, `scroll-area`, `segmented-control`, `separator`, `timeline`, `token-input`, `toolbar`, `trigger-menu`, `tree`, `waterfall`
+
+Add only when there is a concrete Dreamy component/API need.

@@ -1,24 +1,49 @@
 "use client";
 
-import { type UserFeedbackProps, callAllHandlers, useField } from "@dreamy-ui/react";
-
-import type React from "react";
-import TextareaAutosize, { type TextareaAutosizeProps } from "react-textarea-autosize";
+import { type UseFieldProps, useField } from "@dreamy-ui/react";
+import { Textarea as UiSdkTextarea } from "@ui-sdk/react/textarea";
+import type { ComponentProps, CSSProperties } from "react";
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type TextareaVariantProps, textarea } from "styled-system/recipes";
 
-export interface TextareaProps
-    extends HTMLDreamyProps<"textarea">,
-        TextareaVariantProps,
-        Omit<TextareaAutosizeProps, keyof HTMLDreamyProps<"textarea">>,
-        UserFeedbackProps {
-    /**
-     * The callback function that is called when the textarea value changes.
-     */
-    onChangeValue?: (value: string) => void;
+type UiSdkTextareaProps = ComponentProps<typeof UiSdkTextarea>;
+
+const StyledTextarea = dreamy(UiSdkTextarea, textarea);
+
+function rowsToStyle(minRows?: number, maxRows?: number): CSSProperties {
+    return {
+        minHeight: minRows ? `${minRows * 1.5}em` : undefined,
+        maxHeight: maxRows ? `${maxRows * 1.5}em` : undefined
+    };
 }
 
-const StyledTextarea = dreamy(TextareaAutosize, textarea);
+export interface TextareaProps
+    extends Omit<
+            HTMLDreamyProps<"textarea">,
+            "size" | "value" | "defaultValue" | "onValueChange" | "onSubmit" | "style"
+        >,
+        TextareaVariantProps,
+        Pick<
+            UiSdkTextareaProps,
+            | "value"
+            | "defaultValue"
+            | "onValueChange"
+            | "controller"
+            | "debug"
+            | "autoResize"
+            | "onSubmit"
+            | "submitShortcut"
+        > {
+    /**
+     * Minimum number of rows used to derive the textarea's min-height.
+     */
+    minRows?: number;
+    /**
+     * Maximum number of rows used to derive the textarea's max-height.
+     */
+    maxRows?: number;
+    style?: CSSProperties;
+}
 
 /**
  * Textarea component — multi-line text input with autosize.
@@ -31,31 +56,29 @@ const StyledTextarea = dreamy(TextareaAutosize, textarea);
  * ```
  */
 export function Textarea(props: TextareaProps) {
-    const { onChangeValue, onChange, ...restProps } = props;
-    const field = useField(restProps);
+    const { minRows, maxRows, autoResize = true, style, ...restProps } = props;
+    const field = useField(restProps as UseFieldProps<HTMLTextAreaElement>);
 
     return (
         <StyledTextarea
             {...field}
-            onChange={callAllHandlers(onChange, function handleChangeValue(
-                e: React.ChangeEvent<HTMLTextAreaElement>
-            ) {
-                onChangeValue?.(e.target.value);
-            })}
+            autoResize={autoResize}
+            style={{ ...rowsToStyle(minRows, maxRows), ...style }}
         />
     );
 }
 
-const StyledTextareaNoAutoSize = dreamy("textarea", textarea);
-
 export interface TextareaNoAutoSizeProps
-    extends HTMLDreamyProps<"textarea">,
+    extends Omit<
+            HTMLDreamyProps<"textarea">,
+            "size" | "value" | "defaultValue" | "onValueChange" | "onSubmit" | "style"
+        >,
         TextareaVariantProps,
-        UserFeedbackProps {
-    /**
-     * The callback function that is called when the textarea value changes.
-     */
-    onChangeValue?: (value: string) => void;
+        Pick<
+            UiSdkTextareaProps,
+            "value" | "defaultValue" | "onValueChange" | "controller" | "debug" | "onSubmit" | "submitShortcut"
+        > {
+    style?: CSSProperties;
 }
 
 /**
@@ -69,17 +92,8 @@ export interface TextareaNoAutoSizeProps
  * ```
  */
 export function TextareaNoAutoSize(props: TextareaNoAutoSizeProps) {
-    const { onChangeValue, onChange, ...restProps } = props;
-    const field = useField(restProps);
+    const { style, ...restProps } = props;
+    const field = useField(restProps as UseFieldProps<HTMLTextAreaElement>);
 
-    return (
-        <StyledTextareaNoAutoSize
-            {...field}
-            onChange={callAllHandlers(onChange, function handleChangeValue(
-                e: React.ChangeEvent<HTMLTextAreaElement>
-            ) {
-                onChangeValue?.(e.target.value);
-            })}
-        />
-    );
+    return <StyledTextarea {...field} style={style} />;
 }

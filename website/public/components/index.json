@@ -78,13 +78,13 @@
     "file": "avatar.tsx",
     "component": "Avatar",
     "npmDependencies": [
-      "@ark-ui"
+      "@ui-sdk",
+      "@ui-sdk/core"
     ],
     "fileDependencies": [
       "./box",
       "./flex",
-      "./icon",
-      "./image"
+      "./icon"
     ],
     "hasRecipe": true,
     "hasPattern": false,
@@ -133,7 +133,9 @@
     "id": "button",
     "file": "button.tsx",
     "component": "Button",
-    "npmDependencies": [],
+    "npmDependencies": [
+      "@ui-sdk"
+    ],
     "fileDependencies": [
       "./ripple",
       "./span",
@@ -164,11 +166,11 @@
     "file": "checkbox.tsx",
     "component": "Checkbox",
     "npmDependencies": [
-      "@ark-ui"
+      "@ui-sdk/core",
+      "@ui-sdk"
     ],
     "fileDependencies": [
-      "./flex",
-      "./map-checkbox-props"
+      "./flex"
     ],
     "hasRecipe": true,
     "hasPattern": false,
@@ -499,7 +501,9 @@
     "id": "input",
     "file": "input.tsx",
     "component": "Input",
-    "npmDependencies": [],
+    "npmDependencies": [
+      "@ui-sdk"
+    ],
     "fileDependencies": [],
     "hasRecipe": true,
     "hasPattern": false,
@@ -557,8 +561,7 @@
     ],
     "fileDependencies": [
       "./kbd",
-      "./popover",
-      "./map-positioning"
+      "./popover"
     ],
     "hasRecipe": true,
     "hasPattern": false,
@@ -639,15 +642,12 @@
     "file": "popover.tsx",
     "component": "Popover",
     "npmDependencies": [
-      "@ark-ui"
+      "@ui-sdk"
     ],
     "fileDependencies": [
       "./close-button",
-      "./motion",
       "./map-positioning",
-      "./popover-ui-context",
-      "./use-floating-present",
-      "./use-hover-open"
+      "./popover-ui-context"
     ],
     "hasRecipe": true,
     "hasPattern": false,
@@ -661,7 +661,7 @@
     "file": "progress.tsx",
     "component": "Progress",
     "npmDependencies": [
-      "@ark-ui"
+      "@ui-sdk"
     ],
     "fileDependencies": [],
     "hasRecipe": true,
@@ -676,7 +676,7 @@
     "file": "progress-circular.tsx",
     "component": "ProgressCircular",
     "npmDependencies": [
-      "@ark-ui"
+      "@ui-sdk"
     ],
     "fileDependencies": [],
     "hasRecipe": true,
@@ -691,11 +691,11 @@
     "file": "radio.tsx",
     "component": "Radio",
     "npmDependencies": [
-      "@ark-ui"
+      "@ui-sdk/core",
+      "@ui-sdk"
     ],
     "fileDependencies": [
-      "./flex",
-      "./map-radio-props"
+      "./flex"
     ],
     "hasRecipe": true,
     "hasPattern": false,
@@ -724,7 +724,7 @@
     "file": "range-slider.tsx",
     "component": "RangeSlider",
     "npmDependencies": [
-      "@ark-ui"
+      "@ui-sdk"
     ],
     "fileDependencies": [
       "./box"
@@ -786,11 +786,10 @@
     "file": "slider.tsx",
     "component": "Slider",
     "npmDependencies": [
-      "@ark-ui"
+      "@ui-sdk"
     ],
     "fileDependencies": [
-      "./box",
-      "./map-slider-value"
+      "./box"
     ],
     "hasRecipe": true,
     "hasPattern": false,
@@ -886,11 +885,9 @@
     "file": "switch.tsx",
     "component": "Switch",
     "npmDependencies": [
-      "@ark-ui"
+      "@ui-sdk"
     ],
-    "fileDependencies": [
-      "./motion"
-    ],
+    "fileDependencies": [],
     "hasRecipe": true,
     "hasPattern": false,
     "recipeIds": [
@@ -949,7 +946,7 @@
     "file": "textarea.tsx",
     "component": "Textarea",
     "npmDependencies": [
-      "react-textarea-autosize"
+      "@ui-sdk"
     ],
     "fileDependencies": [],
     "hasRecipe": true,
@@ -1092,18 +1089,6 @@
   },
   {
     "type": "module",
-    "id": "map-checkbox-props",
-    "file": "map-checkbox-props.ts",
-    "component": "MapCheckboxProps",
-    "npmDependencies": [
-      "@ark-ui"
-    ],
-    "fileDependencies": [],
-    "hasRecipe": false,
-    "hasPattern": false
-  },
-  {
-    "type": "module",
     "id": "ark-calendar",
     "file": "ark-calendar.tsx",
     "component": "ArkCalendar",
@@ -1192,6 +1177,7 @@
     "file": "map-positioning.ts",
     "component": "MapPositioning",
     "npmDependencies": [
+      "@ui-sdk",
       "@ark-ui"
     ],
     "fileDependencies": [],
@@ -1203,7 +1189,9 @@
     "id": "popover-ui-context",
     "file": "popover-ui-context.tsx",
     "component": "PopoverUiContext",
-    "npmDependencies": [],
+    "npmDependencies": [
+      "@ui-sdk"
+    ],
     "fileDependencies": [],
     "hasRecipe": false,
     "hasPattern": false
@@ -1220,41 +1208,9 @@
   },
   {
     "type": "module",
-    "id": "use-hover-open",
-    "file": "use-hover-open.ts",
-    "component": "UseHoverOpen",
-    "npmDependencies": [],
-    "fileDependencies": [],
-    "hasRecipe": false,
-    "hasPattern": false
-  },
-  {
-    "type": "module",
-    "id": "map-radio-props",
-    "file": "map-radio-props.ts",
-    "component": "MapRadioProps",
-    "npmDependencies": [
-      "@ark-ui"
-    ],
-    "fileDependencies": [],
-    "hasRecipe": false,
-    "hasPattern": false
-  },
-  {
-    "type": "module",
     "id": "select-ui-context",
     "file": "select-ui-context.tsx",
     "component": "SelectUiContext",
-    "npmDependencies": [],
-    "fileDependencies": [],
-    "hasRecipe": false,
-    "hasPattern": false
-  },
-  {
-    "type": "module",
-    "id": "map-slider-value",
-    "file": "map-slider-value.ts",
-    "component": "MapSliderValue",
     "npmDependencies": [],
     "fileDependencies": [],
     "hasRecipe": false,

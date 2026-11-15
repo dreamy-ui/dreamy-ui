@@ -94,13 +94,13 @@ export function Size() {
 }
 
 export function Controlled() {
-    const [value, setValue] = useState<string | number>("rr");
+    const [value, setValue] = useState<string>("rr");
 
     return (
         <>
             <Text>Selected: {value}</Text>
             <RadioGroup
-                onChange={setValue}
+                onValueChange={(next) => setValue(next ?? "")}
                 value={value}
             >
                 <Radio value="rr">React Router</Radio>

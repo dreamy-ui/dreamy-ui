@@ -5,45 +5,23 @@ import * as Field from "../field";
 import { render } from "../test/render";
 import { Switch } from "./index";
 
-function getSwitchInput(name?: string | RegExp) {
-    const asSwitch = screen.queryByRole("switch", { name, hidden: true });
-    if (asSwitch) return asSwitch;
-    return screen.getByRole("checkbox", { name, hidden: true });
+function getSwitch(name?: string | RegExp) {
+    return screen.getByRole("switch", { name });
+}
+
+function getHiddenInput(container: HTMLElement) {
+    return container.querySelector('input[type="checkbox"]') as HTMLInputElement;
 }
 
 describe("Switch", () => {
-    it("calls onChange and onChangeValue when toggled", async () => {
+    it("calls onCheckedChange when toggled", async () => {
         const user = userEvent.setup();
-        const onChange = vi.fn();
-        const onChangeValue = vi.fn();
+        const onCheckedChange = vi.fn();
 
         render(
             <Switch
                 defaultChecked={false}
-                onChange={onChange}
-                onChangeValue={onChangeValue}
-            >
-                Notifications
-            </Switch>
-        );
-
-        const input = getSwitchInput(/notifications/i);
-        await user.click(input);
-
-        expect(onChange).toHaveBeenCalledTimes(1);
-        expect(onChange.mock.calls[0][0].target.checked).toBe(true);
-        expect(onChangeValue).toHaveBeenCalledTimes(1);
-        expect(onChangeValue).toHaveBeenCalledWith(true);
-    });
-
-    it("toggles when clicking the label in uncontrolled mode", async () => {
-        const user = userEvent.setup();
-        const onChangeValue = vi.fn();
-
-        render(
-            <Switch
-                defaultChecked={false}
-                onChangeValue={onChangeValue}
+                onCheckedChange={onCheckedChange}
             >
                 Notifications
             </Switch>
@@ -51,30 +29,45 @@ describe("Switch", () => {
 
         await user.click(screen.getByText("Notifications"));
 
-        expect(onChangeValue).toHaveBeenCalledWith(true);
-        expect(getSwitchInput(/notifications/i)).toBeChecked();
+        expect(onCheckedChange).toHaveBeenCalledTimes(1);
+        expect(onCheckedChange.mock.calls[0][0]).toBe(true);
     });
 
-    it("forwards inputProps to the hidden input", () => {
-        render(
+    it("toggles when clicking the label in uncontrolled mode", async () => {
+        const user = userEvent.setup();
+        const onCheckedChange = vi.fn();
+
+        const { container } = render(
             <Switch
-                data-testid="switch-root"
-                inputProps={{
-                    id: "switch-input",
-                    name: "notifications"
-                }}
-                defaultChecked
+                defaultChecked={false}
+                onCheckedChange={onCheckedChange}
             >
                 Notifications
             </Switch>
         );
 
-        const input = document.getElementById("switch-input");
+        await user.click(screen.getByText("Notifications"));
+
+        expect(onCheckedChange).toHaveBeenCalledWith(true, expect.anything());
+        expect(getHiddenInput(container).checked).toBe(true);
+    });
+
+    it("forwards name to the hidden input", () => {
+        const { container } = render(
+            <Switch
+                data-testid="switch-root"
+                defaultChecked
+                name="notifications"
+            >
+                Notifications
+            </Switch>
+        );
+
+        const input = getHiddenInput(container);
         const root = screen.getByTestId("switch-root");
 
-        expect(input).toHaveAttribute("type", "checkbox");
         expect(input).toHaveAttribute("name", "notifications");
-        expect(input).toBeChecked();
+        expect(input.checked).toBe(true);
         expect(root).not.toHaveAttribute("name", "notifications");
     });
 
@@ -96,47 +89,46 @@ describe("Switch", () => {
         expect(screen.getByText("Notifications")).toBeInTheDocument();
     });
 
-    it("exposes switch role and native checked on the input", () => {
+    it("exposes switch role with aria-checked", () => {
         render(<Switch defaultChecked>Notifications</Switch>);
 
-        const input = screen.getByRole("switch", { name: /notifications/i, hidden: true });
+        const control = getSwitch(/notifications/i);
 
-        expect(input).toHaveAttribute("type", "checkbox");
-        expect(input).toHaveAttribute("role", "switch");
-        expect(input).toBeChecked();
-        expect(input).not.toHaveAttribute("aria-checked");
+        expect(control).toHaveAttribute("role", "switch");
+        expect(control).toHaveAttribute("aria-checked", "true");
+        expect(control).toHaveAttribute("type", "button");
     });
 
-    it("keeps focus on the hidden checkbox input", async () => {
+    it("keeps focus on the switch control", async () => {
         const user = userEvent.setup();
 
         render(<Switch>Notifications</Switch>);
 
-        const input = getSwitchInput(/notifications/i);
+        const control = getSwitch(/notifications/i);
         await user.tab();
 
-        expect(input).toHaveFocus();
+        expect(control).toHaveFocus();
     });
 
     it("toggles with Space when focused", async () => {
         const user = userEvent.setup();
-        const onChangeValue = vi.fn();
+        const onCheckedChange = vi.fn();
 
         render(
             <Switch
                 defaultChecked={false}
-                onChangeValue={onChangeValue}
+                onCheckedChange={onCheckedChange}
             >
                 Notifications
             </Switch>
         );
 
-        const input = getSwitchInput(/notifications/i);
-        input.focus();
+        const control = getSwitch(/notifications/i);
+        control.focus();
         await user.keyboard(" ");
 
-        expect(onChangeValue).toHaveBeenCalledWith(true);
-        expect(input).toBeChecked();
+        expect(onCheckedChange).toHaveBeenCalled();
+        expect(control).toHaveAttribute("aria-checked", "true");
     });
 
     it("does not change accessible name when toggled", async () => {
@@ -144,15 +136,15 @@ describe("Switch", () => {
 
         render(<Switch defaultChecked={false}>Notifications</Switch>);
 
-        const input = getSwitchInput(/notifications/i);
-        expect(input).toHaveAccessibleName("Notifications");
+        const control = getSwitch(/notifications/i);
+        expect(control).toHaveAccessibleName("Notifications");
 
-        await user.click(input);
+        await user.click(control);
 
-        expect(getSwitchInput(/notifications/i)).toHaveAccessibleName("Notifications");
+        expect(getSwitch(/notifications/i)).toHaveAccessibleName("Notifications");
     });
 
-    it("hides the visual control from the accessibility tree", () => {
+    it("hides the thumb visuals from the accessibility tree", () => {
         render(
             <Switch data-testid="switch-root">
                 Notifications
@@ -160,10 +152,9 @@ describe("Switch", () => {
         );
 
         const root = screen.getByTestId("switch-root");
-        const control = root.querySelector('[data-part="control"]');
+        const thumb = root.querySelector('[data-part="thumb"]');
 
-        expect(control).toHaveAttribute("aria-hidden", "true");
-        expect(control).not.toHaveAttribute("tabindex");
+        expect(thumb).not.toHaveAttribute("tabindex");
     });
 
     it("does not put conflicting switch semantics on the root", () => {
@@ -184,55 +175,55 @@ describe("Switch", () => {
 
     it("does not toggle when disabled", async () => {
         const user = userEvent.setup();
-        const onChangeValue = vi.fn();
+        const onCheckedChange = vi.fn();
 
         render(
             <Switch
-                isDisabled
+                disabled
                 defaultChecked={false}
-                onChangeValue={onChangeValue}
+                onCheckedChange={onCheckedChange}
             >
                 Notifications
             </Switch>
         );
 
-        const input = getSwitchInput(/notifications/i);
+        const control = getSwitch(/notifications/i);
 
-        expect(input).toBeDisabled();
-        await user.click(input);
+        expect(control).toHaveAttribute("data-disabled", "");
+        await user.click(control);
 
-        expect(onChangeValue).not.toHaveBeenCalled();
-        expect(input).not.toBeChecked();
+        expect(onCheckedChange).not.toHaveBeenCalled();
+        expect(control).toHaveAttribute("aria-checked", "false");
     });
 
     it("does not toggle when read-only", async () => {
         const user = userEvent.setup();
-        const onChangeValue = vi.fn();
+        const onCheckedChange = vi.fn();
 
         render(
             <Switch
-                isReadOnly
+                readOnly
                 defaultChecked={false}
-                onChangeValue={onChangeValue}
+                onCheckedChange={onCheckedChange}
             >
                 Notifications
             </Switch>
         );
 
-        const input = getSwitchInput(/notifications/i);
-        await user.click(input);
+        const control = getSwitch(/notifications/i);
+        await user.click(control);
 
-        expect(onChangeValue).not.toHaveBeenCalled();
-        expect(input).not.toBeChecked();
+        expect(onCheckedChange).not.toHaveBeenCalled();
+        expect(control).toHaveAttribute("aria-checked", "false");
     });
 
     it("accepts an accessible name via aria-label", () => {
         render(<Switch aria-label="Dark mode" />);
 
-        expect(getSwitchInput("Dark mode")).toBeInTheDocument();
+        expect(getSwitch("Dark mode")).toBeInTheDocument();
     });
 
-    it("wires Field.Label into the switch accessible name", () => {
+    it("wires Field.Label into the switch accessible name", async () => {
         render(
             <Field.Root>
                 <Field.Label>Email notifications</Field.Label>
@@ -240,13 +231,13 @@ describe("Switch", () => {
             </Field.Root>
         );
 
-        const input = getSwitchInput(/email notifications/i);
+        const control = getSwitch(/email notifications/i);
 
-        expect(input).toHaveAccessibleName("Email notifications");
-        expect(input.id).toBeTruthy();
+        expect(control).toHaveAccessibleName("Email notifications");
+        expect(control.id).toBeTruthy();
 
         const label = screen.getByText("Email notifications");
-        expect(label).toHaveAttribute("for", input.id);
+        await waitFor(() => expect(label).toHaveAttribute("for", control.id));
     });
 
     it("wires Field hint and error into aria-describedby when invalid", async () => {
@@ -259,15 +250,15 @@ describe("Switch", () => {
             </Field.Root>
         );
 
-        const input = getSwitchInput(/email notifications/i);
+        const control = getSwitch(/email notifications/i);
         const error = screen.getByText("This setting is required.");
 
-        expect(input).toHaveAttribute("aria-invalid", "true");
+        expect(control).toHaveAttribute("data-invalid", "");
         expect(error).toHaveAttribute("id");
         expect(screen.queryByText("We will only send product updates.")).not.toBeInTheDocument();
 
         await waitFor(function assertDescribedBy() {
-            const describedBy = input.getAttribute("aria-describedby") ?? "";
+            const describedBy = control.getAttribute("aria-describedby") ?? "";
             expect(describedBy.split(" ")).toContain(error.id);
         });
     });
@@ -281,19 +272,19 @@ describe("Switch", () => {
             </Field.Root>
         );
 
-        const input = getSwitchInput(/email notifications/i);
+        const control = getSwitch(/email notifications/i);
         const hint = screen.getByText("We will only send product updates.");
 
         expect(hint).toHaveAttribute("id");
-        expect(input).not.toHaveAttribute("aria-invalid", "true");
+        expect(control).not.toHaveAttribute("data-invalid");
 
         await waitFor(function assertDescribedBy() {
-            const describedBy = input.getAttribute("aria-describedby") ?? "";
+            const describedBy = control.getAttribute("aria-describedby") ?? "";
             expect(describedBy.split(" ")).toContain(hint.id);
         });
     });
 
-    it("reflects Field required and disabled on the input", () => {
+    it("reflects Field required and disabled on the control", () => {
         render(
             <Field.Root
                 isRequired
@@ -304,10 +295,10 @@ describe("Switch", () => {
             </Field.Root>
         );
 
-        const input = getSwitchInput(/email notifications/i);
+        const control = getSwitch(/email notifications/i);
 
-        expect(input).toBeDisabled();
-        expect(input).toBeRequired();
+        expect(control).toHaveAttribute("aria-disabled", "true");
+        expect(control).toHaveAttribute("aria-required", "true");
     });
 
     it("supports grouping multiple switches with a fieldset legend", () => {
@@ -326,7 +317,7 @@ describe("Switch", () => {
         );
 
         expect(screen.getByRole("group", { name: "Notification preferences" })).toBeInTheDocument();
-        expect(getSwitchInput(/email/i)).toBeInTheDocument();
-        expect(getSwitchInput(/sms/i)).toBeInTheDocument();
+        expect(getSwitch(/email/i)).toBeInTheDocument();
+        expect(getSwitch(/sms/i)).toBeInTheDocument();
     });
 });

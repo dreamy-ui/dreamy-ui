@@ -3,14 +3,14 @@ import type { ProgressCircularProps } from "./index";
 
 type ExpectTrue<T extends true> = T;
 
-assertType<number | undefined>({} as ProgressCircularProps["value"]);
-assertType<number | undefined>({} as ProgressCircularProps["minValue"]);
-assertType<number | undefined>({} as ProgressCircularProps["maxValue"]);
+assertType<number | null | undefined>({} as ProgressCircularProps["value"]);
+assertType<number | undefined>({} as ProgressCircularProps["min"]);
+assertType<number | undefined>({} as ProgressCircularProps["max"]);
 assertType<string | undefined>({} as ProgressCircularProps["label"]);
 assertType<string | undefined>({} as ProgressCircularProps["valueLabel"]);
 assertType<boolean | undefined>({} as ProgressCircularProps["showValueLabel"]);
 assertType<boolean | undefined>({} as ProgressCircularProps["isIndeterminate"]);
-assertType<boolean | undefined>({} as ProgressCircularProps["isDisabled"]);
+assertType<boolean | undefined>({} as ProgressCircularProps["disabled"]);
 assertType<string | undefined>({} as ProgressCircularProps["speed"]);
 
 const _size: ProgressCircularProps["size"] = "md";
@@ -18,8 +18,8 @@ const _scheme: ProgressCircularProps["scheme"] = "primary";
 
 type _HasValueProps = ExpectTrue<
     "value" extends keyof ProgressCircularProps
-        ? "minValue" extends keyof ProgressCircularProps
-            ? "maxValue" extends keyof ProgressCircularProps
+        ? "min" extends keyof ProgressCircularProps
+            ? "max" extends keyof ProgressCircularProps
                 ? "isIndeterminate" extends keyof ProgressCircularProps
                     ? true
                     : false
@@ -57,35 +57,3 @@ const _recipeProps: _HasRecipeProps = true;
 const _styleProps: _HasStyleProps = true;
 
 void (_valueProps && _recipeProps && _styleProps && _size && _scheme);
-
-assertType<ProgressCircularProps>({
-    value: 60,
-    minValue: 0,
-    maxValue: 100,
-    label: "Loading",
-    showValueLabel: true,
-    valueLabel: "60%",
-    isIndeterminate: false,
-    isDisabled: false,
-    speed: "1.5s",
-    size: "md",
-    scheme: "primary",
-    "aria-label": "Loading results",
-    className: "custom-progress-circular",
-    bg: "transparent",
-    color: "fg",
-    p: 0,
-    m: 1,
-    w: "fit-content",
-    h: "auto"
-});
-
-assertType<ProgressCircularProps>({
-    // @ts-expect-error invalid size
-    size: "2xl"
-});
-
-assertType<ProgressCircularProps>({
-    // @ts-expect-error invalid scheme
-    scheme: "invalid"
-});

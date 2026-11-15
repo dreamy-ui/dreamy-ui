@@ -444,7 +444,7 @@ export const Control = withContext(function DatePickerControl(props: DatePickerC
                 {...inputProps}
             />
             <Button
-                isDisabled={isTodayDisabled}
+                disabled={isTodayDisabled}
                 onClick={handleSetToday}
                 size={size}
                 type="button"

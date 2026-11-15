@@ -1,0 +1,167 @@
+---
+title: UI SDK Migration
+description: Roadmap for moving Dreamy UI behavior from Ark UI and custom hooks to UI SDK while preserving Dreamy styling and compound APIs.
+---
+
+# UI SDK Migration
+
+Dreamy UI is moving its behavior layer to [UI SDK](https://ui-sdk.dev/) (`@ui-sdk/react` + `@ui-sdk/core`). Dreamy remains the design-system layer: Panda CSS recipes, semantic tokens, compound component APIs, generated registry output, and Motion transitions stay authoritative.
+
+## Why UI SDK
+
+UI SDK provides accessible, headless behavior for controls, overlays, forms, lists, selection, focus, keyboard navigation, and popup dismissal. Its APIs are native-first and agent-friendly, which matches Dreamy UI's goals: accessible, modular, easy to theme, and easy for AI agents to use correctly.
+
+Ark UI was the previous behavior layer. Components should no longer add new Ark dependencies or Ark-specific state names. Existing Ark imports are transitional until each component is migrated.
+
+## Architecture
+
+```text
+Consumer
+  → Dreamy compound API (Select.Root, Select.Trigger, Select.Content)
+  → Dreamy Panda recipe / semantic tokens / Motion
+  → @ui-sdk/react/<component> or @ui-sdk/core primitive
+  → accessible DOM, ARIA, keyboard, focus, forms, popups
+```
+
+### Rules
+
+- Use `@ui-sdk/react/<entry>` for direct component coverage.
+- Use `@ui-sdk/core/<behavior>` for Dreamy-only interactive components.
+- Keep static/presentational components Panda-only.
+- Preserve Dreamy compound names and styling APIs.
+- Use UI SDK-native state/event props: `value`, `defaultValue`, `onValueChange`, `open`, `defaultOpen`, `onOpenChange`, `checked`, `defaultChecked`, `onCheckedChange`, `pressed`, `defaultPressed`, `onPressedChange`.
+- Do not reintroduce Dreamy aliases such as `isChecked`, `isOpen`, `onChangeValue`, `onOpen`, or `onClose` on migrated components.
+- Keep presentation-only props such as `size`, `variant`, `scheme`, `triggerVariant`, `positioning`, icons, and motion options when they style/layout the component.
+
+## Phases
+
+### Phase 0 — Foundation
+
+- Pin `@ui-sdk/react` and `@ui-sdk/core` to `0.1.0-beta.1`.
+- Add repository skill: `.agents/skills/dreamy-ui-ui-sdk-migration/SKILL.md`.
+- Add Storybook + Playwright validation helpers.
+- Treat this document and `2.component-coverage.mdx` as the migration source of truth.
+
+### Phase 1 — Primitive controls
+
+Migrate first because other components depend on them:
+
+1. `input`
+2. `textarea`
+3. `button`
+4. `field`
+5. `checkbox`
+6. `radio`
+7. `switch`
+8. `slider` / `range-slider`
+9. `progress` / `progress-circular`
+10. `avatar`
+
+Acceptance criteria:
+
+- No Ark imports for migrated files.
+- Public types use UI SDK-native state/event props.
+- Stories cover default, controlled, disabled/read-only/invalid, and selected/checked states.
+- Playwright checks rendered HTML/ARIA/state attributes for representative stories.
+
+### Phase 2 — Overlay and form-heavy components
+
+Migrate popup/list/form components after primitives are stable:
+
+1. `popover`
+2. `tooltip`
+3. `hover-card`
+4. `menu`
+5. `select`
+6. `autocomplete`
+7. `date-picker` / `date-range-picker`
+8. `time-input`
+9. `file-upload`
+10. `pin-input` → OTP Input
+11. `dialog` / `modal` / `drawer`
+12. `toast` / `toast-provider`
+13. `editable`
+
+Important: overlays must compose shared UI SDK popup/list/selection behavior. Do not copy positioning, portal, focus-return, or dismissal logic into each component.
+
+### Phase 3 — Dreamy composites
+
+Build Dreamy-only interactive components from `@ui-sdk/core`:
+
+- `action-bar`
+- `stepper`
+- `checkbox-card`
+- `radio-card`
+- any remaining component still using custom `@dreamy-ui/react` behavior hooks
+
+### Phase 4 — Cleanup
+
+- Remove `@ark-ui/react` dependencies once no registry source imports it.
+- Mark `dreamy-ui-ark-ui-migration` as superseded.
+- Update component docs and changelog for breaking API changes.
+- Regenerate registry JSON and verify Storybook/Playwright/typecheck/build.
+
+## Validation workflow
+
+### Storybook
+
+Run Storybook from `website/`:
+
+```bash
+bun run story
+```
+
+Open a component story through the iframe URL:
+
+```text
+http://localhost:6006/iframe.html?id=<story-id>&viewMode=story
+```
+
+Examples:
+
+- `button--base`
+- `input--base`
+- `select--base`
+- `checkbox--base`
+- `switch--base`
+
+### Playwright
+
+Run all browser tests:
+
+```bash
+cd website
+bun run test:e2e
+```
+
+The Playwright config starts Storybook automatically on port `6006`. Use `website/tests/e2e/storybook.ts` helpers for story navigation and rendered-HTML assertions.
+
+### What to verify
+
+For each interactive component, verify at least:
+
+- semantic role/name/description
+- rendered `data-slot` and state attributes
+- keyboard operation
+- focus management where relevant
+- controlled and uncontrolled state
+- disabled/read-only/invalid states
+- form participation and hidden/native inputs where applicable
+- popup open/close/dismissal behavior
+- reduced-motion behavior where transitions exist
+
+## Breaking changes
+
+Migrated components intentionally adopt UI SDK prop names. Consumers must update code such as:
+
+```tsx
+// Before
+<Checkbox isChecked={checked} onChangeValue={setChecked} />
+<Select.Root value={value} onChangeValue={setValue} />
+
+// After
+<Checkbox checked={checked} onCheckedChange={setChecked} />
+<Select.Root value={value} onValueChange={setValue} />
+```
+
+Presentation props remain Dreamy-specific where they do not describe behavior state.

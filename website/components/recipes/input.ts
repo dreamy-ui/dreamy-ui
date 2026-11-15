@@ -73,7 +73,7 @@ export const input = defineRecipe({
                         borderColor: "{colors.primary}"
                     }
                 },
-                "&:user-invalid, &[data-invalid]": {
+                "&:user-invalid, &[data-invalid], &[aria-invalid='true']": {
                     _focusWithin: {
                         boxShadow: "0 0 0 0.5px {colors.error} !important"
                     },
@@ -94,7 +94,7 @@ export const input = defineRecipe({
                 _focusWithin: {
                     boxShadow: "0 0 0 1.5px {colors.primary}"
                 },
-                "&:user-invalid, &[data-invalid]": {
+                "&:user-invalid, &[data-invalid], &[aria-invalid='true']": {
                     _focusWithin: {
                         boxShadow: "0 0 0 1.5px {colors.error} !important"
                     },
@@ -116,7 +116,7 @@ export const input = defineRecipe({
                         borderBottomColor: "{colors.primary}"
                     }
                 },
-                "&:user-invalid, &[data-invalid]": {
+                "&:user-invalid, &[data-invalid], &[aria-invalid='true']": {
                     borderBottomColor: "{colors.error} !important",
                     _focusWithin: {
                         boxShadow: "0 0.5px 0 0 {colors.error} !important"
@@ -143,7 +143,7 @@ export const input = defineRecipe({
                         borderColor: "{colors.primary}"
                     }
                 },
-                "&:user-invalid, &[data-invalid]": {
+                "&:user-invalid, &[data-invalid], &[aria-invalid='true']": {
                     _focusWithin: {
                         boxShadow: "0 0 0 0.5px {colors.error} !important"
                     },

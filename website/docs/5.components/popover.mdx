@@ -14,13 +14,13 @@ pnpm dreamy add popover
 
 ## Usage
 
-Popover behavior (focus, dismiss, positioning) is provided by [Ark UI Popover](https://ark-ui.com/docs/components/popover). Dreamy owns styling, compound parts, and Motion enter/exit on the content surface. Use `open`, `defaultOpen`, and `onOpenChange` for controlled state.
+Popover behavior (focus, dismiss, positioning, top-layer rendering) is provided by UI SDK Popover (`@ui-sdk/react/popover`). Dreamy owns styling, compound parts, and CSS enter/exit transitions on the content surface. Use `open`, `defaultOpen`, and `onOpenChange` for controlled state — `onOpenChange` receives `(open, details)` where `details.reason` explains the change and `details.cancel()` can veto it.
 
-Floating content uses Ark `Positioner` + `Content` inside Dreamy [`Portal`](/docs/components/portal) (not Ark’s portal) so z-index stacking, nested overlays, and `portalProps.containerRef` keep working. Set `hasArrow` on the root; the pointer is `Popover.Arrow` + `Popover.ArrowTip` from Ark, styled via the popover recipe.
+Floating content renders through the UI SDK popup, which positions itself against the trigger (or `Popover.Anchor`) and shows in the browser top layer. Set `hasArrow` on the root; the pointer is `Popover.Arrow`, a single element positioned by the popup and styled via the popover recipe.
 
-When Popover opens, focus moves into the panel (when `autoFocus` is enabled). When it closes, focus returns to the trigger. Set `hasArrow` on `Popover.Root` to render the pointer (optional `arrowSize` / `arrowShadowColor`).
+When Popover opens, focus moves into the panel. When it closes, focus returns to the trigger. Set `hasArrow` on `Popover.Root` to render the pointer (optional `arrowSize` / `arrowShadowColor`).
 
-Use `reduceMotion` on the root or rely on `DreamyProvider` to skip scale/fade transitions. Optional `isLazy` defers mounting until the first open. The panel stays in the DOM during close so the scale/fade exit animation can complete.
+Use `reduceMotion` on the root or rely on `DreamyProvider` to skip transitions. Content mounts when the popover opens; the deprecated `lazyMount={false}` maps to `keepMounted` on `Popover.Content` if you need it to stay in the DOM.
 
 <Wrapper>
     <Popover.Root hasArrow>
@@ -71,21 +71,21 @@ export function BasicPopover() {
 
 ### Automatic overlay stacking
 
-Popover content renders through the shared [Portal](/docs/components/portal) stack at the `popover` layer (1500). Inside another Dreamy UI overlay, its portal becomes a nested scope and adds that layer to its parent base automatically. No `usePortal={false}`, manual layer, or z-index workaround is needed.
+Popover content renders in the browser top layer via the UI SDK popup (`popover="manual"`), so it naturally stacks above page content and other overlays without a Dreamy [`Portal`](/docs/components/portal) or z-index workaround.
 
-Active popovers at the same layer follow open order. A later sibling Modal still covers an earlier Modal's complete subtree, including open popovers.
-
-Popover-based composites expose the same escape hatch through `popoverProps.portalProps`. Use `portalProps.containerRef` only to target the non-scrolling overlay root of a native or third-party overlay.
+To render the panel inside a specific element instead, pass `container` to `Popover.Content` (or the deprecated `portalProps.containerRef` on `Popover.Root`, which only honors `containerRef`).
 
 ```tsx
 const overlayRef = useRef<HTMLDivElement>(null);
 
 // Attach overlayRef to the third-party overlay's non-scrolling root.
-<Popover.Root portalProps={{ containerRef: overlayRef }}>
+<Popover.Root>
     <Popover.Trigger>
         <Button>Open Popover</Button>
     </Popover.Trigger>
-    <Popover.Content>Rendered in the external overlay root</Popover.Content>
+    <Popover.Content container={overlayRef?.current ?? undefined}>
+        Rendered in the external overlay root
+    </Popover.Content>
 </Popover.Root>
 ```
 
@@ -112,7 +112,7 @@ export function ControlledPopover() {
         <Popover.Root
             hasArrow
             open={open}
-            onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
+            onOpenChange={(nextOpen) => setOpen(nextOpen)}
         >
             <Popover.Trigger>
                 <Button variant={"primary"}>Open Popover</Button>
@@ -155,7 +155,7 @@ export function FocusPopover() {
         <Popover.Root
             hasArrow
             open={open}
-            onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
+            onOpenChange={(nextOpen) => setOpen(nextOpen)}
             initialFocusRef={initialFocusRef}
         >
             <Popover.Trigger>

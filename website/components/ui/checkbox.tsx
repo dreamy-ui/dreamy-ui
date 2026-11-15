@@ -1,17 +1,19 @@
 "use client";
 
+import type { ChangeDetails } from "@ui-sdk/core";
 import {
-    Checkbox as ArkCheckbox,
-    useCheckboxContext as useArkCheckboxContext,
-    type CheckboxRootProps as ArkCheckboxRootProps
-} from "@ark-ui/react/checkbox";
+    Checkbox as UiSdkCheckbox,
+    CheckboxGroup as UiSdkCheckboxGroup,
+    CheckboxIndicator as UiSdkCheckboxIndicator,
+    type CheckboxController,
+    type CheckedState,
+    type CheckboxCheckedChangeReason
+} from "@ui-sdk/react/checkbox";
 import {
-    CheckboxGroupProvider,
     TRANSITION_EASINGS,
-    type UseCheckboxGroupProps,
-    type UseCheckboxReturn,
-    useCheckboxGroup,
-    useCheckboxGroupContext,
+    type UserFeedbackProps,
+    createContext,
+    dataAttr,
     useFieldProps,
     useMotionVariants,
     useReducedMotion
@@ -22,40 +24,97 @@ import {
     type ReactElement,
     cloneElement,
     useCallback,
-    useEffect,
     useMemo,
-    useRef,
     useState
 } from "react";
 import { cx } from "styled-system/css";
-import { dreamy } from "styled-system/jsx";
+import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type CheckboxVariantProps, checkbox } from "styled-system/recipes";
 import { Flex, type FlexProps } from "./flex";
-import { mapCheckboxRootProps } from "./map-checkbox-props";
 
-const StyledCheckbox = dreamy(ArkCheckbox.Root, checkbox);
+const StyledCheckbox = dreamy("label", checkbox);
+
+interface CheckboxGroupContextValue extends CheckboxVariantProps, UserFeedbackProps {
+    reduceMotion?: boolean;
+}
+
+const [CheckboxGroupProvider, useCheckboxGroupContext] =
+    createContext<CheckboxGroupContextValue>({
+        strict: false,
+        name: "CheckboxGroupContext"
+    });
 
 export interface CheckboxProps
-    extends Omit<
-            ArkCheckboxRootProps,
-            | "checked"
+    extends CheckboxVariantProps,
+        Omit<
+            HTMLDreamyProps<"label">,
+            | "defaultValue"
+            | "onChange"
+            | "onChangeValue"
+            | "isChecked"
             | "defaultChecked"
-            | "disabled"
-            | "invalid"
-            | "readOnly"
-            | "required"
-            | "onCheckedChange"
-        >,
-        CheckboxVariantProps {
-    isChecked?: boolean;
-    defaultChecked?: boolean;
-    isDisabled?: boolean;
+            | "isDisabled"
+            | "isInvalid"
+            | "isReadOnly"
+            | "isRequired"
+            | "isIndeterminate"
+        > {
+    /**
+     * Whether the checkbox is checked. Pass `"indeterminate"` for a partly
+     * checked state. Pass it to control the checkbox.
+     */
+    checked?: CheckedState;
+    /**
+     * Whether the checkbox is checked at first. A form reset returns to it.
+     */
+    defaultChecked?: CheckedState;
+    /**
+     * Runs when a user or a form reset wants to change the checked state.
+     * `details.reason` says why, and `details.cancel()` stops it.
+     */
+    onCheckedChange?: (
+        checked: CheckedState,
+        details: ChangeDetails<CheckboxCheckedChangeReason>
+    ) => void;
+    /**
+     * Disables the checkbox like a native control: it can't be focused or
+     * changed, and isn't submitted.
+     */
+    disabled?: boolean;
+    /**
+     * Keeps the checkbox focusable and submitted, but stops changes.
+     */
+    readOnly?: boolean;
+    /**
+     * Blocks form submission until the checkbox is checked.
+     */
+    required?: boolean;
+    /**
+     * Marks the checkbox as invalid for styling purposes.
+     */
     isInvalid?: boolean;
-    isReadOnly?: boolean;
-    isRequired?: boolean;
-    isIndeterminate?: boolean;
-    onChange?: React.ChangeEventHandler<HTMLInputElement>;
-    onChangeValue?: (value: boolean) => void;
+    /**
+     * The name the checkbox submits under.
+     */
+    name?: string;
+    /**
+     * The value submitted while checked. Defaults to `"on"`.
+     */
+    value?: string;
+    /**
+     * The id of a form to belong to, when it isn't inside that form.
+     */
+    form?: string;
+    /**
+     * Makes it the parent of its group: it checks or unchecks every checkbox
+     * in the group, and shows checked, unchecked or indeterminate from them.
+     */
+    parent?: boolean;
+    /**
+     * Checks it from anywhere. Create one with `createCheckboxController()`.
+     */
+    controller?: CheckboxController;
+    debug?: boolean;
     icon?: React.ReactNode | ((props: CheckboxIconProps) => React.ReactNode);
     reduceMotion?: boolean;
     animationTime?: number;
@@ -73,146 +132,140 @@ export function Checkbox(props: CheckboxProps) {
     const {
         children,
         icon = <CheckboxIcon />,
-        isChecked: isCheckedProp,
+        checked,
         defaultChecked,
-        isIndeterminate,
-        reduceMotion = reduceMotionGlobal ?? false,
+        onCheckedChange,
+        disabled: disabledProp,
+        readOnly: readOnlyProp,
+        required: requiredProp,
+        isInvalid: isInvalidProp,
+        reduceMotion: reduceMotionProp,
         animationTime,
         pathProps,
         scheme,
         size,
         variant,
         className,
+        id: idProp,
+        "aria-label": ariaLabel,
+        "aria-labelledby": ariaLabelledby,
+        name,
+        value,
+        form,
+        parent,
+        controller,
+        debug,
         onPointerDown,
         onPointerUp,
         onPointerLeave,
         ...rest
     } = props;
 
-    const resolvedScheme = scheme ?? groupContext?.variants?.scheme;
-    const resolvedSize = size ?? groupContext?.variants?.size;
-    const resolvedVariant = variant ?? groupContext?.variants?.variant;
-
     const field = useFieldProps(props);
-    const inputRef = useRef<HTMLInputElement>(null);
-    const isInteractionDisabled = field.isDisabled || field.isReadOnly;
-    const isControlled = isCheckedProp !== undefined;
-    const [uncontrolledChecked, setUncontrolledChecked] = useState(!!defaultChecked);
+    const isDisabled = disabledProp ?? field.isDisabled ?? groupContext?.isDisabled;
+    const isReadOnly = readOnlyProp ?? field.isReadOnly ?? groupContext?.isReadOnly;
+    const isRequired = requiredProp ?? field.isRequired ?? groupContext?.isRequired;
+    const isInvalid = isInvalidProp ?? groupContext?.isInvalid ?? field.isInvalid;
+    const reduceMotion = reduceMotionProp ?? groupContext?.reduceMotion ?? reduceMotionGlobal ?? false;
+    const isInteractionDisabled = isDisabled || isReadOnly;
+
     const [isActive, setIsActive] = useState(false);
     const active = isActive && !isInteractionDisabled;
-    const isChecked = isControlled ? isCheckedProp : uncontrolledChecked;
-    const showCheckedData = isChecked || isIndeterminate;
 
-    const arkProps = mapCheckboxRootProps({
-        isChecked: isCheckedProp,
-        isIndeterminate,
-        ...props,
-        onChangeValue: props.onChangeValue,
-        onChange: props.onChange
-    });
+    const resolvedScheme = scheme ?? groupContext?.scheme;
+    const resolvedSize = size ?? groupContext?.size;
+    const resolvedVariant = variant ?? groupContext?.variant;
 
-    useEffect(() => {
-        if (inputRef.current) {
-            inputRef.current.indeterminate = Boolean(isIndeterminate);
-        }
-    }, [isIndeterminate, isChecked]);
+    const handleCheckedChange = useCallback(
+        (next: CheckedState, details: ChangeDetails<CheckboxCheckedChangeReason>) => {
+            onCheckedChange?.(next, details);
+        },
+        [onCheckedChange]
+    );
 
-    const handleCheckedChange = arkProps.onCheckedChange;
+    const renderIcon = useCallback(
+        (state: { checked: boolean; indeterminate: boolean }) => {
+            const iconProps: CheckboxIconProps = {
+                isChecked: state.checked,
+                isIndeterminate: state.indeterminate,
+                active,
+                reduceMotion,
+                animationTime,
+                pathProps,
+                "data-part": "icon"
+            };
+
+            return typeof icon === "function"
+                ? icon(iconProps)
+                : cloneElement(icon as ReactElement, iconProps);
+        },
+        [icon, active, reduceMotion, animationTime, pathProps]
+    );
 
     return (
         <StyledCheckbox
-            {...arkProps}
             {...rest}
-            className={cx("group", className)}
             scheme={resolvedScheme}
             size={resolvedSize}
             variant={resolvedVariant}
+            className={cx("group", className as string)}
             data-active={active ? "" : undefined}
-            data-checked={showCheckedData ? "" : undefined}
-            data-disabled={field.isDisabled ? "" : undefined}
-            data-indeterminate={isIndeterminate ? "" : undefined}
-            data-invalid={field.isInvalid ? "" : undefined}
-            data-readonly={field.isReadOnly ? "" : undefined}
-            onCheckedChange={(details) => {
-                if (!isControlled) {
-                    setUncontrolledChecked(details.checked === true);
-                }
-                handleCheckedChange?.(details);
-            }}
+            data-disabled={dataAttr(isDisabled)}
+            data-invalid={dataAttr(isInvalid)}
+            data-readonly={dataAttr(isReadOnly)}
+            data-required={dataAttr(isRequired)}
             onPointerDown={(event: PointerEvent<HTMLLabelElement>) => {
-                onPointerDown?.(event);
+                (onPointerDown as ((e: PointerEvent<HTMLLabelElement>) => void) | undefined)?.(
+                    event
+                );
                 if (!isInteractionDisabled) {
                     setIsActive(true);
                 }
             }}
             onPointerLeave={(event: PointerEvent<HTMLLabelElement>) => {
-                onPointerLeave?.(event);
+                (
+                    onPointerLeave as ((e: PointerEvent<HTMLLabelElement>) => void) | undefined
+                )?.(event);
                 setIsActive(false);
             }}
             onPointerUp={(event: PointerEvent<HTMLLabelElement>) => {
-                onPointerUp?.(event);
+                (onPointerUp as ((e: PointerEvent<HTMLLabelElement>) => void) | undefined)?.(event);
                 setIsActive(false);
             }}
         >
-            <ArkCheckbox.HiddenInput
+            <UiSdkCheckbox
                 aria-describedby={field["aria-describedby"]}
-                aria-invalid={field.isInvalid ? true : undefined}
-                id={field.id}
-                ref={inputRef}
-                required={field.isRequired}
-            />
-            <ArkCheckbox.Control
-                aria-hidden="true"
+                aria-invalid={isInvalid ? true : undefined}
+                aria-label={ariaLabel as string | undefined}
+                aria-labelledby={ariaLabelledby as string | undefined}
+                checked={checked}
+                controller={controller}
                 data-part="control"
+                data-invalid={dataAttr(isInvalid)}
+                debug={debug}
+                defaultChecked={defaultChecked}
+                disabled={isDisabled}
+                form={form}
+                id={(idProp ?? field.id) as string | undefined}
+                name={name}
+                onBlur={field.onBlur}
+                onCheckedChange={handleCheckedChange}
+                onFocus={field.onFocus}
+                parent={parent}
+                readOnly={isReadOnly}
+                required={isRequired}
+                value={value}
             >
-                <CheckboxIndicator
-                    active={active}
-                    animationTime={animationTime}
-                    icon={icon}
-                    pathProps={pathProps}
-                    reduceMotion={reduceMotion}
-                />
-            </ArkCheckbox.Control>
-            {children ? <ArkCheckbox.Label data-part="label">{children}</ArkCheckbox.Label> : null}
+                <UiSdkCheckboxIndicator
+                    aria-hidden="true"
+                    data-part="icon"
+                    keepMounted
+                >
+                    {renderIcon}
+                </UiSdkCheckboxIndicator>
+            </UiSdkCheckbox>
+            {children ? <span data-part="label">{children as React.ReactNode}</span> : null}
         </StyledCheckbox>
-    );
-}
-
-interface CheckboxIndicatorProps {
-    icon: CheckboxProps["icon"];
-    active?: boolean;
-    reduceMotion?: boolean;
-    animationTime?: number;
-    pathProps?: SVGMotionProps<SVGPathElement>;
-}
-
-function CheckboxIndicator(props: CheckboxIndicatorProps) {
-    const { icon, active, reduceMotion, animationTime, pathProps } = props;
-    const api = useArkCheckboxContext();
-    const iconProps = useMemo(
-        () => ({
-            isChecked: api.checked === true,
-            isIndeterminate: api.indeterminate,
-            active,
-            reduceMotion,
-            animationTime,
-            pathProps,
-            "data-part": "icon"
-        }),
-        [api.checked, api.indeterminate, active, reduceMotion, animationTime, pathProps]
-    );
-
-    const content =
-        typeof icon === "function" ? icon(iconProps) : cloneElement(icon as ReactElement, iconProps);
-
-    return (
-        <ArkCheckbox.Indicator
-            aria-hidden="true"
-            data-part="icon"
-            hidden={false}
-        >
-            {content}
-        </ArkCheckbox.Indicator>
     );
 }
 
@@ -221,10 +274,14 @@ export interface IconCustomProps {
     pathProps?: SVGMotionProps<SVGPathElement>;
 }
 
-interface CheckboxIconProps
-    extends Partial<ReturnType<UseCheckboxReturn["getIconProps"]> & IconCustomProps> {
-    active?: boolean;
-}
+type CheckboxIconProps = Partial<{
+    isChecked: boolean;
+    isIndeterminate: boolean;
+    active: boolean;
+    reduceMotion: boolean;
+    "data-part": string;
+}> &
+    IconCustomProps;
 
 function CheckIcon(props: CheckboxIconProps) {
     const {
@@ -310,9 +367,25 @@ export function CheckboxIcon(props: CheckboxIconProps) {
 }
 
 export interface CheckboxGroupProps
-    extends UseCheckboxGroupProps,
-        CheckboxVariantProps,
-        Omit<FlexProps, "defaultValue" | "onChange"> {}
+    extends CheckboxVariantProps,
+        Pick<
+            React.ComponentProps<typeof UiSdkCheckboxGroup>,
+            | "value"
+            | "defaultValue"
+            | "onValueChange"
+            | "allValues"
+            | "disabled"
+            | "readOnly"
+            | "required"
+            | "name"
+            | "form"
+            | "controller"
+            | "debug"
+        >,
+        Omit<FlexProps, "defaultValue" | "onChange" | "onValueChange"> {
+    isInvalid?: boolean;
+    reduceMotion?: boolean;
+}
 
 export function CheckboxGroup(props: CheckboxGroupProps) {
     const {
@@ -320,77 +393,59 @@ export function CheckboxGroup(props: CheckboxGroupProps) {
         size,
         variant,
         children,
-        isDisabled,
-        isRequired,
-        isReadOnly,
         isInvalid,
         reduceMotion,
-        onChange: onChangeProp,
+        className,
+        value,
         defaultValue,
-        value: valueProp,
+        onValueChange,
+        allValues,
+        disabled,
+        readOnly,
+        required,
+        name,
+        form,
+        controller,
+        debug,
         ...rest
     } = props;
 
-    const group = useCheckboxGroup({
-        onChange: onChangeProp,
-        defaultValue,
-        value: valueProp,
-        isDisabled,
-        isRequired,
-        isReadOnly,
-        isInvalid,
-        reduceMotion,
-        ...props
-    });
-
-    const providerValue = useMemo(
+    const providerValue = useMemo<CheckboxGroupContextValue>(
         () => ({
-            variants: { size, scheme, variant },
-            value: group.value,
-            onChange: group.onChange,
-            isDisabled,
-            isRequired,
-            isReadOnly,
-            isInvalid,
-            reduceMotion
-        }),
-        [
             size,
-            group.onChange,
-            group.value,
             scheme,
             variant,
-            isDisabled,
-            isRequired,
-            isReadOnly,
             isInvalid,
+            isDisabled: disabled,
+            isReadOnly: readOnly,
+            isRequired: required,
             reduceMotion
-        ]
-    );
-
-    const handleValueChange = useCallback(
-        (details: { value: string[] }) => {
-            group.setValue(details.value);
-        },
-        [group]
+        }),
+        [size, scheme, variant, isInvalid, disabled, readOnly, required, reduceMotion]
     );
 
     return (
         <CheckboxGroupProvider value={providerValue}>
-            <ArkCheckbox.Group
-                disabled={isDisabled}
-                invalid={isInvalid}
-                onValueChange={handleValueChange}
-                readOnly={isReadOnly}
-                value={group.value.map(String)}
+            <UiSdkCheckboxGroup
+                allValues={allValues}
+                controller={controller}
+                debug={debug}
+                defaultValue={defaultValue}
+                disabled={disabled}
+                form={form}
+                name={name}
+                onValueChange={onValueChange}
+                readOnly={readOnly}
+                required={required}
+                value={value}
             >
                 <Flex
                     {...rest}
-                    className={cx("dreamy-checkbox-group", rest.className)}
+                    className={cx("dreamy-checkbox-group", className as string)}
                 >
                     {children}
                 </Flex>
-            </ArkCheckbox.Group>
+            </UiSdkCheckboxGroup>
         </CheckboxGroupProvider>
     );
 }

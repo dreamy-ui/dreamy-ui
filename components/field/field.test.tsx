@@ -1,11 +1,11 @@
-import { screen } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { Input } from "../input";
 import { render } from "../test/render";
 import * as Field from "./index";
 
 describe("Field", () => {
-    it("associates the label with the control via htmlFor and id", () => {
+    it("associates the label with the control via htmlFor and id", async () => {
         render(
             <Field.Root id="username">
                 <Field.Label>Username</Field.Label>
@@ -17,7 +17,7 @@ describe("Field", () => {
         const label = screen.getByText("Username");
 
         expect(input).toHaveAttribute("id", "username");
-        expect(label).toHaveAttribute("for", "username");
+        await waitFor(() => expect(label).toHaveAttribute("for", "username"));
         expect(label.tagName).toBe("LABEL");
     });
 
@@ -34,7 +34,7 @@ describe("Field", () => {
         const hint = screen.getByText("Use your work email.");
 
         expect(hint).toHaveAttribute("id", "email-hint");
-        expect(input).toHaveAttribute("aria-describedby", "email-hint");
+        expect(input.getAttribute("aria-describedby") ?? "").toContain("email-hint");
     });
 
     it("shows error text when invalid and wires it into aria-describedby", () => {
@@ -55,7 +55,7 @@ describe("Field", () => {
         expect(error).toBeVisible();
         expect(error).toHaveAttribute("id", "email-feedback");
         expect(input).toHaveAttribute("aria-invalid", "true");
-        expect(input).toHaveAttribute("aria-describedby", "email-feedback");
+        expect(input.getAttribute("aria-describedby") ?? "").toContain("email-feedback");
     });
 
     it("hides hint when invalid so describedby points at the error", () => {
@@ -73,7 +73,7 @@ describe("Field", () => {
 
         expect(screen.queryByText("Use your work email.")).not.toBeInTheDocument();
         expect(screen.getByText("Enter a valid email.")).toBeVisible();
-        expect(screen.getByRole("textbox")).toHaveAttribute("aria-describedby", "email-feedback");
+        expect(screen.getByRole("textbox").getAttribute("aria-describedby") ?? "").toContain("email-feedback");
     });
 
     it("shows a required indicator and marks the control as required", () => {

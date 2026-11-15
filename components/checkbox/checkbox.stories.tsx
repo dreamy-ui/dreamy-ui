@@ -85,8 +85,8 @@ export function Controlled() {
         <>
             <Text>Selected: {isChecked ? "true" : "false"}</Text>
             <Checkbox
-                isChecked={isChecked}
-                onChangeValue={setIsChecked}
+                checked={isChecked}
+                onCheckedChange={setIsChecked}
             >
                 Controlled
             </Checkbox>
@@ -101,7 +101,7 @@ export function CheckboxGroupControl() {
         <>
             <Text>Selected: {value.join(", ")}</Text>
             <CheckboxGroup
-                onChange={setValue}
+                onValueChange={setValue}
                 value={value}
             >
                 <Checkbox value="1">Option 1</Checkbox>

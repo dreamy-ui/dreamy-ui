@@ -38,7 +38,7 @@ describe("Button", () => {
 
         render(
             <Button
-                isDisabled
+                disabled
                 onClick={onClick}
             >
                 Save

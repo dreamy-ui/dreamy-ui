@@ -192,12 +192,23 @@ function SelectRoot<T extends boolean = false, Item extends SelectItemData = Sel
         defaultValue: defaultOpen
     });
 
+    type SelectOpenChangeDetails = Parameters<
+        NonNullable<ArkSelectRootProps<Item>["onOpenChange"]>
+    >[0];
+
     const handleOpenChange = useCallback(
-        (details: Parameters<NonNullable<ArkSelectRootProps<Item>["onOpenChange"]>>[0]) => {
+        (details: SelectOpenChangeDetails) => {
             setOpen(details.open);
             onOpenChange?.(details);
         },
         [onOpenChange, setOpen]
+    );
+
+    const handlePopoverOpenChange = useCallback(
+        (nextOpen: boolean) => {
+            handleOpenChange({ open: nextOpen } as SelectOpenChangeDetails);
+        },
+        [handleOpenChange]
     );
 
     const popoverPositioning = useMemo(
@@ -289,7 +300,7 @@ function SelectRoot<T extends boolean = false, Item extends SelectItemData = Sel
                     closeOnInteractOutside={false}
                     modal={false}
                     open={open}
-                    onOpenChange={handleOpenChange}
+                    onOpenChange={handlePopoverOpenChange}
                     positioning={popoverPositioning}
                     portalProps={{
                         zIndex: resolvedContentZIndex,

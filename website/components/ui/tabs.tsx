@@ -93,13 +93,16 @@ export const List = withContext(function TabList(props: TabListProps) {
 
 export interface TabProps extends ButtonProps {
     index?: number;
+    /** @deprecated use `disabled` instead */
+    isDisabled?: boolean;
 }
 
 function TabComponent(props: TabProps) {
     const {
         children,
         index = 0,
-        isDisabled,
+        disabled,
+        isDisabled: isDisabledProp,
         isLoading,
         onFocus,
         disableRipple: _disableRipple,
@@ -113,6 +116,7 @@ function TabComponent(props: TabProps) {
     const value = indexToValue(index);
     const tabsApi = useTabsContext();
     const { isManual } = useContext(TabsActivationContext);
+    const isDisabled = disabled || isDisabledProp;
 
     function handleFocus(event: React.FocusEvent<HTMLButtonElement>) {
         onFocus?.(event);

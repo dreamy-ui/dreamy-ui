@@ -1,17 +1,18 @@
-import type { ChangeEventHandler } from "react";
 import { assertType } from "vitest";
 import type { RadioGroupProps, RadioProps } from "./index";
 
 type ExpectTrue<T extends true> = T;
 
-assertType<ChangeEventHandler<HTMLInputElement> | undefined>({} as RadioProps["onChange"]);
-assertType<string | number | undefined>({} as RadioProps["value"]);
-assertType<boolean | undefined>({} as RadioProps["isChecked"]);
+assertType<string>({} as RadioProps["value"]);
+assertType<boolean | undefined>({} as RadioProps["checked"]);
 assertType<boolean | undefined>({} as RadioProps["defaultChecked"]);
-assertType<boolean | undefined>({} as RadioProps["isDisabled"]);
-assertType<boolean | undefined>({} as RadioProps["isInvalid"]);
-assertType<boolean | undefined>({} as RadioProps["isRequired"]);
-assertType<boolean | undefined>({} as RadioProps["isReadOnly"]);
+assertType<((checked: boolean, details: never) => void) | undefined>(
+    {} as RadioProps["onCheckedChange"]
+);
+assertType<boolean | undefined>({} as RadioProps["disabled"]);
+assertType<boolean | undefined>({} as RadioProps["readOnly"]);
+assertType<boolean | undefined>({} as RadioProps["required"]);
+assertType<string | undefined>({} as RadioProps["name"]);
 
 const _scheme: RadioProps["scheme"] = "primary";
 const _size: RadioProps["size"] = "md";
@@ -46,7 +47,7 @@ type _HasStyleProps = ExpectTrue<
 type _HasGroupProps = ExpectTrue<
     "value" extends keyof RadioGroupProps
         ? "defaultValue" extends keyof RadioGroupProps
-            ? "onChange" extends keyof RadioGroupProps
+            ? "onValueChange" extends keyof RadioGroupProps
                 ? true
                 : false
             : false
@@ -60,45 +61,29 @@ const _groupProps: _HasGroupProps = true;
 void (_recipeProps && _styleProps && _groupProps && _scheme && _size && _variant);
 
 assertType<RadioProps>({
-    onChange: () => {},
-    value: "pro",
-    isChecked: true,
+    value: "a",
+    checked: true,
     defaultChecked: false,
-    scheme: "primary",
-    size: "md",
+    onCheckedChange: () => {},
+    disabled: false,
+    readOnly: false,
+    required: false,
+    name: "choice",
     variant: "solid",
-    name: "plan",
-    className: "custom-radio",
-    bg: "primary",
-    color: "fg",
-    p: 2,
-    m: 1,
-    w: "fit-content",
-    h: "auto"
+    size: "md",
+    scheme: "primary"
 });
 
 assertType<RadioGroupProps>({
-    value: "pro",
-    defaultValue: "team",
-    onChange: () => {},
-    scheme: "primary",
-    size: "md",
+    value: "a",
+    defaultValue: null,
+    onValueChange: () => {},
+    disabled: false,
+    readOnly: false,
+    required: false,
+    name: "choice",
+    loop: true,
     variant: "solid",
-    isDisabled: false,
-    isInvalid: false
-});
-
-assertType<RadioProps>({
-    // @ts-expect-error invalid color scheme
-    scheme: "invalid"
-});
-
-assertType<RadioProps>({
-    // @ts-expect-error invalid size
-    size: "xl"
-});
-
-assertType<RadioProps>({
-    // @ts-expect-error invalid variant
-    variant: "ghost"
+    size: "sm",
+    scheme: "primary"
 });

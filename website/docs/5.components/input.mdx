@@ -66,22 +66,22 @@ pnpm dreamy add input
 
 ### Invalid
 
-Pass `isInvalid` prop to the `Input` to show the error state.
+Pass `aria-invalid` prop to the `Input` to show the error state.
 
 <Wrapper>
 	<VStack w="full">
-		<Input placeholder="Enter your username" variant="outline" isInvalid />
-		<Input placeholder="Enter your username" variant="filled" isInvalid />
-		<Input placeholder="Enter your username" variant="flushed" isInvalid />
-		<Input placeholder="Enter your username" variant="filledOutline" isInvalid />
+		<Input placeholder="Enter your username" variant="outline" aria-invalid />
+		<Input placeholder="Enter your username" variant="filled" aria-invalid />
+		<Input placeholder="Enter your username" variant="flushed" aria-invalid />
+		<Input placeholder="Enter your username" variant="filledOutline" aria-invalid />
 	</VStack>
 </Wrapper>
 ```tsx
 <VStack w="full">
-	<Input placeholder="Enter your username" variant="outline" isInvalid />
-	<Input placeholder="Enter your username" variant="filled" isInvalid />
-	<Input placeholder="Enter your username" variant="flushed" isInvalid />
-	<Input placeholder="Enter your username" variant="filledOutline" isInvalid />
+	<Input placeholder="Enter your username" variant="outline" aria-invalid />
+	<Input placeholder="Enter your username" variant="filled" aria-invalid />
+	<Input placeholder="Enter your username" variant="flushed" aria-invalid />
+	<Input placeholder="Enter your username" variant="filledOutline" aria-invalid />
 </VStack>
 ```
 

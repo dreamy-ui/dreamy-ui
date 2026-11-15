@@ -47,7 +47,7 @@ describe("CloseButton", () => {
 
         rerender(
             <CloseButton
-                isDisabled
+                disabled
                 onClick={onClick}
             />
         );
@@ -64,7 +64,7 @@ describe("CloseButton", () => {
 
         render(
             <CloseButton
-                isDisabled
+                disabled
                 onClick={onClick}
             />
         );

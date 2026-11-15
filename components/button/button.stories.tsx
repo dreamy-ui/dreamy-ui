@@ -108,7 +108,7 @@ export function RightIcon() {
 export function Disabled() {
     return (
         <Button
-            isDisabled
+            disabled
             w="fit"
         >
             Disabled

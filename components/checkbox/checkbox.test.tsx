@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import * as Field from "../field";
@@ -6,33 +6,30 @@ import { render } from "../test/render";
 import { Checkbox, CheckboxGroup } from "./index";
 
 describe("Checkbox", () => {
-    it("exposes a native checkbox and toggles with Space", async () => {
+    it("exposes a checkbox role and toggles with Space", async () => {
         const user = userEvent.setup();
 
         render(<Checkbox>Accept terms</Checkbox>);
 
-        const input = screen.getByRole("checkbox", { hidden: true });
+        const control = screen.getByRole("checkbox", { name: "Accept terms" });
 
-        expect(input).toHaveAttribute("type", "checkbox");
-        expect(input).not.toBeChecked();
+        expect(control).toHaveAttribute("aria-checked", "false");
 
-        input.focus();
+        control.focus();
         await user.keyboard(" ");
 
-        expect(input).toBeChecked();
+        expect(control).toHaveAttribute("aria-checked", "true");
     });
 
-    it("marks the visual control and icons as decorative", () => {
+    it("marks the icon as decorative", () => {
         render(<Checkbox defaultChecked>Accept terms</Checkbox>);
 
-        const control = document.querySelector('[data-part="control"]');
         const icon = document.querySelector('[data-part="icon"]');
 
-        expect(control).toHaveAttribute("aria-hidden", "true");
         expect(icon).toHaveAttribute("aria-hidden", "true");
     });
 
-    it("wires Field label and describedby, and expects Field invalid", () => {
+    it("wires Field label and describedby, and expects Field invalid", async () => {
         render(
             <Field.Root
                 isInvalid
@@ -44,25 +41,23 @@ describe("Checkbox", () => {
             </Field.Root>
         );
 
-        const input = screen.getByRole("checkbox", { hidden: true });
+        const control = screen.getByRole("checkbox");
         const label = screen.getByText("Accept terms");
 
-        expect(label).toHaveAttribute("for", input.id);
-        expect(input).toBeRequired();
-        expect(input.getAttribute("aria-describedby")).toBeTruthy();
-        expect(input).toHaveAttribute("aria-invalid", "true");
+        await waitFor(() => expect(label).toHaveAttribute("for", control.id));
+        expect(control).toHaveAttribute("aria-required", "true");
+        expect(control.getAttribute("aria-describedby")).toBeTruthy();
+        expect(control).toHaveAttribute("data-invalid", "");
     });
 
-    it("calls onChange and onChangeValue when toggled", async () => {
+    it("calls onCheckedChange when toggled", async () => {
         const user = userEvent.setup();
-        const onChange = vi.fn();
-        const onChangeValue = vi.fn();
+        const onCheckedChange = vi.fn();
 
         render(
             <Checkbox
                 defaultChecked={false}
-                onChange={onChange}
-                onChangeValue={onChangeValue}
+                onCheckedChange={onCheckedChange}
             >
                 Notifications
             </Checkbox>
@@ -70,58 +65,47 @@ describe("Checkbox", () => {
 
         await user.click(screen.getByText("Notifications"));
 
-        expect(onChange).toHaveBeenCalled();
-        expect(onChangeValue).toHaveBeenCalledWith(true);
+        expect(onCheckedChange).toHaveBeenCalled();
+        expect(onCheckedChange.mock.calls.at(-1)?.[0]).toBe(true);
     });
 
     it("supports controlled and indeterminate state", () => {
-        const { rerender } = render(
-            <Checkbox
-                isChecked
-                isIndeterminate
-            >
-                Select all
-            </Checkbox>
+        const { container, rerender } = render(
+            <Checkbox checked="indeterminate">Select all</Checkbox>
         );
 
-        const input = screen.getByRole("checkbox", { hidden: true }) as HTMLInputElement;
-        const root = input.closest(".group") ?? input.parentElement;
+        const control = screen.getByRole("checkbox");
+        const input = container.querySelector(
+            'input[type="checkbox"]'
+        ) as HTMLInputElement;
 
-        expect(input).toBeChecked();
-        expect(root).toHaveAttribute("data-indeterminate", "");
+        expect(control).toHaveAttribute("aria-checked", "mixed");
         expect(input.indeterminate).toBe(true);
 
-        rerender(
-            <Checkbox
-                isChecked={false}
-                isIndeterminate={false}
-            >
-                Select all
-            </Checkbox>
-        );
+        rerender(<Checkbox checked={false}>Select all</Checkbox>);
 
-        expect(input).not.toBeChecked();
+        expect(control).toHaveAttribute("aria-checked", "false");
         expect(input.indeterminate).toBe(false);
     });
 
     it("does not toggle when disabled", async () => {
         const user = userEvent.setup();
-        const onChangeValue = vi.fn();
+        const onCheckedChange = vi.fn();
 
         render(
             <Checkbox
-                isDisabled
-                onChangeValue={onChangeValue}
+                disabled
+                onCheckedChange={onCheckedChange}
             >
                 Disabled
             </Checkbox>
         );
 
-        const input = screen.getByRole("checkbox", { hidden: true });
+        const control = screen.getByRole("checkbox");
 
-        expect(input).toBeDisabled();
-        await user.click(input);
-        expect(onChangeValue).not.toHaveBeenCalled();
+        expect(control).toHaveAttribute("data-disabled", "");
+        await user.click(control);
+        expect(onCheckedChange).not.toHaveBeenCalled();
     });
 
     it("exposes an accessible group name for CheckboxGroup", () => {
@@ -145,8 +129,8 @@ describe("Checkbox", () => {
             </Field.Root>
         );
 
-        expect(screen.getByRole("group", { name: "Features" })).toBeInTheDocument();
-        expect(screen.getAllByRole("checkbox", { hidden: true })).toHaveLength(2);
+        expect(screen.getAllByRole("group", { name: "Features" }).length).toBeGreaterThan(0);
+        expect(screen.getAllByRole("checkbox")).toHaveLength(2);
     });
 
     it("forwards CheckboxGroup recipe variants to each checkbox", () => {

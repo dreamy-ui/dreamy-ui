@@ -76,8 +76,8 @@ export function Controlled() {
         <>
             <Text>Selected: {isChecked ? "true" : "false"}</Text>
             <Switch
-                isChecked={isChecked}
-                onChangeValue={setIsChecked}
+                checked={isChecked}
+                onCheckedChange={setIsChecked}
             >
                 Controlled
             </Switch>

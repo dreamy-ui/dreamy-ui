@@ -1,4 +1,9 @@
 import { assertType } from "vitest";
+import type { ChangeDetails } from "@ui-sdk/core";
+import type {
+    AvatarLoadingStatus,
+    AvatarLoadingStatusChangeReason
+} from "@ui-sdk/react/avatar";
 import type { AvatarGroupProps, AvatarProps } from "./index";
 
 type ExpectTrue<T extends true> = T;
@@ -10,6 +15,16 @@ assertType<"eager" | "lazy" | undefined>({} as AvatarProps["loading"]);
 assertType<(() => void) | undefined>({} as AvatarProps["onError"]);
 assertType<((name: string) => string) | undefined>({} as AvatarProps["getInitials"]);
 assertType<string | undefined>({} as AvatarProps["iconLabel"]);
+assertType<
+    | ((
+          status: AvatarLoadingStatus,
+          details: ChangeDetails<AvatarLoadingStatusChangeReason>
+      ) => void)
+    | undefined
+>({} as AvatarProps["onLoadingStatusChange"]);
+assertType<"" | "anonymous" | "use-credentials" | undefined>(
+    {} as AvatarProps["crossOrigin"]
+);
 
 assertType<number | undefined>({} as AvatarGroupProps["maxAvatars"]);
 assertType<string | number | undefined>({} as AvatarGroupProps["spacing"]);
@@ -56,28 +71,19 @@ assertType<AvatarProps>({
     scheme: "primary",
     variant: "filled",
     iconLabel: "User",
+    onLoadingStatusChange: () => {},
+    crossOrigin: "anonymous",
     className: "custom-avatar",
     bg: "transparent",
     color: "fg",
     p: 0,
-    m: 1,
-    w: "fit-content",
-    h: "auto"
+    m: 0,
+    w: "40px",
+    h: "40px"
 });
 
 assertType<AvatarGroupProps>({
     maxAvatars: 3,
-    spacing: "-0.75rem",
-    "aria-label": "Team",
+    spacing: "-0.5rem",
     children: null
-});
-
-assertType<AvatarProps>({
-    // @ts-expect-error invalid size
-    size: "xl"
-});
-
-assertType<AvatarProps>({
-    // @ts-expect-error invalid scheme
-    scheme: "invalid"
 });

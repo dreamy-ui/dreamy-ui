@@ -50,12 +50,12 @@ describe("RadioCard", () => {
 
     it("selects via Space and root click within a group", async () => {
         const user = userEvent.setup();
-        const onChange = vi.fn();
+        const onValueChange = vi.fn();
 
         render(
             <RadioGroup
                 defaultValue="pro"
-                onChange={onChange}
+                onValueChange={onValueChange}
                 role="radiogroup"
                 aria-label="Plan"
             >
@@ -91,7 +91,7 @@ describe("RadioCard", () => {
         expect(radios[0]).toBeChecked();
 
         await user.click(screen.getByTestId("team-card"));
-        expect(onChange).toHaveBeenCalledWith("team");
+        expect(onValueChange).toHaveBeenCalledWith("team", expect.anything());
     });
 
     it("wires Field describedby and expects Field invalid on card inputs", () => {
@@ -124,13 +124,13 @@ describe("RadioCard", () => {
 
     it("does not select when disabled", async () => {
         const user = userEvent.setup();
-        const onChange = vi.fn();
+        const onValueChange = vi.fn();
 
         render(
             <RadioGroup
                 defaultValue="pro"
-                isDisabled
-                onChange={onChange}
+                disabled
+                onValueChange={onValueChange}
             >
                 <RadioCard.Root value="pro">
                     <RadioCard.Header>
@@ -148,17 +148,17 @@ describe("RadioCard", () => {
         );
 
         await user.click(screen.getAllByRole("radio", { hidden: true })[1]);
-        expect(onChange).not.toHaveBeenCalled();
+        expect(onValueChange).not.toHaveBeenCalled();
     });
 
     it("moves selection across cards with arrow keys", async () => {
         const user = userEvent.setup();
-        const onChange = vi.fn();
+        const onValueChange = vi.fn();
 
         render(
             <RadioGroup
                 defaultValue="pro"
-                onChange={onChange}
+                onValueChange={onValueChange}
                 role="radiogroup"
                 aria-label="Plan"
             >
@@ -189,7 +189,7 @@ describe("RadioCard", () => {
         await user.keyboard("{ArrowDown}");
 
         expect(radios[1]).toBeChecked();
-        expect(onChange).toHaveBeenCalledWith("team");
+        expect(onValueChange).toHaveBeenCalledWith("team", expect.anything());
     });
 
     it("names each option from Title content", () => {

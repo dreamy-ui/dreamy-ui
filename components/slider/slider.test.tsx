@@ -26,9 +26,9 @@ describe("Slider", () => {
 
         const thumb = screen.getByRole("slider", { name: "Volume" });
 
-        expect(thumb).toHaveAttribute("aria-valuenow", "40");
-        expect(thumb).toHaveAttribute("aria-valuemin", "0");
-        expect(thumb).toHaveAttribute("aria-valuemax", "100");
+        expect(thumb).toHaveValue("40");
+        expect(thumb).toHaveAttribute("min", "0");
+        expect(thumb).toHaveAttribute("max", "100");
         expect(thumb).toHaveAttribute("aria-orientation", "horizontal");
     });
 
@@ -54,7 +54,7 @@ describe("Slider", () => {
 
     it("adjusts value with arrow keys, Home, and End", async () => {
         const user = userEvent.setup();
-        const onChangeValue = vi.fn();
+        const onValueChange = vi.fn();
 
         render(
             <Slider.Root
@@ -62,7 +62,7 @@ describe("Slider", () => {
                 defaultValue={50}
                 max={100}
                 min={0}
-                onChangeValue={onChangeValue}
+                onValueChange={onValueChange}
                 step={1}
             >
                 <Slider.Track>
@@ -76,29 +76,29 @@ describe("Slider", () => {
         thumb.focus();
 
         await user.keyboard("{ArrowRight}");
-        expect(thumb).toHaveAttribute("aria-valuenow", "51");
-        expect(onChangeValue).toHaveBeenLastCalledWith(51);
+        expect(thumb).toHaveValue("51");
+        expect(onValueChange.mock.calls.at(-1)?.[0]).toBe(51);
 
         await user.keyboard("{ArrowLeft}");
-        expect(thumb).toHaveAttribute("aria-valuenow", "50");
+        expect(thumb).toHaveValue("50");
 
         await user.keyboard("{Home}");
-        expect(thumb).toHaveAttribute("aria-valuenow", "0");
+        expect(thumb).toHaveValue("0");
 
         await user.keyboard("{End}");
-        expect(thumb).toHaveAttribute("aria-valuenow", "100");
+        expect(thumb).toHaveValue("100");
     });
 
     it("does not change value when disabled", async () => {
         const user = userEvent.setup();
-        const onChangeValue = vi.fn();
+        const onValueChange = vi.fn();
 
         render(
             <Slider.Root
                 aria-label="Volume"
                 defaultValue={30}
-                isDisabled
-                onChangeValue={onChangeValue}
+                disabled
+                onValueChange={onValueChange}
             >
                 <Slider.Track>
                     <Slider.FilledTrack />
@@ -109,11 +109,11 @@ describe("Slider", () => {
 
         const thumb = screen.getByRole("slider", { name: "Volume" });
 
-        expect(thumb).toHaveAttribute("aria-disabled", "true");
+        expect(thumb).toBeDisabled();
         thumb.focus();
         await user.keyboard("{ArrowRight}");
-        expect(onChangeValue).not.toHaveBeenCalled();
-        expect(thumb).toHaveAttribute("aria-valuenow", "30");
+        expect(onValueChange).not.toHaveBeenCalled();
+        expect(thumb).toHaveValue("30");
     });
 
     it("reflects read-only and invalid states", () => {
@@ -123,7 +123,7 @@ describe("Slider", () => {
                 <Slider.Root
                     defaultValue={10}
                     isInvalid
-                    isReadOnly
+                    readOnly
                 >
                     <Slider.Track>
                         <Slider.FilledTrack />
@@ -137,7 +137,7 @@ describe("Slider", () => {
         const thumb = screen.getByRole("slider", { name: "Volume" });
 
         expect(thumb).toHaveAttribute("aria-readonly", "true");
-        expect(thumb).toHaveAttribute("data-invalid");
+        expect(thumb.closest('[data-slot="slider-thumb"]')).toHaveAttribute("data-invalid");
         expect(screen.getByText("Pick a louder volume.")).toBeVisible();
     });
 });

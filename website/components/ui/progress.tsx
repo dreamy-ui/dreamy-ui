@@ -1,9 +1,11 @@
 "use client";
 
 import {
-    Progress as ArkProgress,
-    type ProgressRootProps as ArkProgressRootProps
-} from "@ark-ui/react/progress";
+    Progress as UiSdkProgress,
+    ProgressIndicator as UiSdkProgressIndicator,
+    ProgressTrack as UiSdkProgressTrack,
+    type NumberFormat
+} from "@ui-sdk/react/progress";
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type ProgressVariantProps, progress } from "styled-system/recipes";
 
@@ -17,13 +19,46 @@ interface ProgressOptions {
 
 export interface ProgressProps
     extends ProgressOptions,
-        ArkProgressRootProps,
         ProgressVariantProps,
-        Omit<HTMLDreamyProps<"div">, keyof ArkProgressRootProps | "defaultValue"> {
+        Omit<
+            HTMLDreamyProps<"div">,
+            | "defaultValue"
+            | "onChange"
+            | "min"
+            | "max"
+            | "value"
+            | "aria-valuemax"
+            | "aria-valuemin"
+            | "aria-valuenow"
+        > {
+    /**
+     * How far the task has come, between `min` and `max`. Pass `null` or omit
+     * it while the amount is unknown: the bar is then indeterminate.
+     */
+    value?: number | null;
+    /**
+     * The lowest value.
+     * @default 0
+     */
+    min?: number;
+    /**
+     * The highest value.
+     * @default 100
+     */
+    max?: number;
+    /**
+     * How the value reads for screen readers and `ProgressValue`, like
+     * `{ style: "percent" }` or a function of the value.
+     */
+    format?: NumberFormat;
+    /**
+     * The locale the value is formatted in.
+     */
+    locale?: string;
     "aria-label": string;
 }
 
-const StyledProgress = dreamy(ArkProgress.Root, progress);
+const StyledProgress = dreamy(UiSdkProgress, progress);
 
 /**
  * Progress component — linear progress indicator.
@@ -43,10 +78,11 @@ export function Progress(props: ProgressProps) {
         children,
         isIndeterminate: isIndeterminateProp,
         "aria-label": ariaLabel,
-        "aria-labelledby": ariaLabelledBy,
         "aria-valuetext": ariaValueText,
-        style,
         speed = "1s",
+        format,
+        locale,
+        style,
         ...rest
     } = props;
 
@@ -55,24 +91,25 @@ export function Progress(props: ProgressProps) {
     return (
         <StyledProgress
             {...rest}
+            aria-label={ariaLabel}
             data-speed={speed}
+            format={format}
+            getValueLabel={ariaValueText ? () => ariaValueText : undefined}
             isIndeterminate={isIndeterminate}
+            locale={locale}
             max={max}
             min={min}
-            style={{
-                // @ts-expect-error css variable
-                "--speed": speed,
-                ...style
-            }}
+            style={
+                {
+                    "--speed": speed,
+                    ...(style as React.CSSProperties)
+                } as React.CSSProperties
+            }
             value={isIndeterminate ? null : value}
         >
-            <ArkProgress.Track
-                aria-label={ariaLabel}
-                aria-labelledby={ariaLabelledBy}
-                aria-valuetext={ariaValueText}
-            >
-                <ArkProgress.Range data-indeterminate={isIndeterminate ? "" : undefined} />
-            </ArkProgress.Track>
+            <UiSdkProgressTrack data-part="track">
+                <UiSdkProgressIndicator data-part="range" />
+            </UiSdkProgressTrack>
             {children}
         </StyledProgress>
     );

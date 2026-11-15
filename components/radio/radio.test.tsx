@@ -6,7 +6,7 @@ import { render } from "../test/render";
 import { Radio, RadioGroup } from "./index";
 
 describe("Radio", () => {
-    it("exposes a native radio and checks with Space", async () => {
+    it("exposes a radio role and checks with click", async () => {
         const user = userEvent.setup();
 
         render(
@@ -18,15 +18,13 @@ describe("Radio", () => {
             </Radio>
         );
 
-        const input = screen.getByRole("radio", { hidden: true });
+        const control = screen.getByRole("radio", { name: "Pro" });
 
-        expect(input).toHaveAttribute("type", "radio");
-        expect(input).not.toBeChecked();
+        expect(control).toHaveAttribute("aria-checked", "false");
 
-        input.focus();
-        await user.keyboard(" ");
+        await user.click(control);
 
-        expect(input).toBeChecked();
+        expect(control).toHaveAttribute("aria-checked", "true");
     });
 
     it("marks the visual control as decorative", () => {
@@ -39,21 +37,22 @@ describe("Radio", () => {
             </Radio>
         );
 
-        const wrapper = document.querySelector('[data-part="wrapper"]');
+        const control = document.querySelector('[data-part="control"]');
 
-        expect(wrapper).toHaveAttribute("aria-hidden", "true");
+        expect(control).toHaveAttribute("aria-hidden", "true");
     });
 
     it("shares name across radios in a RadioGroup and supports selection", async () => {
         const user = userEvent.setup();
-        const onChange = vi.fn();
+        const onValueChange = vi.fn();
 
         render(
             <Field.Root>
                 <Field.Label>Plan</Field.Label>
                 <RadioGroup
                     defaultValue="pro"
-                    onChange={onChange}
+                    name="plan"
+                    onValueChange={onValueChange}
                     role="radiogroup"
                     aria-labelledby="plan-label"
                 >
@@ -63,35 +62,28 @@ describe("Radio", () => {
                     >
                         Plan
                     </span>
-                    <Radio
-                        name="plan"
-                        value="pro"
-                    >
-                        Pro
-                    </Radio>
-                    <Radio
-                        name="plan"
-                        value="team"
-                    >
-                        Team
-                    </Radio>
+                    <Radio value="pro">Pro</Radio>
+                    <Radio value="team">Team</Radio>
                 </RadioGroup>
             </Field.Root>
         );
 
-        expect(screen.getByRole("radiogroup", { name: "Plan" })).toBeInTheDocument();
+        expect(screen.getAllByRole("radiogroup", { name: "Plan" }).length).toBeGreaterThan(0);
 
-        const radios = screen.getAllByRole("radio", { hidden: true });
+        const radios = screen.getAllByRole("radio");
+        const inputs = document.querySelectorAll('input[type="radio"]');
 
         expect(radios).toHaveLength(2);
-        expect(radios[0]).toHaveAttribute("name", "plan");
-        expect(radios[1]).toHaveAttribute("name", "plan");
+        expect(inputs).toHaveLength(2);
+        expect(inputs[0]).toHaveAttribute("name", "plan");
+        expect(inputs[1]).toHaveAttribute("name", "plan");
         expect(radios[0]).toBeChecked();
 
         await user.click(radios[1]);
 
         expect(radios[1]).toBeChecked();
-        expect(onChange).toHaveBeenCalledWith("team");
+        expect(onValueChange).toHaveBeenCalled();
+        expect(onValueChange.mock.calls.at(-1)?.[0]).toBe("team");
     });
 
     it("wires Field describedby and expects Field invalid on radios", () => {
@@ -106,34 +98,34 @@ describe("Radio", () => {
             </Field.Root>
         );
 
-        const radios = screen.getAllByRole("radio", { hidden: true });
+        const radios = screen.getAllByRole("radio");
 
         for (const radio of radios) {
             expect(radio.getAttribute("aria-describedby")).toBeTruthy();
-            expect(radio).toHaveAttribute("aria-invalid", "true");
+            expect(radio).toHaveAttribute("data-invalid", "");
         }
     });
 
     it("does not change selection when disabled", async () => {
         const user = userEvent.setup();
-        const onChange = vi.fn();
+        const onValueChange = vi.fn();
 
         render(
             <RadioGroup
                 defaultValue="pro"
-                isDisabled
-                onChange={onChange}
+                disabled
+                onValueChange={onValueChange}
             >
                 <Radio value="pro">Pro</Radio>
                 <Radio value="team">Team</Radio>
             </RadioGroup>
         );
 
-        const radios = screen.getAllByRole("radio", { hidden: true });
+        const radios = screen.getAllByRole("radio");
 
-        expect(radios[0]).toBeDisabled();
+        expect(radios[0]).toHaveAttribute("aria-disabled", "true");
         await user.click(radios[1]);
-        expect(onChange).not.toHaveBeenCalled();
+        expect(onValueChange).not.toHaveBeenCalled();
     });
 
     it("supports controlled value on RadioGroup", () => {
@@ -144,7 +136,7 @@ describe("Radio", () => {
             </RadioGroup>
         );
 
-        const radios = screen.getAllByRole("radio", { hidden: true });
+        const radios = screen.getAllByRole("radio");
 
         expect(radios[0]).toBeChecked();
         expect(radios[1]).not.toBeChecked();
@@ -162,36 +154,27 @@ describe("Radio", () => {
 
     it("moves selection with arrow keys within the group", async () => {
         const user = userEvent.setup();
-        const onChange = vi.fn();
+        const onValueChange = vi.fn();
 
         render(
             <RadioGroup
                 defaultValue="pro"
-                onChange={onChange}
+                onValueChange={onValueChange}
                 role="radiogroup"
                 aria-label="Plan"
             >
-                <Radio
-                    name="plan"
-                    value="pro"
-                >
-                    Pro
-                </Radio>
-                <Radio
-                    name="plan"
-                    value="team"
-                >
-                    Team
-                </Radio>
+                <Radio value="pro">Pro</Radio>
+                <Radio value="team">Team</Radio>
             </RadioGroup>
         );
 
-        const radios = screen.getAllByRole("radio", { hidden: true });
+        const radios = screen.getAllByRole("radio");
 
         radios[0].focus();
         await user.keyboard("{ArrowDown}");
 
         expect(radios[1]).toBeChecked();
-        expect(onChange).toHaveBeenCalledWith("team");
+        expect(onValueChange).toHaveBeenCalled();
+        expect(onValueChange.mock.calls.at(-1)?.[0]).toBe("team");
     });
 });

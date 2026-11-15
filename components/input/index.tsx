@@ -1,13 +1,14 @@
 "use client";
 
-import { type UserFeedbackProps, callAllHandlers, createContext, useField } from "@dreamy-ui/react";
-import type React from "react";
-import { useMemo } from "react";
+import { type UserFeedbackProps, createContext, useField } from "@dreamy-ui/react";
+import { Input as UiSdkInput } from "@ui-sdk/react/input";
+import { type ComponentProps } from "react";
 import { type HTMLDreamyProps, createStyleContext, dreamy, splitCssProps } from "styled-system/jsx";
 import { type InputVariantProps, input } from "styled-system/recipes";
 import { type InputGroupVariantProps, inputGroup } from "styled-system/recipes";
 
-const StyledInput = dreamy("input", input);
+const StyledInput = dreamy(UiSdkInput, input);
+type UiSdkInputProps = ComponentProps<typeof UiSdkInput>;
 const { withProvider, withContext } = createStyleContext(inputGroup);
 
 const [InputGroupProvider, useInputGroup] = createContext<InputGroupProviderContext>({
@@ -18,14 +19,12 @@ const [InputGroupProvider, useInputGroup] = createContext<InputGroupProviderCont
 interface InputGroupProviderContext extends InputVariantProps, UserFeedbackProps {}
 
 export interface InputProps
-    extends Omit<HTMLDreamyProps<"input">, "size">,
+    extends Omit<
+            HTMLDreamyProps<"input">,
+            "size" | "value" | "defaultValue" | "onValueChange"
+        >,
         InputVariantProps,
-        UserFeedbackProps {
-    /**
-     * The callback function that is called when the input value changes.
-     */
-    onChangeValue?: (value: string) => void;
-}
+        Pick<UiSdkInputProps, "value" | "defaultValue" | "onValueChange" | "controller" | "debug"> {}
 
 export interface InputGroupProps
     extends InputGroupProviderContext,
@@ -35,7 +34,8 @@ export interface InputGroupProps
  * Input Group — wrapper that groups input parts and addons.
  */
 const Group = withProvider(function InputGroup(props: InputGroupProps) {
-    const [cssProps, { children, ...rest }] = splitCssProps(props);
+    const [cssProps, groupProps] = splitCssProps(props);
+    const { children, ...rest } = groupProps as InputGroupProps;
 
     return (
         <InputGroupProvider value={rest}>
@@ -88,27 +88,10 @@ const EndAddon = withContext(dreamy.div, "endAddon");
  * ```
  */
 export function Input(props: InputProps) {
-    const { onChangeValue, onChange, ...restProps } = props;
     const groupContext = useInputGroup();
-    const field = useField(
-        useMemo(() => {
-            return {
-                ...groupContext,
-                ...restProps
-            };
-        }, [groupContext, restProps])
-    );
+    const field = useField({ ...groupContext, ...props });
 
-    return (
-        <StyledInput
-            {...field}
-            onChange={callAllHandlers(onChange, function handleChangeValue(
-                e: React.ChangeEvent<HTMLInputElement>
-            ) {
-                onChangeValue?.(e.target.value);
-            })}
-        />
-    );
+    return <StyledInput {...field} />;
 }
 
 Input.Group = Group;

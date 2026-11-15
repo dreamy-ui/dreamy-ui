@@ -51,10 +51,10 @@ export const radio = defineRecipe({
             "&:hover [data-part=wrapper]": {
                 bg: "{colors.alpha.50}"
             },
-            "&[data-state=checked] [data-part=wrapper]": {
+            "& [data-part=wrapper][data-checked]": {
                 borderColor: "var(--radio-bg)"
             },
-            "&[data-state=checked] [data-part=control]": {
+            "& [data-part=control][data-checked]": {
                 opacity: 1,
                 scale: 1
             }
@@ -147,14 +147,14 @@ export const radio = defineRecipe({
                         scale: 0.5,
                         opacity: 0.5
                     },
-                    "&[data-state=checked]:is(:active, [data-active]) [data-part=control]": {
+                    "&:is(:active, [data-active]) [data-part=control][data-checked]": {
                         scale: 0.5,
                         opacity: 1
                     },
                     "&:is(:active, [data-active]) [data-part=wrapper]": {
                         borderColor: "var(--radio-bg)/50"
                     },
-                    "&[data-state=checked]:is(:active, [data-active]) [data-part=wrapper]": {
+                    "&:is(:active, [data-active]) [data-part=wrapper][data-checked]": {
                         borderColor: "var(--radio-bg)"
                     }
                 },
