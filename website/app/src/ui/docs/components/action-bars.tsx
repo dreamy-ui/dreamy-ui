@@ -1,31 +1,26 @@
 "use client";
 
-import { ActionBar } from "@/ui";
-import { Button } from "@/ui";
-import { Checkbox } from "@/ui";
-import { Switch } from "@/ui";
-import { Table } from "@/ui";
-import { useControllable } from "@dreamy-ui/react";
+import { ActionBar, Button, Checkbox, Switch, Table } from "@/ui";
 import { useCallback, useState } from "react";
 import { LuDownload, LuFolderPlus, LuShare, LuSquarePlus, LuTrash } from "react-icons/lu";
 import type { ActionBarVariantProps } from "styled-system/recipes";
 
 export function ControlledActionBar() {
-    const { isOpen, onToggle, onClose } = useControllable();
+    const [open, setOpen] = useState(false);
 
     return (
         <>
             <Switch
-                isChecked={isOpen}
-                onChangeValue={onToggle}
+                checked={open}
+                onCheckedChange={(checked) => setOpen(checked)}
                 size={"sm"}
             >
                 Show Action Bar
             </Switch>
 
             <ActionBar.Root
-                isOpen={isOpen}
-                onClose={onClose}
+                onOpenChange={setOpen}
+                open={open}
             >
                 <ActionBar.Content>
                     <ActionBar.SelectionTrigger>2 items selected</ActionBar.SelectionTrigger>
@@ -51,21 +46,21 @@ export function ControlledActionBar() {
 }
 
 export function ActionBarWithClose() {
-    const { isOpen, onToggle, onClose } = useControllable();
+    const [open, setOpen] = useState(false);
 
     return (
         <>
             <Switch
-                isChecked={isOpen}
-                onChangeValue={onToggle}
+                checked={open}
+                onCheckedChange={(checked) => setOpen(checked)}
                 size={"sm"}
             >
                 Show Action Bar
             </Switch>
 
             <ActionBar.Root
-                isOpen={isOpen}
-                onClose={onClose}
+                onOpenChange={setOpen}
+                open={open}
             >
                 <ActionBar.Content>
                     <ActionBar.SelectionTrigger>5 items selected</ActionBar.SelectionTrigger>
@@ -92,21 +87,21 @@ export function ActionBarWithClose() {
 }
 
 export function ActionBarMultiple() {
-    const { isOpen, onToggle, onClose } = useControllable();
+    const [open, setOpen] = useState(false);
 
     return (
         <>
             <Switch
-                isChecked={isOpen}
-                onChangeValue={onToggle}
+                checked={open}
+                onCheckedChange={(checked) => setOpen(checked)}
                 size={"sm"}
             >
                 Show Action Bar
             </Switch>
 
             <ActionBar.Root
-                isOpen={isOpen}
-                onClose={onClose}
+                onOpenChange={setOpen}
+                open={open}
             >
                 <ActionBar.Content>
                     <ActionBar.SelectionTrigger>12 files selected</ActionBar.SelectionTrigger>
@@ -146,22 +141,22 @@ export function ActionBarMultiple() {
     );
 }
 
-export function ActionBarSizes({ size = "md" }: { size?: ActionBarVariantProps["size"] }) {
-    const { isOpen, onToggle, onClose } = useControllable();
+export function ActionBarSizes({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
+    const [open, setOpen] = useState(false);
 
     return (
         <>
             <Switch
-                isChecked={isOpen}
-                onChangeValue={onToggle}
+                checked={open}
+                onCheckedChange={(checked) => setOpen(checked)}
                 size={"sm"}
             >
                 Show {size} Action Bar
             </Switch>
 
             <ActionBar.Root
-                isOpen={isOpen}
-                onClose={onClose}
+                onOpenChange={setOpen}
+                open={open}
                 size={size}
             >
                 <ActionBar.Content>
@@ -196,10 +191,11 @@ export function ActionBarTable() {
         { id: 3, name: "Jim Doe", age: 25, gender: "Male", isSelected: false }
     ]);
 
-    const { isOpen, onClose } = useControllable({
-        isOpen: users.some((user) => user.isSelected),
-        onClose: () => setUsers((prev) => prev.map((user) => ({ ...user, isSelected: false })))
-    });
+    const open = users.some((user) => user.isSelected);
+
+    const unselectAll = useCallback(() => {
+        setUsers((prev) => prev.map((user) => ({ ...user, isSelected: false })));
+    }, []);
 
     const toggleSelection = useCallback((id: number) => {
         setUsers((prev) =>
@@ -207,15 +203,14 @@ export function ActionBarTable() {
         );
     }, []);
 
-    const unselectAll = useCallback(() => {
-        setUsers((prev) => prev.map((user) => ({ ...user, isSelected: false })));
-    }, []);
-
     const toggleSelectionAll = useCallback(() => {
         setUsers((prev) =>
             prev.map((user) => ({ ...user, isSelected: !prev.every((user) => user.isSelected) }))
         );
     }, []);
+
+    const allSelected = users.every((user) => user.isSelected);
+    const someSelected = users.some((user) => user.isSelected);
 
     return (
         <>
@@ -229,12 +224,10 @@ export function ActionBarTable() {
                         <Table.Row>
                             <Table.ColumnHeader w={"60px"}>
                                 <Checkbox
-                                    isChecked={users.every((user) => user.isSelected)}
-                                    isIndeterminate={
-                                        users.some((user) => user.isSelected) &&
-                                        !users.every((user) => user.isSelected)
+                                    checked={
+                                        someSelected && !allSelected ? "indeterminate" : allSelected
                                     }
-                                    onChangeValue={toggleSelectionAll}
+                                    onCheckedChange={toggleSelectionAll}
                                 />
                             </Table.ColumnHeader>
                             <Table.ColumnHeader>Name</Table.ColumnHeader>
@@ -245,7 +238,6 @@ export function ActionBarTable() {
                     <Table.Body>
                         {users.map((user, index) => (
                             <Table.Row
-                                /* apply border radiuses to first and last rows in the cells */
                                 _first={{
                                     "& > td:first-of-type": {
                                         borderStartStartRadius: "l2"
@@ -272,8 +264,8 @@ export function ActionBarTable() {
                             >
                                 <Table.Cell w={"60px"}>
                                     <Checkbox
-                                        isChecked={user.isSelected}
-                                        onChangeValue={() => toggleSelection(user.id)}
+                                        checked={user.isSelected}
+                                        onCheckedChange={() => toggleSelection(user.id)}
                                     />
                                 </Table.Cell>
                                 <Table.Cell>{user.name}</Table.Cell>
@@ -286,8 +278,10 @@ export function ActionBarTable() {
             </Table.Root>
 
             <ActionBar.Root
-                isOpen={isOpen}
-                onClose={onClose}
+                onOpenChange={(next) => {
+                    if (!next) unselectAll();
+                }}
+                open={open}
             >
                 <ActionBar.Content>
                     <ActionBar.SelectionTrigger>
@@ -302,10 +296,7 @@ export function ActionBarTable() {
                     </Button>
                     <Button
                         color="error"
-                        onClick={() => {
-                            unselectAll();
-                            onClose();
-                        }}
+                        onClick={unselectAll}
                         rightIcon={<LuTrash />}
                         size="sm"
                         variant="outline"

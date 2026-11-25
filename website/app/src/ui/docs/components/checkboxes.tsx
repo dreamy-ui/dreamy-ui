@@ -1,18 +1,15 @@
-import { Checkbox, CheckboxGroup } from "@/ui";
-import { CheckboxCard } from "@/ui";
-import { Group } from "@/ui";
-import { Text } from "@/ui";
+import { Checkbox, CheckboxCard, CheckboxGroup, Group, Text } from "@/ui";
 import { useState } from "react";
 
 export function ControlledCheckbox() {
-    const [isChecked, setIsChecked] = useState(false);
+    const [checked, setChecked] = useState(false);
 
     return (
         <>
-            <Text>Selected: {isChecked ? "true" : "false"}</Text>
+            <Text>Selected: {checked ? "true" : "false"}</Text>
             <Checkbox
-                isChecked={isChecked}
-                onChangeValue={setIsChecked}
+                checked={checked}
+                onCheckedChange={(next) => setChecked(next === true)}
             >
                 Controlled
             </Checkbox>
@@ -21,15 +18,15 @@ export function ControlledCheckbox() {
 }
 
 export function ControlledCheckboxCard() {
-    const [isChecked, setIsChecked] = useState(false);
+    const [checked, setChecked] = useState(false);
 
     return (
         <>
-            <Text>Selected: {isChecked ? "true" : "false"}</Text>
+            <Text>Selected: {checked ? "true" : "false"}</Text>
             <CheckboxCard.Root
+                checked={checked}
                 full
-                isChecked={isChecked}
-                onChangeValue={setIsChecked}
+                onCheckedChange={(next) => setChecked(next === true)}
             >
                 <CheckboxCard.Header>
                     <CheckboxCard.Title>Controlled</CheckboxCard.Title>
@@ -42,13 +39,13 @@ export function ControlledCheckboxCard() {
 }
 
 export function CheckboxGroupControl() {
-    const [value, setValue] = useState<Array<string | number>>(["1"]);
+    const [value, setValue] = useState<string[]>(["1"]);
 
     return (
         <>
             <Text>Selected: {value.join(", ")}</Text>
             <CheckboxGroup
-                onChange={setValue}
+                onValueChange={(next) => setValue(next)}
                 value={value}
             >
                 <Checkbox value="1">Option 1</Checkbox>
@@ -60,13 +57,13 @@ export function CheckboxGroupControl() {
 }
 
 export function CheckboxCardGroupControl() {
-    const [value, setValue] = useState<Array<string | number>>(["1"]);
+    const [value, setValue] = useState<string[]>(["1"]);
 
     return (
         <>
             <Text mb={2}>Selected: {value.join(", ")}</Text>
             <CheckboxGroup
-                onChange={setValue}
+                onValueChange={(next) => setValue(next)}
                 value={value}
             >
                 <Group

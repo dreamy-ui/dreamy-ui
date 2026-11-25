@@ -1,8 +1,0 @@
-{
-  "type": "recipe",
-  "id": "icon",
-  "file": {
-    "name": "icon.ts",
-    "content": "import { defineRecipe } from \"@pandacss/dev\";\r\n\r\nexport const icon = defineRecipe({\r\n    className: \"icon\",\r\n    description:\r\n        \"An SVG icon wrapper for consistently sizing inline icons that inherit currentColor. Only size sets width and height from 12px to 32px — no other visual variants.\",\r\n    base: {\r\n        color: \"currentcolor\",\r\n        display: \"inline-block\",\r\n        flexShrink: \"0\",\r\n        verticalAlign: \"middle\",\r\n        lineHeight: \"1em\"\r\n    },\r\n    jsx: [\"Icon\", \"FieldErrorIcon\"],\r\n    defaultVariants: {\r\n        size: \"md\"\r\n    },\r\n    variants: {\r\n        size: {\r\n            xs: {\r\n                w: \"3\",\r\n                h: \"3\"\r\n            },\r\n            sm: {\r\n                w: \"4\",\r\n                h: \"4\"\r\n            },\r\n            md: {\r\n                w: \"5\",\r\n                h: \"5\"\r\n            },\r\n            lg: {\r\n                w: \"6\",\r\n                h: \"6\"\r\n            },\r\n            xl: {\r\n                w: \"7\",\r\n                h: \"7\"\r\n            },\r\n            \"2xl\": {\r\n                w: \"8\",\r\n                h: \"8\"\r\n            }\r\n        }\r\n    }\r\n});\r\n"
-  }
-}

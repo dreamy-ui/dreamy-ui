@@ -131,12 +131,16 @@ function applyPortalLayerStyles(
 function movePortalToFront(container: HTMLDivElement) {
     const ownerWindow = container.ownerDocument.defaultView;
     if (!ownerWindow) {
-        container.parentNode?.appendChild(container);
+        if (container.parentNode && container.parentNode.lastChild !== container) {
+            container.parentNode.appendChild(container);
+        }
         return;
     }
 
     const frameId = ownerWindow.requestAnimationFrame(function appendActivePortal() {
-        container.parentNode?.appendChild(container);
+        if (container.parentNode && container.parentNode.lastChild !== container) {
+            container.parentNode.appendChild(container);
+        }
     });
 
     return function cancelMoveToFront() {

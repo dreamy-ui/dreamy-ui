@@ -1,18 +1,20 @@
 ---
 title: Modal
-description: Modal provides a way to add accessible labels to form elements.
+description: Modal displays a focused dialog overlay for confirmations, forms, and detailed content.
 isServerComponent: false
-source: /packages/react/src/components/modal/modal.tsx
-themeSource: /packages/system/src/recipes/modal.ts
+source: /components/modal/index.tsx
+themeSource: /components/modal/modal.ts
 ---
 
 ## Installation
 
 ```bash
-pnpm dreamy add modal
+bunx dreamy add modal
 ```
 
 ## Usage
+
+Modal is powered by [UI SDK Dialog](https://ui-sdk.dev/docs/components/dialog) for focus management, top-layer stacking, and dismissal. Use `open`, `defaultOpen`, and `onOpenChange` on `Modal.Root` (or `createDialogController` for imperative control), and compose `Modal.Overlay`, `Modal.Content`, `Modal.Header`, `Modal.Body`, `Modal.Footer`, and `Modal.CloseButton` (or `Modal.Trigger` and `Modal.Close`).
 
 <Wrapper>
 	<BasicModal />
@@ -28,7 +30,7 @@ export default function BasicModal() {
                 Open Modal
             </Button>
 
-            <Modal.Root open={open} onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}>
+            <Modal.Root open={open} onOpenChange={(nextOpen) => setOpen(nextOpen)}>
                 <Modal.Overlay />
                 <Modal.Content>
                     <Modal.Header>Modal Header</Modal.Header>
@@ -46,24 +48,21 @@ export default function BasicModal() {
 
 ### Automatic overlay stacking
 
-Modal uses the shared [Portal](/docs/components/portal) stack at the `modal` layer (1400). Portalled controls inside it stay above the Modal automatically: for example, a Select adds its `dropdown` layer (1000) and resolves to `calc(1400 + 1000)`.
-
-Nested scopes stay inside their parent stacking context, so a later sibling Modal covers an earlier Modal and all of its open menus, selects, popovers, and tooltips. No portal disabling or z-index workaround is needed. Use `portalProps.containerRef` only when the Modal must attach to a native or third-party overlay root.
+Modal renders in the browser's top layer, so popovers, selects, menus, and nested dialogs stack cleanly without manual z-index workarounds. Use `container` on `Modal.Content` only when the Modal must mount into a custom root such as a shadow DOM.
 
 ```tsx
-const overlayRef = useRef<HTMLElement>(null);
-
 <Modal.Root
     open={open}
-    onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
-    portalProps={{ containerRef: overlayRef }}
+    onOpenChange={(nextOpen) => setOpen(nextOpen)}
 >
     <Modal.Overlay />
-    <Modal.Content>Modal content</Modal.Content>
+    <Modal.Content container={overlayRef.current}>Modal content</Modal.Content>
 </Modal.Root>
 ```
 
 ### Customizing Modal Size
+
+Use the `size` prop on `Modal.Root` to adjust the maximum width of the dialog (`sm` through `8xl`, or `full`).
 
 <Wrapper>
 	<SizeModals />
@@ -94,7 +93,7 @@ export function SizeModals() {
                     Open {size} Modal
                 </Button>
 
-                <Modal.Root open={open} onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)} size={size}>
+                <Modal.Root open={open} onOpenChange={(nextOpen) => setOpen(nextOpen)} size={size}>
                     <Modal.Overlay />
                     <Modal.Content>
                         <Modal.Header>{size} Modal</Modal.Header>
@@ -121,6 +120,8 @@ export function SizeModals() {
 
 ### Customizing Scroll Behavior
 
+Use `scrollBehavior` on `Modal.Root` to control how overflowing modal content scrolls:
+
 - **inside**: The modal body will scroll inside the modal.
 
 <Wrapper>
@@ -137,7 +138,7 @@ export default function ScrollBehaviorModal() {
 				Open Modal
 			</Button>
 
-			<Modal.Root open={open} onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)} scrollBehavior={"inside"}>
+			<Modal.Root open={open} onOpenChange={(nextOpen) => setOpen(nextOpen)} scrollBehavior={"inside"}>
 				<Modal.Overlay />
 				<Modal.Content>
 					<Modal.Header>Modal Header</Modal.Header>
@@ -171,7 +172,7 @@ export function ScrollableOutsideModal() {
 
             <Modal.Root
                 open={open}
-                onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
+                onOpenChange={(nextOpen) => setOpen(nextOpen)}
                 scrollBehavior="outside"
                 placement="top"
                 size={"lg"}
@@ -213,7 +214,7 @@ export function PlacementModal() {
                 Open Modal
             </Button>
 
-            <Modal.Root open={open} onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)} placement={"top"}>
+            <Modal.Root open={open} onOpenChange={(nextOpen) => setOpen(nextOpen)} placement={"top"}>
                 <Modal.Overlay />
                 <Modal.Content>
                     <Modal.Header>Modal Header</Modal.Header>

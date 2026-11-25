@@ -8,8 +8,8 @@ describe("ProgressCircular", () => {
         render(
             <ProgressCircular
                 aria-label="Upload progress"
-                maxValue={100}
-                minValue={0}
+                max={100}
+                min={0}
                 value={40}
             />
         );
@@ -87,5 +87,38 @@ describe("ProgressCircular", () => {
         const root = screen.getByTestId("progress-circular-root");
         expect(root).toHaveClass("custom-progress-circular");
         expect(root).toHaveAttribute("aria-label", "Sync");
+    });
+
+    it("auto-formats ProgressValue when showValueLabel is enabled without valueLabel", () => {
+        render(
+            <ProgressCircular
+                aria-label="Download"
+                format={{ style: "currency", currency: "USD", maximumFractionDigits: 0 }}
+                locale="en-US"
+                showValueLabel
+                value={69}
+            />
+        );
+
+        expect(screen.getByText("$69")).toBeInTheDocument();
+    });
+
+    it("supports getValueLabel while keeping compact visible valueLabel", () => {
+        render(
+            <ProgressCircular
+                getValueLabel={(value, details) =>
+                    `${value} of ${details.max} files, ${details.formatted}`
+                }
+                label="Copying files"
+                max={12}
+                showValueLabel
+                value={3}
+                valueLabel="3/12"
+            />
+        );
+
+        const progressbar = screen.getByRole("progressbar", { name: "Copying files" });
+        expect(progressbar).toHaveAttribute("aria-valuetext", "3 of 12 files, 25%");
+        expect(screen.getByText("3/12")).toBeInTheDocument();
     });
 });

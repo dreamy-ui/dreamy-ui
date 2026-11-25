@@ -4,10 +4,6 @@ import { describe, expect, it, vi } from "vitest";
 import { render } from "../test/render";
 import * as Menu from "./index";
 
-function getMenuSurface() {
-    return document.body.querySelector(".menu__content") as HTMLElement | null;
-}
-
 describe("Menu", () => {
     it("exposes menu button and menu semantics per APG", async () => {
         const user = userEvent.setup();
@@ -27,12 +23,14 @@ describe("Menu", () => {
 
         const trigger = screen.getByRole("button", { name: "Open menu" });
 
+        expect(trigger).toHaveAttribute("data-slot", "menu-trigger");
         expect(trigger).toHaveAttribute("aria-haspopup", "menu");
         expect(trigger).toHaveAttribute("aria-expanded", "false");
 
         await user.click(trigger);
 
         const menu = await screen.findByRole("menu");
+        expect(menu).toHaveAttribute("data-slot", "menu-content");
         expect(trigger).toHaveAttribute("aria-expanded", "true");
 
         const controls = trigger.getAttribute("aria-controls");
@@ -41,51 +39,64 @@ describe("Menu", () => {
 
         const items = within(menu).getAllByRole("menuitem");
         expect(items).toHaveLength(3);
-        expect(items[2]).toBeDisabled();
+        expect(items[2]).toHaveAttribute("aria-disabled", "true");
+        expect(items[2]).toHaveAttribute("data-disabled", "");
     });
 
     it("navigates items with ArrowDown / ArrowUp and activates with Enter", async () => {
         const user = userEvent.setup();
         const onAdd = vi.fn();
         const onAlarm = vi.fn();
+        const onAction = vi.fn();
 
         render(
-            <Menu.Root>
+            <Menu.Root onAction={onAction}>
                 <Menu.Trigger>
                     <button type="button">Actions</button>
                 </Menu.Trigger>
                 <Menu.Content>
-                    <Menu.Item onClick={onAdd}>Add new</Menu.Item>
-                    <Menu.Item onClick={onAlarm}>Set alarm</Menu.Item>
-                    <Menu.Item>Battery</Menu.Item>
+                    <Menu.Item
+                        onSelect={onAdd}
+                        value="add"
+                    >
+                        Add new
+                    </Menu.Item>
+                    <Menu.Item
+                        onSelect={onAlarm}
+                        value="alarm"
+                    >
+                        Set alarm
+                    </Menu.Item>
+                    <Menu.Item value="battery">Battery</Menu.Item>
                 </Menu.Content>
             </Menu.Root>
         );
 
         const trigger = screen.getByRole("button", { name: "Actions" });
-        await user.click(trigger);
-        const menu = await screen.findByRole("menu");
-        menu.focus();
+        trigger.focus();
+        await user.keyboard("{ArrowDown}");
 
-        async function expectActiveItem(name: string) {
-            await waitFor(() => {
-                const activeId = menu.getAttribute("aria-activedescendant");
-                expect(activeId).toBeTruthy();
-                expect(document.getElementById(activeId!)).toHaveAccessibleName(name);
-            });
-        }
+        await screen.findByRole("menu");
+        const addItem = screen.getByRole("menuitem", { name: "Add new" });
+        const alarmItem = screen.getByRole("menuitem", { name: "Set alarm" });
+
+        await waitFor(() => {
+            expect(addItem).toHaveFocus();
+        });
 
         await user.keyboard("{ArrowDown}");
-        await expectActiveItem("Add new");
-
-        await user.keyboard("{ArrowDown}");
-        await expectActiveItem("Set alarm");
+        await waitFor(() => {
+            expect(alarmItem).toHaveFocus();
+        });
 
         await user.keyboard("{ArrowUp}");
-        await expectActiveItem("Add new");
+        await waitFor(() => {
+            expect(addItem).toHaveFocus();
+        });
 
         await user.keyboard("{Enter}");
         expect(onAdd).toHaveBeenCalled();
+        expect(onAction).toHaveBeenCalledWith("add", expect.anything());
     });
 
     it("closes on Escape and returns focus to the trigger", async () => {
@@ -106,14 +117,15 @@ describe("Menu", () => {
 
         const trigger = screen.getByRole("button", { name: "Menu" });
         await user.click(trigger);
-        await waitFor(() => {
-            expect(getMenuSurface()).toBeTruthy();
-        });
+        await screen.findByRole("menu");
 
         await user.keyboard("{Escape}");
 
         await waitFor(() => {
-            expect(onOpenChange).toHaveBeenCalledWith({ open: false });
+            expect(onOpenChange).toHaveBeenCalledWith(
+                false,
+                expect.objectContaining({ reason: "escape-key" })
+            );
         });
         await waitFor(() => {
             expect(trigger).toHaveAttribute("aria-expanded", "false");
@@ -133,16 +145,14 @@ describe("Menu", () => {
                     <button type="button">Placed menu</button>
                 </Menu.Trigger>
                 <Menu.Content>
-                    <Menu.Item onClick={onSelect}>Choose me</Menu.Item>
+                    <Menu.Item onSelect={onSelect}>Choose me</Menu.Item>
                 </Menu.Content>
             </Menu.Root>
         );
 
         const trigger = screen.getByRole("button", { name: "Placed menu" });
         await user.click(trigger);
-        await waitFor(() => {
-            expect(getMenuSurface()).toBeTruthy();
-        });
+        await screen.findByRole("menu");
         await user.click(screen.getByRole("menuitem", { name: "Choose me" }));
 
         expect(onSelect).toHaveBeenCalled();
@@ -172,9 +182,7 @@ describe("Menu", () => {
         );
 
         await user.click(screen.getByRole("button", { name: "Root menu" }));
-        await waitFor(() => {
-            expect(getMenuSurface()).toBeTruthy();
-        });
+        await screen.findByRole("menu");
 
         const submenuTrigger = screen.getByRole("menuitem", { name: /More/ });
         await user.click(submenuTrigger);

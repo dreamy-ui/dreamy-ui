@@ -435,6 +435,37 @@ const ControlledRangeSlider = wrapLazy(
 const MaxMinRangeSlider = wrapLazy(
     lazy(() => import("./components/range-sliders").then((m) => ({ default: m.MaxMinRangeSlider })))
 );
+const PriceRangeSlider = wrapLazy(
+    lazy(() => import("./components/range-sliders").then((m) => ({ default: m.PriceRangeSlider })))
+);
+const MultipleThumbsSlider = wrapLazy(
+    lazy(() =>
+        import("./components/range-sliders").then((m) => ({ default: m.MultipleThumbsSlider }))
+    )
+);
+const MinStepsRangeSlider = wrapLazy(
+    lazy(() =>
+        import("./components/range-sliders").then((m) => ({ default: m.MinStepsRangeSlider }))
+    )
+);
+const CommitRangeSlider = wrapLazy(
+    lazy(() => import("./components/range-sliders").then((m) => ({ default: m.CommitRangeSlider })))
+);
+const ControllerRangeSlider = wrapLazy(
+    lazy(() =>
+        import("./components/range-sliders").then((m) => ({ default: m.ControllerRangeSlider }))
+    )
+);
+const FormRangeSlider = wrapLazy(
+    lazy(() => import("./components/range-sliders").then((m) => ({ default: m.FormRangeSlider })))
+);
+const CustomRenderingRangeSlider = wrapLazy(
+    lazy(() =>
+        import("./components/range-sliders").then((m) => ({
+            default: m.CustomRenderingRangeSlider
+        }))
+    )
+);
 
 const AsyncSelect = wrapLazy(
     lazy(() => import("./components/selects").then((m) => ({ default: m.AsyncSelect })))
@@ -455,9 +486,94 @@ const ControlledSlider = wrapLazy(
 const MaxMinSlider = wrapLazy(
     lazy(() => import("./components/sliders").then((m) => ({ default: m.MaxMinSlider })))
 );
+const FieldSlider = wrapLazy(
+    lazy(() => import("./components/sliders").then((m) => ({ default: m.FieldSlider })))
+);
+const DisabledSlider = wrapLazy(
+    lazy(() => import("./components/sliders").then((m) => ({ default: m.DisabledSlider })))
+);
+const ReadOnlySlider = wrapLazy(
+    lazy(() => import("./components/sliders").then((m) => ({ default: m.ReadOnlySlider })))
+);
+const StepAndBoundsSlider = wrapLazy(
+    lazy(() => import("./components/sliders").then((m) => ({ default: m.StepAndBoundsSlider })))
+);
+const LargeStepSlider = wrapLazy(
+    lazy(() => import("./components/sliders").then((m) => ({ default: m.LargeStepSlider })))
+);
+const FormatAndLocaleSliders = wrapLazy(
+    lazy(() => import("./components/sliders").then((m) => ({ default: m.FormatAndLocaleSliders })))
+);
+const CommitSlider = wrapLazy(
+    lazy(() => import("./components/sliders").then((m) => ({ default: m.CommitSlider })))
+);
+const ControllerSlider = wrapLazy(
+    lazy(() => import("./components/sliders").then((m) => ({ default: m.ControllerSlider })))
+);
+const FormSlider = wrapLazy(
+    lazy(() => import("./components/sliders").then((m) => ({ default: m.FormSlider })))
+);
+const VerticalSliders = wrapLazy(
+    lazy(() => import("./components/sliders").then((m) => ({ default: m.VerticalSliders })))
+);
+const CustomRenderingSlider = wrapLazy(
+    lazy(() => import("./components/sliders").then((m) => ({ default: m.CustomRenderingSlider })))
+);
 
 const ControlledSwitch = wrapLazy(
     lazy(() => import("./components/switches").then((m) => ({ default: m.ControlledSwitch })))
+);
+const DescriptionSwitch = wrapLazy(
+    lazy(() => import("./components/switches").then((m) => ({ default: m.DescriptionSwitch })))
+);
+const ChoiceCardSwitches = wrapLazy(
+    lazy(() => import("./components/switches").then((m) => ({ default: m.ChoiceCardSwitches })))
+);
+const DisabledAndReadOnlySwitches = wrapLazy(
+    lazy(() =>
+        import("./components/switches").then((m) => ({ default: m.DisabledAndReadOnlySwitches }))
+    )
+);
+const FormSwitch = wrapLazy(
+    lazy(() => import("./components/switches").then((m) => ({ default: m.FormSwitch })))
+);
+const ValidationSwitch = wrapLazy(
+    lazy(() => import("./components/switches").then((m) => ({ default: m.ValidationSwitch })))
+);
+const AsyncSaveSwitch = wrapLazy(
+    lazy(() => import("./components/switches").then((m) => ({ default: m.AsyncSaveSwitch })))
+);
+const CustomThumbSwitch = wrapLazy(
+    lazy(() => import("./components/switches").then((m) => ({ default: m.CustomThumbSwitch })))
+);
+
+const InteractiveProgress = wrapLazy(
+    lazy(() => import("./components/progresses").then((m) => ({ default: m.InteractiveProgress })))
+);
+const FormatAndLocaleProgress = wrapLazy(
+    lazy(() =>
+        import("./components/progresses").then((m) => ({ default: m.FormatAndLocaleProgress }))
+    )
+);
+const ValueLabelProgress = wrapLazy(
+    lazy(() => import("./components/progresses").then((m) => ({ default: m.ValueLabelProgress })))
+);
+const InteractiveProgressCircular = wrapLazy(
+    lazy(() =>
+        import("./components/progresses").then((m) => ({ default: m.InteractiveProgressCircular }))
+    )
+);
+const FormatAndLocaleProgressCircular = wrapLazy(
+    lazy(() =>
+        import("./components/progresses").then((m) => ({
+            default: m.FormatAndLocaleProgressCircular
+        }))
+    )
+);
+const ValueLabelProgressCircular = wrapLazy(
+    lazy(() =>
+        import("./components/progresses").then((m) => ({ default: m.ValueLabelProgressCircular }))
+    )
 );
 
 const UpdateToast = wrapLazy(
@@ -634,10 +750,34 @@ const DreamComponents = {
     SuccessFlowButton,
     ControlledSlider,
     MaxMinSlider,
+    FieldSlider,
+    DisabledSlider,
+    ReadOnlySlider,
+    StepAndBoundsSlider,
+    LargeStepSlider,
+    FormatAndLocaleSliders,
+    CommitSlider,
+    ControllerSlider,
+    FormSlider,
+    VerticalSliders,
+    CustomRenderingSlider,
     Slider,
     ControlledRangeSlider,
     MaxMinRangeSlider,
+    PriceRangeSlider,
+    MultipleThumbsSlider,
+    MinStepsRangeSlider,
+    CommitRangeSlider,
+    ControllerRangeSlider,
+    FormRangeSlider,
+    CustomRenderingRangeSlider,
     RangeSlider,
+    InteractiveProgress,
+    FormatAndLocaleProgress,
+    ValueLabelProgress,
+    InteractiveProgressCircular,
+    FormatAndLocaleProgressCircular,
+    ValueLabelProgressCircular,
     Tabs,
     VariantTabs,
     ControlledTabs,
@@ -678,6 +818,13 @@ const DreamComponents = {
     ControlledCheckbox,
     ControlledCheckboxCard,
     ControlledSwitch,
+    DescriptionSwitch,
+    ChoiceCardSwitches,
+    DisabledAndReadOnlySwitches,
+    FormSwitch,
+    ValidationSwitch,
+    AsyncSaveSwitch,
+    CustomThumbSwitch,
     Menu,
     ProgressCircular,
     RemixLink,

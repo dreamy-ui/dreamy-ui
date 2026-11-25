@@ -1,6 +1,4 @@
-import { Button } from "@/ui";
-import { Editable } from "@/ui";
-import { HStack } from "@/ui";
+import { Button, Editable, HStack } from "@/ui";
 import { useRef, useState } from "react";
 
 export function ControlledEditable() {
@@ -8,7 +6,7 @@ export function ControlledEditable() {
 
     return (
         <Editable.Root
-            onChange={setValue}
+            onValueChange={setValue}
             value={value}
         >
             <Editable.Preview />
@@ -46,7 +44,7 @@ export function FinalFocusRefEditable() {
 }
 
 export function StartWithEditViewEditable() {
-    const [isRendered, setIsRendered] = useState(false);
+    const [isRendered, setIsRendered] = useState(true);
 
     return (
         <>
@@ -54,9 +52,9 @@ export function StartWithEditViewEditable() {
 
             {isRendered && (
                 <Editable.Root
+                    defaultEditing
                     defaultValue="Meow"
                     placeholder="Enter an animal sound"
-                    startWithEditView
                 >
                     <Editable.Preview />
                     <Editable.Input />

@@ -43,6 +43,12 @@ export const input = defineRecipe({
         },
         "[data-input-group]:has([data-part='suffix']) > &": {
             borderEndRadius: "0"
+        },
+        "[data-input-group]:has([data-part='start-addon']) > &": {
+            paddingInlineStart: "10!"
+        },
+        "[data-input-group]:has([data-part='end-addon']) > &": {
+            paddingInlineEnd: "10!"
         }
     },
     defaultVariants: {
@@ -60,6 +66,7 @@ export const input = defineRecipe({
         variant: {
             outline: {
                 borderWidth: "1px",
+                borderStyle: "solid",
                 background: "none",
                 borderColor: "{colors.border}",
                 _hover: {
@@ -104,6 +111,7 @@ export const input = defineRecipe({
             flushed: {
                 borderRadius: 0,
                 borderBottomWidth: "1px",
+                borderBottomStyle: "solid",
                 borderBottomColor: "{colors.border}",
                 _hover: {
                     borderBottomColor: "{colors.border.hover}"
@@ -129,6 +137,7 @@ export const input = defineRecipe({
             // name a variant that has border and is filled at once
             filledOutline: {
                 borderWidth: "2px",
+                borderStyle: "solid",
                 background: "{colors.alpha.50}",
                 borderColor: "{colors.border}",
                 _hover: {
@@ -157,10 +166,27 @@ export const input = defineRecipe({
         },
         inputType: {
             pin: {
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                position: "relative",
+                userSelect: "none",
                 width: "fit-content",
                 minWidth: "0",
                 aspectRatio: "1/1",
-                textAlign: "center"
+                textAlign: "center",
+                "&[data-active]": {
+                    boxShadow: "0 0 0 1.5px {colors.primary}",
+                    borderColor: "{colors.primary}"
+                },
+                "&[data-fake-caret]::after": {
+                    content: '""',
+                    position: "absolute",
+                    width: "1.5px",
+                    height: "55%",
+                    bg: "fg",
+                    pointerEvents: "none"
+                }
             },
             default: {}
         }

@@ -2,6 +2,9 @@ import { assertType } from "vitest";
 import type { DateRangePickerRootProps } from "./index";
 
 type ExpectTrue<T extends true> = T;
+type KnownKeys<T> = keyof {
+    [K in keyof T as string extends K ? never : number extends K ? never : K]: K;
+};
 
 interface DateRange {
     start: Date | null;
@@ -11,7 +14,7 @@ interface DateRange {
 assertType<DateRange | null | undefined>({} as DateRangePickerRootProps["value"]);
 assertType<DateRange | null | undefined>({} as DateRangePickerRootProps["defaultValue"]);
 assertType<((range: DateRange | null) => void) | undefined>(
-    {} as DateRangePickerRootProps["onChange"]
+    {} as DateRangePickerRootProps["onValueChange"]
 );
 assertType<string | undefined>({} as DateRangePickerRootProps["dateFormat"]);
 assertType<string | undefined>({} as DateRangePickerRootProps["placeholder"]);
@@ -22,10 +25,10 @@ assertType<boolean | undefined>({} as DateRangePickerRootProps["showFooter"]);
 const _size: DateRangePickerRootProps["size"] = "md";
 
 type _HasValueProps = ExpectTrue<
-    "value" extends keyof DateRangePickerRootProps
-        ? "onChange" extends keyof DateRangePickerRootProps
-            ? "showFooter" extends keyof DateRangePickerRootProps
-                ? "presets" extends keyof DateRangePickerRootProps
+    "value" extends KnownKeys<DateRangePickerRootProps>
+        ? "onValueChange" extends KnownKeys<DateRangePickerRootProps>
+            ? "showFooter" extends KnownKeys<DateRangePickerRootProps>
+                ? "presets" extends KnownKeys<DateRangePickerRootProps>
                     ? true
                     : false
                 : false
@@ -33,41 +36,36 @@ type _HasValueProps = ExpectTrue<
         : false
 >;
 
-type _HasRecipeProps = ExpectTrue<"size" extends keyof DateRangePickerRootProps ? true : false>;
+type _NoLegacyProps = ExpectTrue<
+    "onChange" extends KnownKeys<DateRangePickerRootProps>
+        ? false
+        : "popoverProps" extends KnownKeys<DateRangePickerRootProps>
+          ? false
+          : true
+>;
 
-type _HasStyleProps = ExpectTrue<
-    "bg" extends keyof DateRangePickerRootProps
-        ? "color" extends keyof DateRangePickerRootProps
-            ? "p" extends keyof DateRangePickerRootProps
-                ? "m" extends keyof DateRangePickerRootProps
-                    ? "w" extends keyof DateRangePickerRootProps
-                        ? "h" extends keyof DateRangePickerRootProps
-                            ? true
-                            : false
-                        : false
-                    : false
-                : false
-            : false
-        : false
+type _HasRecipeProps = ExpectTrue<
+    "size" extends KnownKeys<DateRangePickerRootProps> ? true : false
 >;
 
 const _valueProps: _HasValueProps = true;
+const _noLegacyProps: _NoLegacyProps = true;
 const _recipeProps: _HasRecipeProps = true;
-const _styleProps: _HasStyleProps = true;
 
-void (_valueProps && _recipeProps && _styleProps && _size);
+void (_valueProps && _noLegacyProps && _recipeProps && _size);
 
 assertType<DateRangePickerRootProps>({
     value: { start: new Date(2026, 0, 1), end: new Date(2026, 0, 7) },
     defaultValue: null,
-    onChange: () => {},
+    onValueChange: () => {},
+    open: true,
+    onOpenChange: () => {},
     dateFormat: "MMM D, YYYY",
     placeholder: "Select date range",
     minDate: new Date(2020, 0, 1),
     maxDate: new Date(2030, 0, 1),
     showFooter: true,
     size: "md",
-    popoverProps: { usePortal: false },
     bg: "transparent",
     color: "fg",
     p: 2,
@@ -87,6 +85,6 @@ assertType<DateRangePickerRootProps>({
 });
 
 assertType<DateRangePickerRootProps>({
-    // @ts-expect-error onChange receives a range, not a single Date
-    onChange: (_value: Date) => {}
+    // @ts-expect-error onValueChange receives a range, not a single Date
+    onValueChange: (_value: Date) => {}
 });

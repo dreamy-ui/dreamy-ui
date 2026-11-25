@@ -1,3 +1,4 @@
+import type { ChangeDetails } from "@ui-sdk/core";
 import { assertType } from "vitest";
 import type {
     StepperContentProps,
@@ -5,6 +6,7 @@ import type {
     StepperNextTriggerProps,
     StepperPrevTriggerProps,
     StepperRootProps,
+    StepperStepChangeReason,
     StepperTriggerProps
 } from "./index";
 
@@ -13,7 +15,9 @@ type ExpectTrue<T extends true> = T;
 assertType<number>({} as StepperRootProps["count"]);
 assertType<number | undefined>({} as StepperRootProps["step"]);
 assertType<number | undefined>({} as StepperRootProps["defaultStep"]);
-assertType<((step: number) => void) | undefined>({} as StepperRootProps["onStepChange"]);
+assertType<((step: number, details: ChangeDetails<StepperStepChangeReason>) => void) | undefined>(
+    {} as StepperRootProps["onStepChange"]
+);
 assertType<"horizontal" | "vertical" | undefined>({} as StepperRootProps["orientation"]);
 
 assertType<number>({} as StepperItemProps["index"]);

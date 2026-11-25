@@ -15,7 +15,6 @@ describe("DateRangePicker", () => {
                         start: new Date(2026, 0, 1),
                         end: new Date(2026, 0, 7)
                     }}
-                    popoverProps={{ usePortal: false }}
                 >
                     <DateRangePicker.Input />
                     <DateRangePicker.PopoverContent>
@@ -38,7 +37,7 @@ describe("DateRangePicker", () => {
                     start: new Date(2026, 6, 1),
                     end: new Date(2026, 6, 10)
                 }}
-                popoverProps={{ usePortal: false, open: true }}
+                open
             >
                 <DateRangePicker.Input />
                 <DateRangePicker.PopoverContent>
@@ -56,10 +55,10 @@ describe("DateRangePicker", () => {
             await screen.findByRole("button", { name: "Next month" })
         ).toBeInTheDocument();
         expect(
-            await screen.findByRole("button", { name: /July 1, 2026/i })
+            await screen.findByRole("gridcell", { name: /July 1, 2026/i })
         ).toBeInTheDocument();
         expect(
-            await screen.findByRole("button", { name: /July 10, 2026/i })
+            await screen.findByRole("gridcell", { name: /July 10, 2026/i })
         ).toBeInTheDocument();
     });
 
@@ -67,7 +66,7 @@ describe("DateRangePicker", () => {
         const user = userEvent.setup();
 
         render(
-            <DateRangePicker.Root popoverProps={{ usePortal: false }}>
+            <DateRangePicker.Root>
                 <DateRangePicker.Input />
                 <DateRangePicker.PopoverContent>
                     <DateRangePicker.Calendar />
@@ -93,7 +92,7 @@ describe("DateRangePicker", () => {
     it("names preset and footer buttons when provided", async () => {
         render(
             <DateRangePicker.Root
-                popoverProps={{ usePortal: false, open: true }}
+                open
                 presets={{
                     week: {
                         label: "This week",
@@ -114,14 +113,8 @@ describe("DateRangePicker", () => {
             </DateRangePicker.Root>
         );
 
-        expect(
-            await screen.findByRole("button", { name: "This week" })
-        ).toBeInTheDocument();
-        expect(
-            await screen.findByRole("button", { name: "Cancel" })
-        ).toBeInTheDocument();
-        expect(
-            await screen.findByRole("button", { name: "Apply" })
-        ).toBeInTheDocument();
+        expect(await screen.findByRole("button", { name: "This week" })).toBeInTheDocument();
+        expect(await screen.findByRole("button", { name: "Cancel" })).toBeInTheDocument();
+        expect(await screen.findByRole("button", { name: "Apply" })).toBeInTheDocument();
     });
 });

@@ -1,10 +1,9 @@
 "use client";
 
-import type { HTMLDreamyProps } from "styled-system/jsx";
 import type { ButtonVariantProps } from "styled-system/recipes";
-import { Button, type UniversalButtonProps } from "./button";
+import { Button, type ButtonProps } from "./button";
 
-interface Props extends UniversalButtonProps {
+interface Props {
     /**
      * aria-label is required for accessibility
      */
@@ -16,7 +15,7 @@ interface Props extends UniversalButtonProps {
 }
 
 export interface IconButtonProps
-    extends Omit<HTMLDreamyProps<"button">, keyof Props>,
+    extends Omit<ButtonProps, keyof Props>,
         ButtonVariantProps,
         Props {}
 

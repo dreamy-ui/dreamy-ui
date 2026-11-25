@@ -1,3 +1,5 @@
+import type { ChangeDetails } from "@ui-sdk/core";
+import type { TooltipOpenChangeReason } from "@ui-sdk/react/tooltip";
 import type { ReactNode } from "react";
 import { assertType } from "vitest";
 import type { TooltipProps } from "./index";
@@ -11,21 +13,25 @@ assertType<boolean | undefined>({} as TooltipProps["shouldWrapChildren"]);
 assertType<boolean | undefined>({} as TooltipProps["hasArrow"]);
 assertType<boolean | undefined>({} as TooltipProps["disabled"]);
 assertType<number | undefined>({} as TooltipProps["arrowSize"]);
-assertType<boolean | undefined>({} as TooltipProps["disablePortal"]);
-assertType<boolean | undefined>({} as TooltipProps["closeOnEsc"]);
-assertType<number | undefined>({} as TooltipProps["openDelay"]);
+assertType<number | undefined>({} as TooltipProps["delay"]);
 assertType<number | undefined>({} as TooltipProps["closeDelay"]);
-assertType<(() => void) | undefined>({} as TooltipProps["onOpen"]);
-assertType<(() => void) | undefined>({} as TooltipProps["onClose"]);
+assertType<boolean | undefined>({} as TooltipProps["open"]);
+assertType<boolean | undefined>({} as TooltipProps["defaultOpen"]);
+assertType<boolean | undefined>({} as TooltipProps["closeOnPress"]);
+assertType<boolean | undefined>({} as TooltipProps["toggleable"]);
+assertType<
+    ((open: boolean, details: ChangeDetails<TooltipOpenChangeReason>) => void) | undefined
+>({} as TooltipProps["onOpenChange"]);
 assertType<TooltipProps["positioning"]>({} as TooltipProps["positioning"]);
-assertType<TooltipProps["portalProps"]>({} as TooltipProps["portalProps"]);
 
-type _HasA11yProps = ExpectTrue<
+type _HasUiSdkProps = ExpectTrue<
     "content" extends keyof TooltipProps
-        ? "aria-label" extends keyof TooltipProps
-            ? "closeOnEsc" extends keyof TooltipProps
-                ? "shouldWrapChildren" extends keyof TooltipProps
-                    ? true
+        ? "delay" extends keyof TooltipProps
+            ? "closeDelay" extends keyof TooltipProps
+                ? "onOpenChange" extends keyof TooltipProps
+                    ? "closeOnPress" extends keyof TooltipProps
+                        ? true
+                        : false
                     : false
                 : false
             : false
@@ -42,10 +48,10 @@ type _HasStyleProps = ExpectTrue<
         : false
 >;
 
-const _a11yProps: _HasA11yProps = true;
+const _uiSdkProps: _HasUiSdkProps = true;
 const _styleProps: _HasStyleProps = true;
 
-void (_a11yProps && _styleProps);
+void (_uiSdkProps && _styleProps);
 
 assertType<TooltipProps>({
     children: "trigger",
@@ -55,13 +61,16 @@ assertType<TooltipProps>({
     hasArrow: true,
     arrowSize: 12,
     disabled: false,
-    disablePortal: false,
-    closeOnEsc: true,
-    openDelay: 0,
+    delay: 0,
     closeDelay: 0,
-    onOpen: () => {},
-    onClose: () => {},
+    closeOnPress: false,
+    toggleable: true,
+    open: true,
+    defaultOpen: false,
+    onOpenChange: () => {},
     positioning: { placement: "top" },
+    side: "bottom",
+    align: "start",
     bg: "bg.panel",
     color: "fg",
     p: 2
@@ -70,9 +79,28 @@ assertType<TooltipProps>({
 assertType<TooltipProps>({
     children: "x",
     content: "y",
-    // @ts-expect-error openDelay must be a number
-    openDelay: "slow"
+    // @ts-expect-error delay must be a number
+    delay: "slow"
 });
+
+type KnownKeys<T> = keyof {
+    [K in keyof T as string extends K ? never : number extends K ? never : K]: K;
+};
+
+type _NoLegacyProps = ExpectTrue<
+    "openDelay" extends KnownKeys<TooltipProps>
+        ? false
+        : "closeOnEsc" extends KnownKeys<TooltipProps>
+          ? false
+          : "onOpen" extends KnownKeys<TooltipProps>
+            ? false
+            : "onClose" extends KnownKeys<TooltipProps>
+              ? false
+              : true
+>;
+
+const _noLegacyProps: _NoLegacyProps = true;
+void _noLegacyProps;
 
 assertType<TooltipProps>({
     children: "x",

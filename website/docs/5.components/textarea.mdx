@@ -2,19 +2,19 @@
 title: Textarea
 description: Textarea component allows you to easily create multi-line text inputs.
 isServerComponent: false
-source: /packages/react/src/components/textarea/textarea.tsx
-themeSource: /packages/system/src/recipes/textarea.ts
+source: /components/textarea/index.tsx
+themeSource: /components/textarea/textarea.ts
 ---
 
 ## Installation
 
 ```bash
-pnpm dreamy add textarea
+bunx dreamy add textarea
 ```
 
 ## Usage
 
-Textarea resizes automatically as it's content grows.
+Textarea is powered by [UI SDK Textarea](https://ui-sdk.dev/docs/components/textarea) and resizes automatically as its content grows.
 
 <Wrapper>
 	<Textarea placeholder="Enter your bio" />
@@ -56,6 +56,8 @@ Pass `resize` prop to the `Textarea` to enable resizing.
 
 ### Textarea Size
 
+Use the `size` prop to change the size of the `Textarea` (`sm`, `md`, `lg`, `xl`, or `2xl`).
+
 <Wrapper>
 	<VStack w="full">
 		<Textarea placeholder="Enter your bio" size="sm" />
@@ -77,6 +79,8 @@ Pass `resize` prop to the `Textarea` to enable resizing.
 ```
 
 ### Textarea Variant
+
+Use the `variant` prop to switch between `outline`, `filled`, `flushed`, and `filledOutline` styles.
 
 <Wrapper>	
 	<VStack w="full">

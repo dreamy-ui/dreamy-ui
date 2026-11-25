@@ -1,8 +1,0 @@
-{
-  "type": "pattern",
-  "id": "text",
-  "file": {
-    "name": "text.ts",
-    "content": "import { definePattern } from \"@pandacss/dev\";\r\n\r\nexport const text = definePattern({\r\n    jsx: [\"Heading\", \"Text\"],\r\n    properties: {\r\n        variant: {\r\n            type: \"enum\",\r\n            value: [\"heading\", \"link\"]\r\n        },\r\n        size: {\r\n            type: \"enum\",\r\n            value: [\"xs\", \"sm\", \"md\", \"lg\", \"xl\", \"2xl\", \"3xl\", \"4xl\", \"5xl\", \"6xl\", \"7xl\"]\r\n        }\r\n    },\r\n    transform(props, { map }) {\r\n        const { variant, size, ...rest } = props;\r\n        return {\r\n            textStyle: size ?? map(variant, (v) => (v === \"heading\" ? \"xl\" : undefined)),\r\n            fontWeight: map(variant, (v) =>\r\n                v === \"heading\" ? \"bold\" : v === \"link\" ? \"semibold\" : undefined\r\n            ),\r\n            fontFamily: map(variant, (v) => (v === \"heading\" ? \"heading\" : undefined)),\r\n            transition: map(variant, (v) => (v === \"link\" ? \"colors\" : undefined)),\r\n            _hover: {\r\n                color: map(variant, (v) => (v === \"link\" ? \"fg.max\" : undefined))\r\n            },\r\n            ...rest\r\n        };\r\n    }\r\n});\r\n"
-  }
-}

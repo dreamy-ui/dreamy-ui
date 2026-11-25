@@ -1,15 +1,15 @@
 ---
 title: Menu
-description: Menu allows to create a dropdown list of options.
+description: Menu displays an accessible dropdown list of actions and options.
 isServerComponent: false
 source: /components/menu/index.tsx
-themeSource: /components/recipes/menu.ts
+themeSource: /components/menu/menu.ts
 ---
 
 ## Installation
 
 ```bash
-pnpm dreamy add menu
+bunx dreamy add menu
 ```
 
 ## Usage
@@ -44,18 +44,16 @@ Basic usage of Menu.
 </Menu.Root>
 ```
 
-### Popover props
+### Top-layer positioning and UI SDK props
 
-`popoverProps` configures portal and lazy mount for the menu surface (legacy name): `usePortal`, `portalProps`, `isLazy`, and `reduceMotion`. Placement stays on the root `positioning` prop. Menu keyboard and ARIA use [Ark UI Menu](https://ark-ui.com/docs/components/menu); highlighted items expose `data-highlighted`. Exit motion runs before the surface is hidden (`unmountOnExit` stays off so Motion can finish).
-
-Menu uses the shared Portal stack at the `dropdown` layer (1000). Inside a Dreamy UI overlay, its scope nests automatically and adds 1000 to the parent base; nested menus continue the same scoped behavior. Keep the portal enabled—no manual layer or z-index is needed. For a native or third-party overlay, target its non-scrolling root with `popoverProps={{ portalProps: { containerRef } }}`.
+Menu keyboard navigation, ARIA attributes, submenus, and top-layer positioning are powered by [UI SDK Menu](https://ui-sdk.dev/docs/components/menu). Highlighted items expose `data-highlighted`. Configure placement with `positioning` on `Menu.Root` or `side`/`align`/`sideOffset` on `Menu.Content`, and use `container` only when targeting a custom container such as a shadow root or iframe.
 
 <Wrapper>
-    <Menu.Root popoverProps={{ lazyBehavior: "unmount" }}>
+    <Menu.Root>
         <Menu.Trigger>
             <Button>Open Menu</Button>
         </Menu.Trigger>
-        <Menu.Content>
+        <Menu.Content side="bottom" align="start">
             <Menu.Item>Add new</Menu.Item>
             <Menu.Item>Delete</Menu.Item>
         </Menu.Content>
@@ -63,11 +61,11 @@ Menu uses the shared Portal stack at the `dropdown` layer (1000). Inside a Dream
 </Wrapper>
 
 ```tsx
-<Menu.Root popoverProps={{ lazyBehavior: "unmount" }}>
+<Menu.Root>
     <Menu.Trigger>
         <Button>Open Menu</Button>
     </Menu.Trigger>
-    <Menu.Content>
+    <Menu.Content side="bottom" align="start">
         <Menu.Item>Add new</Menu.Item>
         <Menu.Item>Delete</Menu.Item>
     </Menu.Content>
@@ -76,7 +74,7 @@ Menu uses the shared Portal stack at the `dropdown` layer (1000). Inside a Dream
 
 ### Placement
 
-You can change where the Menu is placed by using the `placement` prop. Use `icon` prop to place an icon on the beginning or the item and `comamnd` to show keybinding to the item. Using `{actionKey}` in command will automatically replace it with the action key of the user's operating system.
+You can change where the Menu appears using `positioning={{ placement }}` on `Menu.Root` (or `side` and `align` on `Menu.Content`). Use `icon` to place an icon at the start of an item and `command` to show a keybinding. Using `{actionKey}` in `command` automatically replaces it with the user's OS modifier key.
 
 <Wrapper>
     <Menu.Root positioning={{ placement: "bottom-start" }}>
@@ -176,7 +174,7 @@ export function VariantMenu({ variant }: { variant: string }) {
                 <Menu.Item
                     icon={<LuWarehouse />}
                     command="{actionKey} h"
-                    as={<Link to="/" />}
+                    render={<Link to="/" />}
                 >
                     Homepage
                 </Menu.Item>
@@ -212,7 +210,7 @@ export function VariantMenu({ variant }: { variant: string }) {
 
 ### Using links
 
-You can use a custom link component with menu item but polymorphic props like `as`, `asComp` and `asChild`.
+You can render a menu item as a link using UI SDK's `render` prop.
 
 <Wrapper>
     <Menu.Root positioning={{ placement: "bottom-start" }}>
@@ -223,7 +221,7 @@ You can use a custom link component with menu item but polymorphic props like `a
             <Menu.Item
                 icon={<LuWarehouse />}
                 command="{actionKey} h"
-                as={<RemixLink to="/" />}
+                render={<RemixLink to="/" />}
             >
                 <>Homepage</>
             </Menu.Item>
@@ -244,7 +242,7 @@ You can use a custom link component with menu item but polymorphic props like `a
         <Menu.Item 
             icon={<LuWarehouse />} 
             command="{actionKey} h"
-            as={<Link to="/" />}
+            render={<Link to="/" />}
         >
             Homepage
         </Menu.Item>
@@ -271,7 +269,7 @@ export function ControlledMenu() {
     return (
         <Menu.Root
             open={open}
-            onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
+            onOpenChange={(nextOpen) => setOpen(nextOpen)}
         >
             <Text>{open ? "Open" : "Closed"}</Text>
             <Menu.Trigger>
@@ -281,7 +279,7 @@ export function ControlledMenu() {
                 <Menu.Item
                     icon={<LuWarehouse />} 
                     command="{actionKey} h"
-                    as={<Link to="/" />}
+                    render={<Link to="/" />}
                 >
                     Homepage
                 </Menu.Item>
@@ -297,7 +295,7 @@ export function ControlledMenu() {
 
 ### Adding logic to the commands
 
-`command` props does not provide any logic. You can use `useEventListener` hook to add logic to the commands.
+The `command` prop only displays the shortcut badge. You can use the `useEventListener` hook to handle keyboard shortcuts.
 
 <Wrapper>
     <InteractiveMenu />
@@ -349,7 +347,7 @@ export function InteractiveMenu() {
                 <Menu.Item
                     icon={<LuWarehouse />}
                     command="{actionKey} h"
-                    as={<Link to="/" />}
+                    render={<Link to="/" />}
                 >
                     Homepage
                 </Menu.Item>

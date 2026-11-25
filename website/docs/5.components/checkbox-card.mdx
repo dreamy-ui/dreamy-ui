@@ -1,15 +1,15 @@
 ---
 title: Checkbox Card
-description: A selectable card component that behaves like a checkbox
+description: A selectable card component that behaves like a checkbox.
 isServerComponent: false
-source: /components/ui/checkbox-card.tsx
-themeSource: /components/recipes/checkbox-card.ts
+source: /components/checkbox-card/index.tsx
+themeSource: /components/checkbox-card/checkbox-card.ts
 ---
 
 ## Installation
 
 ```bash
-pnpm dreamy add checkbox-card
+bunx dreamy add checkbox-card
 ```
 
 ## Usage
@@ -245,7 +245,7 @@ Change the checkbox card size.
 
 ### Controlled
 
-Use `isChecked` and `onChange`, `onChangeValue` to control the checkbox card.
+Use `checked` and `onCheckedChange` to control the checkbox card.
 
 <Wrapper>
 	<ControlledCheckboxCard />
@@ -253,15 +253,15 @@ Use `isChecked` and `onChange`, `onChangeValue` to control the checkbox card.
 
 ```tsx
 export function ControlledCheckboxCard() {
-    const [isChecked, setIsChecked] = useState(false);
+    const [checked, setChecked] = useState(false);
 
     return (
         <>
-            <Text>Selected: {isChecked ? "true" : "false"}</Text>
+            <Text>Selected: {checked ? "true" : "false"}</Text>
             <CheckboxCard.Root
                 full
-                isChecked={isChecked}
-                onChangeValue={setIsChecked}
+                checked={checked}
+                onCheckedChange={(next) => setChecked(next === true)}
             >
                 <CheckboxCard.Header>
                     <CheckboxCard.Title>Controlled</CheckboxCard.Title>
@@ -286,14 +286,14 @@ Use `CheckboxGroup` to compose multiple checkboxes or checkbox cards.
 
 ```tsx
 function CheckboxCardGroupControl() {
-	const [value, setValue] = useState<Array<string | number>>(["1"]);
+	const [value, setValue] = useState<string[]>(["1"]);
 
 	return (
 		<>
 			<Text>Selected: {value.join(", ")}</Text>
 			<CheckboxGroup
 				value={value}
-				onChange={setValue}
+				onValueChange={(next) => setValue(next)}
 			>
 				<Group full wrapped>
 					<CheckboxCard.Root full value="1">

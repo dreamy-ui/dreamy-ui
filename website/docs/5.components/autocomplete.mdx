@@ -2,12 +2,14 @@
 title: Autocomplete
 description: Autocomplete is a text input that filters a list of options as the user types.
 isServerComponent: false
+source: /components/autocomplete/index.tsx
+themeSource: /components/autocomplete/autocomplete.ts
 ---
 
 ## Installation
 
 ```bash
-pnpm dreamy add autocomplete
+bunx dreamy add autocomplete
 ```
 
 ## Usage
@@ -45,11 +47,9 @@ const fruits = [
 </Autocomplete.Root>
 ```
 
-### Popover props
+### Top-layer positioning and UI SDK props
 
-Autocomplete behavior is powered by [Ark UI Combobox](https://ark-ui.com/docs/components/combobox) with Dreamy styling and Motion. Use `popoverProps` for portal options (`usePortal`, `portalProps`, `reduceMotion`). Keep placement on the root `positioning` prop.
-
-Autocomplete uses the shared Portal stack at the `dropdown` layer (1000). Inside a Dreamy UI overlay, its scope nests automatically and adds 1000 to the parent base. Keep the portal enabled—no manual layer or z-index is needed. For a native or third-party overlay, target its non-scrolling root with `popoverProps={{ portalProps: { containerRef } }}`.
+Autocomplete behavior is powered by [UI SDK Combobox](https://ui-sdk.dev/docs/components/combobox) with Dreamy styling and top-layer positioning. Configure placement with `positioning` on `Autocomplete.Root` or `side`/`align`/`sideOffset` on `Autocomplete.Content`. Use `container` only when targeting a custom container such as a shadow root or iframe.
 
 <Wrapper>
     <Autocomplete.Root
@@ -59,20 +59,16 @@ Autocomplete uses the shared Portal stack at the `dropdown` layer (1000). Inside
             { value: "banana", label: "Banana" },
             { value: "orange", label: "Orange" },
         ]}
-        popoverProps={{ usePortal: true }}
     >
         <Autocomplete.Input placeholder="Search a fruit..." />
-        <Autocomplete.Content />
+        <Autocomplete.Content side="bottom" align="start" />
     </Autocomplete.Root>
 </Wrapper>
 
 ```tsx
-<Autocomplete.Root
-    items={fruits}
-    popoverProps={{ usePortal: true }}
->
+<Autocomplete.Root items={fruits}>
     <Autocomplete.Input placeholder="Search a fruit..." />
-    <Autocomplete.Content />
+    <Autocomplete.Content side="bottom" align="start" />
 </Autocomplete.Root>
 ```
 
@@ -81,7 +77,7 @@ Autocomplete uses the shared Portal stack at the `dropdown` layer (1000). Inside
 Autocomplete comes with 6 different sizes.
 
 <Wrapper>
-    {["sm", "md", "lg", "xl", "2xl"].map((size) => (
+    {["xs", "sm", "md", "lg", "xl", "2xl"].map((size) => (
         <Autocomplete.Root
             key={size}
             width="xs"
@@ -99,7 +95,7 @@ Autocomplete comes with 6 different sizes.
 </Wrapper>
 
 ```tsx
-{["sm", "md", "lg", "xl", "2xl"].map((size) => (
+{["xs", "sm", "md", "lg", "xl", "2xl"].map((size) => (
     <Autocomplete.Root key={size} size={size} items={fruits}>
         <Autocomplete.Input placeholder={`Search (${size})...`} />
         <Autocomplete.Content />
@@ -189,7 +185,7 @@ The dropdown list can be `plain` (padded, rounded items) or `stretched` (edge-to
 
 ### Controlled
 
-Control the selected value externally with `value` and `onChangeValue`.
+Control the selected value externally with `value` and `onValueChange`.
 
 <Wrapper>
     <ControlledAutocomplete />
@@ -206,7 +202,7 @@ export function ControlledAutocomplete() {
                 width="xs"
                 items={fruits}
                 value={value}
-                onChangeValue={setValue}
+                onValueChange={(next) => setValue(next)}
             >
                 <Autocomplete.Input placeholder="Search a fruit..." />
                 <Autocomplete.Content />
@@ -294,22 +290,21 @@ Use the `renderItem` prop on `Autocomplete.Content` to fully customise how each 
 
 ### Get value from the input
 
-Sometimes you want to do interactive search bars with easy autocomplete. You'll need input value to eg. download train stations the user is wanting to select. This is a fake demo, it doesn't fetch real station names, just shows how it could be done.
+Sometimes you want to build interactive search bars with autocomplete where you control both the selected `value` and the search `query` (for example, to fetch matching train stations). This example demonstrates how to control `query` and `onQueryChange` alongside `value` and `onValueChange` on `Autocomplete.Root`.
 
 <Wrapper>
     <StationAutocomplete />
 </Wrapper>
 
 ```tsx
-import type { AutocompleteProps } from "components/ui/autocomplete";
 import ky from "ky";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Autocomplete } from "@/ui";
 import type { Station, StationResponse } from "@/utils/types";
 
-interface StationAutocompleteProps extends Partial<AutocompleteProps> {
-	value: string;
-	setValue: (value: string) => void;
+interface StationAutocompleteProps extends Partial<Autocomplete.AutocompleteProps> {
+	value: string | null;
+	setValue: (value: string | null) => void;
 }
 
 export function StationAutocomplete({
@@ -317,48 +312,46 @@ export function StationAutocomplete({
 	setValue,
 	...props
 }: StationAutocompleteProps) {
-	const [inputValue, setInputValue] = useState("");
+	const [query, setQuery] = useState("");
 	const [items, setItems] = useState<Station[]>([]);
 
 	useDebouncedEffect(
 		async () => {
-			if (!inputValue) {
+			if (!query) {
 				return;
 			}
 
 			const data = await ky
 				.post("/api/stations", {
 					body: new URLSearchParams({
-						term: inputValue
+						term: query
 					})
 				})
 				.json<StationResponse[]>();
 
 			setItems(data.map((station) => ({ value: station.value, label: station.name })));
 		},
-		[inputValue],
+		[query],
 		200
 	);
 
 	return (
 		<Autocomplete.Root
-			filterFn={(item, query) => true} // add this to disable default filtering...
+			filter={false} // disable default client-side filtering
 			items={items}
-			onChangeValue={setValue}
+			onQueryChange={setQuery}
+			onValueChange={setValue}
+			query={query}
 			value={value}
 			{...props}
 		>
-			<Autocomplete.Input
-				onChangeValue={setInputValue}
-				placeholder="Enter station name..."
-				value={inputValue}
-			/>
+			<Autocomplete.Input placeholder="Enter station name..." />
 			<Autocomplete.Content />
 		</Autocomplete.Root>
 	);
 }
 
-function useDebouncedEffect(effect: () => void, dependencies: any[], delay: number) {
+function useDebouncedEffect(effect: () => void, dependencies: unknown[], delay: number) {
 	useEffect(() => {
 		const timer = setTimeout(() => {
 			effect();
@@ -367,7 +360,7 @@ function useDebouncedEffect(effect: () => void, dependencies: any[], delay: numb
 		return () => {
 			clearTimeout(timer);
 		};
-	}, [...dependencies]);
+	}, dependencies);
 }
 ```
 
@@ -388,12 +381,12 @@ Pass an `icon` prop to `Autocomplete.Input` to show a leading icon inside the in
 
 ### Clearable
 
-By default, a clear button appears when a value is selected. Set `isClearable={false}` to hide it.
+By default, a clear button appears when a value is selected. Set `clearable={false}` to hide it.
 
 <Wrapper>
     <Autocomplete.Root
         width="xs"
-        isClearable={false}
+        clearable={false}
         items={[
             { value: "strawberry", label: "Strawberry" },
             { value: "banana", label: "Banana" },
@@ -406,7 +399,7 @@ By default, a clear button appears when a value is selected. Set `isClearable={f
 </Wrapper>
 
 ```tsx
-<Autocomplete.Root items={fruits} isClearable={false}>
+<Autocomplete.Root items={fruits} clearable={false}>
     <Autocomplete.Input placeholder="Search a fruit..." />
     <Autocomplete.Content />
 </Autocomplete.Root>
@@ -439,7 +432,7 @@ Customise the message shown when no items match the query with the `noResultsTex
 
 ### Async loading
 
-Fetch items when the autocomplete is opened using the `onOpen` prop. Use `noResultsContent` on `Autocomplete.Content` to show a spinner while loading.
+Fetch items when the autocomplete is opened using the `onOpenChange` prop. Use `noResultsContent` on `Autocomplete.Content` to show a spinner while loading.
 
 <Wrapper>
     <AsyncAutocomplete />
@@ -448,10 +441,10 @@ Fetch items when the autocomplete is opened using the `onOpen` prop. Use `noResu
 ```tsx
 export function AsyncAutocomplete() {
     const [isLoading, setIsLoading] = useState(true);
-    const [items, setItems] = useState<AutocompleteItem[]>([]);
+    const [items, setItems] = useState<Autocomplete.AutocompleteItem[]>([]);
 
-    function fetchItems() {
-        if (items.length > 0) return;
+    function fetchItems(open: boolean) {
+        if (!open || items.length > 0) return;
 
         fetch("/api/fake-select-data")
             .then((res) => res.json())
@@ -462,7 +455,7 @@ export function AsyncAutocomplete() {
     }
 
     return (
-        <Autocomplete.Root items={items} onOpen={fetchItems}>
+        <Autocomplete.Root items={items} onOpenChange={fetchItems}>
             <Autocomplete.Input placeholder="Search a fruit..." />
             <Autocomplete.Content
                 noResultsContent={isLoading ? <Spinner color="primary" py={4} /> : undefined}
@@ -474,7 +467,7 @@ export function AsyncAutocomplete() {
 
 ### Async search
 
-Read the input text with `onChangeValue` on `Autocomplete.Input`, then fetch matching items as the user types. Debounce requests so you do not hit the API on every keystroke. Pass `filterFn={() => true}` when the server already returns filtered results.
+Control the search text with `query` and `onQueryChange` on `Autocomplete.Root`, then fetch matching items as the user types. Debounce requests so you do not hit the API on every keystroke. Pass `filter={false}` (or `filterFn={() => true}`) when the server already returns filtered results.
 
 <Wrapper>
     <AsyncSearchAutocomplete />
@@ -483,7 +476,7 @@ Read the input text with `onChangeValue` on `Autocomplete.Input`, then fetch mat
 ```tsx
 export function AsyncSearchAutocomplete() {
     const [value, setValue] = useState("");
-    const [items, setItems] = useState<AutocompleteItem[]>([]);
+    const [items, setItems] = useState<Autocomplete.AutocompleteItem[]>([]);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
@@ -515,11 +508,13 @@ export function AsyncSearchAutocomplete() {
     }, [value]);
 
     return (
-        <Autocomplete.Root items={items} filterFn={() => true}>
-            <Autocomplete.Input
-                placeholder="Search fruits..."
-                onChangeValue={setValue}
-            />
+        <Autocomplete.Root
+            items={items}
+            filter={false}
+            query={value}
+            onQueryChange={setValue}
+        >
+            <Autocomplete.Input placeholder="Search fruits..." />
             <Autocomplete.Content
                 noResultsContent={
                     isLoading ? (
@@ -580,10 +575,9 @@ You can customise the background color of the selected item with the `selectedIt
 
 <Wrapper>
     {["primary", "success", "warning", "error", "none"].map((scheme) => (
-        <>
+        <VStack key={scheme} align="start" gap={1}>
             <Text>{scheme}</Text>
             <Autocomplete.Root
-                key={scheme}
                 width="xs"
                 defaultValue="strawberry"
                 selectedItemBackgroundScheme={scheme}
@@ -596,7 +590,7 @@ You can customise the background color of the selected item with the `selectedIt
                 <Autocomplete.Input placeholder="Search a fruit..." />
                 <Autocomplete.Content />
             </Autocomplete.Root>
-        </>
+        </VStack>
     ))}
 </Wrapper>
 

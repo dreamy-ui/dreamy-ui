@@ -48,17 +48,17 @@ export function VariantTabs() {
 }
 
 export function ControlledTabs() {
-    const [value, setValue] = useState("0");
+    const [value, setValue] = useState<string | null>("0");
 
     const tabs = ["Dashboard", "AI Chat", "Security"];
 
     return (
         <>
-            <Text bold>Current Tab: {tabs[Number(value)]}</Text>
+            <Text bold>Current Tab: {tabs[Number(value ?? "0")]}</Text>
 
             <Tabs.Root
                 value={value}
-                onValueChange={({ value: nextValue }) => setValue(nextValue)}
+                onValueChange={(nextValue) => setValue(nextValue)}
             >
                 <Tabs.List>
                     <Tabs.Tab>

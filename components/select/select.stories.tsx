@@ -86,12 +86,12 @@ export function Variant() {
 }
 
 export function Controlled() {
-    const [value, setValue] = useState<string>("strawberry");
+    const [value, setValue] = useState<string | null>("strawberry");
 
     return (
         <Select.Root
             items={fruits}
-            onChangeValue={setValue}
+            onValueChange={(next) => setValue(next)}
             value={value}
             width="xs"
         >
@@ -137,7 +137,7 @@ export function WithOneIcon() {
 export function Clearable() {
     return (
         <Select.Root
-            isClearable
+            clearable
             items={fruitsWithIcons}
             width="xs"
         >
@@ -150,8 +150,8 @@ export function Clearable() {
 export function Multiple() {
     return (
         <Select.Root
-            isMultiple
             items={fruits}
+            multiple
             width="xs"
         >
             <Select.Trigger placeholder="Select a favorite fruit" />
@@ -163,8 +163,8 @@ export function Multiple() {
 export function CustomMultipleSelectedText() {
     return (
         <Select.Root
-            isMultiple
             items={fruits}
+            multiple
             width="xs"
         >
             <Select.Trigger
@@ -180,8 +180,8 @@ export function AsyncLoading() {
     const [isLoading, setIsLoading] = useState(false);
     const [items, setItems] = useState<{ value: string; label: string }[]>([]);
 
-    function fetchFruits() {
-        if (items.length > 0) return;
+    function fetchFruits(open: boolean) {
+        if (!open || items.length > 0) return;
 
         setIsLoading(true);
         setTimeout(() => {
@@ -198,7 +198,7 @@ export function AsyncLoading() {
         <Box>
             <Select.Root
                 items={items}
-                onOpen={fetchFruits}
+                onOpenChange={fetchFruits}
                 width="xs"
             >
                 <Select.Trigger placeholder="Select a favorite fruit" />
@@ -232,10 +232,17 @@ export function Virtualized() {
 }
 
 export function CloseOnSelect() {
+    const [open, setOpen] = useState(false);
+
     return (
         <Select.Root
-            closeOnSelect={false}
             items={fruits}
+            onOpenChange={(nextOpen, details) => {
+                if (details.reason !== "item-press") {
+                    setOpen(nextOpen);
+                }
+            }}
+            open={open}
             width="xs"
         >
             <Select.Trigger placeholder="Select a favorite fruit" />
@@ -245,15 +252,11 @@ export function CloseOnSelect() {
 }
 
 export function SharedOverlayStack() {
-    function keepOpen() {}
-
     return (
         <>
             <Select.Root
-                isOpen
                 items={fruits}
-                onClose={keepOpen}
-                popoverProps={{ autoFocus: false }}
+                open
                 width="xs"
             >
                 <Select.Trigger placeholder="Page Select" />
@@ -261,10 +264,7 @@ export function SharedOverlayStack() {
             </Select.Root>
 
             <Modal.Root
-                autoFocus={false}
-                isOpen
-                onClose={keepOpen}
-                trapFocus={false}
+                open
             >
                 <Modal.Overlay />
                 <Modal.Content data-testid="modal-content">
@@ -272,10 +272,8 @@ export function SharedOverlayStack() {
                     <Modal.Body>
                         <Text>Nested overlays automatically stack above this Modal.</Text>
                         <Select.Root
-                            isOpen
                             items={fruits}
-                            onClose={keepOpen}
-                            popoverProps={{ autoFocus: false }}
+                            open
                             width="xs"
                         >
                             <Select.Trigger placeholder="Modal Select" />

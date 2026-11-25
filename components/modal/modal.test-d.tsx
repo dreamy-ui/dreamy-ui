@@ -1,4 +1,4 @@
-import type { RefObject } from "react";
+import type { DialogOpenChangeDetails, DialogOpenChangeReason } from "@ui-sdk/react/dialog";
 import { assertType } from "vitest";
 import type {
     ModalBodyProps,
@@ -11,33 +11,47 @@ import type {
 } from "./index";
 
 type ExpectTrue<T extends true> = T;
+type KnownKeys<T> = keyof {
+    [K in keyof T as string extends K ? never : number extends K ? never : K]: K;
+};
 
 assertType<boolean | undefined>({} as ModalProps["open"]);
 assertType<boolean | undefined>({} as ModalProps["defaultOpen"]);
-assertType<((details: { open: boolean }) => void) | undefined>({} as ModalProps["onOpenChange"]);
-assertType<boolean | undefined>({} as ModalProps["closeOnEscape"]);
-assertType<boolean | undefined>({} as ModalProps["closeOnInteractOutside"]);
-assertType<boolean | undefined>({} as ModalProps["trapFocus"]);
-assertType<boolean | undefined>({} as ModalProps["autoFocus"]);
-assertType<boolean | undefined>({} as ModalProps["restoreFocus"]);
-assertType<boolean | undefined>({} as ModalProps["blockScrollOnMount"]);
-assertType<boolean | undefined>({} as ModalProps["useInert"]);
+assertType<
+    ((open: boolean, details: DialogOpenChangeDetails<DialogOpenChangeReason>) => void) | undefined
+>({} as ModalProps["onOpenChange"]);
+assertType<boolean | undefined>({} as ModalProps["dismissible"]);
+assertType<boolean | "trap-focus" | undefined>({} as ModalProps["modal"]);
+assertType<boolean | undefined>({} as ModalProps["closeOnOutsidePress"]);
 assertType<"inside" | "outside" | undefined>({} as ModalProps["scrollBehavior"]);
-assertType<(() => void) | undefined>({} as ModalProps["onCloseComplete"]);
+assertType<((open: boolean) => void) | undefined>({} as ModalProps["onOpenChangeComplete"]);
 
-assertType<RefObject<{ focus(): void } | null> | undefined>({} as ModalProps["initialFocusRef"]);
-assertType<RefObject<{ focus(): void } | null> | undefined>({} as ModalProps["finalFocusRef"]);
-
-type _HasFocusProps = ExpectTrue<
-    "initialFocusRef" extends keyof ModalProps
-        ? "finalFocusRef" extends keyof ModalProps
-            ? "trapFocus" extends keyof ModalProps
-                ? "restoreFocus" extends keyof ModalProps
+type _HasUiSdkProps = ExpectTrue<
+    "dismissible" extends KnownKeys<ModalProps>
+        ? "modal" extends KnownKeys<ModalProps>
+            ? "onOpenChange" extends KnownKeys<ModalProps>
+                ? "onOpenChangeComplete" extends KnownKeys<ModalProps>
                     ? true
                     : false
                 : false
             : false
         : false
+>;
+
+type _NoLegacyProps = ExpectTrue<
+    "closeOnEscape" extends KnownKeys<ModalProps>
+        ? false
+        : "closeOnInteractOutside" extends KnownKeys<ModalProps>
+          ? false
+          : "trapFocus" extends KnownKeys<ModalProps>
+            ? false
+            : "initialFocusRef" extends KnownKeys<ModalProps>
+              ? false
+              : "finalFocusRef" extends KnownKeys<ModalProps>
+                ? false
+                : "portalProps" extends KnownKeys<ModalProps>
+                  ? false
+                  : true
 >;
 
 type _HasPartProps = ExpectTrue<
@@ -56,38 +70,28 @@ type _HasPartProps = ExpectTrue<
         : false
 >;
 
-const _focusProps: _HasFocusProps = true;
+const _uiSdkProps: _HasUiSdkProps = true;
+const _noLegacyProps: _NoLegacyProps = true;
 const _partProps: _HasPartProps = true;
 
-void (_focusProps && _partProps);
+void (_uiSdkProps && _noLegacyProps && _partProps);
 
 assertType<ModalProps>({
     open: true,
     onOpenChange: () => {},
-    closeOnEscape: true,
-    closeOnInteractOutside: true,
-    trapFocus: true,
-    autoFocus: true,
-    restoreFocus: true,
-    blockScrollOnMount: true,
+    dismissible: true,
+    modal: true,
+    closeOnOutsidePress: true,
     scrollBehavior: "inside",
-    useInert: true,
-    onCloseComplete: () => {},
+    onOpenChangeComplete: () => {},
+    size: "md",
+    placement: "center",
     children: null
 });
 
 assertType<ModalProps>({
     open: false,
-    onOpenChange: () => {},
     children: null,
     // @ts-expect-error scrollBehavior must be inside or outside
     scrollBehavior: "center"
-});
-
-assertType<ModalProps>({
-    open: true,
-    onOpenChange: () => {},
-    children: null,
-    // @ts-expect-error trapFocus must be boolean
-    trapFocus: "yes"
 });

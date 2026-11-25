@@ -101,7 +101,7 @@ Dreamy UI provides various utilities to use, like `center`, which is a `alignIte
 The best practice is to use `<Field />` component to wrap your form elements with nice label, help text and error message. See [Field docs](/docs/components/field) page to learn more.
 
 <Wrapper>
-	<Field.Root name="name" isRequired>
+	<Field.Root name="name" required>
 		<Field.Label>Name</Field.Label>
 		<Input placeholder="Preferred name" />
 		<Field.Hint>
@@ -114,7 +114,7 @@ The best practice is to use `<Field />` component to wrap your form elements wit
 </Wrapper>
 
 ```tsx
-<Field.Root name="name" isRequired>
+<Field.Root name="name" required>
 	<Field.Label>Name</Field.Label>
 	<Input />
 	<Field.Hint>Enter your preferred name</Field.Hint>
@@ -126,7 +126,7 @@ Alternatively use props in Field for label, help text and error.
 
 ```tsx
 <Field.Root 
-	isRequired 
+	required 
 	name="name" 
 	label="Name" 
 	helpText="Enter your preferred name" 

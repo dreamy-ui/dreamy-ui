@@ -17,7 +17,7 @@ describe("Input", () => {
 
     it("wires Field label, hint, error, and invalid state", async () => {
         render(
-            <Field.Root isInvalid>
+            <Field.Root invalid>
                 <Field.Label>Email</Field.Label>
                 <Input
                     autoComplete="email"
@@ -77,8 +77,8 @@ describe("Input", () => {
     it("respects disabled and required from Field", () => {
         render(
             <Field.Root
-                isDisabled
-                isRequired
+                disabled
+                required
             >
                 <Field.Label>Username</Field.Label>
                 <Input />

@@ -1,5 +1,14 @@
 import { assertType } from "vitest";
-import type { RadioGroupProps, RadioProps } from "./index";
+import {
+    type RadioGroupChangeOptions,
+    type RadioGroupController,
+    type RadioGroupProps,
+    type RadioGroupState,
+    type RadioGroupValueChangeReason,
+    type RadioProps,
+    type RadioState,
+    createRadioGroupController
+} from "./index";
 
 type ExpectTrue<T extends true> = T;
 
@@ -82,8 +91,29 @@ assertType<RadioGroupProps>({
     readOnly: false,
     required: false,
     name: "choice",
+    form: "my-form",
     loop: true,
     variant: "solid",
     size: "sm",
     scheme: "primary"
 });
+
+const _controller = createRadioGroupController<"a" | "b">();
+assertType<RadioGroupController<"a" | "b">>(_controller);
+assertType<RadioGroupValueChangeReason>("item-press");
+assertType<RadioGroupChangeOptions>({ reason: "imperative" });
+assertType<RadioGroupState>({
+    value: "a",
+    disabled: false,
+    readOnly: false,
+    required: false
+});
+assertType<RadioState>({
+    checked: true,
+    disabled: false,
+    readOnly: false,
+    required: false
+});
+assertType<string | undefined>({} as RadioProps["form"]);
+assertType<RadioProps["render"]>({} as RadioProps["render"]);
+assertType<RadioGroupProps["render"]>({} as RadioGroupProps["render"]);

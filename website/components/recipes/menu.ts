@@ -22,27 +22,35 @@ export const menu = defineSlotRecipe({
             maxH: "96",
             gap: "0 !important",
             overflowY: "auto",
+            backgroundColor: "bg",
+            borderWidth: "1px",
+            borderStyle: "solid",
+            borderColor: "{colors.border}",
             boxShadow: "md",
-            width: "2xs !important"
+            width: "2xs !important",
+            transformOrigin: "var(--transform-origin, center)"
         },
         item: {
             position: "relative",
-            menu: "none",
+            userSelect: "none",
             display: "flex",
             alignItems: "center",
             gap: "2",
-            // fontWeight: "semibold",
             cursor: "pointer",
             justifyContent: "space-between",
             flex: "1",
             textAlign: "start",
             width: "full",
+            outline: "none",
             "&[data-focused], &[data-highlighted]": {
                 bg: "alpha.50"
             },
-            _disabled: {
-                pointerEvents: "none",
-                opacity: "0.5"
+            "&[data-destructive]": {
+                color: "error"
+            },
+            "&[data-disabled], &[aria-disabled='true']": {
+                opacity: "0.5",
+                cursor: "not-allowed"
             },
             "& span": {
                 display: "flex",
@@ -89,15 +97,6 @@ export const menu = defineSlotRecipe({
                     "& span": {
                         gap: "1"
                     }
-                },
-                itemIndicator: {
-                    right: "2"
-                },
-                indicator: {
-                    _icon: {
-                        width: "3.5",
-                        height: "3.5"
-                    }
                 }
             },
             sm: {
@@ -108,21 +107,12 @@ export const menu = defineSlotRecipe({
                 content: {
                     textStyle: "sm"
                 },
-                indicator: {
-                    _icon: {
-                        width: "4",
-                        height: "4"
-                    }
-                },
                 item: {
                     py: "1",
                     px: "1.5",
                     "& span": {
                         gap: "1.5"
                     }
-                },
-                itemIndicator: {
-                    right: "1.5"
                 }
             },
             md: {
@@ -138,15 +128,6 @@ export const menu = defineSlotRecipe({
                     px: "2",
                     "& span": {
                         gap: "2"
-                    }
-                },
-                itemIndicator: {
-                    right: "2"
-                },
-                indicator: {
-                    _icon: {
-                        width: "4",
-                        height: "4"
                     }
                 }
             },
@@ -164,20 +145,6 @@ export const menu = defineSlotRecipe({
                     "& span": {
                         gap: "2.5"
                     }
-                },
-                trigger: {
-                    textStyle: "md",
-                    py: "3",
-                    gap: "2"
-                },
-                itemIndicator: {
-                    right: "3"
-                },
-                indicator: {
-                    _icon: {
-                        width: "5",
-                        height: "5"
-                    }
                 }
             },
             xl: {
@@ -194,20 +161,6 @@ export const menu = defineSlotRecipe({
                     "& span": {
                         gap: "2.5"
                     }
-                },
-                trigger: {
-                    textStyle: "lg",
-                    py: "3",
-                    gap: "2.5"
-                },
-                itemIndicator: {
-                    right: "3"
-                },
-                indicator: {
-                    _icon: {
-                        width: "5",
-                        height: "5"
-                    }
                 }
             },
             "2xl": {
@@ -223,20 +176,6 @@ export const menu = defineSlotRecipe({
                     px: "3.5",
                     "& span": {
                         gap: "3"
-                    }
-                },
-                trigger: {
-                    textStyle: "xl",
-                    py: "3.5",
-                    gap: "3"
-                },
-                itemIndicator: {
-                    right: "3.5"
-                },
-                indicator: {
-                    _icon: {
-                        width: "5.5",
-                        height: "5.5"
                     }
                 }
             }

@@ -8,8 +8,8 @@ themeSource: /components/accordion/accordion.ts
 
 ## Installation
 
-```bash	
-pnpm dreamy add accordion
+```bash
+bunx dreamy add accordion
 ```
 
 ## Usage
@@ -105,7 +105,7 @@ export function ControlledAccordion() {
     return (
         <Accordion.Root
             value={value}
-            onValueChange={(details) => setValue(details.value)}
+            onValueChange={(next) => setValue(next)}
         >
             {["item-1", "item-2", "item-3"].map((itemValue, index) => (
                 <Accordion.Item key={itemValue} value={itemValue}>
@@ -120,13 +120,15 @@ export function ControlledAccordion() {
 
 ### With icon
 
+Pass custom elements such as icons inside `Accordion.Trigger` alongside the label, or use the `icon` prop to replace the default chevron.
+
 <Wrapper>
 	<Accordion.Root multiple>
 		{["item-1", "item-2", "item-3"].map((value, index) => (
 			<Accordion.Item key={value} value={value}>
 				<Accordion.Trigger>
 					<HStack>
-						<Icon as={<PiConfetti />} color="fg.medium" />
+						<Icon color="fg.medium"><PiConfetti /></Icon>
 						<Text>Item {index + 1}</Text>
 					</HStack>
 				</Accordion.Trigger>

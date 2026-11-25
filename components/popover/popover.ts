@@ -80,23 +80,7 @@ export const popover = defineSlotRecipe({
             borderStyle: "solid",
             borderColor: "{colors.border}",
             gap: 2,
-            transformOrigin: "var(--transform-origin, center)",
-            transitionProperty: "opacity, scale",
-            transitionDuration: "200ms",
-            transitionTimingFunction: "cubic-bezier(0.5, 0, 0.2, 1)",
-            "&[data-starting-style]": {
-                opacity: "0",
-                scale: "0.95"
-            },
-            "&[data-ending-style]": {
-                opacity: "0",
-                scale: "0.95",
-                transitionDuration: "100ms",
-                transitionTimingFunction: "cubic-bezier(0.4, 0, 1, 1)"
-            },
-            "&[data-reduce-motion]": {
-                transition: "none"
-            }
+            transformOrigin: "var(--transform-origin, center)"
         },
         header: {
             display: "flex",

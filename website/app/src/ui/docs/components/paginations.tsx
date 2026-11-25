@@ -6,10 +6,10 @@ export function ControlledPagination() {
 
     return (
         <Pagination.Root
-            count={100}
-            onPageChange={(details) => setPage(details.page)}
+            onPageChange={(nextPage) => setPage(nextPage)}
             page={page}
             pageSize={10}
+            total={100}
         >
             <Pagination.PrevTrigger />
             <Pagination.Items />
@@ -25,9 +25,9 @@ export function ControlledPagination() {
 export function CustomItemPagination() {
     return (
         <Pagination.Root
-            count={200}
             defaultPage={5}
             pageSize={10}
+            total={200}
         >
             <Pagination.PrevTrigger />
             <Pagination.Items
@@ -39,7 +39,7 @@ export function CustomItemPagination() {
                         }}
                         variant="ghost"
                     >
-                        Page {page.value}
+                        Page {page}
                     </Button>
                 )}
             />

@@ -1,5 +1,6 @@
-import { HStack, Text, Tooltip } from "@/ui";
+import { Button, HStack, Text, Tooltip, VStack } from "@/ui";
 import type { Meta } from "@storybook/react-vite";
+import { useState } from "react";
 
 export default {
     title: "Tooltip"
@@ -18,7 +19,7 @@ export function OpenCloseDelay() {
         <HStack>
             <Tooltip
                 content="I am visible on hover after 1000 milliseconds"
-                openDelay={1000}
+                delay={1000}
             >
                 <Text w="fit-content">Hover me (1s open)</Text>
             </Tooltip>
@@ -36,28 +37,41 @@ export function CloseHandlers() {
     return (
         <HStack>
             <Tooltip
-                closeOnClick={false}
-                content="I am not closed on click"
+                closeOnPress={false}
+                content="I stay open when the trigger is pressed"
             >
-                <Text w="fit-content">Close on click false</Text>
+                <Button
+                    size="sm"
+                    variant="outline"
+                >
+                    Keep open on press
+                </Button>
             </Tooltip>
             <Tooltip
-                closeOnPointerDown={false}
-                content="I am not closed on pointer down"
+                content="Tap or press to toggle on touch and keyboard"
+                toggleable
             >
-                <Text w="fit-content">Close on pointer down false</Text>
+                <Button
+                    size="sm"
+                    variant="outline"
+                >
+                    Toggleable
+                </Button>
             </Tooltip>
             <Tooltip
-                closeOnEsc={false}
-                content="I am not closed on esc key"
+                content="Escape dismissal is canceled"
+                onOpenChange={(next, details) => {
+                    if (!next && details.reason === "escape-key") {
+                        details.cancel();
+                    }
+                }}
             >
-                <Text w="fit-content">Close on esc key false</Text>
-            </Tooltip>
-            <Tooltip
-                closeOnScroll
-                content="I am closed on scroll"
-            >
-                <Text w="fit-content">Close on scroll</Text>
+                <Button
+                    size="sm"
+                    variant="outline"
+                >
+                    Cancel Escape
+                </Button>
             </Tooltip>
         </HStack>
     );
@@ -82,13 +96,55 @@ export function Arrow() {
     );
 }
 
-export function DisablePortal() {
+export function Controlled() {
+    const [open, setOpen] = useState(false);
+
     return (
-        <Tooltip
-            content="I am rendered directly in the parent component"
-            disablePortal
-        >
-            <Text w="fit-content">Disable portal</Text>
-        </Tooltip>
+        <VStack align="start">
+            <Button
+                onClick={() => setOpen((prev) => !prev)}
+                size="sm"
+                variant="outline"
+            >
+                {open ? "Close" : "Open"} tooltip
+            </Button>
+            <Tooltip
+                content="Controlled tooltip content"
+                onOpenChange={(next) => setOpen(next)}
+                open={open}
+            >
+                <Button size="sm">Trigger</Button>
+            </Tooltip>
+        </VStack>
+    );
+}
+
+export function States() {
+    return (
+        <HStack>
+            <Tooltip
+                content="Disabled tooltip"
+                disabled
+            >
+                <Button
+                    size="sm"
+                    variant="outline"
+                >
+                    Disabled
+                </Button>
+            </Tooltip>
+            <Tooltip
+                content="Reduced motion tooltip"
+                delay={0}
+                reduceMotion
+            >
+                <Button
+                    size="sm"
+                    variant="outline"
+                >
+                    Reduced motion
+                </Button>
+            </Tooltip>
+        </HStack>
     );
 }

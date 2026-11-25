@@ -108,7 +108,7 @@ export function WithList() {
                         Try adjusting your search
                     </EmptyState.Description>
                 </VStack>
-                <List.Root variant="marker">
+                <List.Root>
                     <List.Item>Try removing filters</List.Item>
                     <List.Item>Try different keywords</List.Item>
                 </List.Root>

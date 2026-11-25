@@ -9,7 +9,7 @@ export function ControlledAccordion() {
     return (
         <Accordion.Root
             value={value}
-            onValueChange={(details) => setValue(details.value)}
+            onValueChange={(next) => setValue(next)}
         >
             {items.map((itemValue, index) => (
                 <Accordion.Item

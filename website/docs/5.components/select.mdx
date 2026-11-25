@@ -1,15 +1,15 @@
 ---
 title: Select
-description: Select allows to create a dropdown list of options.
+description: Select allows users to choose one or more options from a dropdown list.
 isServerComponent: false
-source: /components/ui/select.tsx
-themeSource: /components/recipes/select.ts
+source: /components/select/index.tsx
+themeSource: /components/select/select.ts
 ---
 
 ## Installation
 
 ```bash
-pnpm dreamy add select
+bunx dreamy add select
 ```
 
 ## Usage
@@ -43,9 +43,9 @@ const fruits = [
 </Select.Root>
 ```
 
-### Popover props
+### Top-layer positioning and UI SDK props
 
-Select dropdown behavior is powered by [Ark UI Select](https://ark-ui.com/docs/components/select) with Dreamy styling and Motion. Use `popoverProps` for portal options (`usePortal`, `portalProps`, `reduceMotion`). Keep placement on the root `positioning` prop. The dropdown joins the shared Portal stack automatically; use `popoverProps.portalProps.containerRef` only for a native or third-party overlay root.
+Select dropdown behavior is powered by [UI SDK Select](https://ui-sdk.dev/docs/components/select) with Dreamy styling and top-layer positioning. Configure placement with `positioning` on `Select.Root` or `side`/`align`/`sideOffset` on `Select.Content`. Use `container` only when targeting a custom container such as a shadow root or iframe.
 
 <Wrapper>
     <Select.Root
@@ -55,20 +55,16 @@ Select dropdown behavior is powered by [Ark UI Select](https://ark-ui.com/docs/c
             { value: "banana", label: "Banana" },
             { value: "orange", label: "Orange" },
         ]}
-        popoverProps={{ usePortal: true }}
     >
         <Select.Trigger placeholder="Select a favorite fruit" />
-        <Select.Content />
+        <Select.Content side="bottom" align="start" />
     </Select.Root>
 </Wrapper>
 
 ```tsx
-<Select.Root
-    items={fruits}
-    popoverProps={{ usePortal: true }}
->
+<Select.Root items={fruits}>
     <Select.Trigger placeholder="Select a favorite fruit" />
-    <Select.Content />
+    <Select.Content side="bottom" align="start" />
 </Select.Root>
 ```
 
@@ -217,7 +213,7 @@ The dropdown list can be `plain` (padded, rounded items) or `stretched` (edge-to
 
 <Wrapper>
     {["plain", "stretched"].map((variant) => (
-        <Select.Root width="xs" variant={variant} items={[
+        <Select.Root key={variant} width="xs" variant={variant} items={[
             { value: "strawberry", label: "Strawberry" },
             { value: "banana", label: "Banana" },
             { value: "orange", label: "Orange" },
@@ -241,7 +237,7 @@ You can customize the background color of the selected item. This will only appl
 
 <Wrapper>
     {["primary", "success", "warning", "info", "error", "none"].map((scheme) => (
-        <>
+        <VStack key={scheme} align="flex-start" gap={1}>
             <Text>{scheme}</Text>
             <Select.Root
                 width="xs"
@@ -256,11 +252,24 @@ You can customize the background color of the selected item. This will only appl
                 <Select.Trigger placeholder="Select a favorite fruit" />
                 <Select.Content />
             </Select.Root>
-        </>
+        </VStack>
     ))}
 </Wrapper>
 
+```tsx
+<Select.Root
+    selectedItemBackgroundScheme="success"
+    defaultValue="strawberry"
+    items={fruits}
+>
+    <Select.Trigger placeholder="Select a favorite fruit" />
+    <Select.Content />
+</Select.Root>
+```
+
 ### Controlled
+
+Use `value` and `onValueChange` to control the selected option.
 
 <Wrapper>
     <ControlledSelect />
@@ -268,7 +277,7 @@ You can customize the background color of the selected item. This will only appl
 
 ```tsx
 export function ControlledSelect() {
-    const [value, setValue] = useState<string>("strawberry");
+    const [value, setValue] = useState<string | null>("strawberry");
 
     const fruits = [
         { value: "strawberry", label: "Strawberry" },
@@ -280,7 +289,7 @@ export function ControlledSelect() {
         <Select.Root
             items={fruits}
             value={value}
-            onChangeValue={setValue}
+            onValueChange={(next) => setValue(next)}
             width="xs"
         >
             <Select.Trigger placeholder="Select a favorite fruit" />
@@ -292,14 +301,13 @@ export function ControlledSelect() {
 
 ### Selected Strategy
 
-You can customize how the selected value is marked as selected.
+You can customize how the selected value is marked as selected using `selectedStrategy` (`"both"`, `"checkmark"`, or `"background"`).
 
 <Wrapper>
     {["both", "checkmark", "background"].map((strategy) => (
-        <>
+        <VStack key={strategy} align="flex-start" gap={1}>
             <Text>{strategy}</Text>
             <Select.Root
-                key={strategy}
                 selectedStrategy={strategy}
                 width="xs"
                 items={[
@@ -311,9 +319,16 @@ You can customize how the selected value is marked as selected.
                 <Select.Trigger placeholder="Select a favorite fruit" />
                 <Select.Content />
             </Select.Root>
-        </>
+        </VStack>
     ))}
 </Wrapper>
+
+```tsx
+<Select.Root selectedStrategy="checkmark" items={fruits}>
+    <Select.Trigger placeholder="Select a favorite fruit" />
+    <Select.Content />
+</Select.Root>
+```
 
 ### With one icon
 
@@ -339,10 +354,10 @@ Single icon is useful if you want to have a global icon for the trigger, instead
 
 ### Clearable
 
-Pass `isClearable` prop to enable clear button.
+Pass `clearable` prop to enable a clear button on the trigger.
 
 <Wrapper>
-    <Select.Root width="xs" isClearable items={[
+    <Select.Root width="xs" clearable items={[
         { value: "cherry", label: "Cherry" },
         { value: "banana", label: "Banana" },
         { value: "orange", label: "Orange" },
@@ -352,12 +367,19 @@ Pass `isClearable` prop to enable clear button.
     </Select.Root>
 </Wrapper>
 
+```tsx
+<Select.Root clearable items={fruits}>
+    <Select.Trigger placeholder="Select a favorite fruit" />
+    <Select.Content />
+</Select.Root>
+```
+
 ### Multiple
 
-You can use the `isMultiple` prop to allow multiple selections. `onChangeValue` returns an array of values. By default, the trigger shows selected labels joined with commas (truncated when they overflow).
+You can use the `multiple` prop to allow multiple selections. `onValueChange` returns an array of values. By default, the trigger shows selected labels joined with commas (truncated when they overflow).
 
 <Wrapper>
-    <Select.Root width="xs" isMultiple items={[
+    <Select.Root width="xs" multiple items={[
         { value: "strawberry", label: "Strawberry" },
         { value: "banana", label: "Banana" },
         { value: "orange", label: "Orange" },
@@ -368,7 +390,7 @@ You can use the `isMultiple` prop to allow multiple selections. `onChangeValue` 
 </Wrapper>
 
 ```tsx
-<Select.Root isMultiple items={fruits}>
+<Select.Root multiple items={fruits}>
     <Select.Trigger placeholder="Select a favorite fruit" />
     <Select.Content />
 </Select.Root>
@@ -380,7 +402,7 @@ You can use the `isMultiple` prop to allow multiple selections. `onChangeValue` 
 Use `multipleSelectedText` on `Select.Trigger` to override the default comma-separated labels.
 
 <Wrapper>
-    <Select.Root width="xs" isMultiple items={[
+    <Select.Root width="xs" multiple items={[
         { value: "strawberry", label: "Strawberry" },
         { value: "banana", label: "Banana" },
         { value: "orange", label: "Orange" },
@@ -402,7 +424,7 @@ Use `multipleSelectedText` on `Select.Trigger` to override the default comma-sep
 
 ### Async loading
 
-You can fetch data when the Select is opened and update the `items` array. Use `showItems={false}` on `Select.Content` to render custom UI (such as a loading spinner) instead of the default items list.
+You can fetch data when the Select is opened via `onOpenChange` and update the `items` array. Use `showItems={false}` on `Select.Content` to render custom UI (such as a loading spinner) instead of the default items list.
 
 <Wrapper>
     <AsyncSelect />
@@ -413,8 +435,8 @@ export function AsyncSelect() {
     const [isLoading, setIsLoading] = useState(false);
     const [items, setItems] = useState<{ value: string; label: string }[]>([]);
 
-    function fetchFruits() {
-        if (items.length > 0) return;
+    function fetchFruits(open: boolean) {
+        if (!open || items.length > 0) return;
 
         setIsLoading(true);
         fetch("/api/fake-select-data")
@@ -426,7 +448,7 @@ export function AsyncSelect() {
     }
 
     return (
-        <Select.Root items={items} onOpen={fetchFruits} width="xs">
+        <Select.Root items={items} onOpenChange={fetchFruits} width="xs">
             <Select.Trigger placeholder="Select a favorite fruit" />
             <Select.Content showItems={!isLoading}>
                 <Spinner color="primary" py={4} />
@@ -475,7 +497,7 @@ const manyItems = Array.from({ length: 250 }, (_, index) => ({
 
 No extra prop is needed inside Dreamy UI overlays. Keep the Select portal enabled so its `dropdown` scope (1000) nests under the parent scope and escapes clipped or scrolling content. In a Modal, it resolves to `calc(1400 + 1000)` automatically.
 
-Later sibling Modals still cover earlier Modal subtrees, and same-layer dropdowns follow open order. Do not disable the portal or add a manual layer or z-index. For a native or third-party overlay, pass its non-scrolling root with `popoverProps={{ portalProps: { containerRef } }}`.
+Later sibling Modals still cover earlier Modal subtrees, and same-layer dropdowns follow open order. Do not disable the portal or add a manual layer or z-index. For a native or third-party overlay, pass its non-scrolling root element via the `container` prop on `Select.Root` or `Select.Content`.
 
 <Wrapper>
     <SelectInModal />
@@ -498,7 +520,7 @@ export function SelectInModal() {
             </Button>
             <Modal.Root
                 open={open}
-                onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
+                onOpenChange={(nextOpen) => setOpen(nextOpen)}
             >
                 <Modal.Overlay />
                 <Modal.Content>
@@ -524,20 +546,42 @@ export function SelectInModal() {
 }
 ```
 
-### Close on select
+### Keep open on select
 
-You can customize whether the Select should close when an item is selected. Default is `true` for non-multiple select, `false` for multiple select.
+Single-select closes automatically when an option is selected, while `multiple` keeps the menu open. To keep a single-select open after selection, intercept `onOpenChange` and call `details.cancel()` when `details.reason === "select"` (or control `open` and ignore `"select"` reasons).
 
 <Wrapper>
-    <Select.Root width="xs" closeOnSelect={false} items={[
-        { value: "strawberry", label: "Strawberry" },
-        { value: "banana", label: "Banana" },
-        { value: "orange", label: "Orange" },
-    ]}>
+    <Select.Root
+        width="xs"
+        onOpenChange={(nextOpen, details) => {
+            if (!nextOpen && details.reason === "select") {
+                details.cancel();
+            }
+        }}
+        items={[
+            { value: "strawberry", label: "Strawberry" },
+            { value: "banana", label: "Banana" },
+            { value: "orange", label: "Orange" },
+        ]}
+    >
         <Select.Trigger placeholder="Select a favorite fruit" />
         <Select.Content />
     </Select.Root>
 </Wrapper>
+
+```tsx
+<Select.Root
+    items={fruits}
+    onOpenChange={(nextOpen, details) => {
+        if (!nextOpen && details.reason === "select") {
+            details.cancel();
+        }
+    }}
+>
+    <Select.Trigger placeholder="Select a favorite fruit" />
+    <Select.Content />
+</Select.Root>
+```
 
 ### Reduce motion
 
@@ -553,3 +597,10 @@ You can disable the animation of the Select by setting the `reduceMotion` prop t
         <Select.Content />
     </Select.Root>
 </Wrapper>
+
+```tsx
+<Select.Root reduceMotion items={fruits}>
+    <Select.Trigger placeholder="Select a favorite fruit" />
+    <Select.Content />
+</Select.Root>
+```

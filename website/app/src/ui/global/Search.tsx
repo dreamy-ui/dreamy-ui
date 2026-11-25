@@ -191,7 +191,7 @@ export default function Search() {
                 }}
                 justifyContent={"space-between"}
                 leftIcon={
-                    <>
+                    <span style={{ display: "inline-flex", alignItems: "center" }}>
                         <Icon
                             as={BiSearch}
                             boxSize={"5"}
@@ -204,7 +204,7 @@ export default function Search() {
                         >
                             Search...
                         </Text>
-                    </>
+                    </span>
                 }
                 onClick={onToggle}
                 rightIcon={<Kbd size={"sm"}>{actionKey} K</Kbd>}

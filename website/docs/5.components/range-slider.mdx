@@ -1,22 +1,40 @@
 ---
 title: Range Slider
-description: Range Slider is a component that allows you to select a range between two values.
+description: Select a range or multiple values along a scale with draggable thumbs, keyboard controls, and accessible formatting.
 isServerComponent: false
 source: /components/range-slider/index.tsx
-themeSource: /components/recipes/range-slider.ts
+themeSource: /components/range-slider/range-slider.ts
 ---
 
 ## Installation
 
 ```bash
-pnpm dreamy add range-slider
+bunx dreamy add range-slider
 ```
+
+## Composition
+
+Range Slider is powered by [UI SDK Slider](https://ui-sdk.dev/docs/react/components/slider) and composed from `RangeSlider.Root`, `RangeSlider.Value`, `RangeSlider.Track`, `RangeSlider.FilledTrack`, two or more `RangeSlider.Thumb` elements (each with an `index` starting at `0`), and optional `RangeSlider.Mark` elements.
+
+```text
+RangeSlider.Root
+├── RangeSlider.Value
+└── RangeSlider.Track
+    ├── RangeSlider.FilledTrack
+    ├── RangeSlider.Thumb (index={0})
+    ├── RangeSlider.Thumb (index={1})
+    └── RangeSlider.Mark
+```
+
+- Give each thumb its own `index` (`0`, `1`, ...) and its own `aria-label` (or pass an array of labels to `aria-label` on `RangeSlider.Root`).
+- Name the group with `Field.Label` or a string `aria-label` on `RangeSlider.Root`.
+- For single-thumb sliders, see [Slider](/docs/components/slider).
 
 ## Usage
 
 <Wrapper>
-	<RangeSlider.Root w="xs">
-		<RangeSlider.Track>
+	<RangeSlider.Root aria-label={["Minimum value", "Maximum value"]}>
+		<RangeSlider.Track maxW="xs">
 			<RangeSlider.FilledTrack />
 			<RangeSlider.Thumb index={0} />
 			<RangeSlider.Thumb index={1} />
@@ -25,8 +43,8 @@ pnpm dreamy add range-slider
 </Wrapper>
 
 ```tsx
-<RangeSlider.Root maxW="xs">
-	<RangeSlider.Track>
+<RangeSlider.Root aria-label={["Minimum value", "Maximum value"]}>
+	<RangeSlider.Track maxW="xs">
 		<RangeSlider.FilledTrack />
 		<RangeSlider.Thumb index={0} />
 		<RangeSlider.Thumb index={1} />
@@ -34,65 +52,279 @@ pnpm dreamy add range-slider
 </RangeSlider.Root>
 ```
 
-### Max, Min, Step
+### Range & Formatting
 
-You can change the max, min, and step of the Range Slider by using the `max`, `min`, and `step` props.
+Pass an array to `defaultValue` or `value` and render one `RangeSlider.Thumb` per number. `RangeSlider.Value` formats the range joined with an en dash.
 
 <Wrapper>
-	<MaxMinRangeSlider />
+	<PriceRangeSlider />
 </Wrapper>
 
 ```tsx
-function MaxMinRangeSlider() {
-    const [value, setValue] = useState<[number, number]>([0, 25]);
+<Field.Root maxW="xs" w="full">
+	<RangeSlider.Root
+		defaultValue={[25, 50]}
+		step={5}
+		format={{
+			style: "currency",
+			currency: "USD",
+			maximumFractionDigits: 0
+		}}
+	>
+		<HStack justify="space-between">
+			<Field.Label>Price</Field.Label>
+			<RangeSlider.Value />
+		</HStack>
+		<RangeSlider.Track>
+			<RangeSlider.FilledTrack />
+			<RangeSlider.Thumb index={0} aria-label="Minimum price" />
+			<RangeSlider.Thumb index={1} aria-label="Maximum price" />
+		</RangeSlider.Track>
+	</RangeSlider.Root>
+</Field.Root>
+```
 
-    return (
-        <>
-            <Text>
-                Range: {value[0]} - {value[1]}
-            </Text>
+### Multiple Thumbs
 
-            <RangeSlider.Root
-                maxW="xs"
-                min={0}
-                max={50}
-                step={5}
-                value={value}
-                onChangeValue={setValue}
-            >
-                <RangeSlider.Track>
-                    <RangeSlider.FilledTrack />
-                    <RangeSlider.Thumb index={0} />
-                    <RangeSlider.Thumb index={1} />
-                </RangeSlider.Track>
-            </RangeSlider.Root>
-        </>
-    );
+Any number of thumbs works the same way. They never pass each other, and pressing the track moves the nearest thumb.
+
+<Wrapper>
+	<MultipleThumbsSlider />
+</Wrapper>
+
+```tsx
+const thumbs = ["Low", "Medium", "High"];
+
+<Field.Root maxW="xs" w="full">
+	<RangeSlider.Root
+		defaultValue={[10, 20, 70]}
+		step={10}
+		format={{ style: "unit", unit: "percent" }}
+	>
+		<HStack justify="space-between">
+			<Field.Label>Alert thresholds</Field.Label>
+			<RangeSlider.Value />
+		</HStack>
+		<RangeSlider.Track>
+			<RangeSlider.FilledTrack />
+			{thumbs.map((label, index) => (
+				<RangeSlider.Thumb key={label} index={index} aria-label={label} />
+			))}
+		</RangeSlider.Track>
+	</RangeSlider.Root>
+</Field.Root>
+```
+
+### Distance Between Thumbs
+
+Set `minStepsBetweenThumbs` to keep neighbouring thumbs at least that many steps apart. `Home` and `End` also stop at the minimum allowed distance from a neighbour.
+
+<Wrapper>
+	<MinStepsRangeSlider />
+</Wrapper>
+
+```tsx
+const formatTime = (minutes: number) =>
+	`${Math.floor(minutes / 60)}:${String(minutes % 60).padStart(2, "0")}`;
+
+<Field.Root maxW="xs" w="full">
+	<RangeSlider.Root
+		defaultValue={[540, 1020]}
+		min={0}
+		max={1440}
+		step={15}
+		minStepsBetweenThumbs={16}
+		format={formatTime}
+	>
+		<HStack justify="space-between">
+			<Field.Label>Opening hours</Field.Label>
+			<RangeSlider.Value />
+		</HStack>
+		<RangeSlider.Track>
+			<RangeSlider.FilledTrack />
+			<RangeSlider.Thumb index={0} aria-label="Opens" />
+			<RangeSlider.Thumb index={1} aria-label="Closes" />
+		</RangeSlider.Track>
+	</RangeSlider.Root>
+</Field.Root>
+```
+
+### Controlled
+
+Pass `value` and `onValueChange` to control the range. Every change passes `(value, details)` with `details.reason` and `details.thumb`. Call `details.cancel()` to reject a change.
+
+<Wrapper>
+	<ControlledRangeSlider />
+</Wrapper>
+
+```tsx
+function ControlledRangeSlider() {
+	const [value, setValue] = useState<[number, number]>([0.3, 0.7]);
+
+	return (
+		<VStack align="start" gap={4} maxW="sm" w="full">
+			<Button size="xs" variant="outline" onClick={() => setValue([0.3, 0.7])}>
+				Reset
+			</Button>
+			<Field.Root w="full">
+				<RangeSlider.Root
+					value={value}
+					onValueChange={(next) => setValue(next)}
+					min={0}
+					max={1}
+					step={0.1}
+				>
+					<HStack justify="space-between">
+						<Field.Label>Temperature</Field.Label>
+						<RangeSlider.Value />
+					</HStack>
+					<RangeSlider.Track>
+						<RangeSlider.FilledTrack />
+						<RangeSlider.Thumb index={0} aria-label="Minimum temperature" />
+						<RangeSlider.Thumb index={1} aria-label="Maximum temperature" />
+					</RangeSlider.Track>
+				</RangeSlider.Root>
+			</Field.Root>
+		</VStack>
+	);
 }
+```
+
+### Saving on Commit
+
+Use `onValueCommit` to persist the committed range once the pointer lifts, key releases, or screen reader finishes adjusting.
+
+<Wrapper>
+	<CommitRangeSlider />
+</Wrapper>
+
+```tsx
+<RangeSlider.Root
+	defaultValue={[20, 80]}
+	onValueCommit={(value, details) => console.log(`Saved ${value.join(" – ")} (${details.reason})`)}
+>
+	<RangeSlider.Track>
+		<RangeSlider.FilledTrack />
+		<RangeSlider.Thumb index={0} aria-label="Minimum" />
+		<RangeSlider.Thumb index={1} aria-label="Maximum" />
+	</RangeSlider.Track>
+</RangeSlider.Root>
+```
+
+### Controller
+
+Create a controller with `RangeSlider.createSliderController<[number, number]>()` to read, set, or focus a specific thumb (`controller.focus(0)` / `controller.focus(1)`) from outside the slider.
+
+<Wrapper>
+	<ControllerRangeSlider />
+</Wrapper>
+
+```tsx
+const [controller] = useState(() => RangeSlider.createSliderController<[number, number]>());
+
+<Button onClick={() => controller.setValue([0, 100])}>Expand</Button>
+<Button onClick={() => controller.focus(1)}>Focus Max</Button>
+```
+
+### Form
+
+When `name` is set, a range submits `"start/end"` (for example `"200/800"`). Resetting the form restores `defaultValue`, and `form` lets a slider outside the `<form>` join by id.
+
+<Wrapper>
+	<FormRangeSlider />
+</Wrapper>
+
+```tsx
+<form id={formId}>
+	<Field.Root>
+		<RangeSlider.Root name="price" defaultValue={[200, 800]} max={1000} step={10}>
+			<HStack justify="space-between">
+				<Field.Label>Price</Field.Label>
+				<RangeSlider.Value />
+			</HStack>
+			<RangeSlider.Track>
+				<RangeSlider.FilledTrack />
+				<RangeSlider.Thumb index={0} aria-label="Minimum price" />
+				<RangeSlider.Thumb index={1} aria-label="Maximum price" />
+			</RangeSlider.Track>
+		</RangeSlider.Root>
+	</Field.Root>
+</form>
+```
+
+### Disabled & Read-Only
+
+Set `disabled` to prevent focus, interaction, and form submission, or `readOnly` to keep thumbs focusable and submitted without allowing value edits.
+
+<Wrapper>
+	<VStack align="start" gap={6} maxW="xs" w="full">
+		<RangeSlider.Root defaultValue={[20, 80]} disabled aria-label={["Min disabled", "Max disabled"]}>
+			<RangeSlider.Track>
+				<RangeSlider.FilledTrack />
+				<RangeSlider.Thumb index={0} />
+				<RangeSlider.Thumb index={1} />
+			</RangeSlider.Track>
+		</RangeSlider.Root>
+		<RangeSlider.Root defaultValue={[30, 70]} readOnly aria-label={["Min read-only", "Max read-only"]}>
+			<RangeSlider.Track>
+				<RangeSlider.FilledTrack />
+				<RangeSlider.Thumb index={0} />
+				<RangeSlider.Thumb index={1} />
+			</RangeSlider.Track>
+		</RangeSlider.Root>
+	</VStack>
+</Wrapper>
+
+```tsx
+<RangeSlider.Root defaultValue={[20, 80]} disabled>...</RangeSlider.Root>
+<RangeSlider.Root defaultValue={[30, 70]} readOnly>...</RangeSlider.Root>
+```
+
+### Custom Rendering
+
+Pass function `children` or `render` to `RangeSlider.Value` and `RangeSlider.Thumb` to render custom labels or live thumb badges using `state.thumbValue` and `state.percent`.
+
+<Wrapper>
+	<CustomRenderingRangeSlider />
+</Wrapper>
+
+```tsx
+<RangeSlider.Root defaultValue={[25, 75]}>
+	<RangeSlider.Value>{(state) => `${state.text}%`}</RangeSlider.Value>
+	<RangeSlider.Track>
+		<RangeSlider.FilledTrack />
+		<RangeSlider.Thumb index={0} aria-label="Minimum">
+			{(state) => <span>{state.thumbValue}</span>}
+		</RangeSlider.Thumb>
+		<RangeSlider.Thumb index={1} aria-label="Maximum">
+			{(state) => <span>{state.thumbValue}</span>}
+		</RangeSlider.Thumb>
+	</RangeSlider.Track>
+</RangeSlider.Root>
 ```
 
 ### Size
 
-You can change the size of the Range Slider by using the `size` prop. This adjusts both the track height/width and the thumb size.
+Change the size of the Range Slider using `size` (`sm`, `md`, `lg`).
 
 <Wrapper>
 	<VStack w="full" gap={10}>
-		<RangeSlider.Root size='sm' maxW="xs">
-			<RangeSlider.Track>
+		<RangeSlider.Root size="sm" aria-label={["Sm min", "Sm max"]}>
+			<RangeSlider.Track maxW="xs">
 				<RangeSlider.FilledTrack />
 				<RangeSlider.Thumb index={0} />
 				<RangeSlider.Thumb index={1} />
 			</RangeSlider.Track>
 		</RangeSlider.Root>
-		<RangeSlider.Root size='md' maxW="xs">
-			<RangeSlider.Track>
+		<RangeSlider.Root size="md" aria-label={["Md min", "Md max"]}>
+			<RangeSlider.Track maxW="xs">
 				<RangeSlider.FilledTrack />
 				<RangeSlider.Thumb index={0} />
 				<RangeSlider.Thumb index={1} />
 			</RangeSlider.Track>
 		</RangeSlider.Root>
-		<RangeSlider.Root size='lg' maxW="xs">
-			<RangeSlider.Track>
+		<RangeSlider.Root size="lg" aria-label={["Lg min", "Lg max"]}>
+			<RangeSlider.Track maxW="xs">
 				<RangeSlider.FilledTrack />
 				<RangeSlider.Thumb index={0} />
 				<RangeSlider.Thumb index={1} />
@@ -102,81 +334,59 @@ You can change the size of the Range Slider by using the `size` prop. This adjus
 </Wrapper>
 
 ```tsx
-<VStack w="full" gap={10}>
-	<RangeSlider.Root size='sm' maxW="xs">
-		<RangeSlider.Track>
-			<RangeSlider.FilledTrack />
-			<RangeSlider.Thumb index={0} />
-			<RangeSlider.Thumb index={1} />
-		</RangeSlider.Track>
-	</RangeSlider.Root>
-	<RangeSlider.Root size='md' maxW="xs">
-		<RangeSlider.Track>
-			<RangeSlider.FilledTrack />
-			<RangeSlider.Thumb index={0} />
-			<RangeSlider.Thumb index={1} />
-		</RangeSlider.Track>
-	</RangeSlider.Root>
-	<RangeSlider.Root size='lg' maxW="xs">
-		<RangeSlider.Track>
-			<RangeSlider.FilledTrack />
-			<RangeSlider.Thumb index={0} />
-			<RangeSlider.Thumb index={1} />
-		</RangeSlider.Track>
-	</RangeSlider.Root>
-</VStack>
+<RangeSlider.Root size="lg">...</RangeSlider.Root>
 ```
 
 ### Scheme
 
-You can change the scheme of the Range Slider by using the `scheme` prop.
+Change the color scheme of the Range Slider using `scheme`.
 
 <Wrapper>
 	<VStack w="full" gap={10}>
-		<RangeSlider.Root scheme="primary" maxW="xs">
-			<RangeSlider.Track>
+		<RangeSlider.Root scheme="primary" aria-label={["Primary min", "Primary max"]}>
+			<RangeSlider.Track maxW="xs">
 				<RangeSlider.FilledTrack />
 				<RangeSlider.Thumb index={0} />
 				<RangeSlider.Thumb index={1} />
 			</RangeSlider.Track>
 		</RangeSlider.Root>
-		<RangeSlider.Root scheme="secondary" maxW="xs">
-			<RangeSlider.Track>
+		<RangeSlider.Root scheme="secondary" aria-label={["Secondary min", "Secondary max"]}>
+			<RangeSlider.Track maxW="xs">
 				<RangeSlider.FilledTrack />
 				<RangeSlider.Thumb index={0} />
 				<RangeSlider.Thumb index={1} />
 			</RangeSlider.Track>
 		</RangeSlider.Root>
-		<RangeSlider.Root scheme="info" maxW="xs">
-			<RangeSlider.Track>
+		<RangeSlider.Root scheme="info" aria-label={["Info min", "Info max"]}>
+			<RangeSlider.Track maxW="xs">
 				<RangeSlider.FilledTrack />
 				<RangeSlider.Thumb index={0} />
 				<RangeSlider.Thumb index={1} />
 			</RangeSlider.Track>
 		</RangeSlider.Root>
-		<RangeSlider.Root scheme="success" maxW="xs">
-			<RangeSlider.Track>
+		<RangeSlider.Root scheme="success" aria-label={["Success min", "Success max"]}>
+			<RangeSlider.Track maxW="xs">
 				<RangeSlider.FilledTrack />
 				<RangeSlider.Thumb index={0} />
 				<RangeSlider.Thumb index={1} />
 			</RangeSlider.Track>
 		</RangeSlider.Root>
-		<RangeSlider.Root scheme="warning" maxW="xs">
-			<RangeSlider.Track>
+		<RangeSlider.Root scheme="warning" aria-label={["Warning min", "Warning max"]}>
+			<RangeSlider.Track maxW="xs">
 				<RangeSlider.FilledTrack />
 				<RangeSlider.Thumb index={0} />
 				<RangeSlider.Thumb index={1} />
 			</RangeSlider.Track>
 		</RangeSlider.Root>
-		<RangeSlider.Root scheme="error" maxW="xs">
-			<RangeSlider.Track>
+		<RangeSlider.Root scheme="error" aria-label={["Error min", "Error max"]}>
+			<RangeSlider.Track maxW="xs">
 				<RangeSlider.FilledTrack />
 				<RangeSlider.Thumb index={0} />
 				<RangeSlider.Thumb index={1} />
 			</RangeSlider.Track>
 		</RangeSlider.Root>
-		<RangeSlider.Root scheme="none" maxW="xs">
-			<RangeSlider.Track>
+		<RangeSlider.Root scheme="none" aria-label={["None min", "None max"]}>
+			<RangeSlider.Track maxW="xs">
 				<RangeSlider.FilledTrack />
 				<RangeSlider.Thumb index={0} />
 				<RangeSlider.Thumb index={1} />
@@ -186,65 +396,15 @@ You can change the scheme of the Range Slider by using the `scheme` prop.
 </Wrapper>
 
 ```tsx
-<VStack w="full" gap={10}>
-	<RangeSlider.Root scheme="primary" maxW="xs">
-		<RangeSlider.Track>
-			<RangeSlider.FilledTrack />
-			<RangeSlider.Thumb index={0} />
-			<RangeSlider.Thumb index={1} />
-		</RangeSlider.Track>
-	</RangeSlider.Root>
-	<RangeSlider.Root scheme="secondary" maxW="xs">
-		<RangeSlider.Track>
-			<RangeSlider.FilledTrack />
-			<RangeSlider.Thumb index={0} />
-			<RangeSlider.Thumb index={1} />
-		</RangeSlider.Track>
-	</RangeSlider.Root>
-	<RangeSlider.Root scheme="info" maxW="xs">
-		<RangeSlider.Track>
-			<RangeSlider.FilledTrack />
-			<RangeSlider.Thumb index={0} />
-			<RangeSlider.Thumb index={1} />
-		</RangeSlider.Track>
-	</RangeSlider.Root>
-	<RangeSlider.Root scheme="success" maxW="xs">
-		<RangeSlider.Track>
-			<RangeSlider.FilledTrack />
-			<RangeSlider.Thumb index={0} />
-			<RangeSlider.Thumb index={1} />
-		</RangeSlider.Track>
-	</RangeSlider.Root>
-	<RangeSlider.Root scheme="warning" maxW="xs">
-		<RangeSlider.Track>
-			<RangeSlider.FilledTrack />
-			<RangeSlider.Thumb index={0} />
-			<RangeSlider.Thumb index={1} />
-		</RangeSlider.Track>
-	</RangeSlider.Root>
-	<RangeSlider.Root scheme="error" maxW="xs">
-		<RangeSlider.Track>
-			<RangeSlider.FilledTrack />
-			<RangeSlider.Thumb index={0} />
-			<RangeSlider.Thumb index={1} />
-		</RangeSlider.Track>
-	</RangeSlider.Root>
-	<RangeSlider.Root scheme="none" maxW="xs">
-		<RangeSlider.Track>
-			<RangeSlider.FilledTrack />
-			<RangeSlider.Thumb index={0} />
-			<RangeSlider.Thumb index={1} />
-		</RangeSlider.Track>
-	</RangeSlider.Root>
-</VStack>
+<RangeSlider.Root scheme="info">...</RangeSlider.Root>
 ```
 
 ### Orientation
 
-You can change the orientation of the Range Slider by using the `orientation` prop.
+Set `orientation="vertical"` and provide a height for a vertical range slider.
 
 <Wrapper>
-	<RangeSlider.Root orientation="vertical" h="200px" maxW="xs">
+	<RangeSlider.Root orientation="vertical" h="200px" aria-label={["Min vertical", "Max vertical"]}>
 		<RangeSlider.Track>
 			<RangeSlider.FilledTrack />
 			<RangeSlider.Thumb index={0} />
@@ -254,7 +414,7 @@ You can change the orientation of the Range Slider by using the `orientation` pr
 </Wrapper>
 
 ```tsx
-<RangeSlider.Root orientation="vertical" h="200px" maxW="xs">
+<RangeSlider.Root orientation="vertical" h="200px">
 	<RangeSlider.Track>
 		<RangeSlider.FilledTrack />
 		<RangeSlider.Thumb index={0} />
@@ -265,11 +425,11 @@ You can change the orientation of the Range Slider by using the `orientation` pr
 
 ### Reversed
 
-You can reverse the Range Slider by using the `isReversed` prop. The minimum value moves to the right and arrow keys follow the visual direction. This applies to horizontal sliders only.
+Use `isReversed` to reverse horizontal direction so the minimum value starts on the right.
 
-<Wrapper>	
-	<RangeSlider.Root isReversed maxW="xs">
-		<RangeSlider.Track>
+<Wrapper>
+	<RangeSlider.Root isReversed aria-label={["Min reversed", "Max reversed"]}>
+		<RangeSlider.Track maxW="xs">
 			<RangeSlider.FilledTrack />
 			<RangeSlider.Thumb index={0} />
 			<RangeSlider.Thumb index={1} />
@@ -278,37 +438,24 @@ You can reverse the Range Slider by using the `isReversed` prop. The minimum val
 </Wrapper>
 
 ```tsx
-<RangeSlider.Root isReversed maxW="xs">
-	<RangeSlider.Track>
-		<RangeSlider.FilledTrack />
-		<RangeSlider.Thumb index={0} />
-		<RangeSlider.Thumb index={1} />
-	</RangeSlider.Track>
-</RangeSlider.Root>
+<RangeSlider.Root isReversed>...</RangeSlider.Root>
 ```
 
 ### Custom Thumb Size
 
-You can set a custom thumb size by using the `thumbSize` prop (in pixels). This is useful when you need precise control over the thumb size beyond the predefined `size` variants.
+Use `thumbSize` (in pixels) to override the thumb diameter.
 
 <Wrapper>
 	<VStack w="full" gap={10}>
-		<RangeSlider.Root thumbSize={16} maxW="xs">
-			<RangeSlider.Track>
+		<RangeSlider.Root thumbSize={16} aria-label={["16px min", "16px max"]}>
+			<RangeSlider.Track maxW="xs">
 				<RangeSlider.FilledTrack />
 				<RangeSlider.Thumb index={0} />
 				<RangeSlider.Thumb index={1} />
 			</RangeSlider.Track>
 		</RangeSlider.Root>
-		<RangeSlider.Root thumbSize={32} maxW="xs">
-			<RangeSlider.Track>
-				<RangeSlider.FilledTrack />
-				<RangeSlider.Thumb index={0} />
-				<RangeSlider.Thumb index={1} />
-			</RangeSlider.Track>
-		</RangeSlider.Root>
-		<RangeSlider.Root thumbSize={48} scheme="info" maxW="xs">
-			<RangeSlider.Track>
+		<RangeSlider.Root thumbSize={32} aria-label={["32px min", "32px max"]}>
+			<RangeSlider.Track maxW="xs">
 				<RangeSlider.FilledTrack />
 				<RangeSlider.Thumb index={0} />
 				<RangeSlider.Thumb index={1} />
@@ -318,59 +465,26 @@ You can set a custom thumb size by using the `thumbSize` prop (in pixels). This 
 </Wrapper>
 
 ```tsx
-<VStack w="full" gap={10}>
-	<RangeSlider.Root thumbSize={16} maxW="xs">
-		<RangeSlider.Track>
-			<RangeSlider.FilledTrack />
-			<RangeSlider.Thumb index={0} />
-			<RangeSlider.Thumb index={1} />
-		</RangeSlider.Track>
-	</RangeSlider.Root>
-	<RangeSlider.Root thumbSize={32} maxW="xs">
-		<RangeSlider.Track>
-			<RangeSlider.FilledTrack />
-			<RangeSlider.Thumb index={0} />
-			<RangeSlider.Thumb index={1} />
-		</RangeSlider.Track>
-	</RangeSlider.Root>
-	<RangeSlider.Root thumbSize={48} scheme="info" maxW="xs">
-		<RangeSlider.Track>
-			<RangeSlider.FilledTrack />
-			<RangeSlider.Thumb index={0} />
-			<RangeSlider.Thumb index={1} />
-		</RangeSlider.Track>
-	</RangeSlider.Root>
-</VStack>
+<RangeSlider.Root thumbSize={32}>...</RangeSlider.Root>
 ```
 
-### Controlled
+## Styling & Data Attributes
 
-You can control the Range Slider by using the `value` prop.
+- **CSS variables**: `--slider-indicator-start`, `--slider-indicator-size`, `--slider-thumb-position`.
+- **Data attributes**: `data-orientation`, `data-disabled`, `data-dragging`, `data-invalid`, and `data-index` on each `[data-slot="slider-thumb"]`.
 
-<Wrapper>
-	<ControlledRangeSlider />
-</Wrapper>
+## API Reference
 
-```tsx
-function ControlledRangeSlider() {
-    const [value, setValue] = useState<[number, number]>([25, 75]);
+`RangeSlider.Root` accepts all UI SDK `SliderOptions<Value>` (where `Value extends number[]`, defaulting to `[number, number]`) including `value`, `defaultValue`, `onValueChange`, `onValueCommit`, `min`, `max`, `step`, `largeStep`, `minStepsBetweenThumbs`, `orientation`, `disabled`, `readOnly`, `required`, `name`, `form`, `format`, `locale`, `controller`, and `debug`, plus Dreamy presentation props `size`, `scheme`, `isReversed`, `thumbSize`, and `isInvalid`.
 
-    return (
-        <>
-            <Text>
-                Range: {value[0]} - {value[1]}
-            </Text>
+## Accessibility & Keyboard
 
-            <RangeSlider.Root value={value} onChangeValue={setValue} maxW="xs">
-                <RangeSlider.Track>
-                    <RangeSlider.FilledTrack />
-                    <RangeSlider.Thumb index={0} />
-                    <RangeSlider.Thumb index={1} />
-                </RangeSlider.Track>
-            </RangeSlider.Root>
-        </>
-    );
-}
+Follows the [WAI-ARIA Multi-Thumb Slider Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/slider-multithumb/).
 
-```
-
+| Key | Action |
+| --- | --- |
+| `Tab` / `Shift+Tab` | Move between thumbs in order |
+| `ArrowRight` / `ArrowUp` | Increase focused thumb by `step` |
+| `ArrowLeft` / `ArrowDown` | Decrease focused thumb by `step` |
+| `PageUp` / `PageDown` / `Shift` + Arrow | Move focused thumb by `largeStep` |
+| `Home` / `End` | Move as far as `min` / `max` or neighbouring thumb allows |

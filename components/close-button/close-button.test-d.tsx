@@ -5,7 +5,7 @@ import type { CloseButtonProps } from "./index";
 type ExpectTrue<T extends true> = T;
 
 assertType<string | undefined>({} as CloseButtonProps["aria-label"]);
-assertType<boolean | undefined>({} as CloseButtonProps["isDisabled"]);
+assertType<boolean | undefined>({} as CloseButtonProps["disabled"]);
 assertType<boolean | undefined>({} as CloseButtonProps["isLoading"]);
 assertType<ReactNode | undefined>({} as CloseButtonProps["icon"]);
 
@@ -52,7 +52,7 @@ void (_optionalAriaLabel && _recipeProps && _styleProps && _variant && _size && 
 assertType<CloseButtonProps>({
     "aria-label": "Close dialog",
     icon: null,
-    isDisabled: false,
+    disabled: false,
     variant: "ghost",
     size: "sm",
     scheme: "error",

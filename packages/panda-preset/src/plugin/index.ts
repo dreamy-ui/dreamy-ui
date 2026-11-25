@@ -69,18 +69,18 @@ export function dreamyPlugin(options?: DreamyPluginOptions): PandaPlugin {
                     updateFactoryOption ? ensureTypesFolderExists(styledFolder) : null
                 ]);
 
+                if (removeJsxElementsOption) {
+                    await removeJsxElements(jsxFolder);
+                }
                 if (removeFactoryFromStyleContextOption) {
                     await updateStyleContextTypes(jsxFolder);
                     await writeDreamyStyleContext(jsxFolder);
                     await removeGeneratedRecipeContextFiles(jsxFolder);
                 }
-                if (removeJsxElementsOption) {
-                    await removeJsxElements(jsxFolder);
-                }
                 if (updateFactoryOption && typesFolder) {
                     await updateFactory(jsxFolder, typesFolder);
                     await updateJsxStyleProps(typesFolder);
-                    await updatePatternTypeImports(patternsFolder);
+                    await updatePatternTypeImports(patternsFolder, typesFolder);
                     await updateIsValidProp(typesFolder, jsxFolder);
                     await updateSplitJsxProps(jsxFolder);
                 }

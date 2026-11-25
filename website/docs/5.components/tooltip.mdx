@@ -1,20 +1,20 @@
 ---
 title: Tooltip
-description: Tooltip is an interactive component that displays information when hovering over an element.
+description: Tooltip is an interactive component that displays information when hovering or focusing an element.
 isServerComponent: false
 source: /components/tooltip/index.tsx
-themeSource: /components/recipes/tooltip.ts
+themeSource: /components/tooltip/tooltip.ts
 ---
 
 ## Installation
 
 ```bash
-pnpm dreamy add tooltip
+bunx dreamy add tooltip
 ```
 
 ## Usage
 
-Tooltip behavior is powered by [Ark UI Tooltip](https://ark-ui.com/docs/components/tooltip) with Dreamy styling and Motion on the floating surface. Use `open`, `defaultOpen`, and `onOpenChange` for controlled state. An `id` is required by Ark and is generated automatically when omitted. `hasArrow` defaults to `true`.
+Tooltip behavior is powered by [UI SDK Tooltip](https://ui-sdk.dev/docs/components/tooltip) with Dreamy styling and top-layer positioning. Use `open`, `defaultOpen`, and `onOpenChange` for controlled state. `hasArrow` defaults to `true`.
 
 Base usage of a Tooltip.
 
@@ -32,65 +32,51 @@ Base usage of a Tooltip.
 
 ### Open and close delay
 
-You can control the open and close delay of the tooltip by using the `openDelay` and `closeDelay` props.
+You can control the open and close delay of the tooltip with `delay` and `closeDelay`.
 
 <Wrapper>
-	<Tooltip content="I am visible on hover after 1000 miliseconds" openDelay={1000}>
+	<Tooltip content="I am visible on hover after 1000 milliseconds" delay={1000}>
 		<Text w="fit-content">Hover me (1s open)</Text>
 	</Tooltip>
-	<Tooltip content="I am closed after 1000 miliseconds" closeDelay={1000}>
+	<Tooltip content="I am closed after 1000 milliseconds" closeDelay={1000}>
 		<Text w="fit-content">Hover me (1s close)</Text>
 	</Tooltip>
 </Wrapper>
 
 ```tsx
-<Tooltip content="I am visible on hover after 1000 miliseconds" openDelay={1000}>
+<Tooltip content="I am visible on hover after 1000 milliseconds" delay={1000}>
     <Text>Hover me (1s open)</Text>
 </Tooltip>
-<Tooltip content="I am closed after 1000 miliseconds" closeDelay={1000}>
+<Tooltip content="I am closed after 1000 milliseconds" closeDelay={1000}>
     <Text>Hover me (1s close)</Text>
 </Tooltip>
 ```
 
-### Close handlers
+### Press and dismissal behavior
 
-You can control the close behavior of the tooltip by using the `closeOnClick`, `closeOnPointerDown`, `closeOnEscape`, and `closeOnScroll` props.
-
-By default, the tooltip will close on click, pointer down, esc key, but not on scroll.
+Use `closeOnPress={false}` to keep the tooltip open when the trigger is pressed (for example, a copy button), `toggleable` to allow press-to-toggle on touch devices, or `onOpenChange` with `details.cancel()` to control dismissal reasons such as `"escape-key"`.
 
 <Wrapper>
-	<Tooltip content="I am not closed on click" closeOnClick={false}>
-		<Text w="fit-content">Close on click false</Text>
+	<Tooltip content="I stay open on press" closeOnPress={false}>
+		<Text w="fit-content">Keep open on press</Text>
 	</Tooltip>
-	<Tooltip content="I am not closed on pointer down" closeOnPointerDown={false}>
-		<Text w="fit-content">Close on pointer down false</Text>
-	</Tooltip>
-	<Tooltip content="I am not closed on esc key" closeOnEscape={false}>
-		<Text w="fit-content">Close on esc key false</Text>
-	</Tooltip>
-	<Tooltip content="I am closed on scroll" closeOnScroll>
-		<Text w="fit-content">Close on scroll</Text>
+	<Tooltip content="Tap or press to toggle" toggleable>
+		<Text w="fit-content">Toggleable</Text>
 	</Tooltip>
 </Wrapper>
 
 ```tsx
-<Tooltip content="I am not closed on click" closeOnClick={false}>
-    <Text>Close on click false</Text>
+<Tooltip content="I stay open on press" closeOnPress={false}>
+    <Text>Keep open on press</Text>
 </Tooltip>
-<Tooltip content="I am not closed on pointer down" closeOnPointerDown={false}>
-    <Text>Close on pointer down false</Text>
-</Tooltip>
-<Tooltip content="I am not closed on esc key" closeOnEscape={false}>
-    <Text>Close on esc key false</Text>
-</Tooltip>
-<Tooltip content="I am closed on scroll" closeOnScroll>
-    <Text>Close on scroll</Text>
+<Tooltip content="Tap or press to toggle" toggleable>
+    <Text>Toggleable</Text>
 </Tooltip>
 ```
 
 ### Arrow
 
-You can control the arrow of the tooltip by using the `hasArrow` and `arrowSize` props.
+You can control the arrow of the tooltip by using `hasArrow` and `arrowSize`.
 
 <Wrapper>
 	<Tooltip content="I have no arrow" hasArrow={false}>
@@ -110,20 +96,18 @@ You can control the arrow of the tooltip by using the `hasArrow` and `arrowSize`
 </Tooltip>
 ```
 
-### Automatic overlay stacking
+### Placement and top-layer stacking
 
-Tooltip uses the shared [Portal](/docs/components/portal) stack at the `tooltip` layer (1800). Inside a Dreamy UI Modal, Popover, or other overlay, it becomes a nested scope and adds that layer to its parent base automatically. Keep the portal enabled—no manual layer or z-index workaround is needed.
-
-Use `portalProps.containerRef` only to target the non-scrolling root of a native or third-party overlay.
+Tooltip uses UI SDK's top-layer positioning and renders in place without requiring a Portal wrapper. Configure placement with `side`, `align`, `sideOffset`, or the `positioning` prop. Use `container` only when targeting a custom container such as a shadow root or iframe.
 
 <Wrapper>
-	<Tooltip content="Automatically stacked tooltip">
+	<Tooltip content="Top-layer tooltip" side="bottom">
 		<Text w="fit-content">Hover me</Text>
 	</Tooltip>
 </Wrapper>
 
 ```tsx
-<Tooltip content="Automatically stacked tooltip">
+<Tooltip content="Top-layer tooltip" side="bottom">
 	<Text>Hover me</Text>
 </Tooltip>
 ```

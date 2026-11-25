@@ -1,4 +1,5 @@
-import type { RefObject } from "react";
+import type { DialogOpenChangeDetails } from "@ui-sdk/react/dialog";
+import type { DrawerOpenChangeReason, SnapPoint } from "@ui-sdk/react/drawer";
 import { assertType } from "vitest";
 import type {
     DrawerBodyProps,
@@ -11,33 +12,47 @@ import type {
 } from "./index";
 
 type ExpectTrue<T extends true> = T;
+type KnownKeys<T> = keyof {
+    [K in keyof T as string extends K ? never : number extends K ? never : K]: K;
+};
 
 assertType<boolean | undefined>({} as DrawerProps["open"]);
 assertType<boolean | undefined>({} as DrawerProps["defaultOpen"]);
-assertType<((details: { open: boolean }) => void) | undefined>({} as DrawerProps["onOpenChange"]);
-assertType<boolean | undefined>({} as DrawerProps["closeOnEscape"]);
-assertType<boolean | undefined>({} as DrawerProps["closeOnInteractOutside"]);
-assertType<boolean | undefined>({} as DrawerProps["trapFocus"]);
-assertType<boolean | undefined>({} as DrawerProps["autoFocus"]);
-assertType<boolean | undefined>({} as DrawerProps["restoreFocus"]);
-assertType<boolean | undefined>({} as DrawerProps["blockScrollOnMount"]);
-assertType<boolean | undefined>({} as DrawerProps["useInert"]);
+assertType<
+    ((open: boolean, details: DialogOpenChangeDetails<DrawerOpenChangeReason>) => void) | undefined
+>({} as DrawerProps["onOpenChange"]);
+assertType<boolean | undefined>({} as DrawerProps["dismissible"]);
+assertType<boolean | "trap-focus" | undefined>({} as DrawerProps["modal"]);
+assertType<SnapPoint[] | undefined>({} as DrawerProps["snapPoints"]);
 assertType<"inside" | "outside" | undefined>({} as DrawerProps["scrollBehavior"]);
-assertType<(() => void) | undefined>({} as DrawerProps["onCloseComplete"]);
+assertType<((open: boolean) => void) | undefined>({} as DrawerProps["onOpenChangeComplete"]);
 
-assertType<RefObject<{ focus(): void } | null> | undefined>({} as DrawerProps["initialFocusRef"]);
-assertType<RefObject<{ focus(): void } | null> | undefined>({} as DrawerProps["finalFocusRef"]);
-
-type _HasFocusProps = ExpectTrue<
-    "initialFocusRef" extends keyof DrawerProps
-        ? "finalFocusRef" extends keyof DrawerProps
-            ? "trapFocus" extends keyof DrawerProps
-                ? "restoreFocus" extends keyof DrawerProps
+type _HasUiSdkProps = ExpectTrue<
+    "dismissible" extends KnownKeys<DrawerProps>
+        ? "snapPoints" extends KnownKeys<DrawerProps>
+            ? "side" extends KnownKeys<DrawerProps>
+                ? "onOpenChange" extends KnownKeys<DrawerProps>
                     ? true
                     : false
                 : false
             : false
         : false
+>;
+
+type _NoLegacyProps = ExpectTrue<
+    "closeOnEscape" extends KnownKeys<DrawerProps>
+        ? false
+        : "closeOnInteractOutside" extends KnownKeys<DrawerProps>
+          ? false
+          : "trapFocus" extends KnownKeys<DrawerProps>
+            ? false
+            : "initialFocusRef" extends KnownKeys<DrawerProps>
+              ? false
+              : "finalFocusRef" extends KnownKeys<DrawerProps>
+                ? false
+                : "portalProps" extends KnownKeys<DrawerProps>
+                  ? false
+                  : true
 >;
 
 type _HasPartProps = ExpectTrue<
@@ -56,38 +71,27 @@ type _HasPartProps = ExpectTrue<
         : false
 >;
 
-const _focusProps: _HasFocusProps = true;
+const _uiSdkProps: _HasUiSdkProps = true;
+const _noLegacyProps: _NoLegacyProps = true;
 const _partProps: _HasPartProps = true;
 
-void (_focusProps && _partProps);
+void (_uiSdkProps && _noLegacyProps && _partProps);
 
 assertType<DrawerProps>({
     open: true,
     onOpenChange: () => {},
-    closeOnEscape: true,
-    closeOnInteractOutside: true,
-    trapFocus: true,
-    autoFocus: true,
-    restoreFocus: true,
-    blockScrollOnMount: true,
+    dismissible: true,
+    modal: true,
+    placement: "right",
+    snapPoints: [0.25, 0.5, 1],
     scrollBehavior: "inside",
-    useInert: true,
-    onCloseComplete: () => {},
+    onOpenChangeComplete: () => {},
     children: null
 });
 
 assertType<DrawerProps>({
     open: false,
-    onOpenChange: () => {},
     children: null,
     // @ts-expect-error scrollBehavior must be inside or outside
     scrollBehavior: "center"
-});
-
-assertType<DrawerProps>({
-    open: true,
-    onOpenChange: () => {},
-    children: null,
-    // @ts-expect-error trapFocus must be boolean
-    trapFocus: "yes"
 });

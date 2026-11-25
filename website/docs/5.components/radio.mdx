@@ -3,50 +3,50 @@ title: Radio
 description: Radio is used to select a single option from a list of options.
 isServerComponent: false
 source: /components/radio/index.tsx
-themeSource: /components/recipes/radio.ts
+themeSource: /components/radio/radio.ts
 ---
 
 ## Installation
 
 ```bash
-pnpm dreamy add radio
+bunx dreamy add radio
 ```
 
 ## Usage
 
-Radio behavior uses [Ark UI Radio Group](https://ark-ui.com/docs/components/radio-group) with Dreamy recipes and `RadioGroup` layout. `isChecked` / `defaultIsChecked` / `onChange` map to Ark checked state and `onCheckedChange`.
+Radio behavior and keyboard navigation are powered by [UI SDK Radio](https://ui-sdk.dev/docs/components/radio). Use `checked`, `defaultChecked`, and `onCheckedChange` on standalone `Radio` components, or `value`, `defaultValue`, `onValueChange`, and `disabled` on `RadioGroup`.
 
 Radio buttons allow users to select one option from a set of mutually exclusive choices. Perfect for single-selection scenarios in forms.
 
 <Wrapper>
-	<Radio defaultChecked>
+	<Radio value="default" defaultChecked>
 		<>Default</>
 	</Radio>
 </Wrapper>
 
 ```tsx
-<Radio defaultChecked>
+<Radio value="default" defaultChecked>
 	Default
 </Radio>
 ```
 
 ### Radio Group
 
-`RadioGroup` allows easily composing multiple Radioes. 
+`RadioGroup` allows easily composing multiple radios.
 
-Use `defaultValue`, `value` and `onChange` in `<RadioGroup />` to control the selected Radioes.
+Use `defaultValue`, `value`, and `onValueChange` in `<RadioGroup />` to control the selected radio.
 
 <Wrapper>
-	<RadioGroup defaultValue={1}>
-		<Radio value={1}>First</Radio>
-		<Radio value={2}>Second</Radio>
+	<RadioGroup defaultValue="1">
+		<Radio value="1">First</Radio>
+		<Radio value="2">Second</Radio>
 	</RadioGroup>
 </Wrapper>
 
 ```tsx
-<RadioGroup defaultValue={1}>
-	<Radio value={1}>First</Radio>
-	<Radio value={2}>Second</Radio>
+<RadioGroup defaultValue="1">
+	<Radio value="1">First</Radio>
+	<Radio value="2">Second</Radio>
 </RadioGroup>
 ```
 
@@ -99,9 +99,27 @@ Change the Radio size.
 </RadioGroup>
 ```
 
+### Disabled
+
+Pass `disabled` to `RadioGroup` to disable all radios in the group, or to an individual `Radio`.
+
+<Wrapper>
+	<RadioGroup defaultValue="1" disabled>
+		<Radio value="1">First</Radio>
+		<Radio value="2">Second</Radio>
+	</RadioGroup>
+</Wrapper>
+
+```tsx
+<RadioGroup defaultValue="1" disabled>
+	<Radio value="1">First</Radio>
+	<Radio value="2">Second</Radio>
+</RadioGroup>
+```
+
 ### Controlled Radio
 
-You can control the Radio state by using `value` and `onChange` in `<RadioGroup />`.
+You can control the Radio state by using `value` and `onValueChange` in `<RadioGroup />`.
 
 <Wrapper>
 	<ControlledRadios />
@@ -109,12 +127,12 @@ You can control the Radio state by using `value` and `onChange` in `<RadioGroup 
 
 ```tsx
 export function ControlledRadios() {
-    const [value, setValue] = useState<string | number>("rr");
+    const [value, setValue] = useState<string | null>("rr");
 
     return (
         <RadioGroup
             value={value}
-            onChange={setValue}
+            onValueChange={(next) => setValue(next)}
         >
             <Radio value="rr">React Router</Radio>
             <Radio value="next">Next.js</Radio>

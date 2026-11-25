@@ -1,6 +1,6 @@
 "use client";
 
-import type { PositioningProps } from "@dreamy-ui/react";
+import type { PositioningProps, UiSdkMotionController } from "@dreamy-ui/react";
 import type {
     PopoverFinalFocus,
     PopoverInitialFocus
@@ -15,6 +15,7 @@ export interface PopoverUiContextValue {
     arrowShadowColor?: string;
     trigger: PopoverTriggerMode;
     reduceMotion: boolean;
+    motion: UiSdkMotionController;
     positioning?: PositioningProps;
     initialFocus?: PopoverInitialFocus;
     finalFocus?: PopoverFinalFocus;

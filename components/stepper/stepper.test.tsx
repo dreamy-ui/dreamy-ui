@@ -75,7 +75,10 @@ describe("Stepper", () => {
         expect(next).not.toBeDisabled();
 
         await user.click(next);
-        expect(onStepChange).toHaveBeenCalledWith(1);
+        expect(onStepChange).toHaveBeenCalledWith(
+            1,
+            expect.objectContaining({ reason: "next-press" })
+        );
     });
 
     it("navigates steps when triggers render a Button with asChild", async () => {
@@ -106,7 +109,10 @@ describe("Stepper", () => {
         expect(prev).toBeDisabled();
 
         await user.click(next);
-        expect(onStepChange).toHaveBeenCalledWith(1);
+        expect(onStepChange).toHaveBeenCalledWith(
+            1,
+            expect.objectContaining({ reason: "next-press" })
+        );
         expect(screen.getByText("Content two")).toBeVisible();
         expect(prev).not.toBeDisabled();
 
@@ -134,7 +140,10 @@ describe("Stepper", () => {
 
         await user.click(screen.getByRole("button", { name: "Next" }));
         expect(onClick).toHaveBeenCalledTimes(1);
-        expect(onStepChange).toHaveBeenCalledWith(1);
+        expect(onStepChange).toHaveBeenCalledWith(
+            1,
+            expect.objectContaining({ reason: "next-press" })
+        );
     });
 
     it("exposes separators and associates active content with tabpanel role", () => {

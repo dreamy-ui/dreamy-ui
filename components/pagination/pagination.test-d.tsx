@@ -1,4 +1,5 @@
-import type { PaginationPageChangeDetails } from "@ark-ui/react/pagination";
+import type { ChangeDetails } from "@ui-sdk/core";
+import type { PaginationPageChangeReason } from "@ui-sdk/react/pagination";
 import { assertType } from "vitest";
 import type {
     PaginationEllipsisProps,
@@ -12,30 +13,41 @@ import type {
 } from "./index";
 
 type ExpectTrue<T extends true> = T;
+type KnownKeys<T> = keyof {
+    [K in keyof T as string extends K ? never : number extends K ? never : K]: K;
+};
 
-assertType<number | undefined>({} as PaginationRootProps["count"]);
+assertType<number | undefined>({} as PaginationRootProps["total"]);
+assertType<number | undefined>({} as PaginationRootProps["pageCount"]);
 assertType<number | undefined>({} as PaginationRootProps["page"]);
 assertType<number | undefined>({} as PaginationRootProps["defaultPage"]);
 assertType<number | undefined>({} as PaginationRootProps["pageSize"]);
-assertType<number | undefined>({} as PaginationRootProps["defaultPageSize"]);
-assertType<number | undefined>({} as PaginationRootProps["siblingCount"]);
-assertType<number | undefined>({} as PaginationRootProps["boundaryCount"]);
-assertType<((details: PaginationPageChangeDetails) => void) | undefined>(
-    {} as PaginationRootProps["onPageChange"]
-);
+assertType<number | undefined>({} as PaginationRootProps["siblings"]);
+assertType<number | undefined>({} as PaginationRootProps["boundaries"]);
+assertType<((page: number) => string) | undefined>({} as PaginationRootProps["getHref"]);
+assertType<
+    ((page: number, details: ChangeDetails<PaginationPageChangeReason>) => void) | undefined
+>({} as PaginationRootProps["onPageChange"]);
 
-assertType<number>({} as PaginationItemProps["value"]);
-assertType<number | undefined>({} as PaginationEllipsisProps["index"]);
+assertType<number>({} as PaginationItemProps["page"]);
 assertType<"short" | "compact" | "long" | undefined>({} as PaginationPageTextProps["format"]);
 
 const _size: PaginationRootProps["size"] = "md";
 
-type _HasCallbackProps = ExpectTrue<"onPageChange" extends keyof PaginationRootProps ? true : false>;
+type _HasCallbackProps = ExpectTrue<
+    "onPageChange" extends KnownKeys<PaginationRootProps> ? true : false
+>;
 
-type _HasRecipeProps = ExpectTrue<"size" extends keyof PaginationRootProps ? true : false>;
+type _HasRecipeProps = ExpectTrue<"size" extends KnownKeys<PaginationRootProps> ? true : false>;
 
-type _HasNoLinkProps = ExpectTrue<
-    "getPageUrl" extends keyof PaginationRootProps ? false : true
+type _HasNoLegacyProps = ExpectTrue<
+    "count" extends KnownKeys<PaginationRootProps>
+        ? false
+        : "siblingCount" extends KnownKeys<PaginationRootProps>
+          ? false
+          : "boundaryCount" extends KnownKeys<PaginationRootProps>
+            ? false
+            : true
 >;
 
 type _HasStyleProps = ExpectTrue<
@@ -72,18 +84,20 @@ type _HasPartProps = ExpectTrue<
 
 const _callbackProps: _HasCallbackProps = true;
 const _recipeProps: _HasRecipeProps = true;
-const _noLinkProps: _HasNoLinkProps = true;
+const _noLegacyProps: _HasNoLegacyProps = true;
 const _styleProps: _HasStyleProps = true;
 const _partProps: _HasPartProps = true;
 
-void (_callbackProps && _recipeProps && _noLinkProps && _styleProps && _partProps && _size);
+void (_callbackProps && _recipeProps && _noLegacyProps && _styleProps && _partProps && _size);
 
 assertType<PaginationRootProps>({
-    count: 100,
+    total: 100,
     page: 1,
     defaultPage: 1,
     pageSize: 10,
-    siblingCount: 1,
+    siblings: 1,
+    boundaries: 1,
+    getHref: (page) => `/posts?page=${page}`,
     onPageChange: () => {},
     translations: { nextTriggerLabel: "Next", itemLabel: ({ page }) => `Page ${page}` },
     size: "md",
@@ -97,13 +111,8 @@ assertType<PaginationRootProps>({
     h: "auto"
 });
 
-assertType<PaginationRootProps["onPageChange"]>(
-    // @ts-expect-error onPageChange receives page details, not a bare number
-    (_page: number) => {}
-);
-
 assertType<PaginationRootProps>({
-    count: 10,
+    total: 10,
     // @ts-expect-error invalid size
     size: "3xl"
 });

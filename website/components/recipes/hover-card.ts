@@ -4,7 +4,7 @@ export const hoverCard = defineSlotRecipe({
     className: "hover-card",
     description:
         "A hover-triggered preview panel for rich contextual content like user profiles or link previews. Panel uses bg.panel, blur, border, and shadow with optional header, body, and footer — only size changes dimensions and padding.",
-    slots: ["content", "header", "body", "footer"],
+    slots: ["content", "header", "body", "footer", "arrow"],
     jsx: [
         "HoverCard.Root",
         "HoverCard.Content",
@@ -17,21 +17,21 @@ export const hoverCard = defineSlotRecipe({
     base: {
         content: {
             "--popper-z-index": "{zIndex.popover}",
+            "--arrow-size": "8px",
+            "--arrow-background": "{colors.bg.panel}",
             maxW: "100vw",
-            "--popper-arrow-bg": "{colors.bg.panel}",
-            "& [data-popper-arrow-inner]": {
-                backdropFilter: "blur({blurs.base})"
-            },
             display: "flex",
             flexDirection: "column",
             position: "relative",
+            overflow: "visible",
             backgroundColor: "bg.panel",
             backdropFilter: "blur({blurs.base})",
             boxShadow: "sm",
             borderWidth: "1px",
             borderStyle: "solid",
             borderColor: "{colors.border}",
-            gap: 0
+            gap: 0,
+            transformOrigin: "var(--transform-origin, center)"
         },
         header: {
             display: "flex",
@@ -54,6 +54,39 @@ export const hoverCard = defineSlotRecipe({
             width: "100%",
             gap: 2,
             p: "var(--hover-card-padding)"
+        },
+        arrow: {
+            "--arrow-size": "8px",
+            "--arrow-background": "{colors.bg.panel}",
+            width: "var(--arrow-size)",
+            height: "var(--arrow-size)",
+            background: "var(--arrow-background)",
+            borderStyle: "solid",
+            borderColor: "border",
+            borderWidth: "0",
+            boxSizing: "border-box",
+            rotate: "45deg",
+            pointerEvents: "none",
+            "&[data-side='bottom']": {
+                top: "calc(var(--arrow-size) / -2)",
+                borderTopWidth: "1px",
+                borderLeftWidth: "1px"
+            },
+            "&[data-side='top']": {
+                bottom: "calc(var(--arrow-size) / -2)",
+                borderBottomWidth: "1px",
+                borderRightWidth: "1px"
+            },
+            "&[data-side='left']": {
+                right: "calc(var(--arrow-size) / -2)",
+                borderTopWidth: "1px",
+                borderRightWidth: "1px"
+            },
+            "&[data-side='right']": {
+                left: "calc(var(--arrow-size) / -2)",
+                borderBottomWidth: "1px",
+                borderLeftWidth: "1px"
+            }
         }
     },
     variants: {

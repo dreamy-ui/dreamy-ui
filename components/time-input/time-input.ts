@@ -59,7 +59,7 @@ export const timeInput = defineSlotRecipe({
                 cursor: "not-allowed",
                 opacity: 0.4
             },
-            "&[data-placeholder]": {
+            "&[data-placeholder], &[data-empty]": {
                 color: "fg.medium"
             }
         },
@@ -85,7 +85,7 @@ export const timeInput = defineSlotRecipe({
                 background: "primary/15",
                 color: "fg"
             },
-            "&[data-placeholder]": {
+            "&[data-placeholder], &[data-empty]": {
                 color: "fg.medium"
             }
         },

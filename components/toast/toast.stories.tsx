@@ -3,10 +3,12 @@ import { useToast } from "@dreamy-ui/react";
 import type { Meta } from "@storybook/react-vite";
 import { useState } from "react";
 
+import type { ComponentType } from "react";
+
 export default {
     title: "Toast",
     decorators: [
-        function ToastStoryProvider(Story) {
+        function ToastStoryProvider(Story: ComponentType) {
             return (
                 <ToastProvider>
                     <Story />

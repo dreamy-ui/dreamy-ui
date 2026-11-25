@@ -9,10 +9,12 @@ themeSource: /components/drawer/drawer.ts
 ## Installation
 
 ```bash
-pnpm dreamy add drawer
+bunx dreamy add drawer
 ```
 
 ## Usage
+
+Use `Drawer.Root` with `Drawer.Overlay`, `Drawer.Content`, and layout parts such as `Drawer.Header`, `Drawer.Body`, and `Drawer.Footer` to build slide-over panels. Control visibility with `open`, `defaultOpen`, and `onOpenChange`.
 
 <Wrapper>
 	<BasicDrawer />
@@ -28,7 +30,7 @@ export default function BasicDrawer() {
                 Open Drawer
             </Button>
 
-            <Drawer.Root open={open} onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}>
+            <Drawer.Root open={open} onOpenChange={(nextOpen) => setOpen(nextOpen)}>
                 <Drawer.Overlay />
                 <Drawer.Content>
                     <Drawer.Header>Drawer Header</Drawer.Header>
@@ -78,7 +80,7 @@ function DrawerVariant({ variant }: { variant: "inset" | "simple" }) {
                 Open {variant} Drawer
             </Button>
 
-            <Drawer.Root open={open} onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)} variant={variant}>
+            <Drawer.Root open={open} onOpenChange={(nextOpen) => setOpen(nextOpen)} variant={variant}>
                 <Drawer.Overlay />
                 <Drawer.Content>
                     <Drawer.Header>{variant} Drawer</Drawer.Header>
@@ -128,7 +130,7 @@ function DrawerPlacement({
                 Open {placement} Drawer
             </Button>
 
-            <Drawer.Root open={open} onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)} placement={placement}>
+            <Drawer.Root open={open} onOpenChange={(nextOpen) => setOpen(nextOpen)} placement={placement}>
                 <Drawer.Overlay />
                 <Drawer.Content>
                     <Drawer.Header>{placement} Drawer</Drawer.Header>
@@ -174,7 +176,7 @@ function DrawerSize({ size }: { size: "xs" | "sm" | "md" | "lg" | "xl" | "2xl" |
                 Open {size} Drawer
             </Button>
 
-            <Drawer.Root open={open} onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)} size={size}>
+            <Drawer.Root open={open} onOpenChange={(nextOpen) => setOpen(nextOpen)} size={size}>
                 <Drawer.Overlay />
                 <Drawer.Content>
                     <Drawer.Header>{size} Drawer</Drawer.Header>
@@ -192,7 +194,7 @@ function DrawerSize({ size }: { size: "xs" | "sm" | "md" | "lg" | "xl" | "2xl" |
 
 ### Snap points and grabber
 
-Bottom (and top) drawers support Ark UI snap points and drag-to-resize. Set `placement="bottom"`, pass `snapPoints` and optional `defaultSnapPoint`, and add `Drawer.Grabber` with `Drawer.GrabberIndicator` at the top of the content.
+Drawers are powered by [UI SDK Drawer](https://ui-sdk.dev/docs/components/drawer) with built-in snap points, spring physics, and drag-to-resize. Set `placement="bottom"`, pass `snapPoints` and optional `defaultSnapPoint`, and add `Drawer.Grabber` with `Drawer.GrabberIndicator` at the top of the content.
 
 ```tsx
 <Drawer.Root
@@ -200,7 +202,7 @@ Bottom (and top) drawers support Ark UI snap points and drag-to-resize. Set `pla
     snapPoints={[0.25, 0.5, 1]}
     defaultSnapPoint={0.5}
     open={open}
-    onOpenChange={({ open }) => setOpen(open)}
+    onOpenChange={(nextOpen) => setOpen(nextOpen)}
 >
     <Drawer.Overlay />
     <Drawer.Content>
@@ -213,7 +215,7 @@ Bottom (and top) drawers support Ark UI snap points and drag-to-resize. Set `pla
 </Drawer.Root>
 ```
 
-`Drawer.Root` also forwards Ark props such as `draggable` on `Drawer.Content`, `closeThreshold`, `swipeVelocityThreshold`, `onSnapPointChange`, `modal={false}`, and `Drawer.Trigger` with `value` for multiple triggers. Use `useDrawerStore` from the drawer module for imperative control via `Drawer.RootProvider`.
+`Drawer.Root` forwards UI SDK `Drawer` props such as `side`, `dismissible`, `onDismissAttempt`, `onSnapPointChange`, `modal`, `modalAbove`, `driver`, `physics`, and `controller` (via `createDrawerController()`).
 
 ### Scroll behavior
 
@@ -233,7 +235,7 @@ export function ScrollableInsideDrawer() {
                 Open Drawer
             </Button>
 
-            <Drawer.Root open={open} onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)} scrollBehavior="inside" size="lg">
+            <Drawer.Root open={open} onOpenChange={(nextOpen) => setOpen(nextOpen)} scrollBehavior="inside" size="lg">
                 <Drawer.Overlay />
                 <Drawer.Content>
                     <Drawer.Header>Drawer Header</Drawer.Header>

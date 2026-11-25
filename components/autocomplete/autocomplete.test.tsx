@@ -18,10 +18,7 @@ describe("Autocomplete", () => {
         render(
             <Field.Root>
                 <Field.Label>City</Field.Label>
-                <Autocomplete.Root
-                    items={cities}
-                    popoverProps={{ usePortal: false }}
-                >
+                <Autocomplete.Root items={cities}>
                     <Autocomplete.Input placeholder="Search…" />
                     <Autocomplete.Content />
                 </Autocomplete.Root>
@@ -30,7 +27,7 @@ describe("Autocomplete", () => {
 
         const input = screen.getByRole("combobox", { name: "City" });
 
-        expect(input).toHaveAttribute("aria-haspopup", "listbox");
+        expect(input).toHaveAttribute("data-slot", "combobox-input");
         expect(input).toHaveAttribute("aria-expanded", "false");
         expect(input).toHaveAttribute("autocomplete", "off");
 
@@ -45,10 +42,7 @@ describe("Autocomplete", () => {
         const user = userEvent.setup();
 
         render(
-            <Autocomplete.Root
-                items={cities}
-                popoverProps={{ usePortal: false }}
-            >
+            <Autocomplete.Root items={cities}>
                 <Autocomplete.Input
                     aria-label="City"
                     placeholder="Search…"
@@ -64,15 +58,14 @@ describe("Autocomplete", () => {
         expect(screen.getByText("Tokyo")).toBeInTheDocument();
     });
 
-    it("filters options and selects with Enter", async () => {
+    it("filters options and selects by pointer or Enter", async () => {
         const user = userEvent.setup();
-        const onChangeValue = vi.fn();
+        const onValueChange = vi.fn();
 
         render(
             <Autocomplete.Root
                 items={cities}
-                onChangeValue={onChangeValue}
-                popoverProps={{ usePortal: false }}
+                onValueChange={onValueChange}
             >
                 <Autocomplete.Input
                     aria-label="City"
@@ -92,7 +85,7 @@ describe("Autocomplete", () => {
         await user.click(screen.getByRole("option", { name: "London" }));
 
         await waitFor(function waitForSelect() {
-            expect(onChangeValue).toHaveBeenCalledWith("ldn");
+            expect(onValueChange).toHaveBeenCalledWith("ldn", expect.anything());
         });
     });
 
@@ -100,10 +93,7 @@ describe("Autocomplete", () => {
         const user = userEvent.setup();
 
         render(
-            <Autocomplete.Root
-                items={cities}
-                popoverProps={{ usePortal: false }}
-            >
+            <Autocomplete.Root items={cities}>
                 <Autocomplete.Input
                     aria-label="City"
                     placeholder="Search…"
@@ -129,10 +119,7 @@ describe("Autocomplete", () => {
         const user = userEvent.setup();
 
         render(
-            <Autocomplete.Root
-                items={cities}
-                popoverProps={{ usePortal: false }}
-            >
+            <Autocomplete.Root items={cities}>
                 <Autocomplete.Input
                     aria-label="City"
                     placeholder="Search…"
@@ -148,12 +135,9 @@ describe("Autocomplete", () => {
 
     it("wires Field invalid onto the combobox input", () => {
         render(
-            <Field.Root isInvalid>
+            <Field.Root invalid>
                 <Field.Label>City</Field.Label>
-                <Autocomplete.Root
-                    items={cities}
-                    popoverProps={{ usePortal: false }}
-                >
+                <Autocomplete.Root items={cities}>
                     <Autocomplete.Input placeholder="Search…" />
                     <Autocomplete.Content />
                 </Autocomplete.Root>
@@ -169,15 +153,14 @@ describe("Autocomplete", () => {
 
     it("exposes a named clear button when clearable and selected", async () => {
         const user = userEvent.setup();
-        const onChangeValue = vi.fn();
+        const onValueChange = vi.fn();
 
         render(
             <Autocomplete.Root
+                clearable
                 defaultValue="nyc"
-                isClearable
                 items={cities}
-                onChangeValue={onChangeValue}
-                popoverProps={{ usePortal: false }}
+                onValueChange={onValueChange}
             >
                 <Autocomplete.Input
                     aria-label="City"
@@ -191,15 +174,17 @@ describe("Autocomplete", () => {
 
         await user.click(clear);
 
-        expect(onChangeValue).toHaveBeenCalledWith(null);
+        await waitFor(() => {
+            expect(onValueChange).toHaveBeenCalledWith(
+                null,
+                expect.objectContaining({ reason: "clear-press" })
+            );
+        });
     });
 
     it("marks decorative indicators as aria-hidden", () => {
         render(
-            <Autocomplete.Root
-                items={cities}
-                popoverProps={{ usePortal: false }}
-            >
+            <Autocomplete.Root items={cities}>
                 <Autocomplete.Input
                     aria-label="City"
                     placeholder="Search…"
@@ -209,7 +194,6 @@ describe("Autocomplete", () => {
         );
 
         const svgs = document.querySelectorAll("svg[aria-hidden='true']");
-
         expect(svgs.length).toBeGreaterThan(0);
     });
 });

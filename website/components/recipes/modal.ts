@@ -18,35 +18,35 @@ export const modal = defineSlotRecipe({
         overlay: {
             zIndex: "overlay",
             position: "fixed",
-            top: 0,
-            left: 0,
-            height: "100vh",
-            width: "100vw",
+            inset: 0,
             backgroundColor: "rgba(0, 0, 0, 0.4)",
             backdropFilter: "blur({blurs.sm})"
         },
         container: {
             zIndex: "modal",
             position: "fixed",
-            top: 0,
-            left: 0,
-            height: "100vh",
-            width: "100dvw",
+            inset: 0,
             display: "flex",
             justifyContent: "center"
         },
         content: {
+            zIndex: "modal",
+            position: "fixed",
+            inset: 0,
+            margin: "auto",
             display: "flex",
             flexDirection: "column",
-            position: "relative",
-            width: "100%",
+            width: "calc(100% - 2rem)",
             borderRadius: "p-4",
             backgroundColor: "bg.panel",
             backdropFilter: "blur({blurs.base})",
             boxShadow: "md",
-            marginTop: 16,
-            marginBottom: 16,
-            height: "fit-content"
+            height: "fit-content",
+            maxHeight: "calc(100dvh - 2rem)",
+            outline: "none",
+            "&[data-scroll-behavior='outside']": {
+                overflowY: "auto"
+            }
         },
         header: {
             display: "flex",
@@ -64,11 +64,6 @@ export const modal = defineSlotRecipe({
             gap: 4,
             paddingX: 4,
             paddingY: 2
-            // it dissapers the scrollbar
-            // "&::-webkit-scrollbar": {
-            //     backgroundColor: "bg.panel",
-            //     color: "fg"
-            // }
         },
         footer: {
             display: "flex",
@@ -152,14 +147,13 @@ export const modal = defineSlotRecipe({
         placement: {
             top: {
                 content: {
-                    container: {
-                        marginTop: 24
-                    }
+                    marginTop: 16,
+                    marginBottom: "auto"
                 }
             },
             center: {
-                container: {
-                    alignItems: "center"
+                content: {
+                    margin: "auto"
                 }
             }
         }

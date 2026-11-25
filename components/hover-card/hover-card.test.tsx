@@ -5,16 +5,16 @@ import { render } from "../test/render";
 import * as HoverCard from "./index";
 
 describe("HoverCard", () => {
-    it("opens on keyboard focus and associates trigger with content", async () => {
+    it("opens on keyboard focus and exposes UI SDK slots and open state", async () => {
         const user = userEvent.setup();
 
         render(
             <HoverCard.Root
                 closeDelay={0}
-                openDelay={0}
+                delay={0}
             >
                 <HoverCard.Trigger>
-                    <button type="button">@dreamy</button>
+                    <a href="https://dreamy-ui.com">@dreamy</a>
                 </HoverCard.Trigger>
                 <HoverCard.Content>
                     <HoverCard.Header>Dreamy UI</HoverCard.Header>
@@ -23,24 +23,17 @@ describe("HoverCard", () => {
             </HoverCard.Root>
         );
 
-        const trigger = screen.getByRole("button", { name: "@dreamy" });
+        const trigger = screen.getByRole("link", { name: "@dreamy" });
+        expect(trigger).toHaveAttribute("data-slot", "hover-card-trigger");
+
         await user.tab();
         expect(trigger).toHaveFocus();
 
-        const content = await waitFor(() => {
-            const dialog = screen.queryByRole("dialog");
-            const tooltip = screen.queryByRole("tooltip");
-            const node = dialog ?? tooltip;
-            expect(node).toBeTruthy();
-            return node!;
-        });
-
-        expect(content).toHaveAccessibleName("Dreamy UI");
-        expect(content).not.toHaveAttribute("aria-modal", "true");
-
-        const describedBy = trigger.getAttribute("aria-describedby");
-        const controls = trigger.getAttribute("aria-controls");
-        expect(describedBy || controls).toBeTruthy();
+        expect(await screen.findByText("Component library preview")).toBeInTheDocument();
+        const content = document.querySelector("[data-slot='hover-card-content']");
+        expect(content).toBeTruthy();
+        expect(content).toHaveAttribute("data-open", "");
+        expect(trigger).toHaveAttribute("data-open", "");
     });
 
     it("opens on pointer hover", async () => {
@@ -49,7 +42,7 @@ describe("HoverCard", () => {
         render(
             <HoverCard.Root
                 closeDelay={0}
-                openDelay={0}
+                delay={0}
             >
                 <HoverCard.Trigger>
                     <a href="https://dreamy-ui.com">Profile</a>
@@ -62,27 +55,21 @@ describe("HoverCard", () => {
 
         await user.hover(screen.getByRole("link", { name: "Profile" }));
 
-        await waitFor(() => {
-            expect(
-                screen.queryByRole("dialog") ?? screen.queryByRole("tooltip")
-            ).toBeInTheDocument();
-        });
-        expect(screen.getByText("Hover preview")).toBeInTheDocument();
+        expect(await screen.findByText("Hover preview")).toBeInTheDocument();
     });
 
-    it("dismisses on Escape", async () => {
+    it("dismisses on Escape and notifies onOpenChange with details", async () => {
         const user = userEvent.setup();
         const onOpenChange = vi.fn();
 
         render(
             <HoverCard.Root
                 closeDelay={0}
-                closeOnEscape
+                delay={0}
                 onOpenChange={onOpenChange}
-                openDelay={0}
             >
                 <HoverCard.Trigger>
-                    <button type="button">Trigger</button>
+                    <a href="https://dreamy-ui.com">Trigger</a>
                 </HoverCard.Trigger>
                 <HoverCard.Content>
                     <HoverCard.Header>Dismissible</HoverCard.Header>
@@ -92,30 +79,30 @@ describe("HoverCard", () => {
         );
 
         await user.tab();
-        await waitFor(() => {
-            expect(
-                screen.queryByRole("dialog") ?? screen.queryByRole("tooltip")
-            ).toBeInTheDocument();
-        });
+        expect(await screen.findByText("Press Escape")).toBeInTheDocument();
 
         await user.keyboard("{Escape}");
 
         await waitFor(() => {
-            expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
-            expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
+            expect(screen.queryByText("Press Escape")).not.toBeInTheDocument();
         });
-        expect(onOpenChange).toHaveBeenCalledWith({ open: false });
+        expect(onOpenChange).toHaveBeenCalledWith(
+            false,
+            expect.objectContaining({ reason: "escape-key" })
+        );
     });
 
-    it("supports controlled open state and interactive footer without aria-modal", async () => {
+    it("supports controlled open state, arrow, and interactive footer", async () => {
         render(
             <HoverCard.Root
+                arrowSize={10}
                 closeDelay={0}
+                delay={0}
+                hasArrow
                 open
-                openDelay={0}
             >
                 <HoverCard.Trigger>
-                    <button type="button">Controlled</button>
+                    <a href="https://dreamy-ui.com">Controlled</a>
                 </HoverCard.Trigger>
                 <HoverCard.Content>
                     <HoverCard.Header>Interactive</HoverCard.Header>
@@ -130,13 +117,30 @@ describe("HoverCard", () => {
         expect(await screen.findByText("Contains actions")).toBeInTheDocument();
         expect(screen.getByRole("button", { name: "Follow" })).toBeInTheDocument();
 
-        const content =
-            screen.queryByRole("dialog") ??
-            screen.queryByRole("tooltip") ??
-            document.body.querySelector(".hover-card__content");
-        expect(content).toBeTruthy();
-        // Interactive hover cards must not use tooltip semantics (APG).
-        expect(content).toHaveAttribute("role", "dialog");
-        expect(content).not.toHaveAttribute("aria-modal", "true");
+        const arrow = document.querySelector("[data-slot='hover-card-arrow']") as HTMLElement | null;
+        expect(arrow).toBeTruthy();
+        expect(arrow!.style.getPropertyValue("--arrow-size")).toBe("10px");
+    });
+
+    it("does not open when disabled", async () => {
+        const user = userEvent.setup();
+
+        render(
+            <HoverCard.Root
+                closeDelay={0}
+                delay={0}
+                disabled
+            >
+                <HoverCard.Trigger>
+                    <a href="https://dreamy-ui.com">Disabled link</a>
+                </HoverCard.Trigger>
+                <HoverCard.Content>
+                    <HoverCard.Body>Hidden preview</HoverCard.Body>
+                </HoverCard.Content>
+            </HoverCard.Root>
+        );
+
+        await user.hover(screen.getByRole("link", { name: "Disabled link" }));
+        expect(screen.queryByText("Hidden preview")).not.toBeInTheDocument();
     });
 });

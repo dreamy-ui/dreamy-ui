@@ -1,30 +1,35 @@
 "use client";
 
 import {
-    HoverCard as ArkHoverCard,
-    type HoverCardRootProps as ArkHoverCardRootProps,
-    useHoverCardContext as useArkHoverCardContext
-} from "@ark-ui/react/hover-card";
-import {
-    type MaybeRenderProp,
-    Portal,
-    type PortalProps,
+    type DreamyHostProps,
     type PositioningProps,
-    callAllHandlers,
-    runIfFn,
+    UiSdkMotionSync,
+    mergeMotionRefs,
     transformReducedMotion,
     useMotionVariants,
-    useReducedMotion
+    useReducedMotion,
+    useUiSdkMotion
 } from "@dreamy-ui/react";
-import { Children, cloneElement, useCallback, useEffect, useId, useMemo, useState } from "react";
-import { type HTMLDreamyProps, createStyleContext } from "styled-system/jsx";
-import type { HoverCardVariantProps } from "styled-system/recipes";
-import { hoverCard } from "styled-system/recipes";
-import { Box, type BoxProps } from "../box";
+import {
+    HoverCard as UiSdkHoverCard,
+    HoverCardArrow as UiSdkHoverCardArrow,
+    HoverCardContent as UiSdkHoverCardContent,
+    type HoverCardProps as UiSdkHoverCardProps,
+    HoverCardTrigger as UiSdkHoverCardTrigger
+} from "@ui-sdk/react/hover-card";
+import type React from "react";
+import { Children, type CSSProperties, type ReactElement, type ReactNode, useMemo } from "react";
+import { css, cx } from "styled-system/css";
+import {
+    type HTMLDreamyProps,
+    createStyleContext,
+    dreamy,
+    splitCssProps
+} from "styled-system/jsx";
+import { type HoverCardVariantProps, hoverCard } from "styled-system/recipes";
 import { Heading } from "../heading";
-import { MotionBox, type MotionBoxProps } from "../motion";
-import { mapPositioningProps } from "../popover/map-positioning";
-import { useFloatingPresent } from "../popover/use-floating-present";
+import { MotionBox } from "../motion";
+import { mapUiSdkPositioning } from "../popover/map-positioning";
 import { HoverCardUiProvider, useHoverCardUi } from "./hover-card-ui-context";
 
 const { withContext, withRootProvider } = createStyleContext(hoverCard, {
@@ -32,31 +37,24 @@ const { withContext, withRootProvider } = createStyleContext(hoverCard, {
 });
 
 export interface HoverCardProps
-    extends Omit<ArkHoverCardRootProps, "positioning" | "lazyMount" | "unmountOnExit">,
+    extends Omit<UiSdkHoverCardProps, "children">,
         HoverCardVariantProps {
     /**
      * The content of the hover card. Usually `HoverCard.Trigger` and `HoverCard.Content`.
      */
-    children?: MaybeRenderProp<{
-        open: boolean;
-        setOpen: (open: boolean) => void;
-    }>;
+    children?: ReactNode;
     /**
      * If `true`, the hover card will show an arrow pointing to the trigger.
      * @default true
      */
     hasArrow?: boolean;
     /**
-     * If `true`, the hover card content will be rendered in a portal.
-     * @default true
+     * Size of the hover card arrow in pixels.
+     * @default 8
      */
-    usePortal?: boolean;
+    arrowSize?: number;
     /**
-     * Props forwarded to the `Portal` used by `HoverCard.Content`.
-     */
-    portalProps?: Omit<PortalProps, "children">;
-    /**
-     * Positioning configuration for the hover card floating element.
+     * Positioning configuration mapped onto UI SDK `side`/`align`/offset props.
      */
     positioning?: PositioningProps;
     /**
@@ -69,76 +67,49 @@ function HoverCardRoot(props: HoverCardProps) {
     const {
         children,
         hasArrow = true,
-        usePortal = true,
-        portalProps,
+        arrowSize,
         positioning,
-        onOpenChange,
         reduceMotion: reduceMotionProp,
-        openDelay = 300,
+        delay = 300,
         closeDelay = 300,
-        open: openProp,
+        open,
         defaultOpen,
-        ...arkRest
+        onOpenChange,
+        ...rest
     } = props;
 
     const globalReduceMotion = useReducedMotion();
     const reduceMotion = reduceMotionProp ?? globalReduceMotion ?? false;
-
-    const [trackedOpen, setTrackedOpen] = useState(defaultOpen ?? false);
-    const rootOpen = openProp ?? trackedOpen;
-
-    const { present, handleExitComplete } = useFloatingPresent(rootOpen, reduceMotion);
-
-    const handleOpenChange = useCallback(
-        (details: { open: boolean }) => {
-            if (openProp === undefined) {
-                setTrackedOpen(details.open);
-            }
-            onOpenChange?.(details);
-        },
-        [onOpenChange, openProp]
-    );
-
-    const arkRootProps: ArkHoverCardRootProps = {
-        ...arkRest,
-        openDelay,
-        closeDelay,
-        positioning: mapPositioningProps(positioning),
-        open: rootOpen,
-        onOpenChange: handleOpenChange,
-        present,
-        onExitComplete: handleExitComplete,
-        unmountOnExit: false
-    };
+    const motion = useUiSdkMotion({ open, defaultOpen, reduceMotion });
+    const handleOpenChange = motion.wrapOnOpenChange(onOpenChange);
 
     const uiValue = useMemo(
         () => ({
             hasArrow,
-            usePortal,
-            portalProps,
+            arrowSize,
             reduceMotion,
-            present,
-            onExitComplete: handleExitComplete
+            motion,
+            positioning
         }),
-        [handleExitComplete, hasArrow, portalProps, present, reduceMotion, usePortal]
+        [arrowSize, hasArrow, motion, positioning, reduceMotion]
     );
 
     return (
         <HoverCardUiProvider value={uiValue}>
-            <ArkHoverCard.Root {...arkRootProps}>
-                {typeof children === "function" ? (
-                    <ArkHoverCard.Context>
-                        {(api) =>
-                            runIfFn(children, {
-                                open: api.open,
-                                setOpen: api.setOpen
-                            })
-                        }
-                    </ArkHoverCard.Context>
-                ) : (
-                    children
-                )}
-            </ArkHoverCard.Root>
+            <UiSdkHoverCard
+                {...rest}
+                closeDelay={closeDelay}
+                defaultOpen={defaultOpen}
+                delay={delay}
+                onOpenChange={handleOpenChange}
+                open={open}
+            >
+                <UiSdkMotionSync
+                    controller={motion}
+                    open={open}
+                />
+                {children}
+            </UiSdkHoverCard>
         </HoverCardUiProvider>
     );
 }
@@ -152,139 +123,131 @@ export const Root = withRootProvider(HoverCardRoot);
 
 export interface HoverCardArrowProps extends HTMLDreamyProps<"div"> {}
 
+interface HoverCardArrowStyle extends CSSProperties {
+    "--arrow-size"?: string;
+    "--arrow-background"?: string;
+}
+
 /**
  * Hover Card Arrow — pointer indicating the trigger element.
  */
-export function Arrow(props: HoverCardArrowProps) {
-    const side = "bottom";
-    const staticSide =
-        ({ top: "bottom", right: "left", bottom: "top", left: "right" } as const)[side] ?? "bottom";
+export const Arrow = withContext(function HoverCardArrow(props: HoverCardArrowProps) {
+    const { arrowSize } = useHoverCardUi();
+    const { className, style, ...rest } = props;
+    const [cssProps, domProps] = splitCssProps(rest);
+    const mergedClassName = cx(className as string | undefined, css(cssProps));
+
+    const arrowStyle: HoverCardArrowStyle = {
+        "--arrow-size": `${arrowSize ?? 8}px`,
+        "--arrow-background": "var(--colors-bg-panel)",
+        ...(style as CSSProperties | undefined)
+    };
 
     return (
-        <ArkHoverCard.Arrow
-            data-popper-arrow=""
-            style={{
-                backgroundColor: "transparent",
-                position: "absolute",
-                [staticSide]: "calc(var(--popper-arrow-size, 8px) / -2 + 1px)",
-                width: "var(--popper-arrow-size, 8px)",
-                height: "var(--popper-arrow-size, 8px)",
-                zIndex: -1
-            }}
-        >
-            <Box
-                data-popper-arrow-inner=""
-                style={{
-                    transform: "rotate(45deg)",
-                    background: "var(--popper-arrow-bg, var(--popper-arrow-bg))",
-                    top: 0,
-                    left: 0,
-                    width: "100%",
-                    height: "100%",
-                    position: "absolute",
-                    zIndex: "inherit"
-                }}
-                {...props}
-            />
-        </ArkHoverCard.Arrow>
+        <UiSdkHoverCardArrow
+            {...(domProps as unknown as React.ComponentProps<typeof UiSdkHoverCardArrow>)}
+            className={mergedClassName}
+            style={arrowStyle}
+        />
     );
-}
+}, "arrow");
 
-export interface HoverCardTransitionProps extends Omit<MotionBoxProps, "children"> {
-    children?: React.ReactNode;
+type UiSdkHoverCardContentProps = React.ComponentProps<typeof UiSdkHoverCardContent>;
+type UiSdkHoverCardContentPickedProps = Pick<
+    UiSdkHoverCardContentProps,
+    | "side"
+    | "align"
+    | "sideOffset"
+    | "alignOffset"
+    | "collisionPadding"
+    | "arrowPadding"
+    | "anchor"
+    | "container"
+    | "keepMounted"
+>;
+
+export interface HoverCardContentProps
+    extends DreamyHostProps<HTMLDreamyProps<"div">, UiSdkHoverCardContentPickedProps, "children">,
+        UiSdkHoverCardContentPickedProps {
+    children?: ReactNode;
     arrowProps?: HoverCardArrowProps;
-}
-
-function Transition(props: HoverCardTransitionProps) {
-    const { children, arrowProps, onKeyDown, onAnimationComplete, ...rest } = props;
-    const { hasArrow, reduceMotion, contentLabelId, onExitComplete } = useHoverCardUi();
-    const { open, setOpen } = useArkHoverCardContext();
-
-    const { popover: motionVariants } = useMotionVariants();
-
-    return (
-        <MotionBox
-            animate={open ? "initial" : "exit"}
-            initial={reduceMotion ? false : "exit"}
-            variants={transformReducedMotion(motionVariants, reduceMotion)}
-            onAnimationComplete={(definition) => {
-                onAnimationComplete?.(definition);
-                if (!open && !reduceMotion) {
-                    onExitComplete();
-                }
-            }}
-            role="dialog"
-            aria-labelledby={contentLabelId}
-            tabIndex={-1}
-            onKeyDown={(event) => {
-                onKeyDown?.(event);
-                if (event.key === "Escape") {
-                    event.preventDefault();
-                    setOpen(false);
-                }
-            }}
-            {...rest}
-            {...(reduceMotion ? {} : { hidden: false })}
-        >
-            {hasArrow && <Arrow {...arrowProps} />}
-            {children}
-        </MotionBox>
-    );
-}
-
-export interface HoverCardContentProps extends HoverCardTransitionProps {
-    rootProps?: HTMLDreamyProps<"div">;
-    motionProps?: Omit<MotionBoxProps, "children">;
 }
 
 /**
  * Hover Card Content — positioned panel revealed on hover or focus.
  */
 export const Content = withContext(function HoverCardContent(props: HoverCardContentProps) {
-    const { rootProps, motionProps, arrowProps, children, ...contentProps } = props;
-    const { usePortal, portalProps, setContentId, present } = useHoverCardUi();
-    const { open } = useArkHoverCardContext();
-    const contentId = useId();
+    const {
+        children,
+        className,
+        style,
+        arrowProps,
+        side,
+        align,
+        sideOffset,
+        alignOffset,
+        collisionPadding,
+        arrowPadding,
+        anchor,
+        container,
+        keepMounted,
+        ...rest
+    } = props;
 
-    useEffect(() => {
-        setContentId(contentId);
-    }, [contentId, setContentId]);
+    const ui = useHoverCardUi();
+    const { popover: popoverVariants } = useMotionVariants();
+    const mapped = mapUiSdkPositioning(ui.positioning);
+    const [cssProps, domProps] = splitCssProps(rest);
+    const mergedClassName = cx(className as string | undefined, css(cssProps));
 
-    if (typeof document === "undefined") return null;
+    return (
+        <UiSdkHoverCardContent
+            {...(domProps as unknown as UiSdkHoverCardContentProps)}
+            align={align ?? mapped.align}
+            alignOffset={alignOffset ?? mapped.alignOffset}
+            anchor={anchor}
+            arrowPadding={arrowPadding ?? mapped.arrowPadding}
+            className={mergedClassName}
+            collisionPadding={collisionPadding ?? mapped.collisionPadding}
+            container={container}
+            data-reduce-motion={ui.reduceMotion ? "" : undefined}
+            keepMounted={keepMounted}
+            render={(partProps, state) => {
+                const {
+                    ref: partRef,
+                    style: partStyle,
+                    children: partChildren,
+                    ...restPartProps
+                } = partProps as React.ComponentPropsWithRef<"div">;
+                const isOpen = (state as { open?: boolean })?.open ?? ui.motion.isOpen;
 
-    const { style: rootStyle, ...restRootProps } = rootProps ?? {};
-
-    const rendered = (
-        <ArkHoverCard.Positioner
-            {...restRootProps}
-            style={{
-                pointerEvents: open ? undefined : "none",
-                ...rootStyle
+                return (
+                    <MotionBox
+                        {...(restPartProps as Record<string, unknown>)}
+                        animate={isOpen ? "initial" : "exit"}
+                        initial={ui.reduceMotion ? false : "exit"}
+                        onAnimationComplete={() => {
+                            if (!isOpen) {
+                                ui.motion.notifyAnimationComplete("content");
+                            }
+                        }}
+                        ref={mergeMotionRefs(partRef, (el) => {
+                            ui.motion.register("content", el as HTMLElement | null);
+                        })}
+                        style={partStyle as CSSProperties | undefined}
+                        variants={transformReducedMotion(popoverVariants, ui.reduceMotion)}
+                    >
+                        {partChildren}
+                    </MotionBox>
+                );
             }}
+            side={side ?? mapped.side ?? "bottom"}
+            sideOffset={sideOffset ?? mapped.sideOffset ?? 8}
+            style={style as CSSProperties | undefined}
         >
-            <ArkHoverCard.Content asChild>
-                <Transition
-                    id={contentId}
-                    {...motionProps}
-                    {...contentProps}
-                    arrowProps={arrowProps}
-                >
-                    {children}
-                </Transition>
-            </ArkHoverCard.Content>
-        </ArkHoverCard.Positioner>
-    );
-
-    return usePortal ? (
-        <Portal
-            isActive={present}
-            zIndex="var(--z-index-popover)"
-            {...portalProps}
-        >
-            {rendered}
-        </Portal>
-    ) : (
-        rendered
+            {ui.hasArrow ? <Arrow {...arrowProps} /> : null}
+            {children}
+        </UiSdkHoverCardContent>
     );
 }, "content");
 
@@ -295,25 +258,11 @@ export interface HoverCardHeaderProps extends HTMLDreamyProps<"header"> {}
  */
 export const Header = withContext(function HoverCardHeader(props: HoverCardHeaderProps) {
     const { children, ...rest } = props;
-    const labelId = useId();
-    const { setContentLabelId } = useHoverCardUi();
-
-    useEffect(() => {
-        setContentLabelId(labelId);
-    }, [labelId, setContentLabelId]);
 
     return (
-        <Box
-            as="header"
-            id={labelId}
-            {...rest}
-        >
-            {typeof children === "string" ? (
-                <Heading size="md">{children}</Heading>
-            ) : (
-                children
-            )}
-        </Box>
+        <dreamy.header {...rest}>
+            {typeof children === "string" ? <Heading size="md">{children}</Heading> : children}
+        </dreamy.header>
     );
 }, "header");
 
@@ -322,55 +271,31 @@ export interface HoverCardBodyProps extends HTMLDreamyProps<"div"> {}
 /**
  * Hover Card Body — main content area of the hover card.
  */
-export const Body = withContext(function HoverCardBody(props: HoverCardBodyProps) {
-    return <Box {...props} />;
-}, "body");
+export const Body = withContext(dreamy.div, "body");
 
-export interface HoverCardFooterProps extends BoxProps {}
+export interface HoverCardFooterProps extends HTMLDreamyProps<"footer"> {}
 
 /**
  * Hover Card Footer — bottom section for actions or metadata.
  */
-export const Footer = withContext(function HoverCardFooter(props: HoverCardFooterProps) {
-    return (
-        <Box
-            as="footer"
-            {...props}
-        />
-    );
-}, "footer");
+export const Footer = withContext(dreamy.footer, "footer");
+
+export interface HoverCardTriggerProps
+    extends Omit<React.ComponentProps<typeof UiSdkHoverCardTrigger>, "render" | "children"> {
+    children: ReactNode;
+}
 
 /**
  * Hover Card Trigger — interactive element that opens the hover card.
  */
-export function Trigger(props: { children: React.ReactNode }) {
-    const child = Children.only(props.children) as React.ReactElement<Record<string, unknown>> & {
-        ref?: React.Ref<Element>;
-    };
-    const { open, setOpen } = useArkHoverCardContext();
-    const { contentId } = useHoverCardUi();
+export function Trigger(props: HoverCardTriggerProps) {
+    const { children, ...rest } = props;
+    const child = Children.only(children) as ReactElement<Record<string, unknown>>;
 
     return (
-        <ArkHoverCard.Trigger asChild>
-            {cloneElement(child, {
-                ...child.props,
-                ref: child.ref,
-                ...(open && contentId
-                    ? {
-                          "aria-controls": contentId,
-                          "aria-expanded": true
-                      }
-                    : { "aria-expanded": false }),
-                onKeyDown: callAllHandlers(
-                    child.props.onKeyDown as React.KeyboardEventHandler<HTMLElement> | undefined,
-                    (event: React.KeyboardEvent<HTMLElement>) => {
-                        if (event.key === "Escape" && open) {
-                            event.preventDefault();
-                            setOpen(false);
-                        }
-                    }
-                )
-            })}
-        </ArkHoverCard.Trigger>
+        <UiSdkHoverCardTrigger
+            {...rest}
+            render={child}
+        />
     );
 }

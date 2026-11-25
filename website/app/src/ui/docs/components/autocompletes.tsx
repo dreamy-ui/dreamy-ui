@@ -21,7 +21,7 @@ export function ControlledAutocomplete() {
             <Text>Selected: {value ?? "none"}</Text>
             <Autocomplete.Root
                 items={fruits}
-                onChangeValue={setValue}
+                onValueChange={(next) => setValue(next)}
                 value={value}
                 width="xs"
             >
@@ -87,12 +87,13 @@ export function AsyncSearchAutocomplete() {
         >
             <Text>Query: {value || "none"}</Text>
             <Autocomplete.Root
-                filterFn={() => true}
+                filter={false}
                 items={items}
+                onQueryChange={(next) => setValue(next)}
+                query={value}
                 width="xs"
             >
                 <Autocomplete.Input
-                    onChangeValue={setValue}
                     placeholder="Search fruits..."
                 />
                 <Autocomplete.Content
@@ -123,8 +124,8 @@ export function AsyncAutocomplete() {
     const [isLoading, setIsLoading] = useState(true);
     const [items, setItems] = useState<Autocomplete.AutocompleteItem[]>([]);
 
-    function fetchItems() {
-        if (items.length > 0) return;
+    function fetchItems(open: boolean) {
+        if (!open || items.length > 0) return;
 
         fetch("/api/fake-select-data")
             .then((res) => res.json())
@@ -142,7 +143,7 @@ export function AsyncAutocomplete() {
     return (
         <Autocomplete.Root
             items={items}
-            onOpen={fetchItems}
+            onOpenChange={fetchItems}
             width="xs"
         >
             <Autocomplete.Input placeholder="Search a fruit..." />
@@ -228,17 +229,15 @@ export function StationAutocomplete() {
                 <Text>Value: {value}</Text>
             </HStack>
             <Autocomplete.Root
-                filterFn={(item, query) => true}
+                filter={false}
                 items={items}
-                onChangeValue={setValue}
+                onQueryChange={(next) => setRaw(next)}
+                onValueChange={(next) => setValue(next)}
+                query={raw}
                 size={"lg"}
                 value={value}
             >
-                <Autocomplete.Input
-                    onChangeValue={setRaw}
-                    placeholder="Enter station name..."
-                    value={raw}
-                />
+                <Autocomplete.Input placeholder="Enter station name..." />
                 <Autocomplete.Content />
             </Autocomplete.Root>
         </>

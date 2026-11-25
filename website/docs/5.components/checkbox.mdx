@@ -3,25 +3,23 @@ title: Checkbox
 description: Checkbox is used to select one or more options from a list.
 isServerComponent: false
 source: /components/checkbox/index.tsx
-themeSource: /components/recipes/checkbox.ts
+themeSource: /components/checkbox/checkbox.ts
 ---
 
 ## Installation
 
 ```bash
-pnpm dreamy add checkbox
+bunx dreamy add checkbox
 ```
 
 ## Usage
 
-Checkbox behavior and keyboard interaction use [Ark UI Checkbox](https://ark-ui.com/docs/components/checkbox). Dreamy provides recipes, `CheckboxGroup`, and motion on the indicator. Controlled props `isChecked`, `defaultIsChecked`, and `onChange` map to Ark `checked`, `defaultChecked`, and `onCheckedChange`.
+Checkbox behavior and keyboard interaction are powered by [UI SDK Checkbox](https://ui-sdk.dev/docs/components/checkbox), with Dreamy recipes, `CheckboxGroup`, and indicator motion. Use `checked`, `defaultChecked`, and `onCheckedChange` for single checkboxes, and `value`, `defaultValue`, and `onValueChange` on `CheckboxGroup`.
 
 Checkbox allows users to select multiple options from a list. Use it for multi-selection scenarios and boolean preferences.
 
 <Wrapper>
-	<Checkbox>
-		<>Default</>
-	</Checkbox>
+	<Checkbox>Default</Checkbox>
 </Wrapper>
 
 ```tsx
@@ -86,7 +84,7 @@ Change the checkbox size.
 
 ### Controlled
 
-Use `isChecked` and `onChange`, `onChangeValue` to control the checkbox.
+Use `checked` and `onCheckedChange` to control the checkbox.
 
 <Wrapper>
 	<ControlledCheckbox />
@@ -94,14 +92,14 @@ Use `isChecked` and `onChange`, `onChangeValue` to control the checkbox.
 
 ```tsx
 export function ControlledCheckbox() {
-    const [isChecked, setIsChecked] = useState(false);
+    const [checked, setChecked] = useState(false);
 
     return (
         <>
-            <Text>Selected: {isChecked ? "true" : "false"}</Text>
+            <Text>Selected: {checked ? "true" : "false"}</Text>
             <Checkbox
-                isChecked={isChecked}
-                onChangeValue={setIsChecked}
+                checked={checked}
+                onCheckedChange={(next) => setChecked(next === true)}
             >
                 Controlled
             </Checkbox>
@@ -112,7 +110,7 @@ export function ControlledCheckbox() {
 
 ### Checkbox group
 
-Use `CheckboxGroup` to compose multiple checkboxes. Use `value` and `onChange` in `<CheckboxGroup />` to control the selected checkboxes. CheckboxGroup also accepts all the variant props of the Checkbox component.
+Use `CheckboxGroup` to compose multiple checkboxes. Use `value` and `onValueChange` in `<CheckboxGroup />` to control the selected checkboxes. CheckboxGroup also accepts all the variant props of the Checkbox component.
 
 Every Checkbox in the CheckboxGroup should have a unique `value` prop.
 
@@ -122,14 +120,14 @@ Every Checkbox in the CheckboxGroup should have a unique `value` prop.
 
 ```tsx
 function CheckboxGroupControl() {
-    const [value, setValue] = useState<Array<string | number>>(["1"]);
+    const [value, setValue] = useState<string[]>(["1"]);
 
     return (
         <>
             <Text>Selected: {value.join(", ")}</Text>
             <CheckboxGroup
                 value={value}
-                onChange={setValue}
+                onValueChange={(next) => setValue(next)}
             >
                 <Checkbox value="1">Option 1</Checkbox>
                 <Checkbox value="2">Option 2</Checkbox>

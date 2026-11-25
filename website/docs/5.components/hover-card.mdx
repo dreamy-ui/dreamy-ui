@@ -1,20 +1,20 @@
 ---
 title: Hover Card
-description: Displays a card with additional information when hovering over an element.
+description: Displays a card with additional information when hovering or focusing an element.
 isServerComponent: false
 source: /components/hover-card/index.tsx
-themeSource: /components/recipes/hover-card.ts
+themeSource: /components/hover-card/hover-card.ts
 ---
 
 ## Installation
 
 ```bash
-pnpm dreamy add hover-card
+bunx dreamy add hover-card
 ```
 
 ## Usage
 
-Hover Card uses [Ark UI Hover Card](https://ark-ui.com/docs/components/hover-card) for open/close timing, focus, and positioning. Dreamy provides recipes, `Portal` stacking, Motion on `HoverCard.Content`, and the compound API. Use `open`, `defaultOpen`, and `onOpenChange` for controlled state. `hasArrow` defaults to `true` on the root.
+Hover Card uses [UI SDK Hover Card](https://ui-sdk.dev/docs/components/hover-card) for open/close timing, focus, top-layer positioning, and dismissal. Dreamy provides recipes and the compound API. Use `open`, `defaultOpen`, and `onOpenChange` for controlled state. `hasArrow` defaults to `true` on the root.
 
 Hover over the username to see a profile card.
 
@@ -29,9 +29,7 @@ Hover over the username to see a profile card.
                     <Avatar name="Dreamy UI" rounded="none" src="/dreamy-ui-no-bg.png" size="sm" flexShrink={0} />
                     <VStack align="flex-start" gap={1}>
                         <Text fontWeight="semibold">Dreamy UI</Text>
-                        <Text color="fg.medium" fontSize="sm">
-                            A beautiful React component library with smooth animations.
-                        </Text>
+                        <Text color="fg.medium" fontSize="sm">A beautiful React component library with smooth animations.</Text>
                     </VStack>
                 </HStack>
             </HoverCard.Body>
@@ -56,23 +54,6 @@ Hover over the username to see a profile card.
                 </VStack>
             </HStack>
         </HoverCard.Body>
-    </HoverCard.Content>
-</HoverCard.Root>
-```
-
-### Automatic overlay stacking
-
-Hover Card uses the shared [Portal](/docs/components/portal) stack at the `popover` layer (1500). Inside another Dreamy UI overlay, it becomes a nested scope and adds that layer to its parent base automatically. Keep the portal enabled—no manual layer or z-index workaround is needed.
-
-Use `portalProps.containerRef` only to target the non-scrolling root of a native or third-party overlay.
-
-```tsx
-<HoverCard.Root>
-    <HoverCard.Trigger>
-        <Button variant="link">@dreamy_ui</Button>
-    </HoverCard.Trigger>
-    <HoverCard.Content>
-        <HoverCard.Body>Automatically stacked content</HoverCard.Body>
     </HoverCard.Content>
 </HoverCard.Root>
 ```
@@ -142,15 +123,9 @@ Pass `hasArrow={false}` to `HoverCard.Root` to hide the arrow.
         </HoverCard.Trigger>
         <HoverCard.Content>
             <HoverCard.Body>
-                <HStack align="flex-start" gap={3}>
-                    <Avatar name="Dreamy UI" rounded="none" src="/dreamy-ui-no-bg.png" size="sm" flexShrink={0} />
-                    <VStack align="flex-start" gap={1}>
-                        <Text fontWeight="semibold">Dreamy UI</Text>
-                        <Text color="fg.medium" fontSize="sm">
-                            This card has no arrow.
-                        </Text>
-                    </VStack>
-                </HStack>
+                <Text color="fg.medium" fontSize="sm">
+                    This card has no arrow.
+                </Text>
             </HoverCard.Body>
         </HoverCard.Content>
     </HoverCard.Root>
@@ -163,15 +138,9 @@ Pass `hasArrow={false}` to `HoverCard.Root` to hide the arrow.
     </HoverCard.Trigger>
     <HoverCard.Content>
         <HoverCard.Body>
-            <HStack align="flex-start" gap={3}>
-                <Avatar name="Dreamy UI" rounded="none" src="/dreamy-ui-no-bg.png" size="sm" flexShrink={0} />
-                <VStack align="flex-start" gap={1}>
-                    <Text fontWeight="semibold">Dreamy UI</Text>
-                    <Text color="fg.medium" fontSize="sm">
-                        This card has no arrow.
-                    </Text>
-                </VStack>
-            </HStack>
+            <Text color="fg.medium" fontSize="sm">
+                This card has no arrow.
+            </Text>
         </HoverCard.Body>
     </HoverCard.Content>
 </HoverCard.Root>
@@ -190,15 +159,9 @@ Use the `size` prop to control the width of the card. Available sizes are `sm`, 
                 </HoverCard.Trigger>
                 <HoverCard.Content>
                     <HoverCard.Body>
-                        <HStack align="flex-start" gap={3}>
-                            <Avatar name="Dreamy UI" rounded="none" src="/dreamy-ui-no-bg.png" size="sm" flexShrink={0} />
-                            <VStack align="flex-start" gap={1}>
-                                <Text fontWeight="semibold">Dreamy UI</Text>
-                                <Text color="fg.medium" fontSize="sm">
-                                    This is a <Text as="span" fontWeight="semibold">{size}</Text> hover card.
-                                </Text>
-                            </VStack>
-                        </HStack>
+                        <Text color="fg.medium" fontSize="sm">
+                            This is a <Text as="span" fontWeight="semibold">{size}</Text> hover card.
+                        </Text>
                     </HoverCard.Body>
                 </HoverCard.Content>
             </HoverCard.Root>
@@ -215,15 +178,9 @@ Use the `size` prop to control the width of the card. Available sizes are `sm`, 
             </HoverCard.Trigger>
             <HoverCard.Content>
                 <HoverCard.Body>
-                    <HStack align="flex-start" gap={3}>
-                        <Avatar name="Dreamy UI" rounded="none" src="/dreamy-ui-no-bg.png" size="sm" flexShrink={0} />
-                        <VStack align="flex-start" gap={1}>
-                            <Text fontWeight="semibold">Dreamy UI</Text>
-                            <Text color="fg.medium" fontSize="sm">
-                                This is a <Text as="span" fontWeight="semibold">{size}</Text> hover card.
-                            </Text>
-                        </VStack>
-                    </HStack>
+                    <Text color="fg.medium" fontSize="sm">
+                        This is a <Text as="span" fontWeight="semibold">{size}</Text> hover card.
+                    </Text>
                 </HoverCard.Body>
             </HoverCard.Content>
         </HoverCard.Root>
@@ -233,26 +190,20 @@ Use the `size` prop to control the width of the card. Available sizes are `sm`, 
 
 ### Placement
 
-Use the `positioning` prop to control where the card appears relative to the trigger.
+Use `side` and `align` on `HoverCard.Content` (or `positioning` on `HoverCard.Root`) to control where the card appears relative to the trigger.
 
 <Wrapper>
     <HStack gap={4} wrapped>
-        {["top", "bottom", "left", "right"].map((placement) => (
-            <HoverCard.Root key={placement} positioning={{ placement }}>
+        {["top", "bottom", "left", "right"].map((side) => (
+            <HoverCard.Root key={side}>
                 <HoverCard.Trigger>
-                    <Button variant="outline" size="sm">{placement}</Button>
+                    <Button variant="outline" size="sm">{side}</Button>
                 </HoverCard.Trigger>
-                <HoverCard.Content>
+                <HoverCard.Content side={side}>
                     <HoverCard.Body>
-                        <HStack align="flex-start" gap={3}>
-                            <Avatar name="Dreamy UI" rounded="none" src="/dreamy-ui-no-bg.png" size="sm" flexShrink={0} />
-                            <VStack align="flex-start" gap={1}>
-                                <Text fontWeight="semibold">Dreamy UI</Text>
-                                <Text color="fg.medium" fontSize="sm">
-                                    Placed on the <Text as="span" fontWeight="semibold">{placement}</Text>.
-                                </Text>
-                            </VStack>
-                        </HStack>
+                        <Text color="fg.medium" fontSize="sm">
+                            Placed on the <Text as="span" fontWeight="semibold">{side}</Text>.
+                        </Text>
                     </HoverCard.Body>
                 </HoverCard.Content>
             </HoverCard.Root>
@@ -262,22 +213,16 @@ Use the `positioning` prop to control where the card appears relative to the tri
 
 ```tsx
 <HStack gap={4} wrapped>
-    {["top", "bottom", "left", "right"].map((placement) => (
-        <HoverCard.Root key={placement} positioning={{ placement }}>
+    {["top", "bottom", "left", "right"].map((side) => (
+        <HoverCard.Root key={side}>
             <HoverCard.Trigger>
-                <Button variant="outline" size="sm">{placement}</Button>
+                <Button variant="outline" size="sm">{side}</Button>
             </HoverCard.Trigger>
-            <HoverCard.Content>
+            <HoverCard.Content side={side}>
                 <HoverCard.Body>
-                    <HStack align="flex-start" gap={3}>
-                        <Avatar name="Dreamy UI" rounded="none" src="/dreamy-ui-no-bg.png" size="sm" flexShrink={0} />
-                        <VStack align="flex-start" gap={1}>
-                            <Text fontWeight="semibold">Dreamy UI</Text>
-                            <Text color="fg.medium" fontSize="sm">
-                                Placed on the <Text as="span" fontWeight="semibold">{placement}</Text>.
-                            </Text>
-                        </VStack>
-                    </HStack>
+                    <Text color="fg.medium" fontSize="sm">
+                        Placed on the <Text as="span" fontWeight="semibold">{side}</Text>.
+                    </Text>
                 </HoverCard.Body>
             </HoverCard.Content>
         </HoverCard.Root>
@@ -287,45 +232,33 @@ Use the `positioning` prop to control where the card appears relative to the tri
 
 ### Delays
 
-Use `openDelay` and `closeDelay` to control how long before the card opens or closes after the cursor enters or leaves the trigger.
+Use `delay` and `closeDelay` to control how long before the card opens or closes after the cursor enters or leaves the trigger.
 
 <Wrapper>
-    <HoverCard.Root openDelay={800} closeDelay={100}>
+    <HoverCard.Root delay={800} closeDelay={100}>
         <HoverCard.Trigger>
             <Button variant="link">Hover me (slow open)</Button>
         </HoverCard.Trigger>
         <HoverCard.Content>
             <HoverCard.Body>
-                <HStack align="flex-start" gap={3}>
-                    <Avatar name="Dreamy UI" rounded="none" src="/dreamy-ui-no-bg.png" size="sm" flexShrink={0} />
-                    <VStack align="flex-start" gap={1}>
-                        <Text fontWeight="semibold">Dreamy UI</Text>
-                        <Text color="fg.medium" fontSize="sm">
-                            Opens after 800ms, closes after 100ms.
-                        </Text>
-                    </VStack>
-                </HStack>
+                <Text color="fg.medium" fontSize="sm">
+                    Opens after 800ms, closes after 100ms.
+                </Text>
             </HoverCard.Body>
         </HoverCard.Content>
     </HoverCard.Root>
 </Wrapper>
 
 ```tsx
-<HoverCard.Root openDelay={800} closeDelay={100}>
+<HoverCard.Root delay={800} closeDelay={100}>
     <HoverCard.Trigger>
         <Button variant="link">Hover me (slow open)</Button>
     </HoverCard.Trigger>
     <HoverCard.Content>
         <HoverCard.Body>
-            <HStack align="flex-start" gap={3}>
-                <Avatar name="Dreamy UI" rounded="none" src="/dreamy-ui-no-bg.png" size="sm" flexShrink={0} />
-                <VStack align="flex-start" gap={1}>
-                    <Text fontWeight="semibold">Dreamy UI</Text>
-                    <Text color="fg.medium" fontSize="sm">
-                        Opens after 800ms, closes after 100ms.
-                    </Text>
-                </VStack>
-            </HStack>
+            <Text color="fg.medium" fontSize="sm">
+                Opens after 800ms, closes after 100ms.
+            </Text>
         </HoverCard.Body>
     </HoverCard.Content>
 </HoverCard.Root>
@@ -354,22 +287,16 @@ export function ControlledHoverCard() {
             </Button>
             <HoverCard.Root
                 open={open}
-                onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
+                onOpenChange={(nextOpen) => setOpen(nextOpen)}
             >
                 <HoverCard.Trigger>
                     <Button variant="link">@dreamy_ui</Button>
                 </HoverCard.Trigger>
                 <HoverCard.Content>
                     <HoverCard.Body>
-                        <HStack align="flex-start" gap={3}>
-                            <Avatar name="Dreamy UI" rounded="none" src="/dreamy-ui-no-bg.png" size="sm" flexShrink={0} />
-                            <VStack align="flex-start" gap={1}>
-                                <Text fontWeight="semibold">Dreamy UI</Text>
-                                <Text color="fg.medium" fontSize="sm">
-                                    A beautiful React component library with smooth animations.
-                                </Text>
-                            </VStack>
-                        </HStack>
+                        <Text color="fg.medium" fontSize="sm">
+                            Controlled hover card content.
+                        </Text>
                     </HoverCard.Body>
                 </HoverCard.Content>
             </HoverCard.Root>

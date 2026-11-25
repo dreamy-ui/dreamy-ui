@@ -1,9 +1,9 @@
-import { screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import * as Field from "../field";
 import { render } from "../test/render";
-import { Switch } from "./index";
+import { Switch, createSwitchController } from "./index";
 
 function getSwitch(name?: string | RegExp) {
     return screen.getByRole("switch", { name });
@@ -242,7 +242,7 @@ describe("Switch", () => {
 
     it("wires Field hint and error into aria-describedby when invalid", async () => {
         render(
-            <Field.Root isInvalid>
+            <Field.Root invalid>
                 <Field.Label>Email notifications</Field.Label>
                 <Switch />
                 <Field.Hint>We will only send product updates.</Field.Hint>
@@ -287,8 +287,8 @@ describe("Switch", () => {
     it("reflects Field required and disabled on the control", () => {
         render(
             <Field.Root
-                isRequired
-                isDisabled
+                required
+                disabled
             >
                 <Field.Label>Email notifications</Field.Label>
                 <Switch />
@@ -319,5 +319,180 @@ describe("Switch", () => {
         expect(screen.getByRole("group", { name: "Notification preferences" })).toBeInTheDocument();
         expect(getSwitch(/email/i)).toBeInTheDocument();
         expect(getSwitch(/sms/i)).toBeInTheDocument();
+    });
+
+    it("sets and clears data-active on pointer and keyboard press", () => {
+        render(
+            <Switch data-testid="switch-root">
+                Notifications
+            </Switch>
+        );
+
+        const root = screen.getByTestId("switch-root");
+        const control = getSwitch(/notifications/i);
+
+        expect(root).not.toHaveAttribute("data-active");
+
+        fireEvent.pointerDown(root, { button: 0, pointerType: "mouse" });
+        expect(root).toHaveAttribute("data-active", "");
+
+        fireEvent.pointerUp(root);
+        expect(root).not.toHaveAttribute("data-active");
+
+        fireEvent.pointerDown(root, { button: 0, pointerType: "touch" });
+        expect(root).toHaveAttribute("data-active", "");
+
+        fireEvent.pointerCancel(root);
+        expect(root).not.toHaveAttribute("data-active");
+
+        fireEvent(root, new MouseEvent("pointerdown", { bubbles: true, button: 2 }));
+        expect(root).not.toHaveAttribute("data-active");
+
+        fireEvent.keyDown(control, { key: " " });
+        expect(root).toHaveAttribute("data-active", "");
+
+        fireEvent.keyUp(control, { key: " " });
+        expect(root).not.toHaveAttribute("data-active");
+    });
+
+    it("does not set data-active when disabled or read-only", () => {
+        render(
+            <>
+                <Switch
+                    data-testid="disabled-switch"
+                    disabled
+                >
+                    Disabled
+                </Switch>
+                <Switch
+                    data-testid="readonly-switch"
+                    readOnly
+                >
+                    Read only
+                </Switch>
+            </>
+        );
+
+        const disabledRoot = screen.getByTestId("disabled-switch");
+        const readOnlyRoot = screen.getByTestId("readonly-switch");
+
+        fireEvent.pointerDown(disabledRoot, { button: 0, pointerType: "mouse" });
+        expect(disabledRoot).not.toHaveAttribute("data-active");
+
+        fireEvent.pointerDown(readOnlyRoot, { button: 0, pointerType: "mouse" });
+        expect(readOnlyRoot).not.toHaveAttribute("data-active");
+    });
+
+    it("supports imperative control via createSwitchController", () => {
+        const controller = createSwitchController();
+
+        render(
+            <Switch
+                controller={controller}
+                defaultChecked={false}
+            >
+                Wi-Fi
+            </Switch>
+        );
+
+        expect(controller.getChecked()).toBe(false);
+        act(() => {
+            expect(controller.toggle()).toBe(true);
+        });
+        expect(controller.getChecked()).toBe(true);
+        expect(getSwitch("Wi-Fi")).toHaveAttribute("aria-checked", "true");
+
+        act(() => {
+            expect(controller.setChecked(false)).toBe(true);
+        });
+        expect(controller.getChecked()).toBe(false);
+
+        act(() => {
+            controller.focus();
+        });
+        expect(getSwitch("Wi-Fi")).toHaveFocus();
+    });
+
+    it("forwards aria-busy to the switch control and supports state-aware icon", async () => {
+        const user = userEvent.setup();
+
+        render(
+            <Switch
+                aria-busy
+                data-testid="switch-root"
+                defaultChecked={false}
+                icon={(state) => (
+                    <span data-testid="thumb-state">{state.checked ? "ON" : "OFF"}</span>
+                )}
+            >
+                Dark mode
+            </Switch>
+        );
+
+        const root = screen.getByTestId("switch-root");
+        const control = getSwitch("Dark mode");
+
+        expect(control).toHaveAttribute("aria-busy", "true");
+        expect(root).not.toHaveAttribute("aria-busy");
+        expect(screen.getByTestId("thumb-state")).toHaveTextContent("OFF");
+
+        await user.click(control);
+        expect(screen.getByTestId("thumb-state")).toHaveTextContent("ON");
+    });
+
+    it("supports canceling changes via details.cancel() and committing imperatively", async () => {
+        const user = userEvent.setup();
+        const controller = createSwitchController();
+
+        render(
+            <Switch
+                controller={controller}
+                defaultChecked={false}
+                onCheckedChange={(_next, details) => {
+                    if (details.reason !== "imperative") {
+                        details.cancel();
+                    }
+                }}
+            >
+                Automatic backups
+            </Switch>
+        );
+
+        const control = getSwitch("Automatic backups");
+        await user.click(control);
+        expect(control).toHaveAttribute("aria-checked", "false");
+
+        act(() => {
+            controller.setChecked(true, { reason: "imperative" });
+        });
+        expect(control).toHaveAttribute("aria-checked", "true");
+    });
+
+    it("participates in form submission and reset", async () => {
+        const user = userEvent.setup();
+
+        render(
+            <form data-testid="switch-form">
+                <Switch
+                    defaultChecked
+                    name="digest"
+                    value="weekly"
+                >
+                    Weekly digest
+                </Switch>
+                <Switch name="updates">Product updates</Switch>
+            </form>
+        );
+
+        const form = screen.getByTestId("switch-form") as HTMLFormElement;
+        expect(new FormData(form).get("digest")).toBe("weekly");
+        expect(new FormData(form).get("updates")).toBeNull();
+
+        await user.click(getSwitch("Product updates"));
+        expect(new FormData(form).get("updates")).toBe("on");
+
+        form.reset();
+        expect(new FormData(form).get("digest")).toBe("weekly");
+        expect(new FormData(form).get("updates")).toBeNull();
     });
 });

@@ -1,20 +1,23 @@
 "use client";
 
+import type { PositioningProps, UiSdkMotionController } from "@dreamy-ui/react";
 import { createContext, useContext } from "react";
 
 export interface AutocompleteItem {
     value: string;
     label: string;
+    disabled?: boolean;
 }
 
 export interface AutocompleteUiContextValue {
-    visibleItems: AutocompleteItem[];
+    items: AutocompleteItem[];
     size: "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
     triggerVariant: string;
-    isClearable: boolean;
+    clearable: boolean;
+    reduceMotion: boolean;
+    motion: UiSdkMotionController;
+    positioning?: PositioningProps;
     inputFieldProps: React.InputHTMLAttributes<HTMLInputElement>;
-    onInputValueChange: (inputValue: string) => void;
-    onChangeValue?: (value: string | null) => void;
 }
 
 const AutocompleteUiContext = createContext<AutocompleteUiContextValue | null>(null);
@@ -26,7 +29,9 @@ export function AutocompleteUiProvider({
     value: AutocompleteUiContextValue;
     children: React.ReactNode;
 }) {
-    return <AutocompleteUiContext.Provider value={value}>{children}</AutocompleteUiContext.Provider>;
+    return (
+        <AutocompleteUiContext.Provider value={value}>{children}</AutocompleteUiContext.Provider>
+    );
 }
 
 export function useAutocompleteUi() {

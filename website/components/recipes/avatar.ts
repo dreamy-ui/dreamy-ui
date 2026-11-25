@@ -16,8 +16,7 @@ export { parts as avatarParts };
 
 const schemeVariants = getColorSchemes("--avatar-scheme", undefined, "root", true);
 
-const fallbackVisibleSelector =
-    '&:has([data-scope="avatar"][data-part="name"][data-state="visible"])';
+const fallbackVisibleSelector = "&:not([data-loaded])";
 
 export const avatar = defineRecipe({
     className: "avatar",

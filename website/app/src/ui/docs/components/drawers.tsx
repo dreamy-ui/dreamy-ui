@@ -23,7 +23,7 @@ export function BasicDrawer() {
 
             <Drawer.Root
                 open={open}
-                onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
+                onOpenChange={(nextOpen) => setOpen(nextOpen)}
             >
                 <Drawer.Overlay />
                 <Drawer.Content>
@@ -57,7 +57,7 @@ export function VariantDrawers() {
 
                 <Drawer.Root
                     open={open}
-                    onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
+                    onOpenChange={(nextOpen) => setOpen(nextOpen)}
                     variant={variant}
                 >
                     <Drawer.Overlay />
@@ -111,7 +111,7 @@ export function PlacementDrawers() {
 
                 <Drawer.Root
                     open={open}
-                    onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
+                    onOpenChange={(nextOpen) => setOpen(nextOpen)}
                     placement={placement}
                 >
                     <Drawer.Overlay />
@@ -161,7 +161,7 @@ export function SizeDrawers() {
 
                 <Drawer.Root
                     open={open}
-                    onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
+                    onOpenChange={(nextOpen) => setOpen(nextOpen)}
                     size={size}
                 >
                     <Drawer.Overlay />
@@ -208,7 +208,7 @@ export function ScrollableInsideDrawer() {
 
             <Drawer.Root
                 open={open}
-                onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
+                onOpenChange={(nextOpen) => setOpen(nextOpen)}
                 scrollBehavior="inside"
                 size={"lg"}
             >

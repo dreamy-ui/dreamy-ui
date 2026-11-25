@@ -33,29 +33,44 @@ export const editable = defineSlotRecipe({
         },
         cancelButton: {
             color: "fg.medium",
+            fontSize: "sm",
             fontWeight: "medium",
+            px: 2,
+            py: 0.5,
+            rounded: "l1",
             cursor: "pointer",
-            transition: "color {durations.normal} {easings.easeInOut}",
+            transition: "all {durations.normal} {easings.easeInOut}",
             _hover: {
-                color: "fg"
+                color: "fg",
+                bg: "alpha.50"
             }
         },
         submitButton: {
             color: "fg.medium",
+            fontSize: "sm",
             fontWeight: "medium",
+            px: 2,
+            py: 0.5,
+            rounded: "l1",
             cursor: "pointer",
-            transition: "color {durations.normal} {easings.easeInOut}",
+            transition: "all {durations.normal} {easings.easeInOut}",
             _hover: {
-                color: "fg"
+                color: "fg",
+                bg: "alpha.50"
             }
         },
         editButton: {
             color: "fg.medium",
+            fontSize: "sm",
             fontWeight: "medium",
+            px: 2,
+            py: 0.5,
+            rounded: "l1",
             cursor: "pointer",
-            transition: "color {durations.normal} {easings.easeInOut}",
+            transition: "all {durations.normal} {easings.easeInOut}",
             _hover: {
-                color: "fg"
+                color: "fg",
+                bg: "alpha.50"
             }
         }
     },

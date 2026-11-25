@@ -18,7 +18,7 @@ export function ControlledPopover() {
         <Popover.Root
             hasArrow
             open={open}
-            onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
+            onOpenChange={(nextOpen) => setOpen(nextOpen)}
         >
             <Popover.Trigger>
                 <Button
@@ -61,9 +61,8 @@ export function FocusPopover() {
     return (
         <Popover.Root
             hasArrow
-            initialFocusRef={initialFocusRef}
             open={open}
-            onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
+            onOpenChange={(nextOpen) => setOpen(nextOpen)}
         >
             <Popover.Trigger>
                 <Button
@@ -74,7 +73,7 @@ export function FocusPopover() {
                 </Button>
             </Popover.Trigger>
 
-            <Popover.Content>
+            <Popover.Content initialFocus={initialFocusRef}>
                 <Popover.CloseButton />
                 <Popover.Header>Delete Post</Popover.Header>
                 <Popover.Body>

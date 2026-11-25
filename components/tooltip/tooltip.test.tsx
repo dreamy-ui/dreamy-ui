@@ -12,20 +12,21 @@ describe("Tooltip", () => {
             <Tooltip
                 closeDelay={0}
                 content="Helpful tip"
-                openDelay={0}
+                delay={0}
             >
                 <button type="button">Info</button>
             </Tooltip>
         );
 
         const trigger = screen.getByRole("button", { name: "Info" });
-        expect(trigger).not.toHaveAttribute("aria-describedby");
 
         await user.tab();
         expect(trigger).toHaveFocus();
 
         const tooltip = await screen.findByRole("tooltip");
         expect(tooltip).toHaveTextContent("Helpful tip");
+        expect(tooltip).toHaveAttribute("data-slot", "tooltip-content");
+        expect(tooltip).toHaveAttribute("data-open", "");
 
         await waitFor(() => {
             expect(trigger).toHaveAttribute("aria-describedby", tooltip.id);
@@ -39,7 +40,7 @@ describe("Tooltip", () => {
             <Tooltip
                 closeDelay={0}
                 content="Hover tip"
-                openDelay={0}
+                delay={0}
             >
                 <button type="button">Hover me</button>
             </Tooltip>
@@ -50,17 +51,16 @@ describe("Tooltip", () => {
         expect(await screen.findByRole("tooltip")).toHaveTextContent("Hover tip");
     });
 
-    it("dismisses on Escape while open", async () => {
+    it("dismisses on Escape while open and notifies onOpenChange with details", async () => {
         const user = userEvent.setup();
         const onOpenChange = vi.fn();
 
         render(
             <Tooltip
                 closeDelay={0}
-                closeOnEscape
                 content="Esc tip"
+                delay={0}
                 onOpenChange={onOpenChange}
-                openDelay={0}
             >
                 <button type="button">Focus me</button>
             </Tooltip>
@@ -74,7 +74,10 @@ describe("Tooltip", () => {
         await waitFor(() => {
             expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
         });
-        expect(onOpenChange).toHaveBeenCalledWith({ open: false });
+        expect(onOpenChange).toHaveBeenCalledWith(
+            false,
+            expect.objectContaining({ reason: "escape-key" })
+        );
     });
 
     it("hides on blur and does not trap focus or set aria-modal", async () => {
@@ -85,7 +88,7 @@ describe("Tooltip", () => {
                 <Tooltip
                     closeDelay={0}
                     content="Blur tip"
-                    openDelay={0}
+                    delay={0}
                 >
                     <button type="button">First</button>
                 </Tooltip>
@@ -123,7 +126,7 @@ describe("Tooltip", () => {
             <Tooltip
                 closeDelay={0}
                 content="Wrapped"
-                openDelay={0}
+                delay={0}
                 shouldWrapChildren
             >
                 Plain text trigger
@@ -134,14 +137,14 @@ describe("Tooltip", () => {
         expect(await screen.findByRole("tooltip")).toHaveTextContent("Wrapped");
     });
 
-    it("supports placement and disabled", async () => {
+    it("supports controlled open and disabled state", async () => {
         const user = userEvent.setup();
 
-        render(
+        const { rerender } = render(
             <Tooltip
                 content="Disabled tip"
+                delay={0}
                 disabled
-                openDelay={0}
                 positioning={{ placement: "top" }}
             >
                 <button type="button">Disabled tooltip</button>
@@ -150,9 +153,20 @@ describe("Tooltip", () => {
 
         await user.hover(screen.getByRole("button", { name: "Disabled tooltip" }));
         expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
+
+        rerender(
+            <Tooltip
+                content="Controlled tip"
+                open
+            >
+                <button type="button">Controlled tooltip</button>
+            </Tooltip>
+        );
+
+        expect(await screen.findByRole("tooltip")).toHaveTextContent("Controlled tip");
     });
 
-    it("renders an arrow with Ark sizing and background variables when hasArrow is set", async () => {
+    it("renders a UI SDK arrow with sizing and background variables when hasArrow is set", async () => {
         const user = userEvent.setup();
 
         render(
@@ -160,8 +174,8 @@ describe("Tooltip", () => {
                 arrowSize={12}
                 closeDelay={0}
                 content="With arrow"
+                delay={0}
                 hasArrow
-                openDelay={0}
             >
                 <button type="button">Arrow trigger</button>
             </Tooltip>
@@ -170,16 +184,9 @@ describe("Tooltip", () => {
         await user.hover(screen.getByRole("button", { name: "Arrow trigger" }));
         await screen.findByRole("tooltip");
 
-        const arrow = document.querySelector("[data-scope='tooltip'][data-part='arrow']");
-        const arrowTip = document.querySelector("[data-scope='tooltip'][data-part='arrow-tip']");
-
+        const arrow = document.querySelector("[data-slot='tooltip-arrow']") as HTMLElement | null;
         expect(arrow).toBeTruthy();
-        expect(arrowTip).toBeTruthy();
-
-        const arrowEl = arrow as HTMLElement;
-
-        expect(arrowEl.style.getPropertyValue("--arrow-size")).toBe("12px");
-        expect(arrowEl.style.getPropertyValue("--arrow-background")).toBe("var(--tooltip-bg)");
-        expect(arrowEl.style.width).toBe("var(--arrow-size)");
+        expect(arrow!.style.getPropertyValue("--arrow-size")).toBe("12px");
+        expect(arrow!.style.getPropertyValue("--arrow-background")).toBe("var(--tooltip-bg)");
     });
 });

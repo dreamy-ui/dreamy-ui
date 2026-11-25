@@ -8,7 +8,6 @@ export const radioCard = defineSlotRecipe({
     slots: ["root", "header", "title", "description", "radio", "label"],
     jsx: [
         "RadioCard.Root",
-        "RadioCard.RootProvider",
         "RadioCard.Header",
         "RadioCard.Title",
         "RadioCard.Description",
@@ -32,6 +31,21 @@ export const radioCard = defineSlotRecipe({
             _disabled: {
                 cursor: "not-allowed",
                 opacity: 0.6
+            },
+            "&[data-readonly]": {
+                cursor: "default"
+            },
+            "&[data-readonly]:hover": {
+                borderColor: "border"
+            },
+            "&[data-readonly]:hover [data-part=wrapper]": {
+                bg: "transparent"
+            },
+            "&[data-invalid]": {
+                borderColor: "error"
+            },
+            "&[data-invalid] [data-part=wrapper]": {
+                borderColor: "error"
             },
             _hover: {
                 borderColor: "border.hover"
@@ -78,6 +92,9 @@ export const radioCard = defineSlotRecipe({
             _disabled: {
                 cursor: "not-allowed",
                 opacity: 0.6
+            },
+            "&[data-readonly]": {
+                cursor: "default"
             },
             "& [data-part=wrapper]": {
                 position: "relative",

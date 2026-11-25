@@ -20,7 +20,7 @@ export function ControlledHoverCard() {
             </Button>
             <HoverCard.Root
                 open={open}
-                onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
+                onOpenChange={(nextOpen) => setOpen(nextOpen)}
             >
                 <HoverCard.Trigger>
                     <Button variant="link">@dreamy_ui</Button>

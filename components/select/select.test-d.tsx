@@ -1,20 +1,29 @@
-import type { ChangeEventHandler } from "react";
+import type { ChangeDetails } from "@ui-sdk/core";
+import type { SelectValueChangeReason } from "@ui-sdk/react/select";
 import { assertType } from "vitest";
 import type { SelectProps, SelectTriggerProps } from "./index";
 
 type ExpectTrue<T extends true> = T;
+type KnownKeys<T> = keyof {
+    [K in keyof T as string extends K ? never : number extends K ? never : K]: K;
+};
 
 type SingleSelectProps = SelectProps<false>;
+type MultiSelectProps = SelectProps<true>;
 
-assertType<ChangeEventHandler<HTMLSelectElement> | undefined>({} as SingleSelectProps["onChange"]);
-assertType<((value: string) => void) | undefined>({} as SingleSelectProps["onChangeValue"]);
-assertType<string | undefined>({} as SingleSelectProps["value"]);
-assertType<string | undefined>({} as SingleSelectProps["defaultValue"]);
-assertType<boolean | undefined>({} as SingleSelectProps["isDisabled"]);
-assertType<boolean | undefined>({} as SingleSelectProps["isInvalid"]);
-assertType<boolean | undefined>({} as SingleSelectProps["isRequired"]);
-assertType<boolean | undefined>({} as SingleSelectProps["isClearable"]);
-assertType<boolean | undefined>({} as SingleSelectProps["isMultiple"]);
+assertType<
+    ((value: string | null, details: ChangeDetails<SelectValueChangeReason>) => void) | undefined
+>({} as SingleSelectProps["onValueChange"]);
+assertType<string | null | undefined>({} as SingleSelectProps["value"]);
+assertType<string | null | undefined>({} as SingleSelectProps["defaultValue"]);
+assertType<string[] | undefined>({} as MultiSelectProps["value"]);
+assertType<string[] | undefined>({} as MultiSelectProps["defaultValue"]);
+assertType<boolean | undefined>({} as SingleSelectProps["disabled"]);
+assertType<boolean | undefined>({} as SingleSelectProps["readOnly"]);
+assertType<boolean | undefined>({} as SingleSelectProps["invalid"]);
+assertType<boolean | undefined>({} as SingleSelectProps["required"]);
+assertType<boolean | undefined>({} as SingleSelectProps["clearable"]);
+assertType<false | undefined>({} as SingleSelectProps["multiple"]);
 
 assertType<string | undefined>({} as SelectTriggerProps["placeholder"]);
 
@@ -23,50 +32,50 @@ const _variant: SingleSelectProps["variant"] = "plain";
 const _triggerVariant: SingleSelectProps["triggerVariant"] = "outline";
 
 type _HasCallbackProps = ExpectTrue<
-    "onChange" extends keyof SingleSelectProps
-        ? "onChangeValue" extends keyof SingleSelectProps
+    "onValueChange" extends KnownKeys<SingleSelectProps>
+        ? "onOpenChange" extends KnownKeys<SingleSelectProps>
             ? true
             : false
         : false
 >;
 
+type _NoLegacyProps = ExpectTrue<
+    "onChangeValue" extends KnownKeys<SingleSelectProps>
+        ? false
+        : "isMultiple" extends KnownKeys<SingleSelectProps>
+          ? false
+          : "isClearable" extends KnownKeys<SingleSelectProps>
+            ? false
+            : "isDisabled" extends KnownKeys<SingleSelectProps>
+              ? false
+              : "popoverProps" extends KnownKeys<SingleSelectProps>
+                ? false
+                : true
+>;
+
 type _HasRecipeProps = ExpectTrue<
-    "size" extends keyof SingleSelectProps
-        ? "variant" extends keyof SingleSelectProps
-            ? "triggerVariant" extends keyof SingleSelectProps
+    "size" extends KnownKeys<SingleSelectProps>
+        ? "variant" extends KnownKeys<SingleSelectProps>
+            ? "triggerVariant" extends KnownKeys<SingleSelectProps>
                 ? true
                 : false
             : false
         : false
 >;
 
-type _HasStyleProps = ExpectTrue<
-    "bg" extends keyof SingleSelectProps
-        ? "color" extends keyof SingleSelectProps
-            ? "p" extends keyof SingleSelectProps
-                ? "m" extends keyof SingleSelectProps
-                    ? "w" extends keyof SingleSelectProps
-                        ? "h" extends keyof SingleSelectProps
-                            ? true
-                            : false
-                        : false
-                    : false
-                : false
-            : false
-        : false
+type _HasPartProps = ExpectTrue<
+    "placeholder" extends KnownKeys<SelectTriggerProps> ? true : false
 >;
 
-type _HasPartProps = ExpectTrue<"placeholder" extends keyof SelectTriggerProps ? true : false>;
-
 const _callbackProps: _HasCallbackProps = true;
+const _noLegacyProps: _NoLegacyProps = true;
 const _recipeProps: _HasRecipeProps = true;
-const _styleProps: _HasStyleProps = true;
 const _partProps: _HasPartProps = true;
 
 void (
     _callbackProps &&
+    _noLegacyProps &&
     _recipeProps &&
-    _styleProps &&
     _partProps &&
     _size &&
     _variant &&
@@ -75,14 +84,13 @@ void (
 
 assertType<SingleSelectProps>({
     items: [{ value: "a", label: "A" }],
-    onChange: () => {},
-    onChangeValue: () => {},
+    onValueChange: () => {},
     value: "a",
     defaultValue: "a",
     size: "md",
     variant: "plain",
     triggerVariant: "outline",
-    isClearable: true,
+    clearable: true,
     name: "fruit",
     className: "custom-select",
     bg: "transparent",
@@ -92,11 +100,6 @@ assertType<SingleSelectProps>({
     w: "xs",
     h: "auto"
 });
-
-assertType<SingleSelectProps["onChangeValue"]>(
-    // @ts-expect-error onChangeValue receives the selected value, not an event
-    (_event: ChangeEventHandler<HTMLSelectElement>) => {}
-);
 
 assertType<SingleSelectProps>({
     items: [{ value: "a", label: "A" }],

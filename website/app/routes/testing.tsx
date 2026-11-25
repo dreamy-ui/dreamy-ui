@@ -74,9 +74,9 @@ export default function Test() {
             </RangeSlider.Root>
 
             <Pagination.Root
-                count={100}
                 defaultPage={1}
                 pageSize={10}
+                total={100}
             >
                 <Pagination.PrevTrigger />
                 <Pagination.Items />
@@ -131,7 +131,7 @@ export default function Test() {
                 )}
             </AnimatePresence>
 
-            <Accordion.Root reduceMotion>
+            <Accordion.Root>
                 <Accordion.Item value="1">
                     <Accordion.Trigger>
                         <Text>Accordion Item 1</Text>
@@ -160,8 +160,8 @@ export default function Test() {
                 >
                     <Text>1. Color Mode Switch (animates):</Text>
                     <Switch
-                        isChecked={colorMode === "dark"}
-                        onChangeValue={toggleColorMode}
+                        checked={colorMode === "dark"}
+                        onCheckedChange={() => toggleColorMode()}
                     />
                 </Flex>
 
@@ -171,8 +171,8 @@ export default function Test() {
                 >
                     <Text>2. Plain Switch (no animation):</Text>
                     <Switch
-                        isChecked={plainSwitch}
-                        onChangeValue={setPlainSwitch}
+                        checked={plainSwitch}
+                        onCheckedChange={(checked) => setPlainSwitch(checked)}
                     />
                 </Flex>
 
@@ -182,8 +182,8 @@ export default function Test() {
                 >
                     <Text>3. Controlled Switch (no animation):</Text>
                     <Switch
-                        isChecked={controlledSwitch}
-                        onChangeValue={setControlledSwitch}
+                        checked={controlledSwitch}
+                        onCheckedChange={(checked) => setControlledSwitch(checked)}
                     />
                 </Flex>
             </Flex>

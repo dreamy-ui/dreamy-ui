@@ -1,32 +1,216 @@
 ---
 title: Switch
-description: Switch is used to select one or more options from a list.
+description: Switch is an accessible toggle control for turning settings on or off.
 isServerComponent: false
 source: /components/switch/index.tsx
-themeSource: /components/recipes/swittch.ts
+themeSource: /components/switch/swittch.ts
 ---
 
 ## Installation
 
 ```bash
-pnpm dreamy add switch
+bunx dreamy add switch
 ```
 
 ## Usage
 
-Switch behavior uses [Ark UI Switch](https://ark-ui.com/docs/components/switch). Dreamy maps `isChecked`, `defaultIsChecked`, and `onChange` to Ark `checked`, `defaultChecked`, and `onCheckedChange`.
-
-Switch allows users to toggle between two states (on/off). Use it for boolean settings and preferences in forms or configuration panels.
+Switch behavior is powered by [UI SDK Switch](https://ui-sdk.dev/docs/react/components/switch). Keep the label the same in both states: the label names the setting, and the switch indicates whether it is on.
 
 <Wrapper>
-	<Switch>
-		<>Default</>
-	</Switch>
+	<Switch>Airplane mode</Switch>
 </Wrapper>
 
 ```tsx
-<Switch>
-	Default
+<Switch>Airplane mode</Switch>
+```
+
+### Description
+
+Use `Field.Root`, `Field.Label`, and `Field.Hint` when a setting needs additional explanation.
+
+<Wrapper>
+	<DescriptionSwitch />
+</Wrapper>
+
+```tsx
+<Field.Root maxW="md" w="full">
+	<Flex align="center" justify="space-between" w="full">
+		<VStack align="start" gap={0.5}>
+			<Field.Label>Weekly digest</Field.Label>
+			<Field.Hint>A summary of your week, every Monday.</Field.Hint>
+		</VStack>
+		<Switch />
+	</Flex>
+</Field.Root>
+```
+
+### Choice Card
+
+Make an entire settings card clickable by expanding the `Field.Label` hit target across the card.
+
+<Wrapper>
+	<ChoiceCardSwitches />
+</Wrapper>
+
+```tsx
+<Field.Root border="1px solid" borderColor="border" p={4} position="relative" rounded="l2">
+	<Flex align="center" justify="space-between" w="full">
+		<VStack align="start" gap={0.5}>
+			<Field.Label
+				cursor="pointer"
+				position="static"
+				_after={{ content: '""', position: "absolute", inset: 0 }}
+			>
+				Public profile
+			</Field.Label>
+			<Field.Hint>Anyone can see your name and photo.</Field.Hint>
+		</VStack>
+		<Switch />
+	</Flex>
+</Field.Root>
+```
+
+### Disabled & Read-Only
+
+- `disabled` prevents focus and changes, and excludes the switch from form submission.
+- `readOnly` keeps the switch focusable and submitted, while preventing user changes.
+
+<Wrapper>
+	<DisabledAndReadOnlySwitches />
+</Wrapper>
+
+```tsx
+<VStack align="start" gap={4}>
+	<Switch defaultChecked disabled>Security alerts</Switch>
+	<Field.Root>
+		<Field.Label>Encrypt backups</Field.Label>
+		<Switch name="encrypt" defaultChecked readOnly />
+		<Field.Hint>Your organization manages this setting.</Field.Hint>
+	</Field.Root>
+</VStack>
+```
+
+### Controlled & Controller
+
+Use `checked` with `onCheckedChange` to control state, and `createSwitchController()` to toggle, set, read, or focus the switch from outside.
+
+<Wrapper>
+	<ControlledSwitch />
+</Wrapper>
+
+```tsx
+function ControlledSwitch() {
+	const [wifi] = useState(() => createSwitchController());
+	const [checked, setChecked] = useState(true);
+
+	return (
+		<VStack align="start" gap={4}>
+			<Button size="xs" variant="outline" onClick={() => wifi.toggle()}>
+				Toggle
+			</Button>
+			<Switch
+				checked={checked}
+				controller={wifi}
+				onCheckedChange={(next, details) => {
+					setChecked(next);
+					console.log(`${next ? "On" : "Off"} (${details.reason})`);
+				}}
+			>
+				Wi-Fi
+			</Switch>
+		</VStack>
+	);
+}
+```
+
+### Form
+
+Set `name` to include the switch in native `FormData`. When on, it submits `value` (default `"on"`); when off, it submits nothing. Form reset restores `defaultChecked`.
+
+<Wrapper>
+	<FormSwitch />
+</Wrapper>
+
+```tsx
+<form onSubmit={handleSubmit}>
+	<Fieldset.Root>
+		<Fieldset.Legend>Email notifications</Fieldset.Legend>
+		<Fieldset.Content>
+			<Switch name="updates">Product updates</Switch>
+			<Switch name="security" defaultChecked>Security alerts</Switch>
+			<Switch name="digest" value="weekly" defaultChecked>Weekly digest</Switch>
+		</Fieldset.Content>
+	</Fieldset.Root>
+	<Button type="submit">Save</Button>
+	<Button type="reset">Reset</Button>
+</form>
+```
+
+### Validation
+
+`required` blocks form submission until the switch is turned on, and `Field.Error match="valueMissing"` displays the validation message under the field.
+
+<Wrapper>
+	<ValidationSwitch />
+</Wrapper>
+
+```tsx
+<form onSubmit={handleSubmit}>
+	<Field.Root required>
+		<Flex align="center" justify="space-between" w="full">
+			<VStack align="start" gap={0.5}>
+				<Field.Label>Two-factor authentication</Field.Label>
+				<Field.Hint>Required for admins of this workspace.</Field.Hint>
+			</VStack>
+			<Switch name="two-factor" required />
+		</Flex>
+		<Field.Error match="valueMissing">Turn this on to continue.</Field.Error>
+	</Field.Root>
+	<Button type="submit">Continue</Button>
+</form>
+```
+
+### Saving on Toggle
+
+Call `details.cancel()` inside `onCheckedChange` to keep the current value while an async save runs, set `aria-busy`, show a `<Spinner />` via `icon`, and commit with `controller.setChecked(next, { reason: "imperative" })`.
+
+<Wrapper>
+	<AsyncSaveSwitch />
+</Wrapper>
+
+```tsx
+<Switch
+	aria-busy={saving}
+	controller={backups}
+	icon={saving ? <Spinner size="sm" /> : undefined}
+	onCheckedChange={(next, details) => {
+		if (details.reason === "imperative") return;
+		details.cancel();
+		if (pending.current) return;
+		pending.current = true;
+		setSaving(true);
+		save(next).then(() => {
+			pending.current = false;
+			backups.setChecked(next, { reason: "imperative" });
+			setSaving(false);
+		});
+	}}
+>
+	Automatic backups
+</Switch>
+```
+
+### Custom Thumb Rendering
+
+Pass a render function to `icon` receiving `SwitchThumbState` (`{ checked, disabled, readOnly, required }`) to render state-dependent icons inside the thumb.
+
+<Wrapper>
+	<CustomThumbSwitch />
+</Wrapper>
+
+```tsx
+<Switch icon={(state) => (state.checked ? <LuMoon size={12} /> : <LuSun size={12} />)}>
+	Dark mode
 </Switch>
 ```
 
@@ -48,15 +232,11 @@ Change the color scheme of the Switch.
 <Switch scheme="primary" defaultChecked>Primary</Switch>
 <Switch scheme="secondary" defaultChecked>Secondary</Switch>
 <Switch scheme="success" defaultChecked>Success</Switch>
-<Switch scheme="warning" defaultChecked>Warning</Switch>
-<Switch scheme="error" defaultChecked>Error</Switch>
-<Switch scheme="info" defaultChecked>Info</Switch>
-<Switch scheme="none" defaultChecked>None</Switch>
 ```
 
 ### Size
 
-Change the Switch size.
+Change the Switch size (`sm`, `md`, `lg`).
 
 <Wrapper>
 	<Switch size="sm">Sm</Switch>
@@ -70,72 +250,41 @@ Change the Switch size.
 <Switch size="lg">Lg</Switch>
 ```
 
-### Controlled
+## Styling & Data Attributes
 
-Use `isChecked` with `onChange` or `onChangeValue` to control the Switch.
+- `[data-slot="switch"]` and `[data-part="thumb"]`:
+  - `data-checked`: Present while on.
+  - `data-unchecked`: Present while off.
+  - `data-disabled`: Present when disabled.
+  - `data-readonly`: Present when read-only.
+  - `data-required`: Present when required.
+  - `data-invalid`: Present on root and switch control when `isInvalid` or inside an invalid `Field.Root`.
 
-<Wrapper>
-	<ControlledSwitch />
-</Wrapper>
+## API Reference
 
-```tsx
-export function ControlledSwitch() {
-    const [isChecked, setIsChecked] = useState(false);
-
-    return (
-        <>
-            <Text>Selected: {isChecked ? "true" : "false"}</Text>
-            <Switch
-                isChecked={isChecked}
-                onChangeValue={setIsChecked}
-            >
-                Controlled
-            </Switch>
-        </>
-    );
-}
-```
-
-### Props
-
-Switch is a compound control: a styled root `label`, a hidden checkbox input, a visual control track, a thumb, and an optional text label.
-
-| Prop | Forwarded to | Description |
+| Prop | Type | Description |
 | --- | --- | --- |
-| `onChange` | hidden input | Native checkbox change event |
-| `onChangeValue` | hidden input | Boolean callback when the value changes |
-| `name`, `value`, `tabIndex`, `autoFocus` | hidden input | Standard form input attributes |
-| `isChecked`, `defaultChecked`, `isIndeterminate` | hidden input | Checked state |
-| `isDisabled`, `isReadOnly`, `isRequired`, `isInvalid` | root + hidden input | Field state |
-| `inputProps` | hidden input | Extra props for the hidden checkbox |
-| `wrapperProps` | control `span` | Props for the visual track |
-| `labelProps` | label `span` | Props for the text label |
-| `thumbProps` | thumb | Props for the animated thumb |
-| `scheme`, `size` | root | Recipe variants |
-| other HTML/`data-*` props | root | Applied to the root `label` |
+| `checked`, `defaultChecked` | `boolean` | Controlled or initial checked state |
+| `onCheckedChange` | `(checked: boolean, details) => void` | Runs when toggled, reset, or set via controller |
+| `disabled`, `readOnly`, `required` | `boolean` | Interactive and form validation states |
+| `isInvalid` | `boolean` | Marks the switch as invalid for styling and ARIA |
+| `name`, `value`, `form` | `string` | Native form participation |
+| `icon` | `ReactNode \| ((state: SwitchThumbState) => ReactNode)` | Static or state-aware content inside the thumb |
+| `thumbProps` | `MotionProps` | Motion props for the thumb content wrapper |
+| `reduceMotion` | `boolean` | Disables thumb motion animation |
+| `controller` | `SwitchController` | Imperative controller from `createSwitchController()` |
+| `scheme`, `size` | Recipe variants | Color scheme and size (`sm`, `md`, `lg`) |
+| `debug` | `boolean` | Logs state transitions in development |
 
-Use top-level props such as `name` and `onChange` for the common case. Reach for `inputProps`, `wrapperProps`, `labelProps`, and `thumbProps` when you need to target a specific internal element.
+Controller methods: `toggle(details?)`, `getChecked()`, `setChecked(checked, details?)`, `focus()`.
+Change `details.reason` values: `press`, `reset`, `restore`, `imperative`.
 
-<Wrapper>
-	<Switch
-		name="notifications"
-		defaultChecked
-		inputProps={{ "aria-label": "Email notifications" }}
-		wrapperProps={{ "data-testid": "switch-control" }}
-		labelProps={{ className: "font-medium" }}
-	>
-		Email notifications
-	</Switch>
-</Wrapper>
+## Accessibility & Keyboard
 
-```tsx
-<Switch
-    name="notifications"
-    defaultChecked
-    inputProps={{ "aria-label": "Email notifications" }}
-    wrapperProps={{ "data-testid": "switch-control" }}
-    labelProps={{ className: "font-medium" }}
->
-    Email notifications
-</Switch>
-```
+Follows the [WAI-ARIA Switch Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/switch/). Renders a `<button role="switch">` paired with a hidden native `<input type="checkbox">` for form submission.
+
+| Key | Action |
+| --- | --- |
+| `Tab` | Move focus to the switch |
+| `Space` | Toggle between on and off |
+| `Enter` | Submits the surrounding form without toggling |

@@ -7,4 +7,5 @@ export * from "./use-steps";
 export * from "./use-controllable-state";
 export * from "./use-event-listener";
 export * from "./use-focus-ring";
+export * from "./use-ui-sdk-motion";
 export * from "./use-update-effect";

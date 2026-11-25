@@ -1,113 +1,117 @@
 ---
 title: Progress Circular
-description: Progress Circular is used to display the progress of a task in a circular shape.
+description: Circular progress indicator with determinate, indeterminate, and accessible formatted value support.
 isServerComponent: false
-source: /packages/react/src/components/progress-circular/progress-circular.tsx
-themeSource: /packages/system/src/recipes/progress-circular.ts
+source: /components/progress-circular/index.tsx
+themeSource: /components/progress-circular/progress-circular.ts
 ---
 
 ## Installation
 
 ```bash
-pnpm dreamy add progress-circular
+bunx dreamy add progress-circular
 ```
 
 ## Usage
 
-Use `value` prop to set the progress value.
+Progress Circular is powered by [UI SDK Progress](https://ui-sdk.dev/docs/react/components/progress). Use `value` between `min` and `max`, and enable `showValueLabel` or `label` to display formatted progress and name the control.
 
 <Wrapper>
-	<ProgressCircular value={69} />
+	<ProgressCircular value={69} showValueLabel label="Loading" />
 </Wrapper>
 
 ```tsx
-<ProgressCircular value={69} />
+<ProgressCircular value={69} showValueLabel label="Loading" />
 ```
 
-### Sizes
+### Indeterminate
 
-You can set the size of the progress by using the `size` prop.
+Pass `value={null}` (or omit `value`, or pass `isIndeterminate`) to show an indeterminate spinning indicator. Customize the spin speed with `speed` (default `"1.5s"`).
 
 <Wrapper>
-	<Flex col gap={5}>
-		<ProgressCircular value={69} size="xs" />
-		<ProgressCircular value={69} size="sm" />
-    	<ProgressCircular value={69} size="md" />
-		<ProgressCircular value={69} size="lg" />
-		<ProgressCircular value={69} size="xl" />
-	</Flex>
+	<ProgressCircular value={null} label="Connecting" />
 </Wrapper>
 
 ```tsx
-<Flex col gap={5}>
-    <ProgressCircular value={69} size="xs" />
-    <ProgressCircular value={69} size="sm" />
-    <ProgressCircular value={69} size="md" />
-    <ProgressCircular value={69} size="lg" />
-    <ProgressCircular value={69} size="xl" />
+<ProgressCircular value={null} label="Connecting" />
+```
+
+### Changing the Value
+
+Pass the latest `value` as your task progresses. The underlying UI SDK root updates `data-progressing` and `data-complete` automatically.
+
+<Wrapper>
+	<InteractiveProgressCircular />
+</Wrapper>
+
+```tsx
+<ProgressCircular
+	label="Uploading photos"
+	showValueLabel
+	size="lg"
+	value={(uploaded / total) * 100}
+/>
+```
+
+### Show Value Label, Format & Locale
+
+When `showValueLabel` is `true`, `ProgressCircular` renders UI SDK's `ProgressValue` in the center of the ring. Without `valueLabel`, it formats the value automatically using `format` and `locale`.
+
+<Wrapper>
+	<FormatAndLocaleProgressCircular />
+</Wrapper>
+
+```tsx
+<Flex gap={6} wrap="wrap">
+	<ProgressCircular
+		format={{ style: "currency", currency: "USD", maximumFractionDigits: 0 }}
+		label="Budget"
+		showValueLabel
+		size="lg"
+		value={69}
+	/>
+	<ProgressCircular
+		format={{ style: "unit", unit: "percent" }}
+		label="CPU"
+		showValueLabel
+		size="lg"
+		value={42}
+	/>
+	<ProgressCircular
+		label="Synchronisierung"
+		locale="de-DE"
+		showValueLabel
+		size="lg"
+		value={40}
+	/>
 </Flex>
-``` 
-
-### Scheme
-
-You can set the color of the progress by using the `scheme` prop.
-
-<Wrapper>
-	<Flex col gap={5}>
-		<ProgressCircular scheme="primary" value={21} />
-		<ProgressCircular scheme="secondary" value={37} />
-		<ProgressCircular scheme="success" value={42} />
-		<ProgressCircular scheme="warning" value={10} />
-		<ProgressCircular scheme="error" value={100} />
-		<ProgressCircular scheme="info" value={50} />
-
-	</Flex>
-</Wrapper>
-
-```tsx
-<Flex col gap={5}>
-    <ProgressCircular scheme="primary" value={21} />
-    <ProgressCircular scheme="secondary" value={37} />
-    <ProgressCircular scheme="success" value={42} />
-    <ProgressCircular scheme="warning" value={10} />
-    <ProgressCircular scheme="error" value={100} />
-    <ProgressCircular scheme="info" value={50} />
-</Flex>
 ```
 
-### Indeterminate Progress
+### Value Label
 
-You can make the progress indeterminate by using the `isIndeterminate` prop. You can customize `speed` prop to change the speed of the indeterminate animation.
+Use `getValueLabel` to give screen readers extra context while keeping the visible `valueLabel` compact inside the ring.
 
 <Wrapper>
-	<ProgressCircular isIndeterminate />
+	<ValueLabelProgressCircular />
 </Wrapper>
 
 ```tsx
-<ProgressCircular isIndeterminate />
-```
-
-### Show value label
-
-You can show the value label by using the `showValue` prop. Use `valueLabel` prop to set the value label.
-
-You can also set the `formatOptions` prop to format the value label.
-
-<Wrapper>
-	<ProgressCircular showValueLabel value={69} />
-	<ProgressCircular showValueLabel value={69} valueLabel="0" />
-	<ProgressCircular showValueLabel value={69} formatOptions={{ style: "currency", currency: "USD" }} />
-</Wrapper>
-
-```tsx
-<ProgressCircular showValueLabel value={69} />
-<ProgressCircular showValueLabel value={69} valueLabel="0" />
-<ProgressCircular showValueLabel value={69} formatOptions={{ style: "currency", currency: "USD" }} />
+<ProgressCircular
+	getValueLabel={(value, details) =>
+		`${value} of ${details.max} files, ${details.formatted}`
+	}
+	label="Copying files"
+	max={12}
+	showValueLabel
+	size="lg"
+	value={3}
+	valueLabel="3/12"
+/>
 ```
 
 ### Label
 
-You can set the label of the progress by using the `label` prop.
+Pass `label` to render an accessible `ProgressLabel` below the ring that automatically names the progressbar.
 
 <Wrapper>
 	<ProgressCircular label="Downloading..." value={69} />
@@ -117,14 +121,97 @@ You can set the label of the progress by using the `label` prop.
 <ProgressCircular label="Downloading..." value={69} />
 ```
 
-### Min and Max value
+### Bounds (Min & Max)
 
-You can set the min and max value of the progress by using the `minValue` and `maxValue` prop.
+Use `min` and `max` to customize the range for `value`.
 
 <Wrapper>
-	<ProgressCircular minValue={21} maxValue={37} value={29} />
+	<ProgressCircular min={21} max={37} value={29} showValueLabel />
 </Wrapper>
 
 ```tsx
-<ProgressCircular minValue={21} maxValue={37} value={29} />
+<ProgressCircular min={21} max={37} value={29} showValueLabel />
 ```
+
+### Sizes
+
+Change the diameter and stroke thickness with `size` (`xs`, `sm`, `md`, `lg`, `xl`).
+
+<Wrapper>
+	<Flex col gap={5}>
+		<ProgressCircular value={69} size="xs" />
+		<ProgressCircular value={69} size="sm" />
+		<ProgressCircular value={69} size="md" />
+		<ProgressCircular value={69} size="lg" />
+		<ProgressCircular value={69} size="xl" />
+	</Flex>
+</Wrapper>
+
+```tsx
+<Flex col gap={5}>
+	<ProgressCircular value={69} size="xs" />
+	<ProgressCircular value={69} size="sm" />
+	<ProgressCircular value={69} size="md" />
+	<ProgressCircular value={69} size="lg" />
+	<ProgressCircular value={69} size="xl" />
+</Flex>
+```
+
+### Scheme
+
+Change the ring color with `scheme`.
+
+<Wrapper>
+	<Flex col gap={5}>
+		<ProgressCircular scheme="primary" value={21} />
+		<ProgressCircular scheme="secondary" value={37} />
+		<ProgressCircular scheme="success" value={42} />
+		<ProgressCircular scheme="warning" value={10} />
+		<ProgressCircular scheme="error" value={100} />
+		<ProgressCircular scheme="info" value={50} />
+	</Flex>
+</Wrapper>
+
+```tsx
+<ProgressCircular scheme="success" value={42} />
+```
+
+### Disabled
+
+Pass `disabled` to render the progress indicator in a disabled state.
+
+<Wrapper>
+	<ProgressCircular disabled value={45} />
+</Wrapper>
+
+```tsx
+<ProgressCircular disabled value={45} />
+```
+
+## Styling & Data Attributes
+
+- **CSS variable**: `--progress-value` holds the percentage between `min` and `max`.
+- **Data attributes**: `data-indeterminate`, `data-progressing`, `data-complete`, and `data-disabled`.
+
+## API Reference
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `value` | `number \| null` | Current value between `min` and `max`, or `null` for indeterminate |
+| `min`, `max` | `number` | Range bounds (defaults `0`, `100`) |
+| `isIndeterminate` | `boolean` | Forces indeterminate mode |
+| `label` | `string` | Label rendered below the ring via `ProgressLabel` |
+| `showValueLabel` | `boolean` | Shows formatted `ProgressValue` inside the ring |
+| `valueLabel` | `string` | Overrides the visible value text inside the ring |
+| `format` | `NumberFormat` | `Intl.NumberFormatOptions` or formatter function |
+| `locale` | `string` | BCP 47 locale tag |
+| `getValueLabel` | `(value: number \| null, details: GaugeLabelDetails<number \| null>) => string` | Screen reader announcement formatter |
+| `speed` | `string` | Indeterminate spin speed (default `"1.5s"`) |
+| `disabled` | `boolean` | Marks the indicator disabled |
+| `size` | `"xs" \| "sm" \| "md" \| "lg" \| "xl"` | Ring diameter and stroke thickness |
+| `scheme` | `"primary" \| "secondary" \| "info" \| "success" \| "warning" \| "error" \| "none"` | Color scheme |
+| `debug` | `boolean` | Logs state transitions in development |
+
+## Accessibility
+
+Name the indicator with `label` or `aria-label`. The decorative SVG ring carries `aria-hidden="true"`, while the root exposes `role="progressbar"` with `aria-valuemin`, `aria-valuemax`, `aria-valuenow`, and `aria-valuetext`.

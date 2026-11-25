@@ -10,6 +10,7 @@ import {
     type CheckboxCheckedChangeReason
 } from "@ui-sdk/react/checkbox";
 import {
+    type DreamyHostProps,
     TRANSITION_EASINGS,
     type UserFeedbackProps,
     createContext,
@@ -20,6 +21,7 @@ import {
 } from "@dreamy-ui/react";
 import { type SVGMotionProps, m } from "motion/react";
 import {
+    type FocusEvent,
     type PointerEvent,
     type ReactElement,
     cloneElement,
@@ -38,7 +40,7 @@ interface CheckboxGroupContextValue extends CheckboxVariantProps, UserFeedbackPr
     reduceMotion?: boolean;
 }
 
-const [CheckboxGroupProvider, useCheckboxGroupContext] =
+export const [CheckboxGroupProvider, useCheckboxGroupContext] =
     createContext<CheckboxGroupContextValue>({
         strict: false,
         name: "CheckboxGroupContext"
@@ -248,9 +250,13 @@ export function Checkbox(props: CheckboxProps) {
                 form={form}
                 id={(idProp ?? field.id) as string | undefined}
                 name={name}
-                onBlur={field.onBlur}
+                onBlur={(event: FocusEvent<HTMLButtonElement>) => {
+                    field.onBlur?.(event as unknown as FocusEvent<HTMLLabelElement>);
+                }}
                 onCheckedChange={handleCheckedChange}
-                onFocus={field.onFocus}
+                onFocus={(event: FocusEvent<HTMLButtonElement>) => {
+                    field.onFocus?.(event as unknown as FocusEvent<HTMLLabelElement>);
+                }}
                 parent={parent}
                 readOnly={isReadOnly}
                 required={isRequired}
@@ -366,23 +372,25 @@ export function CheckboxIcon(props: CheckboxIconProps) {
     return <BaseIcon {...otherProps} />;
 }
 
+type UiSdkCheckboxGroupPickedProps = Pick<
+    React.ComponentProps<typeof UiSdkCheckboxGroup>,
+    | "value"
+    | "defaultValue"
+    | "onValueChange"
+    | "allValues"
+    | "disabled"
+    | "readOnly"
+    | "required"
+    | "name"
+    | "form"
+    | "controller"
+    | "debug"
+>;
+
 export interface CheckboxGroupProps
     extends CheckboxVariantProps,
-        Pick<
-            React.ComponentProps<typeof UiSdkCheckboxGroup>,
-            | "value"
-            | "defaultValue"
-            | "onValueChange"
-            | "allValues"
-            | "disabled"
-            | "readOnly"
-            | "required"
-            | "name"
-            | "form"
-            | "controller"
-            | "debug"
-        >,
-        Omit<FlexProps, "defaultValue" | "onChange" | "onValueChange"> {
+        UiSdkCheckboxGroupPickedProps,
+        DreamyHostProps<FlexProps, UiSdkCheckboxGroupPickedProps, "onChange"> {
     isInvalid?: boolean;
     reduceMotion?: boolean;
 }

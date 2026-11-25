@@ -10,7 +10,8 @@ export default {
     title: "Checkbox Card"
 } satisfies Meta;
 
-interface CheckboxCardOptionProps extends React.ComponentProps<typeof CheckboxCard.Root> {
+interface CheckboxCardOptionProps
+    extends Omit<React.ComponentProps<typeof CheckboxCard.Root>, "title"> {
     title: React.ReactNode;
     description?: React.ReactNode;
     hideCheckbox?: boolean;
@@ -196,16 +197,16 @@ export function Size() {
 }
 
 export function Controlled() {
-    const [isChecked, setIsChecked] = useState(false);
+    const [checked, setChecked] = useState(false);
 
     return (
         <>
-            <Text>Selected: {isChecked ? "true" : "false"}</Text>
+            <Text>Selected: {checked ? "true" : "false"}</Text>
             <CheckboxCardOption
+                checked={checked}
                 description="Description for Controlled"
                 full
-                isChecked={isChecked}
-                onChangeValue={setIsChecked}
+                onCheckedChange={(next) => setChecked(next === true)}
                 title="Controlled"
             />
         </>
@@ -213,13 +214,13 @@ export function Controlled() {
 }
 
 export function CheckboxCardGroup() {
-    const [value, setValue] = useState<Array<string | number>>(["1"]);
+    const [value, setValue] = useState<string[]>(["1"]);
 
     return (
         <>
             <Text>Selected: {value.join(", ")}</Text>
             <CheckboxGroup
-                onChange={setValue}
+                onValueChange={(next) => setValue(next)}
                 value={value}
             >
                 <Group

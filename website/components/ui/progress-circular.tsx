@@ -2,8 +2,13 @@
 
 import {
     Progress as UiSdkProgress,
+    ProgressLabel as UiSdkProgressLabel,
+    ProgressValue as UiSdkProgressValue,
+    type GaugeLabelDetails,
     type NumberFormat
 } from "@ui-sdk/react/progress";
+
+export type { GaugeLabelDetails, NumberFormat };
 import { dataAttr } from "@dreamy-ui/react";
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type ProgressCircularVariantProps, progressCircular } from "styled-system/recipes";
@@ -51,6 +56,14 @@ export interface ProgressCircularProps
      * The locale the value is formatted in.
      */
     locale?: string;
+    /**
+     * Accessible value text function receiving `(value, details)`.
+     */
+    getValueLabel?: (value: number | null, details: GaugeLabelDetails<number | null>) => string;
+    /**
+     * Logs state transitions in development builds.
+     */
+    debug?: boolean;
 }
 
 const StyledProgressCircular = dreamy(UiSdkProgress, progressCircular);
@@ -80,6 +93,8 @@ export function ProgressCircular(props: ProgressCircularProps) {
         "aria-valuetext": ariaValueText,
         format,
         locale,
+        getValueLabel,
+        debug,
         style,
         ...rest
     } = props;
@@ -98,11 +113,13 @@ export function ProgressCircular(props: ProgressCircularProps) {
             aria-label={ariaLabel}
             data-disabled={dataAttr(disabled)}
             data-indeterminate={dataAttr(isIndeterminate)}
+            debug={debug}
             format={format}
             getValueLabel={
-                ariaValueText != null || valueLabel != null
+                getValueLabel ??
+                (ariaValueText != null || valueLabel != null
                     ? () => ariaValueText ?? valueLabel ?? ""
-                    : undefined
+                    : undefined)
             }
             locale={locale}
             max={max}
@@ -156,10 +173,10 @@ export function ProgressCircular(props: ProgressCircularProps) {
                     />
                 </svg>
                 {showValueLabel ? (
-                    <span data-part="valueText">{valueLabel}</span>
+                    <UiSdkProgressValue data-part="valueText">{valueLabel}</UiSdkProgressValue>
                 ) : null}
             </div>
-            {label ? <span data-part="label">{label}</span> : null}
+            {label ? <UiSdkProgressLabel data-part="label">{label}</UiSdkProgressLabel> : null}
             {children}
         </StyledProgressCircular>
     );

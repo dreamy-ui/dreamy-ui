@@ -2,19 +2,19 @@
 title: Stepper
 description: Stepper is used to guide users through multi-step processes like registration flows, checkout, or onboarding.
 isServerComponent: false
-source: /packages/react/src/components/stepper/use-stepper.ts
-themeSource: /website/components/recipes/stepper.ts
+source: /components/stepper/index.tsx
+themeSource: /components/stepper/stepper.ts
 ---
 
 ## Installation
 
-```bash	
-pnpm dreamy add stepper
+```bash
+bunx dreamy add stepper
 ```
 
 ## Usage
 
-Stepper guides users through a sequence of steps.
+Stepper guides users through a sequence of steps using `Stepper.Root`, `Stepper.List`, `Stepper.Item`, `Stepper.Trigger`, `Stepper.Indicator`, `Stepper.Title`, `Stepper.Description`, `Stepper.Separator`, `Stepper.Content`, `Stepper.CompletedContent`, `Stepper.PrevTrigger`, `Stepper.NextTrigger`, and `Stepper.Context`.
 
 <Wrapper>
     <Stepper.Root count={3}>

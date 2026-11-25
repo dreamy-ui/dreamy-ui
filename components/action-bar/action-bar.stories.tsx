@@ -1,5 +1,4 @@
 import { ActionBar, Button, Switch } from "@/ui";
-import { useControllable } from "@dreamy-ui/react";
 import type { Meta } from "@storybook/react-vite";
 import { useState } from "react";
 import { LuShare, LuTrash } from "react-icons/lu";
@@ -9,21 +8,21 @@ export default {
 } satisfies Meta;
 
 export function Base() {
-    const { isOpen, onToggle, onClose } = useControllable();
+    const [open, setOpen] = useState(false);
 
     return (
         <>
             <Switch
-                isChecked={isOpen}
-                onChangeValue={onToggle}
+                checked={open}
+                onCheckedChange={(checked) => setOpen(checked)}
                 size="sm"
             >
                 Show Action Bar
             </Switch>
 
             <ActionBar.Root
-                isOpen={isOpen}
-                onClose={onClose}
+                onOpenChange={setOpen}
+                open={open}
             >
                 <ActionBar.Content>
                     <ActionBar.SelectionTrigger>2 items selected</ActionBar.SelectionTrigger>
@@ -49,21 +48,21 @@ export function Base() {
 }
 
 export function WithClose() {
-    const { isOpen, onToggle, onClose } = useControllable();
+    const [open, setOpen] = useState(false);
 
     return (
         <>
             <Switch
-                isChecked={isOpen}
-                onChangeValue={onToggle}
+                checked={open}
+                onCheckedChange={(checked) => setOpen(checked)}
                 size="sm"
             >
                 Show Action Bar
             </Switch>
 
             <ActionBar.Root
-                isOpen={isOpen}
-                onClose={onClose}
+                onOpenChange={setOpen}
+                open={open}
             >
                 <ActionBar.Content>
                     <ActionBar.SelectionTrigger>5 items selected</ActionBar.SelectionTrigger>
@@ -89,21 +88,21 @@ export function WithClose() {
 }
 
 export function MultipleActions() {
-    const { isOpen, onToggle, onClose } = useControllable();
+    const [open, setOpen] = useState(false);
 
     return (
         <>
             <Switch
-                isChecked={isOpen}
-                onChangeValue={onToggle}
+                checked={open}
+                onCheckedChange={(checked) => setOpen(checked)}
                 size="sm"
             >
                 Show Action Bar
             </Switch>
 
             <ActionBar.Root
-                isOpen={isOpen}
-                onClose={onClose}
+                onOpenChange={setOpen}
+                open={open}
             >
                 <ActionBar.Content>
                     <ActionBar.SelectionTrigger>12 files selected</ActionBar.SelectionTrigger>
@@ -141,22 +140,22 @@ export function MultipleActions() {
 }
 
 export function Sizes() {
-    const { isOpen: isOpenSm, onToggle: onToggleSm, onClose: onCloseSm } = useControllable();
-    const { isOpen: isOpenMd, onToggle: onToggleMd, onClose: onCloseMd } = useControllable();
-    const { isOpen: isOpenLg, onToggle: onToggleLg, onClose: onCloseLg } = useControllable();
+    const [openSm, setOpenSm] = useState(false);
+    const [openMd, setOpenMd] = useState(false);
+    const [openLg, setOpenLg] = useState(false);
 
     return (
         <>
             <Switch
-                isChecked={isOpenSm}
-                onChangeValue={onToggleSm}
+                checked={openSm}
+                onCheckedChange={(checked) => setOpenSm(checked)}
                 size="sm"
             >
                 Show Small Action Bar
             </Switch>
             <ActionBar.Root
-                isOpen={isOpenSm}
-                onClose={onCloseSm}
+                onOpenChange={setOpenSm}
+                open={openSm}
                 size="sm"
             >
                 <ActionBar.Content>
@@ -174,15 +173,15 @@ export function Sizes() {
             </ActionBar.Root>
 
             <Switch
-                isChecked={isOpenMd}
-                onChangeValue={onToggleMd}
+                checked={openMd}
+                onCheckedChange={(checked) => setOpenMd(checked)}
                 size="sm"
             >
                 Show Medium Action Bar
             </Switch>
             <ActionBar.Root
-                isOpen={isOpenMd}
-                onClose={onCloseMd}
+                onOpenChange={setOpenMd}
+                open={openMd}
                 size="md"
             >
                 <ActionBar.Content>
@@ -200,15 +199,15 @@ export function Sizes() {
             </ActionBar.Root>
 
             <Switch
-                isChecked={isOpenLg}
-                onChangeValue={onToggleLg}
+                checked={openLg}
+                onCheckedChange={(checked) => setOpenLg(checked)}
                 size="sm"
             >
                 Show Large Action Bar
             </Switch>
             <ActionBar.Root
-                isOpen={isOpenLg}
-                onClose={onCloseLg}
+                onOpenChange={setOpenLg}
+                open={openLg}
                 size="lg"
             >
                 <ActionBar.Content>

@@ -20,7 +20,7 @@ export function Base() {
 
             <Modal.Root
                 open={open}
-                onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
+                onOpenChange={(nextOpen) => setOpen(nextOpen)}
             >
                 <Modal.Overlay />
                 <Modal.Content>
@@ -65,7 +65,7 @@ export function Sizes() {
 
                 <Modal.Root
                     open={open}
-                    onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
+                    onOpenChange={(nextOpen) => setOpen(nextOpen)}
                     size={size}
                 >
                     <Modal.Overlay />
@@ -108,7 +108,7 @@ export function ScrollBehaviorInside() {
 
             <Modal.Root
                 open={open}
-                onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
+                onOpenChange={(nextOpen) => setOpen(nextOpen)}
                 scrollBehavior="inside"
             >
                 <Modal.Overlay />
@@ -139,7 +139,7 @@ export function ScrollBehaviorOutside() {
 
             <Modal.Root
                 open={open}
-                onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
+                onOpenChange={(nextOpen) => setOpen(nextOpen)}
                 placement="top"
                 scrollBehavior="outside"
                 size="lg"
@@ -179,7 +179,7 @@ export function Placement() {
 
             <Modal.Root
                 open={open}
-                onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
+                onOpenChange={(nextOpen) => setOpen(nextOpen)}
                 placement="top"
             >
                 <Modal.Overlay />

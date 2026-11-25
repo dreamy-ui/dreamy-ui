@@ -187,7 +187,7 @@ export const datePicker = defineSlotRecipe({
                 color: "fg"
                 // fontWeight: "semibold"
             },
-            "&[data-outside-month]": {
+            "&[data-outside-month], &[data-outside]": {
                 opacity: 0.4
             },
             "& [data-part='indicator']": {

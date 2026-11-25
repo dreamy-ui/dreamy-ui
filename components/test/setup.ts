@@ -28,44 +28,80 @@ if (typeof Element.prototype.getAnimations !== "function") {
     };
 }
 
+if (typeof Element.prototype.animate !== "function") {
+    Element.prototype.animate = function animate() {
+        return {
+            cancel: () => {},
+            finish: () => {},
+            pause: () => {},
+            play: () => {},
+            reverse: () => {},
+            addEventListener: () => {},
+            removeEventListener: () => {},
+            finished: Promise.resolve()
+        } as unknown as Animation;
+    };
+}
+
+if (typeof globalThis.PointerEvent === "undefined") {
+    globalThis.PointerEvent = MouseEvent as typeof PointerEvent;
+}
+
+if (typeof globalThis.CSS === "undefined" || typeof globalThis.CSS.supports !== "function") {
+    Object.defineProperty(globalThis, "CSS", {
+        writable: true,
+        value: {
+            ...(typeof globalThis.CSS === "object" ? globalThis.CSS : {}),
+            supports: () => false
+        }
+    });
+}
+
 class ResizeObserverMock {
     private callback: ResizeObserverCallback;
+
+    private disconnected = false;
 
     constructor(callback: ResizeObserverCallback) {
         this.callback = callback;
     }
 
     observe(target: Element) {
-        const orientation = target.getAttribute("data-orientation");
-        const width = target.clientWidth || (orientation === "vertical" ? 16 : 320);
-        const height = target.clientHeight || (orientation === "vertical" ? 200 : 16);
+        queueMicrotask(() => {
+            if (this.disconnected) return;
+            const orientation = target.getAttribute("data-orientation");
+            const width = target.clientWidth || (orientation === "vertical" ? 16 : 320);
+            const height = target.clientHeight || (orientation === "vertical" ? 200 : 16);
 
-        this.callback(
-            [
-                {
-                    target,
-                    contentRect: {
-                        x: 0,
-                        y: 0,
-                        width,
-                        height,
-                        top: 0,
-                        left: 0,
-                        bottom: height,
-                        right: width,
-                        toJSON: () => ({})
-                    } as DOMRectReadOnly,
-                    borderBoxSize: [],
-                    contentBoxSize: [],
-                    devicePixelContentBoxSize: []
-                } as ResizeObserverEntry
-            ],
-            this as ResizeObserver
-        );
+            this.callback(
+                [
+                    {
+                        target,
+                        contentRect: {
+                            x: 0,
+                            y: 0,
+                            width,
+                            height,
+                            top: 0,
+                            left: 0,
+                            bottom: height,
+                            right: width,
+                            toJSON: () => ({})
+                        } as DOMRectReadOnly,
+                        borderBoxSize: [],
+                        contentBoxSize: [],
+                        devicePixelContentBoxSize: []
+                    } as ResizeObserverEntry
+                ],
+                this as ResizeObserver
+            );
+        });
     }
 
     unobserve() {}
-    disconnect() {}
+    disconnect() {
+        this.disconnected = true;
+    }
 }
 
 globalThis.ResizeObserver = ResizeObserverMock as typeof ResizeObserver;

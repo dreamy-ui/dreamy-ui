@@ -67,6 +67,19 @@ export const swittch = defineRecipe({
                 cursor: "not-allowed",
                 opacity: 0.6
             },
+            "&:hover [data-part=control]:not([data-checked]):not([data-disabled])": {
+                bg: "alpha.200"
+            },
+            "&:is(:active, [data-active]) [data-part=thumb]:not([data-disabled]):not([data-readonly])":
+                {
+                    width: "var(--switch-thumb-active-size)"
+                },
+            "&:is(:active, [data-active]) [data-part=thumb][data-checked]:not([data-disabled]):not([data-readonly])":
+                {
+                    transform:
+                        "translateX(calc(var(--switch-width) - var(--switch-thumb-active-size) - var(--switch-thumb-gap)))",
+                    transformOrigin: "right center"
+                },
             "--switch-thumb-bg": "white",
             "--switch-thumb-size": "calc(var(--switch-height) * 0.8)",
             "--switch-thumb-gap": "calc(var(--switch-height) * 0.1)",
@@ -76,6 +89,7 @@ export const swittch = defineRecipe({
             position: "relative",
             display: "inline-flex",
             alignItems: "center",
+            cursor: "inherit",
             mr: 2,
             flexShrink: 0,
             overflow: "hidden",
@@ -85,6 +99,9 @@ export const swittch = defineRecipe({
             height: "var(--switch-height)",
             width: "var(--switch-width)",
             justifyContent: "flex-start",
+            "&[data-disabled]": {
+                cursor: "not-allowed"
+            },
             "&:is(:focus-visible, [data-focus-visible])": {
                 boxShadow: "0 0 0 1.5px {colors.primary}"
             },
@@ -93,9 +110,6 @@ export const swittch = defineRecipe({
             },
             "&:is(:focus-visible, [data-focus-visible])[data-checked]": {
                 bg: "var(--switch-bg)"
-            },
-            ".group:is(:hover) &:not([data-checked])": {
-                bg: "alpha.200"
             },
             "&[data-checked]": {
                 bg: "var(--switch-bg)"
@@ -107,16 +121,9 @@ export const swittch = defineRecipe({
         thumb: {
             width: "var(--switch-thumb-size)",
             height: "var(--switch-thumb-size)",
+            flexShrink: 0,
             transform: "translateX(var(--switch-thumb-gap))",
             transformOrigin: "left center",
-            ".group:is([data-active])&": {
-                width: "var(--switch-thumb-active-size)"
-            },
-            ".group:is([data-active]) &[data-checked]": {
-                transform:
-                    "translateX(calc(var(--switch-width) - var(--switch-thumb-active-size) - var(--switch-thumb-gap)))",
-                transformOrigin: "right center"
-            },
             "&[data-checked]": {
                 transform:
                     "translateX(calc(var(--switch-width) - var(--switch-thumb-size) - var(--switch-thumb-gap)))",

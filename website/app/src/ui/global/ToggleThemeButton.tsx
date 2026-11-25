@@ -24,8 +24,7 @@ export function ToggleThemeButton() {
     return (
         <Tooltip
             content={`${actionKey} i`}
-            disablePortal
-            openDelay={500}
+            delay={500}
         >
             <IconButton
                 aria-label="Toggle color mode"

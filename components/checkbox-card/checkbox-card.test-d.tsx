@@ -1,4 +1,5 @@
-import type { ChangeEventHandler } from "react";
+import type { ChangeDetails } from "@ui-sdk/core";
+import type { CheckboxCheckedChangeReason, CheckedState } from "@ui-sdk/react/checkbox";
 import { assertType } from "vitest";
 import type {
     CheckboxCardCheckboxProps,
@@ -8,17 +9,17 @@ import type {
 } from "./index";
 
 type ExpectTrue<T extends true> = T;
+type KnownKeys<T> = keyof {
+    [K in keyof T as string extends K ? never : number extends K ? never : K]: K;
+};
 
-assertType<ChangeEventHandler<HTMLInputElement> | undefined>(
-    {} as CheckboxCardRootProps["onChange"]
-);
-assertType<((value: boolean) => void) | undefined>({} as CheckboxCardRootProps["onChangeValue"]);
-
-assertType<boolean | undefined>({} as CheckboxCardRootProps["isChecked"]);
-assertType<boolean | undefined>({} as CheckboxCardRootProps["defaultChecked"]);
-assertType<boolean | undefined>({} as CheckboxCardRootProps["isIndeterminate"]);
-assertType<boolean | undefined>({} as CheckboxCardRootProps["isDisabled"]);
-assertType<boolean | undefined>({} as CheckboxCardRootProps["isInvalid"]);
+assertType<
+    ((checked: CheckedState, details: ChangeDetails<CheckboxCheckedChangeReason>) => void) | undefined
+>({} as CheckboxCardRootProps["onCheckedChange"]);
+assertType<CheckedState | undefined>({} as CheckboxCardRootProps["checked"]);
+assertType<CheckedState | undefined>({} as CheckboxCardRootProps["defaultChecked"]);
+assertType<boolean | undefined>({} as CheckboxCardRootProps["disabled"]);
+assertType<boolean | undefined>({} as CheckboxCardRootProps["invalid"]);
 
 const _scheme: CheckboxCardRootProps["scheme"] = "primary";
 const _size: CheckboxCardRootProps["size"] = "md";
@@ -26,18 +27,24 @@ const _variant: CheckboxCardRootProps["variant"] = "outline";
 const _checkboxVariant: CheckboxCardRootProps["checkboxVariant"] = "solid";
 
 type _HasCallbackProps = ExpectTrue<
-    "onChange" extends keyof CheckboxCardRootProps
-        ? "onChangeValue" extends keyof CheckboxCardRootProps
-            ? true
-            : false
-        : false
+    "onCheckedChange" extends KnownKeys<CheckboxCardRootProps> ? true : false
+>;
+
+type _HasNoLegacyProps = ExpectTrue<
+    "isChecked" extends KnownKeys<CheckboxCardRootProps>
+        ? false
+        : "isDisabled" extends KnownKeys<CheckboxCardRootProps>
+          ? false
+          : "onChangeValue" extends KnownKeys<CheckboxCardRootProps>
+            ? false
+            : true
 >;
 
 type _HasRecipeProps = ExpectTrue<
-    "scheme" extends keyof CheckboxCardRootProps
-        ? "size" extends keyof CheckboxCardRootProps
-            ? "variant" extends keyof CheckboxCardRootProps
-                ? "checkboxVariant" extends keyof CheckboxCardRootProps
+    "scheme" extends KnownKeys<CheckboxCardRootProps>
+        ? "size" extends KnownKeys<CheckboxCardRootProps>
+            ? "variant" extends KnownKeys<CheckboxCardRootProps>
+                ? "checkboxVariant" extends KnownKeys<CheckboxCardRootProps>
                     ? true
                     : false
                 : false
@@ -66,11 +73,13 @@ assertType<string | undefined>({} as CheckboxCardDescriptionProps["className"]);
 assertType<string | undefined>({} as CheckboxCardCheckboxProps["className"]);
 
 const _callbackProps: _HasCallbackProps = true;
+const _noLegacyProps: _HasNoLegacyProps = true;
 const _recipeProps: _HasRecipeProps = true;
 const _styleProps: _HasStyleProps = true;
 
 void (
     _callbackProps &&
+    _noLegacyProps &&
     _recipeProps &&
     _styleProps &&
     _scheme &&
@@ -80,10 +89,11 @@ void (
 );
 
 assertType<CheckboxCardRootProps>({
-    onChange: () => {},
-    onChangeValue: () => {},
-    isChecked: true,
+    onCheckedChange: () => {},
+    checked: true,
     defaultChecked: false,
+    disabled: false,
+    invalid: false,
     scheme: "primary",
     size: "md",
     variant: "subtle",

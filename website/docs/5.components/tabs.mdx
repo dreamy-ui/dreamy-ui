@@ -2,17 +2,19 @@
 title: Tabs
 description: Tabs can be used to display information in a structured way.
 isServerComponent: false
-source: /packages/react/src/components/tabs/tabs.tsx
-themeSource: /packages/system/src/recipes/tabs.ts
+source: /components/tabs/index.tsx
+themeSource: /components/tabs/tabs.ts
 ---
 
 ## Installation
 
 ```bash
-pnpm dreamy add tabs
+bunx dreamy add tabs
 ```
 
 ## Usage
+
+Tabs are powered by [UI SDK Tabs](https://ui-sdk.dev/docs/components/tabs). Compose tabbed views with `Tabs.Root`, `Tabs.List`, `Tabs.Tab`, `Tabs.Panels`, and `Tabs.Panel`.
 
 <Wrapper>
   <Tabs.Root>
@@ -287,7 +289,7 @@ function ControlledTabs() {
 
             <Tabs.Root
                 value={value}
-                onValueChange={({ value: nextValue }) => setValue(nextValue)}
+                onValueChange={(nextValue) => setValue(nextValue)}
             >
                 <Tabs.List>
                     <Tabs.Tab>
@@ -311,12 +313,12 @@ function ControlledTabs() {
 }
 ```
 
-### Lazy mount panel
+### Keep mounted panel
 
-You can lazy mount the panel by passing the `isLazy` prop to the `Tabs.Root` component. This will only render the active tab panel, instead of switching the visibility of all panels.
+Inactive panels unmount automatically by default. Add `keepMounted` on a `Tabs.Panel` when you want its local state preserved while inactive.
 
 <Wrapper>
-	<Tabs.Root isLazy>
+	<Tabs.Root>
 		<Tabs.List>
 			<Tabs.Tab>
         <HStack gap={1.5}><LuHouse />Home</HStack>
@@ -329,15 +331,15 @@ You can lazy mount the panel by passing the `isLazy` prop to the `Tabs.Root` com
       </Tabs.Tab>
 		</Tabs.List>
 		<Tabs.Panels>
-			<Tabs.Panel>Home content</Tabs.Panel>
-      <Tabs.Panel>Messages content</Tabs.Panel>
-      <Tabs.Panel>Settings content</Tabs.Panel>
+			<Tabs.Panel keepMounted>Home content</Tabs.Panel>
+      <Tabs.Panel keepMounted>Messages content</Tabs.Panel>
+      <Tabs.Panel keepMounted>Settings content</Tabs.Panel>
 		</Tabs.Panels>
 	</Tabs.Root>
 </Wrapper>
 
 ```tsx
-<Tabs.Root isLazy>
+<Tabs.Root>
   <Tabs.List>
     <Tabs.Tab>
       <HStack gap={1.5}><LuHouse />Home</HStack>
@@ -350,9 +352,9 @@ You can lazy mount the panel by passing the `isLazy` prop to the `Tabs.Root` com
     </Tabs.Tab>
   </Tabs.List>
   <Tabs.Panels>
-    <Tabs.Panel>Home content</Tabs.Panel>
-    <Tabs.Panel>Messages content</Tabs.Panel>
-    <Tabs.Panel>Settings content</Tabs.Panel>
+    <Tabs.Panel keepMounted>Home content</Tabs.Panel>
+    <Tabs.Panel keepMounted>Messages content</Tabs.Panel>
+    <Tabs.Panel keepMounted>Settings content</Tabs.Panel>
   </Tabs.Panels>
 </Tabs.Root>
 ```

@@ -1,6 +1,6 @@
 import { getColorSchemes } from "@dreamy-ui/panda-preset";
-import type { SystemStyleObject } from "@pandacss/types";
 import { defineSlotRecipe } from "@pandacss/dev";
+import type { SystemStyleObject } from "@pandacss/types";
 
 export const select = defineSlotRecipe({
     className: "select",
@@ -55,7 +55,7 @@ export const select = defineSlotRecipe({
                 alignItems: "center",
                 gap: "1"
             },
-            _placeholderShown: {
+            "&[data-placeholder], &[data-placeholder-shown]": {
                 color: "fg.medium"
             },
             _disabled: {
@@ -83,11 +83,15 @@ export const select = defineSlotRecipe({
             },
             transition: "transform {durations.normal} {easings.easeInOut}",
             transform: "rotate(0deg)",
-            "&[data-state=open]": {
+            "[data-open] &": {
                 transform: "rotate(180deg)"
             }
         },
         clearButton: {
+            position: "absolute",
+            insetInlineEnd: "8",
+            top: "50%",
+            transform: "translateY(-50%)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -111,8 +115,14 @@ export const select = defineSlotRecipe({
             gap: "0 !important",
             overflowY: "auto",
             borderRadius: "l2!",
-            width: "full",
-            minW: "0"
+            width: "var(--anchor-width)",
+            minW: "0",
+            backgroundColor: "bg",
+            boxShadow: "md",
+            borderWidth: "1px",
+            borderStyle: "solid",
+            borderColor: "{colors.border}",
+            transformOrigin: "var(--transform-origin, center)"
         },
         item: {
             position: "relative",
@@ -125,7 +135,8 @@ export const select = defineSlotRecipe({
             flex: "1",
             textAlign: "start",
             width: "full",
-            "&[data-focused]": {
+            outline: "none",
+            "&[data-focused], &[data-highlighted]": {
                 bg: "alpha.50"
             },
             "&:is([data-selected-strategy='both'][data-selected], [data-selected-strategy='background'][data-selected])":
@@ -143,7 +154,9 @@ export const select = defineSlotRecipe({
         },
         control: {
             pos: "relative",
-            width: "full"
+            width: "full",
+            display: "flex",
+            alignItems: "center"
         }
     },
     variants: {

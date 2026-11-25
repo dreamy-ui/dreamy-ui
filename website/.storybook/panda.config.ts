@@ -49,9 +49,6 @@ export default defineConfig({
             html: {
                 scrollBehavior: "smooth"
             },
-            body: {
-                overflowY: "scroll"
-            },
             pre: {
                 overflowX: "auto",
                 padding: "1rem 0",

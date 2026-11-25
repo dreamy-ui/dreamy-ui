@@ -3,20 +3,20 @@ title: Date Picker
 description: Date Picker allows users to select a date from a calendar popover.
 isServerComponent: false
 source: /components/date-picker/index.tsx
-themeSource: /components/recipes/date-picker.ts
+themeSource: /components/date-picker/date-picker.ts
 ---
 
 ## Installation
 
 ```bash
-pnpm dreamy add date-picker
+bunx dreamy add date-picker
 ```
 
 ## Usage
 
 Date Picker provides a calendar interface for selecting dates. It can be used with either an input field or a button trigger.
 
-Calendar keyboard interaction and grid semantics are provided by [Ark UI `DatePicker`](https://ark-ui.com/docs/components/date-picker). The popover shell uses Dreamy `Popover` for motion, positioning, and portal stacking. Day cells expose accessible names in the form **Choose {full date}** (for example, `Choose Thursday, January 15, 2026`).
+Calendar keyboard interaction and grid semantics are provided by [UI SDK Calendar](https://ui-sdk.dev/docs/components/calendar). The popover shell uses Dreamy `Popover` for positioning and transitions. Day cells expose `role="gridcell"` with full-date accessible names (for example, `Thursday, January 15, 2026`).
 
 ### With Input
 
@@ -28,7 +28,6 @@ The most common usage is with an input field that displays the selected date.
         <DatePicker.Content>
             <DatePicker.Header />
             <DatePicker.Control />
-            <DatePicker.Nav />
             <DatePicker.Calendar />
             <DatePicker.Footer />
         </DatePicker.Content>
@@ -41,21 +40,18 @@ The most common usage is with an input field that displays the selected date.
     <DatePicker.Content>
         <DatePicker.Header />
         <DatePicker.Control />
-        <DatePicker.Nav />
         <DatePicker.Calendar />
         <DatePicker.Footer />
     </DatePicker.Content>
 </DatePicker.Root>
 ```
 
-### Popover props
+### Positioning and Open State
 
-Use `popoverProps` on `DatePicker.Root` to pass behavior props to the internal [Popover](/docs/components/popover). Keep placement options on the root `positioning` prop.
-
-The calendar uses the shared Portal stack at the `popover` layer (1500). Inside a Dreamy UI overlay, its scope nests automatically and adds 1500 to the parent base while escaping clipped or scrolling content. Keep the portal enabled—no manual layer or z-index is needed. For a native or third-party overlay, use `popoverProps={{ portalProps: { containerRef } }}` with its non-scrolling root.
+Control visibility with `open`, `defaultOpen`, and `onOpenChange`, and configure popover placement via `positioning` on `DatePicker.Root` or `side` / `align` on `DatePicker.Content`.
 
 <Wrapper>
-    <DatePicker.Root popoverProps={{ closeOnBlur: false }}>
+    <DatePicker.Root positioning={{ placement: "bottom-start" }}>
         <DatePicker.Input />
         <DatePicker.Content>
             <DatePicker.Header />
@@ -65,7 +61,7 @@ The calendar uses the shared Portal stack at the `popover` layer (1500). Inside 
 </Wrapper>
 
 ```tsx
-<DatePicker.Root popoverProps={{ closeOnBlur: false }}>
+<DatePicker.Root positioning={{ placement: "bottom-start" }}>
     <DatePicker.Input />
     <DatePicker.Content>
         <DatePicker.Header />
@@ -102,37 +98,9 @@ You can also use a button as the trigger instead of an input field.
 </DatePicker.Root>
 ```
 
-### With View Navigation
-
-Add `DatePicker.Nav` below the `Control` to let users switch between Day, Month, and Year views. The default view is Day (the standard calendar grid). Month view shows a 3-column month grid. Year view shows a scrollable 3-column year grid from the current year +10 down to 1919, with custom year inputs at the top (for future years) and bottom (for years before 1919).
-
-<Wrapper>
-    <DatePicker.Root>
-        <DatePicker.Input />
-        <DatePicker.Content>
-            <DatePicker.Header />
-            <DatePicker.Control />
-            <DatePicker.Nav />
-            <DatePicker.Calendar />
-        </DatePicker.Content>
-    </DatePicker.Root>
-</Wrapper>
-
-```tsx
-<DatePicker.Root>
-    <DatePicker.Input />
-    <DatePicker.Content>
-        <DatePicker.Header />
-        <DatePicker.Control />
-        <DatePicker.Nav />
-        <DatePicker.Calendar />
-    </DatePicker.Content>
-</DatePicker.Root>
-```
-
 ### Controlled
 
-You can control the date picker's value using the `value` and `onChange` props.
+You can control the date picker's value using the `value` and `onValueChange` props.
 
 <Wrapper>
     <ControlledDatePicker />
@@ -145,7 +113,7 @@ function ControlledDatePicker() {
     return (
         <DatePicker.Root
             value={date}
-            onChange={setDate}
+            onValueChange={setDate}
         >
             <DatePicker.Input />
             <DatePicker.Content>
@@ -402,6 +370,10 @@ Pass props to `DatePicker.Header` and `DatePicker.Footer` child parts to customi
 
 Use `DatePicker.AIO` when you want the full date picker structure in one component. It renders `Input`, `Content`, `Header`, `Calendar`, and `Footer` for you.
 
+<Wrapper>
+    <DatePicker.AIO />
+</Wrapper>
+
 ```tsx
 function DatePickerAIOExample() {
     const [date, setDate] = useState<Date | null>(null);
@@ -417,7 +389,7 @@ function DatePickerAIOExample() {
     return (
         <DatePicker.AIO
             value={date}
-            onChange={setDate}
+            onValueChange={setDate}
             onApply={handleApply}
             onCancel={handleCancel}
             footerProps={{

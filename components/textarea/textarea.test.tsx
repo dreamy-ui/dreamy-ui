@@ -24,7 +24,7 @@ describe("Textarea", () => {
 
     it("wires Field label, hint/error, and invalid state", async () => {
         render(
-            <Field.Root isInvalid>
+            <Field.Root invalid>
                 <Field.Label>Bio</Field.Label>
                 <Textarea />
                 <Field.Error>Bio is required.</Field.Error>
@@ -67,8 +67,8 @@ describe("Textarea", () => {
     it("respects disabled and required from Field", () => {
         render(
             <Field.Root
-                isDisabled
-                isRequired
+                disabled
+                required
             >
                 <Field.Label>Notes</Field.Label>
                 <Textarea />

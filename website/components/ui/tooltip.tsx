@@ -1,58 +1,75 @@
 "use client";
 
 import {
-    Tooltip as ArkTooltip,
-    type TooltipRootProps as ArkTooltipRootProps,
-    useTooltipContext as useArkTooltipContext
-} from "@ark-ui/react/tooltip";
-import {
-    Portal,
-    type PortalProps,
+    type DreamyHostProps,
     type PositioningProps,
+    type UiSdkMotionController,
+    UiSdkMotionSync,
+    mergeMotionRefs,
     transformReducedMotion,
     useMotionVariants,
-    useReducedMotion
+    useReducedMotion,
+    useUiSdkMotion
 } from "@dreamy-ui/react";
 import {
-    Children,
-    Fragment,
-    cloneElement,
-    useCallback,
-    useId,
-    useMemo,
-    useState,
-    type CSSProperties,
-    type ComponentType
-} from "react";
-import { createStyleContext, dreamy, type HTMLDreamyProps } from "styled-system/jsx";
+    Tooltip as UiSdkTooltip,
+    TooltipArrow as UiSdkTooltipArrow,
+    TooltipContent as UiSdkTooltipContent,
+    type TooltipProps as UiSdkTooltipProps,
+    TooltipTrigger as UiSdkTooltipTrigger
+} from "@ui-sdk/react/tooltip";
+import { Children, type CSSProperties, type ReactElement, type ReactNode } from "react";
+import { css, cx } from "styled-system/css";
+import {
+    type HTMLDreamyProps,
+    createStyleContext,
+    dreamy,
+    splitCssProps
+} from "styled-system/jsx";
 import { tooltip } from "styled-system/recipes";
-import { Box } from "./box";
-import { MotionBox, type MotionBoxProps } from "./motion";
-import { mapPositioningProps } from "./map-positioning";
-import { useFloatingPresent } from "./use-floating-present";
+import { MotionBox } from "./motion";
+import { mapUiSdkPositioning } from "./map-positioning";
+
+type UiSdkTooltipContentProps = React.ComponentProps<typeof UiSdkTooltipContent>;
+type UiSdkTooltipPositionProps = Pick<
+    UiSdkTooltipContentProps,
+    | "side"
+    | "align"
+    | "sideOffset"
+    | "alignOffset"
+    | "collisionPadding"
+    | "arrowPadding"
+    | "anchor"
+    | "container"
+>;
 
 export interface TooltipProps
-    extends Omit<ArkTooltipRootProps, "positioning" | "lazyMount" | "unmountOnExit">,
-        Omit<HTMLDreamyProps<"div">, "content"> {
+    extends Omit<UiSdkTooltipProps, "children" | "container">,
+        UiSdkTooltipPositionProps,
+        DreamyHostProps<
+            HTMLDreamyProps<"div">,
+            Omit<UiSdkTooltipProps, "children" | "container"> & UiSdkTooltipPositionProps,
+            "content" | "children"
+        > {
     /**
-     * The React component to use as the trigger for the tooltip
+     * The React element or text to use as the trigger for the tooltip.
      */
-    children: React.ReactNode;
+    children: ReactNode;
     /**
-     * The label of the tooltip
+     * The content rendered inside the tooltip. When empty, children render directly.
      */
-    content?: React.ReactNode;
+    content?: ReactNode;
     /**
-     * The accessible, human friendly label to use for screen readers.
+     * Accessible label override for the tooltip content.
      */
     "aria-label"?: string;
     /**
-     * If `true`, the tooltip will wrap its children in a `<span/>` with `tabIndex=0`
+     * If `true`, wraps non-interactive children in a focusable `<span>` trigger.
      * @default false
      */
     shouldWrapChildren?: boolean;
     /**
-     * If `true`, the tooltip will show an arrow tip
+     * If `true`, the tooltip displays an arrow pointing to the trigger.
      * @default true
      */
     hasArrow?: boolean;
@@ -62,165 +79,155 @@ export interface TooltipProps
      */
     arrowSize?: number;
     /**
-     * Props to be forwarded to the portal component
-     */
-    portalProps?: Omit<PortalProps, "children">;
-    /**
-     * If `true`, the tooltip will not be rendered inside a portal
-     * @default false
-     */
-    disablePortal?: boolean;
-    /**
-     * Props to be forwarded to the motion component
-     */
-    motionProps?: MotionBoxProps;
-    /**
-     * Positioning configuration for the tooltip floating element.
+     * Positioning configuration mapped onto UI SDK `side`/`align`/offset props.
      */
     positioning?: PositioningProps;
+    /**
+     * If `true`, tooltip open/close transitions are disabled.
+     */
+    reduceMotion?: boolean;
 }
 
 const { withRootProvider, withContext } = createStyleContext(tooltip);
 
-const TooltipRoot = withRootProvider(function TooltipRootBase({
+const TooltipStyleRoot = withRootProvider(function TooltipStyleRootBase({
     children
 }: {
-    children: React.ReactNode;
+    children: ReactNode;
 }) {
     return children;
 });
 
-const TooltipTrigger = withContext(function TooltipTriggerBase(props: HTMLDreamyProps<"span">) {
-    return <dreamy.span {...props} />;
-}, "trigger");
+const TooltipTriggerSpan = withContext(dreamy.span, "trigger");
 
-const StyledTooltip = withContext(function TooltipContent(props: MotionBoxProps) {
-    return <MotionBox {...props} />;
-}, "content") as ComponentType<MotionBoxProps>;
+interface TooltipArrowStyle extends CSSProperties {
+    "--arrow-size"?: string;
+    "--arrow-background"?: string;
+}
 
 export interface TooltipArrowProps extends HTMLDreamyProps<"div"> {}
 
 const TooltipArrow = withContext(function TooltipArrowBase(props: TooltipArrowProps) {
+    const { className, style, ...rest } = props;
+    const [cssProps, domProps] = splitCssProps(rest);
+    const mergedClassName = cx(className as string | undefined, css(cssProps));
+
     return (
-        <ArkTooltip.Arrow {...props}>
-            <ArkTooltip.ArrowTip />
-        </ArkTooltip.Arrow>
+        <UiSdkTooltipArrow
+            {...(domProps as unknown as React.ComponentProps<typeof UiSdkTooltipArrow>)}
+            className={mergedClassName}
+            style={style as CSSProperties | undefined}
+        />
     );
 }, "arrow");
 
-interface TooltipFloaterProps {
-    content: React.ReactNode;
+interface StyledTooltipContentProps
+    extends DreamyHostProps<HTMLDreamyProps<"div">, UiSdkTooltipPositionProps, "children" | "content">,
+        UiSdkTooltipPositionProps {
+    children?: ReactNode;
+    reduceMotion: boolean;
+    motion: UiSdkMotionController;
     hasArrow: boolean;
     arrowSize: number;
-    hasAriaLabel: boolean;
-    ariaLabel?: string;
-    motionProps?: MotionBoxProps;
-    ref?: React.Ref<HTMLDivElement>;
-    disablePortal: boolean;
-    portalProps?: Omit<PortalProps, "children">;
-    disabled?: boolean;
-    present: boolean;
-    reduceMotion: boolean;
-    onExitComplete: () => void;
 }
 
-function TooltipFloater(props: TooltipFloaterProps) {
+const TooltipContentSlot: (props: StyledTooltipContentProps) => ReactElement = withContext(
+    function TooltipContentSlotBase(
+        props: StyledTooltipContentProps
+    ) {
     const {
-        content,
+        children,
+        className,
+        style,
+        reduceMotion,
+        motion,
         hasArrow,
         arrowSize,
-        hasAriaLabel,
-        ariaLabel,
-        motionProps,
-        ref,
-        disablePortal,
-        portalProps,
-        disabled,
-        present,
-        reduceMotion,
-        onExitComplete
+        side,
+        align,
+        sideOffset,
+        alignOffset,
+        collisionPadding,
+        arrowPadding,
+        anchor,
+        container,
+        ...rest
     } = props;
+    const { tooltip: tooltipVariants } = useMotionVariants();
+    const [cssProps, domProps] = splitCssProps(rest);
+    const mergedClassName = cx(className as string | undefined, css(cssProps));
 
-    const { open } = useArkTooltipContext();
-    const { tooltip: variants } = useMotionVariants();
-    const srLabelId = useId();
-    const { onAnimationComplete: motionOnAnimationComplete, style, ...restMotionProps } =
-        motionProps ?? {};
-
-    const contentStyle = {
+    const contentStyle: TooltipArrowStyle = {
         "--arrow-size": `${arrowSize}px`,
         "--arrow-background": "var(--tooltip-bg)",
-        ...style
-    } satisfies CSSProperties;
-
-    if (disabled) {
-        return null;
-    }
-
-    const PortalComponent = disablePortal ? Fragment : Portal;
-
-    const floating = (
-        <ArkTooltip.Positioner>
-            <ArkTooltip.Content
-                asChild
-                aria-label={hasAriaLabel ? ariaLabel : undefined}
-            >
-                <StyledTooltip
-                    animate={open ? "initial" : "exit"}
-                    exit="exit"
-                    initial={reduceMotion ? false : "exit"}
-                    variants={transformReducedMotion(variants, reduceMotion)}
-                    {...restMotionProps}
-                    style={contentStyle}
-                    onAnimationComplete={(definition) => {
-                        motionOnAnimationComplete?.(definition);
-                        if (!open && !reduceMotion) {
-                            onExitComplete();
-                        }
-                    }}
-                    ref={ref}
-                >
-                    {content}
-                    {hasAriaLabel && (
-                        <Box
-                            as="span"
-                            srOnly
-                            id={srLabelId}
-                            role="tooltip"
-                        >
-                            {ariaLabel}
-                        </Box>
-                    )}
-                    {hasArrow && (
-                        <TooltipArrow
-                            style={{
-                                "--arrow-size": `${arrowSize}px`,
-                                "--arrow-background": "var(--tooltip-bg)"
-                            }}
-                        />
-                    )}
-                </StyledTooltip>
-            </ArkTooltip.Content>
-        </ArkTooltip.Positioner>
-    );
+        ...(style as CSSProperties | undefined)
+    };
 
     return (
-        <PortalComponent
-            {...(disablePortal
-                ? {}
-                : {
-                      isActive: present,
-                      zIndex: "var(--z-index-tooltip)",
-                      ...portalProps
-                  })}
+        <UiSdkTooltipContent
+            {...(domProps as unknown as UiSdkTooltipContentProps)}
+            align={align}
+            alignOffset={alignOffset}
+            anchor={anchor}
+            arrowPadding={arrowPadding}
+            className={mergedClassName}
+            collisionPadding={collisionPadding}
+            container={container}
+            data-reduce-motion={reduceMotion ? "" : undefined}
+            render={(partProps, state) => {
+                const {
+                    ref: partRef,
+                    style: partStyle,
+                    children: partChildren,
+                    ...restPartProps
+                } = partProps as React.ComponentPropsWithRef<"div">;
+                const tooltipState = state as { open?: boolean; instant?: boolean };
+                const isOpen = tooltipState?.open ?? motion.isOpen;
+                const skipMotion = reduceMotion || Boolean(tooltipState?.instant);
+
+                return (
+                    <MotionBox
+                        {...(restPartProps as Record<string, unknown>)}
+                        animate={isOpen ? "initial" : "exit"}
+                        initial={skipMotion ? false : "exit"}
+                        onAnimationComplete={() => {
+                            if (!isOpen) {
+                                motion.notifyAnimationComplete("content");
+                            }
+                        }}
+                        ref={mergeMotionRefs(partRef, (el) => {
+                            motion.register("content", el as HTMLElement | null);
+                        })}
+                        style={partStyle as CSSProperties | undefined}
+                        variants={transformReducedMotion(tooltipVariants, skipMotion)}
+                    >
+                        {partChildren}
+                    </MotionBox>
+                );
+            }}
+            side={side}
+            sideOffset={sideOffset}
+            style={contentStyle}
         >
-            {floating}
-        </PortalComponent>
+            {hasArrow ? (
+                <TooltipArrow
+                    style={
+                        {
+                            "--arrow-size": `${arrowSize}px`,
+                            "--arrow-background": "var(--tooltip-bg)"
+                        } as TooltipArrowStyle
+                    }
+                />
+            ) : null}
+            {children}
+        </UiSdkTooltipContent>
     );
-}
+}, "content", { forwardProps: ["container"] } as never) as (
+    props: StyledTooltipContentProps
+) => ReactElement;
 
 /**
- * Tooltip component — informative text on hover, focus, or tap.
+ * Tooltip component — informative text on hover or keyboard focus.
  *
  * @see Docs https://dreamy-ui.com/docs/components/tooltip
  */
@@ -228,109 +235,105 @@ export function Tooltip(props: TooltipProps) {
     const {
         children,
         content,
-        shouldWrapChildren,
         "aria-label": ariaLabel,
+        shouldWrapChildren = false,
         hasArrow = true,
         arrowSize = 8,
-        portalProps,
-        motionProps,
-        disablePortal = false,
         positioning,
+        reduceMotion: reduceMotionProp,
         open,
         defaultOpen,
         onOpenChange,
-        closeOnEscape = true,
-        disabled,
-        closeOnClick,
-        closeOnPointerDown,
-        closeOnScroll,
-        openDelay,
+        onOpenChangeComplete,
+        onPayloadChange,
+        delay,
         closeDelay,
-        id,
-        ref,
-        ...rest
+        disabled,
+        toggleable,
+        closeOnPress,
+        type,
+        shortcut,
+        controller,
+        debug,
+        side,
+        align,
+        sideOffset,
+        alignOffset,
+        collisionPadding,
+        arrowPadding,
+        anchor,
+        container,
+        ...contentRest
     } = props;
 
-    const generatedId = useId();
-    const [trackedOpen, setTrackedOpen] = useState(defaultOpen ?? false);
-    const reducedMotion = useReducedMotion() ?? false;
-    const resolvedOpen = open ?? trackedOpen;
-    const { present, handleExitComplete } = useFloatingPresent(resolvedOpen, reducedMotion);
+    const globalReduceMotion = useReducedMotion();
+    const reduceMotion = reduceMotionProp ?? globalReduceMotion ?? false;
+    const motion = useUiSdkMotion({ open, defaultOpen, reduceMotion });
+    const handleOpenChange = motion.wrapOnOpenChange(onOpenChange);
+    const mapped = mapUiSdkPositioning(positioning);
 
-    const handleOpenChange = useCallback(
-        (details: { open: boolean }) => {
-            setTrackedOpen(details.open);
-            onOpenChange?.(details);
-        },
-        [onOpenChange]
-    );
-
-    const arkRootProps: ArkTooltipRootProps = {
-        id: id ?? generatedId,
-        openDelay,
-        closeDelay,
-        closeOnClick,
-        closeOnPointerDown,
-        closeOnScroll,
-        disabled,
-        positioning: mapPositioningProps(positioning),
-        ...(open !== undefined ? { open } : {}),
-        ...(open === undefined ? { defaultOpen } : {}),
-        onOpenChange: handleOpenChange,
-        closeOnEscape,
-        present,
-        onExitComplete: handleExitComplete,
-        unmountOnExit: false
-    };
-
-    const shouldWrap = shouldWrapChildren || typeof children === "string";
-
-    const trigger = useMemo(() => {
-        if (shouldWrap) {
-            return (
-                <ArkTooltip.Trigger asChild>
-                    <TooltipTrigger tabIndex={0}>{children}</TooltipTrigger>
-                </ArkTooltip.Trigger>
-            );
-        }
-
-        const child = Children.only(children) as React.ReactElement & {
-            ref?: React.Ref<Element>;
-        };
-
-        return (
-            <ArkTooltip.Trigger asChild>
-                {cloneElement(child, { ...child.props, ref: child.ref })}
-            </ArkTooltip.Trigger>
-        );
-    }, [children, shouldWrap]);
-
-    if (!content) {
+    if (content === null || content === undefined || content === false) {
         return <>{children}</>;
     }
 
-    const hasAriaLabel = !!ariaLabel;
+    const shouldWrap = shouldWrapChildren || typeof children === "string";
+
+    const trigger = shouldWrap ? (
+        <UiSdkTooltipTrigger
+            render={<TooltipTriggerSpan tabIndex={0}>{children}</TooltipTriggerSpan>}
+        />
+    ) : (
+        <UiSdkTooltipTrigger
+            render={Children.only(children) as ReactElement<Record<string, unknown>>}
+        />
+    );
+
+    const { "data-slot": _dataSlot, ...forwardContentProps } =
+        contentRest as typeof contentRest & { "data-slot"?: string };
 
     return (
-        <TooltipRoot {...rest}>
-            <ArkTooltip.Root {...arkRootProps}>
-                {trigger}
-                <TooltipFloater
-                    ariaLabel={ariaLabel}
-                    content={content}
-                    disablePortal={disablePortal}
-                    hasAriaLabel={hasAriaLabel}
-                    hasArrow={hasArrow}
-                    arrowSize={arrowSize}
-                    disabled={disabled}
-                    motionProps={motionProps}
-                    onExitComplete={handleExitComplete}
-                    portalProps={portalProps}
-                    present={present}
-                    reduceMotion={reducedMotion}
-                    ref={ref}
+        <TooltipStyleRoot>
+            <UiSdkTooltip
+                closeDelay={closeDelay}
+                closeOnPress={closeOnPress}
+                container={container}
+                controller={controller}
+                debug={debug}
+                defaultOpen={defaultOpen}
+                delay={delay}
+                disabled={disabled}
+                onOpenChange={handleOpenChange}
+                onOpenChangeComplete={onOpenChangeComplete}
+                onPayloadChange={onPayloadChange}
+                open={open}
+                shortcut={shortcut}
+                toggleable={toggleable}
+                type={type}
+            >
+                <UiSdkMotionSync
+                    controller={motion}
+                    open={open}
                 />
-            </ArkTooltip.Root>
-        </TooltipRoot>
+                {trigger}
+                <TooltipContentSlot
+                    {...forwardContentProps}
+                    align={align ?? mapped.align}
+                    alignOffset={alignOffset ?? mapped.alignOffset}
+                    anchor={anchor}
+                    aria-label={ariaLabel}
+                    arrowPadding={arrowPadding ?? mapped.arrowPadding}
+                    arrowSize={arrowSize}
+                    collisionPadding={collisionPadding ?? mapped.collisionPadding}
+                    container={container}
+                    hasArrow={hasArrow}
+                    motion={motion}
+                    reduceMotion={reduceMotion}
+                    side={side ?? mapped.side ?? "top"}
+                    sideOffset={sideOffset ?? mapped.sideOffset ?? 6}
+                >
+                    {content}
+                </TooltipContentSlot>
+            </UiSdkTooltip>
+        </TooltipStyleRoot>
     );
 }

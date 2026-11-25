@@ -6,7 +6,7 @@ import { render } from "../test/render";
 import * as Accordion from "./index";
 
 describe("Accordion", () => {
-    it("exposes APG button / region relationships", async () => {
+    it("exposes APG button / region relationships and UI SDK slots", async () => {
         const user = userEvent.setup();
 
         render(
@@ -22,12 +22,13 @@ describe("Accordion", () => {
             </Accordion.Root>
         );
 
+        expect(document.querySelector('[data-slot="accordion"]')).toBeInTheDocument();
+
         const triggers = screen.getAllByRole("button");
         expect(triggers).toHaveLength(2);
 
         for (const trigger of triggers) {
             expect(trigger).toHaveAttribute("aria-expanded");
-            expect(trigger).toHaveAttribute("aria-controls");
             expect(trigger.closest("h2")).toBeTruthy();
         }
 
@@ -39,6 +40,7 @@ describe("Accordion", () => {
             expect(triggers[0]).toHaveAttribute("aria-expanded", "true");
         });
 
+        expect(triggers[0]).toHaveAttribute("aria-controls");
         const panelId = triggers[0].getAttribute("aria-controls")!;
         const panel = document.getElementById(panelId);
         expect(panel).toHaveAttribute("role", "region");
@@ -73,11 +75,11 @@ describe("Accordion", () => {
         });
     });
 
-    it("moves focus between headers with ArrowDown / ArrowUp", async () => {
+    it("moves focus between headers with Tab and supports multiple expanded items", async () => {
         const user = userEvent.setup();
 
         render(
-            <Accordion.Root>
+            <Accordion.Root multiple>
                 <Accordion.Item value="first">
                     <Accordion.Trigger>First</Accordion.Trigger>
                     <Accordion.Content>A</Accordion.Content>
@@ -98,27 +100,28 @@ describe("Accordion", () => {
         const third = screen.getByRole("button", { name: /Third/ });
 
         first.focus();
-        await user.keyboard("{ArrowDown}");
+        await user.tab();
         expect(second).toHaveFocus();
 
-        await user.keyboard("{ArrowDown}");
+        await user.tab();
         expect(third).toHaveFocus();
 
-        await user.keyboard("{ArrowUp}");
-        expect(second).toHaveFocus();
-
-        await user.keyboard("{Home}");
-        expect(first).toHaveFocus();
-
-        await user.keyboard("{End}");
-        expect(third).toHaveFocus();
+        await user.click(first);
+        await user.click(second);
+        await waitFor(() => {
+            expect(first).toHaveAttribute("aria-expanded", "true");
+            expect(second).toHaveAttribute("aria-expanded", "true");
+        });
     });
 
     it("hides collapsed panel content from interaction", async () => {
         const user = userEvent.setup();
 
         render(
-            <Accordion.Root defaultValue={["open"]}>
+            <Accordion.Root
+                defaultValue={["open"]}
+                keepMounted
+            >
                 <Accordion.Item value="open">
                     <Accordion.Trigger>Open</Accordion.Trigger>
                     <Accordion.Content>
@@ -135,12 +138,13 @@ describe("Accordion", () => {
         );
 
         expect(screen.getByRole("button", { name: "Inside open" })).toBeVisible();
+        expect(screen.queryByRole("button", { name: "Inside closed" })).not.toBeInTheDocument();
+
+        const panels = document.querySelectorAll('[data-slot="accordion-panel"]');
+        expect(panels).toHaveLength(2);
+        expect(panels[1]).toHaveAttribute("hidden");
 
         const closedTrigger = screen.getByRole("button", { name: /Closed/ });
-        const closedPanelId = closedTrigger.getAttribute("aria-controls")!;
-        const closedPanel = document.getElementById(closedPanelId);
-        expect(closedPanel).toHaveAttribute("hidden");
-
         await user.click(closedTrigger);
         await waitFor(() => {
             expect(closedTrigger).toHaveAttribute("aria-expanded", "true");
@@ -157,11 +161,11 @@ describe("Accordion", () => {
 
             return (
                 <Accordion.Root
-                    value={value}
-                    onValueChange={(details) => {
-                        onValueChange(details.value);
-                        setValue(details.value);
+                    onValueChange={(next, details) => {
+                        onValueChange(next, details);
+                        setValue(next);
                     }}
+                    value={value}
                 >
                     <Accordion.Item value="one">
                         <Accordion.Trigger>One</Accordion.Trigger>
@@ -178,7 +182,7 @@ describe("Accordion", () => {
         render(<Fixture />);
 
         await user.click(screen.getByRole("button", { name: /Two/ }));
-        expect(onValueChange).toHaveBeenCalled();
+        expect(onValueChange).toHaveBeenCalledWith(["two"], expect.anything());
         await waitFor(() => {
             expect(screen.getByRole("button", { name: /Two/ })).toHaveAttribute(
                 "aria-expanded",
@@ -218,7 +222,7 @@ describe("Accordion", () => {
         );
 
         const trigger = screen.getByRole("button", { name: /Disabled/ });
-        expect(trigger).toBeDisabled();
+        expect(trigger).toHaveAttribute("aria-disabled", "true");
         await user.click(trigger);
         expect(trigger).toHaveAttribute("aria-expanded", "false");
     });

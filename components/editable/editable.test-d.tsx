@@ -1,30 +1,41 @@
+import type { ChangeDetails } from "@ui-sdk/core";
 import { assertType } from "vitest";
 import type {
+    EditableActivationMode,
     EditableEditButtonProps,
+    EditableEditingChangeReason,
     EditableInputProps,
     EditablePreviewProps,
-    EditableProps
+    EditableProps,
+    EditableSubmitMode,
+    EditableValueChangeReason
 } from "./index";
 
 type ExpectTrue<T extends true> = T;
+type KnownKeys<T> = keyof {
+    [K in keyof T as string extends K ? never : number extends K ? never : K]: K;
+};
 
-assertType<((nextValue: string) => void) | undefined>({} as EditableProps["onChange"]);
-assertType<((nextValue: string) => void) | undefined>({} as EditableProps["onSubmit"]);
-assertType<((previousValue: string) => void) | undefined>({} as EditableProps["onCancel"]);
-assertType<(() => void) | undefined>({} as EditableProps["onEdit"]);
+assertType<
+    ((nextValue: string, details: ChangeDetails<EditableValueChangeReason>) => void) | undefined
+>({} as EditableProps["onValueChange"]);
+assertType<((nextValue: string) => void) | undefined>({} as EditableProps["onValueCommit"]);
+assertType<((previousValue: string) => void) | undefined>({} as EditableProps["onValueRevert"]);
+assertType<
+    ((editing: boolean, details: ChangeDetails<EditableEditingChangeReason>) => void) | undefined
+>({} as EditableProps["onEditingChange"]);
 assertType<string | undefined>({} as EditableProps["value"]);
 assertType<string | undefined>({} as EditableProps["defaultValue"]);
-assertType<boolean | undefined>({} as EditableProps["isDisabled"]);
-assertType<boolean | undefined>({} as EditableProps["useDoubleClick"]);
-assertType<boolean | undefined>({} as EditableProps["isPreviewFocusable"]);
-assertType<boolean | undefined>({} as EditableProps["submitOnBlur"]);
+assertType<boolean | undefined>({} as EditableProps["disabled"]);
+assertType<EditableActivationMode | undefined>({} as EditableProps["activationMode"]);
+assertType<EditableSubmitMode | undefined>({} as EditableProps["submitMode"]);
 assertType<EditableProps["variant"]>({} as EditableProps["variant"]);
 
 type _HasCallbackProps = ExpectTrue<
-    "onChange" extends keyof EditableProps
-        ? "onSubmit" extends keyof EditableProps
-            ? "onCancel" extends keyof EditableProps
-                ? "onEdit" extends keyof EditableProps
+    "onValueChange" extends KnownKeys<EditableProps>
+        ? "onValueCommit" extends KnownKeys<EditableProps>
+            ? "onValueRevert" extends KnownKeys<EditableProps>
+                ? "onEditingChange" extends KnownKeys<EditableProps>
                     ? true
                     : false
                 : false
@@ -32,20 +43,18 @@ type _HasCallbackProps = ExpectTrue<
         : false
 >;
 
-type _HasStyleProps = ExpectTrue<
-    "bg" extends keyof EditableProps
-        ? "color" extends keyof EditableProps
-            ? "p" extends keyof EditableProps
-                ? "m" extends keyof EditableProps
-                    ? "w" extends keyof EditableProps
-                        ? "h" extends keyof EditableProps
-                            ? true
-                            : false
-                        : false
-                    : false
-                : false
-            : false
-        : false
+type _NoLegacyProps = ExpectTrue<
+    "onChange" extends KnownKeys<EditableProps>
+        ? false
+        : "isDisabled" extends KnownKeys<EditableProps>
+          ? false
+          : "isEditing" extends KnownKeys<EditableProps>
+            ? false
+            : "useDoubleClick" extends KnownKeys<EditableProps>
+              ? false
+              : "submitOnBlur" extends KnownKeys<EditableProps>
+                ? false
+                : true
 >;
 
 assertType<string | undefined>({} as EditablePreviewProps["className"]);
@@ -53,21 +62,20 @@ assertType<string | undefined>({} as EditableInputProps["className"]);
 assertType<string | undefined>({} as EditableEditButtonProps["className"]);
 
 const _callbackProps: _HasCallbackProps = true;
-const _styleProps: _HasStyleProps = true;
+const _noLegacyProps: _NoLegacyProps = true;
 
-void (_callbackProps && _styleProps);
+void (_callbackProps && _noLegacyProps);
 
 assertType<EditableProps>({
-    onChange: () => {},
-    onSubmit: () => {},
-    onCancel: () => {},
-    onEdit: () => {},
+    onValueChange: () => {},
+    onValueCommit: () => {},
+    onValueRevert: () => {},
+    onEditingChange: () => {},
     value: "Ada",
     defaultValue: "Ada",
-    isDisabled: false,
-    useDoubleClick: false,
-    isPreviewFocusable: true,
-    submitOnBlur: true,
+    disabled: false,
+    activationMode: "dblclick",
+    submitMode: "enter",
     placeholder: "Enter a name",
     className: "custom-editable",
     bg: "transparent",
@@ -78,12 +86,7 @@ assertType<EditableProps>({
     h: "auto"
 });
 
-assertType<EditableProps["onChange"]>(
-    // @ts-expect-error onChange receives the next string value, not a boolean
-    (_value: boolean) => {}
-);
-
 assertType<EditableProps>({
-    // @ts-expect-error useDoubleClick must be a boolean
-    useDoubleClick: "yes"
+    // @ts-expect-error activationMode must be focus | dblclick | none
+    activationMode: "hover"
 });

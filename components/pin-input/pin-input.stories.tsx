@@ -1,4 +1,4 @@
-import { Divider, PinInput, VStack } from "@/ui";
+import { PinInput, VStack } from "@/ui";
 import type { Meta } from "@storybook/react-vite";
 import { useState } from "react";
 
@@ -8,7 +8,7 @@ export default {
 
 export function Base() {
     return (
-        <PinInput.Root>
+        <PinInput.Root aria-label="Pin code">
             <PinInput.Field />
             <PinInput.Field />
             <PinInput.Field />
@@ -21,7 +21,8 @@ export function Controlled() {
 
     return (
         <PinInput.Root
-            onChange={setPin}
+            aria-label="Pin code"
+            onValueChange={(next) => setPin(next)}
             value={pin}
         >
             <PinInput.Field />
@@ -35,35 +36,17 @@ export function Controlled() {
 export function Sizes() {
     return (
         <VStack w="full">
-            <PinInput.Root size="sm">
-                <PinInput.Field />
-                <PinInput.Field />
-                <PinInput.Field />
-            </PinInput.Root>
-
-            <PinInput.Root size="md">
-                <PinInput.Field />
-                <PinInput.Field />
-                <PinInput.Field />
-            </PinInput.Root>
-
-            <PinInput.Root size="lg">
-                <PinInput.Field />
-                <PinInput.Field />
-                <PinInput.Field />
-            </PinInput.Root>
-
-            <PinInput.Root size="xl">
-                <PinInput.Field />
-                <PinInput.Field />
-                <PinInput.Field />
-            </PinInput.Root>
-
-            <PinInput.Root size="2xl">
-                <PinInput.Field />
-                <PinInput.Field />
-                <PinInput.Field />
-            </PinInput.Root>
+            {(["sm", "md", "lg", "xl", "2xl"] as const).map((size) => (
+                <PinInput.Root
+                    aria-label={`Pin ${size}`}
+                    key={size}
+                    size={size}
+                >
+                    <PinInput.Field />
+                    <PinInput.Field />
+                    <PinInput.Field />
+                </PinInput.Root>
+            ))}
         </VStack>
     );
 }
@@ -71,36 +54,27 @@ export function Sizes() {
 export function Variants() {
     return (
         <VStack w="full">
-            <PinInput.Root variant="outline">
-                <PinInput.Field />
-                <PinInput.Field />
-                <PinInput.Field />
-            </PinInput.Root>
-
-            <PinInput.Root variant="filled">
-                <PinInput.Field />
-                <PinInput.Field />
-                <PinInput.Field />
-            </PinInput.Root>
-
-            <PinInput.Root variant="flushed">
-                <PinInput.Field />
-                <PinInput.Field />
-                <PinInput.Field />
-            </PinInput.Root>
-
-            <PinInput.Root variant="filledOutline">
-                <PinInput.Field />
-                <PinInput.Field />
-                <PinInput.Field />
-            </PinInput.Root>
+            {(["outline", "filled", "flushed", "filledOutline"] as const).map((variant) => (
+                <PinInput.Root
+                    aria-label={`Pin ${variant}`}
+                    key={variant}
+                    variant={variant}
+                >
+                    <PinInput.Field />
+                    <PinInput.Field />
+                    <PinInput.Field />
+                </PinInput.Root>
+            ))}
         </VStack>
     );
 }
 
 export function Invalid() {
     return (
-        <PinInput.Root isInvalid>
+        <PinInput.Root
+            aria-label="Invalid pin"
+            invalid
+        >
             <PinInput.Field />
             <PinInput.Field />
             <PinInput.Field />
@@ -110,17 +84,10 @@ export function Invalid() {
 
 export function Disabled() {
     return (
-        <PinInput.Root isDisabled>
-            <PinInput.Field />
-            <PinInput.Field />
-            <PinInput.Field />
-        </PinInput.Root>
-    );
-}
-
-export function OTP() {
-    return (
-        <PinInput.Root otp>
+        <PinInput.Root
+            aria-label="Disabled pin"
+            disabled
+        >
             <PinInput.Field />
             <PinInput.Field />
             <PinInput.Field />
@@ -130,7 +97,10 @@ export function OTP() {
 
 export function Mask() {
     return (
-        <PinInput.Root mask>
+        <PinInput.Root
+            aria-label="Masked pin"
+            mask
+        >
             <PinInput.Field />
             <PinInput.Field />
             <PinInput.Field />
@@ -138,29 +108,12 @@ export function Mask() {
     );
 }
 
-export function Type() {
+export function Alphanumeric() {
     return (
-        <PinInput.Root type="alphanumeric">
-            <PinInput.Field />
-            <PinInput.Field />
-            <PinInput.Field />
-        </PinInput.Root>
-    );
-}
-
-export function ManageFocus() {
-    return (
-        <PinInput.Root manageFocus={false}>
-            <PinInput.Field />
-            <PinInput.Field />
-            <PinInput.Field />
-        </PinInput.Root>
-    );
-}
-
-export function AutoFocus() {
-    return (
-        <PinInput.Root autoFocus>
+        <PinInput.Root
+            aria-label="Alphanumeric code"
+            pattern="alphanumeric"
+        >
             <PinInput.Field />
             <PinInput.Field />
             <PinInput.Field />
@@ -170,20 +123,20 @@ export function AutoFocus() {
 
 export function SplitFields() {
     return (
-        <PinInput.Root>
-            <PinInput.Field />
-            <PinInput.Field />
-            <PinInput.Field />
+        <PinInput.Root aria-label="6-digit code">
+            <PinInput.Group>
+                <PinInput.Field />
+                <PinInput.Field />
+                <PinInput.Field />
+            </PinInput.Group>
 
-            <Divider
-                h={8}
-                mx={2}
-                orientation="vertical"
-            />
+            <PinInput.Separator />
 
-            <PinInput.Field />
-            <PinInput.Field />
-            <PinInput.Field />
+            <PinInput.Group>
+                <PinInput.Field />
+                <PinInput.Field />
+                <PinInput.Field />
+            </PinInput.Group>
         </PinInput.Root>
     );
 }

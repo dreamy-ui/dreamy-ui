@@ -90,15 +90,15 @@ export function Fitted() {
 }
 
 export function Controlled() {
-    const [index, setIndex] = useState(2);
+    const [value, setValue] = useState<string | null>("2");
 
     return (
         <>
-            <Text bold>Current Tab: {index + 1}</Text>
+            <Text bold>Current Tab: {Number(value ?? "0") + 1}</Text>
 
             <Tabs.Root
-                index={index}
-                onChange={setIndex}
+                onValueChange={(next) => setValue(next)}
+                value={value}
             >
                 <Tabs.List>
                     <Tabs.Tab>Tab 1</Tabs.Tab>
@@ -121,22 +121,22 @@ export function Controlled() {
     );
 }
 
-export function LazyMount() {
+export function KeepMounted() {
     return (
-        <Tabs.Root isLazy>
+        <Tabs.Root>
             <Tabs.List>
                 <Tabs.Tab>Tab 1</Tabs.Tab>
                 <Tabs.Tab>Tab 2</Tabs.Tab>
                 <Tabs.Tab>Tab 3</Tabs.Tab>
             </Tabs.List>
             <Tabs.Panels>
-                <Tabs.Panel>
+                <Tabs.Panel keepMounted>
                     <p>Tab 1</p>
                 </Tabs.Panel>
-                <Tabs.Panel>
+                <Tabs.Panel keepMounted>
                     <p>Tab 2</p>
                 </Tabs.Panel>
-                <Tabs.Panel>
+                <Tabs.Panel keepMounted>
                     <p>Tab 3</p>
                 </Tabs.Panel>
             </Tabs.Panels>

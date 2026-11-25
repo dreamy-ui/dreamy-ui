@@ -1,86 +1,217 @@
 ---
 title: Progress
-description: Progress is used to display the progress of a task.
-isServerComponent: true
-source: /packages/react/src/components/Progress/Progress.tsx
-themeSource: /packages/system/src/recipes/progress.ts
+description: Show a task's completion progress or an indeterminate state while progress is unknown.
+isServerComponent: false
+source: /components/progress/index.tsx
+themeSource: /components/progress/progress.ts
 ---
 
 ## Installation
 
 ```bash
-pnpm dreamy add progress
+bunx dreamy add progress
+```
+
+## Composition
+
+Progress is powered by [UI SDK Progress](https://ui-sdk.dev/docs/react/components/progress). You can pass `label` and `showValue` directly on `Progress`, or pass `aria-label` when rendering a standalone bar.
+
+```text
+Progress
+├── [header]
+│   ├── ProgressLabel (when `label` is set)
+│   └── ProgressValue (when `showValue` is true)
+└── ProgressTrack
+    └── ProgressIndicator
 ```
 
 ## Usage
 
-Use `value` prop to set the progress value 0 - 100. `aria-label` prop is required for accessibility.
-
 <Wrapper>
-	<Progress value={50} aria-label="Progress" />
+	<Progress label="Exporting video" showValue value={60} maxW="md" />
 </Wrapper>
 
 ```tsx
-<Progress value={50} aria-label="Progress" />
+<Progress label="Exporting video" showValue value={60} maxW="md" />
+```
+
+### Indeterminate
+
+Pass `value={null}` (or omit `value`, or pass `isIndeterminate`) when how much work remains is unknown. The bar exposes `data-indeterminate` and omits `aria-valuenow`. Use `speed` to customize the sweep duration.
+
+<Wrapper>
+	<Progress label="Connecting to server" value={null} speed="0.8s" maxW="md" />
+</Wrapper>
+
+```tsx
+<Progress label="Connecting to server" value={null} speed="0.8s" maxW="md" />
+```
+
+### Changing the Value
+
+Pass the latest `value` as your task progresses. Parts expose `data-progressing` while below `max`, and `data-complete` once `value` reaches `max`.
+
+<Wrapper>
+	<InteractiveProgress />
+</Wrapper>
+
+```tsx
+function InteractiveProgress() {
+	const total = 5;
+	const [uploaded, setUploaded] = useState(1);
+
+	return (
+		<VStack align="start" gap={4} maxW="md" w="full">
+			<Flex gap={2}>
+				<Button size="xs" disabled={uploaded >= total} onClick={() => setUploaded((n) => n + 1)}>
+					Upload Next
+				</Button>
+				<Button size="xs" variant="outline" onClick={() => setUploaded(0)}>
+					Reset
+				</Button>
+			</Flex>
+			<Progress label="Uploading photos" showValue value={(uploaded / total) * 100} />
+		</VStack>
+	);
+}
+```
+
+### Bounds (Min & Max)
+
+`min` and `max` default to `0` and `100`. A value of `3` between `1` and `5` fills half the track.
+
+<Wrapper>
+	<Progress label="Account setup, step 3 of 5" min={1} max={5} value={3} showValue maxW="md" />
+</Wrapper>
+
+```tsx
+<Progress label="Account setup, step 3 of 5" min={1} max={5} value={3} showValue maxW="md" />
+```
+
+### Format and Locale
+
+`format` accepts `Intl.NumberFormatOptions` (for units, decimals, currency) or a custom formatter function. `locale` sets digits and separators.
+
+<Wrapper>
+	<FormatAndLocaleProgress />
+</Wrapper>
+
+```tsx
+<VStack align="stretch" gap={5} maxW="md" w="full">
+	<Progress
+		label="Download"
+		showValue
+		value={120}
+		max={250}
+		format={{ style: "unit", unit: "gigabyte" }}
+	/>
+	<Progress
+		label="Video render"
+		showValue
+		value={87.25}
+		format={{ style: "percent", maximumFractionDigits: 1 }}
+	/>
+	<Progress
+		label="Backup"
+		showValue
+		value={45}
+		max={60}
+		format={(minutes) => `${60 - minutes} min left`}
+	/>
+	<Progress
+		label="Synchronisierung"
+		showValue
+		value={40}
+		locale="de-DE"
+	/>
+</VStack>
+```
+
+### Value Label
+
+Use `getValueLabel` to give screen readers richer context than the compact visible `valueLabel` (receives `(value, details)` with `details.formatted`, `details.percent`, `details.min`, and `details.max`).
+
+<Wrapper>
+	<ValueLabelProgress />
+</Wrapper>
+
+```tsx
+<Progress
+	label="Copying files"
+	value={3}
+	max={12}
+	showValue
+	valueLabel="3 of 12"
+	getValueLabel={(value, details) => `${value} of ${details.max} files, ${details.formatted}`}
+/>
 ```
 
 ### Sizes
 
-You can set the size of the progress by using the `size` prop.
+Set the track height with `size` (`sm`, `md`, `lg`).
 
 <Wrapper>
-	<VStack w='full' gap={5}>
-		<Progress value={50} size="sm" aria-label="Progress" />
-    	<Progress value={50} size="md" aria-label="Progress" />
-		<Progress value={50} size="lg" aria-label="Progress" />
+	<VStack w="full" gap={5}>
+		<Progress value={50} size="sm" aria-label="Small progress" />
+		<Progress value={50} size="md" aria-label="Medium progress" />
+		<Progress value={50} size="lg" aria-label="Large progress" />
 	</VStack>
 </Wrapper>
 
 ```tsx
 <VStack gap={5}>
-    <Progress value={50} size="sm" aria-label="Progress" />
-    <Progress value={50} size="md" aria-label="Progress" />
-    <Progress value={50} size="lg" aria-label="Progress" />
+	<Progress value={50} size="sm" aria-label="Small progress" />
+	<Progress value={50} size="md" aria-label="Medium progress" />
+	<Progress value={50} size="lg" aria-label="Large progress" />
 </VStack>
-``` 
+```
 
 ### Scheme
 
-You can set the color of the progress by using the `scheme` prop.
+Change the indicator color with `scheme`.
 
 <Wrapper>
 	<VStack gap={5} full>
-		<Progress scheme="primary" value={50} aria-label="Progress" />
-		<Progress scheme="secondary" value={50} aria-label="Progress" />
-		<Progress scheme="success" value={50} aria-label="Progress" />
-		<Progress scheme="warning" value={50} aria-label="Progress" />
-		<Progress scheme="error" value={50} aria-label="Progress" />
-		<Progress scheme="info" value={50} aria-label="Progress" />
-		<Progress scheme="none" value={50} aria-label="Progress" />
+		<Progress scheme="primary" value={50} aria-label="Primary" />
+		<Progress scheme="secondary" value={50} aria-label="Secondary" />
+		<Progress scheme="success" value={50} aria-label="Success" />
+		<Progress scheme="warning" value={50} aria-label="Warning" />
+		<Progress scheme="error" value={50} aria-label="Error" />
+		<Progress scheme="info" value={50} aria-label="Info" />
+		<Progress scheme="none" value={50} aria-label="None" />
 	</VStack>
 </Wrapper>
 
 ```tsx
-<VStack gap={5} full>
-    <Progress scheme="primary" value={50} aria-label="Progress" />
-    <Progress scheme="secondary" value={50} aria-label="Progress" />
-    <Progress scheme="success" value={50} aria-label="Progress" />
-    <Progress scheme="warning" value={50} aria-label="Progress" />
-    <Progress scheme="error" value={50} aria-label="Progress" />
-    <Progress scheme="info" value={50} aria-label="Progress" />
-    <Progress scheme="none" value={50} aria-label="Progress" />
-</VStack>	
+<Progress scheme="success" value={50} aria-label="Success" />
 ```
 
-### Indeterminate Progress
+## Styling & Data Attributes
 
-You can make the progress indeterminate by using the `isIndeterminate` prop. You can customize `speed` prop to change the speed of the indeterminate animation.
+- **CSS variable**: `--progress-value` holds the percentage between `min` and `max` (unset while indeterminate).
+- **Data attributes**:
+  - `data-indeterminate`: Present while `value` is `null` or `isIndeterminate` is `true`.
+  - `data-progressing`: Present while `value` is below `max`.
+  - `data-complete`: Present once `value` reaches `max`.
 
-<Wrapper>
-	<Progress isIndeterminate speed="0.8s" aria-label="Progress" />
-</Wrapper>
+## API Reference
 
-```tsx
-<Progress isIndeterminate speed="0.8s" aria-label="Progress" />
-```
+| Prop | Type | Description |
+| --- | --- | --- |
+| `value` | `number \| null` | Current value between `min` and `max`, or `null` for indeterminate |
+| `min`, `max` | `number` | Range bounds (defaults `0`, `100`) |
+| `isIndeterminate` | `boolean` | Forces indeterminate mode |
+| `label` | `ReactNode` | Visible label rendered via `ProgressLabel` (names the progressbar) |
+| `showValue` | `boolean` | Renders the formatted value via `ProgressValue` |
+| `valueLabel` | `ReactNode \| ((state: ProgressValueState) => ReactNode)` | Custom visible text for `ProgressValue` |
+| `format` | `NumberFormat` | `Intl.NumberFormatOptions` or formatter function |
+| `locale` | `string` | BCP 47 locale tag |
+| `getValueLabel` | `(value: number \| null, details: GaugeLabelDetails<number \| null>) => string` | Screen reader announcement formatter |
+| `speed` | `string` | Indeterminate animation duration (default `"1s"`) |
+| `size` | `"sm" \| "md" \| "lg"` | Track height |
+| `scheme` | `"primary" \| "secondary" \| "info" \| "success" \| "warning" \| "error" \| "none"` | Color scheme |
+| `debug` | `boolean` | Logs state transitions in development |
 
+## Accessibility
+
+Name the bar with `label` (rendered inside `ProgressLabel`) or `aria-label`. The root exposes `role="progressbar"` with `aria-valuemin`, `aria-valuemax`, `aria-valuenow` (omitted when indeterminate), and `aria-valuetext`.

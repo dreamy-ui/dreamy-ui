@@ -17,7 +17,7 @@ export function Base() {
 
 export function Required() {
     return (
-        <Field.Root isRequired>
+        <Field.Root required>
             <Field.Label>Username</Field.Label>
             <Input placeholder="Enter your username" />
         </Field.Root>
@@ -26,7 +26,7 @@ export function Required() {
 
 export function Invalid() {
     return (
-        <Field.Root isInvalid>
+        <Field.Root invalid>
             <Field.Label>Username</Field.Label>
             <Input placeholder="Enter your username" />
         </Field.Root>
@@ -35,7 +35,7 @@ export function Invalid() {
 
 export function Disabled() {
     return (
-        <Field.Root isDisabled>
+        <Field.Root disabled>
             <Field.Label>Username</Field.Label>
             <Input placeholder="Enter your username" />
         </Field.Root>
@@ -44,7 +44,7 @@ export function Disabled() {
 
 export function FieldError() {
     return (
-        <Field.Root isInvalid>
+        <Field.Root invalid>
             <Field.Label>Username</Field.Label>
             <Input
                 defaultValue="x"

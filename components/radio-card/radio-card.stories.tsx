@@ -9,7 +9,7 @@ export default {
     title: "Radio Card"
 } satisfies Meta;
 
-interface RadioCardOptionProps extends React.ComponentProps<typeof RadioCard.Root> {
+interface RadioCardOptionProps extends Omit<React.ComponentProps<typeof RadioCard.Root>, "title"> {
     title: React.ReactNode;
     description?: React.ReactNode;
     hideRadio?: boolean;
@@ -245,13 +245,13 @@ export function Size() {
 }
 
 export function Controlled() {
-    const [value, setValue] = useState<string | number>("rr");
+    const [value, setValue] = useState<string | null>("rr");
 
     return (
         <>
             <Text>Selected: {value}</Text>
             <RadioGroup
-                onChange={setValue}
+                onValueChange={(next) => setValue(next)}
                 value={value}
             >
                 <Group
@@ -420,6 +420,34 @@ export function HideRadio() {
                         </Flex>
                     }
                     value="apple"
+                />
+            </Group>
+        </RadioGroup>
+    );
+}
+
+export function DisabledAndReadOnly() {
+    return (
+        <RadioGroup
+            defaultValue="pro"
+            full
+            readOnly
+        >
+            <Group
+                full
+                wrapped
+            >
+                <RadioCardOption
+                    description="Read-only selected option"
+                    full
+                    title="Pro"
+                    value="pro"
+                />
+                <RadioCardOption
+                    description="Cannot change while read-only"
+                    full
+                    title="Team"
+                    value="team"
                 />
             </Group>
         </RadioGroup>

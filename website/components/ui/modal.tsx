@@ -1,429 +1,486 @@
 "use client";
 
 import {
-    Dialog as ArkDialog,
-    type DialogRootProps as ArkDialogRootProps
-} from "@ark-ui/react/dialog";
-import {
-    FocusLock,
-    ModalContextProvider,
-    type ModalOptions,
-    Portal,
-    type PortalProps,
-    RemoveScroll,
-    type UseModalProps,
+    type DreamyHostProps,
+    type StyleContextSlotProps,
+    type UiSdkMotionController,
+    UiSdkMotionSync,
+    mergeMotionRefs,
     transformReducedMotion,
     useDefaultTransition,
-    useModal,
-    useModalContext,
-    useModalManager,
     useMotionVariants,
-    useReducedMotion
+    useReducedMotion,
+    useUiSdkMotion
 } from "@dreamy-ui/react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { createStyleContext } from "styled-system/jsx";
-import { modal } from "styled-system/recipes";
-import { Box, type BoxProps } from "./box";
+import {
+    Dialog as UiSdkDialog,
+    DialogBackdrop as UiSdkDialogBackdrop,
+    DialogClose as UiSdkDialogClose,
+    DialogContent as UiSdkDialogContent,
+    DialogDescription as UiSdkDialogDescription,
+    DialogShortcut as UiSdkDialogShortcut,
+    DialogTitle as UiSdkDialogTitle,
+    DialogTrigger as UiSdkDialogTrigger,
+    type DialogContentProps as UiSdkDialogContentProps,
+    type DialogOptions,
+    type DialogShortcutProps as UiSdkDialogShortcutProps,
+    type DialogTriggerProps as UiSdkDialogTriggerProps,
+    createDialogController
+} from "@ui-sdk/react/dialog";
+import type React from "react";
+import {
+    type CSSProperties,
+    type ReactElement,
+    type ReactNode,
+    createContext,
+    useContext,
+    useMemo
+} from "react";
+import { css, cx } from "styled-system/css";
+import {
+    type HTMLDreamyProps,
+    createStyleContext,
+    dreamy,
+    splitCssProps
+} from "styled-system/jsx";
+import { type ModalVariantProps, modal } from "styled-system/recipes";
 import { CloseButton as CloseButtonComponent, type CloseButtonProps } from "./close-button";
-import { Flex, type FlexProps } from "./flex";
 import { Heading } from "./heading";
-import { MotionBox, type MotionBoxProps, MotionFlex, type MotionFlexProps } from "./motion";
-import { useFloatingPresent } from "./use-floating-present";
+import { MotionBox, MotionFlex } from "./motion";
+import { Text, type TextProps } from "./text";
 
 const { withContext, withRootProvider } = createStyleContext(modal);
 
-type ScrollBehavior = "inside" | "outside";
+export { createDialogController };
 
-export interface ModalProps
-    extends Omit<ArkDialogRootProps, "children">,
-        ModalOptions,
-        Pick<UseModalProps, "useInert"> {
-    children: React.ReactNode;
+export type ModalScrollBehavior = "inside" | "outside";
+
+interface ModalUiContextValue {
+    scrollBehavior: ModalScrollBehavior;
+    reduceMotion: boolean;
+    motion: UiSdkMotionController;
+}
+
+const ModalUiContext = createContext<ModalUiContextValue | null>(null);
+
+function useModalUi() {
+    const context = useContext(ModalUiContext);
+    if (!context) {
+        throw new Error("useModalUi must be used within Modal.Root");
+    }
+    return context;
+}
+
+export interface ModalProps extends DialogOptions, ModalVariantProps {
+    children?: ReactNode;
     /**
      * Where scroll behavior should originate.
-     * - If set to `inside`, scroll only occurs within the `ModalBody`.
-     * - If set to `outside`, the entire `ModalContent` will scroll within the viewport.
+     * - If set to `inside`, scroll occurs within `Modal.Body`.
+     * - If set to `outside`, the dialog content scrolls within the viewport.
      *
      * @default "inside"
      */
-    scrollBehavior?: ScrollBehavior;
+    scrollBehavior?: ModalScrollBehavior;
     /**
-     * Fires when all exiting nodes have completed animating out
+     * If `true`, dialog enter/exit transitions are disabled.
      */
-    onCloseComplete?: () => void;
-    /**
-     * Props to be forwarded to the portal component
-     */
-    portalProps?: Omit<PortalProps, "children">;
+    reduceMotion?: boolean;
 }
 
 /**
- * Modal component — accessible dialog overlay.
+ * Modal component — accessible dialog overlay powered by UI SDK `Dialog`.
  *
  * @see Docs https://dreamy-ui.com/docs/components/modal
- *
- * @example
- * ```tsx
- * <Modal.Root open={open} onOpenChange={({ open }) => setOpen(open)}>
- *   <Modal.Overlay />
- *   <Modal.Content>
- *     <Modal.Header>Title</Modal.Header>
- *     <Modal.Body>Body</Modal.Body>
- *   </Modal.Content>
- * </Modal.Root>
- * ```
  */
 export const Root = withRootProvider(function ModalRoot(props: ModalProps) {
-    const modalProps: ModalProps = {
-        scrollBehavior: "inside",
-        autoFocus: true,
-        trapFocus: true,
-        restoreFocus: true,
-        blockScrollOnMount: true,
-        allowPinchZoom: false,
-        preserveScrollBarGap: true,
-        closeOnEscape: true,
-        closeOnInteractOutside: true,
-        ...props
-    };
-
     const {
         children,
-        open: openProp,
+        scrollBehavior = "inside",
+        reduceMotion: reduceMotionProp,
+        size: _size,
+        placement: _placement,
+        open,
         defaultOpen,
         onOpenChange,
-        autoFocus,
-        trapFocus,
-        initialFocusRef,
-        finalFocusRef,
-        restoreFocus,
-        blockScrollOnMount,
-        scrollBehavior,
-        allowPinchZoom,
-        preserveScrollBarGap,
-        onCloseComplete,
-        portalProps,
-        closeOnEscape,
-        closeOnInteractOutside,
-        useInert,
-        id,
-        ...arkRest
-    } = modalProps;
+        ...dialogOptions
+    } = props;
 
-    const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen ?? false);
-    const isControlled = openProp !== undefined;
-    const open = isControlled ? openProp : uncontrolledOpen;
+    const globalReduceMotion = useReducedMotion();
+    const reduceMotion = reduceMotionProp ?? globalReduceMotion ?? false;
+    const motion = useUiSdkMotion({ open, defaultOpen, reduceMotion });
+    const handleOpenChange = motion.wrapOnOpenChange(onOpenChange);
 
-    const handleOpenChange = useCallback(
-        (details: { open: boolean }) => {
-            if (!isControlled) {
-                setUncontrolledOpen(details.open);
-            }
-            onOpenChange?.(details);
-        },
-        [isControlled, onOpenChange]
+    const uiValue = useMemo<ModalUiContextValue>(
+        () => ({ scrollBehavior, reduceMotion, motion }),
+        [motion, reduceMotion, scrollBehavior]
     );
 
-    const reduceMotion = useReducedMotion();
-    const { present, handleExitComplete } = useFloatingPresent(open, reduceMotion);
-
-    const handleMotionExitComplete = useCallback(() => {
-        handleExitComplete();
-        onCloseComplete?.();
-    }, [handleExitComplete, onCloseComplete]);
-
-    useEffect(() => {
-        if (!open && reduceMotion) {
-            onCloseComplete?.();
-        }
-    }, [open, onCloseComplete, reduceMotion]);
-
-    const modalState = useModal({
-        open,
-        present,
-        onOpenChange: handleOpenChange,
-        id,
-        closeOnEscape,
-        closeOnInteractOutside,
-        useInert,
-        scrollBehavior
-    });
-
-    const context = useMemo(() => {
-        return {
-            ...modalState,
-            autoFocus,
-            trapFocus,
-            initialFocusRef,
-            finalFocusRef,
-            restoreFocus,
-            blockScrollOnMount,
-            allowPinchZoom,
-            preserveScrollBarGap,
-            onCloseComplete,
-            scrollBehavior,
-            reduceMotion,
-            onExitAnimationComplete: handleMotionExitComplete
-        };
-    }, [
-        allowPinchZoom,
-        autoFocus,
-        blockScrollOnMount,
-        finalFocusRef,
-        handleMotionExitComplete,
-        initialFocusRef,
-        modalState,
-        onCloseComplete,
-        preserveScrollBarGap,
-        reduceMotion,
-        restoreFocus,
-        scrollBehavior,
-        trapFocus
-    ]);
-
     return (
-        <ArkDialog.Root
-            {...arkRest}
-            closeOnEscape={closeOnEscape}
-            closeOnInteractOutside={closeOnInteractOutside}
-            defaultOpen={defaultOpen}
-            id={id}
-            onOpenChange={handleOpenChange}
-            open={open}
-            present={present}
-            unmountOnExit={false}
-        >
-            <ModalContextProvider value={context}>
-                {present && (
-                    <Portal
-                        isActive={present}
-                        key={context.id}
-                        zIndex="var(--z-index-modal)"
-                        {...portalProps}
-                    >
-                        {children}
-                    </Portal>
-                )}
-            </ModalContextProvider>
-        </ArkDialog.Root>
+        <ModalUiContext.Provider value={uiValue}>
+            <UiSdkDialog
+                {...dialogOptions}
+                defaultOpen={defaultOpen}
+                onOpenChange={handleOpenChange}
+                open={open}
+            >
+                <UiSdkMotionSync
+                    controller={motion}
+                    open={open}
+                />
+                {children}
+            </UiSdkDialog>
+        </ModalUiContext.Provider>
     );
 });
 
-export interface ModalOverlayProps extends MotionBoxProps {}
+export interface ModalTriggerProps
+    extends UiSdkDialogTriggerProps,
+        Omit<HTMLDreamyProps<"button">, "children" | "disabled" | "value" | "defaultValue" | "onChange"> {
+    render?: ReactElement;
+    children?: ReactNode;
+}
 
 /**
- * Modal Overlay — backdrop behind the dialog content.
+ * Modal Trigger — opens the dialog when activated.
  */
-export const Overlay = withContext(function Component(props: ModalOverlayProps) {
-    const { open, reduceMotion } = useModalContext();
-    const { overlay } = useMotionVariants();
-    const transition = useDefaultTransition();
+export function Trigger(props: ModalTriggerProps) {
+    const { className, style, children, ...rest } = props;
+    const [cssProps, domProps] = splitCssProps(rest);
 
     return (
-        <MotionBox
-            animate={open ? "animate" : "exit"}
-            exit="exit"
-            initial={reduceMotion ? false : "initial"}
-            transition={transition}
-            variants={transformReducedMotion(overlay, reduceMotion ?? false)}
-            {...(reduceMotion ? {} : { hidden: false })}
-            {...props}
-        />
+        <UiSdkDialogTrigger
+            {...(domProps as unknown as React.ComponentProps<typeof UiSdkDialogTrigger>)}
+            className={cx(className as string | undefined, css(cssProps))}
+            style={style as CSSProperties | undefined}
+        >
+            {children}
+        </UiSdkDialogTrigger>
+    );
+}
+
+export interface ModalOverlayProps extends Omit<HTMLDreamyProps<"div">, "children">, StyleContextSlotProps {
+    children?: ReactNode;
+}
+
+/**
+ * Modal Overlay — backdrop scrim behind the dialog content.
+ */
+export const Overlay = withContext(function ModalOverlay(props: ModalOverlayProps) {
+    const { className, style, children, "data-slot": _dataSlot, ...rest } = props;
+    const { reduceMotion, motion } = useModalUi();
+    const { overlay } = useMotionVariants();
+    const transition = useDefaultTransition();
+    const [cssProps, domProps] = splitCssProps(rest);
+
+    return (
+        <UiSdkDialogBackdrop
+            {...(domProps as unknown as React.ComponentProps<typeof UiSdkDialogBackdrop>)}
+            className={cx(className as string | undefined, css(cssProps))}
+            data-reduce-motion={reduceMotion ? "" : undefined}
+            render={(partProps, state) => {
+                const {
+                    ref: partRef,
+                    style: partStyle,
+                    children: partChildren,
+                    ...restPartProps
+                } = partProps as React.ComponentPropsWithRef<"div">;
+                const isOpen = (state as { open?: boolean })?.open ?? motion.isOpen;
+
+                return (
+                    <MotionBox
+                        {...(restPartProps as Record<string, unknown>)}
+                        animate={isOpen ? "animate" : "exit"}
+                        initial={reduceMotion ? false : "initial"}
+                        onAnimationComplete={() => {
+                            if (!isOpen) {
+                                motion.notifyAnimationComplete("overlay");
+                            }
+                        }}
+                        ref={mergeMotionRefs(partRef, (el) => {
+                            motion.register("overlay", el as HTMLElement | null);
+                        })}
+                        style={partStyle as CSSProperties | undefined}
+                        transition={transition}
+                        variants={transformReducedMotion(overlay, reduceMotion)}
+                    >
+                        {partChildren}
+                    </MotionBox>
+                );
+            }}
+            style={style as CSSProperties | undefined}
+        >
+            {children}
+        </UiSdkDialogBackdrop>
     );
 }, "overlay");
 
-interface ModalContainerProps extends BoxProps {}
-
-const Container = withContext(function Component({ children, ...props }: ModalContainerProps) {
-    const { getDialogContainerProps } = useModalContext();
-
-    return <Box {...getDialogContainerProps(props)}>{children}</Box>;
-}, "container");
-
-export interface ModalContentProps extends MotionFlexProps {}
+export interface ModalContentProps
+    extends UiSdkDialogContentProps,
+        DreamyHostProps<HTMLDreamyProps<"div">, UiSdkDialogContentProps>,
+        StyleContextSlotProps {
+    render?: ReactElement;
+    children?: ReactNode;
+}
 
 /**
- * Modal Content — centered dialog surface and focus scope.
+ * Modal Content — dialog surface, top-layer stacking, and focus scope.
  */
-export const Content = withContext(function Component({
-    children,
-    ...props
-}: ModalContentProps) {
-    const { getDialogProps, open, reduceMotion, onExitAnimationComplete } = useModalContext();
+export const Content = withContext(function ModalContent(props: ModalContentProps) {
+    const {
+        className,
+        style,
+        children,
+        initialFocus,
+        finalFocus,
+        keepMounted,
+        container,
+        render,
+        "data-slot": _dataSlot,
+        ...rest
+    } = props;
+    const { scrollBehavior, reduceMotion, motion } = useModalUi();
     const { modal: modalVariants } = useMotionVariants();
     const transition = useDefaultTransition();
-    const exitNotifiedRef = useRef(false);
+    const [cssProps, domProps] = splitCssProps(rest);
 
-    useEffect(() => {
-        if (open) {
-            exitNotifiedRef.current = false;
-        }
-    }, [open]);
+    const resolvedRender: React.ComponentProps<typeof UiSdkDialogContent>["render"] =
+        render ??
+        ((partProps, state) => {
+            const {
+                ref: partRef,
+                style: partStyle,
+                children: partChildren,
+                ...restPartProps
+            } = partProps as React.ComponentPropsWithRef<"div">;
+            const isOpen = (state as { open?: boolean })?.open ?? motion.isOpen;
+
+            return (
+                <MotionFlex
+                    {...(restPartProps as Record<string, unknown>)}
+                    animate={isOpen ? "animate" : "exit"}
+                    initial={reduceMotion ? false : "initial"}
+                    onAnimationComplete={() => {
+                        if (!isOpen) {
+                            motion.notifyAnimationComplete("content");
+                        }
+                    }}
+                    ref={mergeMotionRefs(partRef, (el) => {
+                        motion.register("content", el as HTMLElement | null);
+                    })}
+                    style={partStyle as CSSProperties | undefined}
+                    transition={transition}
+                    variants={transformReducedMotion(modalVariants, reduceMotion)}
+                >
+                    {partChildren}
+                </MotionFlex>
+            );
+        });
 
     return (
-        <ArkDialog.Positioner>
-            <ModalFocusScope>
-                <Container>
-                    <ArkDialog.Content asChild>
-                        <MotionFlex
-                            animate={open ? "animate" : "exit"}
-                            exit="exit"
-                            initial={reduceMotion ? false : "initial"}
-                            transition={transition}
-                            variants={transformReducedMotion(modalVariants, reduceMotion ?? false)}
-                            onAnimationComplete={() => {
-                                if (!open && !reduceMotion && !exitNotifiedRef.current) {
-                                    exitNotifiedRef.current = true;
-                                    onExitAnimationComplete?.();
-                                }
-                            }}
-                            {...(reduceMotion ? {} : { hidden: false })}
-                            {...getDialogProps(props)}
-                        >
-                            {children}
-                        </MotionFlex>
-                    </ArkDialog.Content>
-                </Container>
-            </ModalFocusScope>
-        </ArkDialog.Positioner>
+        <UiSdkDialogContent
+            {...(domProps as unknown as React.ComponentProps<typeof UiSdkDialogContent>)}
+            className={cx(className as string | undefined, css(cssProps))}
+            container={container}
+            data-reduce-motion={reduceMotion ? "" : undefined}
+            data-scroll-behavior={scrollBehavior}
+            finalFocus={finalFocus}
+            initialFocus={initialFocus}
+            keepMounted={keepMounted}
+            render={resolvedRender}
+            style={style as CSSProperties | undefined}
+        >
+            {children}
+        </UiSdkDialogContent>
     );
 }, "content");
 
-export interface ModalHeaderProps extends FlexProps {}
+export interface ModalHeaderProps extends Omit<HTMLDreamyProps<"header">, "children">, StyleContextSlotProps {
+    children?: ReactNode;
+}
 
 /**
- * Modal Header — top section for the dialog title.
+ * Modal Header — top section that provides the dialog's accessible title (`aria-labelledby`).
  */
-export const Header = withContext(function Component({ children, ...props }: ModalHeaderProps) {
-    const { headerId, setHeaderMounted } = useModalContext();
-
-    useEffect(() => {
-        setHeaderMounted(true);
-        return () => setHeaderMounted(false);
-    }, [setHeaderMounted]);
+export const Header = withContext(function ModalHeader(props: ModalHeaderProps) {
+    const { children, className, style, "data-slot": _dataSlot, ...rest } = props;
+    const [cssProps, domProps] = splitCssProps(rest);
 
     return (
-        <Flex
-            as={"header"}
-            id={headerId}
-            {...props}
+        <UiSdkDialogTitle
+            {...(domProps as unknown as React.ComponentProps<typeof UiSdkDialogTitle>)}
+            className={cx(className as string | undefined, css(cssProps))}
+            render={<header />}
+            style={style as CSSProperties | undefined}
         >
             {typeof children === "string" ? (
                 <Heading
+                    as="span"
                     size="lg"
-                    variant={"heading"}
+                    variant="heading"
                 >
                     {children}
                 </Heading>
             ) : (
                 children
             )}
-        </Flex>
+        </UiSdkDialogTitle>
     );
 }, "header");
 
-export interface ModalBodyProps extends FlexProps {}
+export interface ModalTitleProps extends Omit<HTMLDreamyProps<"h2">, "children"> {
+    children?: ReactNode;
+}
 
 /**
- * Modal Body — main content area of the dialog.
+ * Modal Title — explicit dialog heading (`aria-labelledby`).
  */
-export const Body = withContext(function Component({ children, style, ...props }: ModalBodyProps) {
-    const { scrollBehavior, bodyId, setBodyMounted } = useModalContext();
-
-    useEffect(() => {
-        setBodyMounted(true);
-        return () => setBodyMounted(false);
-    }, [setBodyMounted]);
+export function Title(props: ModalTitleProps) {
+    const { children, className, style, ...rest } = props;
+    const [cssProps, domProps] = splitCssProps(rest);
 
     return (
-        <Flex
-            id={bodyId}
-            {...props}
-            style={{
-                maxHeight: scrollBehavior === "inside" ? "calc(100vh - 10rem)" : undefined,
-                overflow: scrollBehavior === "inside" ? "auto" : undefined,
-                ...style
-            }}
+        <UiSdkDialogTitle
+            {...(domProps as unknown as React.ComponentProps<typeof UiSdkDialogTitle>)}
+            className={cx(className as string | undefined, css(cssProps))}
+            render={
+                <Heading
+                    as="h2"
+                    size="lg"
+                    variant="heading"
+                />
+            }
+            style={style as CSSProperties | undefined}
         >
             {children}
-        </Flex>
+        </UiSdkDialogTitle>
+    );
+}
+
+export interface ModalBodyProps extends Omit<HTMLDreamyProps<"div">, "children">, StyleContextSlotProps {
+    children?: ReactNode;
+}
+
+/**
+ * Modal Body — main content area wired as the dialog's `aria-describedby`.
+ */
+export const Body = withContext(function ModalBody(props: ModalBodyProps) {
+    const { children, className, style, "data-slot": _dataSlot, ...rest } = props;
+    const { scrollBehavior } = useModalUi();
+    const [cssProps, domProps] = splitCssProps(rest);
+
+    const resolvedStyle: CSSProperties = {
+        maxHeight: scrollBehavior === "inside" ? "calc(100vh - 10rem)" : undefined,
+        overflow: scrollBehavior === "inside" ? "auto" : undefined,
+        ...(style as CSSProperties | undefined)
+    };
+
+    return (
+        <UiSdkDialogDescription
+            {...(domProps as unknown as React.ComponentProps<typeof UiSdkDialogDescription>)}
+            className={cx(className as string | undefined, css(cssProps))}
+            render={<div />}
+            style={resolvedStyle}
+        >
+            {children}
+        </UiSdkDialogDescription>
     );
 }, "body");
 
-export interface ModalFooterProps extends FlexProps {}
+export interface ModalDescriptionProps extends TextProps {}
+
+/**
+ * Modal Description — explicit accessible description (`aria-describedby`).
+ */
+export function Description(props: ModalDescriptionProps) {
+    const { children, className, style, ...rest } = props;
+    const [cssProps, domProps] = splitCssProps(rest);
+
+    return (
+        <UiSdkDialogDescription
+            {...(domProps as unknown as React.ComponentProps<typeof UiSdkDialogDescription>)}
+            className={cx(className as string | undefined, css(cssProps))}
+            render={<Text as="p" />}
+            style={style as CSSProperties | undefined}
+        >
+            {children}
+        </UiSdkDialogDescription>
+    );
+}
+
+export interface ModalFooterProps extends HTMLDreamyProps<"footer"> {}
 
 /**
  * Modal Footer — bottom section for dialog actions.
  */
-export const Footer = withContext(function Component({ children, ...props }: ModalFooterProps) {
-    return (
-        <Flex
-            as={"footer"}
-            {...props}
-        >
-            {children}
-        </Flex>
-    );
-}, "footer");
+export const Footer = withContext(dreamy.footer, "footer");
 
-export interface ModalCloseButtonProps extends CloseButtonProps {}
+export interface ModalCloseButtonProps extends CloseButtonProps, StyleContextSlotProps {
+    action?: React.ComponentProps<typeof UiSdkDialogClose>["action"];
+    value?: string;
+}
 
 /**
- * Modal Close Button — dismisses the dialog.
+ * Modal Close Button — icon button that dismisses the dialog.
  */
-export const CloseButton = withContext(function Component({ ...props }: ModalCloseButtonProps) {
-    const { onClose } = useModalContext();
+export const CloseButton = withContext(function ModalCloseButton(props: ModalCloseButtonProps) {
+    const { className, action, value, "data-slot": _dataSlot, ...rest } = props;
 
     return (
-        <CloseButtonComponent
-            onClick={onClose}
-            {...props}
+        <UiSdkDialogClose
+            action={action}
+            className={className as string | undefined}
+            render={<CloseButtonComponent {...rest} />}
+            value={value}
         />
     );
 }, "close");
 
-interface ModalFocusScopeProps {
-    children: React.ReactElement;
+export interface ModalCloseProps
+    extends Omit<HTMLDreamyProps<"button">, "children" | "value"> {
+    action?: React.ComponentProps<typeof UiSdkDialogClose>["action"];
+    value?: string;
+    render?: ReactElement;
+    children?: ReactNode;
 }
 
-function ModalFocusScope(props: ModalFocusScopeProps) {
-    const {
-        autoFocus,
-        trapFocus,
-        dialogRef,
-        initialFocusRef,
-        blockScrollOnMount,
-        allowPinchZoom,
-        finalFocusRef,
-        restoreFocus,
-        preserveScrollBarGap,
-        lockFocusAcrossFrames,
-        useInert,
-        present
-    } = useModalContext();
-
-    const index = useModalManager(dialogRef, present);
+/**
+ * Modal Close — action button that closes the dialog.
+ */
+export function Close(props: ModalCloseProps) {
+    const { className, style, children, ...rest } = props;
+    const [cssProps, domProps] = splitCssProps(rest);
 
     return (
-        <FocusLock
-            autoFocus={autoFocus}
-            contentRef={dialogRef}
-            finalFocusRef={finalFocusRef}
-            initialFocusRef={initialFocusRef}
-            isDisabled={!trapFocus}
-            lockFocusAcrossFrames={lockFocusAcrossFrames}
-            restoreFocus={restoreFocus}
+        <UiSdkDialogClose
+            {...(domProps as unknown as React.ComponentProps<typeof UiSdkDialogClose>)}
+            className={cx(className as string | undefined, css(cssProps))}
+            style={style as CSSProperties | undefined}
         >
-            <RemoveScroll
-                allowPinchZoom={allowPinchZoom}
-                enabled={index === 1 && blockScrollOnMount}
-                // only block scroll for first dialog
-                forwardProps
-                inert={useInert}
-                removeScrollBar={!preserveScrollBarGap}
-            >
-                {props.children}
-            </RemoveScroll>
-        </FocusLock>
+            {children}
+        </UiSdkDialogClose>
+    );
+}
+
+export interface ModalShortcutProps
+    extends UiSdkDialogShortcutProps,
+        Omit<HTMLDreamyProps<"span">, "children"> {
+    children?: ReactNode;
+}
+
+/**
+ * Modal Shortcut — displays a trigger's keyboard shortcut.
+ */
+export function Shortcut(props: ModalShortcutProps) {
+    const { className, style, children, ...rest } = props;
+    const [cssProps, domProps] = splitCssProps(rest);
+
+    return (
+        <UiSdkDialogShortcut
+            {...(domProps as unknown as React.ComponentProps<typeof UiSdkDialogShortcut>)}
+            className={cx(className as string | undefined, css(cssProps))}
+            style={style as CSSProperties | undefined}
+        >
+            {children}
+        </UiSdkDialogShortcut>
     );
 }

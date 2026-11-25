@@ -6,36 +6,34 @@ import { Button } from "../button";
 import { render } from "../test/render";
 import * as ActionBar from "./index";
 
-function ActionBarHarness(props: { defaultOpen?: boolean; onClose?: () => void }) {
-    const { defaultOpen = true, onClose } = props;
-    const [isOpen, setIsOpen] = useState(defaultOpen);
+function ActionBarHarness(props: { defaultOpen?: boolean; onOpenChange?: (open: boolean) => void }) {
+    const { defaultOpen = true, onOpenChange } = props;
+    const [open, setOpen] = useState(defaultOpen);
 
-    function handleClose() {
-        setIsOpen(false);
-        onClose?.();
+    function handleOpenChange(next: boolean) {
+        setOpen(next);
+        onOpenChange?.(next);
     }
 
     return (
         <>
             <button
+                onClick={() => handleOpenChange(true)}
                 type="button"
-                onClick={function open() {
-                    setIsOpen(true);
-                }}
             >
                 Open actions
             </button>
             <ActionBar.Root
-                isOpen={isOpen}
-                onClose={handleClose}
+                onOpenChange={handleOpenChange}
+                open={open}
             >
                 <ActionBar.Content>
                     <ActionBar.SelectionTrigger>3 selected</ActionBar.SelectionTrigger>
                     <ActionBar.Separator />
                     <Button size="sm">Delete</Button>
                     <Button
-                        size="sm"
                         aria-label="Share selection"
+                        size="sm"
                     >
                         Share
                     </Button>
@@ -47,17 +45,15 @@ function ActionBarHarness(props: { defaultOpen?: boolean; onClose?: () => void }
 }
 
 function getActionSurface() {
-    const toolbar = screen.queryByRole("toolbar", { name: "Action bar" });
-    if (toolbar) return toolbar;
-    return screen.getByRole("dialog", { name: "Action bar" });
+    return screen.getByRole("toolbar", { name: "Action bar" });
 }
 
 describe("ActionBar", () => {
     it("exposes a named toolbar surface when open", () => {
         render(
             <ActionBar.Root
-                isOpen
-                onClose={() => {}}
+                onOpenChange={() => {}}
+                open
             >
                 <ActionBar.Content>
                     <ActionBar.SelectionTrigger>2 items selected</ActionBar.SelectionTrigger>
@@ -75,34 +71,32 @@ describe("ActionBar", () => {
 
     it("names the close control and dismisses on click", async () => {
         const user = userEvent.setup();
-        const onClose = vi.fn();
+        const onOpenChange = vi.fn();
 
-        render(<ActionBarHarness onClose={onClose} />);
+        render(<ActionBarHarness onOpenChange={onOpenChange} />);
 
         expect(getActionSurface()).toBeInTheDocument();
 
         const close = screen.getByRole("button", { name: "Close action bar" });
         await user.click(close);
 
-        expect(onClose).toHaveBeenCalled();
-        await waitFor(function assertClosed() {
-            expect(screen.queryByRole("dialog", { name: "Action bar" })).not.toBeInTheDocument();
+        expect(onOpenChange).toHaveBeenCalledWith(false);
+        await waitFor(() => {
             expect(screen.queryByRole("toolbar", { name: "Action bar" })).not.toBeInTheDocument();
         });
     });
 
     it("dismisses with Escape when open", async () => {
         const user = userEvent.setup();
-        const onClose = vi.fn();
+        const onOpenChange = vi.fn();
 
-        render(<ActionBarHarness onClose={onClose} />);
+        render(<ActionBarHarness onOpenChange={onOpenChange} />);
 
         getActionSurface().focus();
         await user.keyboard("{Escape}");
 
-        expect(onClose).toHaveBeenCalled();
-        await waitFor(function assertClosed() {
-            expect(screen.queryByRole("dialog", { name: "Action bar" })).not.toBeInTheDocument();
+        expect(onOpenChange).toHaveBeenCalledWith(false);
+        await waitFor(() => {
             expect(screen.queryByRole("toolbar", { name: "Action bar" })).not.toBeInTheDocument();
         });
     });
@@ -113,14 +107,14 @@ describe("ActionBar", () => {
 
         render(
             <ActionBar.Root
-                isOpen
-                onClose={() => {}}
+                onOpenChange={() => {}}
+                open
             >
                 <ActionBar.Content>
                     <ActionBar.SelectionTrigger>1 selected</ActionBar.SelectionTrigger>
                     <Button
-                        size="sm"
                         onClick={onDelete}
+                        size="sm"
                     >
                         Delete
                     </Button>
@@ -142,8 +136,8 @@ describe("ActionBar", () => {
     it("exposes a vertical separator", () => {
         render(
             <ActionBar.Root
-                isOpen
-                onClose={() => {}}
+                onOpenChange={() => {}}
+                open
             >
                 <ActionBar.Content>
                     <ActionBar.SelectionTrigger>2 selected</ActionBar.SelectionTrigger>
@@ -163,7 +157,6 @@ describe("ActionBar", () => {
 
         render(<ActionBarHarness defaultOpen={false} />);
 
-        expect(screen.queryByRole("dialog", { name: "Action bar" })).not.toBeInTheDocument();
         expect(screen.queryByRole("toolbar", { name: "Action bar" })).not.toBeInTheDocument();
         expect(screen.queryByRole("button", { name: "Delete" })).not.toBeInTheDocument();
 
@@ -175,8 +168,8 @@ describe("ActionBar", () => {
     it("shows meaningful selection summary text", () => {
         render(
             <ActionBar.Root
-                isOpen
-                onClose={() => {}}
+                onOpenChange={() => {}}
+                open
             >
                 <ActionBar.Content>
                     <ActionBar.SelectionTrigger>12 files selected</ActionBar.SelectionTrigger>
@@ -188,13 +181,13 @@ describe("ActionBar", () => {
         expect(screen.getByText("12 files selected")).toBeInTheDocument();
     });
 
-    it("supports arrow-key focus movement among actions when toolbar semantics apply", async () => {
+    it("supports arrow-key focus movement among actions", async () => {
         const user = userEvent.setup();
 
         render(
             <ActionBar.Root
-                isOpen
-                onClose={() => {}}
+                onOpenChange={() => {}}
+                open
             >
                 <ActionBar.Content>
                     <ActionBar.SelectionTrigger>2 selected</ActionBar.SelectionTrigger>

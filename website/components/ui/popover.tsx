@@ -10,12 +10,24 @@ import {
     PopoverTrigger as UiSdkPopoverTrigger,
     type PopoverProps as UiSdkPopoverProps
 } from "@ui-sdk/react/popover";
-import { type PortalProps, type PositioningProps, useReducedMotion } from "@dreamy-ui/react";
+import {
+    type DreamyHostProps,
+    type PortalProps,
+    type PositioningProps,
+    type StyleContextSlotProps,
+    UiSdkMotionSync,
+    mergeMotionRefs,
+    transformReducedMotion,
+    useMotionVariants,
+    useReducedMotion,
+    useUiSdkMotion
+} from "@dreamy-ui/react";
 import { Children, cloneElement, useCallback, useMemo, useState } from "react";
 import { type HTMLDreamyProps, createStyleContext, dreamy } from "styled-system/jsx";
 import type { PopoverVariantProps } from "styled-system/recipes";
 import { popover } from "styled-system/recipes";
 import { CloseButton as CloseButtonComponent, type CloseButtonProps } from "./close-button";
+import { MotionBox, type MotionBoxProps } from "./motion";
 import { mapUiSdkPositioning } from "./map-positioning";
 import { PopoverUiProvider, usePopoverUi } from "./popover-ui-context";
 
@@ -127,9 +139,14 @@ function PopoverRoot(props: PopoverProps) {
 
     const globalReduceMotion = useReducedMotion();
     const reduceMotion = reduceMotionProp ?? globalReduceMotion ?? false;
+    const motion = useUiSdkMotion({
+        open: rest.open,
+        defaultOpen: rest.defaultOpen,
+        reduceMotion
+    });
     const [anchor, setAnchor] = useState<HTMLElement | null>(null);
 
-    const handleOpenChange = useCallback<NonNullable<UiSdkPopoverProps["onOpenChange"]>>(
+    const handleUserOpenChange = useCallback<NonNullable<UiSdkPopoverProps["onOpenChange"]>>(
         (nextOpen, details) => {
             if (!nextOpen) {
                 if (details.reason === "escape-key" && !closeOnEscape) {
@@ -146,6 +163,8 @@ function PopoverRoot(props: PopoverProps) {
         [closeOnEscape, closeOnInteractOutside, onOpenChange]
     );
 
+    const handleOpenChange = motion.wrapOnOpenChange(handleUserOpenChange);
+
     const uiValue = useMemo(
         () => ({
             hasArrow: hasArrow ?? false,
@@ -153,6 +172,7 @@ function PopoverRoot(props: PopoverProps) {
             arrowShadowColor,
             trigger,
             reduceMotion,
+            motion,
             positioning,
             initialFocus: initialFocusRef
                 ? () => (initialFocusRef.current as HTMLElement | null)
@@ -161,7 +181,7 @@ function PopoverRoot(props: PopoverProps) {
                   : undefined,
             finalFocus: restoreFocus === false ? "none" : undefined,
             keepMounted: lazyMount === false ? true : undefined,
-            container: portalProps?.containerRef?.current ?? undefined,
+            containerRef: portalProps?.containerRef,
             anchor,
             setAnchor
         }),
@@ -173,6 +193,7 @@ function PopoverRoot(props: PopoverProps) {
             hasArrow,
             initialFocusRef,
             lazyMount,
+            motion,
             portalProps?.containerRef,
             positioning,
             reduceMotion,
@@ -185,10 +206,14 @@ function PopoverRoot(props: PopoverProps) {
         <PopoverUiProvider value={uiValue}>
             <UiSdkPopover
                 {...rest}
-                openOnHover={openOnHover ?? trigger === "hover"}
                 delay={delay ?? openDelay}
                 onOpenChange={handleOpenChange}
+                openOnHover={openOnHover ?? trigger === "hover"}
             >
+                <UiSdkMotionSync
+                    controller={motion}
+                    open={rest.open}
+                />
                 {children}
             </UiSdkPopover>
         </PopoverUiProvider>
@@ -202,7 +227,7 @@ function PopoverRoot(props: PopoverProps) {
  */
 export const Root = withRootProvider(PopoverRoot);
 
-export interface PopoverArrowProps extends HTMLDreamyProps<"div"> {}
+export interface PopoverArrowProps extends HTMLDreamyProps<"div">, StyleContextSlotProps {}
 
 interface PopoverArrowStyle extends React.CSSProperties {
     "--arrow-size"?: string;
@@ -217,53 +242,66 @@ export const Arrow = withContext(function PopoverArrow(props: PopoverArrowProps)
     const { arrowSize, arrowShadowColor } = usePopoverUi();
     const { "data-slot": _dataSlot, style, ...arrowProps } = props;
 
-    const arrowStyle: PopoverArrowStyle = {
+    const arrowStyle = {
         "--arrow-size": `${arrowSize ?? 8}px`,
         "--arrow-background": "var(--colors-bg-panel)",
         ...(arrowShadowColor ? { "--popper-arrow-shadow": arrowShadowColor } : {}),
-        ...style
-    };
+        ...(style as React.CSSProperties | undefined)
+    } as PopoverArrowStyle;
 
-    return <UiSdkPopoverArrow {...arrowProps} style={arrowStyle} />;
+    return (
+        <UiSdkPopoverArrow
+            {...(arrowProps as unknown as React.ComponentProps<typeof UiSdkPopoverArrow>)}
+            style={arrowStyle as React.CSSProperties}
+        />
+    );
 }, "arrow");
 
+type UiSdkPopoverContentProps = React.ComponentProps<typeof UiSdkPopoverContent>;
+type UiSdkPopoverContentPickedProps = Pick<
+    UiSdkPopoverContentProps,
+    | "side"
+    | "align"
+    | "sideOffset"
+    | "alignOffset"
+    | "collisionPadding"
+    | "arrowPadding"
+    | "anchor"
+    | "container"
+    | "initialFocus"
+    | "finalFocus"
+    | "keepMounted"
+>;
+
 export interface PopoverContentProps
-    extends HTMLDreamyProps<"div">,
-        Pick<
-            React.ComponentProps<typeof UiSdkPopoverContent>,
-            | "side"
-            | "align"
-            | "sideOffset"
-            | "alignOffset"
-            | "collisionPadding"
-            | "arrowPadding"
-            | "anchor"
-            | "container"
-            | "initialFocus"
-            | "finalFocus"
-            | "keepMounted"
-        > {
+    extends DreamyHostProps<HTMLDreamyProps<"div">, UiSdkPopoverContentPickedProps, "children">,
+        UiSdkPopoverContentPickedProps,
+        StyleContextSlotProps {
+    children?: React.ReactNode;
     rootProps?: {
         className?: string;
         style?: React.CSSProperties;
     };
     /**
-     * @deprecated Motion is handled by CSS transitions on `data-starting-style`/`data-ending-style`.
+     * Props forwarded to the internal `MotionBox` wrapper on `Popover.Content`.
      */
-    motionProps?: Record<string, unknown>;
+    motionProps?: Omit<MotionBoxProps, "children">;
+    onAnimationComplete?: (definition: unknown) => void;
     arrowProps?: PopoverArrowProps;
 }
 
 /**
  * Popover Content — the floating panel rendered in a portal.
  */
-export const Content = withContext(function PopoverContent(props: PopoverContentProps) {
+export const Content: (props: PopoverContentProps) => React.JSX.Element = withContext(
+    function PopoverContent(props: PopoverContentProps) {
     const {
         children,
         className,
         style,
         rootProps,
-        motionProps: _motionProps,
+        motionProps,
+        onAnimationComplete,
         arrowProps,
         side,
         align,
@@ -281,27 +319,61 @@ export const Content = withContext(function PopoverContent(props: PopoverContent
     } = props;
 
     const ui = usePopoverUi();
+    const { popover: popoverVariants } = useMotionVariants();
     const mapped = mapUiSdkPositioning(ui.positioning);
 
     const resolvedStyle: React.CSSProperties = {
         ...(mapped.matchWidth ? { width: "var(--anchor-width)" } : {}),
         ...rootProps?.style,
-        ...style
+        ...(style as React.CSSProperties | undefined)
     };
 
     return (
         <UiSdkPopoverContent
-            {...rest}
+            {...(rest as unknown as React.ComponentProps<typeof UiSdkPopoverContent>)}
             align={align ?? mapped.align}
             alignOffset={alignOffset ?? mapped.alignOffset}
             anchor={anchor ?? ui.anchor ?? undefined}
             arrowPadding={arrowPadding ?? mapped.arrowPadding}
-            className={className}
+            className={className as string | undefined}
             collisionPadding={collisionPadding ?? mapped.collisionPadding}
-            container={container ?? ui.container}
+            container={container ?? ui.containerRef?.current ?? undefined}
+            data-reduce-motion={ui.reduceMotion ? "" : undefined}
             finalFocus={finalFocus ?? ui.finalFocus}
             initialFocus={initialFocus ?? ui.initialFocus}
             keepMounted={keepMounted ?? ui.keepMounted}
+            render={(partProps, state) => {
+                const {
+                    ref: partRef,
+                    style: partStyle,
+                    children: partChildren,
+                    ...restPartProps
+                } = partProps as React.ComponentPropsWithRef<"div">;
+                const isOpen = (state as { open?: boolean })?.open ?? ui.motion.isOpen;
+
+                return (
+                    <MotionBox
+                        {...(restPartProps as Record<string, unknown>)}
+                        animate={isOpen ? "initial" : "exit"}
+                        initial={ui.reduceMotion ? false : "exit"}
+                        ref={mergeMotionRefs(partRef, (el) => {
+                            ui.motion.register("content", el as HTMLElement | null);
+                        })}
+                        style={partStyle as React.CSSProperties | undefined}
+                        variants={transformReducedMotion(popoverVariants, ui.reduceMotion)}
+                        {...motionProps}
+                        onAnimationComplete={(definition) => {
+                            if (!isOpen) {
+                                ui.motion.notifyAnimationComplete("content");
+                            }
+                            onAnimationComplete?.(definition);
+                            motionProps?.onAnimationComplete?.(definition);
+                        }}
+                    >
+                        {partChildren}
+                    </MotionBox>
+                );
+            }}
             side={side ?? mapped.side}
             sideOffset={sideOffset ?? mapped.sideOffset}
             style={resolvedStyle}
@@ -310,9 +382,13 @@ export const Content = withContext(function PopoverContent(props: PopoverContent
             {children}
         </UiSdkPopoverContent>
     );
-}, "content");
+}, "content", { forwardProps: ["container"] } as never) as (
+    props: PopoverContentProps
+) => React.JSX.Element;
 
-export interface PopoverHeaderProps extends HTMLDreamyProps<"header"> {}
+export interface PopoverHeaderProps extends HTMLDreamyProps<"header">, StyleContextSlotProps {
+    children?: React.ReactNode;
+}
 
 /**
  * Popover Header — title area at the top of the popover.
@@ -322,13 +398,15 @@ export const Header = withContext(function PopoverHeader(props: PopoverHeaderPro
 
     return (
         <UiSdkPopoverTitle
-            {...rest}
+            {...(rest as unknown as React.ComponentProps<typeof UiSdkPopoverTitle>)}
             render={<header>{children}</header>}
         />
     );
 }, "header");
 
-export interface PopoverBodyProps extends HTMLDreamyProps<"div"> {}
+export interface PopoverBodyProps extends HTMLDreamyProps<"div">, StyleContextSlotProps {
+    children?: React.ReactNode;
+}
 
 /**
  * Popover Body — main content area of the popover.
@@ -338,13 +416,15 @@ export const Body = withContext(function PopoverBody(props: PopoverBodyProps) {
 
     return (
         <UiSdkPopoverDescription
-            {...rest}
+            {...(rest as unknown as React.ComponentProps<typeof UiSdkPopoverDescription>)}
             render={<div>{children}</div>}
         />
     );
 }, "body");
 
-export interface PopoverFooterProps extends HTMLDreamyProps<"footer"> {}
+export interface PopoverFooterProps extends HTMLDreamyProps<"footer"> {
+    children?: React.ReactNode;
+}
 
 /**
  * Popover Footer — action area at the bottom of the popover.
@@ -363,8 +443,8 @@ export const CloseButton = withContext(function PopoverCloseButton(props: Popove
 
     return (
         <UiSdkPopoverClose
-            className={className}
-            render={<CloseButtonComponent {...rest} />}
+            className={className as string | undefined}
+            render={<CloseButtonComponent {...(rest as CloseButtonProps)} />}
         />
     );
 }, "close");

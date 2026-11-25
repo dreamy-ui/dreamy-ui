@@ -1,152 +1,225 @@
 "use client";
 
 import {
-    FileUploadProvider,
-    type UseFileUploadProps,
-    type UseFileUploadReturn,
+    type DreamyHostProps,
     dataAttr,
-    formatFileSize,
-    useFileUpload,
-    useFileUploadContext
+    useFieldProps
 } from "@dreamy-ui/react";
-import { useMemo } from "react";
-import { type HTMLDreamyProps, createStyleContext, dreamy } from "styled-system/jsx";
+import {
+    FileInput as UiSdkFileInput,
+    FileInputDropzone as UiSdkFileInputDropzone,
+    FileInputItem as UiSdkFileInputItem,
+    FileInputItemRemove as UiSdkFileInputItemRemove,
+    FileInputList as UiSdkFileInputList,
+    FileInputTrigger as UiSdkFileInputTrigger,
+    type FileInputController,
+    type FileInputDropzoneProps,
+    type FileInputOptions,
+    createFileInputController,
+    formatFileSize
+} from "@ui-sdk/react/file-input";
+import type React from "react";
+import {
+    type CSSProperties,
+    type ReactElement,
+    type ReactNode,
+    createContext,
+    useContext,
+    useEffect,
+    useMemo,
+    useState
+} from "react";
+import { css, cx } from "styled-system/css";
+import {
+    type HTMLDreamyProps,
+    createStyleContext,
+    dreamy,
+    splitCssProps
+} from "styled-system/jsx";
 import { fileUpload } from "styled-system/recipes";
 
 const { withProvider, withContext } = createStyleContext(fileUpload);
 
+export { createFileInputController, formatFileSize };
+
+export interface FileUploadUiState {
+    files: readonly File[];
+    disabled: boolean;
+    required: boolean;
+    dragging: boolean;
+    invalid: boolean;
+    controller: FileInputController;
+    fieldId?: string;
+    ariaDescribedBy?: string;
+}
+
+const FileUploadUiContext = createContext<FileUploadUiState | null>(null);
+
+export function useFileUploadUi(): FileUploadUiState {
+    const ctx = useContext(FileUploadUiContext);
+    if (!ctx) {
+        throw new Error("FileUpload sub-components must be used within FileUpload.Root");
+    }
+    return ctx;
+}
+
 // ─── Root ────────────────────────────────────────────────────────────────────
 
-interface RootBaseProps extends UseFileUploadProps {}
-
-const StyledRoot = withProvider(dreamy.div, "root");
+export interface FileUploadRootProps
+    extends FileInputOptions,
+        DreamyHostProps<HTMLDreamyProps<"div">, FileInputOptions, "onChange" | "onSelect" | "onDrop"> {
+    invalid?: boolean;
+    children?: ReactNode;
+}
 
 /**
- * File Upload component — drag-and-drop and picker-based file selection.
+ * File Upload component — drag-and-drop and picker-based file selection powered by UI SDK.
  *
  * @see Docs https://dreamy-ui.com/docs/components/file-upload
- *
- * @example
- * ```tsx
- * <FileUpload.Root accept="image/*" maxFiles={3}>
- *   <FileUpload.Dropzone>
- *     <FileUpload.Trigger>Choose files</FileUpload.Trigger>
- *   </FileUpload.Dropzone>
- *   <FileUpload.List />
- * </FileUpload.Root>
- * ```
  */
-export function Root(props: RootBaseProps & HTMLDreamyProps<"div">) {
+export const Root = withProvider(function FileUploadRoot(props: FileUploadRootProps) {
     const {
         accept,
         maxFiles,
-        maxFileSize,
-        minFileSize,
-        allowDrop,
+        maxSize,
+        minSize,
+        multiple,
         directory,
         capture,
         disabled,
         required,
         invalid,
         name,
-        onFileAccept,
-        onFileReject,
-        onFileChange,
+        form,
+        value,
+        defaultValue,
+        onValueChange,
+        onReject,
         validate,
-        preventDocumentDrop,
-        locale,
+        announcement,
+        controller: controllerProp,
+        debug,
+        id,
+        className,
+        style,
         children,
         ...rest
     } = props;
 
-    const fileUpload = useFileUpload({
-        accept,
-        maxFiles,
-        maxFileSize,
-        minFileSize,
-        allowDrop,
-        directory,
-        capture,
-        disabled,
-        required,
-        invalid,
-        name,
-        onFileAccept,
-        onFileReject,
-        onFileChange,
-        validate,
-        preventDocumentDrop,
-        locale
+    const [internalController] = useState(createFileInputController);
+    const resolvedController = controllerProp ?? internalController;
+
+    const {
+        isDisabled: isDisabledField = false,
+        isRequired: isRequiredField = false,
+        isInvalid: isInvalidField = false,
+        id: fieldId,
+        "aria-describedby": ariaDescribedBy
+    } = useFieldProps({
+        isDisabled: disabled,
+        isRequired: required,
+        isInvalid: invalid,
+        id
     });
 
-    return (
-        <FileUploadProvider value={fileUpload}>
-            <StyledRoot
-                {...fileUpload.getRootProps()}
-                {...rest}
-            >
-                <input {...fileUpload.getInputProps()} />
-                {children}
-            </StyledRoot>
-        </FileUploadProvider>
-    );
-}
+    const resolvedDisabled = disabled ?? isDisabledField;
+    const resolvedRequired = required ?? isRequiredField;
+    const resolvedInvalid = invalid ?? isInvalidField;
+    const resolvedMultiple = multiple ?? (maxFiles !== undefined && maxFiles > 1 ? true : undefined);
 
-// ─── RootProvider ────────────────────────────────────────────────────────────
-
-interface RootProviderProps {
-    value: UseFileUploadReturn;
-    children?: React.ReactNode;
-}
-
-const StyledRootProvider = withProvider(dreamy.div, "root");
-
-/**
- * File Upload Root Provider — root wrapper when using `useFileUpload` externally.
- */
-export function RootProvider(props: RootProviderProps & HTMLDreamyProps<"div">) {
-    const { value, children, ...rest } = props;
+    const [cssProps, domProps] = splitCssProps(rest);
+    const mergedClassName = cx(className as string | undefined, css(cssProps));
 
     return (
-        <FileUploadProvider value={value}>
-            <StyledRootProvider
-                {...value.getRootProps()}
-                {...rest}
-            >
-                <input {...value.getInputProps()} />
-                {children}
-            </StyledRootProvider>
-        </FileUploadProvider>
+        <UiSdkFileInput
+            {...(domProps as unknown as React.ComponentProps<typeof UiSdkFileInput>)}
+            accept={accept}
+            announcement={announcement}
+            capture={capture}
+            className={mergedClassName}
+            controller={resolvedController}
+            data-invalid={dataAttr(resolvedInvalid)}
+            debug={debug}
+            defaultValue={defaultValue}
+            directory={directory}
+            disabled={resolvedDisabled}
+            form={form}
+            maxFiles={maxFiles}
+            maxSize={maxSize}
+            minSize={minSize}
+            multiple={resolvedMultiple}
+            name={name}
+            onReject={onReject}
+            onValueChange={onValueChange}
+            required={resolvedRequired}
+            style={style as CSSProperties | undefined}
+            validate={validate}
+            value={value}
+        >
+            {(state) => (
+                <FileUploadUiContext.Provider
+                    value={{
+                        files: state.value,
+                        disabled: state.disabled,
+                        required: state.required,
+                        dragging: state.dragging,
+                        invalid: resolvedInvalid,
+                        controller: resolvedController,
+                        fieldId,
+                        ariaDescribedBy
+                    }}
+                >
+                    {children}
+                </FileUploadUiContext.Provider>
+            )}
+        </UiSdkFileInput>
     );
-}
+}, "root");
 
 // ─── Label ───────────────────────────────────────────────────────────────────
 
+export interface FileUploadLabelProps extends HTMLDreamyProps<"label"> {}
+
 /**
- * File Upload Label — accessible label for the file input.
+ * File Upload Label — accessible label for the file input trigger.
  */
-export const Label = withContext(dreamy.label, "label");
+export const Label = withContext(function FileUploadLabel(props: FileUploadLabelProps) {
+    const ui = useFileUploadUi();
+    return (
+        <dreamy.label
+            htmlFor={ui.fieldId}
+            {...props}
+        />
+    );
+}, "label");
 
 // ─── Dropzone ────────────────────────────────────────────────────────────────
 
-const StyledDropzone = withContext(dreamy.div, "dropzone");
+export interface FileUploadDropzoneProps
+    extends FileInputDropzoneProps,
+        Omit<HTMLDreamyProps<"div">, "children"> {
+    children?: ReactNode;
+}
 
 /**
- * File Upload Dropzone — drag-and-drop area for uploading files.
+ * File Upload Dropzone — drag-and-drop and paste area for uploading files.
  */
-export function Dropzone(props: HTMLDreamyProps<"div">) {
-    const { children, ...rest } = props;
-    const ctx = useFileUploadContext();
+export const Dropzone = withContext(function FileUploadDropzone(props: FileUploadDropzoneProps) {
+    const { target, pasteTarget, className, style, children, ...rest } = props;
+    const [cssProps, domProps] = splitCssProps(rest);
 
     return (
-        <StyledDropzone
-            {...ctx.getDropzoneProps()}
-            {...rest}
+        <UiSdkFileInputDropzone
+            {...(domProps as unknown as React.ComponentProps<typeof UiSdkFileInputDropzone>)}
+            className={cx(className as string | undefined, css(cssProps))}
+            pasteTarget={pasteTarget}
+            style={style as CSSProperties | undefined}
+            target={target}
         >
             {children}
-        </StyledDropzone>
+        </UiSdkFileInputDropzone>
     );
-}
+}, "dropzone");
 
 // ─── DropzoneContent ─────────────────────────────────────────────────────────
 
@@ -157,24 +230,35 @@ export const DropzoneContent = withContext(dreamy.div, "dropzoneContent");
 
 // ─── Trigger ─────────────────────────────────────────────────────────────────
 
-const StyledTrigger = withContext(dreamy.button, "trigger");
+export interface FileUploadTriggerProps
+    extends Omit<HTMLDreamyProps<"button">, "children" | "name" | "form" | "value" | "asChild"> {
+    controller?: FileInputController;
+    render?: ReactElement;
+    children?: ReactNode;
+}
 
 /**
  * File Upload Trigger — button that opens the file picker dialog.
  */
-export function Trigger(props: HTMLDreamyProps<"button">) {
-    const { children, ...rest } = props;
-    const ctx = useFileUploadContext();
+export const Trigger = withContext(function FileUploadTrigger(props: FileUploadTriggerProps) {
+    const { controller, render, className, style, children, id, ...rest } = props;
+    const ui = useFileUploadUi();
+    const [cssProps, domProps] = splitCssProps(rest);
 
     return (
-        <StyledTrigger
-            {...ctx.getTriggerProps()}
-            {...rest}
+        <UiSdkFileInputTrigger
+            {...(domProps as unknown as React.ComponentProps<typeof UiSdkFileInputTrigger>)}
+            aria-invalid={ui.invalid || undefined}
+            className={cx(className as string | undefined, css(cssProps))}
+            controller={controller}
+            id={id ?? ui.fieldId}
+            render={render}
+            style={style as CSSProperties | undefined}
         >
             {children}
-        </StyledTrigger>
+        </UiSdkFileInputTrigger>
     );
-}
+}, "trigger");
 
 // ─── ItemGroup ───────────────────────────────────────────────────────────────
 
@@ -185,34 +269,36 @@ export const ItemGroup = withContext(dreamy.ul, "itemGroup");
 
 // ─── Item ────────────────────────────────────────────────────────────────────
 
-interface ItemProps {
-    file: File;
-    children?: React.ReactNode;
+export interface FileUploadItemProps extends Omit<HTMLDreamyProps<"li">, "children"> {
+    file?: File;
+    children?: ReactNode | ((state: { file: File }) => ReactNode);
 }
-
-const StyledItem = withContext(dreamy.li, "item");
 
 /**
  * File Upload Item — single uploaded file in the list.
  */
-export function Item(props: ItemProps & HTMLDreamyProps<"li">) {
-    const { file, children, ...rest } = props;
+export const Item = withContext(function FileUploadItem(props: FileUploadItemProps) {
+    const { file, className, style, children, ...rest } = props;
+    const [cssProps, domProps] = splitCssProps(rest);
 
     return (
-        <StyledItem
-            data-file={file.name}
-            {...rest}
+        <UiSdkFileInputItem
+            {...(domProps as unknown as React.ComponentProps<typeof UiSdkFileInputItem>)}
+            className={cx(className as string | undefined, css(cssProps))}
+            data-file={file?.name}
+            file={file}
+            render={<li />}
+            style={style as CSSProperties | undefined}
         >
             {children}
-        </StyledItem>
+        </UiSdkFileInputItem>
     );
-}
+}, "item");
 
 // ─── ItemPreview ─────────────────────────────────────────────────────────────
 
-interface ItemPreviewProps {
+export interface FileUploadItemPreviewProps extends HTMLDreamyProps<"div"> {
     file?: File;
-    children?: React.ReactNode;
 }
 
 const StyledItemPreview = withContext(dreamy.div, "itemPreview");
@@ -220,15 +306,15 @@ const StyledItemPreview = withContext(dreamy.div, "itemPreview");
 /**
  * File Upload Item Preview — preview icon or content for an uploaded file.
  */
-export function ItemPreview(props: ItemPreviewProps & HTMLDreamyProps<"div">) {
-    const { children, ...rest } = props;
+export function ItemPreview(props: FileUploadItemPreviewProps) {
+    const { file: _file, children, ...rest } = props;
 
     return <StyledItemPreview {...rest}>{children || <DefaultFileIcon />}</StyledItemPreview>;
 }
 
 // ─── ItemPreviewImage ────────────────────────────────────────────────────────
 
-interface ItemPreviewImageProps {
+export interface FileUploadItemPreviewImageProps extends HTMLDreamyProps<"img"> {
     file: File;
 }
 
@@ -237,9 +323,19 @@ const StyledItemPreviewImage = withContext(dreamy.img, "itemPreviewImage");
 /**
  * File Upload Item Preview Image — image preview for uploaded image files.
  */
-export function ItemPreviewImage(props: ItemPreviewImageProps & HTMLDreamyProps<"img">) {
+export function ItemPreviewImage(props: FileUploadItemPreviewImageProps) {
     const { file, ...rest } = props;
-    const src = useMemo(() => URL.createObjectURL(file), [file]);
+    const [src, setSrc] = useState<string>("");
+
+    useEffect(() => {
+        const url = URL.createObjectURL(file);
+        setSrc(url);
+        return () => {
+            URL.revokeObjectURL(url);
+        };
+    }, [file]);
+
+    if (!src) return null;
 
     return (
         <StyledItemPreviewImage
@@ -259,9 +355,8 @@ export const ItemContent = withContext(dreamy.div, "itemContent");
 
 // ─── ItemName ────────────────────────────────────────────────────────────────
 
-interface ItemNameProps {
+export interface FileUploadItemNameProps extends HTMLDreamyProps<"span"> {
     file: File;
-    children?: React.ReactNode;
 }
 
 const StyledItemName = withContext(dreamy.span, "itemName");
@@ -269,7 +364,7 @@ const StyledItemName = withContext(dreamy.span, "itemName");
 /**
  * File Upload Item Name — displays the uploaded file name.
  */
-export function ItemName(props: ItemNameProps & HTMLDreamyProps<"span">) {
+export function ItemName(props: FileUploadItemNameProps) {
     const { file, children, ...rest } = props;
 
     return <StyledItemName {...rest}>{children || file.name}</StyledItemName>;
@@ -277,9 +372,8 @@ export function ItemName(props: ItemNameProps & HTMLDreamyProps<"span">) {
 
 // ─── ItemSizeText ────────────────────────────────────────────────────────────
 
-interface ItemSizeTextProps {
+export interface FileUploadItemSizeTextProps extends HTMLDreamyProps<"span"> {
     file: File;
-    children?: React.ReactNode;
 }
 
 const StyledItemSizeText = withContext(dreamy.span, "itemSizeText");
@@ -287,41 +381,41 @@ const StyledItemSizeText = withContext(dreamy.span, "itemSizeText");
 /**
  * File Upload Item Size Text — human-readable file size display.
  */
-export function ItemSizeText(props: ItemSizeTextProps & HTMLDreamyProps<"span">) {
+export function ItemSizeText(props: FileUploadItemSizeTextProps) {
     const { file, children, ...rest } = props;
-    const ctx = useFileUploadContext();
-    const sizeText = useMemo(() => formatFileSize(file.size, ctx.locale), [file.size, ctx.locale]);
+    const sizeText = useMemo(() => formatFileSize(file.size), [file.size]);
 
     return <StyledItemSizeText {...rest}>{children || sizeText}</StyledItemSizeText>;
 }
 
 // ─── ItemDeleteTrigger ───────────────────────────────────────────────────────
 
-interface ItemDeleteTriggerProps {
-    file: File;
-    children?: React.ReactNode;
+export interface FileUploadItemDeleteTriggerProps
+    extends Omit<HTMLDreamyProps<"button">, "children" | "name" | "form" | "value"> {
+    file?: File;
+    children?: ReactNode;
 }
-
-const StyledItemDeleteTrigger = withContext(dreamy.button, "itemDeleteTrigger");
 
 /**
  * File Upload Item Delete Trigger — removes a specific file from the list.
  */
-export function ItemDeleteTrigger(props: ItemDeleteTriggerProps & HTMLDreamyProps<"button">) {
-    const { file, children, ...rest } = props;
-    const ctx = useFileUploadContext();
+export const ItemDeleteTrigger = withContext(function FileUploadItemDeleteTrigger(
+    props: FileUploadItemDeleteTriggerProps
+) {
+    const { file, className, style, children, ...rest } = props;
+    const [cssProps, domProps] = splitCssProps(rest);
 
     return (
-        <StyledItemDeleteTrigger
-            aria-label={`Remove ${file.name}`}
-            onClick={() => ctx.removeFile(file)}
-            type="button"
-            {...rest}
+        <UiSdkFileInputItemRemove
+            {...(domProps as unknown as React.ComponentProps<typeof UiSdkFileInputItemRemove>)}
+            className={cx(className as string | undefined, css(cssProps))}
+            file={file}
+            style={style as CSSProperties | undefined}
         >
             {children || <DefaultCloseIcon />}
-        </StyledItemDeleteTrigger>
+        </UiSdkFileInputItemRemove>
     );
-}
+}, "itemDeleteTrigger");
 
 // ─── ClearTrigger ────────────────────────────────────────────────────────────
 
@@ -331,13 +425,17 @@ const StyledClearTrigger = withContext(dreamy.button, "itemDeleteTrigger");
  * File Upload Clear Trigger — removes all accepted files.
  */
 export function ClearTrigger(props: HTMLDreamyProps<"button">) {
-    const { children, ...rest } = props;
-    const ctx = useFileUploadContext();
+    const { children, onClick, disabled, ...rest } = props;
+    const ui = useFileUploadUi();
 
     return (
         <StyledClearTrigger
             aria-label="Clear all files"
-            onClick={() => ctx.clearFiles()}
+            disabled={disabled ?? ui.disabled}
+            onClick={(event) => {
+                (onClick as React.MouseEventHandler<HTMLButtonElement> | undefined)?.(event);
+                ui.controller.clear();
+            }}
             type="button"
             {...rest}
         >
@@ -348,9 +446,8 @@ export function ClearTrigger(props: HTMLDreamyProps<"button">) {
 
 // ─── FileText ────────────────────────────────────────────────────────────────
 
-interface FileTextProps {
+export interface FileUploadFileTextProps extends HTMLDreamyProps<"span"> {
     fallback?: string;
-    children?: React.ReactNode;
 }
 
 const StyledFileText = withContext(dreamy.span, "fileText");
@@ -358,22 +455,22 @@ const StyledFileText = withContext(dreamy.span, "fileText");
 /**
  * File Upload File Text — selected file name or placeholder text.
  */
-export function FileText(props: FileTextProps & HTMLDreamyProps<"span">) {
+export function FileText(props: FileUploadFileTextProps) {
     const { fallback = "Select file(s)", children, ...rest } = props;
-    const ctx = useFileUploadContext();
+    const ui = useFileUploadUi();
 
     const fileText = useMemo(() => {
-        const files = ctx.acceptedFiles;
+        const files = ui.files;
         if (files.length === 1) return files[0].name;
         if (files.length > 1) return `${files.length} files`;
         return fallback;
-    }, [ctx.acceptedFiles, fallback]);
+    }, [ui.files, fallback]);
 
     const isPlaceholder = fileText === fallback;
 
     return (
         <StyledFileText
-            data-placeholder={isPlaceholder || undefined}
+            data-placeholder={dataAttr(isPlaceholder)}
             {...rest}
         >
             {children || fileText}
@@ -384,16 +481,16 @@ export function FileText(props: FileTextProps & HTMLDreamyProps<"span">) {
 // ─── Context ─────────────────────────────────────────────────────────────────
 
 /**
- * File Upload Context — render-prop access to file upload state.
+ * File Upload Context — render-prop access to file upload state and controller.
  */
-export function Context(props: { children: (ctx: UseFileUploadReturn) => React.ReactNode }) {
-    const ctx = useFileUploadContext();
+export function Context(props: { children: (ctx: FileUploadUiState) => ReactNode }) {
+    const ctx = useFileUploadUi();
     return <>{props.children(ctx)}</>;
 }
 
 // ─── Shortcut Components ─────────────────────────────────────────────────────
 
-interface ItemsBaseProps {
+export interface FileUploadItemsProps extends Omit<FileUploadItemProps, "file"> {
     showSize?: boolean;
     clearable?: boolean;
 }
@@ -401,16 +498,16 @@ interface ItemsBaseProps {
 /**
  * File Upload Items — shortcut that renders all accepted files as items.
  */
-export function Items(props: ItemsBaseProps & HTMLDreamyProps<"li">) {
+export function Items(props: FileUploadItemsProps) {
     const { showSize, clearable, ...rest } = props;
-    const ctx = useFileUploadContext();
+    const ui = useFileUploadUi();
 
     return (
         <>
-            {ctx.acceptedFiles.map((file) => (
+            {ui.files.map((file, index) => (
                 <Item
                     file={file}
-                    key={file.name}
+                    key={`${file.name}-${file.size}-${index}`}
                     {...rest}
                 >
                     <ItemPreview />
@@ -425,33 +522,57 @@ export function Items(props: ItemsBaseProps & HTMLDreamyProps<"li">) {
                             file={file}
                         />
                     )}
-                    {clearable && <ItemDeleteTrigger file={file} />}
+                    {clearable ? <ItemDeleteTrigger file={file} /> : null}
                 </Item>
             ))}
         </>
     );
 }
 
-interface ListProps extends ItemsBaseProps {}
+export interface FileUploadListProps extends Omit<HTMLDreamyProps<"ul">, "children"> {
+    showSize?: boolean;
+    clearable?: boolean;
+}
 
 /**
- * File Upload List — item group containing all accepted files.
+ * File Upload List — UI SDK file list containing all accepted files.
  */
-export function List(props: ListProps & HTMLDreamyProps<"ul">) {
-    const { showSize, clearable, ...rest } = props;
-    const ctx = useFileUploadContext();
+export const List = withContext(function FileUploadList(props: FileUploadListProps) {
+    const { showSize, clearable, className, style, ...rest } = props;
+    const ui = useFileUploadUi();
+    const [cssProps, domProps] = splitCssProps(rest);
 
-    if (ctx.acceptedFiles.length === 0) return null;
+    if (ui.files.length === 0) return null;
 
     return (
-        <ItemGroup {...rest}>
-            <Items
-                clearable={clearable}
-                showSize={showSize}
-            />
-        </ItemGroup>
+        <UiSdkFileInputList
+            {...(domProps as unknown as React.ComponentProps<typeof UiSdkFileInputList>)}
+            className={cx(className as string | undefined, css(cssProps))}
+            render={<ul />}
+            style={style as CSSProperties | undefined}
+        >
+            <Item>
+                {(state) => (
+                    <>
+                        <ItemPreview />
+                        {showSize ? (
+                            <ItemContent>
+                                <ItemName file={state.file} />
+                                <ItemSizeText file={state.file} />
+                            </ItemContent>
+                        ) : (
+                            <ItemName
+                                data-grow={dataAttr(true)}
+                                file={state.file}
+                            />
+                        )}
+                        {clearable ? <ItemDeleteTrigger file={state.file} /> : null}
+                    </>
+                )}
+            </Item>
+        </UiSdkFileInputList>
     );
-}
+}, "itemGroup");
 
 // ─── Default Icons ───────────────────────────────────────────────────────────
 

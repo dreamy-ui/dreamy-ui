@@ -9,12 +9,12 @@ themeSource: /components/time-input/time-input.ts
 ## Installation
 
 ```bash
-pnpm dreamy add time-input
+bunx dreamy add time-input
 ```
 
 ## Usage
 
-Click the control to open the time popover. Focus starts on the first field so you can type immediately. Use up and down arrows to change the focused segment, and left and right arrows to move between fields.
+Click the control to open the time popover. Use up and down arrows to step the focused segment, and left and right arrows to move between segments.
 
 <Wrapper>
     <TimeInput.AIO />
@@ -26,112 +26,98 @@ Click the control to open the time popover. Focus starts on the first field so y
 
 ### 12-hour format
 
-Pass `hour12` to show an AM/PM segment and 1-12 hour wheel (only when `hour` is included in `fields`).
+Pass `hourCycle={12}` to show an AM/PM segment and a 1–12 hour wheel, or `hourCycle={24}` for 24-hour time.
 
 <Wrapper>
-    <TimeInput.AIO hour12 />
+    <TimeInput.AIO hourCycle={12} />
 </Wrapper>
 
 ```tsx
-<TimeInput.AIO hour12 />
+<TimeInput.AIO hourCycle={12} />
 ```
 
-### Fields
+### Granularity
 
-Use `fields` to choose any combination of `hour`, `minute`, `second`, and `millisecond`. Order is always normalized to hour → minute → second → millisecond. The string value format follows the active fields.
+Use `granularity` (`"hour"`, `"minute"`, or `"second"`) to choose the smallest unit displayed.
 
 <Wrapper>
     <VStack alignItems="flex-start" gap={3}>
-        <TimeInput.AIO defaultValue="14:30:45" fields={["hour", "minute", "second"]} hour12 />
-        <TimeInput.AIO
-            defaultValue="14:30:45.100"
-            fields={["hour", "minute", "second", "millisecond"]}
-            millisecondStep={100}
-        />
-        <TimeInput.AIO defaultValue="05:30" fields={["minute", "second"]} />
-        <TimeInput.AIO defaultValue="45.250" fields={["second", "millisecond"]} millisecondStep={50} />
+        <TimeInput.AIO defaultValue="09:00" granularity="hour" hourCycle={24} />
+        <TimeInput.AIO defaultValue="14:30" granularity="minute" hourCycle={12} />
+        <TimeInput.AIO defaultValue="14:30:45" granularity="second" hourCycle={24} />
     </VStack>
 </Wrapper>
 
 ```tsx
-<TimeInput.AIO defaultValue="14:30:45" fields={["hour", "minute", "second"]} hour12 />
-<TimeInput.AIO
-  defaultValue="14:30:45.100"
-  fields={["hour", "minute", "second", "millisecond"]}
-  millisecondStep={100}
-/>
-<TimeInput.AIO defaultValue="05:30" fields={["minute", "second"]} />
-<TimeInput.AIO defaultValue="45.250" fields={["second", "millisecond"]} millisecondStep={50} />
+<TimeInput.AIO defaultValue="09:00" granularity="hour" hourCycle={24} />
+<TimeInput.AIO defaultValue="14:30" granularity="minute" hourCycle={12} />
+<TimeInput.AIO defaultValue="14:30:45" granularity="second" hourCycle={24} />
 ```
 
 ### Controlled
 
-The value string matches the active `fields` (for example `"HH:mm"`, `"HH:mm:ss"`, or `"ss.SSS"`), even when `hour12` is enabled.
+Control the ISO time string (`"HH:mm"` or `"HH:mm:ss"`, or `null`) with `value` and `onValueChange`.
 
 <Wrapper>
     <ControlledTimeInput />
 </Wrapper>
 
 ```tsx
-const [value, setValue] = useState("14:30");
+const [value, setValue] = useState<string | null>("14:30");
 
-<TimeInput.AIO hour12 value={value} onChange={setValue} />
+<TimeInput.AIO hourCycle={12} value={value} onValueChange={(next) => setValue(next)} />
 ```
 
 ### Sizes
 
+Use the `size` prop to change the size of the trigger and wheel popover (`sm`, `md`, or `lg`).
+
 <Wrapper>
-    <HStack alignItems="flex-start">
-        <TimeInput.AIO size="sm" hour12 />
-        <TimeInput.AIO size="md" hour12 />
-        <TimeInput.AIO size="lg" hour12 />
+    <HStack alignItems="flex-start" wrapped>
+        <TimeInput.AIO size="sm" hourCycle={12} />
+        <TimeInput.AIO size="md" hourCycle={12} />
+        <TimeInput.AIO size="lg" hourCycle={12} />
     </HStack>
 </Wrapper>
 
 ```tsx
-<TimeInput.AIO size="sm" hour12 />
-<TimeInput.AIO size="md" hour12 />
-<TimeInput.AIO size="lg" hour12 />
+<TimeInput.AIO size="sm" hourCycle={12} />
+<TimeInput.AIO size="md" hourCycle={12} />
+<TimeInput.AIO size="lg" hourCycle={12} />
 ```
 
 ### Variants
 
+Use the `variant` prop to switch between `outline`, `solid`, and `filledOutline` trigger styles.
+
 <Wrapper>
     <VStack alignItems="flex-start">
-        <TimeInput.AIO variant="outline" hour12 />
-        <TimeInput.AIO variant="solid" hour12 />
-        <TimeInput.AIO variant="filledOutline" hour12 />
+        <TimeInput.AIO variant="outline" hourCycle={12} />
+        <TimeInput.AIO variant="solid" hourCycle={12} />
+        <TimeInput.AIO variant="filledOutline" hourCycle={12} />
     </VStack>
 </Wrapper>
 
 ```tsx
-<TimeInput.AIO variant="outline" hour12 />
-<TimeInput.AIO variant="solid" hour12 />
-<TimeInput.AIO variant="filledOutline" hour12 />
+<TimeInput.AIO variant="outline" hourCycle={12} />
+<TimeInput.AIO variant="solid" hourCycle={12} />
+<TimeInput.AIO variant="filledOutline" hourCycle={12} />
 ```
 
 ### Steps
 
-Use `minuteStep`, `secondStep`, and `millisecondStep` to snap each field (for example every 5 minutes or every 100ms). Prefer a larger `millisecondStep` when showing milliseconds so the wheel stays usable.
+Use `minuteStep` and `secondStep` to snap wheel columns (for example every 5 minutes).
 
 <Wrapper>
     <HStack alignItems="flex-start">
-        <TimeInput.AIO defaultValue="09:00" hour12 minuteStep={5} />
-        <TimeInput.AIO
-            defaultValue="14:30:00.000"
-            fields={["hour", "minute", "second", "millisecond"]}
-            millisecondStep={100}
-        />
+        <TimeInput.AIO defaultValue="09:00" hourCycle={12} minuteStep={5} />
+        <TimeInput.AIO defaultValue="14:30:00" granularity="second" secondStep={15} />
     </HStack>
 </Wrapper>
 
 ```tsx
-<TimeInput.AIO defaultValue="09:00" hour12 minuteStep={5} />
-<TimeInput.AIO
-  defaultValue="14:30:00.000"
-  fields={["hour", "minute", "second", "millisecond"]}
-  millisecondStep={100}
-/>
+<TimeInput.AIO defaultValue="09:00" hourCycle={12} minuteStep={5} />
+<TimeInput.AIO defaultValue="14:30:00" granularity="second" secondStep={15} />
 ```
 
 ### Compound API
@@ -139,7 +125,7 @@ Use `minuteStep`, `secondStep`, and `millisecondStep` to snap each field (for ex
 Compose the parts yourself when you need custom layout.
 
 <Wrapper>
-    <TimeInput.Root defaultValue="16:45:00" fields={["hour", "minute", "second"]} hour12>
+    <TimeInput.Root defaultValue="16:45:00" granularity="second" hourCycle={12}>
         <TimeInput.Trigger />
         <TimeInput.Content>
             <TimeInput.Columns />
@@ -148,7 +134,7 @@ Compose the parts yourself when you need custom layout.
 </Wrapper>
 
 ```tsx
-<TimeInput.Root defaultValue="16:45:00" fields={["hour", "minute", "second"]} hour12>
+<TimeInput.Root defaultValue="16:45:00" granularity="second" hourCycle={12}>
     <TimeInput.Trigger />
     <TimeInput.Content>
         <TimeInput.Columns />
@@ -158,10 +144,12 @@ Compose the parts yourself when you need custom layout.
 
 ### With Field
 
+Combine `TimeInput` with `Field` to associate a label, hint, and validation state.
+
 <Wrapper>
     <Field.Root>
         <Field.Label>Appointment time</Field.Label>
-        <TimeInput.AIO hour12 name="appointmentTime" />
+        <TimeInput.AIO hourCycle={12} name="appointmentTime" />
         <Field.Hint>Scroll the wheels or type each segment</Field.Hint>
     </Field.Root>
 </Wrapper>
@@ -169,20 +157,7 @@ Compose the parts yourself when you need custom layout.
 ```tsx
 <Field.Root>
     <Field.Label>Appointment time</Field.Label>
-    <TimeInput.AIO hour12 name="appointmentTime" />
+    <TimeInput.AIO hourCycle={12} name="appointmentTime" />
     <Field.Hint>Scroll the wheels or type each segment</Field.Hint>
 </Field.Root>
-```
-
-### Popover props
-
-Use `popoverProps` on `TimeInput.Root` to forward behavior props to the internal [Popover](/docs/components/popover). Keep placement on the root `positioning` prop.
-
-```tsx
-<TimeInput.Root hour12 popoverProps={{ closeOnBlur: false }}>
-    <TimeInput.Trigger />
-    <TimeInput.Content>
-        <TimeInput.Columns />
-    </TimeInput.Content>
-</TimeInput.Root>
 ```

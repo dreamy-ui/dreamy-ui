@@ -37,7 +37,7 @@ Consumer
 
 ### Phase 0 — Foundation
 
-- Pin `@ui-sdk/react` and `@ui-sdk/core` to `0.1.0-beta.1`.
+- Pin `@ui-sdk/react` and `@ui-sdk/core` to `0.1.0-beta.17` (upgraded from `0.1.0-beta.1`).
 - Add repository skill: `.agents/skills/dreamy-ui-ui-sdk-migration/SKILL.md`.
 - Add Storybook + Playwright validation helpers.
 - Treat this document and `2.component-coverage.mdx` as the migration source of truth.
@@ -94,12 +94,12 @@ Build Dreamy-only interactive components from `@ui-sdk/core`:
 - `radio-card`
 - any remaining component still using custom `@dreamy-ui/react` behavior hooks
 
-### Phase 4 — Cleanup
+### Phase 4 — Cleanup (Complete)
 
-- Remove `@ark-ui/react` dependencies once no registry source imports it.
-- Mark `dreamy-ui-ark-ui-migration` as superseded.
-- Update component docs and changelog for breaking API changes.
-- Regenerate registry JSON and verify Storybook/Playwright/typecheck/build.
+- Removed `@ark-ui/react` dependencies from `components/package.json` and `website/package.json`, and pruned legacy Ark adapter files from generated website outputs.
+- Kept custom `@ui-sdk/core`-style primitive modules colocated with custom components (`action-bar/action-bar-primitive.ts`, `stepper/stepper-primitive.ts`, `editable/editable-primitive.ts`).
+- Updated component documentation (`website/docs/5.components/*.mdx`), interactive demos, stories, and `.test-d.tsx` / Vitest / Playwright suites for UI SDK-native props (`checked`, `open`, `value`, `onCheckedChange`, `onOpenChange`, `onValueChange`, `disabled`, `readOnly`, `required`, `invalid`).
+- Regenerated registry JSON (`bun run components`) and verified Storybook/Playwright/Vitest/typecheck/build.
 
 ## Validation workflow
 

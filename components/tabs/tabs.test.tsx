@@ -6,7 +6,7 @@ import { render } from "../test/render";
 import * as Tabs from "./index";
 
 describe("Tabs", () => {
-    it("exposes tablist / tab / tabpanel roles and associations", () => {
+    it("exposes tablist / tab / tabpanel roles, associations, and UI SDK slots", () => {
         render(
             <Tabs.Root>
                 <Tabs.List>
@@ -22,8 +22,11 @@ describe("Tabs", () => {
             </Tabs.Root>
         );
 
+        expect(document.querySelector('[data-slot="tabs"]')).toBeInTheDocument();
+
         const tablist = screen.getByRole("tablist");
-        expect(tablist).toHaveAttribute("aria-orientation", "horizontal");
+        expect(tablist).toHaveAttribute("data-orientation", "horizontal");
+        expect(tablist).toHaveAttribute("data-slot", "tabs-list");
 
         const tabs = screen.getAllByRole("tab");
         expect(tabs).toHaveLength(3);
@@ -31,9 +34,6 @@ describe("Tabs", () => {
         expect(tabs[1]).toHaveAttribute("aria-selected", "false");
         expect(tabs[0]).toHaveAttribute("tabIndex", "0");
         expect(tabs[1]).toHaveAttribute("tabIndex", "-1");
-
-        const panels = screen.getAllByRole("tabpanel");
-        expect(panels.length).toBeGreaterThanOrEqual(1);
 
         const controls = tabs[0].getAttribute("aria-controls");
         expect(controls).toBeTruthy();
@@ -148,15 +148,15 @@ describe("Tabs", () => {
         const onValueChange = vi.fn();
 
         function Fixture() {
-            const [value, setValue] = useState("0");
+            const [value, setValue] = useState<string | null>("0");
 
             return (
                 <Tabs.Root
-                    value={value}
-                    onValueChange={(details) => {
-                        onValueChange(details);
-                        setValue(details.value);
+                    onValueChange={(next, details) => {
+                        onValueChange(next, details);
+                        setValue(next);
                     }}
+                    value={value}
                 >
                     <Tabs.List>
                         <Tabs.Tab>Alpha</Tabs.Tab>
@@ -173,15 +173,15 @@ describe("Tabs", () => {
         render(<Fixture />);
 
         await user.click(screen.getByRole("tab", { name: "Beta" }));
-        expect(onValueChange).toHaveBeenCalledWith({ value: "1" });
+        expect(onValueChange).toHaveBeenCalledWith("1", expect.anything());
         expect(screen.getByRole("tab", { name: "Beta" })).toHaveAttribute("aria-selected", "true");
     });
 
-    it("keeps selection manual until activation when manual", async () => {
+    it("keeps selection manual until activation when activation='manual'", async () => {
         const user = userEvent.setup();
 
         render(
-            <Tabs.Root manual>
+            <Tabs.Root activation="manual">
                 <Tabs.List>
                     <Tabs.Tab>Manual 1</Tabs.Tab>
                     <Tabs.Tab>Manual 2</Tabs.Tab>
@@ -216,7 +216,7 @@ describe("Tabs", () => {
             <Tabs.Root>
                 <Tabs.List>
                     <Tabs.Tab>Enabled</Tabs.Tab>
-                    <Tabs.Tab isDisabled>Disabled</Tabs.Tab>
+                    <Tabs.Tab disabled>Disabled</Tabs.Tab>
                     <Tabs.Tab>Also enabled</Tabs.Tab>
                 </Tabs.List>
                 <Tabs.Panels>
@@ -228,11 +228,22 @@ describe("Tabs", () => {
         );
 
         const tabs = screen.getAllByRole("tab");
-        expect(tabs[1]).toBeDisabled();
+        expect(tabs[1]).toHaveAttribute("aria-disabled", "true");
 
         tabs[0].focus();
         await user.keyboard("{ArrowRight}");
 
+        await waitFor(() => {
+            const nextTabs = screen.getAllByRole("tab");
+            expect(nextTabs[1]).toHaveFocus();
+            expect(nextTabs[0]).toHaveAttribute("aria-selected", "true");
+            expect(nextTabs[1]).toHaveAttribute("aria-selected", "false");
+        });
+
+        await user.keyboard("{Enter}");
+        expect(screen.getAllByRole("tab")[0]).toHaveAttribute("aria-selected", "true");
+
+        await user.keyboard("{ArrowRight}");
         await waitFor(() => {
             const nextTabs = screen.getAllByRole("tab");
             expect(nextTabs[2]).toHaveFocus();

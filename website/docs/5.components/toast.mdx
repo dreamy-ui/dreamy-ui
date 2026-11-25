@@ -1,20 +1,20 @@
 ---
 title: Toast
-description: Toasts can be a nice way to signalize the user about important information from user action. 
+description: Toasts provide brief, non-intrusive notifications for user actions and application events.
 isServerComponent: false
-source: /packages/react/src/components/toast/toast.tsx
-themeSource: /packages/system/src/recipes/toast.ts
+source: /components/toast/index.tsx
+themeSource: /components/toast/toast.ts
 ---
 
 ## Installation
 
 ```bash
-pnpm dreamy add toast toast-provider
+bunx dreamy add toast toast-provider
 ```
 
 ### Add ToastProvider
 
-You need to wrap your app with `ToastProvider` to use the toasts.
+You need to wrap your app with `ToastProvider` to use toasts.
 
 ```tsx {4,6}
 import { ToastProvider } from "@ui/toast-provider";
@@ -31,6 +31,8 @@ export function App() {
 ```
 
 ## Usage
+
+Use the `useToast` hook to trigger toast notifications from any client component inside `ToastProvider`.
 
 <Wrapper>
 	<Button onClick={() => toast({ title: "Welcome!", description: "Make yourself at home!" })}>
@@ -52,9 +54,7 @@ function Toast() {
 
 ### Overlay stacking
 
-ToastProvider renders to the shared [Portal](/docs/components/portal) stack at the `toast` layer (1700). Toasts remain above lower semantic layers without manual z-index values, and active same-layer portal scopes follow open order.
-
-There is still only one browser Top Layer host per `Document`; ToastProvider does not create an independent top-layer entry.
+ToastProvider mounts UI SDK `ToastRegion` instances that render in the browser's top layer, keeping notifications visible and reachable via `F6` even above open modals and drawers without manual z-index configuration.
 
 ### Status
 
@@ -117,7 +117,7 @@ The `position` prop changes the position of the Toast.
 
 ```tsx
 <Flex wrapped gap={2}>
-  {["top-left", "top-center", "top-right", "bottom-left", "bottom-center", "bottom-right"].map((position) => (
+  {["top-left", "top", "top-right", "bottom-left", "bottom", "bottom-right"].map((position) => (
     <Button 
       key={position} 
       onClick={() => toast({ 

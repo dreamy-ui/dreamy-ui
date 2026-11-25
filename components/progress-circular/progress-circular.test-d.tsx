@@ -1,5 +1,5 @@
 import { assertType } from "vitest";
-import type { ProgressCircularProps } from "./index";
+import type { GaugeLabelDetails, NumberFormat, ProgressCircularProps } from "./index";
 
 type ExpectTrue<T extends true> = T;
 
@@ -12,6 +12,12 @@ assertType<boolean | undefined>({} as ProgressCircularProps["showValueLabel"]);
 assertType<boolean | undefined>({} as ProgressCircularProps["isIndeterminate"]);
 assertType<boolean | undefined>({} as ProgressCircularProps["disabled"]);
 assertType<string | undefined>({} as ProgressCircularProps["speed"]);
+assertType<NumberFormat | undefined>({} as ProgressCircularProps["format"]);
+assertType<string | undefined>({} as ProgressCircularProps["locale"]);
+assertType<
+    ((value: number | null, details: GaugeLabelDetails<number | null>) => string) | undefined
+>({} as ProgressCircularProps["getValueLabel"]);
+assertType<boolean | undefined>({} as ProgressCircularProps["debug"]);
 
 const _size: ProgressCircularProps["size"] = "md";
 const _scheme: ProgressCircularProps["scheme"] = "primary";

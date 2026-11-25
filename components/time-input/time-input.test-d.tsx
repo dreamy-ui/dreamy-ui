@@ -1,38 +1,65 @@
+import type { ChangeDetails } from "@ui-sdk/core";
+import type { TimeInputValueChangeReason } from "@ui-sdk/react/time-input";
 import type { ReactNode } from "react";
 import { assertType } from "vitest";
 import type { TimeInputProps, TimeInputTriggerProps } from "./index";
 
 type ExpectTrue<T extends true> = T;
+type KnownKeys<T> = keyof {
+    [K in keyof T as string extends K ? never : number extends K ? never : K]: K;
+};
 
-assertType<((value: string) => void) | undefined>({} as TimeInputProps["onChange"]);
-assertType<string | undefined>({} as TimeInputProps["value"]);
-assertType<string | undefined>({} as TimeInputProps["defaultValue"]);
-assertType<boolean | undefined>({} as TimeInputProps["hour12"]);
+assertType<
+    ((value: string | null, details: ChangeDetails<TimeInputValueChangeReason>) => void) | undefined
+>({} as TimeInputProps["onValueChange"]);
+assertType<string | null | undefined>({} as TimeInputProps["value"]);
+assertType<string | null | undefined>({} as TimeInputProps["defaultValue"]);
+assertType<12 | 24 | undefined>({} as TimeInputProps["hourCycle"]);
+assertType<"hour" | "minute" | "second" | undefined>({} as TimeInputProps["granularity"]);
 assertType<number | undefined>({} as TimeInputProps["minuteStep"]);
 assertType<number | undefined>({} as TimeInputProps["secondStep"]);
-assertType<number | undefined>({} as TimeInputProps["millisecondStep"]);
-assertType<("hour" | "minute" | "second" | "millisecond")[] | undefined>(
-    {} as TimeInputProps["fields"]
-);
-assertType<boolean | undefined>({} as TimeInputProps["isDisabled"]);
-assertType<boolean | undefined>({} as TimeInputProps["isInvalid"]);
-assertType<boolean | undefined>({} as TimeInputProps["isRequired"]);
+assertType<boolean | undefined>({} as TimeInputProps["disabled"]);
+assertType<boolean | undefined>({} as TimeInputProps["readOnly"]);
+assertType<boolean | undefined>({} as TimeInputProps["invalid"]);
+assertType<boolean | undefined>({} as TimeInputProps["required"]);
 
 const _size: TimeInputProps["size"] = "md";
 const _variant: TimeInputProps["variant"] = "outline";
-const _fields: TimeInputProps["fields"] = ["hour", "minute", "second", "millisecond"];
 
 assertType<ReactNode | null | undefined>({} as TimeInputTriggerProps["icon"]);
 
-type _HasCallbackProps = ExpectTrue<"onChange" extends keyof TimeInputProps ? true : false>;
+type _HasCallbackProps = ExpectTrue<
+    "onValueChange" extends KnownKeys<TimeInputProps>
+        ? "hourCycle" extends KnownKeys<TimeInputProps>
+            ? "granularity" extends KnownKeys<TimeInputProps>
+                ? true
+                : false
+            : false
+        : false
+>;
+
+type _NoLegacyProps = ExpectTrue<
+    "onChange" extends KnownKeys<TimeInputProps>
+        ? false
+        : "isDisabled" extends KnownKeys<TimeInputProps>
+          ? false
+          : "hour12" extends KnownKeys<TimeInputProps>
+            ? false
+            : "popoverProps" extends KnownKeys<TimeInputProps>
+              ? false
+              : true
+>;
 
 type _HasRecipeProps = ExpectTrue<
-    "size" extends keyof TimeInputProps
-        ? "variant" extends keyof TimeInputProps
+    "size" extends KnownKeys<TimeInputProps>
+        ? "variant" extends KnownKeys<TimeInputProps>
             ? true
             : false
         : false
 >;
 
-type _HasHour12 = ExpectTrue<"hour12" extends keyof TimeInputProps ? true : false>;
-type _HasFields = ExpectTrue<"fields" extends keyof TimeInputProps ? true : false>;
+const _callbackProps: _HasCallbackProps = true;
+const _noLegacyProps: _NoLegacyProps = true;
+const _recipeProps: _HasRecipeProps = true;
+
+void (_callbackProps && _noLegacyProps && _recipeProps && _size && _variant);

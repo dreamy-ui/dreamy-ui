@@ -4,12 +4,12 @@ import { Button, Snippet } from "@/ui";
 import { useSnippetContext } from "@dreamy-ui/react";
 import { type PM, useGlobalContext } from "../../global/GlobalContext";
 
-const commands = {
-    npm: "npx dreamy init",
-    pnpm: "pnpm dlx dreamy init",
-    yarn: "yarn dlx dreamy init",
-    bun: "bunx dreamy init"
-} as const;
+const pmPrefixes = {
+    npm: "npx dreamy",
+    pnpm: "pnpm dlx dreamy",
+    yarn: "yarn dlx dreamy",
+    bun: "bunx dreamy"
+} as const satisfies Record<PM, string>;
 
 function PackageManagerTabs() {
     const { pm, updatePm } = useGlobalContext();
@@ -17,10 +17,10 @@ function PackageManagerTabs() {
 
     return (
         <>
-            {(Object.keys(commands) as PM[]).map((name) => (
+            {(Object.keys(pmPrefixes) as PM[]).map((name) => (
                 <Button
                     color={pm === name ? "fg" : "fg.medium"}
-                    fontWeight={"medium"}
+                    fontWeight={pm === name ? "semibold" : "medium"}
                     key={name}
                     onClick={() => {
                         updatePm(name);
@@ -38,9 +38,13 @@ function PackageManagerTabs() {
     );
 }
 
-export function LandingSnippet() {
+export interface PmCommandSnippetProps {
+    commandSuffix?: string;
+}
+
+export function PmCommandSnippet({ commandSuffix = "init" }: PmCommandSnippetProps) {
     const { pm } = useGlobalContext();
-    const command = commands[pm];
+    const command = `${pmPrefixes[pm]} ${commandSuffix}`;
 
     return (
         <Snippet.Root w="full">
@@ -50,4 +54,8 @@ export function LandingSnippet() {
             <Snippet.Body codeString={command}>{command}</Snippet.Body>
         </Snippet.Root>
     );
+}
+
+export function LandingSnippet() {
+    return <PmCommandSnippet commandSuffix="init" />;
 }

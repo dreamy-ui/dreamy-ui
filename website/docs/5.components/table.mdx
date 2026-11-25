@@ -2,17 +2,19 @@
 title: Table
 description: Tables are used to display data in a structured way.
 isServerComponent: false
-source: /packages/react/src/components/table/table.tsx
-themeSource: /packages/system/src/recipes/table.ts
+source: /components/table/index.tsx
+themeSource: /components/table/table.ts
 ---
 
 ## Installation
 
 ```bash
-pnpm dreamy add table
+bunx dreamy add table
 ```
 
 ## Usage
+
+Compose accessible data tables using `Table.Root`, `Table.Table`, `Table.Header`, `Table.Body`, `Table.Row`, `Table.ColumnHeader`, `Table.Cell`, and `Table.Caption`.
 
 <Wrapper>
   <Table.Root w="full">
@@ -62,9 +64,11 @@ pnpm dreamy add table
 
 ### Variants
 
+Use the `variant` prop on `Table.Root` to switch between `simple` and `line` styles.
+
 <Wrapper>
   {["simple", "line"].map((variant) => (
-    <>
+    <Box key={variant} w="full">
       <Text size={"lg"}>{variant}</Text>
       <Table.Root w="full" variant={variant}>
         <Table.Table>
@@ -86,13 +90,13 @@ pnpm dreamy add table
             </Table.Body>
         </Table.Table>
       </Table.Root>
-    </>
+    </Box>
   ))}
 </Wrapper>
 
 ```tsx
 {["simple", "line"].map((variant) => (
-  <>
+  <Box key={variant} w="full">
     <Text size={"lg"}>{variant}</Text>
     <Table.Root w="full" variant={variant}>
       <Table.Table>
@@ -114,15 +118,17 @@ pnpm dreamy add table
         </Table.Body>
       </Table.Table>
     </Table.Root>
-  </>
+  </Box>
 ))}
 ```
 
 ### With background
 
+Pass `withBackground` to `Table.Root` to apply a subtle tinted container background.
+
 <Wrapper>
   {["simple", "line"].map((variant) => (
-    <>
+    <Box key={variant} w="full">
       <Text size={"lg"}>{variant}</Text>
       <Table.Root w="full" variant={variant} withBackground>
         <Table.Table>
@@ -144,13 +150,13 @@ pnpm dreamy add table
           </Table.Body>
         </Table.Table>
       </Table.Root>
-    </>
+    </Box>
   ))}
 </Wrapper>
 
 ```tsx
 {["simple", "line"].map((variant) => (
-    <>
+    <Box key={variant} w="full">
       <Text size={"lg"}>{variant}</Text>
       <Table.Root w="full" variant={variant} withBackground>
         <Table.Table>
@@ -172,11 +178,13 @@ pnpm dreamy add table
             </Table.Body>
         </Table.Table>
       </Table.Root>
-    </>
+    </Box>
   ))}
 ```
 
 ### Interactive
+
+Pass `interactive` to highlight rows on hover.
 
 <Wrapper> 
   <Table.Root w="full" interactive>
@@ -226,6 +234,8 @@ pnpm dreamy add table
 
 ### Striped
 
+Pass `striped` to alternate row background colors.
+
 <Wrapper>
   <Table.Root w="full" striped>
     <Table.Table>
@@ -274,9 +284,11 @@ pnpm dreamy add table
 
 ### Size
 
+Use the `size` prop (`sm`, `md`, or `lg`) to adjust cell padding and typography.
+
 <Wrapper>
   {["sm", "md", "lg"].map((size) => (
-    <>
+    <Box key={size} w="full">
       <Text size={"lg"}>{size}</Text>
       <Table.Root w="full" size={size}>
         <Table.Table>
@@ -298,13 +310,13 @@ pnpm dreamy add table
             </Table.Body>
         </Table.Table>
       </Table.Root>
-    </>
+    </Box>
   ))}
 </Wrapper>
 
 ```tsx
 {["sm", "md", "lg"].map((size) => (
-  <>
+  <Box key={size} w="full">
     <Text size={"lg"}>{size}</Text>
     <Table.Root w="full" size={size}>
       <Table.Table>
@@ -326,7 +338,7 @@ pnpm dreamy add table
           </Table.Body>
       </Table.Table>
     </Table.Root>
-  </>
+  </Box>
 ))}
 ```
 
@@ -354,10 +366,11 @@ function ActionBarTable() {
 		{ id: 3, name: "Jim Doe", age: 25, gender: "Male", isSelected: false }
 	]);
 
-	const { isOpen, onClose } = useControllable({
-		isOpen: users.some((user) => user.isSelected),
-		onClose: () => setUsers((prev) => prev.map((user) => ({ ...user, isSelected: false })))
-	});
+	const open = users.some((user) => user.isSelected);
+
+	const unselectAll = useCallback(() => {
+		setUsers((prev) => prev.map((user) => ({ ...user, isSelected: false })));
+	}, []);
 
 	const toggleSelection = useCallback((id: number) => {
 		setUsers((prev) =>
@@ -365,15 +378,14 @@ function ActionBarTable() {
 		);
 	}, []);
 
-	const unselectAll = useCallback(() => {
-		setUsers((prev) => prev.map((user) => ({ ...user, isSelected: false })));
-	}, []);
-
 	const toggleSelectionAll = useCallback(() => {
 		setUsers((prev) =>
 			prev.map((user) => ({ ...user, isSelected: !prev.every((user) => user.isSelected) }))
 		);
 	}, []);
+
+	const allSelected = users.every((user) => user.isSelected);
+	const someSelected = users.some((user) => user.isSelected);
 
 	return (
 		<>
@@ -383,12 +395,10 @@ function ActionBarTable() {
 						<Table.Row>
 							<Table.ColumnHeader w={"60px"}>
 								<Checkbox
-									isChecked={users.every((user) => user.isSelected)}
-									isIndeterminate={
-										users.some((user) => user.isSelected) &&
-										!users.every((user) => user.isSelected)
+									checked={
+										someSelected && !allSelected ? "indeterminate" : allSelected
 									}
-									onChangeValue={toggleSelectionAll}
+									onCheckedChange={toggleSelectionAll}
 								/>
 							</Table.ColumnHeader>
 							<Table.ColumnHeader>Name</Table.ColumnHeader>
@@ -426,8 +436,8 @@ function ActionBarTable() {
 							>
 								<Table.Cell w={"60px"}>
 									<Checkbox
-										isChecked={user.isSelected}
-										onChangeValue={() => toggleSelection(user.id)}
+										checked={user.isSelected}
+										onCheckedChange={() => toggleSelection(user.id)}
 									/>
 								</Table.Cell>
 								<Table.Cell>{user.name}</Table.Cell>
@@ -439,7 +449,12 @@ function ActionBarTable() {
 				</Table.Table>
 			</Table.Root>
 
-			<ActionBar.Root isOpen={isOpen} onClose={onClose}>
+			<ActionBar.Root
+				open={open}
+				onOpenChange={(next) => {
+					if (!next) unselectAll();
+				}}
+			>
 				<ActionBar.Content>
 					<ActionBar.SelectionTrigger>
 						{users.filter((user) => user.isSelected).length} selected
@@ -450,10 +465,7 @@ function ActionBarTable() {
 					</Button>
 					<Button
 						color="error"
-						onClick={() => {
-							unselectAll();
-							onClose();
-						}}
+						onClick={unselectAll}
 						rightIcon={<LuTrash />}
 						size="sm"
 						variant="outline"

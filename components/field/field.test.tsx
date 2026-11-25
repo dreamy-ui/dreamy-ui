@@ -5,7 +5,7 @@ import { render } from "../test/render";
 import * as Field from "./index";
 
 describe("Field", () => {
-    it("associates the label with the control via htmlFor and id", async () => {
+    it("associates the label with the control via htmlFor, id, and UI SDK slots", async () => {
         render(
             <Field.Root id="username">
                 <Field.Label>Username</Field.Label>
@@ -13,15 +13,18 @@ describe("Field", () => {
             </Field.Root>
         );
 
+        expect(document.querySelector('[data-slot="field"]')).toBeInTheDocument();
+
         const input = screen.getByRole("textbox");
         const label = screen.getByText("Username");
 
         expect(input).toHaveAttribute("id", "username");
         await waitFor(() => expect(label).toHaveAttribute("for", "username"));
         expect(label.tagName).toBe("LABEL");
+        expect(label).toHaveAttribute("data-slot", "field-label");
     });
 
-    it("wires hint into aria-describedby", () => {
+    it("wires hint into aria-describedby", async () => {
         render(
             <Field.Root id="email">
                 <Field.Label>Email</Field.Label>
@@ -34,14 +37,17 @@ describe("Field", () => {
         const hint = screen.getByText("Use your work email.");
 
         expect(hint).toHaveAttribute("id", "email-hint");
-        expect(input.getAttribute("aria-describedby") ?? "").toContain("email-hint");
+        expect(hint).toHaveAttribute("data-slot", "field-description");
+        await waitFor(() => {
+            expect(input.getAttribute("aria-describedby") ?? "").toContain("email-hint");
+        });
     });
 
-    it("shows error text when invalid and wires it into aria-describedby", () => {
+    it("shows error text when invalid and wires it into aria-describedby", async () => {
         render(
             <Field.Root
                 id="email"
-                isInvalid
+                invalid
             >
                 <Field.Label>Email</Field.Label>
                 <Input />
@@ -54,15 +60,18 @@ describe("Field", () => {
 
         expect(error).toBeVisible();
         expect(error).toHaveAttribute("id", "email-feedback");
+        expect(error).toHaveAttribute("data-slot", "field-error");
         expect(input).toHaveAttribute("aria-invalid", "true");
-        expect(input.getAttribute("aria-describedby") ?? "").toContain("email-feedback");
+        await waitFor(() => {
+            expect(input.getAttribute("aria-describedby") ?? "").toContain("email-feedback");
+        });
     });
 
-    it("hides hint when invalid so describedby points at the error", () => {
+    it("hides hint when invalid so describedby points at the error", async () => {
         render(
             <Field.Root
                 id="email"
-                isInvalid
+                invalid
             >
                 <Field.Label>Email</Field.Label>
                 <Input />
@@ -73,14 +82,18 @@ describe("Field", () => {
 
         expect(screen.queryByText("Use your work email.")).not.toBeInTheDocument();
         expect(screen.getByText("Enter a valid email.")).toBeVisible();
-        expect(screen.getByRole("textbox").getAttribute("aria-describedby") ?? "").toContain("email-feedback");
+        await waitFor(() => {
+            expect(screen.getByRole("textbox").getAttribute("aria-describedby") ?? "").toContain(
+                "email-feedback"
+            );
+        });
     });
 
     it("shows a required indicator and marks the control as required", () => {
         render(
             <Field.Root
                 id="email"
-                isRequired
+                required
             >
                 <Field.Label>Email</Field.Label>
                 <Input />
@@ -98,7 +111,7 @@ describe("Field", () => {
 
     it("marks ErrorIcon as decorative relative to error text", () => {
         render(
-            <Field.Root isInvalid>
+            <Field.Root invalid>
                 <Field.Label>Email</Field.Label>
                 <Input />
                 <Field.Error>
@@ -113,13 +126,13 @@ describe("Field", () => {
         expect(screen.getByText("Enter a valid email.")).toBeVisible();
     });
 
-    it("supports label/hint/error shortcut props with isInvalid", () => {
+    it("supports label/hint/error shortcut props with invalid", () => {
         render(
             <Field.Root
                 error="Too short"
                 hint="At least 3 characters"
                 id="username"
-                isInvalid
+                invalid
                 label="Username"
             >
                 <Input />

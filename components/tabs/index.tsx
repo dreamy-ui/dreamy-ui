@@ -1,191 +1,306 @@
 "use client";
 
-import { Tabs as ArkTabs, useTabsContext } from "@ark-ui/react/tabs";
-import { useCanUseDOM, useDefaultTransition, useReducedMotion } from "@dreamy-ui/react";
-import { Children, cloneElement, createContext, isValidElement, useContext } from "react";
-import { type HTMLDreamyProps, createStyleContext } from "styled-system/jsx";
+import {
+    type DreamyHostProps,
+    TRANSITION_EASINGS,
+    useDefaultTransition,
+    useReducedMotion
+} from "@dreamy-ui/react";
+import {
+    Tabs as UiSdkTabs,
+    TabsList as UiSdkTabsList,
+    TabsPanel as UiSdkTabsPanel,
+    TabsTab as UiSdkTabsTab,
+    TabsTabIcon as UiSdkTabsTabIcon,
+    type TabsOptions,
+    type TabsPanelProps as UiSdkTabsPanelProps,
+    type TabsTabProps as UiSdkTabsTabProps,
+    createTabsController
+} from "@ui-sdk/react/tabs";
+import type React from "react";
+import {
+    type CSSProperties,
+    Children,
+    type ReactElement,
+    type ReactNode,
+    cloneElement,
+    createContext,
+    isValidElement,
+    useContext,
+    useId,
+    useMemo
+} from "react";
+import { css, cx } from "styled-system/css";
+import {
+    type HTMLDreamyProps,
+    createStyleContext,
+    dreamy,
+    splitCssProps
+} from "styled-system/jsx";
 import { type TabsVariantProps, tabs } from "styled-system/recipes";
-import { Box } from "../box";
-import { type ButtonProps } from "../button";
-import { Flex, type FlexProps } from "../flex";
 import { MotionFlex, type MotionFlexProps } from "../motion";
 
 const { withProvider, withContext } = createStyleContext(tabs, {
     forwardVariants: ["orientation"]
 });
 
+export { createTabsController };
+
 const TAB_PART = Symbol.for("dreamy.tabs.tab");
 const PANEL_PART = Symbol.for("dreamy.tabs.panel");
 
-interface TabsActivationContextValue {
-    isManual: boolean;
+interface TabsUiContextValue {
+    reduceMotion: boolean;
+    indicatorLayoutId: string;
 }
 
-const TabsActivationContext = createContext<TabsActivationContextValue>({ isManual: false });
+const TabsUiContext = createContext<TabsUiContextValue>({
+    reduceMotion: false,
+    indicatorLayoutId: "dreamy-tab-indicator"
+});
 
-function getIsManual(manual?: boolean, activationMode?: TabsProps["activationMode"]) {
-    if (activationMode) {
-        return activationMode === "manual";
-    }
-    return manual === true;
-}
-
-function assignIndices(children: React.ReactNode, part: symbol) {
+function assignIndices(children: ReactNode, part: symbol) {
     let index = 0;
     return Children.map(children, (child) => {
         if (!isValidElement(child)) {
             return child;
         }
         if ((child.type as { partType?: symbol }).partType === part) {
-            const next = cloneElement(child, { index } as { index: number });
-            index += 1;
-            return next;
+            const props = child.props as { value?: string; index?: number };
+            const currentIndex = props.index ?? index;
+            index = currentIndex + 1;
+            return cloneElement(child as ReactElement<{ index?: number; value?: string }>, {
+                index: currentIndex,
+                value: props.value ?? String(currentIndex)
+            });
         }
         return child;
     });
 }
 
 export interface TabsProps
-    extends Omit<React.ComponentProps<typeof ArkTabs.Root>, "activationMode">,
-        TabsVariantProps {
-    children: React.ReactNode;
-    /**
-     * When true, selection updates on Enter/Space or click, not on focus.
-     * Maps to Ark `activationMode="manual"`.
-     */
-    manual?: boolean;
-    activationMode?: React.ComponentProps<typeof ArkTabs.Root>["activationMode"];
+    extends TabsOptions<string>,
+        Omit<TabsVariantProps, "orientation">,
+        DreamyHostProps<HTMLDreamyProps<"div">, TabsOptions<string>, "onChange" | "size"> {
+    reduceMotion?: boolean;
+    children?: ReactNode;
 }
 
-function indexToValue(index: number) {
-    return String(index);
-}
+function TabsRoot(props: TabsProps) {
+    const {
+        value,
+        defaultValue,
+        onValueChange,
+        orientation = "horizontal",
+        activation,
+        loop,
+        hiddenUntilFound,
+        controller,
+        debug,
+        reduceMotion: reduceMotionProp,
+        className,
+        style,
+        children,
+        ...rest
+    } = props;
 
-export const Root = withProvider(function Tabs(props: TabsProps) {
-    const { children, manual, activationMode, defaultValue, value, ...rest } = props;
-    const isManual = getIsManual(manual, activationMode);
+    const globalReduceMotion = useReducedMotion();
+    const reduceMotion = reduceMotionProp ?? globalReduceMotion ?? false;
+    const indicatorLayoutId = `dreamy-tab-indicator-${useId()}`;
+    const [cssProps, domProps] = splitCssProps(rest);
+    const uiValue = useMemo<TabsUiContextValue>(
+        () => ({ reduceMotion, indicatorLayoutId }),
+        [indicatorLayoutId, reduceMotion]
+    );
 
     return (
-        <ArkTabs.Root
-            activationMode={activationMode ?? (manual ? "manual" : undefined)}
-            defaultValue={value === undefined ? (defaultValue ?? "0") : defaultValue}
-            value={value}
-            {...rest}
-        >
-            <TabsActivationContext.Provider value={{ isManual }}>
-                <Box data-part="root">{children}</Box>
-            </TabsActivationContext.Provider>
-        </ArkTabs.Root>
+        <TabsUiContext.Provider value={uiValue}>
+            <UiSdkTabs
+                {...(domProps as unknown as React.ComponentProps<typeof UiSdkTabs>)}
+                activation={activation}
+                className={cx(className as string | undefined, css(cssProps))}
+                controller={controller}
+                debug={debug}
+                defaultValue={value === undefined ? (defaultValue ?? "0") : defaultValue}
+                hiddenUntilFound={hiddenUntilFound}
+                loop={loop}
+                onValueChange={onValueChange}
+                orientation={orientation}
+                style={style as CSSProperties | undefined}
+                value={value}
+            >
+                {children}
+            </UiSdkTabs>
+        </TabsUiContext.Provider>
     );
-}, "root");
+}
 
-export interface TabListProps extends FlexProps {}
+/**
+ * Tabs component — layered sections of content powered by UI SDK `Tabs`.
+ *
+ * @see Docs https://dreamy-ui.com/docs/components/tabs
+ */
+export const Root: (props: TabsProps) => React.JSX.Element = withProvider(TabsRoot, "root") as (
+    props: TabsProps
+) => React.JSX.Element;
+
+export interface TabListProps extends Omit<HTMLDreamyProps<"div">, "children"> {
+    children?: ReactNode;
+}
 
 export const List = withContext(function TabList(props: TabListProps) {
-    const { children, ...rest } = props;
+    const { children, className, style, ...rest } = props;
+    const [cssProps, domProps] = splitCssProps(rest);
+
     return (
-        <ArkTabs.List {...rest}>
+        <UiSdkTabsList
+            {...(domProps as unknown as React.ComponentProps<typeof UiSdkTabsList>)}
+            className={cx(className as string | undefined, css(cssProps))}
+            style={style as CSSProperties | undefined}
+        >
             {assignIndices(children, TAB_PART)}
-            <TabIndicator />
-        </ArkTabs.List>
+        </UiSdkTabsList>
     );
 }, "tabList");
 
-export interface TabProps extends ButtonProps {
+export interface TabProps
+    extends Partial<Omit<UiSdkTabsTabProps, "disabled" | "value">>,
+        DreamyHostProps<HTMLDreamyProps<"button">, UiSdkTabsTabProps, "disabled" | "value"> {
     index?: number;
-    /** @deprecated use `disabled` instead */
-    isDisabled?: boolean;
+    value?: string;
+    disabled?: boolean;
+    render?: ReactElement;
+    children?: ReactNode;
 }
 
 function TabComponent(props: TabProps) {
     const {
         children,
         index = 0,
+        value,
         disabled,
-        isDisabled: isDisabledProp,
-        isLoading,
-        onFocus,
-        disableRipple: _disableRipple,
-        leftIcon: _leftIcon,
-        rightIcon: _rightIcon,
-        loadingText: _loadingText,
-        spinner: _spinner,
-        spinnerPlacement: _spinnerPlacement,
+        render,
+        className,
+        style,
         ...rest
     } = props;
-    const value = indexToValue(index);
-    const tabsApi = useTabsContext();
-    const { isManual } = useContext(TabsActivationContext);
-    const isDisabled = disabled || isDisabledProp;
-
-    function handleFocus(event: React.FocusEvent<HTMLButtonElement>) {
-        onFocus?.(event);
-        if (!isManual && !isDisabled && !isLoading) {
-            tabsApi.setValue(value);
-        }
-    }
+    const [cssProps, domProps] = splitCssProps(rest);
 
     return (
-        <ArkTabs.Trigger
-            disabled={isDisabled || isLoading}
-            type="button"
-            value={value}
-            {...rest}
-            onFocus={handleFocus}
+        <UiSdkTabsTab
+            {...(domProps as unknown as React.ComponentProps<typeof UiSdkTabsTab>)}
+            className={cx(className as string | undefined, css(cssProps))}
+            disabled={disabled}
+            render={render}
+            style={style as CSSProperties | undefined}
+            value={value ?? String(index)}
         >
-            {children}
-        </ArkTabs.Trigger>
+            {(state) => (
+                <>
+                    {children}
+                    {state.selected ? <TabIndicator /> : null}
+                </>
+            )}
+        </UiSdkTabsTab>
     );
 }
 
-export const Tab = withContext(TabComponent, "tab");
+export const Tab = withContext(TabComponent, "tab") as typeof TabComponent & {
+    partType?: symbol;
+};
 Tab.partType = TAB_PART;
 
-export interface TabPanelsProps extends FlexProps {}
+export interface TabIconProps extends Omit<HTMLDreamyProps<"span">, "children"> {
+    mirror?: boolean;
+    children?: ReactNode;
+}
+
+export function TabIcon(props: TabIconProps) {
+    const { className, style, children, mirror, ...rest } = props;
+    const [cssProps, domProps] = splitCssProps(rest);
+
+    return (
+        <UiSdkTabsTabIcon
+            {...(domProps as unknown as React.ComponentProps<typeof UiSdkTabsTabIcon>)}
+            className={cx(className as string | undefined, css(cssProps))}
+            mirror={mirror}
+            style={style as CSSProperties | undefined}
+        >
+            {children}
+        </UiSdkTabsTabIcon>
+    );
+}
+
+export interface TabPanelsProps extends HTMLDreamyProps<"div"> {}
 
 export const Panels = withContext(function TabPanels(props: TabPanelsProps) {
     const { children, ...rest } = props;
-    return <Flex {...rest}>{assignIndices(children, PANEL_PART)}</Flex>;
+    return <dreamy.div {...rest}>{assignIndices(children, PANEL_PART)}</dreamy.div>;
 }, "tabPanels");
 
-export interface TabPanelProps extends HTMLDreamyProps<"div"> {
+export interface TabPanelProps
+    extends Partial<UiSdkTabsPanelProps>,
+        DreamyHostProps<HTMLDreamyProps<"div">, UiSdkTabsPanelProps> {
     index?: number;
+    children?: ReactNode;
 }
 
 function TabPanelComponent(props: TabPanelProps) {
-    const { children, index = 0, ...rest } = props;
+    const { children, index = 0, value, keepMounted, hiddenUntilFound, className, style, ...rest } =
+        props;
+    const [cssProps, domProps] = splitCssProps(rest);
 
     return (
-        <ArkTabs.Content
-            value={indexToValue(index)}
-            {...rest}
+        <UiSdkTabsPanel
+            {...(domProps as unknown as React.ComponentProps<typeof UiSdkTabsPanel>)}
+            className={cx(className as string | undefined, css(cssProps))}
+            hiddenUntilFound={hiddenUntilFound}
+            keepMounted={keepMounted}
+            style={style as CSSProperties | undefined}
+            value={value ?? String(index)}
         >
-            <Flex>{children}</Flex>
-        </ArkTabs.Content>
+            {children}
+        </UiSdkTabsPanel>
     );
 }
 
-export const Panel = withContext(TabPanelComponent, "tabPanel");
+export const Panel = withContext(TabPanelComponent, "tabPanel") as typeof TabPanelComponent & {
+    partType?: symbol;
+};
 Panel.partType = PANEL_PART;
 
-const TabIndicator = withContext(function TabIndicator(props: MotionFlexProps) {
+const TabIndicator = withContext(function TabsIndicatorSlot(props: MotionFlexProps) {
+    const { reduceMotion, indicatorLayoutId } = useContext(TabsUiContext);
     const transition = useDefaultTransition();
-    const reduceMotion = useReducedMotion();
-    const domAvailable = useCanUseDOM();
+
+    const indicatorTransition = useMemo(
+        () =>
+            reduceMotion
+                ? { duration: 0 }
+                : {
+                      ...transition,
+                      layout:
+                          transition && "type" in transition && transition.type === "spring"
+                              ? transition
+                              : {
+                                    duration:
+                                        ((transition as { duration?: number } | undefined)
+                                            ?.duration ?? 0.2) * 1.5,
+                                    ease: TRANSITION_EASINGS.easeInOut
+                                }
+                  },
+        [reduceMotion, transition]
+    );
 
     return (
-        <ArkTabs.Indicator asChild>
-            <MotionFlex
-                {...props}
-                animate={{ opacity: 1, scale: 1 }}
-                initial={!domAvailable ? { opacity: 0, scale: 0.95 } : undefined}
-                style={
-                    reduceMotion
-                        ? ({ "--transition-duration": "0ms" } as React.CSSProperties)
-                        : undefined
-                }
-                transition={reduceMotion ? { duration: 0 } : transition}
-            />
-        </ArkTabs.Indicator>
+        <MotionFlex
+            aria-hidden="true"
+            data-reduce-motion={reduceMotion ? "" : undefined}
+            data-slot="tabs-indicator"
+            layout={reduceMotion ? false : "position"}
+            layoutId={indicatorLayoutId}
+            transition={indicatorTransition}
+            {...props}
+        />
     );
 }, "tabIndicator");

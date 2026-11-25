@@ -6,7 +6,7 @@ export function ControlledPinInput() {
 
     return (
         <PinInput.Root
-            onChange={setPin}
+            onValueChange={setPin}
             value={pin}
         >
             <PinInput.Field />

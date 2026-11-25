@@ -27,12 +27,12 @@ describe("Editable", () => {
 
     it("enters edit mode when the preview is clicked and focuses the input", async () => {
         const user = userEvent.setup();
-        const onEdit = vi.fn();
+        const onEditingChange = vi.fn();
 
         render(
             <Editable.Root
                 defaultValue="Ada"
-                onEdit={onEdit}
+                onEditingChange={onEditingChange}
             >
                 <Editable.Preview />
                 <Editable.Input />
@@ -41,20 +41,20 @@ describe("Editable", () => {
 
         await user.click(screen.getByText("Ada"));
 
-        expect(onEdit).toHaveBeenCalled();
-        await waitFor(function waitForInputFocus() {
+        expect(onEditingChange).toHaveBeenCalledWith(true, expect.objectContaining({ reason: expect.any(String) }));
+        await waitFor(() => {
             expect(screen.getByDisplayValue("Ada")).toHaveFocus();
         });
     });
 
     it("enters edit mode from the Edit button and focuses the input", async () => {
         const user = userEvent.setup();
-        const onEdit = vi.fn();
+        const onEditingChange = vi.fn();
 
         render(
             <Editable.Root
                 defaultValue="Ada"
-                onEdit={onEdit}
+                onEditingChange={onEditingChange}
             >
                 <Editable.Preview />
                 <Editable.Input />
@@ -66,23 +66,26 @@ describe("Editable", () => {
 
         await user.click(screen.getByRole("button", { name: "Edit" }));
 
-        expect(onEdit).toHaveBeenCalled();
-        await waitFor(function waitForInputFocusFromEditButton() {
+        expect(onEditingChange).toHaveBeenCalledWith(
+            true,
+            expect.objectContaining({ reason: "trigger-press" })
+        );
+        await waitFor(() => {
             expect(screen.getByDisplayValue("Ada")).toHaveFocus();
         });
     });
 
-    it("submits with Enter and cancels with Escape", async () => {
+    it("commits with Enter and reverts with Escape", async () => {
         const user = userEvent.setup();
-        const onSubmit = vi.fn();
-        const onCancel = vi.fn();
+        const onValueCommit = vi.fn();
+        const onValueRevert = vi.fn();
 
         render(
             <Editable.Root
                 defaultValue="Ada"
-                onCancel={onCancel}
-                onSubmit={onSubmit}
-                submitOnBlur={false}
+                onValueCommit={onValueCommit}
+                onValueRevert={onValueRevert}
+                submitMode="enter"
             >
                 <Editable.Preview />
                 <Editable.Input />
@@ -94,31 +97,29 @@ describe("Editable", () => {
 
         await user.click(screen.getByRole("button", { name: "Edit" }));
         const input = await screen.findByDisplayValue("Ada");
-        await waitFor(function waitForInputFocusBeforeSubmit() {
+        await waitFor(() => {
             expect(input).toHaveFocus();
         });
         await user.clear(input);
         await user.type(input, "Grace");
         await user.keyboard("{Enter}");
 
-        await waitFor(function waitForSubmit() {
-            expect(onSubmit).toHaveBeenCalledWith("Grace");
+        await waitFor(() => {
+            expect(onValueCommit).toHaveBeenCalledWith("Grace");
         });
-        await waitFor(function waitForGracePreview() {
-            expect(screen.getByText("Grace")).toBeInTheDocument();
-        });
+        expect(screen.getByText("Grace")).toBeInTheDocument();
 
         await user.click(screen.getByRole("button", { name: "Edit" }));
         const inputAfterSubmit = await screen.findByDisplayValue("Grace");
-        await waitFor(function waitForInputFocusBeforeCancel() {
+        await waitFor(() => {
             expect(inputAfterSubmit).toHaveFocus();
         });
         await user.clear(inputAfterSubmit);
         await user.type(inputAfterSubmit, "Alan");
         await user.keyboard("{Escape}");
 
-        await waitFor(function waitForCancel() {
-            expect(onCancel).toHaveBeenCalledWith("Grace");
+        await waitFor(() => {
+            expect(onValueRevert).toHaveBeenCalledWith("Grace");
         });
         expect(screen.getByText("Grace")).toBeInTheDocument();
     });
@@ -148,13 +149,13 @@ describe("Editable", () => {
 
     it("blocks edit actions when disabled", async () => {
         const user = userEvent.setup();
-        const onEdit = vi.fn();
+        const onEditingChange = vi.fn();
 
         render(
             <Editable.Root
                 defaultValue="Ada"
-                isDisabled
-                onEdit={onEdit}
+                disabled
+                onEditingChange={onEditingChange}
             >
                 <Editable.Preview />
                 <Editable.Input />
@@ -165,18 +166,18 @@ describe("Editable", () => {
         );
 
         await user.click(screen.getByRole("button", { name: "Edit" }));
-        expect(onEdit).not.toHaveBeenCalled();
+        expect(onEditingChange).not.toHaveBeenCalled();
     });
 
     it("supports controlled value and Field labeling", async () => {
         const user = userEvent.setup();
-        const onChange = vi.fn();
+        const onValueChange = vi.fn();
 
         render(
             <Field.Root>
                 <Field.Label>Display name</Field.Label>
                 <Editable.Root
-                    onChange={onChange}
+                    onValueChange={onValueChange}
                     value="Ada"
                 >
                     <Editable.Preview />
@@ -194,6 +195,6 @@ describe("Editable", () => {
         await user.click(screen.getByRole("button", { name: "Edit" }));
         await user.type(screen.getByRole("textbox"), " Lovelace");
 
-        expect(onChange).toHaveBeenCalled();
+        expect(onValueChange).toHaveBeenCalled();
     });
 });

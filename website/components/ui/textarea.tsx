@@ -1,6 +1,6 @@
 "use client";
 
-import { type UseFieldProps, useField } from "@dreamy-ui/react";
+import { type DreamyHostProps, type UseFieldProps, useField } from "@dreamy-ui/react";
 import { Textarea as UiSdkTextarea } from "@ui-sdk/react/textarea";
 import type { ComponentProps, CSSProperties } from "react";
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
@@ -17,23 +17,22 @@ function rowsToStyle(minRows?: number, maxRows?: number): CSSProperties {
     };
 }
 
+type UiSdkPickedTextareaProps = Pick<
+    UiSdkTextareaProps,
+    | "value"
+    | "defaultValue"
+    | "onValueChange"
+    | "controller"
+    | "debug"
+    | "autoResize"
+    | "onSubmit"
+    | "submitShortcut"
+>;
+
 export interface TextareaProps
-    extends Omit<
-            HTMLDreamyProps<"textarea">,
-            "size" | "value" | "defaultValue" | "onValueChange" | "onSubmit" | "style"
-        >,
+    extends DreamyHostProps<HTMLDreamyProps<"textarea">, UiSdkPickedTextareaProps, "size" | "style">,
         TextareaVariantProps,
-        Pick<
-            UiSdkTextareaProps,
-            | "value"
-            | "defaultValue"
-            | "onValueChange"
-            | "controller"
-            | "debug"
-            | "autoResize"
-            | "onSubmit"
-            | "submitShortcut"
-        > {
+        UiSdkPickedTextareaProps {
     /**
      * Minimum number of rows used to derive the textarea's min-height.
      */
@@ -68,16 +67,19 @@ export function Textarea(props: TextareaProps) {
     );
 }
 
+type UiSdkPickedTextareaNoAutoSizeProps = Pick<
+    UiSdkTextareaProps,
+    "value" | "defaultValue" | "onValueChange" | "controller" | "debug" | "onSubmit" | "submitShortcut"
+>;
+
 export interface TextareaNoAutoSizeProps
-    extends Omit<
+    extends DreamyHostProps<
             HTMLDreamyProps<"textarea">,
-            "size" | "value" | "defaultValue" | "onValueChange" | "onSubmit" | "style"
+            UiSdkPickedTextareaNoAutoSizeProps,
+            "size" | "style"
         >,
         TextareaVariantProps,
-        Pick<
-            UiSdkTextareaProps,
-            "value" | "defaultValue" | "onValueChange" | "controller" | "debug" | "onSubmit" | "submitShortcut"
-        > {
+        UiSdkPickedTextareaNoAutoSizeProps {
     style?: CSSProperties;
 }
 

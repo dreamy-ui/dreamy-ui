@@ -1,15 +1,15 @@
 ---
 title: Avatar
-description: Avatar is a simple `div` tag with styled system.
+description: Avatar displays a user's profile picture with automatic initials or fallback icon support.
 isServerComponent: false
-source: /packages/react/src/components/Avatar/Avatar.tsx
-themeSource: /packages/system/src/recipes/avatar.ts
+source: /components/avatar/index.tsx
+themeSource: /components/avatar/avatar.ts
 ---
 
 ## Installation
 
 ```bash
-pnpm dreamy add avatar
+bunx dreamy add avatar
 ```
 
 ## Usage
@@ -89,9 +89,9 @@ You can change the variant of the avatar by using the `variant` prop.
 
 ```tsx
 <HStack>
-	<Avatar variant="filled" src="/olcia.webp" name="Girlfriend" />
-	<Avatar variant="subtle" src="/olcia.webp" name="Girlfriend" />
-	<Avatar variant="outline" src="/olcia.webp" name="Girlfriend" />
+	<Avatar variant="filled" name="Girlfriend" />
+	<Avatar variant="subtle" name="Girlfriend" />
+	<Avatar variant="outline" name="Girlfriend" />
 </HStack>
 ```
 
@@ -133,12 +133,8 @@ Using more Dreamy UI components, you can create a nice looking persona component
 	<HStack>
 		<Avatar src="/olcia.webp" size="md" name="Alexandra" />
 		<Flex col>
-			<Text size="sm" fontWeight="medium">
-				<>Alexandra</>
-			</Text>
-			<Text size="sm" color="fg.medium">
-				<>Dream</>
-			</Text>
+			<Text size="sm" fontWeight="medium">Alexandra</Text>
+			<Text size="sm" color="fg.medium">Dream</Text>
 		</Flex>
 	</HStack>
 </Wrapper>

@@ -18,11 +18,22 @@ export const pagination = defineSlotRecipe({
         root: {
             display: "flex",
             alignItems: "center",
-            gap: 1
+            "& [data-slot='pagination-list']": {
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                listStyle: "none",
+                margin: 0,
+                padding: 0
+            },
+            "& [data-slot='pagination-item']": {
+                display: "inline-flex",
+                alignItems: "center"
+            }
         },
         item: {
             transition: "none!",
-            "&[data-selected]": {
+            "&[data-current]": {
                 color: "primary.fg"
             },
             "& [data-part='indicator']": {
@@ -39,10 +50,30 @@ export const pagination = defineSlotRecipe({
             justifyContent: "center",
             color: "fg.medium"
         },
-        firstTrigger: {},
-        prevTrigger: {},
-        nextTrigger: {},
-        lastTrigger: {}
+        firstTrigger: {
+            "&[data-disabled]": {
+                opacity: 0.4,
+                cursor: "not-allowed"
+            }
+        },
+        prevTrigger: {
+            "&[data-disabled]": {
+                opacity: 0.4,
+                cursor: "not-allowed"
+            }
+        },
+        nextTrigger: {
+            "&[data-disabled]": {
+                opacity: 0.4,
+                cursor: "not-allowed"
+            }
+        },
+        lastTrigger: {
+            "&[data-disabled]": {
+                opacity: 0.4,
+                cursor: "not-allowed"
+            }
+        }
     },
     variants: {
         size: {

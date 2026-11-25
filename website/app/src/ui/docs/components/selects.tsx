@@ -40,7 +40,7 @@ export function SelectInModal() {
             </Button>
             <Modal.Root
                 open={open}
-                onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
+                onOpenChange={(nextOpen) => setOpen(nextOpen)}
             >
                 <Modal.Overlay />
                 <Modal.Content>
@@ -69,8 +69,8 @@ export function AsyncSelect() {
     const [isLoading, setIsLoading] = useState(false);
     const [items, setItems] = useState<{ value: string; label: string }[]>([]);
 
-    function fetchFruits() {
-        if (items.length > 0) return;
+    function fetchFruits(open: boolean) {
+        if (!open || items.length > 0) return;
 
         setIsLoading(true);
         fetch("/api/fake-select-data")
@@ -84,7 +84,7 @@ export function AsyncSelect() {
     return (
         <Select.Root
             items={items}
-            onOpen={fetchFruits}
+            onOpenChange={fetchFruits}
             width={"xs"}
         >
             <Select.Trigger placeholder="Select a favorite fruit" />
@@ -99,7 +99,7 @@ export function AsyncSelect() {
 }
 
 export function ControlledSelect() {
-    const [value, setValue] = useState<string>("strawberry");
+    const [value, setValue] = useState<string | null>("strawberry");
 
     const fruits = [
         { value: "strawberry", label: "Strawberry" },
@@ -110,7 +110,7 @@ export function ControlledSelect() {
     return (
         <Select.Root
             items={fruits}
-            onChangeValue={setValue}
+            onValueChange={(next) => setValue(next)}
             value={value}
             width={"xs"}
         >

@@ -58,6 +58,8 @@
 	"dependencies": {
 		"@floating-ui/react": "^0.27.10",
 		"@react-aria/focus": "^3.19.0",
+		"@ui-sdk/core": "0.1.0-beta.17",
+		"@ui-sdk/react": "0.1.0-beta.17",
 		"@zag-js/focus-visible": "^0.78.3",
 		"aria-hidden": "^1.2.4",
 		"framesync": "^6.1.2",

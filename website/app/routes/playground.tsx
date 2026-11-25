@@ -102,14 +102,14 @@ export default function playground() {
             >
                 <Category name="Basic">
                     <Accordion.Root
-                        defaultIndex={[0]}
+                        defaultValue={["item-1"]}
                         w={"xs"}
                     >
-                        <Accordion.Item>
+                        <Accordion.Item value="item-1">
                             <Accordion.Trigger>Item 1</Accordion.Trigger>
                             <Accordion.Content>Content for item 1</Accordion.Content>
                         </Accordion.Item>
-                        <Accordion.Item>
+                        <Accordion.Item value="item-2">
                             <Accordion.Trigger>Item 2</Accordion.Trigger>
                             <Accordion.Content>Content for item 2</Accordion.Content>
                         </Accordion.Item>
@@ -360,8 +360,8 @@ export default function playground() {
                 <Category name="Basic">
                     <Group>
                         <Checkbox>Default</Checkbox>
-                        <Checkbox defaultIsChecked>Checked</Checkbox>
-                        <Checkbox isIndeterminate>Indeterminate</Checkbox>
+                        <Checkbox defaultChecked>Checked</Checkbox>
+                        <Checkbox checked="indeterminate">Indeterminate</Checkbox>
                     </Group>
                 </Category>
                 <Category name="Group">
@@ -412,12 +412,12 @@ export default function playground() {
                         defaultValue="Click to edit"
                         w="xs"
                     >
-                        {({ isEditing }) => (
+                        {({ editing }) => (
                             <>
                                 <Editable.Preview />
                                 <Editable.Input />
                                 <Group>
-                                    {!isEditing ? (
+                                    {!editing ? (
                                         <Editable.EditButton>
                                             <Icon as={LuPen} />
                                         </Editable.EditButton>
@@ -447,7 +447,7 @@ export default function playground() {
                     name="Basic"
                 >
                     <Field.Root
-                        isRequired
+                        required
                         label="Email"
                         w="xs"
                     >
@@ -1104,8 +1104,8 @@ export default function playground() {
                 <Category name="Basic">
                     <Group>
                         <Switch>Default</Switch>
-                        <Switch defaultIsChecked>Checked</Switch>
-                        <Switch isDisabled>Disabled</Switch>
+                        <Switch defaultChecked>Checked</Switch>
+                        <Switch disabled>Disabled</Switch>
                     </Group>
                 </Category>
             </Component>
@@ -1398,8 +1398,10 @@ function ModalExample() {
         <>
             <Button onClick={onOpen}>Open Modal</Button>
             <Modal.Root
-                isOpen={isOpen}
-                onClose={onClose}
+                open={isOpen}
+                onOpenChange={(nextOpen) => {
+                    if (!nextOpen) onClose();
+                }}
             >
                 <Modal.Overlay />
                 <Modal.Content>
@@ -1424,8 +1426,10 @@ function ActionBarExample() {
         <>
             <Button onClick={onToggle}>{isOpen ? "Close" : "Open"} Action Bar</Button>
             <ActionBar.Root
-                isOpen={isOpen}
-                onClose={onClose}
+                open={isOpen}
+                onOpenChange={(nextOpen) => {
+                    if (!nextOpen) onClose();
+                }}
             >
                 <ActionBar.Content>
                     <Text>3 items selected</Text>

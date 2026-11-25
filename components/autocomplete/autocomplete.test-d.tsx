@@ -1,3 +1,8 @@
+import type { ChangeDetails } from "@ui-sdk/core";
+import type {
+    ComboboxOpenChangeReason,
+    ComboboxValueChangeReason
+} from "@ui-sdk/react/combobox";
 import { assertType } from "vitest";
 import type {
     AutocompleteContentProps,
@@ -6,15 +11,20 @@ import type {
 } from "./index";
 
 type ExpectTrue<T extends true> = T;
+type KnownKeys<T> = keyof {
+    [K in keyof T as string extends K ? never : number extends K ? never : K]: K;
+};
 
-assertType<((value: string | null) => void) | undefined>({} as AutocompleteProps["onChangeValue"]);
+assertType<
+    ((value: string | null, details: ChangeDetails<ComboboxValueChangeReason>) => void) | undefined
+>({} as AutocompleteProps["onValueChange"]);
 assertType<string | null | undefined>({} as AutocompleteProps["value"]);
-assertType<string | undefined>({} as AutocompleteProps["defaultValue"]);
-assertType<boolean | undefined>({} as AutocompleteProps["isClearable"]);
+assertType<string | null | undefined>({} as AutocompleteProps["defaultValue"]);
+assertType<boolean | undefined>({} as AutocompleteProps["clearable"]);
 assertType<boolean | undefined>({} as AutocompleteProps["open"]);
 assertType<boolean | undefined>({} as AutocompleteProps["defaultOpen"]);
 assertType<
-    ((details: Parameters<NonNullable<AutocompleteProps["onOpenChange"]>>[0]) => void) | undefined
+    ((open: boolean, details: ChangeDetails<ComboboxOpenChangeReason>) => void) | undefined
 >({} as AutocompleteProps["onOpenChange"]);
 
 assertType<string | undefined>({} as AutocompleteInputProps["placeholder"]);
@@ -24,60 +34,63 @@ const _size: AutocompleteProps["size"] = "md";
 const _variant: AutocompleteProps["variant"] = "plain";
 
 type _HasCallbackProps = ExpectTrue<
-    "onChangeValue" extends keyof AutocompleteProps
-        ? "onOpenChange" extends keyof AutocompleteProps
-            ? "open" extends keyof AutocompleteProps
+    "onValueChange" extends KnownKeys<AutocompleteProps>
+        ? "onOpenChange" extends KnownKeys<AutocompleteProps>
+            ? "open" extends KnownKeys<AutocompleteProps>
                 ? true
                 : false
             : false
         : false
 >;
 
+type _NoLegacyProps = ExpectTrue<
+    "onChangeValue" extends KnownKeys<AutocompleteProps>
+        ? false
+        : "isClearable" extends KnownKeys<AutocompleteProps>
+          ? false
+          : "isDisabled" extends KnownKeys<AutocompleteProps>
+            ? false
+            : "popoverProps" extends KnownKeys<AutocompleteProps>
+              ? false
+              : true
+>;
+
 type _HasRecipeProps = ExpectTrue<
-    "size" extends keyof AutocompleteProps
-        ? "variant" extends keyof AutocompleteProps
+    "size" extends KnownKeys<AutocompleteProps>
+        ? "variant" extends KnownKeys<AutocompleteProps>
             ? true
             : false
         : false
 >;
 
-type _HasStyleProps = ExpectTrue<
-    "bg" extends keyof AutocompleteProps
-        ? "color" extends keyof AutocompleteProps
-            ? "p" extends keyof AutocompleteProps
-                ? "m" extends keyof AutocompleteProps
-                    ? "w" extends keyof AutocompleteProps
-                        ? "h" extends keyof AutocompleteProps
-                            ? true
-                            : false
-                        : false
-                    : false
-                : false
-            : false
-        : false
->;
-
 type _HasPartProps = ExpectTrue<
-    "placeholder" extends keyof AutocompleteInputProps
-        ? "noResultsText" extends keyof AutocompleteContentProps
+    "placeholder" extends KnownKeys<AutocompleteInputProps>
+        ? "noResultsText" extends KnownKeys<AutocompleteContentProps>
             ? true
             : false
         : false
 >;
 
 const _callbackProps: _HasCallbackProps = true;
+const _noLegacyProps: _NoLegacyProps = true;
 const _recipeProps: _HasRecipeProps = true;
-const _styleProps: _HasStyleProps = true;
 const _partProps: _HasPartProps = true;
 
-void (_callbackProps && _recipeProps && _styleProps && _partProps && _size && _variant);
+void (
+    _callbackProps &&
+    _noLegacyProps &&
+    _recipeProps &&
+    _partProps &&
+    _size &&
+    _variant
+);
 
 assertType<AutocompleteProps>({
     items: [{ value: "a", label: "A" }],
-    onChangeValue: () => {},
+    onValueChange: () => {},
     value: "a",
     defaultValue: "a",
-    isClearable: true,
+    clearable: true,
     size: "md",
     variant: "plain",
     triggerVariant: "outline",
@@ -89,11 +102,6 @@ assertType<AutocompleteProps>({
     w: "xs",
     h: "auto"
 });
-
-assertType<AutocompleteProps["onChangeValue"]>(
-    // @ts-expect-error onChangeValue receives string | null, not a boolean
-    (_value: boolean) => {}
-);
 
 assertType<AutocompleteProps>({
     items: [{ value: "a", label: "A" }],

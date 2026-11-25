@@ -2,22 +2,22 @@
 title: Pagination
 description: Pagination allows users to navigate through pages of content.
 isServerComponent: false
-source: /packages/react/src/components/pagination/pagination.tsx
-themeSource: /packages/system/src/recipes/pagination.ts
+source: /components/pagination/index.tsx
+themeSource: /components/pagination/pagination.ts
 ---
 
 ## Installation
 
 ```bash
-pnpm dreamy add pagination
+bunx dreamy add pagination
 ```
 
 ## Usage
 
-Pagination is used to navigate through pages of content when you have too much data to display on a single page. Behavior and accessibility come from [Ark UI Pagination](https://ark-ui.com/docs/components/pagination), so `Pagination.Root` accepts the same state props (`page`, `defaultPage`, `pageSize`, `defaultPageSize`, `onPageChange`, `onPageSizeChange`, `siblingCount`, `boundaryCount`, `translations`).
+Pagination is used to navigate through pages of content when you have too much data to display on a single page. Behavior and accessibility come from [UI SDK Pagination](https://ui-sdk.dev/docs/components/pagination), so `Pagination.Root` accepts `total`, `pageSize`, `pageCount`, `page`, `defaultPage`, `onPageChange`, `siblings`, `boundaries`, `getHref`, `controller`, and `translations`.
 
 <Wrapper>
-    <Pagination.Root count={100} pageSize={10} defaultPage={1}>
+    <Pagination.Root total={100} pageSize={10} defaultPage={1}>
         <Pagination.PrevTrigger />
         <Pagination.Items />
         <Pagination.NextTrigger />
@@ -25,7 +25,7 @@ Pagination is used to navigate through pages of content when you have too much d
 </Wrapper>
 
 ```tsx
-<Pagination.Root count={100} pageSize={10} defaultPage={1}>
+<Pagination.Root total={100} pageSize={10} defaultPage={1}>
     <Pagination.PrevTrigger />
     <Pagination.Items />
     <Pagination.NextTrigger />
@@ -37,7 +37,7 @@ Pagination is used to navigate through pages of content when you have too much d
 Use `FirstTrigger` and `LastTrigger` to jump to the edges of the page range.
 
 <Wrapper>
-    <Pagination.Root count={100} pageSize={10} defaultPage={5}>
+    <Pagination.Root total={100} pageSize={10} defaultPage={5}>
         <Pagination.FirstTrigger />
         <Pagination.PrevTrigger />
         <Pagination.Items />
@@ -47,7 +47,7 @@ Use `FirstTrigger` and `LastTrigger` to jump to the edges of the page range.
 </Wrapper>
 
 ```tsx
-<Pagination.Root count={100} pageSize={10} defaultPage={5}>
+<Pagination.Root total={100} pageSize={10} defaultPage={5}>
     <Pagination.FirstTrigger />
     <Pagination.PrevTrigger />
     <Pagination.Items />
@@ -61,7 +61,7 @@ Use `FirstTrigger` and `LastTrigger` to jump to the edges of the page range.
 You can display the current page information using the `PageText` component.
 
 <Wrapper>
-    <Pagination.Root count={100} pageSize={10} defaultPage={3}>
+    <Pagination.Root total={100} pageSize={10} defaultPage={3}>
         <Pagination.PrevTrigger />
         <Pagination.Items />
         <Pagination.NextTrigger />
@@ -70,7 +70,7 @@ You can display the current page information using the `PageText` component.
 </Wrapper>
 
 ```tsx
-<Pagination.Root count={100} pageSize={10} defaultPage={3}>
+<Pagination.Root total={100} pageSize={10} defaultPage={3}>
     <Pagination.PrevTrigger />
     <Pagination.Items />
     <Pagination.NextTrigger />
@@ -80,10 +80,10 @@ You can display the current page information using the `PageText` component.
 
 ### Automatic Ellipsis
 
-The `Items` component automatically handles ellipsis placement based on the current page, `siblingCount`, and `boundaryCount`. This eliminates the need to manually manage which pages to show.
+The `Items` component automatically handles ellipsis placement based on the current page, `siblings`, and `boundaries`.
 
 <Wrapper>
-    <Pagination.Root count={200} pageSize={10} defaultPage={10} siblingCount={1}>
+    <Pagination.Root total={200} pageSize={10} defaultPage={10} siblings={1}>
         <Pagination.PrevTrigger />
         <Pagination.Items />
         <Pagination.NextTrigger />
@@ -91,7 +91,7 @@ The `Items` component automatically handles ellipsis placement based on the curr
 </Wrapper>
 
 ```tsx
-<Pagination.Root count={200} pageSize={10} defaultPage={10} siblingCount={1}>
+<Pagination.Root total={200} pageSize={10} defaultPage={10} siblings={1}>
     <Pagination.PrevTrigger />
     <Pagination.Items />
     <Pagination.NextTrigger />
@@ -100,47 +100,47 @@ The `Items` component automatically handles ellipsis placement based on the curr
 
 ### Manual Items and Ellipsis
 
-If you need full control, you can still manually specify items and ellipsis. Give each `Ellipsis` a unique `index`.
+If you need full control, you can manually specify items and ellipses.
 
 <Wrapper>
-    <Pagination.Root count={100} page={5}>
+    <Pagination.Root total={100} page={5}>
         <Pagination.PrevTrigger />
-        <Pagination.Item value={1} />
-        <Pagination.Ellipsis index={1} />
-        <Pagination.Item value={4} />
-        <Pagination.Item value={5} />
-        <Pagination.Item value={6} />
-        <Pagination.Ellipsis index={5} />
-        <Pagination.Item value={10} />
+        <Pagination.Item page={1} />
+        <Pagination.Ellipsis />
+        <Pagination.Item page={4} />
+        <Pagination.Item page={5} />
+        <Pagination.Item page={6} />
+        <Pagination.Ellipsis />
+        <Pagination.Item page={10} />
         <Pagination.NextTrigger />
     </Pagination.Root>
 </Wrapper>
 
 ```tsx
-<Pagination.Root count={100} page={5}>
+<Pagination.Root total={100} page={5}>
     <Pagination.PrevTrigger />
-    <Pagination.Item value={1} />
-    <Pagination.Ellipsis index={1} />
-    <Pagination.Item value={4} />
-    <Pagination.Item value={5} />
-    <Pagination.Item value={6} />
-    <Pagination.Ellipsis index={5} />
-    <Pagination.Item value={10} />
+    <Pagination.Item page={1} />
+    <Pagination.Ellipsis />
+    <Pagination.Item page={4} />
+    <Pagination.Item page={5} />
+    <Pagination.Item page={6} />
+    <Pagination.Ellipsis />
+    <Pagination.Item page={10} />
     <Pagination.NextTrigger />
 </Pagination.Root>
 ```
 
 ### Custom Rendering
 
-Use `Pagination.Context` to read the Ark pagination API (`page`, `pages`, `totalPages`, `pageRange`, `setPage`, `slice`, ...) and build your own layout.
+Use `Pagination.Context` to read pagination state (`page`, `pageCount`, `items`, `pageSize`, `total`) and build your own layout.
 
 <Wrapper>
-    <Pagination.Root count={100} pageSize={10} defaultPage={2}>
+    <Pagination.Root total={100} pageSize={10} defaultPage={2}>
         <Pagination.Context>
             {(pagination) => (
                 <>
                     <Pagination.PrevTrigger />
-                    <span>Page {pagination.page} of {pagination.totalPages}</span>
+                    <span>Page {pagination.page} of {pagination.pageCount}</span>
                     <Pagination.NextTrigger />
                 </>
             )}
@@ -149,12 +149,12 @@ Use `Pagination.Context` to read the Ark pagination API (`page`, `pages`, `total
 </Wrapper>
 
 ```tsx
-<Pagination.Root count={100} pageSize={10} defaultPage={2}>
+<Pagination.Root total={100} pageSize={10} defaultPage={2}>
     <Pagination.Context>
         {(pagination) => (
             <>
                 <Pagination.PrevTrigger />
-                <span>Page {pagination.page} of {pagination.totalPages}</span>
+                <span>Page {pagination.page} of {pagination.pageCount}</span>
                 <Pagination.NextTrigger />
             </>
         )}
@@ -164,7 +164,7 @@ Use `Pagination.Context` to read the Ark pagination API (`page`, `pages`, `total
 
 ### Controlled Pagination
 
-You can control the pagination state using the `page` and `onPageChange` props. The `Items` component automatically updates based on the current page.
+Control the pagination state using `page` and `onPageChange`. `onPageChange` receives `(page, details)`.
 
 <Wrapper>
     <ControlledPagination />
@@ -174,10 +174,10 @@ You can control the pagination state using the `page` and `onPageChange` props. 
 const [page, setPage] = useState(1);
 
 <Pagination.Root
-    count={100}
+    total={100}
     page={page}
     pageSize={10}
-    onPageChange={(details) => setPage(details.page)}
+    onPageChange={(nextPage) => setPage(nextPage)}
 >
     <Pagination.PrevTrigger />
     <Pagination.Items />
@@ -191,31 +191,31 @@ const [page, setPage] = useState(1);
 Pagination comes with five sizes: `sm`, `md` (default), `lg`, `xl`, and `2xl`.
 
 <Wrapper>
-    <Pagination.Root count={100} pageSize={10} defaultPage={1} size="sm">
+    <Pagination.Root total={100} pageSize={10} defaultPage={1} size="sm">
         <Pagination.PrevTrigger />
         <Pagination.Items />
         <Pagination.NextTrigger />
     </Pagination.Root>
 
-    <Pagination.Root count={100} pageSize={10} defaultPage={1} size="md">
+    <Pagination.Root total={100} pageSize={10} defaultPage={1} size="md">
         <Pagination.PrevTrigger />
         <Pagination.Items />
         <Pagination.NextTrigger />
     </Pagination.Root>
 
-    <Pagination.Root count={100} pageSize={10} defaultPage={1} size="lg">
+    <Pagination.Root total={100} pageSize={10} defaultPage={1} size="lg">
         <Pagination.PrevTrigger />
         <Pagination.Items />
         <Pagination.NextTrigger />
     </Pagination.Root>
 
-    <Pagination.Root count={100} pageSize={10} defaultPage={1} size="xl">
+    <Pagination.Root total={100} pageSize={10} defaultPage={1} size="xl">
         <Pagination.PrevTrigger />
         <Pagination.Items />
         <Pagination.NextTrigger />
     </Pagination.Root>
 
-    <Pagination.Root count={100} pageSize={10} defaultPage={1} size="2xl">
+    <Pagination.Root total={100} pageSize={10} defaultPage={1} size="2xl">
         <Pagination.PrevTrigger />
         <Pagination.Items />
         <Pagination.NextTrigger />
@@ -223,77 +223,33 @@ Pagination comes with five sizes: `sm`, `md` (default), `lg`, `xl`, and `2xl`.
 </Wrapper>
 
 ```tsx
-<Pagination.Root count={100} pageSize={10} defaultPage={1} size="sm">
+<Pagination.Root total={100} pageSize={10} defaultPage={1} size="sm">
     <Pagination.PrevTrigger />
     <Pagination.Items />
     <Pagination.NextTrigger />
-</Pagination.Root>
-
-<Pagination.Root count={100} pageSize={10} defaultPage={1} size="md">
-    <Pagination.PrevTrigger />
-    <Pagination.Items />
-    <Pagination.NextTrigger />
-</Pagination.Root>
-
-<Pagination.Root count={100} pageSize={10} defaultPage={1} size="lg">
-    <Pagination.PrevTrigger />
-    <Pagination.Items />
-    <Pagination.NextTrigger />
-</Pagination.Root>
-
-<Pagination.Root count={100} pageSize={10} defaultPage={1} size="xl">
-    <Pagination.PrevTrigger />
-    <Pagination.Items />
-    <Pagination.NextTrigger />
-</Pagination.Root>
-
-<Pagination.Root count={100} pageSize={10} defaultPage={1} size="2xl">
-    <Pagination.PrevTrigger />
-    <Pagination.Items />
-    <Pagination.NextTrigger />
-</Pagination.Root>
-```
-
-### Custom Trigger Content
-
-You can customize the content of the prev and next triggers.
-
-<Wrapper>
-    <Pagination.Root count={100} pageSize={10} defaultPage={3}>
-        <Pagination.PrevTrigger>Previous</Pagination.PrevTrigger>
-        <Pagination.Items />
-        <Pagination.NextTrigger>Next</Pagination.NextTrigger>
-    </Pagination.Root>
-</Wrapper>
-
-```tsx
-<Pagination.Root count={100} pageSize={10} defaultPage={3}>
-    <Pagination.PrevTrigger>Previous</Pagination.PrevTrigger>
-    <Pagination.Items />
-    <Pagination.NextTrigger>Next</Pagination.NextTrigger>
 </Pagination.Root>
 ```
 
 ### Page Text Formats
 
-The `PageText` component supports three different formats.
+The `PageText` component supports `"short"`, `"compact"`, and `"long"` formats.
 
 <Wrapper>
-    <Pagination.Root count={100} pageSize={10} defaultPage={3}>
+    <Pagination.Root total={100} pageSize={10} defaultPage={3}>
         <Pagination.PrevTrigger />
         <Pagination.Items />
         <Pagination.NextTrigger />
         <Pagination.PageText format="short" ml={4} />
     </Pagination.Root>
 
-    <Pagination.Root count={100} pageSize={10} defaultPage={3}>
+    <Pagination.Root total={100} pageSize={10} defaultPage={3}>
         <Pagination.PrevTrigger />
         <Pagination.Items />
         <Pagination.NextTrigger />
         <Pagination.PageText format="compact" ml={4} />
     </Pagination.Root>
 
-    <Pagination.Root count={100} pageSize={10} defaultPage={3}>
+    <Pagination.Root total={100} pageSize={10} defaultPage={3}>
         <Pagination.PrevTrigger />
         <Pagination.Items />
         <Pagination.NextTrigger />
@@ -302,24 +258,7 @@ The `PageText` component supports three different formats.
 </Wrapper>
 
 ```tsx
-{/* Short format: "3 / 10" */}
-<Pagination.Root count={100} pageSize={10} defaultPage={3}>
-    <Pagination.PrevTrigger />
-    <Pagination.Items />
-    <Pagination.NextTrigger />
-    <Pagination.PageText format="short" ml={4} />
-</Pagination.Root>
-
-{/* Compact format: "3 of 10" */}
-<Pagination.Root count={100} pageSize={10} defaultPage={3}>
-    <Pagination.PrevTrigger />
-    <Pagination.Items />
-    <Pagination.NextTrigger />
-    <Pagination.PageText format="compact" ml={4} />
-</Pagination.Root>
-
-{/* Long format: "21-30 of 100" */}
-<Pagination.Root count={100} pageSize={10} defaultPage={3}>
+<Pagination.Root total={100} pageSize={10} defaultPage={3}>
     <Pagination.PrevTrigger />
     <Pagination.Items />
     <Pagination.NextTrigger />
@@ -329,11 +268,11 @@ The `PageText` component supports three different formats.
 
 ### Translations
 
-Accessible labels default to "Pagination", "First page", "Previous page", "Next page", "Last page", and "Page N". Override any of them with `translations`.
+Accessible labels default to `"Pagination"`, `"First page"`, `"Previous page"`, `"Next page"`, `"Last page"`, and `"Page N"`. Override any of them with `translations`.
 
 ```tsx
 <Pagination.Root
-    count={100}
+    total={100}
     translations={{
         prevTriggerLabel: "Précédent",
         nextTriggerLabel: "Suivant",
@@ -346,9 +285,29 @@ Accessible labels default to "Pagination", "First page", "Previous page", "Next 
 </Pagination.Root>
 ```
 
-## Migrating from the hook-based Pagination
+### Imperative Controller
 
-- `onPageChange` now receives `{ page, pageSize }`.
-- `count` is optional (Ark defaults it to `1`), and `boundaryCount`, `defaultPageSize`, `onPageSizeChange`, and `translations` are new.
-- `Pagination.Ellipsis` accepts an `index` (pass a unique one when rendering ellipses manually).
-- `usePaginationRange` is no longer used by the component. Read `pages` from `Pagination.Context` instead.
+Use `createPaginationController` (re-exported from the `pagination` module) to read or change pages imperatively with `setPage`, `next`, `previous`, `first`, and `last`.
+
+```tsx
+const [controller] = useState(createPaginationController);
+
+<VStack align="flex-start" gap={3}>
+    <HStack gap={2}>
+        <Button size="sm" variant="outline" onClick={() => controller.previous()}>
+            Prev
+        </Button>
+        <Button size="sm" variant="outline" onClick={() => controller.setPage(5)}>
+            Jump to 5
+        </Button>
+        <Button size="sm" variant="outline" onClick={() => controller.next()}>
+            Next
+        </Button>
+    </HStack>
+    <Pagination.Root controller={controller} total={100} pageSize={10}>
+        <Pagination.PrevTrigger />
+        <Pagination.Items />
+        <Pagination.NextTrigger />
+    </Pagination.Root>
+</VStack>
+```

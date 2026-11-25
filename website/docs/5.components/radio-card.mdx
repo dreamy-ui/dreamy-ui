@@ -1,20 +1,20 @@
 ---
 title: Radio Card
-description: A selectable card component that behaves like a Radio
+description: A selectable card component that behaves like a Radio.
 isServerComponent: false
-source: /packages/react/src/components/Radio-card/Radio-card.tsx
-themeSource: /packages/system/src/recipes/Radio-card.ts
+source: /components/radio-card/index.tsx
+themeSource: /components/radio-card/radio-card.ts
 ---
 
 ## Installation
 
 ```bash
-pnpm dreamy add radio-card
+bunx dreamy add radio-card
 ```
 
 ## Usage
 
-Radio Card is a multipart component. The hidden radio input is rendered automatically inside `RadioCard.Root` — pass all radio props to `Root`.
+Radio Card is a multipart component backed by [UI SDK Radio](https://ui-sdk.dev/docs/components/radio). Compose options with `RadioCard.Root`, `RadioCard.Header`, `RadioCard.Title`, `RadioCard.Description`, `RadioCard.Radio`, and `RadioCard.Label`, and pass `value`, `disabled`, `readOnly`, `required`, or `invalid` to `RadioCard.Root` (or wrap options in `RadioGroup`).
 
 <Wrapper>
 	<RadioGroup full defaultValue="rr">
@@ -257,7 +257,7 @@ Change the Radio card size.
 
 ### Radio Group
 
-You can control the Radio state by using `value` and `onChange` in `<RadioGroup />`.
+You can control the Radio state by using `value` and `onValueChange` in `<RadioGroup />`.
 
 <Wrapper>
 	<ControlledRadioCards />
@@ -265,12 +265,12 @@ You can control the Radio state by using `value` and `onChange` in `<RadioGroup 
 
 ```tsx
 export function ControlledRadioCards() {
-    const [value, setValue] = useState<string | number>("rr");
+    const [value, setValue] = useState<string | null>("rr");
 
     return (
         <RadioGroup
             value={value}
-            onChange={setValue}
+            onValueChange={(next) => setValue(next)}
         >
             <Group
                 full

@@ -1,26 +1,24 @@
 ---
 title: Popover
-description: Popover allows to create dialog that shows next to the trigger element.
+description: Popover displays floating content anchored to a trigger element.
 isServerComponent: false
 source: /components/popover/index.tsx
-themeSource: /components/recipes/popover.ts
+themeSource: /components/popover/popover.ts
 ---
 
 ## Installation
 
 ```bash
-pnpm dreamy add popover
+bunx dreamy add popover
 ```
 
 ## Usage
 
-Popover behavior (focus, dismiss, positioning, top-layer rendering) is provided by UI SDK Popover (`@ui-sdk/react/popover`). Dreamy owns styling, compound parts, and CSS enter/exit transitions on the content surface. Use `open`, `defaultOpen`, and `onOpenChange` for controlled state — `onOpenChange` receives `(open, details)` where `details.reason` explains the change and `details.cancel()` can veto it.
+Popover behavior (focus, dismiss, positioning, top-layer rendering) is provided by [UI SDK Popover](https://ui-sdk.dev/docs/components/popover). Dreamy owns styling, compound parts, and CSS enter/exit transitions on the content surface. Use `open`, `defaultOpen`, and `onOpenChange` for controlled state — `onOpenChange` receives `(open, details)` where `details.reason` explains the change and `details.cancel()` can veto it.
 
-Floating content renders through the UI SDK popup, which positions itself against the trigger (or `Popover.Anchor`) and shows in the browser top layer. Set `hasArrow` on the root; the pointer is `Popover.Arrow`, a single element positioned by the popup and styled via the popover recipe.
+Floating content renders through the UI SDK popup, which positions itself against the trigger (or `Popover.Anchor`) and shows in the browser top layer. Set `hasArrow` on `Popover.Root` to render the pointer (with optional `arrowSize` / `arrowShadowColor`).
 
-When Popover opens, focus moves into the panel. When it closes, focus returns to the trigger. Set `hasArrow` on `Popover.Root` to render the pointer (optional `arrowSize` / `arrowShadowColor`).
-
-Use `reduceMotion` on the root or rely on `DreamyProvider` to skip transitions. Content mounts when the popover opens; the deprecated `lazyMount={false}` maps to `keepMounted` on `Popover.Content` if you need it to stay in the DOM.
+When Popover opens, focus moves into the panel. When it closes, focus returns to the trigger. Use `reduceMotion` on `Popover.Root` (or rely on `DreamyProvider`) to skip transitions, and pass `keepMounted` on `Popover.Content` if you need the content to stay mounted in the DOM when closed.
 
 <Wrapper>
     <Popover.Root hasArrow>
@@ -73,7 +71,7 @@ export function BasicPopover() {
 
 Popover content renders in the browser top layer via the UI SDK popup (`popover="manual"`), so it naturally stacks above page content and other overlays without a Dreamy [`Portal`](/docs/components/portal) or z-index workaround.
 
-To render the panel inside a specific element instead, pass `container` to `Popover.Content` (or the deprecated `portalProps.containerRef` on `Popover.Root`, which only honors `containerRef`).
+To render the panel inside a specific element instead, pass `container` to `Popover.Content`.
 
 ```tsx
 const overlayRef = useRef<HTMLDivElement>(null);
@@ -140,7 +138,7 @@ export function ControlledPopover() {
 
 ### Initial Focus
 
-You can set the initial focus element using `initialFocusRef` prop.
+You can set the initial focus element using the `initialFocus` prop on `Popover.Content`.
 
 <Wrapper>
 	<FocusPopover />
@@ -156,13 +154,12 @@ export function FocusPopover() {
             hasArrow
             open={open}
             onOpenChange={(nextOpen) => setOpen(nextOpen)}
-            initialFocusRef={initialFocusRef}
         >
             <Popover.Trigger>
                 <Button variant={"primary"}>Open Popover</Button>
             </Popover.Trigger>
 
-            <Popover.Content>
+            <Popover.Content initialFocus={() => initialFocusRef.current}>
                 <Popover.CloseButton />
                 <Popover.Header>Delete Post</Popover.Header>
                 <Popover.Body>
@@ -182,7 +179,7 @@ export function FocusPopover() {
 
 ### Placement
 
-You can customize the placement of the popover relative to the trigger element using the `positioning` prop.
+You can customize the placement of the popover relative to the trigger element using `side` and `align` on `Popover.Content` or `positioning` on `Popover.Root`.
 
 <Wrapper>
 	<PlacementPopovers />

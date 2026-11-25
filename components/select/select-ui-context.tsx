@@ -1,6 +1,8 @@
 "use client";
 
+import type { PositioningProps, UiSdkMotionController } from "@dreamy-ui/react";
 import { createContext, useContext } from "react";
+
 export interface SelectItemData {
     value: string;
     label: string;
@@ -11,9 +13,12 @@ export interface SelectUiContextValue {
     items: SelectItemData[];
     renderItem?: (item: SelectItemData) => React.ReactNode;
     selectedStrategy: "checkmark" | "background" | "both";
-    isClearable: boolean;
+    clearable: boolean;
+    multiple: boolean;
+    reduceMotion: boolean;
+    motion: UiSdkMotionController;
+    positioning?: PositioningProps;
     triggerFieldProps: React.HTMLAttributes<HTMLElement>;
-    onSingleValueChange?: (value: string) => void;
 }
 
 const SelectUiContext = createContext<SelectUiContextValue | null>(null);

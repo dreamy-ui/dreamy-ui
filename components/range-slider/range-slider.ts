@@ -16,11 +16,21 @@ export const rangeSlider = defineSlotRecipe({
     base: {
         root: {
             display: "flex",
-            alignItems: "center",
+            flexDirection: "column",
+            gap: 2,
             position: "relative",
             width: "full",
             userSelect: "none",
             touchAction: "none",
+            "&[data-orientation=vertical]": {
+                width: "fit-content",
+                alignItems: "center"
+            },
+            "& [data-slot=slider-value]": {
+                textStyle: "sm",
+                color: "fg.medium",
+                fontVariantNumeric: "tabular-nums"
+            },
             "&[data-disabled]": {
                 cursor: "not-allowed",
                 opacity: 0.5
@@ -32,6 +42,15 @@ export const rangeSlider = defineSlotRecipe({
             height: "full",
             cursor: "pointer",
             touchAction: "none",
+            "[data-orientation=horizontal] &": {
+                width: "full",
+                height: "var(--range-slider-track-size)"
+            },
+            "[data-orientation=vertical] &": {
+                width: "var(--range-slider-track-size)",
+                height: "full",
+                flex: 1
+            },
             "[data-disabled] &": {
                 cursor: "not-allowed"
             }
@@ -88,6 +107,10 @@ export const rangeSlider = defineSlotRecipe({
                 _after: {
                     scale: 0.8
                 }
+            },
+            "&:has(:focus-visible)": {
+                outline: "2px solid {colors.primary}",
+                outlineOffset: "2px"
             },
             "[data-disabled] &": {
                 cursor: "not-allowed"

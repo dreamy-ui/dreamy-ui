@@ -34,7 +34,7 @@ At the start of every UI SDK migration task:
 4. The generic UI SDK agent skill ships at `components/node_modules/@ui-sdk/core/skills/ui-sdk/SKILL.md`; use it for primitive composition and testing patterns.
 5. Read `website/docs/7.migration/1.ui-sdk-migration.mdx` and `website/docs/7.migration/2.component-coverage.mdx` for the roadmap and coverage matrix.
 
-UI SDK `0.1.0-beta.1` is pinned in `components/package.json` and `website/package.json`. APIs may change; do not upgrade casually.
+UI SDK `0.1.0-beta.17` is pinned in `components/package.json` and `website/package.json`. `@ark-ui/react` has been removed cleanly after Phase 4 cleanup. Custom headless primitives for components without a direct UI SDK entry (`editable`, `action-bar`, `stepper`) live alongside their components and use `@ui-sdk/core` / `@ui-sdk/react/primitive` patterns.
 
 ## Repository layout (current)
 

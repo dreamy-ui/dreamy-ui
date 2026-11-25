@@ -7,10 +7,13 @@ import type {
 } from "./index";
 
 type ExpectTrue<T extends true> = T;
+type KnownKeys<T> = keyof {
+    [K in keyof T as string extends K ? never : number extends K ? never : K]: K;
+};
 
 assertType<Date | null | undefined>({} as DatePickerRootProps["value"]);
 assertType<Date | null | undefined>({} as DatePickerRootProps["defaultValue"]);
-assertType<((date: Date | null) => void) | undefined>({} as DatePickerRootProps["onChange"]);
+assertType<((date: Date | null) => void) | undefined>({} as DatePickerRootProps["onValueChange"]);
 assertType<string | undefined>({} as DatePickerRootProps["dateFormat"]);
 assertType<string | undefined>({} as DatePickerRootProps["placeholder"]);
 assertType<Date | undefined>({} as DatePickerRootProps["minDate"]);
@@ -20,10 +23,10 @@ assertType<0 | 1 | 2 | 3 | 4 | 5 | 6 | undefined>({} as DatePickerRootProps["wee
 const _size: DatePickerRootProps["size"] = "md";
 
 type _HasValueProps = ExpectTrue<
-    "value" extends keyof DatePickerRootProps
-        ? "onChange" extends keyof DatePickerRootProps
-            ? "minDate" extends keyof DatePickerRootProps
-                ? "maxDate" extends keyof DatePickerRootProps
+    "value" extends KnownKeys<DatePickerRootProps>
+        ? "onValueChange" extends KnownKeys<DatePickerRootProps>
+            ? "open" extends KnownKeys<DatePickerRootProps>
+                ? "onOpenChange" extends KnownKeys<DatePickerRootProps>
                     ? true
                     : false
                 : false
@@ -31,49 +34,43 @@ type _HasValueProps = ExpectTrue<
         : false
 >;
 
-type _HasRecipeProps = ExpectTrue<"size" extends keyof DatePickerRootProps ? true : false>;
-
-type _HasStyleProps = ExpectTrue<
-    "bg" extends keyof DatePickerRootProps
-        ? "color" extends keyof DatePickerRootProps
-            ? "p" extends keyof DatePickerRootProps
-                ? "m" extends keyof DatePickerRootProps
-                    ? "w" extends keyof DatePickerRootProps
-                        ? "h" extends keyof DatePickerRootProps
-                            ? true
-                            : false
-                        : false
-                    : false
-                : false
-            : false
-        : false
+type _NoLegacyProps = ExpectTrue<
+    "onChange" extends KnownKeys<DatePickerRootProps>
+        ? false
+        : "popoverProps" extends KnownKeys<DatePickerRootProps>
+          ? false
+          : true
 >;
+
+type _HasRecipeProps = ExpectTrue<"size" extends KnownKeys<DatePickerRootProps> ? true : false>;
 
 type _HasInputGroupProps = ExpectTrue<
-    "inputGroupProps" extends keyof DatePickerInputProps
-        ? "endAddonProps" extends keyof DatePickerInputProps
-            ? "placeholder" extends keyof DatePickerInputProps
-                ? true
-                : false
+    "inputGroupProps" extends KnownKeys<DatePickerInputProps>
+        ? "endAddonProps" extends KnownKeys<DatePickerInputProps>
+            ? true
             : false
         : false
 >;
 
-type _HasContentProps = ExpectTrue<"children" extends keyof DatePickerContentProps ? true : false>;
+type _HasContentProps = ExpectTrue<
+    "children" extends KnownKeys<DatePickerContentProps> ? true : false
+>;
 
-type _HasAIOContentProps = ExpectTrue<"contentProps" extends keyof DatePickerAIOProps ? true : false>;
+type _HasAIOContentProps = ExpectTrue<
+    "contentProps" extends KnownKeys<DatePickerAIOProps> ? true : false
+>;
 
 const _valueProps: _HasValueProps = true;
+const _noLegacyProps: _NoLegacyProps = true;
 const _recipeProps: _HasRecipeProps = true;
-const _styleProps: _HasStyleProps = true;
 const _inputGroupProps: _HasInputGroupProps = true;
 const _contentProps: _HasContentProps = true;
 const _aioContentProps: _HasAIOContentProps = true;
 
 void (
     _valueProps &&
+    _noLegacyProps &&
     _recipeProps &&
-    _styleProps &&
     _size &&
     _inputGroupProps &&
     _contentProps &&
@@ -83,14 +80,15 @@ void (
 assertType<DatePickerRootProps>({
     value: new Date(2026, 0, 1),
     defaultValue: null,
-    onChange: () => {},
+    onValueChange: () => {},
+    open: true,
+    onOpenChange: () => {},
     dateFormat: "MMM D, YYYY",
     placeholder: "Select date",
     minDate: new Date(2020, 0, 1),
     maxDate: new Date(2030, 0, 1),
     weekStartsOn: 1,
     size: "md",
-    popoverProps: { usePortal: false },
     bg: "transparent",
     color: "fg",
     p: 2,
@@ -123,6 +121,6 @@ assertType<DatePickerRootProps>({
 });
 
 assertType<DatePickerRootProps>({
-    // @ts-expect-error onChange receives Date | null, not a string
-    onChange: (_value: string) => {}
+    // @ts-expect-error onValueChange receives Date | null, not a string
+    onValueChange: (_value: string) => {}
 });

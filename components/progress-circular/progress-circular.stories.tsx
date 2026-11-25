@@ -93,7 +93,7 @@ export function ShowValueLabel() {
                 valueLabel="0"
             />
             <ProgressCircular
-                formatOptions={{ style: "currency", currency: "USD" }}
+                format={{ style: "currency", currency: "USD" }}
                 showValueLabel
                 value={69}
             />
@@ -113,9 +113,37 @@ export function Label() {
 export function MinAndMaxValue() {
     return (
         <ProgressCircular
-            maxValue={37}
-            minValue={21}
+            max={37}
+            min={21}
             value={29}
         />
+    );
+}
+
+export function ValueLabelAndLocale() {
+    return (
+        <Flex
+            gap={6}
+            wrap="wrap"
+        >
+            <ProgressCircular
+                getValueLabel={(value, details) =>
+                    `${value} of ${details.max} files, ${details.formatted}`
+                }
+                label="Copying files"
+                max={12}
+                showValueLabel
+                size="lg"
+                value={3}
+                valueLabel="3/12"
+            />
+            <ProgressCircular
+                label="Synchronisierung"
+                locale="de-DE"
+                showValueLabel
+                size="lg"
+                value={40}
+            />
+        </Flex>
     );
 }

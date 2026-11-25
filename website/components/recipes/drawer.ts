@@ -38,20 +38,14 @@ export const drawer = defineSlotRecipe({
         overlay: {
             zIndex: "overlay",
             position: "fixed",
-            top: 0,
-            left: 0,
-            height: "100vh",
-            width: "100vw",
+            inset: 0,
             backgroundColor: "rgba(0, 0, 0, 0.4)",
             backdropFilter: "blur({blurs.sm})"
         },
         container: {
             zIndex: "modal",
             position: "fixed",
-            top: 0,
-            left: 0,
-            height: "100vh",
-            width: "100dvw",
+            inset: 0,
             display: "flex"
         },
         content: {
@@ -62,9 +56,12 @@ export const drawer = defineSlotRecipe({
             backdropFilter: "blur({blurs.base})",
             boxShadow: "md",
             overflow: "hidden",
-            touchAction: "pan-y",
-            "&[data-dragging]": {
-                touchAction: "none"
+            outline: "none",
+            width: "100%",
+            height: "100%",
+            maxHeight: "100dvh",
+            "&[data-scroll-behavior='outside']": {
+                overflowY: "auto"
             }
         },
         grabber: {
@@ -75,6 +72,8 @@ export const drawer = defineSlotRecipe({
             paddingY: 2,
             flexShrink: 0,
             cursor: "grab",
+            background: "transparent",
+            border: "none",
             touchAction: "none"
         },
         grabberIndicator: {
@@ -138,19 +137,16 @@ export const drawer = defineSlotRecipe({
     variants: {
         variant: {
             simple: {
-                container: {
-                    padding: 0
-                },
                 content: {
-                    borderRadius: "none"
+                    borderRadius: "none",
+                    margin: 0
                 }
             },
             inset: {
-                container: {
-                    padding: 4
-                },
                 content: {
-                    borderRadius: "p-4"
+                    borderRadius: "p-4",
+                    margin: 4,
+                    maxHeight: "calc(100dvh - 2rem)"
                 }
             }
         },

@@ -6,12 +6,9 @@ import { render } from "../test/render";
 import * as Drawer from "./index";
 
 describe("Drawer", () => {
-    it("exposes dialog role, aria-modal, and accessible name from Header", async () => {
+    it("exposes dialog role, aria-modal, UI SDK slot, and accessible name from Header", async () => {
         render(
-            <Drawer.Root
-                open
-                onOpenChange={() => {}}
-            >
+            <Drawer.Root open>
                 <Drawer.Overlay />
                 <Drawer.Content>
                     <Drawer.Header>Confirm delete</Drawer.Header>
@@ -23,8 +20,8 @@ describe("Drawer", () => {
 
         const dialog = await screen.findByRole("dialog");
 
+        expect(dialog).toHaveAttribute("data-slot", "drawer-content");
         expect(dialog).toHaveAttribute("aria-modal", "true");
-        expect(dialog).toHaveAttribute("tabIndex", "-1");
         expect(dialog).toHaveAccessibleName("Confirm delete");
 
         const labelledBy = dialog.getAttribute("aria-labelledby");
@@ -34,10 +31,7 @@ describe("Drawer", () => {
 
     it("associates Body via aria-describedby when present", async () => {
         render(
-            <Drawer.Root
-                open
-                onOpenChange={() => {}}
-            >
+            <Drawer.Root open>
                 <Drawer.Content>
                     <Drawer.Header>Title</Drawer.Header>
                     <Drawer.Body>Primary message for assistive tech</Drawer.Body>
@@ -54,17 +48,13 @@ describe("Drawer", () => {
         );
     });
 
-    it("focuses the element pointed to by initialFocusRef when open", async () => {
+    it("focuses the element pointed to by initialFocus when open", async () => {
         function Fixture() {
             const inputRef = useRef<HTMLInputElement>(null);
 
             return (
-                <Drawer.Root
-                    initialFocusRef={inputRef}
-                    open
-                    onOpenChange={() => {}}
-                >
-                    <Drawer.Content>
+                <Drawer.Root open>
+                    <Drawer.Content initialFocus={() => inputRef.current}>
                         <Drawer.Header>Edit profile</Drawer.Header>
                         <Drawer.CloseButton />
                         <Drawer.Body>
@@ -87,50 +77,30 @@ describe("Drawer", () => {
         });
     });
 
-    it("closes on Escape and returns focus to the trigger", async () => {
+    it("opens via Trigger, closes on Escape, and returns focus to the trigger", async () => {
         const user = userEvent.setup();
         const onOpenChange = vi.fn();
 
-        function Fixture() {
-            const [open, setOpen] = useState(false);
-
-            return (
-                <>
-                    <button
-                        onClick={() => setOpen(true)}
-                        type="button"
-                    >
-                        Open Drawer
-                    </button>
-                    <Drawer.Root
-                        open={open}
-                        onOpenChange={(details) => {
-                            onOpenChange(details);
-                            setOpen(details.open);
-                        }}
-                        restoreFocus
-                    >
-                        <Drawer.Content>
-                            <Drawer.Header>Keyboard dismiss</Drawer.Header>
-                            <Drawer.CloseButton />
-                            <Drawer.Body>Press Escape</Drawer.Body>
-                        </Drawer.Content>
-                    </Drawer.Root>
-                </>
-            );
-        }
-
-        render(<Fixture />);
+        render(
+            <Drawer.Root onOpenChange={onOpenChange}>
+                <Drawer.Trigger>Open Drawer</Drawer.Trigger>
+                <Drawer.Overlay />
+                <Drawer.Content>
+                    <Drawer.Header>Keyboard dismiss</Drawer.Header>
+                    <Drawer.CloseButton />
+                    <Drawer.Body>Press Escape</Drawer.Body>
+                </Drawer.Content>
+            </Drawer.Root>
+        );
 
         const trigger = screen.getByRole("button", { name: "Open Drawer" });
         await user.click(trigger);
 
-        const dialog = await screen.findByRole("dialog");
-        dialog.focus();
+        expect(await screen.findByRole("dialog")).toBeInTheDocument();
         await user.keyboard("{Escape}");
 
         await waitFor(() => {
-            expect(onOpenChange).toHaveBeenCalledWith({ open: false });
+            expect(onOpenChange).toHaveBeenCalledWith(false, expect.anything());
         });
         await waitFor(() => {
             expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
@@ -146,8 +116,8 @@ describe("Drawer", () => {
 
         render(
             <Drawer.Root
-                open
                 onOpenChange={onOpenChange}
+                open
             >
                 <Drawer.Content>
                     <Drawer.Header>Closeable</Drawer.Header>
@@ -160,44 +130,20 @@ describe("Drawer", () => {
         const close = await screen.findByRole("button", { name: "Close" });
         await user.click(close);
 
-        expect(onOpenChange).toHaveBeenCalledWith({ open: false });
+        expect(onOpenChange).toHaveBeenCalledWith(false, expect.anything());
     });
 
-    it("calls onOpenChange when closeOnEscape is enabled and Escape is pressed", async () => {
+    it("does not close on Escape when dismissible is false and calls onDismissAttempt", async () => {
         const user = userEvent.setup();
         const onOpenChange = vi.fn();
+        const onDismissAttempt = vi.fn();
 
         render(
             <Drawer.Root
-                closeOnEscape
-                open
+                dismissible={false}
+                onDismissAttempt={onDismissAttempt}
                 onOpenChange={onOpenChange}
-            >
-                <Drawer.Content>
-                    <Drawer.Header>Esc</Drawer.Header>
-                    <Drawer.Body>
-                        <button type="button">Focusable</button>
-                    </Drawer.Body>
-                </Drawer.Content>
-            </Drawer.Root>
-        );
-
-        await screen.findByRole("dialog");
-        await user.click(screen.getByRole("button", { name: "Focusable" }));
-        await user.keyboard("{Escape}");
-
-        expect(onOpenChange).toHaveBeenCalledWith({ open: false });
-    });
-
-    it("does not close on Escape when closeOnEscape is false", async () => {
-        const user = userEvent.setup();
-        const onOpenChange = vi.fn();
-
-        render(
-            <Drawer.Root
-                closeOnEscape={false}
                 open
-                onOpenChange={onOpenChange}
             >
                 <Drawer.Content>
                     <Drawer.Header>Stay open</Drawer.Header>
@@ -212,11 +158,12 @@ describe("Drawer", () => {
         await user.click(screen.getByRole("button", { name: "Focusable" }));
         await user.keyboard("{Escape}");
 
-        expect(onOpenChange).not.toHaveBeenCalledWith({ open: false });
+        expect(onDismissAttempt).toHaveBeenCalled();
+        expect(onOpenChange).not.toHaveBeenCalledWith(false, expect.anything());
         expect(screen.getByRole("dialog")).toBeInTheDocument();
     });
 
-    it("returns focus to finalFocusRef when provided", async () => {
+    it("returns focus to finalFocus target when provided", async () => {
         const user = userEvent.setup();
 
         function Fixture() {
@@ -232,12 +179,10 @@ describe("Drawer", () => {
                         Final focus target
                     </button>
                     <Drawer.Root
-                        finalFocusRef={finalRef}
+                        onOpenChange={(next) => setOpen(next)}
                         open={open}
-                        onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
-                        restoreFocus
                     >
-                        <Drawer.Content>
+                        <Drawer.Content finalFocus={() => finalRef.current}>
                             <Drawer.Header>Final focus</Drawer.Header>
                             <Drawer.CloseButton />
                             <Drawer.Body>Body</Drawer.Body>
@@ -257,29 +202,31 @@ describe("Drawer", () => {
         });
     });
 
-    it("forwards trapFocus and related Drawerity props without throwing", async () => {
+    it("supports placement, snapPoints, and Grabber handle", async () => {
         render(
             <Drawer.Root
-                autoFocus
-                blockScrollOnMount
+                defaultSnapPoint={0.5}
                 open
-                onOpenChange={() => {}}
-                preserveScrollBarGap
-                scrollBehavior="inside"
-                trapFocus
+                placement="bottom"
+                snapPoints={[0.25, 0.5, 1]}
             >
-                <Drawer.Overlay data-testid="Drawer-overlay" />
-                <Drawer.Content data-testid="Drawer-content">
-                    <Drawer.Header>Props</Drawer.Header>
+                <Drawer.Overlay data-testid="drawer-overlay" />
+                <Drawer.Content data-testid="drawer-content">
+                    <Drawer.Grabber>
+                        <Drawer.GrabberIndicator />
+                    </Drawer.Grabber>
+                    <Drawer.Header>Sheet</Drawer.Header>
                     <Drawer.Footer>
-                        <button type="button">OK</button>
+                        <Drawer.Close>OK</Drawer.Close>
                     </Drawer.Footer>
                 </Drawer.Content>
             </Drawer.Root>
         );
 
-        expect(await screen.findByTestId("Drawer-content")).toBeInTheDocument();
-        expect(screen.getByTestId("Drawer-overlay")).toBeInTheDocument();
+        const content = await screen.findByTestId("drawer-content");
+        expect(content).toHaveAttribute("data-side", "bottom");
+        expect(screen.getByTestId("drawer-overlay")).toBeInTheDocument();
+        expect(screen.getByRole("button", { name: "Resize drawer" })).toBeInTheDocument();
         expect(screen.getByRole("button", { name: "OK" })).toBeInTheDocument();
     });
 });

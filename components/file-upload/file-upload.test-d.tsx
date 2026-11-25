@@ -1,42 +1,32 @@
-import type { FileChangeDetails } from "@dreamy-ui/react";
-import type { ComponentProps } from "react";
+import type { FileInputValueChangeDetails } from "@ui-sdk/react/file-input";
 import { assertType } from "vitest";
-import * as FileUpload from "./index";
+import type { FileUploadRootProps, FileUploadTriggerProps } from "./index";
 
 type ExpectTrue<T extends true> = T;
-type FileUploadRootProps = ComponentProps<typeof FileUpload.Root>;
+type KnownKeys<T> = keyof {
+    [K in keyof T as string extends K ? never : number extends K ? never : K]: K;
+};
 
 assertType<FileUploadRootProps["accept"]>({} as FileUploadRootProps["accept"]);
 assertType<number | undefined>({} as FileUploadRootProps["maxFiles"]);
+assertType<number | undefined>({} as FileUploadRootProps["maxSize"]);
+assertType<number | undefined>({} as FileUploadRootProps["minSize"]);
+assertType<boolean | undefined>({} as FileUploadRootProps["multiple"]);
 assertType<boolean | undefined>({} as FileUploadRootProps["disabled"]);
 assertType<boolean | undefined>({} as FileUploadRootProps["required"]);
 assertType<boolean | undefined>({} as FileUploadRootProps["invalid"]);
 assertType<string | undefined>({} as FileUploadRootProps["name"]);
-assertType<((details: FileChangeDetails) => void) | undefined>(
-    {} as FileUploadRootProps["onFileChange"]
+assertType<((value: File[], details: FileInputValueChangeDetails) => void) | undefined>(
+    {} as FileUploadRootProps["onValueChange"]
 );
 
 type _HasControlProps = ExpectTrue<
-    "accept" extends keyof FileUploadRootProps
-        ? "disabled" extends keyof FileUploadRootProps
-            ? "required" extends keyof FileUploadRootProps
-                ? "invalid" extends keyof FileUploadRootProps
-                    ? "name" extends keyof FileUploadRootProps
-                        ? true
-                        : false
-                    : false
-                : false
-            : false
-        : false
->;
-
-type _HasStyleProps = ExpectTrue<
-    "bg" extends keyof FileUploadRootProps
-        ? "color" extends keyof FileUploadRootProps
-            ? "p" extends keyof FileUploadRootProps
-                ? "m" extends keyof FileUploadRootProps
-                    ? "w" extends keyof FileUploadRootProps
-                        ? "h" extends keyof FileUploadRootProps
+    "accept" extends KnownKeys<FileUploadRootProps>
+        ? "disabled" extends KnownKeys<FileUploadRootProps>
+            ? "required" extends KnownKeys<FileUploadRootProps>
+                ? "invalid" extends KnownKeys<FileUploadRootProps>
+                    ? "onValueChange" extends KnownKeys<FileUploadRootProps>
+                        ? "onReject" extends KnownKeys<FileUploadRootProps>
                             ? true
                             : false
                         : false
@@ -46,19 +36,34 @@ type _HasStyleProps = ExpectTrue<
         : false
 >;
 
-const _controlProps: _HasControlProps = true;
-const _styleProps: _HasStyleProps = true;
+type _NoLegacyProps = ExpectTrue<
+    "onFileChange" extends KnownKeys<FileUploadRootProps>
+        ? false
+        : "onFileReject" extends KnownKeys<FileUploadRootProps>
+          ? false
+          : "maxFileSize" extends KnownKeys<FileUploadRootProps>
+            ? false
+            : "asChild" extends KnownKeys<FileUploadTriggerProps>
+              ? false
+              : true
+>;
 
-void (_controlProps && _styleProps);
+const _controlProps: _HasControlProps = true;
+const _noLegacyProps: _NoLegacyProps = true;
+
+void (_controlProps && _noLegacyProps);
 
 assertType<FileUploadRootProps>({
     accept: ".pdf",
-    maxFiles: 1,
+    maxFiles: 3,
+    maxSize: 5_000_000,
+    multiple: true,
     disabled: false,
     required: true,
     invalid: false,
     name: "resume",
-    onFileChange: () => {},
+    onValueChange: () => {},
+    onReject: () => {},
     className: "custom-upload",
     bg: "transparent",
     color: "fg",

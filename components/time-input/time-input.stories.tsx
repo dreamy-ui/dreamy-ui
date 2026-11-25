@@ -11,44 +11,25 @@ export function Base() {
 }
 
 export function Hour12() {
-    return <TimeInput.AIO hour12 />;
+    return <TimeInput.AIO hourCycle={12} />;
 }
 
 export function WithSeconds() {
     return (
         <TimeInput.AIO
             defaultValue="14:30:45"
-            fields={["hour", "minute", "second"]}
-            hour12
+            granularity="second"
+            hourCycle={12}
         />
     );
 }
 
-export function WithMilliseconds() {
+export function HourOnly() {
     return (
         <TimeInput.AIO
-            defaultValue="14:30:45.100"
-            fields={["hour", "minute", "second", "millisecond"]}
-            millisecondStep={100}
-        />
-    );
-}
-
-export function SecondsOnly() {
-    return (
-        <TimeInput.AIO
-            defaultValue="45.250"
-            fields={["second", "millisecond"]}
-            millisecondStep={50}
-        />
-    );
-}
-
-export function MinutesAndSeconds() {
-    return (
-        <TimeInput.AIO
-            defaultValue="05:30"
-            fields={["minute", "second"]}
+            defaultValue="09:00"
+            granularity="hour"
+            hourCycle={24}
         />
     );
 }
@@ -62,7 +43,7 @@ export function Sizes() {
         >
             {(["sm", "md", "lg"] as const).map((size) => (
                 <TimeInput.AIO
-                    hour12
+                    hourCycle={12}
                     key={size}
                     size={size}
                 />
@@ -76,7 +57,7 @@ export function Variants() {
         <VStack alignItems="flex-start">
             {(["outline", "solid", "filledOutline"] as const).map((variant) => (
                 <TimeInput.AIO
-                    hour12
+                    hourCycle={12}
                     key={variant}
                     variant={variant}
                 />
@@ -86,14 +67,14 @@ export function Variants() {
 }
 
 export function Controlled() {
-    const [value, setValue] = useState("14:30");
+    const [value, setValue] = useState<string | null>("14:30");
 
     return (
         <VStack alignItems="flex-start">
             <Text>Value: {value || "(empty)"}</Text>
             <TimeInput.AIO
-                hour12
-                onChange={setValue}
+                hourCycle={12}
+                onValueChange={(next) => setValue(next)}
                 value={value}
             />
         </VStack>
@@ -104,7 +85,7 @@ export function MinuteStep() {
     return (
         <TimeInput.AIO
             defaultValue="09:00"
-            hour12
+            hourCycle={12}
             minuteStep={5}
         />
     );
@@ -114,7 +95,7 @@ export function WithField() {
     return (
         <Field.Root>
             <Field.Label>Appointment time</Field.Label>
-            <TimeInput.AIO hour12 />
+            <TimeInput.AIO hourCycle={12} />
             <Field.Hint>Use arrows or scroll the wheels</Field.Hint>
         </Field.Root>
     );
@@ -123,8 +104,8 @@ export function WithField() {
 export function Invalid() {
     return (
         <TimeInput.AIO
-            hour12
-            isInvalid
+            hourCycle={12}
+            invalid
         />
     );
 }
@@ -133,8 +114,8 @@ export function Disabled() {
     return (
         <TimeInput.AIO
             defaultValue="08:15"
-            hour12
-            isDisabled
+            disabled
+            hourCycle={12}
         />
     );
 }
@@ -143,8 +124,8 @@ export function Compound() {
     return (
         <TimeInput.Root
             defaultValue="16:45:00"
-            fields={["hour", "minute", "second"]}
-            hour12
+            granularity="second"
+            hourCycle={12}
         >
             <TimeInput.Trigger />
             <TimeInput.Content>

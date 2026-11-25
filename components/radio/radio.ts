@@ -48,6 +48,15 @@ export const radio = defineRecipe({
                 cursor: "not-allowed",
                 opacity: 0.6
             },
+            "&[data-readonly]": {
+                cursor: "default"
+            },
+            "&[data-readonly]:hover [data-part=wrapper]": {
+                bg: "transparent"
+            },
+            "&[data-invalid] [data-part=wrapper]": {
+                borderColor: "error"
+            },
             "&:hover [data-part=wrapper]": {
                 bg: "{colors.alpha.50}"
             },

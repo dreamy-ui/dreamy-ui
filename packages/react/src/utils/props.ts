@@ -26,6 +26,23 @@ export type RequiredPropGetter<P = Record<string, unknown>, R = DOMAttributes> =
 
 export type MaybeRenderProp<P> = React.ReactNode | ((props: P) => React.ReactNode);
 
+/**
+ * Omits colliding domain/UI SDK prop keys from a Dreamy host element's props
+ * (`HTMLDreamyProps<T>`, `FlexProps`, `BoxProps`) when extending both in one interface.
+ */
+export type DreamyHostProps<
+	HostProps,
+	OwnProps = {},
+	ExtraOmit extends PropertyKey = never
+> = Omit<HostProps, keyof OwnProps | ExtraOmit>;
+
+/**
+ * Internal `data-slot` prop injected by Panda `createStyleContext`.
+ */
+export interface StyleContextSlotProps {
+	"data-slot"?: string;
+}
+
 export function mergeProps<P extends Record<string, unknown>>(
 	props: P,
 	otherProps: Record<string, unknown>

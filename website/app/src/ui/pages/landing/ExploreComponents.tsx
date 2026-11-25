@@ -1,5 +1,4 @@
-import { Icon } from "@/ui";
-import { HStack } from "@/ui";
+import { HStack, Icon } from "@/ui";
 import { m } from "motion/react";
 import { useState } from "react";
 import { LuArrowRight } from "react-icons/lu";
@@ -10,6 +9,7 @@ export default function ExploreComponents() {
 
     return (
         <Link
+            _hover={{ color: "fg" }}
             alignSelf={"center"}
             color={"fg.medium"}
             onMouseEnter={() => setIsHovering(true)}
@@ -19,11 +19,10 @@ export default function ExploreComponents() {
             <HStack gap={2}>
                 <m.span
                     animate={{
-                        // animate letter spacing
-                        letterSpacing: isHovering ? "2px" : "0px"
+                        letterSpacing: isHovering ? "1.5px" : "0px"
                     }}
                 >
-                    Explore components
+                    Explore all 60+ components
                 </m.span>
                 <Icon
                     as={LuArrowRight}

@@ -1,7 +1,15 @@
 "use client";
 
-import { Switch as UiSdkSwitch, SwitchThumb as UiSdkSwitchThumb } from "@ui-sdk/react/switch";
-import { dataAttr, useFieldProps } from "@dreamy-ui/react";
+import {
+    Switch as UiSdkSwitch,
+    SwitchThumb as UiSdkSwitchThumb,
+    createSwitchController,
+    type SwitchController,
+    type SwitchState,
+    type SwitchThumbState
+} from "@ui-sdk/react/switch";
+import { type DreamyHostProps, dataAttr, useFieldProps } from "@dreamy-ui/react";
+import type { FocusEvent } from "react";
 import type { MotionProps } from "motion/react";
 import { m } from "motion/react";
 import { useState } from "react";
@@ -9,10 +17,26 @@ import { cx } from "styled-system/css";
 import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
 import { type SwittchVariantProps, swittch } from "styled-system/recipes";
 
+type UiSdkSwitchPickedProps = Pick<
+    React.ComponentProps<typeof UiSdkSwitch>,
+    | "checked"
+    | "defaultChecked"
+    | "onCheckedChange"
+    | "disabled"
+    | "readOnly"
+    | "required"
+    | "name"
+    | "value"
+    | "form"
+    | "controller"
+    | "debug"
+>;
+
 export interface SwitchProps
     extends SwittchVariantProps,
-        Omit<
+        DreamyHostProps<
             HTMLDreamyProps<"label">,
+            UiSdkSwitchPickedProps,
             | "defaultValue"
             | "onChange"
             | "onChangeValue"
@@ -23,33 +47,27 @@ export interface SwitchProps
             | "isRequired"
             | "isIndeterminate"
         >,
-        Pick<
-            React.ComponentProps<typeof UiSdkSwitch>,
-            | "checked"
-            | "defaultChecked"
-            | "onCheckedChange"
-            | "disabled"
-            | "readOnly"
-            | "required"
-            | "name"
-            | "value"
-            | "form"
-            | "controller"
-            | "debug"
-        > {
+        UiSdkSwitchPickedProps {
     /**
      * Marks the switch as invalid for styling purposes.
      */
     isInvalid?: boolean;
     /**
-     * Icon rendered inside the thumb.
+     * Disables switch thumb motion animation.
      */
-    icon?: React.ReactNode;
+    reduceMotion?: boolean;
+    /**
+     * Icon rendered inside the thumb, or a render function receiving thumb state.
+     */
+    icon?: React.ReactNode | ((state: SwitchThumbState) => React.ReactNode);
     /**
      * Motion props applied to the thumb content.
      */
     thumbProps?: MotionProps;
 }
+
+export { createSwitchController };
+export type { SwitchController, SwitchState, SwitchThumbState };
 
 const StyledSwitch = dreamy("label", swittch);
 
@@ -86,12 +104,15 @@ export function Switch(props: SwitchProps) {
         autoFocus,
         tabIndex,
         className,
+        "aria-busy": ariaBusy,
         "aria-label": ariaLabel,
         "aria-labelledby": ariaLabelledby,
         onClick,
+        onPointerCancel,
         onPointerDown,
         onPointerUp,
         onPointerLeave,
+        reduceMotion: _reduceMotion,
         ...rest
     } = props;
 
@@ -115,11 +136,19 @@ export function Switch(props: SwitchProps) {
             data-readonly={dataAttr(isReadOnly)}
             data-required={dataAttr(isRequired)}
             onClick={onClick}
+            onPointerCancel={(event: React.PointerEvent<HTMLLabelElement>) => {
+                (
+                    onPointerCancel as
+                        | ((e: React.PointerEvent<HTMLLabelElement>) => void)
+                        | undefined
+                )?.(event);
+                setIsActive(false);
+            }}
             onPointerDown={(event: React.PointerEvent<HTMLLabelElement>) => {
                 (onPointerDown as ((e: React.PointerEvent<HTMLLabelElement>) => void) | undefined)?.(
                     event
                 );
-                if (!isInteractionDisabled) {
+                if (!isInteractionDisabled && (event.button == null || event.button === 0)) {
                     setIsActive(true);
                 }
             }}
@@ -137,12 +166,13 @@ export function Switch(props: SwitchProps) {
             }}
         >
             <UiSdkSwitch
+                aria-busy={ariaBusy}
                 aria-describedby={field["aria-describedby"]}
                 aria-invalid={isInvalid ? true : undefined}
                 aria-label={ariaLabel as string | undefined}
                 aria-labelledby={ariaLabelledby as string | undefined}
                 autoFocus={autoFocus}
-                checked={checked as boolean | undefined}
+                checked={checked}
                 data-part="control"
                 data-invalid={dataAttr(isInvalid)}
                 debug={debug}
@@ -151,9 +181,24 @@ export function Switch(props: SwitchProps) {
                 form={form}
                 id={field.id}
                 name={name}
-                onBlur={field.onBlur}
+                onBlur={(event: FocusEvent<HTMLButtonElement>) => {
+                    field.onBlur?.(event as unknown as FocusEvent<HTMLLabelElement>);
+                    setIsActive(false);
+                }}
                 onCheckedChange={onCheckedChange}
-                onFocus={field.onFocus}
+                onFocus={(event: FocusEvent<HTMLButtonElement>) => {
+                    field.onFocus?.(event as unknown as FocusEvent<HTMLLabelElement>);
+                }}
+                onKeyDown={(event) => {
+                    if (event.key === " " && !isInteractionDisabled) {
+                        setIsActive(true);
+                    }
+                }}
+                onKeyUp={(event) => {
+                    if (event.key === " ") {
+                        setIsActive(false);
+                    }
+                }}
                 readOnly={isReadOnly}
                 required={isRequired}
                 tabIndex={tabIndex as number | undefined}
@@ -161,14 +206,17 @@ export function Switch(props: SwitchProps) {
                 controller={controller}
             >
                 <UiSdkSwitchThumb data-part="thumb">
-                    {icon != null || thumbProps ? (
-                        <m.span
-                            data-part="thumb-content"
-                            {...thumbProps}
-                        >
-                            {icon}
-                        </m.span>
-                    ) : null}
+                    {(state) => {
+                        const resolvedIcon = typeof icon === "function" ? icon(state) : icon;
+                        return resolvedIcon != null || thumbProps ? (
+                            <m.span
+                                data-part="thumb-content"
+                                {...thumbProps}
+                            >
+                                {resolvedIcon}
+                            </m.span>
+                        ) : null;
+                    }}
                 </UiSdkSwitchThumb>
             </UiSdkSwitch>
             {children ? <span data-part="label">{children as React.ReactNode}</span> : null}

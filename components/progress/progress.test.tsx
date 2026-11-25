@@ -72,4 +72,54 @@ describe("Progress", () => {
             "3 of 4 files"
         );
     });
+
+    it("renders ProgressLabel and formatted ProgressValue via label and showValue", () => {
+        render(
+            <Progress
+                format={{ style: "unit", unit: "gigabyte" }}
+                label="Download"
+                locale="en-US"
+                max={250}
+                showValue
+                value={120}
+            />
+        );
+
+        const progressbar = screen.getByRole("progressbar", { name: "Download" });
+        expect(progressbar).toHaveAttribute("aria-valuenow", "120");
+        expect(progressbar).toHaveAttribute("aria-valuemax", "250");
+        expect(screen.getByText(/120\s*GB/)).toBeInTheDocument();
+    });
+
+    it("supports getValueLabel and custom visible valueLabel", () => {
+        render(
+            <Progress
+                getValueLabel={(value, details) =>
+                    `${value} of ${details.max} files, ${details.formatted}`
+                }
+                label="Copying files"
+                max={12}
+                showValue
+                value={3}
+                valueLabel="3 of 12"
+            />
+        );
+
+        const progressbar = screen.getByRole("progressbar", { name: "Copying files" });
+        expect(progressbar).toHaveAttribute("aria-valuetext", "3 of 12 files, 25%");
+        expect(screen.getByText("3 of 12")).toBeInTheDocument();
+    });
+
+    it("marks indeterminate progress when value is null or omitted", () => {
+        render(
+            <Progress
+                label="Connecting to server"
+                value={null}
+            />
+        );
+
+        const progressbar = screen.getByRole("progressbar", { name: "Connecting to server" });
+        expect(progressbar).toHaveAttribute("data-indeterminate");
+        expect(progressbar).not.toHaveAttribute("aria-valuenow");
+    });
 });

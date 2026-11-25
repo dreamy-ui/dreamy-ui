@@ -2,14 +2,14 @@
 title: Button
 description: Button is a primary action element that performs an action when clicked.
 isServerComponent: false
-source: /packages/react/src/components/button/button.tsx
-themeSource: /packages/system/src/recipes/button.ts
+source: /components/button/index.tsx
+themeSource: /components/button/button.ts
 ---
 
 ## Installation
 
 ```bash
-pnpm dreamy add button
+bunx dreamy add button
 ```
 
 ## Usage
@@ -134,14 +134,14 @@ You can add icons on left or right side of the Button by using the `leftIcon` or
 
 ### Disabled
 
-You can disable the Button by using the `isDisabled` prop.
+You can disable the Button by using the `disabled` prop (or pass `focusableWhenDisabled` to keep it in the tab order with `aria-disabled`).
 
 <Wrapper>
-	<Button w='fit' isDisabled>Disabled</Button>
+	<Button w="fit" disabled>Disabled</Button>
 </Wrapper>
 
 ```tsx
-<Button isDisabled>Disabled</Button>
+<Button disabled>Disabled</Button>
 ```
 
 ### Loading State
@@ -282,15 +282,19 @@ Use the `Group` component to group multiple Buttons together.
 
 ### As Link
 
-Often you need to use a Button as a link. You can do this by using the `as` prop.
+Often you need to use a Button as a link. You can do this by using the `render` prop or `asChild`.
 
 <Wrapper>
-	<Button as={<ReactRouterLink to="/">Home</ReactRouterLink>}>Home</Button>
-	<Button as={<ReactRouterLink to="/">Home</ReactRouterLink>}>Home</Button>
+	<Flex wrapped gap={2}>
+		<Button render={<ReactRouterLink to="/" />}>Home</Button>
+		<Button asChild>
+			<ReactRouterLink to="/">Home</ReactRouterLink>
+		</Button>
+	</Flex>
 </Wrapper>
 
 ```tsx
-<Button as={<Link to="/">Home</Link>}>Home</Button>
+<Button render={<Link to="/" />}>Home</Button>
 <Button asChild>
 	<Link to="/">Home</Link>
 </Button>
@@ -312,7 +316,7 @@ If you dislike the default ripple effect, you can customize the button recipe to
 				}}
 				transitionProperty="background-color, color, border-color, fill, scale"
 			>
-				<>Press me</>
+				Press me
 			</Button>
 		</VStack>
 		<VStack>
@@ -324,7 +328,7 @@ If you dislike the default ripple effect, you can customize the button recipe to
 				}}
 				transitionProperty="background-color, color, border-color, fill, scale"
 			>
-				<>Press me</>
+				Press me
 			</Button>
 		</VStack>
 	</Wrap>

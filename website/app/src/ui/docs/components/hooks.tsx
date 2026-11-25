@@ -114,8 +114,10 @@ export function UseControllableModal() {
             <Text>Is open: {isOpen ? "Yes" : "No"}</Text>
             <Button onClick={onOpen}>Open</Button>
             <Modal.Root
-                isOpen={isOpen}
-                onClose={onClose}
+                onOpenChange={(open) => {
+                    if (!open) onClose();
+                }}
+                open={isOpen}
             >
                 <Modal.Overlay />
                 <Modal.Content>

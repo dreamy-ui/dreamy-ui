@@ -276,7 +276,7 @@ export const button = defineRecipe({
                 }
             })
         },
-        scheme: getColorSchemes("--button-scheme", undefined, "root")
+        scheme: getColorSchemes("--button-scheme")
     },
     compoundVariants: [
         {

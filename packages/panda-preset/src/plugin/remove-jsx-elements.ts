@@ -13,12 +13,6 @@ const KEEP_PREFIXES = [
 
 export async function removeJsxElements(jsxFolder: string) {
     const files = await fs.readdir(jsxFolder);
-    for (const file of files) {
-        if (!KEEP_PREFIXES.some((prefix) => file.startsWith(prefix))) {
-            await fs.unlink(path.join(jsxFolder, file));
-        }
-    }
-
     let js: "mjs" | "js" | "both" = "js";
 
     const indexJs = await fs.readFile(path.join(jsxFolder, "index.js"), "utf-8").catch(() => null);
@@ -49,6 +43,11 @@ export type { HTMLDreamyProps, DreamyComponent } from '../types/jsx';
         fs.writeFile(path.join(jsxFolder, "index.d.ts"), indexDts)
     ]);
 
+    await Promise.all(
+        files
+            .filter((file) => !KEEP_PREFIXES.some((prefix) => file.startsWith(prefix)))
+            .map((file) => fs.unlink(path.join(jsxFolder, file)).catch(() => {}))
+    );
 }
 
 export async function removeGeneratedRecipeContextFiles(jsxFolder: string) {

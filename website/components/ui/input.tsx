@@ -1,6 +1,6 @@
 "use client";
 
-import { type UserFeedbackProps, createContext, useField } from "@dreamy-ui/react";
+import { type DreamyHostProps, type UserFeedbackProps, createContext, useField } from "@dreamy-ui/react";
 import { Input as UiSdkInput } from "@ui-sdk/react/input";
 import { type ComponentProps } from "react";
 import { type HTMLDreamyProps, createStyleContext, dreamy, splitCssProps } from "styled-system/jsx";
@@ -18,13 +18,15 @@ const [InputGroupProvider, useInputGroup] = createContext<InputGroupProviderCont
 
 interface InputGroupProviderContext extends InputVariantProps, UserFeedbackProps {}
 
+type UiSdkPickedInputProps = Pick<
+    UiSdkInputProps,
+    "value" | "defaultValue" | "onValueChange" | "controller" | "debug"
+>;
+
 export interface InputProps
-    extends Omit<
-            HTMLDreamyProps<"input">,
-            "size" | "value" | "defaultValue" | "onValueChange"
-        >,
+    extends DreamyHostProps<HTMLDreamyProps<"input">, UiSdkPickedInputProps, "size">,
         InputVariantProps,
-        Pick<UiSdkInputProps, "value" | "defaultValue" | "onValueChange" | "controller" | "debug"> {}
+        UiSdkPickedInputProps {}
 
 export interface InputGroupProps
     extends InputGroupProviderContext,
@@ -68,14 +70,18 @@ export interface InputStartAddonProps extends HTMLDreamyProps<"div"> {}
 /**
  * Input Start Addon — addon attached to the start of the input group.
  */
-const StartAddon = withContext(dreamy.div, "startAddon");
+const StartAddon = withContext(dreamy.div, "startAddon", {
+    defaultProps: { "data-part": "start-addon" }
+});
 
 export interface InputEndAddonProps extends HTMLDreamyProps<"div"> {}
 
 /**
  * Input End Addon — addon attached to the end of the input group.
  */
-const EndAddon = withContext(dreamy.div, "endAddon");
+const EndAddon = withContext(dreamy.div, "endAddon", {
+    defaultProps: { "data-part": "end-addon" }
+});
 
 /**
  * Input component — text field for user input.

@@ -1,14 +1,12 @@
-import { Group } from "@/ui";
-import { Radio, RadioGroup } from "@/ui";
-import { RadioCard } from "@/ui";
+import { Group, Radio, RadioCard, RadioGroup } from "@/ui";
 import { useState } from "react";
 
 export function ControlledRadios() {
-    const [value, setValue] = useState<string | number>("rr");
+    const [value, setValue] = useState<string | null>("rr");
 
     return (
         <RadioGroup
-            onChange={setValue}
+            onValueChange={(next) => setValue(next)}
             value={value}
         >
             <Radio value="rr">React Router</Radio>
@@ -19,12 +17,12 @@ export function ControlledRadios() {
 }
 
 export function ControlledRadioCards() {
-    const [value, setValue] = useState<string | number>("rr");
+    const [value, setValue] = useState<string | null>("rr");
 
     return (
         <RadioGroup
             full
-            onChange={setValue}
+            onValueChange={(next) => setValue(next)}
             value={value}
         >
             <Group

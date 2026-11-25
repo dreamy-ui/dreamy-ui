@@ -1,5 +1,5 @@
 import { assertType } from "vitest";
-import type { ProgressProps } from "./index";
+import type { GaugeLabelDetails, NumberFormat, ProgressProps } from "./index";
 
 type ExpectTrue<T extends true> = T;
 
@@ -7,7 +7,15 @@ assertType<number | null | undefined>({} as ProgressProps["value"]);
 assertType<number | undefined>({} as ProgressProps["min"]);
 assertType<number | undefined>({} as ProgressProps["max"]);
 assertType<string | undefined>({} as ProgressProps["speed"]);
-assertType<string>({} as ProgressProps["aria-label"]);
+assertType<string | undefined>({} as ProgressProps["aria-label"]);
+assertType<React.ReactNode | undefined>({} as ProgressProps["label"]);
+assertType<boolean | undefined>({} as ProgressProps["showValue"]);
+assertType<NumberFormat | undefined>({} as ProgressProps["format"]);
+assertType<string | undefined>({} as ProgressProps["locale"]);
+assertType<
+    ((value: number | null, details: GaugeLabelDetails<number | null>) => string) | undefined
+>({} as ProgressProps["getValueLabel"]);
+assertType<boolean | undefined>({} as ProgressProps["debug"]);
 
 const _size: ProgressProps["size"] = "md";
 const _scheme: ProgressProps["scheme"] = "primary";

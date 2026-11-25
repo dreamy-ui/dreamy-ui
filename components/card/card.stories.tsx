@@ -204,12 +204,12 @@ export function WithForm() {
 
 export function AsLink() {
     return (
-        <Card.Root
-            as="a"
+        <a
             href="https://github.com/dreamy-ui/dreamy-ui"
-            maxW="sm"
+            rel="noopener noreferrer"
             target="_blank"
         >
+            <Card.Root maxW="sm">
             <Card.Header
                 alignItems="center"
                 gap={4}
@@ -251,5 +251,6 @@ export function AsLink() {
                 </Link>
             </Card.Footer>
         </Card.Root>
+        </a>
     );
 }

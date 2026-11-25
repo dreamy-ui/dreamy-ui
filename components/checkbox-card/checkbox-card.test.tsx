@@ -1,12 +1,13 @@
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
+import { CheckboxGroup } from "../checkbox";
 import * as Field from "../field";
 import { render } from "../test/render";
 import * as CheckboxCard from "./index";
 
 describe("CheckboxCard", () => {
-    it("exposes a native checkbox as the only checkbox widget", () => {
+    it("exposes a checkbox role as the only checkbox widget", () => {
         render(
             <CheckboxCard.Root aria-label="Pro plan">
                 <CheckboxCard.Header>
@@ -17,13 +18,14 @@ describe("CheckboxCard", () => {
             </CheckboxCard.Root>
         );
 
-        const inputs = screen.getAllByRole("checkbox", { hidden: true });
+        const controls = screen.getAllByRole("checkbox");
 
-        expect(inputs).toHaveLength(1);
-        expect(inputs[0]).toHaveAttribute("type", "checkbox");
+        expect(controls).toHaveLength(1);
+        expect(controls[0]).toHaveAttribute("aria-checked", "false");
+        expect(controls[0]).toHaveAttribute("data-slot", "root");
     });
 
-    it("marks the visual checkbox control as decorative", () => {
+    it("marks the visual checkbox control and icon as decorative", () => {
         render(
             <CheckboxCard.Root defaultChecked>
                 <CheckboxCard.Header>
@@ -42,12 +44,12 @@ describe("CheckboxCard", () => {
 
     it("toggles with Space and root click", async () => {
         const user = userEvent.setup();
-        const onChangeValue = vi.fn();
+        const onCheckedChange = vi.fn();
 
         render(
             <CheckboxCard.Root
                 data-testid="card"
-                onChangeValue={onChangeValue}
+                onCheckedChange={onCheckedChange}
             >
                 <CheckboxCard.Header>
                     <CheckboxCard.Title>Pro</CheckboxCard.Title>
@@ -56,20 +58,20 @@ describe("CheckboxCard", () => {
             </CheckboxCard.Root>
         );
 
-        const input = screen.getByRole("checkbox", { hidden: true });
+        const control = screen.getByRole("checkbox");
 
-        input.focus();
+        control.focus();
         await user.keyboard(" ");
-        expect(input).toBeChecked();
-        expect(onChangeValue).toHaveBeenCalledWith(true);
+        expect(control).toHaveAttribute("aria-checked", "true");
+        expect(onCheckedChange).toHaveBeenCalledWith(true, expect.anything());
 
         await user.click(screen.getByTestId("card"));
-        expect(input).not.toBeChecked();
+        expect(control).toHaveAttribute("aria-checked", "false");
     });
 
-    it("wires Field describedby and expects Field invalid on the input", () => {
+    it("wires Field describedby and expects Field invalid on the control", () => {
         render(
-            <Field.Root isInvalid>
+            <Field.Root invalid>
                 <Field.Label>Add-ons</Field.Label>
                 <CheckboxCard.Root>
                     <CheckboxCard.Header>
@@ -81,20 +83,20 @@ describe("CheckboxCard", () => {
             </Field.Root>
         );
 
-        const input = screen.getByRole("checkbox", { hidden: true });
+        const control = screen.getByRole("checkbox");
 
-        expect(input.getAttribute("aria-describedby")).toBeTruthy();
-        expect(input).toHaveAttribute("aria-invalid", "true");
+        expect(control.getAttribute("aria-describedby")).toBeTruthy();
+        expect(control).toHaveAttribute("aria-invalid", "true");
     });
 
     it("does not toggle when disabled", async () => {
         const user = userEvent.setup();
-        const onChangeValue = vi.fn();
+        const onCheckedChange = vi.fn();
 
         render(
             <CheckboxCard.Root
-                isDisabled
-                onChangeValue={onChangeValue}
+                disabled
+                onCheckedChange={onCheckedChange}
             >
                 <CheckboxCard.Header>
                     <CheckboxCard.Title>Disabled</CheckboxCard.Title>
@@ -103,16 +105,19 @@ describe("CheckboxCard", () => {
             </CheckboxCard.Root>
         );
 
-        const input = screen.getByRole("checkbox", { hidden: true });
+        const control = screen.getByRole("checkbox");
 
-        expect(input).toBeDisabled();
-        await user.click(input);
-        expect(onChangeValue).not.toHaveBeenCalled();
+        expect(control).toHaveAttribute("data-disabled", "");
+        await user.click(control);
+        expect(onCheckedChange).not.toHaveBeenCalled();
     });
 
-    it("supports controlled checked state", () => {
+    it("supports controlled checked state and CheckboxGroup", async () => {
+        const user = userEvent.setup();
+        const onValueChange = vi.fn();
+
         const { rerender } = render(
-            <CheckboxCard.Root isChecked>
+            <CheckboxCard.Root checked>
                 <CheckboxCard.Header>
                     <CheckboxCard.Title>Controlled</CheckboxCard.Title>
                     <CheckboxCard.Checkbox />
@@ -120,33 +125,46 @@ describe("CheckboxCard", () => {
             </CheckboxCard.Root>
         );
 
-        expect(screen.getByRole("checkbox", { hidden: true })).toBeChecked();
+        expect(screen.getByRole("checkbox")).toHaveAttribute("aria-checked", "true");
 
         rerender(
-            <CheckboxCard.Root isChecked={false}>
-                <CheckboxCard.Header>
-                    <CheckboxCard.Title>Controlled</CheckboxCard.Title>
-                    <CheckboxCard.Checkbox />
-                </CheckboxCard.Header>
-            </CheckboxCard.Root>
-        );
-
-        expect(screen.getByRole("checkbox", { hidden: true })).not.toBeChecked();
-    });
-
-    it("uses Field or aria-label for the accessible name", async () => {
-        render(
-            <Field.Root>
-                <Field.Label>Add-ons</Field.Label>
-                <CheckboxCard.Root>
+            <CheckboxGroup
+                defaultValue={["a"]}
+                onValueChange={onValueChange}
+            >
+                <CheckboxCard.Root value="a">
                     <CheckboxCard.Header>
-                        <CheckboxCard.Title>Analytics</CheckboxCard.Title>
+                        <CheckboxCard.Title>Option A</CheckboxCard.Title>
                         <CheckboxCard.Checkbox />
                     </CheckboxCard.Header>
                 </CheckboxCard.Root>
-            </Field.Root>
+                <CheckboxCard.Root value="b">
+                    <CheckboxCard.Header>
+                        <CheckboxCard.Title>Option B</CheckboxCard.Title>
+                        <CheckboxCard.Checkbox />
+                    </CheckboxCard.Header>
+                </CheckboxCard.Root>
+            </CheckboxGroup>
         );
 
-        expect(await screen.findByRole("checkbox", { name: /add-ons|analytics/i, hidden: true })).toBeInTheDocument();
+        const boxes = screen.getAllByRole("checkbox");
+        expect(boxes[0]).toHaveAttribute("aria-checked", "true");
+        expect(boxes[1]).toHaveAttribute("aria-checked", "false");
+
+        await user.click(boxes[1]);
+        expect(onValueChange).toHaveBeenCalledWith(["a", "b"], expect.anything());
+    });
+
+    it("uses card content for the accessible name", () => {
+        render(
+            <CheckboxCard.Root>
+                <CheckboxCard.Header>
+                    <CheckboxCard.Title>Analytics</CheckboxCard.Title>
+                    <CheckboxCard.Checkbox />
+                </CheckboxCard.Header>
+            </CheckboxCard.Root>
+        );
+
+        expect(screen.getByRole("checkbox", { name: /analytics/i })).toBeInTheDocument();
     });
 });

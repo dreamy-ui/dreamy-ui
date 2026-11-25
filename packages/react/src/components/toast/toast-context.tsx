@@ -12,7 +12,10 @@ const positions = [
 
 export type Position = (typeof positions)[number];
 
-export interface ToastContainerProps extends MotionProps {}
+export interface ToastContainerProps extends MotionProps {
+    className?: string;
+    style?: React.CSSProperties;
+}
 
 interface ToastBase {
     /**

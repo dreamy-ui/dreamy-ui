@@ -1,145 +1,255 @@
 "use client";
 
-import { Editable as ArkEditable, useEditableContext } from "@ark-ui/react/editable";
-import { type MaybeRenderProp, runIfFn, useSafeLayoutEffect } from "@dreamy-ui/react";
-import { useRef } from "react";
-import { type HTMLDreamyProps, createStyleContext, dreamy } from "styled-system/jsx";
+import {
+    type EditableActivationMode,
+    type EditableEditingChangeReason,
+    type EditableOptions,
+    EditablePrimitiveParts,
+    type EditableSubmitMode,
+    type EditableValueChangeReason,
+    type MaybeRenderProp,
+    createEditableController,
+    runIfFn,
+    useFieldProps
+} from "@dreamy-ui/react";
+import type React from "react";
+import { type CSSProperties, type ReactNode, createContext, useContext, useMemo } from "react";
+import { css, cx } from "styled-system/css";
+import { type HTMLDreamyProps, createStyleContext, splitCssProps } from "styled-system/jsx";
 import { type EditableVariantProps, editable } from "styled-system/recipes";
-import { mapEditableRootProps } from "./map-editable-props";
-
-export interface EditableProps
-    extends Omit<
-            React.ComponentProps<typeof ArkEditable.Root>,
-            | "value"
-            | "defaultValue"
-            | "onValueChange"
-            | "onValueCommit"
-            | "onValueRevert"
-            | "defaultEdit"
-            | "edit"
-            | "disabled"
-            | "activationMode"
-            | "submitMode"
-            | "selectOnFocus"
-            | "placeholder"
-            | "translations"
-            | "children"
-        >,
-        EditableVariantProps,
-        Partial<Pick<HTMLDreamyProps<"div">, "bg" | "color" | "p" | "m" | "w" | "h" | "className">> {
-    defaultValue?: string;
-    value?: string;
-    onChange?: (value: string) => void;
-    onSubmit?: (value: string) => void;
-    onCancel?: (previousValue: string) => void;
-    onEdit?: () => void;
-    isEditing?: boolean;
-    defaultIsEditing?: boolean;
-    startWithEditView?: boolean;
-    isDisabled?: boolean;
-    useDoubleClick?: boolean;
-    isPreviewFocusable?: boolean;
-    submitOnBlur?: boolean;
-    selectAllOnFocus?: boolean;
-    placeholder?: string;
-    children?: MaybeRenderProp<{
-        isEditing: boolean;
-        onSubmit: () => void;
-        onCancel: () => void;
-        onEdit: () => void;
-    }>;
-}
 
 const { withProvider, withContext } = createStyleContext(editable);
 
-function EditableContent(props: { children?: EditableProps["children"] }) {
-    const api = useEditableContext();
-    const contentRef = useRef<HTMLDivElement>(null);
+export { createEditableController };
+export type {
+    EditableActivationMode,
+    EditableEditingChangeReason,
+    EditableSubmitMode,
+    EditableValueChangeReason
+};
 
-    useSafeLayoutEffect(
-        function focusInputOnEdit() {
-            if (!api.editing) return;
+export interface EditableRenderState {
+    editing: boolean;
+    submit: () => void;
+    cancel: () => void;
+    edit: () => void;
+}
 
-            const input = contentRef.current?.querySelector<HTMLInputElement>(
-                '[data-scope="editable"][data-part="input"]'
-            );
-            input?.focus({ preventScroll: true });
-        },
-        [api.editing]
-    );
+interface EditableFieldContextValue {
+    fieldId?: string;
+    ariaDescribedBy?: string;
+}
 
-    const children = runIfFn(props.children, {
-        isEditing: api.editing,
-        onSubmit: api.submit,
-        onCancel: api.cancel,
-        onEdit: api.edit
+const EditableFieldContext = createContext<EditableFieldContextValue>({});
+
+export interface EditableProps
+    extends EditableOptions,
+        EditableVariantProps,
+        Omit<
+            HTMLDreamyProps<"div">,
+            keyof EditableOptions | "defaultValue" | "value" | "onChange" | "onSubmit" | "children"
+        > {
+    children?: MaybeRenderProp<EditableRenderState>;
+}
+
+function EditableChildren({ children }: { children?: MaybeRenderProp<EditableRenderState> }) {
+    const { editing, edit, submit, cancel } = EditablePrimitiveParts.useState();
+    return <>{runIfFn(children, { editing, edit, submit, cancel })}</>;
+}
+
+function EditableRoot(props: EditableProps) {
+    const {
+        value,
+        defaultValue,
+        onValueChange,
+        onValueCommit,
+        onValueRevert,
+        editing,
+        defaultEditing,
+        onEditingChange,
+        disabled,
+        readOnly,
+        invalid,
+        activationMode,
+        submitMode,
+        selectOnFocus,
+        placeholder,
+        finalFocusRef,
+        controller,
+        debug,
+        id,
+        children,
+        className,
+        style,
+        ...rest
+    } = props;
+
+    const {
+        isDisabled: isDisabledField = false,
+        isReadOnly: isReadOnlyField = false,
+        isInvalid: isInvalidField = false,
+        id: fieldId,
+        "aria-describedby": ariaDescribedBy
+    } = useFieldProps({
+        isDisabled: disabled,
+        isReadOnly: readOnly,
+        isInvalid: invalid,
+        id
     });
 
+    const fieldValue = useMemo<EditableFieldContextValue>(
+        () => ({ fieldId, ariaDescribedBy }),
+        [ariaDescribedBy, fieldId]
+    );
+    const [cssProps, domProps] = splitCssProps(rest);
+
     return (
-        <dreamy.div
-            ref={contentRef}
-            data-editable-state={api.editing ? "editing" : "view"}
-            data-part="content"
+        <EditableFieldContext.Provider value={fieldValue}>
+            <EditablePrimitiveParts.Root
+                {...(domProps as Record<string, unknown>)}
+                activationMode={activationMode}
+                className={cx(className as string | undefined, css(cssProps))}
+                controller={controller}
+                debug={debug}
+                defaultEditing={defaultEditing}
+                defaultValue={defaultValue}
+                disabled={disabled ?? isDisabledField}
+                editing={editing}
+                finalFocusRef={finalFocusRef}
+                invalid={invalid ?? isInvalidField}
+                onEditingChange={onEditingChange}
+                onValueChange={onValueChange}
+                onValueCommit={onValueCommit}
+                onValueRevert={onValueRevert}
+                placeholder={placeholder}
+                readOnly={readOnly ?? isReadOnlyField}
+                selectOnFocus={selectOnFocus}
+                style={style as CSSProperties | undefined}
+                submitMode={submitMode}
+                value={value}
+            >
+                {typeof children === "function" ? (
+                    <EditableChildren>{children}</EditableChildren>
+                ) : (
+                    children
+                )}
+            </EditablePrimitiveParts.Root>
+        </EditableFieldContext.Provider>
+    );
+}
+
+/**
+ * Editable component — inline text field toggling between preview and edit mode.
+ *
+ * @see Docs https://dreamy-ui.com/docs/components/editable
+ */
+export const Root: (props: EditableProps) => React.JSX.Element = withProvider(
+    EditableRoot,
+    "root"
+) as (props: EditableProps) => React.JSX.Element;
+
+export interface EditablePreviewProps extends Omit<HTMLDreamyProps<"span">, "children"> {
+    className?: string;
+    children?: ReactNode;
+}
+
+export const Preview = withContext(function EditablePreview(props: EditablePreviewProps) {
+    const { className, style, children, ...rest } = props;
+    const [cssProps, domProps] = splitCssProps(rest);
+
+    return (
+        <EditablePrimitiveParts.Preview
+            {...(domProps as Record<string, unknown>)}
+            className={cx(className as string | undefined, css(cssProps))}
+            style={style as CSSProperties | undefined}
         >
-            {children}
-        </dreamy.div>
+            {(state) => children ?? (state.empty ? state.placeholder : state.value)}
+        </EditablePrimitiveParts.Preview>
     );
+}, "preview");
+
+export interface EditableInputProps
+    extends Omit<HTMLDreamyProps<"input">, "value" | "defaultValue" | "onChange"> {
+    className?: string;
 }
 
-export const Root = withProvider(function EditableRoot(props: EditableProps) {
-    const { arkProps, children } = mapEditableRootProps(
-        props as Parameters<typeof mapEditableRootProps>[0]
-    );
+export const Input = withContext(function EditableInput(props: EditableInputProps) {
+    const { className, style, id, "aria-describedby": ariaDescribedByProp, ...rest } = props;
+    const { fieldId, ariaDescribedBy } = useContext(EditableFieldContext);
+    const [cssProps, domProps] = splitCssProps(rest);
 
     return (
-        <ArkEditable.Root {...arkProps}>
-            <EditableContent children={children} />
-        </ArkEditable.Root>
+        <EditablePrimitiveParts.Input
+            {...(domProps as Record<string, unknown>)}
+            aria-describedby={ariaDescribedByProp ?? ariaDescribedBy}
+            className={cx(className as string | undefined, css(cssProps))}
+            id={id ?? fieldId}
+            style={style as CSSProperties | undefined}
+        />
     );
-}, "root");
+}, "input");
 
-export interface EditablePreviewProps extends HTMLDreamyProps<"span"> {
+export interface EditableEditButtonProps extends Omit<HTMLDreamyProps<"button">, "children"> {
     className?: string;
-}
-
-export const Preview = withContext(ArkEditable.Preview, "preview");
-
-export interface EditableInputProps extends HTMLDreamyProps<"input"> {
-    className?: string;
-}
-
-export const Input = withContext(ArkEditable.Input, "input");
-
-export interface EditableEditButtonProps extends HTMLDreamyProps<"button"> {
-    className?: string;
-    children?: React.ReactNode;
+    children?: ReactNode;
 }
 
 export const EditButton = withContext(function EditableEditButton(props: EditableEditButtonProps) {
-    const { children, ...rest } = props;
-    return <ArkEditable.EditTrigger {...rest}>{children ?? "Edit"}</ArkEditable.EditTrigger>;
+    const { children, disabled, className, style, ...rest } = props;
+    const [cssProps, domProps] = splitCssProps(rest);
+
+    return (
+        <EditablePrimitiveParts.EditTrigger
+            {...(domProps as Record<string, unknown>)}
+            className={cx(className as string | undefined, css(cssProps))}
+            disabled={disabled}
+            style={style as CSSProperties | undefined}
+        >
+            {children ?? "Edit"}
+        </EditablePrimitiveParts.EditTrigger>
+    );
 }, "editButton");
 
-interface EditableSubmitButtonProps extends HTMLDreamyProps<"button"> {
-    className?: string;
-    children?: React.ReactNode;
+export interface EditableSubmitButtonProps extends Omit<HTMLDreamyProps<"button">, "children"> {
+    children?: ReactNode;
 }
 
 export const SubmitButton = withContext(function EditableSubmitButton(
     props: EditableSubmitButtonProps
 ) {
-    const { children, ...rest } = props;
-    return <ArkEditable.SubmitTrigger {...rest}>{children ?? "Submit"}</ArkEditable.SubmitTrigger>;
+    const { children, disabled, className, style, ...rest } = props;
+    const [cssProps, domProps] = splitCssProps(rest);
+
+    return (
+        <EditablePrimitiveParts.SubmitTrigger
+            {...(domProps as Record<string, unknown>)}
+            className={cx(className as string | undefined, css(cssProps))}
+            disabled={disabled}
+            style={style as CSSProperties | undefined}
+        >
+            {children ?? "Submit"}
+        </EditablePrimitiveParts.SubmitTrigger>
+    );
 }, "submitButton");
 
-interface EditableCancelButtonProps extends HTMLDreamyProps<"button"> {
-    className?: string;
-    children?: React.ReactNode;
+export interface EditableCancelButtonProps extends Omit<HTMLDreamyProps<"button">, "children"> {
+    children?: ReactNode;
 }
 
 export const CancelButton = withContext(function EditableCancelButton(
     props: EditableCancelButtonProps
 ) {
-    const { children, ...rest } = props;
-    return <ArkEditable.CancelTrigger {...rest}>{children ?? "Cancel"}</ArkEditable.CancelTrigger>;
+    const { children, disabled, className, style, ...rest } = props;
+    const [cssProps, domProps] = splitCssProps(rest);
+
+    return (
+        <EditablePrimitiveParts.CancelTrigger
+            {...(domProps as Record<string, unknown>)}
+            className={cx(className as string | undefined, css(cssProps))}
+            disabled={disabled}
+            style={style as CSSProperties | undefined}
+        >
+            {children ?? "Cancel"}
+        </EditablePrimitiveParts.CancelTrigger>
+    );
 }, "cancelButton");

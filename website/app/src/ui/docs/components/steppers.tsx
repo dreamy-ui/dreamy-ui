@@ -40,14 +40,14 @@ export function ControlledStepper() {
             </Stepper.CompletedContent>
             <HStack mt={4}>
                 <Button
-                    variant="outline"
-                    isDisabled={step === 0}
+                    disabled={step === 0}
                     onClick={goToPrev}
+                    variant="outline"
                 >
                     Prev
                 </Button>
                 <Button
-                    isDisabled={isComplete}
+                    disabled={isComplete}
                     onClick={goToNext}
                 >
                     Next
@@ -95,14 +95,14 @@ export function StepperWithIcons() {
             </Stepper.CompletedContent>
             <HStack mt={4}>
                 <Button
-                    variant="outline"
-                    isDisabled={step === 0}
+                    disabled={step === 0}
                     onClick={goToPrev}
+                    variant="outline"
                 >
                     Prev
                 </Button>
                 <Button
-                    isDisabled={isComplete}
+                    disabled={isComplete}
                     onClick={goToNext}
                 >
                     Next

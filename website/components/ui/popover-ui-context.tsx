@@ -1,11 +1,11 @@
 "use client";
 
-import type { PositioningProps } from "@dreamy-ui/react";
+import type { PositioningProps, UiSdkMotionController } from "@dreamy-ui/react";
 import type {
     PopoverFinalFocus,
     PopoverInitialFocus
 } from "@ui-sdk/react/popover";
-import { createContext, useContext } from "react";
+import { createContext, useContext, type RefObject } from "react";
 
 export type PopoverTriggerMode = "click" | "hover";
 
@@ -15,11 +15,12 @@ export interface PopoverUiContextValue {
     arrowShadowColor?: string;
     trigger: PopoverTriggerMode;
     reduceMotion: boolean;
+    motion: UiSdkMotionController;
     positioning?: PositioningProps;
     initialFocus?: PopoverInitialFocus;
     finalFocus?: PopoverFinalFocus;
     keepMounted?: boolean;
-    container?: Element | DocumentFragment | null;
+    containerRef?: RefObject<HTMLElement | null>;
     anchor: HTMLElement | null;
     setAnchor: (element: HTMLElement | null) => void;
 }

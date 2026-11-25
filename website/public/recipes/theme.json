@@ -1,8 +1,0 @@
-{
-  "type": "recipe",
-  "id": "theme",
-  "file": {
-    "name": "theme.ts",
-    "content": "import { defineRecipe } from \"@pandacss/dev\";\r\n\r\nexport const theme = defineRecipe({\r\n    className: \"theme\",\r\n    description:\r\n        \"A root theme wrapper that sets light or dark color-scheme on descendant components. Applies color-scheme via data-theme attribute — no visual variants.\",\r\n    jsx: [\"DarkTheme\", \"LightTheme\"],\r\n    base: {\r\n        root: {\r\n            color: \"fg\",\r\n            \"&[data-theme='dark']\": {\r\n                colorScheme: \"dark\"\r\n            },\r\n            \"&[data-theme='light']\": {\r\n                colorScheme: \"light\"\r\n            }\r\n        }\r\n    }\r\n});\r\n"
-  }
-}

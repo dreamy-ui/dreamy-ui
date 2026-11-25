@@ -7,7 +7,7 @@ export function ControlledDatePicker() {
 
     return (
         <DatePicker.Root
-            onChange={setDate}
+            onValueChange={setDate}
             value={date}
         >
             <DatePicker.Input />
@@ -45,7 +45,7 @@ export function DatePickerWithFooter() {
         <DatePicker.Root
             onApply={handleApply}
             onCancel={handleCancel}
-            onChange={setDate}
+            onValueChange={setDate}
             value={date}
         >
             <DatePicker.Input />

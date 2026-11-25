@@ -1,18 +1,20 @@
 ---
 title: Input
-description: Input is one of the main form elements.
+description: Input is a single-line text field for user input with support for variants, sizes, addons, and form field integration.
 isServerComponent: false
-source: /packages/react/src/components/input/input.tsx
-themeSource: /packages/system/src/recipes/input.ts
+source: /components/input/index.tsx
+themeSource: /components/input/input.ts
 ---
 
 ## Installation
 
 ```bash
-pnpm dreamy add input
+bunx dreamy add input
 ```
 
 ## Usage
+
+`Input` is powered by [UI SDK Input](https://ui-sdk.dev/docs/components/input) and supports controlled or uncontrolled values (`value`, `defaultValue`, `onValueChange`) as well as native input attributes and `Field.Root` context.
 
 <Wrapper>
 	<Input placeholder="Enter your username" />
@@ -23,6 +25,8 @@ pnpm dreamy add input
 ```
 
 ### Input Size
+
+Use the `size` prop to adjust the height and font size of the input (`sm`, `md`, `lg`, `xl`, and `2xl`).
 
 <Wrapper>
 	<VStack w="full">
@@ -41,10 +45,12 @@ pnpm dreamy add input
 	<Input placeholder="Enter your username" size="lg" />
 	<Input placeholder="Enter your username" size="xl" />
 	<Input placeholder="Enter your username" size="2xl" />
-</VStack>	
+</VStack>
 ```
 
 ### Input Variant
+
+Use the `variant` prop to change the visual style of the input (`outline`, `filled`, `flushed`, or `filledOutline`).
 
 <Wrapper>
 	<VStack w="full">
@@ -134,9 +140,23 @@ Due to specificity of the `Input` component, space for addons won't be added aut
 </Input.Group>	
 ```
 
+### Controlled
+
+Use `value` and `onValueChange` (which receives the string value and change details) to control the input state.
+
+```tsx
+const [value, setValue] = useState("");
+
+<Input
+	placeholder="Enter your username"
+	value={value}
+	onValueChange={(nextValue) => setValue(nextValue)}
+/>
+```
+
 ### Usage with Field
 
-Combine `Input` with `Field` to create a nice looking form element.
+Combine `Input` with `Field` to wire accessible labels, hints, and error states automatically.
 
 <Wrapper>
 	<Field.Root>
@@ -151,5 +171,5 @@ Combine `Input` with `Field` to create a nice looking form element.
 	<Field.Label>Username</Field.Label>
 	<Input placeholder="Enter your username" />
 	<Field.Hint>Username should not contain special characters.</Field.Hint>
-</Field.Root>	
+</Field.Root>
 ```

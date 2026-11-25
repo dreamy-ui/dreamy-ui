@@ -37,9 +37,13 @@ export default function Header({ isMenuOpen, setIsMenuOpen }: Props) {
     return (
         <Flex
             as={"header"}
-            backdropBlur={"sm"}
+            backdropBlur={hasScrolled ? "sm" : "none"}
             backdropFilter={"auto"}
-            bg={"color-mix(in srgb, {colors.bg} 70%, transparent 10%)"}
+            bg={
+                hasScrolled
+                    ? "color-mix(in srgb, {colors.bg} 70%, transparent 10%)"
+                    : "transparent"
+            }
             borderBottomWidth={"1px"}
             borderColor={hasScrolled ? "border" : "transparent"}
             contentBetween

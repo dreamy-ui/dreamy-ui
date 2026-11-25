@@ -1,3 +1,5 @@
+import type { ChangeDetails } from "@ui-sdk/core";
+import type { HoverCardOpenChangeReason } from "@ui-sdk/react/hover-card";
 import { assertType } from "vitest";
 import type {
     HoverCardBodyProps,
@@ -11,17 +13,19 @@ type ExpectTrue<T extends true> = T;
 
 assertType<boolean | undefined>({} as HoverCardProps["open"]);
 assertType<boolean | undefined>({} as HoverCardProps["defaultOpen"]);
-assertType<((details: { open: boolean }) => void) | undefined>({} as HoverCardProps["onOpenChange"]);
+assertType<
+    ((open: boolean, details: ChangeDetails<HoverCardOpenChangeReason>) => void) | undefined
+>({} as HoverCardProps["onOpenChange"]);
 assertType<boolean | undefined>({} as HoverCardProps["hasArrow"]);
-assertType<boolean | undefined>({} as HoverCardProps["usePortal"]);
-assertType<number | undefined>({} as HoverCardProps["openDelay"]);
+assertType<number | undefined>({} as HoverCardProps["arrowSize"]);
+assertType<number | undefined>({} as HoverCardProps["delay"]);
 assertType<number | undefined>({} as HoverCardProps["closeDelay"]);
+assertType<boolean | undefined>({} as HoverCardProps["disabled"]);
 assertType<HoverCardProps["positioning"]>({} as HoverCardProps["positioning"]);
-assertType<HoverCardProps["portalProps"]>({} as HoverCardProps["portalProps"]);
 
 type _HasOpenProps = ExpectTrue<
     "open" extends keyof HoverCardProps
-        ? "openDelay" extends keyof HoverCardProps
+        ? "delay" extends keyof HoverCardProps
             ? "closeDelay" extends keyof HoverCardProps
                 ? "onOpenChange" extends keyof HoverCardProps
                     ? true
@@ -53,9 +57,19 @@ assertType<HoverCardProps>({
     defaultOpen: false,
     onOpenChange: () => {},
     hasArrow: true,
-    usePortal: true,
-    openDelay: 0,
+    arrowSize: 10,
+    delay: 0,
     closeDelay: 0,
-    closeOnEscape: true,
+    disabled: false,
     positioning: { placement: "top" }
+});
+
+assertType<HoverCardProps>({
+    // @ts-expect-error legacy openDelay prop removed in favor of delay
+    openDelay: 100
+});
+
+assertType<HoverCardProps>({
+    // @ts-expect-error legacy usePortal prop removed
+    usePortal: true
 });

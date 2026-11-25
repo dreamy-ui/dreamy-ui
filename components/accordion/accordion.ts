@@ -16,7 +16,11 @@ export const accordion = defineSlotRecipe({
         root: {
             display: "flex",
             flexDirection: "column",
-            width: "100%"
+            width: "100%",
+            "&[data-disabled]": {
+                opacity: 0.5,
+                cursor: "not-allowed"
+            }
         },
         item: {
             display: "flex",
@@ -33,7 +37,11 @@ export const accordion = defineSlotRecipe({
             paddingY: "var(--accordion-padding-y)",
             fontSize: "md",
             fontWeight: "medium",
-            textAlign: "left"
+            textAlign: "left",
+            "&[data-disabled]": {
+                opacity: 0.4,
+                cursor: "not-allowed"
+            }
         },
         content: {
             overflow: "hidden"
@@ -44,11 +52,14 @@ export const accordion = defineSlotRecipe({
             paddingBottom: "calc(var(--accordion-padding-y) * 2)"
         },
         icon: {
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
             width: 4,
             height: 4,
             transition: "transform 0.2s {easings.default}",
             color: "fg.medium",
-            "&[data-state=open]": {
+            "&[data-open], [data-open] > &": {
                 transform: "rotate(180deg)"
             },
             "@media (prefers-reduced-motion: reduce)": {
@@ -103,7 +114,7 @@ export const accordion = defineSlotRecipe({
                 item: {
                     borderRadius: "l1",
                     transition: "background-color 0.2s {easings.default}",
-                    "&[data-state=open]": {
+                    "&[data-open]": {
                         bg: "{colors.alpha.50}"
                     }
                 },

@@ -1,43 +1,66 @@
 "use client";
 
 import {
-    Combobox as ArkCombobox,
-    useComboboxContext as useArkComboboxContext,
-    useListCollection,
-    type ComboboxRootProps as ArkComboboxRootProps,
-    type ComboboxValueChangeDetails
-} from "@ark-ui/react/combobox";
-import {
+    type DreamyHostProps,
     type PositioningProps,
+    type UiSdkMotionController,
+    UiSdkMotionSync,
     ariaAttr,
-    callAllHandlers,
     dataAttr,
-    useControllableState,
+    mergeMotionRefs,
+    transformReducedMotion,
     useFieldProps,
-    useReducedMotion
+    useMotionVariants,
+    useReducedMotion,
+    useUiSdkMotion
 } from "@dreamy-ui/react";
-import { matchSorter } from "match-sorter";
+import type { ChangeDetails } from "@ui-sdk/core";
+import {
+    Combobox as UiSdkCombobox,
+    ComboboxClear as UiSdkComboboxClear,
+    ComboboxContent as UiSdkComboboxContent,
+    ComboboxEmpty as UiSdkComboboxEmpty,
+    ComboboxInput as UiSdkComboboxInput,
+    ComboboxItem as UiSdkComboboxItem,
+    ComboboxItemIndicator as UiSdkComboboxItemIndicator,
+    ComboboxItemText as UiSdkComboboxItemText,
+    ComboboxList as UiSdkComboboxList,
+    type ComboboxOpenChangeReason,
+    type ComboboxProps as UiSdkComboboxProps,
+    ComboboxTrigger as UiSdkComboboxTrigger,
+    type ComboboxValueChangeReason
+} from "@ui-sdk/react/combobox";
 import { useVirtualizer } from "@tanstack/react-virtual";
+import type { Variants } from "motion/react";
 import type React from "react";
 import {
+    type CSSProperties,
     type ReactNode,
     type SVGProps,
-    useCallback,
     useEffect,
     useMemo,
-    useRef,
-    useState
+    useRef
 } from "react";
-import { type HTMLDreamyProps, createStyleContext, dreamy, splitCssProps } from "styled-system/jsx";
-import { type AutocompleteVariantProps, autocomplete } from "styled-system/recipes";
-import { Box } from "./box";
-import { Input as BaseInput, type InputProps } from "./input";
-import * as Popover from "./popover";
-import type { PopoverContentProps } from "./popover";
+import { css, cx } from "styled-system/css";
 import {
+    type HTMLDreamyProps,
+    createStyleContext,
+    dreamy,
+    splitCssProps
+} from "styled-system/jsx";
+import {
+    type AutocompleteVariantProps,
+    autocomplete,
+    input as inputRecipe
+} from "styled-system/recipes";
+import type { InputProps } from "./input";
+import { MotionBox } from "./motion";
+import { mapUiSdkPositioning } from "./map-positioning";
+import {
+    type AutocompleteItem,
     AutocompleteUiProvider,
-    useAutocompleteUi,
-    type AutocompleteItem
+    type AutocompleteUiContextValue,
+    useAutocompleteUi
 } from "./autocomplete-ui-context";
 
 export type { AutocompleteItem };
@@ -46,44 +69,38 @@ const { withProvider, withContext } = createStyleContext(autocomplete, {
     forwardVariants: ["size"]
 });
 
-export type AutocompletePopoverProps = Omit<
-    Popover.PopoverProps,
-    "positioning" | "children" | "open" | "defaultOpen" | "onOpenChange"
+type UiSdkComboboxBaseProps = Omit<
+    UiSdkComboboxProps<string, false>,
+    "children" | "items" | "multiple" | "value" | "defaultValue" | "onValueChange"
 >;
 
 export interface AutocompleteProps
-    extends Omit<
-            ArkComboboxRootProps<AutocompleteItem>,
-            | "collection"
-            | "value"
-            | "defaultValue"
-            | "onValueChange"
-            | "disabled"
-            | "invalid"
-            | "required"
-            | "positioning"
-            | "inputValue"
-            | "defaultInputValue"
-            | "onInputValueChange"
-        >,
+    extends UiSdkComboboxBaseProps,
         AutocompleteVariantProps,
         Omit<
             HTMLDreamyProps<"div">,
-            keyof ArkComboboxRootProps<AutocompleteItem> | "onChange" | "items"
+            | keyof UiSdkComboboxBaseProps
+            | "items"
+            | "value"
+            | "defaultValue"
+            | "onValueChange"
+            | "onChange"
+            | "children"
         > {
     items: AutocompleteItem[];
     value?: string | null;
-    defaultValue?: string;
-    onChangeValue?: (value: string | null) => void;
+    defaultValue?: string | null;
+    onValueChange?: (
+        value: string | null,
+        details: ChangeDetails<ComboboxValueChangeReason>
+    ) => void;
+    onOpenChange?: (open: boolean, details: ChangeDetails<ComboboxOpenChangeReason>) => void;
     filterFn?: (item: AutocompleteItem, query: string) => boolean;
-    isClearable?: boolean;
+    clearable?: boolean;
     positioning?: PositioningProps;
-    popoverProps?: AutocompletePopoverProps;
     triggerVariant?: InputProps["variant"];
     children?: ReactNode;
-    isDisabled?: boolean;
-    isInvalid?: boolean;
-    isRequired?: boolean;
+    invalid?: boolean;
     reduceMotion?: boolean;
 }
 
@@ -94,197 +111,189 @@ function AutocompleteRoot(props: AutocompleteProps) {
         triggerVariant = "outline",
         items,
         filterFn,
-        isClearable = true,
+        filter,
+        clearable = true,
         reduceMotion: reduceMotionProp,
-        open: openProp,
+        open,
         defaultOpen,
         onOpenChange,
-        isDisabled,
-        isInvalid,
-        isRequired,
+        onOpenChangeComplete,
+        query,
+        defaultQuery,
+        onQueryChange,
+        disabled,
+        readOnly,
+        invalid,
+        required,
         value,
         defaultValue,
-        onChangeValue,
+        onValueChange,
         positioning,
-        popoverProps,
+        name,
+        form,
+        loop,
+        modal,
+        presentation,
+        autoHighlight = true,
+        allowCustomValue,
+        status,
+        onLoadMore,
+        announcement,
+        onHighlight,
+        dismissible,
+        onDismissAttempt,
+        controller,
+        debug,
+        container,
         className,
+        id,
         ...rest
     } = props;
-    const [, arkRest] = splitCssProps(rest);
 
+    const [cssProps, domProps] = splitCssProps(rest);
     const globalReduceMotion = useReducedMotion();
-    const reduceMotion = reduceMotionProp ?? popoverProps?.reduceMotion ?? globalReduceMotion ?? false;
+    const reduceMotion = reduceMotionProp ?? globalReduceMotion ?? false;
+    const motion = useUiSdkMotion({ open, defaultOpen, reduceMotion });
+    const handleOpenChange = motion.wrapOnOpenChange(onOpenChange);
 
     const {
         isDisabled: isDisabledField = false,
         isRequired: isRequiredField = false,
         isInvalid: isInvalidField = false,
+        isReadOnly: isReadOnlyField = false,
         id: fieldId,
         "aria-describedby": ariaDescribedByField
-    } = useFieldProps({ isDisabled, isInvalid, isRequired, id: props.id });
-
-    const resolvedIsDisabled = isDisabled ?? isDisabledField;
-    const resolvedIsRequired = isRequired ?? isRequiredField;
-    const resolvedIsInvalid = isInvalid ?? isInvalidField;
-
-    const [visibleItems, setVisibleItems] = useState(items);
-
-    const { collection, set } = useListCollection<AutocompleteItem>({
-        initialItems: items,
-        itemToString: (item) => item.label
+    } = useFieldProps({
+        isDisabled: disabled,
+        isInvalid: invalid,
+        isRequired: required,
+        isReadOnly: readOnly,
+        id
     });
 
-    useEffect(() => {
-        set(items);
-        setVisibleItems(items);
-    }, [items, set]);
+    const resolvedDisabled = disabled ?? isDisabledField;
+    const resolvedRequired = required ?? isRequiredField;
+    const resolvedInvalid = invalid ?? isInvalidField;
+    const resolvedReadOnly = readOnly ?? isReadOnlyField;
 
-    const handleInputValueChange = useCallback(
-        (details: { inputValue: string }) => {
-            if (!details.inputValue) {
-                set(items);
-                setVisibleItems(items);
-                return;
-            }
-            const nextItems = filterFn
-                ? items.filter((entry) => filterFn(entry, details.inputValue))
-                : matchSorter(items, details.inputValue, { keys: ["label"] });
-            set(nextItems);
-            setVisibleItems(nextItems);
-        },
-        [filterFn, items, set]
+    const resolvedFilter = useMemo<UiSdkComboboxBaseProps["filter"]>(() => {
+        if (filter !== undefined) return filter;
+        if (!filterFn) return undefined;
+        return (entry, q) => filterFn({ value: entry.value, label: entry.label }, q);
+    }, [filter, filterFn]);
+
+    const itemToLabel = useMemo(() => {
+        const map = new Map<string, string>();
+        for (const entry of items) {
+            map.set(entry.value, entry.label);
+        }
+        return (val: string) => map.get(val) ?? val;
+    }, [items]);
+
+    const listItems = useMemo(
+        () =>
+            items.map((item) => ({
+                value: item.value,
+                label: item.label,
+                disabled: item.disabled
+            })),
+        [items]
     );
 
-    const handleValueChange = useCallback(
-        (details: ComboboxValueChangeDetails<AutocompleteItem>) => {
-            const next = details.value[0] ?? null;
-            onChangeValue?.(next);
-        },
-        [onChangeValue]
-    );
-
-    const [open, setOpen] = useControllableState({
-        value: openProp,
-        defaultValue: defaultOpen
-    });
-
-    const handleOpenChange = useCallback(
-        (details: Parameters<NonNullable<ArkComboboxRootProps<AutocompleteItem>["onOpenChange"]>>[0]) => {
-            setOpen(details.open);
-            onOpenChange?.(details);
-        },
-        [onOpenChange, setOpen]
-    );
-
-    const popoverPositioning = useMemo(
+    const uiValue = useMemo<AutocompleteUiContextValue>(
         () => ({
-            placement: "bottom-start" as const,
-            matchWidth: true,
-            shift: false,
-            ...positioning
-        }),
-        [positioning]
-    );
-
-    const { size: popoverSize, ...restPopoverProps } = popoverProps ?? {};
-
-    const controlledValue = value === undefined ? undefined : value ? [value] : [];
-    const controlledDefaultValue = defaultValue ? [defaultValue] : undefined;
-
-    const uiValue = useMemo(
-        () => ({
+            items,
             size: size as AutocompleteUiContextValue["size"],
             triggerVariant: triggerVariant as string,
-            isClearable,
+            clearable,
+            reduceMotion,
+            motion,
+            positioning,
             inputFieldProps: {
                 id: fieldId,
                 "aria-describedby": ariaDescribedByField,
-                "aria-invalid": ariaAttr(resolvedIsInvalid),
-                "aria-required": ariaAttr(resolvedIsRequired)
-            },
-            onInputValueChange: (inputValue: string) => {
-                handleInputValueChange({ inputValue });
-            },
-            onChangeValue,
-            visibleItems
+                "aria-invalid": ariaAttr(resolvedInvalid),
+                "data-invalid": resolvedInvalid ? "" : undefined
+            }
         }),
         [
             ariaDescribedByField,
+            clearable,
             fieldId,
-            handleInputValueChange,
-            isClearable,
-            onChangeValue,
-            visibleItems,
-            resolvedIsInvalid,
-            resolvedIsRequired,
+            items,
+            motion,
+            positioning,
+            reduceMotion,
+            resolvedInvalid,
             size,
             triggerVariant
         ]
     );
 
     return (
-        <AutocompleteUiProvider value={uiValue}>
-            <ArkCombobox.Root
-                {...arkRest}
-                className={className}
-                collection={collection}
-                {...(controlledDefaultValue !== undefined
-                    ? { defaultValue: controlledDefaultValue }
-                    : {})}
-                disabled={resolvedIsDisabled}
-                immediate
-                invalid={resolvedIsInvalid}
-                lazyMount={false}
-                inputBehavior="autohighlight"
-                onInputValueChange={handleInputValueChange}
-                onOpenChange={handleOpenChange}
-                onValueChange={handleValueChange}
-                open={open}
-                openOnClick
-                required={resolvedIsRequired}
-                selectionBehavior="replace"
-                translations={{ clearTriggerLabel: "Clear selection" }}
-                unmountOnExit={false}
-                {...(controlledValue !== undefined ? { value: controlledValue } : {})}
-            >
-                <Popover.Root
-                    {...restPopoverProps}
-                    autoFocus={false}
-                    closeOnEscape={false}
-                    closeOnInteractOutside={false}
-                    modal={false}
-                    open={open}
+        <dreamy.div
+            {...domProps}
+            className={cx(className as string | undefined, css(cssProps))}
+        >
+            <AutocompleteUiProvider value={uiValue}>
+                <UiSdkCombobox
+                    allowCustomValue={allowCustomValue}
+                    announcement={announcement}
+                    autoHighlight={autoHighlight}
+                    container={container}
+                    controller={controller}
+                    debug={debug}
+                    defaultOpen={defaultOpen}
+                    defaultQuery={defaultQuery}
+                    defaultValue={defaultValue}
+                    disabled={resolvedDisabled}
+                    dismissible={dismissible}
+                    filter={resolvedFilter}
+                    form={form}
+                    itemToLabel={itemToLabel}
+                    items={listItems}
+                    loop={loop}
+                    modal={modal}
+                    name={name}
+                    onDismissAttempt={onDismissAttempt}
+                    onHighlight={onHighlight}
+                    onLoadMore={onLoadMore}
                     onOpenChange={handleOpenChange}
-                    positioning={popoverPositioning}
-                    reduceMotion={reduceMotion}
-                    restoreFocus={false}
-                    size={popoverSize ?? "reference"}
-                    portalProps={{
-                        zIndex: "var(--z-index-dropdown)",
-                        ...popoverProps?.portalProps
-                    }}
+                    onOpenChangeComplete={onOpenChangeComplete}
+                    onQueryChange={onQueryChange}
+                    onValueChange={onValueChange}
+                    open={open}
+                    presentation={presentation}
+                    query={query}
+                    readOnly={resolvedReadOnly}
+                    required={resolvedRequired}
+                    status={status}
+                    value={value}
                 >
+                    <UiSdkMotionSync
+                        controller={motion}
+                        open={open}
+                    />
                     {children}
-                </Popover.Root>
-            </ArkCombobox.Root>
-        </AutocompleteUiProvider>
+                </UiSdkCombobox>
+            </AutocompleteUiProvider>
+        </dreamy.div>
     );
 }
 
-type AutocompleteUiContextValue = import("./autocomplete-ui-context").AutocompleteUiContextValue;
-
+/**
+ * Autocomplete component — searchable combobox that filters options as the user types.
+ *
+ * @see Docs https://dreamy-ui.com/docs/components/autocomplete
+ */
 export const Root: (props: AutocompleteProps) => React.JSX.Element = withProvider(
     AutocompleteRoot,
     "root"
 ) as (props: AutocompleteProps) => React.JSX.Element;
 
-const AutocompleteControl = withContext(ArkCombobox.Control, "control");
-
-const AutocompleteIcon = withContext(function AutocompleteIconBase(props: HTMLDreamyProps<"div">) {
-    return <dreamy.div {...props} />;
-}, "icon");
-
-const AutocompleteIndicatorGroup = withContext(Box, "indicatorGroup");
+const AutocompleteControl = withContext(dreamy.div, "control");
+const AutocompleteIcon = withContext(dreamy.div, "icon");
+const AutocompleteIndicatorGroup = withContext(dreamy.div, "indicatorGroup");
 
 function AutocompleteIndicatorBase(props: SVGProps<SVGSVGElement>) {
     return (
@@ -307,12 +316,8 @@ function AutocompleteIndicatorBase(props: SVGProps<SVGSVGElement>) {
 const AutocompleteIndicator = withContext(AutocompleteIndicatorBase, "indicator");
 
 function resolveAutocompleteInputSize(size: AutocompleteVariantProps["size"]): InputProps["size"] {
-    if (typeof size !== "string") {
-        return "md";
-    }
-    if (size === "xs") {
-        return "sm";
-    }
+    if (typeof size !== "string") return "md";
+    if (size === "xs") return "sm";
     if (size === "sm" || size === "md" || size === "lg" || size === "xl" || size === "2xl") {
         return size;
     }
@@ -320,32 +325,24 @@ function resolveAutocompleteInputSize(size: AutocompleteVariantProps["size"]): I
 }
 
 const AutocompleteClearButton = withContext(function AutocompleteClearButtonBase(
-    props: HTMLDreamyProps<"button">
+    props: Omit<React.ComponentProps<typeof UiSdkComboboxClear>, "children">
 ) {
     return (
-        <dreamy.button
-            type="button"
-            {...props}
-        >
-            <dreamy.svg
+        <UiSdkComboboxClear {...props}>
+            <svg
                 aria-hidden="true"
-                asChild
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
             >
-                <svg
-                    aria-hidden="true"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <path d="M18 6 6 18" />
-                    <path d="m6 6 12 12" />
-                </svg>
-            </dreamy.svg>
-        </dreamy.button>
+                <path d="M18 6 6 18" />
+                <path d="m6 6 12 12" />
+            </svg>
+        </UiSdkComboboxClear>
     );
 }, "clearButton");
 
@@ -369,116 +366,187 @@ function CheckIcon(props: SVGProps<SVGSVGElement>) {
 }
 
 const AutocompleteItemIndicator = withContext(CheckIcon, "itemIndicator");
-const AutocompleteContentEl = withContext(ArkCombobox.Content, "content");
-const AutocompleteNoResults = withContext(Box, "noResults");
-
-function AutocompleteListbox({ children }: { children: ReactNode }) {
-    const api = useArkComboboxContext();
-
-    return (
-        <AutocompleteContentEl
-            aria-hidden={!api.open}
-            hidden={false}
-            tabIndex={-1}
-        >
-            {children}
-        </AutocompleteContentEl>
-    );
-}
+const AutocompleteNoResults = withContext(dreamy.div, "noResults");
 
 export interface AutocompleteInputProps
-    extends Omit<InputProps, "size" | "variant" | "triggerVariant"> {
+    extends Omit<InputProps, "size" | "variant" | "value" | "defaultValue" | "onValueChange"> {
     icon?: ReactNode;
+    placeholder?: string;
 }
 
 export const Input = withContext(function AutocompleteInput({
     icon,
     placeholder,
+    className,
+    style,
     ...rest
 }: AutocompleteInputProps) {
-    const { inputFieldProps, isClearable, onInputValueChange, size, triggerVariant } =
-        useAutocompleteUi();
-    const api = useArkComboboxContext();
-    const showClear = isClearable && api.value.length > 0;
+    const { inputFieldProps, clearable, size, triggerVariant } = useAutocompleteUi();
+    const [cssProps, domProps] = splitCssProps(rest);
+    const mergedClassName = cx(
+        inputRecipe({
+            size: resolveAutocompleteInputSize(size ?? "md"),
+            variant: triggerVariant as InputProps["variant"]
+        }),
+        className as string | undefined,
+        css({ pe: "var(--ac-pe)", ...cssProps })
+    );
+
     return (
-        <Popover.Anchor>
-            <AutocompleteControl data-has-icon={dataAttr(!!icon)}>
-                {icon && <AutocompleteIcon>{icon}</AutocompleteIcon>}
-                <ArkCombobox.Input asChild>
-                <BaseInput
-                    placeholder={placeholder}
-                    variant={triggerVariant as InputProps["variant"]}
-                    {...inputFieldProps}
-                    {...rest}
-                    aria-haspopup="listbox"
-                    size={resolveAutocompleteInputSize(size ?? "md") as InputProps["size"]}
-                    autoComplete="off"
-                    onChange={callAllHandlers(rest.onChange, (event) => {
-                        onInputValueChange(event.currentTarget.value);
-                    })}
-                    pe="var(--ac-pe)"
-                />
-            </ArkCombobox.Input>
+        <AutocompleteControl data-has-icon={dataAttr(!!icon)}>
+            {icon ? <AutocompleteIcon>{icon}</AutocompleteIcon> : null}
+            <UiSdkComboboxInput
+                {...(inputFieldProps as Record<string, unknown>)}
+                {...(domProps as unknown as React.ComponentProps<typeof UiSdkComboboxInput>)}
+                autoComplete="off"
+                className={mergedClassName}
+                placeholder={placeholder}
+                style={style as CSSProperties | undefined}
+            />
             <AutocompleteIndicatorGroup>
-                {showClear && (
-                    <ArkCombobox.ClearTrigger asChild>
-                        <AutocompleteClearButton />
-                    </ArkCombobox.ClearTrigger>
-                )}
-                <AutocompleteIndicator data-state={api.open ? "open" : "closed"} />
+                {clearable ? <AutocompleteClearButton aria-label="Clear selection" /> : null}
+                <UiSdkComboboxTrigger
+                    aria-label="Toggle options"
+                    render={<dreamy.button type="button" />}
+                    style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        pointerEvents: "auto",
+                        cursor: "pointer"
+                    }}
+                >
+                    <AutocompleteIndicator />
+                </UiSdkComboboxTrigger>
             </AutocompleteIndicatorGroup>
-            </AutocompleteControl>
-        </Popover.Anchor>
+        </AutocompleteControl>
     );
 }, "input");
 
-export interface AutocompleteContentProps extends Omit<PopoverContentProps, "children" | "transition"> {
+type UiSdkComboboxContentProps = React.ComponentProps<typeof UiSdkComboboxContent>;
+type UiSdkComboboxContentPickedProps = Pick<
+    UiSdkComboboxContentProps,
+    | "side"
+    | "align"
+    | "sideOffset"
+    | "alignOffset"
+    | "collisionPadding"
+    | "arrowPadding"
+    | "anchor"
+    | "container"
+    | "keepMounted"
+>;
+
+export interface AutocompleteContentProps
+    extends DreamyHostProps<HTMLDreamyProps<"div">, UiSdkComboboxContentPickedProps, "children">,
+        UiSdkComboboxContentPickedProps {
     noResultsText?: string;
     noResultsContent?: ReactNode;
     renderItem?: (item: AutocompleteItem) => ReactNode;
     children?: ReactNode;
 }
 
-export function Content(props: AutocompleteContentProps) {
+function renderAutocompletePopoverMotion(
+    motion: UiSdkMotionController,
+    popoverVariants: Variants,
+    reduceMotion: boolean
+): UiSdkComboboxContentProps["render"] {
+    return (partProps, state) => {
+        const {
+            ref: partRef,
+            style: partStyle,
+            children: partChildren,
+            ...restPartProps
+        } = partProps as React.ComponentPropsWithRef<"div">;
+        const isOpen = (state as { open?: boolean })?.open ?? motion.isOpen;
+
+        return (
+            <MotionBox
+                {...(restPartProps as Record<string, unknown>)}
+                animate={isOpen ? "initial" : "exit"}
+                initial={reduceMotion ? false : "exit"}
+                onAnimationComplete={() => {
+                    if (!isOpen) {
+                        motion.notifyAnimationComplete("content");
+                    }
+                }}
+                ref={mergeMotionRefs(partRef, (el) => {
+                    motion.register("content", el as HTMLElement | null);
+                })}
+                style={partStyle as CSSProperties | undefined}
+                variants={transformReducedMotion(popoverVariants, reduceMotion)}
+            >
+                {partChildren}
+            </MotionBox>
+        );
+    };
+}
+
+export const Content = withContext(function AutocompleteContent(props: AutocompleteContentProps) {
     const {
         noResultsText = "No results found",
         noResultsContent,
         renderItem,
-        motionProps,
-        rootProps,
-        ...contentProps
+        children,
+        className,
+        style,
+        side,
+        align,
+        sideOffset,
+        alignOffset,
+        collisionPadding,
+        arrowPadding,
+        anchor,
+        container,
+        keepMounted,
+        ...rest
     } = props;
-    const { visibleItems } = useAutocompleteUi();
-    const items = visibleItems;
-
-    const list =
-        items.length === 0
-            ? (noResultsContent ?? <AutocompleteNoResults>{noResultsText}</AutocompleteNoResults>)
-            : items.map((item) =>
-                  renderItem ? (
-                      renderItem(item)
-                  ) : (
-                      <Item
-                          item={item}
-                          key={item.value}
-                      >
-                          {item.label}
-                      </Item>
-                  )
-              );
+    const { items, positioning, reduceMotion, motion } = useAutocompleteUi();
+    const { popover: popoverVariants } = useMotionVariants();
+    const mapped = mapUiSdkPositioning(positioning);
+    const [cssProps, domProps] = splitCssProps(rest);
+    const mergedClassName = cx(className as string | undefined, css(cssProps));
 
     return (
-        <Popover.Content
-            motionProps={motionProps}
-            role="presentation"
-            rootProps={rootProps}
-            tabIndex={-1}
-            {...contentProps}
+        <UiSdkComboboxContent
+            {...(domProps as unknown as UiSdkComboboxContentProps)}
+            align={align ?? mapped.align ?? "start"}
+            alignOffset={alignOffset ?? mapped.alignOffset}
+            anchor={anchor}
+            arrowPadding={arrowPadding ?? mapped.arrowPadding}
+            className={mergedClassName}
+            collisionPadding={collisionPadding ?? mapped.collisionPadding}
+            container={container}
+            data-reduce-motion={reduceMotion ? "" : undefined}
+            keepMounted={keepMounted}
+            render={renderAutocompletePopoverMotion(motion, popoverVariants, reduceMotion)}
+            side={side ?? mapped.side ?? "bottom"}
+            sideOffset={sideOffset ?? mapped.sideOffset ?? 6}
+            style={style as CSSProperties | undefined}
         >
-            <AutocompleteListbox>{list}</AutocompleteListbox>
-        </Popover.Content>
+            <UiSdkComboboxEmpty
+                render={<AutocompleteNoResults />}
+            >
+                {noResultsContent ?? noResultsText}
+            </UiSdkComboboxEmpty>
+            <UiSdkComboboxList>
+                {children ??
+                    items.map((item) =>
+                        renderItem ? (
+                            renderItem(item)
+                        ) : (
+                            <Item
+                                item={item}
+                                key={item.value}
+                            >
+                                {item.label}
+                            </Item>
+                        )
+                    )}
+            </UiSdkComboboxList>
+        </UiSdkComboboxContent>
     );
-}
+}, "content");
 
 export interface AutocompleteVirtualContentProps extends AutocompleteContentProps {
     estimatedItemHeight?: number;
@@ -486,7 +554,9 @@ export interface AutocompleteVirtualContentProps extends AutocompleteContentProp
     maxHeight?: number;
 }
 
-export function VirtualContent(props: AutocompleteVirtualContentProps) {
+export const VirtualContent = withContext(function AutocompleteVirtualContent(
+    props: AutocompleteVirtualContentProps
+) {
     const {
         estimatedItemHeight = 32,
         overscan = 5,
@@ -494,40 +564,60 @@ export function VirtualContent(props: AutocompleteVirtualContentProps) {
         noResultsText = "No results found",
         noResultsContent,
         renderItem,
-        motionProps,
-        rootProps,
-        ...contentProps
+        className,
+        style,
+        side,
+        align,
+        sideOffset,
+        alignOffset,
+        collisionPadding,
+        arrowPadding,
+        anchor,
+        container,
+        keepMounted,
+        ...rest
     } = props;
-    const { visibleItems } = useAutocompleteUi();
-    const api = useArkComboboxContext();
-    const items = visibleItems;
-
-    const list =
-        items.length === 0
-            ? (noResultsContent ?? <AutocompleteNoResults>{noResultsText}</AutocompleteNoResults>)
-            : (
-                  <AutocompleteVirtualizedList
-                      estimatedItemHeight={estimatedItemHeight}
-                      items={items}
-                      isOpen={api.open}
-                      maxHeight={maxHeight}
-                      overscan={overscan}
-                      renderItem={renderItem}
-                  />
-              );
+    const { positioning, reduceMotion, motion } = useAutocompleteUi();
+    const { popover: popoverVariants } = useMotionVariants();
+    const mapped = mapUiSdkPositioning(positioning);
+    const [cssProps, domProps] = splitCssProps(rest);
+    const mergedClassName = cx(className as string | undefined, css(cssProps));
 
     return (
-        <Popover.Content
-            motionProps={motionProps}
-            role="presentation"
-            rootProps={rootProps}
-            tabIndex={-1}
-            {...contentProps}
+        <UiSdkComboboxContent
+            {...(domProps as unknown as UiSdkComboboxContentProps)}
+            align={align ?? mapped.align ?? "start"}
+            alignOffset={alignOffset ?? mapped.alignOffset}
+            anchor={anchor}
+            arrowPadding={arrowPadding ?? mapped.arrowPadding}
+            className={mergedClassName}
+            collisionPadding={collisionPadding ?? mapped.collisionPadding}
+            container={container}
+            data-reduce-motion={reduceMotion ? "" : undefined}
+            keepMounted={keepMounted}
+            render={renderAutocompletePopoverMotion(motion, popoverVariants, reduceMotion)}
+            side={side ?? mapped.side ?? "bottom"}
+            sideOffset={sideOffset ?? mapped.sideOffset ?? 6}
+            style={style as CSSProperties | undefined}
         >
-            <AutocompleteListbox>{list}</AutocompleteListbox>
-        </Popover.Content>
+            <UiSdkComboboxEmpty render={<AutocompleteNoResults />}>
+                {noResultsContent ?? noResultsText}
+            </UiSdkComboboxEmpty>
+            <UiSdkComboboxList>
+                {(state) => (
+                    <AutocompleteVirtualizedList
+                        estimatedItemHeight={estimatedItemHeight}
+                        isOpen={state.open}
+                        items={(state.items as AutocompleteItem[]) ?? []}
+                        maxHeight={maxHeight}
+                        overscan={overscan}
+                        renderItem={renderItem}
+                    />
+                )}
+            </UiSdkComboboxList>
+        </UiSdkComboboxContent>
     );
-}
+}, "content");
 
 interface AutocompleteVirtualizedListProps {
     items: AutocompleteItem[];
@@ -547,7 +637,6 @@ function AutocompleteVirtualizedList({
     renderItem
 }: AutocompleteVirtualizedListProps) {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
-    const api = useArkComboboxContext();
 
     const virtualizer = useVirtualizer({
         count: items.length,
@@ -563,15 +652,6 @@ function AutocompleteVirtualizedList({
             });
         }
     }, [isOpen, virtualizer]);
-
-    useEffect(() => {
-        const highlightedValue = api.highlightedValue;
-        if (!highlightedValue) return;
-        const index = items.findIndex((entry) => entry.value === highlightedValue);
-        if (index >= 0) {
-            virtualizer.scrollToIndex(index, { align: "auto" });
-        }
-    }, [api.highlightedValue, items, virtualizer]);
 
     const virtualItems = virtualizer.getVirtualItems();
     const totalSize = virtualizer.getTotalSize();
@@ -601,6 +681,7 @@ function AutocompleteVirtualizedList({
                                 renderItem(item)
                             ) : (
                                 <Item
+                                    index={virtualItem.index}
                                     item={item}
                                     key={item.value}
                                 >
@@ -615,9 +696,11 @@ function AutocompleteVirtualizedList({
     );
 }
 
-export interface AutocompleteItemProps extends Omit<HTMLDreamyProps<"button">, "value"> {
+export interface AutocompleteItemProps extends Omit<HTMLDreamyProps<"div">, "value" | "children"> {
     item?: AutocompleteItem;
     value?: string;
+    label?: string;
+    disabled?: boolean;
     index?: number;
     children?: ReactNode;
 }
@@ -625,34 +708,38 @@ export interface AutocompleteItemProps extends Omit<HTMLDreamyProps<"button">, "
 export const Item = withContext(function AutocompleteItem({
     item: itemProp,
     value,
+    label,
+    disabled,
+    index,
     children,
+    className,
+    style,
     ...rest
 }: AutocompleteItemProps) {
-    const api = useArkComboboxContext();
-    const { onChangeValue } = useAutocompleteUi();
-    const item =
+    const { items } = useAutocompleteUi();
+    const [cssProps, domProps] = splitCssProps(rest);
+    const mergedClassName = cx(className as string | undefined, css(cssProps));
+
+    const resolved =
         itemProp ??
-        api.collection.items.find((entry) => entry.value === value) ??
-        ({ value: value ?? "", label: children?.toString() ?? "" } as AutocompleteItem);
-    const state = api.getItemState({ item });
-    const itemProps = api.getItemProps({ item });
+        items.find((entry) => entry.value === value) ??
+        ({
+            value: value ?? "",
+            label: label ?? (typeof children === "string" ? children : "")
+        } as AutocompleteItem);
 
     return (
-        <AutocompleteItemButton
-            {...itemProps}
-            {...rest}
-            data-focused={dataAttr(state.highlighted)}
-            data-selected={dataAttr(state.selected)}
-            onClick={(event) => {
-                itemProps.onClick?.(event);
-                onChangeValue?.(item.value);
-            }}
-            type="button"
+        <UiSdkComboboxItem
+            {...(domProps as unknown as React.ComponentProps<typeof UiSdkComboboxItem>)}
+            className={mergedClassName}
+            disabled={disabled ?? resolved.disabled}
+            index={index}
+            label={label ?? resolved.label}
+            style={style as CSSProperties | undefined}
+            value={resolved.value}
         >
-            {children ?? <ArkCombobox.ItemText>{item.label}</ArkCombobox.ItemText>}
-            {state.selected && <AutocompleteItemIndicator />}
-        </AutocompleteItemButton>
+            {children ?? <UiSdkComboboxItemText>{resolved.label}</UiSdkComboboxItemText>}
+            <UiSdkComboboxItemIndicator render={<AutocompleteItemIndicator />} />
+        </UiSdkComboboxItem>
     );
 }, "item");
-
-const AutocompleteItemButton = withContext(dreamy.button, "item");

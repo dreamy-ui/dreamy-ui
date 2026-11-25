@@ -76,6 +76,11 @@ export const fileUpload = defineSlotRecipe({
                 borderStyle: "solid",
                 borderColor: "{colors.primary}"
             },
+            "&[data-drag-reject]": {
+                bg: "{colors.alpha.100}",
+                borderStyle: "solid",
+                borderColor: "{colors.error}"
+            },
             _focusVisible: {
                 boxShadow: "0 0 0 1.5px {colors.primary}",
                 borderColor: "{colors.primary}"

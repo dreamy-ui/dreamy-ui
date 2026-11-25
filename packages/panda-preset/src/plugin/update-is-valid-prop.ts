@@ -102,6 +102,14 @@ function extractInterfaceKeys(source: string, interfaceName: string) {
     return keys;
 }
 
+async function readOptional(filePath: string): Promise<string> {
+    try {
+        return await fs.readFile(filePath, "utf8");
+    } catch {
+        return "";
+    }
+}
+
 export async function updateIsValidProp(typesFolder: string, jsxFolder: string) {
     const validPropPath = path.join(jsxFolder, "is-valid-prop.js");
     let content = await fs.readFile(validPropPath, "utf8");
@@ -110,11 +118,15 @@ export async function updateIsValidProp(typesFolder: string, jsxFolder: string) 
         return;
     }
 
-    const styleProps = await fs.readFile(path.join(typesFolder, "style-props.d.ts"), "utf8");
-    const propType = await fs.readFile(path.join(typesFolder, "prop-type.d.ts"), "utf8");
+    const [systemTypes, styleProps, propType] = await Promise.all([
+        readOptional(path.join(typesFolder, "system.d.ts")),
+        readOptional(path.join(typesFolder, "style-props.d.ts")),
+        readOptional(path.join(typesFolder, "prop-type.d.ts"))
+    ]);
 
     const keys = new Set([
         ...EXTRA_CSS_PROPS,
+        ...extractInterfaceKeys(systemTypes, "SystemProperties"),
         ...extractInterfaceKeys(styleProps, "SystemProperties"),
         ...extractInterfaceKeys(propType, "UtilityValues")
     ]);

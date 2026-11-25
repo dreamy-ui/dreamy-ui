@@ -1,550 +1,488 @@
 "use client";
 
 import {
-    Drawer as ArkDrawer,
-    type DrawerContentProps as ArkDrawerContentProps,
-    type DrawerRootProps as ArkDrawerRootProps,
-    type DrawerRootProviderProps as ArkDrawerRootProviderProps
-} from "@ark-ui/react/drawer";
-import {
-    DrawerContextProvider,
-    type DrawerOptions,
-    type DrawerPlacement,
-    FocusLock,
-    Portal,
-    type PortalProps,
-    RemoveScroll,
-    type UseDrawerProps,
-    transformReducedMotion,
-    useDefaultTransition,
-    useDrawer,
-    useDrawerContext,
-    useDrawerManager,
-    useMotionVariants,
+    type DreamyHostProps,
+    type StyleContextSlotProps,
     useReducedMotion
 } from "@dreamy-ui/react";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
-import { createStyleContext } from "styled-system/jsx";
-import { drawer } from "styled-system/recipes";
-import { Box, type BoxProps } from "../box";
+import {
+    Drawer as UiSdkDrawer,
+    DrawerBackdrop as UiSdkDrawerBackdrop,
+    DrawerClose as UiSdkDrawerClose,
+    DrawerContent as UiSdkDrawerContent,
+    DrawerDescription as UiSdkDrawerDescription,
+    DrawerHandle as UiSdkDrawerHandle,
+    DrawerOutlet as UiSdkDrawerOutlet,
+    DrawerShortcut as UiSdkDrawerShortcut,
+    DrawerTitle as UiSdkDrawerTitle,
+    DrawerTrigger as UiSdkDrawerTrigger,
+    type DrawerContentProps as UiSdkDrawerContentProps,
+    type DrawerOptions,
+    type DrawerOutletProps as UiSdkDrawerOutletProps,
+    type DrawerSide,
+    type DrawerTriggerProps as UiSdkDrawerTriggerProps,
+    createDrawerController,
+    sheetPhysics
+} from "@ui-sdk/react/drawer";
+import type React from "react";
+import {
+    type CSSProperties,
+    type ReactElement,
+    type ReactNode,
+    createContext,
+    useContext,
+    useMemo
+} from "react";
+import { css, cx } from "styled-system/css";
+import {
+    type HTMLDreamyProps,
+    createStyleContext,
+    dreamy,
+    splitCssProps
+} from "styled-system/jsx";
+import { type DrawerVariantProps, drawer } from "styled-system/recipes";
 import { CloseButton as CloseButtonComponent, type CloseButtonProps } from "../close-button";
-import { Flex, type FlexProps } from "../flex";
 import { Heading } from "../heading";
-import { MotionBox, type MotionBoxProps } from "../motion";
 import { Text, type TextProps } from "../text";
-import { useFloatingPresent } from "../popover/use-floating-present";
-import { placementToSwipeDirection } from "./map-placement";
 
 const { withContext, withRootProvider } = createStyleContext(drawer, {
     forwardVariants: ["placement"]
 });
 
-type ScrollBehavior = "inside" | "outside";
+export { createDrawerController, sheetPhysics };
+export type { DrawerSide };
+export type DrawerPlacement = "right" | "left" | "top" | "bottom";
+export type DrawerScrollBehavior = "inside" | "outside";
 
-export interface DrawerProps
-    extends Omit<ArkDrawerRootProps, "children">,
-        DrawerOptions,
-        Pick<UseDrawerProps, "useInert" | "placement"> {
-    children: React.ReactNode;
+interface DrawerUiContextValue {
+    scrollBehavior: DrawerScrollBehavior;
+    reduceMotion: boolean;
+}
+
+const DrawerUiContext = createContext<DrawerUiContextValue>({
+    scrollBehavior: "inside",
+    reduceMotion: false
+});
+
+function useDrawerUi() {
+    return useContext(DrawerUiContext);
+}
+
+export interface DrawerProps extends DrawerOptions, DrawerVariantProps {
+    children?: ReactNode;
     /**
      * Where scroll behavior should originate.
-     * - If set to `inside`, scroll only occurs within the `Drawer.Body`.
-     * - If set to `outside`, the entire `Drawer.Content` will scroll within the viewport.
+     * - If set to `inside`, scroll occurs within `Drawer.Body`.
+     * - If set to `outside`, the drawer content scrolls within the viewport.
      *
      * @default "inside"
      */
-    scrollBehavior?: ScrollBehavior;
+    scrollBehavior?: DrawerScrollBehavior;
     /**
-     * Fires when all exiting nodes have completed animating out
+     * If `true`, drawer transitions are reduced.
      */
-    onCloseComplete?: () => void;
-    /**
-     * Props to be forwarded to the portal component
-     */
-    portalProps?: Omit<PortalProps, "children">;
+    reduceMotion?: boolean;
 }
 
 /**
- * Drawer component — accessible slide-over panel.
+ * Drawer component — accessible slide-over sheet powered by UI SDK `Drawer`.
  *
  * @see Docs https://dreamy-ui.com/docs/components/drawer
- *
- * @example
- * ```tsx
- * <Drawer.Root open={open} onOpenChange={({ open }) => setOpen(open)}>
- *   <Drawer.Overlay />
- *   <Drawer.Content>
- *     <Drawer.Header>Title</Drawer.Header>
- *     <Drawer.Body>Body</Drawer.Body>
- *   </Drawer.Content>
- * </Drawer.Root>
- * ```
  */
 export const Root = withRootProvider(function DrawerRoot(props: DrawerProps) {
-    const drawerProps: DrawerProps = {
-        scrollBehavior: "inside",
-        autoFocus: true,
-        trapFocus: true,
-        restoreFocus: true,
-        blockScrollOnMount: true,
-        allowPinchZoom: false,
-        preserveScrollBarGap: true,
-        placement: "right",
-        closeOnEscape: true,
-        closeOnInteractOutside: true,
-        ...props
-    };
-
     const {
         children,
-        open: openProp,
-        defaultOpen,
-        onOpenChange,
-        autoFocus,
-        trapFocus,
-        initialFocusRef,
-        finalFocusRef,
-        restoreFocus,
-        blockScrollOnMount,
-        scrollBehavior,
-        allowPinchZoom,
-        preserveScrollBarGap,
-        onCloseComplete,
-        portalProps,
-        placement,
-        swipeDirection: swipeDirectionProp,
-        closeOnEscape,
-        closeOnInteractOutside,
-        useInert,
-        id,
-        ...arkRest
-    } = drawerProps;
+        scrollBehavior = "inside",
+        reduceMotion: reduceMotionProp,
+        placement = "right",
+        side,
+        size: _size,
+        variant: _variant,
+        ...drawerOptions
+    } = props;
 
-    const swipeDirection = swipeDirectionProp ?? placementToSwipeDirection(placement ?? "right");
+    const globalReduceMotion = useReducedMotion();
+    const reduceMotion = reduceMotionProp ?? globalReduceMotion ?? false;
+    const resolvedSide: DrawerSide = side ?? placement ?? "right";
+    const resolvedPhysics =
+        reduceMotion && drawerOptions.physics?.response === undefined
+            ? { ...drawerOptions.physics, response: 0.001, dampingRatio: 1 }
+            : drawerOptions.physics;
 
-    const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen ?? false);
-    const isControlled = openProp !== undefined;
-    const open = isControlled ? openProp : uncontrolledOpen;
-
-    const handleOpenChange = useCallback(
-        (details: { open: boolean }) => {
-            if (!isControlled) {
-                setUncontrolledOpen(details.open);
-            }
-            onOpenChange?.(details);
-        },
-        [isControlled, onOpenChange]
+    const uiValue = useMemo<DrawerUiContextValue>(
+        () => ({ scrollBehavior, reduceMotion }),
+        [reduceMotion, scrollBehavior]
     );
 
-    const reduceMotion = useReducedMotion();
-    const { present, handleExitComplete } = useFloatingPresent(open, reduceMotion);
-
-    const handleArkExitComplete = useCallback(() => {
-        handleExitComplete();
-        onCloseComplete?.();
-    }, [handleExitComplete, onCloseComplete]);
-
-    useEffect(() => {
-        if (!open && reduceMotion) {
-            handleExitComplete();
-            onCloseComplete?.();
-        }
-    }, [handleExitComplete, onCloseComplete, open, reduceMotion]);
-
-    const drawerState = useDrawer({
-        open,
-        present,
-        onOpenChange: handleOpenChange,
-        id,
-        closeOnEscape,
-        closeOnInteractOutside,
-        useInert,
-        scrollBehavior,
-        placement
-    });
-
-    const context = useMemo(() => {
-        return {
-            ...drawerState,
-            autoFocus,
-            trapFocus,
-            initialFocusRef,
-            finalFocusRef,
-            restoreFocus,
-            blockScrollOnMount,
-            allowPinchZoom,
-            preserveScrollBarGap,
-            onCloseComplete,
-            scrollBehavior,
-            placement: placement ?? "right",
-            reduceMotion
-        };
-    }, [
-        allowPinchZoom,
-        autoFocus,
-        blockScrollOnMount,
-        drawerState,
-        finalFocusRef,
-        initialFocusRef,
-        onCloseComplete,
-        placement,
-        preserveScrollBarGap,
-        reduceMotion,
-        restoreFocus,
-        scrollBehavior,
-        trapFocus
-    ]);
-
     return (
-        <ArkDrawer.Root
-            {...arkRest}
-            closeOnEscape={closeOnEscape}
-            closeOnInteractOutside={closeOnInteractOutside}
-            defaultOpen={defaultOpen}
-            id={id}
-            onExitComplete={handleArkExitComplete}
-            onOpenChange={handleOpenChange}
-            open={open}
-            present={present}
-            preventScroll={blockScrollOnMount}
-            restoreFocus={restoreFocus}
-            swipeDirection={swipeDirection}
-            trapFocus={trapFocus}
-            unmountOnExit={false}
-        >
-            <DrawerContextProvider value={context}>
-                {present && (
-                    <Portal
-                        isActive={present}
-                        key={context.id}
-                        zIndex="var(--z-index-modal)"
-                        {...portalProps}
-                    >
-                        {children}
-                    </Portal>
-                )}
-            </DrawerContextProvider>
-        </ArkDrawer.Root>
+        <DrawerUiContext.Provider value={uiValue}>
+            <UiSdkDrawer
+                {...drawerOptions}
+                physics={resolvedPhysics}
+                side={resolvedSide}
+            >
+                {children}
+            </UiSdkDrawer>
+        </DrawerUiContext.Provider>
     );
 });
 
-export interface DrawerOverlayProps extends MotionBoxProps {}
+export interface DrawerOverlayProps extends Omit<HTMLDreamyProps<"div">, "children">, StyleContextSlotProps {
+    children?: ReactNode;
+}
 
 /**
- * Drawer Overlay — backdrop behind the panel content.
+ * Drawer Overlay — backdrop behind the sheet content.
  */
-export const Overlay = withContext(function Component(props: DrawerOverlayProps) {
-    const { open, reduceMotion } = useDrawerContext();
-    const { overlay } = useMotionVariants();
-    const transition = useDefaultTransition();
+export const Overlay = withContext(function DrawerOverlay(props: DrawerOverlayProps) {
+    const { className, style, children, "data-slot": _dataSlot, ...rest } = props;
+    const { reduceMotion } = useDrawerUi();
+    const [cssProps, domProps] = splitCssProps(rest);
 
     return (
-        <ArkDrawer.Backdrop asChild>
-            <MotionBox
-                animate={open ? "animate" : "exit"}
-                exit="exit"
-                initial={reduceMotion ? false : "initial"}
-                transition={transition}
-                variants={transformReducedMotion(overlay, reduceMotion ?? false)}
-                {...(reduceMotion ? {} : { hidden: false })}
-                {...props}
-            />
-        </ArkDrawer.Backdrop>
+        <UiSdkDrawerBackdrop
+            {...(domProps as unknown as React.ComponentProps<typeof UiSdkDrawerBackdrop>)}
+            className={cx(className as string | undefined, css(cssProps))}
+            data-reduce-motion={reduceMotion ? "" : undefined}
+            style={style as CSSProperties | undefined}
+        >
+            {children}
+        </UiSdkDrawerBackdrop>
     );
 }, "overlay");
 
-interface DrawerContainerProps extends BoxProps {}
-
-const Container = withContext(function Component({ children, ...props }: DrawerContainerProps) {
-    const { getDialogContainerProps } = useDrawerContext();
-
-    return <Box {...getDialogContainerProps(props)}>{children}</Box>;
-}, "container");
-
 export interface DrawerContentProps
-    extends Omit<FlexProps, "draggable">,
-        Pick<ArkDrawerContentProps, "draggable"> {}
+    extends UiSdkDrawerContentProps,
+        DreamyHostProps<HTMLDreamyProps<"div">, UiSdkDrawerContentProps>,
+        StyleContextSlotProps {
+    render?: ReactElement;
+    children?: ReactNode;
+}
 
 /**
- * Drawer Content — slide-over surface and focus scope.
- * Drag, snap points, and swipe-to-dismiss are handled by Ark UI on this element.
+ * Drawer Content — slide-over sheet surface, snap points, and focus scope.
  */
-export const Content = withContext(function Component({
-    children,
-    draggable,
-    ...props
-}: DrawerContentProps) {
-    const { getDialogProps } = useDrawerContext();
+export const Content = withContext(function DrawerContent(props: DrawerContentProps) {
+    const {
+        className,
+        style,
+        children,
+        initialFocus,
+        finalFocus,
+        keepMounted,
+        container,
+        render,
+        "data-slot": _dataSlot,
+        ...rest
+    } = props;
+    const { scrollBehavior, reduceMotion } = useDrawerUi();
+    const [cssProps, domProps] = splitCssProps(rest);
 
     return (
-        <ArkDrawer.Positioner>
-            <DrawerFocusScope>
-                <Container>
-                    <ArkDrawer.Content
-                        asChild
-                        draggable={draggable}
-                    >
-                        <Flex {...getDialogProps(props)}>{children}</Flex>
-                    </ArkDrawer.Content>
-                </Container>
-            </DrawerFocusScope>
-        </ArkDrawer.Positioner>
+        <UiSdkDrawerContent
+            {...(domProps as unknown as React.ComponentProps<typeof UiSdkDrawerContent>)}
+            className={cx(className as string | undefined, css(cssProps))}
+            container={container}
+            data-reduce-motion={reduceMotion ? "" : undefined}
+            data-scroll-behavior={scrollBehavior}
+            finalFocus={finalFocus}
+            initialFocus={initialFocus}
+            keepMounted={keepMounted}
+            render={render}
+            style={style as CSSProperties | undefined}
+        >
+            {children}
+        </UiSdkDrawerContent>
     );
 }, "content");
 
-export interface DrawerHeaderProps extends FlexProps {}
+export interface DrawerHeaderProps extends Omit<HTMLDreamyProps<"header">, "children">, StyleContextSlotProps {
+    children?: ReactNode;
+}
 
 /**
- * Drawer Header — top section for the panel title.
+ * Drawer Header — top section that provides the drawer's accessible title (`aria-labelledby`).
  */
-export const Header = withContext(function Component({ children, ...props }: DrawerHeaderProps) {
-    const { headerId, setHeaderMounted } = useDrawerContext();
-
-    useEffect(() => {
-        setHeaderMounted(true);
-        return () => setHeaderMounted(false);
-    }, [setHeaderMounted]);
+export const Header = withContext(function DrawerHeader(props: DrawerHeaderProps) {
+    const { children, className, style, "data-slot": _dataSlot, ...rest } = props;
+    const [cssProps, domProps] = splitCssProps(rest);
 
     return (
-        <Flex
-            as={"header"}
-            id={headerId}
-            {...props}
+        <UiSdkDrawerTitle
+            {...(domProps as unknown as React.ComponentProps<typeof UiSdkDrawerTitle>)}
+            className={cx(className as string | undefined, css(cssProps))}
+            render={<header />}
+            style={style as CSSProperties | undefined}
         >
             {typeof children === "string" ? (
                 <Heading
+                    as="span"
                     size="lg"
-                    variant={"heading"}
+                    variant="heading"
                 >
                     {children}
                 </Heading>
             ) : (
                 children
             )}
-        </Flex>
+        </UiSdkDrawerTitle>
     );
 }, "header");
 
-export interface DrawerBodyProps extends FlexProps {}
+export interface DrawerBodyProps extends Omit<HTMLDreamyProps<"div">, "children">, StyleContextSlotProps {
+    children?: ReactNode;
+}
 
 /**
- * Drawer Body — main content area of the panel.
+ * Drawer Body — main content area wired as the drawer's `aria-describedby`.
  */
-export const Body = withContext(function Component({ children, style, ...props }: DrawerBodyProps) {
-    const { scrollBehavior, bodyId, setBodyMounted } = useDrawerContext();
+export const Body = withContext(function DrawerBody(props: DrawerBodyProps) {
+    const { children, className, style, "data-slot": _dataSlot, ...rest } = props;
+    const { scrollBehavior } = useDrawerUi();
+    const [cssProps, domProps] = splitCssProps(rest);
 
-    useEffect(() => {
-        setBodyMounted(true);
-        return () => setBodyMounted(false);
-    }, [setBodyMounted]);
+    const resolvedStyle: CSSProperties = {
+        overflow: scrollBehavior === "inside" ? "auto" : undefined,
+        ...(style as CSSProperties | undefined)
+    };
 
     return (
-        <Flex
-            id={bodyId}
-            {...props}
-            style={{
-                overflow: scrollBehavior === "inside" ? "auto" : undefined,
-                ...style
-            }}
+        <UiSdkDrawerDescription
+            {...(domProps as unknown as React.ComponentProps<typeof UiSdkDrawerDescription>)}
+            className={cx(className as string | undefined, css(cssProps))}
+            render={<div />}
+            style={resolvedStyle}
         >
             {children}
-        </Flex>
+        </UiSdkDrawerDescription>
     );
 }, "body");
 
-export interface DrawerFooterProps extends FlexProps {}
+export interface DrawerFooterProps extends HTMLDreamyProps<"footer"> {}
 
 /**
  * Drawer Footer — bottom section for panel actions.
  */
-export const Footer = withContext(function Component({ children, ...props }: DrawerFooterProps) {
-    return (
-        <Flex
-            as={"footer"}
-            {...props}
-        >
-            {children}
-        </Flex>
-    );
-}, "footer");
+export const Footer = withContext(dreamy.footer, "footer");
 
-export interface DrawerCloseButtonProps extends CloseButtonProps {}
+export interface DrawerCloseButtonProps extends CloseButtonProps, StyleContextSlotProps {
+    action?: React.ComponentProps<typeof UiSdkDrawerClose>["action"];
+    value?: string;
+}
 
 /**
- * Drawer Close Button — dismisses the panel.
+ * Drawer Close Button — icon button that dismisses the panel.
  */
-export const CloseButton = withContext(function Component({ ...props }: DrawerCloseButtonProps) {
+export const CloseButton = withContext(function DrawerCloseButton(props: DrawerCloseButtonProps) {
+    const { className, action, value, "data-slot": _dataSlot, ...rest } = props;
+
     return (
-        <ArkDrawer.CloseTrigger asChild>
-            <CloseButtonComponent {...props} />
-        </ArkDrawer.CloseTrigger>
+        <UiSdkDrawerClose
+            action={action}
+            className={className as string | undefined}
+            render={<CloseButtonComponent {...rest} />}
+            value={value}
+        />
     );
 }, "close");
 
-export interface DrawerGrabberProps extends HTMLDreamyProps<"div"> {}
+export interface DrawerCloseProps
+    extends Omit<HTMLDreamyProps<"button">, "children" | "value"> {
+    action?: React.ComponentProps<typeof UiSdkDrawerClose>["action"];
+    value?: string;
+    render?: ReactElement;
+    children?: ReactNode;
+}
 
 /**
- * Drawer Grabber — drag handle for resizing or dismissing (use with snap points).
+ * Drawer Close — action button that closes the drawer.
  */
-export const Grabber = withContext(function Component(props: DrawerGrabberProps) {
+export function Close(props: DrawerCloseProps) {
+    const { className, style, children, ...rest } = props;
+    const [cssProps, domProps] = splitCssProps(rest);
+
     return (
-        <ArkDrawer.Grabber asChild>
-            <dreamy.div {...props} />
-        </ArkDrawer.Grabber>
+        <UiSdkDrawerClose
+            {...(domProps as unknown as React.ComponentProps<typeof UiSdkDrawerClose>)}
+            className={cx(className as string | undefined, css(cssProps))}
+            style={style as CSSProperties | undefined}
+        >
+            {children}
+        </UiSdkDrawerClose>
+    );
+}
+
+export interface DrawerGrabberProps extends Omit<HTMLDreamyProps<"button">, "children">, StyleContextSlotProps {
+    children?: ReactNode;
+}
+
+/**
+ * Drawer Grabber / Handle — keyboard- and pointer-accessible resize handle for snap points.
+ */
+export const Grabber = withContext(function DrawerGrabber(props: DrawerGrabberProps) {
+    const {
+        className,
+        style,
+        children,
+        "aria-label": ariaLabel = "Resize drawer",
+        "data-slot": _dataSlot,
+        ...rest
+    } = props;
+    const [cssProps, domProps] = splitCssProps(rest);
+
+    return (
+        <UiSdkDrawerHandle
+            {...(domProps as unknown as React.ComponentProps<typeof UiSdkDrawerHandle>)}
+            aria-label={ariaLabel}
+            className={cx(className as string | undefined, css(cssProps))}
+            style={style as CSSProperties | undefined}
+        >
+            {children}
+        </UiSdkDrawerHandle>
     );
 }, "grabber");
+
+export const Handle = Grabber;
 
 export interface DrawerGrabberIndicatorProps extends HTMLDreamyProps<"div"> {}
 
 /**
  * Drawer Grabber Indicator — visual pill inside the grabber.
  */
-export const GrabberIndicator = withContext(function Component(props: DrawerGrabberIndicatorProps) {
+export const GrabberIndicator = withContext(function DrawerGrabberIndicator(
+    props: DrawerGrabberIndicatorProps
+) {
     return (
-        <ArkDrawer.GrabberIndicator asChild>
-            <dreamy.div {...props} />
-        </ArkDrawer.GrabberIndicator>
+        <dreamy.div
+            aria-hidden="true"
+            {...props}
+        />
     );
 }, "grabberIndicator");
 
-export interface DrawerTriggerProps extends HTMLDreamyProps<"button"> {
-    value?: string;
+export interface DrawerTriggerProps
+    extends UiSdkDrawerTriggerProps,
+        DreamyHostProps<
+            HTMLDreamyProps<"button">,
+            UiSdkDrawerTriggerProps,
+            "disabled" | "value" | "defaultValue" | "onChange"
+        >,
+        StyleContextSlotProps {
+    render?: ReactElement;
+    children?: ReactNode;
 }
 
 /**
- * Drawer Trigger — opens the drawer (supports `value` for multiple triggers).
+ * Drawer Trigger — opens the drawer when activated.
  */
-export const Trigger = withContext(function Component({ type = "button", ...props }: DrawerTriggerProps) {
+export const Trigger = withContext(function DrawerTrigger(props: DrawerTriggerProps) {
+    const { className, style, children, "data-slot": _dataSlot, ...rest } = props;
+    const [cssProps, domProps] = splitCssProps(rest);
+
     return (
-        <ArkDrawer.Trigger asChild>
-            <dreamy.button
-                type={type}
-                {...props}
-            />
-        </ArkDrawer.Trigger>
+        <UiSdkDrawerTrigger
+            {...(domProps as unknown as React.ComponentProps<typeof UiSdkDrawerTrigger>)}
+            className={cx(className as string | undefined, css(cssProps))}
+            style={style as CSSProperties | undefined}
+        >
+            {children}
+        </UiSdkDrawerTrigger>
     );
 }, "trigger");
 
-export interface DrawerTitleProps extends HTMLDreamyProps<"h2"> {}
+export interface DrawerTitleProps extends Omit<HTMLDreamyProps<"h2">, "children">, StyleContextSlotProps {
+    children?: ReactNode;
+}
 
 /**
- * Drawer Title — accessible name wired to Ark dialog semantics.
+ * Drawer Title — accessible heading wired to UI SDK drawer semantics.
  */
-export const Title = withContext(function Component({ children, ...props }: DrawerTitleProps) {
+export const Title = withContext(function DrawerTitle(props: DrawerTitleProps) {
+    const { children, className, style, "data-slot": _dataSlot, ...rest } = props;
+    const [cssProps, domProps] = splitCssProps(rest);
+
     return (
-        <ArkDrawer.Title asChild>
-            <Heading
-                as="h2"
-                size="lg"
-                variant="heading"
-                {...props}
-            >
-                {children}
-            </Heading>
-        </ArkDrawer.Title>
+        <UiSdkDrawerTitle
+            {...(domProps as unknown as React.ComponentProps<typeof UiSdkDrawerTitle>)}
+            className={cx(className as string | undefined, css(cssProps))}
+            render={
+                <Heading
+                    as="h2"
+                    size="lg"
+                    variant="heading"
+                />
+            }
+            style={style as CSSProperties | undefined}
+        >
+            {children}
+        </UiSdkDrawerTitle>
     );
 }, "title");
 
-export interface DrawerDescriptionProps extends TextProps {}
+export interface DrawerDescriptionProps extends TextProps, StyleContextSlotProps {}
 
 /**
  * Drawer Description — optional accessible description for the panel.
  */
-export const Description = withContext(function Component(props: DrawerDescriptionProps) {
+export const Description = withContext(function DrawerDescription(props: DrawerDescriptionProps) {
+    const { children, className, style, "data-slot": _dataSlot, ...rest } = props;
+    const [cssProps, domProps] = splitCssProps(rest);
+
     return (
-        <ArkDrawer.Description asChild>
-            <Text
-                as="p"
-                {...props}
-            />
-        </ArkDrawer.Description>
+        <UiSdkDrawerDescription
+            {...(domProps as unknown as React.ComponentProps<typeof UiSdkDrawerDescription>)}
+            className={cx(className as string | undefined, css(cssProps))}
+            render={<Text as="p" />}
+            style={style as CSSProperties | undefined}
+        >
+            {children}
+        </UiSdkDrawerDescription>
     );
 }, "description");
 
-export interface DrawerSwipeAreaProps extends HTMLDreamyProps<"div"> {}
-
-/**
- * Drawer Swipe Area — expanded touch target for swipe gestures.
- */
-export const SwipeArea = withContext(function Component(props: DrawerSwipeAreaProps) {
-    return (
-        <ArkDrawer.SwipeArea asChild>
-            <dreamy.div {...props} />
-        </ArkDrawer.SwipeArea>
-    );
-}, "swipeArea");
-
-export type DrawerRootProviderProps = ArkDrawerRootProviderProps;
-
-/**
- * Drawer Root Provider — control the drawer via `useDrawer` from `@ark-ui/react/drawer`.
- */
-export function RootProvider(props: DrawerRootProviderProps) {
-    return <ArkDrawer.RootProvider {...props} />;
+export interface DrawerOutletProps
+    extends UiSdkDrawerOutletProps,
+        Omit<HTMLDreamyProps<"div">, "children"> {
+    children?: ReactNode;
 }
 
-export const Stack = ArkDrawer.Stack;
-export const IndentBackground = ArkDrawer.IndentBackground;
-export const Indent = ArkDrawer.Indent;
-
-interface DrawerFocusScopeProps {
-    children: React.ReactElement;
-}
-
-function DrawerFocusScope(props: DrawerFocusScopeProps) {
-    const {
-        autoFocus,
-        trapFocus,
-        dialogRef,
-        initialFocusRef,
-        blockScrollOnMount,
-        allowPinchZoom,
-        finalFocusRef,
-        restoreFocus,
-        preserveScrollBarGap,
-        lockFocusAcrossFrames,
-        useInert,
-        present
-    } = useDrawerContext();
-
-    const index = useDrawerManager(dialogRef, present);
+/**
+ * Drawer Outlet — element that animates its keyframes in sync with the drawer's progress.
+ */
+export function Outlet(props: DrawerOutletProps) {
+    const { className, style, children, ...rest } = props;
+    const [cssProps, domProps] = splitCssProps(rest);
 
     return (
-        <FocusLock
-            autoFocus={autoFocus}
-            contentRef={dialogRef}
-            finalFocusRef={finalFocusRef}
-            initialFocusRef={initialFocusRef}
-            isDisabled={!trapFocus}
-            lockFocusAcrossFrames={lockFocusAcrossFrames}
-            restoreFocus={restoreFocus}
+        <UiSdkDrawerOutlet
+            {...(domProps as unknown as React.ComponentProps<typeof UiSdkDrawerOutlet>)}
+            className={cx(className as string | undefined, css(cssProps))}
+            style={style as CSSProperties | undefined}
         >
-            <RemoveScroll
-                allowPinchZoom={allowPinchZoom}
-                enabled={index === 1 && blockScrollOnMount}
-                forwardProps
-                inert={useInert}
-                removeScrollBar={!preserveScrollBarGap}
-            >
-                {props.children}
-            </RemoveScroll>
-        </FocusLock>
+            {children}
+        </UiSdkDrawerOutlet>
     );
 }
 
-export type { DrawerPlacement };
+export interface DrawerShortcutProps extends Omit<HTMLDreamyProps<"span">, "children"> {
+    shortcut?: string;
+    children?: ReactNode;
+}
 
-export type DrawerOpenChangeDetails = Parameters<
-    NonNullable<ArkDrawerRootProps["onOpenChange"]>
->[0];
+/**
+ * Drawer Shortcut — displays a trigger's keyboard shortcut.
+ */
+export function Shortcut(props: DrawerShortcutProps) {
+    const { className, style, children, ...rest } = props;
+    const [cssProps, domProps] = splitCssProps(rest);
 
-export type DrawerSnapPointChangeDetails = Parameters<
-    NonNullable<ArkDrawerRootProps["onSnapPointChange"]>
->[0];
-
-export type DrawerTriggerValueChangeDetails = Parameters<
-    NonNullable<ArkDrawerRootProps["onTriggerValueChange"]>
->[0];
-
-export { useDrawer as useDrawerStore } from "@ark-ui/react/drawer";
+    return (
+        <UiSdkDrawerShortcut
+            {...(domProps as unknown as React.ComponentProps<typeof UiSdkDrawerShortcut>)}
+            className={cx(className as string | undefined, css(cssProps))}
+            style={style as CSSProperties | undefined}
+        >
+            {children}
+        </UiSdkDrawerShortcut>
+    );
+}

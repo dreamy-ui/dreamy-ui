@@ -47,11 +47,11 @@ describe("Toast", () => {
                 screen.queryByRole("status") ??
                 document.body.querySelector('[role="status"]');
             expect(node).toBeTruthy();
+            expect(node).toHaveTextContent("Saved");
+            expect(node).toHaveTextContent("Your changes were saved.");
             return node as HTMLElement;
         });
 
-        expect(status).toHaveTextContent("Saved");
-        expect(status).toHaveTextContent("Your changes were saved.");
         expect(status).not.toHaveAttribute("aria-modal");
     });
 

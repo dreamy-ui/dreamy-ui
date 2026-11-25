@@ -6,12 +6,9 @@ import { render } from "../test/render";
 import * as Modal from "./index";
 
 describe("Modal", () => {
-    it("exposes dialog role, aria-modal, and accessible name from Header", async () => {
+    it("exposes dialog role, aria-modal, UI SDK slot, and accessible name from Header", async () => {
         render(
-            <Modal.Root
-                open
-                onOpenChange={() => {}}
-            >
+            <Modal.Root open>
                 <Modal.Overlay />
                 <Modal.Content>
                     <Modal.Header>Confirm delete</Modal.Header>
@@ -23,8 +20,8 @@ describe("Modal", () => {
 
         const dialog = await screen.findByRole("dialog");
 
+        expect(dialog).toHaveAttribute("data-slot", "dialog-content");
         expect(dialog).toHaveAttribute("aria-modal", "true");
-        expect(dialog).toHaveAttribute("tabIndex", "-1");
         expect(dialog).toHaveAccessibleName("Confirm delete");
 
         const labelledBy = dialog.getAttribute("aria-labelledby");
@@ -34,10 +31,7 @@ describe("Modal", () => {
 
     it("associates Body via aria-describedby when present", async () => {
         render(
-            <Modal.Root
-                open
-                onOpenChange={() => {}}
-            >
+            <Modal.Root open>
                 <Modal.Content>
                     <Modal.Header>Title</Modal.Header>
                     <Modal.Body>Primary message for assistive tech</Modal.Body>
@@ -54,17 +48,13 @@ describe("Modal", () => {
         );
     });
 
-    it("focuses the element pointed to by initialFocusRef when open", async () => {
+    it("focuses the element pointed to by initialFocus when open", async () => {
         function Fixture() {
             const inputRef = useRef<HTMLInputElement>(null);
 
             return (
-                <Modal.Root
-                    initialFocusRef={inputRef}
-                    open
-                    onOpenChange={() => {}}
-                >
-                    <Modal.Content>
+                <Modal.Root open>
+                    <Modal.Content initialFocus={() => inputRef.current}>
                         <Modal.Header>Edit profile</Modal.Header>
                         <Modal.CloseButton />
                         <Modal.Body>
@@ -87,50 +77,30 @@ describe("Modal", () => {
         });
     });
 
-    it("closes on Escape and returns focus to the trigger", async () => {
+    it("opens via Trigger, closes on Escape, and returns focus to the trigger", async () => {
         const user = userEvent.setup();
         const onOpenChange = vi.fn();
 
-        function Fixture() {
-            const [open, setOpen] = useState(false);
-
-            return (
-                <>
-                    <button
-                        onClick={() => setOpen(true)}
-                        type="button"
-                    >
-                        Open modal
-                    </button>
-                    <Modal.Root
-                        open={open}
-                        onOpenChange={(details) => {
-                            onOpenChange(details);
-                            setOpen(details.open);
-                        }}
-                        restoreFocus
-                    >
-                        <Modal.Content>
-                            <Modal.Header>Keyboard dismiss</Modal.Header>
-                            <Modal.CloseButton />
-                            <Modal.Body>Press Escape</Modal.Body>
-                        </Modal.Content>
-                    </Modal.Root>
-                </>
-            );
-        }
-
-        render(<Fixture />);
+        render(
+            <Modal.Root onOpenChange={onOpenChange}>
+                <Modal.Trigger>Open modal</Modal.Trigger>
+                <Modal.Overlay />
+                <Modal.Content>
+                    <Modal.Header>Keyboard dismiss</Modal.Header>
+                    <Modal.CloseButton />
+                    <Modal.Body>Press Escape</Modal.Body>
+                </Modal.Content>
+            </Modal.Root>
+        );
 
         const trigger = screen.getByRole("button", { name: "Open modal" });
         await user.click(trigger);
 
-        const dialog = await screen.findByRole("dialog");
-        dialog.focus();
+        expect(await screen.findByRole("dialog")).toBeInTheDocument();
         await user.keyboard("{Escape}");
 
         await waitFor(() => {
-            expect(onOpenChange).toHaveBeenCalledWith({ open: false });
+            expect(onOpenChange).toHaveBeenCalledWith(false, expect.anything());
         });
         await waitFor(() => {
             expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
@@ -146,8 +116,8 @@ describe("Modal", () => {
 
         render(
             <Modal.Root
-                open
                 onOpenChange={onOpenChange}
+                open
             >
                 <Modal.Content>
                     <Modal.Header>Closeable</Modal.Header>
@@ -160,44 +130,20 @@ describe("Modal", () => {
         const close = await screen.findByRole("button", { name: "Close" });
         await user.click(close);
 
-        expect(onOpenChange).toHaveBeenCalledWith({ open: false });
+        expect(onOpenChange).toHaveBeenCalledWith(false, expect.anything());
     });
 
-    it("calls onOpenChange when closeOnEscape is enabled and Escape is pressed", async () => {
+    it("does not close on Escape when dismissible is false and calls onDismissAttempt", async () => {
         const user = userEvent.setup();
         const onOpenChange = vi.fn();
+        const onDismissAttempt = vi.fn();
 
         render(
             <Modal.Root
-                closeOnEscape
-                open
+                dismissible={false}
+                onDismissAttempt={onDismissAttempt}
                 onOpenChange={onOpenChange}
-            >
-                <Modal.Content>
-                    <Modal.Header>Esc</Modal.Header>
-                    <Modal.Body>
-                        <button type="button">Focusable</button>
-                    </Modal.Body>
-                </Modal.Content>
-            </Modal.Root>
-        );
-
-        await screen.findByRole("dialog");
-        await user.click(screen.getByRole("button", { name: "Focusable" }));
-        await user.keyboard("{Escape}");
-
-        expect(onOpenChange).toHaveBeenCalledWith({ open: false });
-    });
-
-    it("does not close on Escape when closeOnEscape is false", async () => {
-        const user = userEvent.setup();
-        const onOpenChange = vi.fn();
-
-        render(
-            <Modal.Root
-                closeOnEscape={false}
                 open
-                onOpenChange={onOpenChange}
             >
                 <Modal.Content>
                     <Modal.Header>Stay open</Modal.Header>
@@ -212,11 +158,12 @@ describe("Modal", () => {
         await user.click(screen.getByRole("button", { name: "Focusable" }));
         await user.keyboard("{Escape}");
 
-        expect(onOpenChange).not.toHaveBeenCalledWith({ open: false });
+        expect(onDismissAttempt).toHaveBeenCalled();
+        expect(onOpenChange).not.toHaveBeenCalledWith(false, expect.anything());
         expect(screen.getByRole("dialog")).toBeInTheDocument();
     });
 
-    it("returns focus to finalFocusRef when provided", async () => {
+    it("returns focus to finalFocus target when provided", async () => {
         const user = userEvent.setup();
 
         function Fixture() {
@@ -232,12 +179,10 @@ describe("Modal", () => {
                         Final focus target
                     </button>
                     <Modal.Root
-                        finalFocusRef={finalRef}
+                        onOpenChange={(next) => setOpen(next)}
                         open={open}
-                        onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
-                        restoreFocus
                     >
-                        <Modal.Content>
+                        <Modal.Content finalFocus={() => finalRef.current}>
                             <Modal.Header>Final focus</Modal.Header>
                             <Modal.CloseButton />
                             <Modal.Body>Body</Modal.Body>
@@ -257,22 +202,17 @@ describe("Modal", () => {
         });
     });
 
-    it("forwards trapFocus and related modality props without throwing", async () => {
+    it("renders overlay, content, footer, and scrollBehavior cleanly", async () => {
         render(
             <Modal.Root
-                autoFocus
-                blockScrollOnMount
                 open
-                onOpenChange={() => {}}
-                preserveScrollBarGap
                 scrollBehavior="inside"
-                trapFocus
             >
                 <Modal.Overlay data-testid="modal-overlay" />
                 <Modal.Content data-testid="modal-content">
                     <Modal.Header>Props</Modal.Header>
                     <Modal.Footer>
-                        <button type="button">OK</button>
+                        <Modal.Close>OK</Modal.Close>
                     </Modal.Footer>
                 </Modal.Content>
             </Modal.Root>

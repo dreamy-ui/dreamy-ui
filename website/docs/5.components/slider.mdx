@@ -1,21 +1,45 @@
 ---
 title: Slider
-description: Slider is a component that allows you to select a value from a range of values.
+description: Adjust a number along a scale with draggable thumbs, keyboard controls, and accessible formatting.
 isServerComponent: false
-source: /packages/react/src/components/slider/slider.tsx
-themeSource: /packages/system/src/recipes/slider.ts
+source: /components/slider/index.tsx
+themeSource: /components/slider/slider.ts
 ---
 
 ## Installation
 
 ```bash
-pnpm dreamy add slider
+bunx dreamy add slider
 ```
+
+## Composition
+
+Slider is powered by [UI SDK Slider](https://ui-sdk.dev/docs/react/components/slider) and composed from `Slider.Root`, `Slider.Value`, `Slider.Track`, `Slider.FilledTrack`, `Slider.Thumb`, and optional `Slider.Mark` elements.
+
+```text
+Slider.Root
+├── Slider.Value
+└── Slider.Track
+    ├── Slider.FilledTrack
+    ├── Slider.Thumb
+    └── Slider.Mark
+```
+
+- **Slider.Root** holds the value, range bounds, formatting, and form state.
+- **Slider.Value** renders an `<output>` showing the formatted value.
+- **Slider.Track** wraps the interactive hit area (`SliderControl`) and rail (`SliderTrack`).
+- **Slider.FilledTrack** fills the track up to the thumb.
+- **Slider.Thumb** is the draggable thumb with a visually hidden `<input type="range">` inside it.
+- **Slider.Mark** places optional markers at specific numeric values along the track.
+
+For multi-thumb range sliders, see [Range Slider](/docs/components/range-slider).
 
 ## Usage
 
+Import `Slider` and put its parts together:
+
 <Wrapper>
-	<Slider.Root>
+	<Slider.Root defaultValue={50} aria-label="Volume">
 		<Slider.Track maxW="xs">
 			<Slider.FilledTrack />
 			<Slider.Thumb />
@@ -24,7 +48,7 @@ pnpm dreamy add slider
 </Wrapper>
 
 ```tsx
-<Slider.Root>
+<Slider.Root defaultValue={50} aria-label="Volume">
 	<Slider.Track maxW="xs">
 		<Slider.FilledTrack />
 		<Slider.Thumb />
@@ -32,60 +56,440 @@ pnpm dreamy add slider
 </Slider.Root>
 ```
 
-### Max, Min, Step
+### Field
 
-You can change the max, min, and step of the Slider by using the `max`, `min`, and `step` props.
+Put the slider in a `Field.Root`. `Field.Label` names the thumb, `Field.Hint` describes it, and `Slider.Value` shows the formatted value beside the label. Clicking the label focuses the thumb.
 
 <Wrapper>
-	<MaxMinSlider />
+	<FieldSlider />
 </Wrapper>
 
 ```tsx
-function MaxMinSlider() {
-    const [value, setValue] = useState(0);
+<Field.Root maxW="xs" w="full">
+	<Slider.Root
+		defaultValue={0.3}
+		format={{ style: "percent" }}
+		min={0}
+		max={1}
+		step={0.01}
+	>
+		<HStack justify="space-between">
+			<Field.Label>Volume</Field.Label>
+			<Slider.Value />
+		</HStack>
+		<Slider.Track>
+			<Slider.FilledTrack />
+			<Slider.Thumb />
+		</Slider.Track>
+	</Slider.Root>
+	<Field.Hint>How loud notifications play.</Field.Hint>
+</Field.Root>
+```
 
-    return (
-        <>
-            <Text>
-                Slider value: {value}
-            </Text>
+### Disabled
 
-            <Slider.Root
-                min={0}
-                max={50}
-                step={10}
-                value={value}
-                onChangeValue={setValue}
-                >
-                <Slider.Track maxW="xs">
-                    <Slider.FilledTrack />
-                    <Slider.Thumb />
-                </Slider.Track>
-            </Slider.Root>
-        </>
-    );
+Set `disabled`. A disabled slider cannot be focused or moved, and is omitted from form submissions. A disabled `<fieldset>` around it disables it too.
+
+<Wrapper>
+	<DisabledSlider />
+</Wrapper>
+
+```tsx
+<Field.Root maxW="xs" w="full">
+	<Slider.Root defaultValue={50} disabled>
+		<HStack justify="space-between">
+			<Field.Label>Brightness</Field.Label>
+			<Slider.Value />
+		</HStack>
+		<Slider.Track>
+			<Slider.FilledTrack />
+			<Slider.Thumb />
+		</Slider.Track>
+	</Slider.Root>
+	<Field.Hint>Managed by your organization.</Field.Hint>
+</Field.Root>
+```
+
+### Read-Only
+
+Set `readOnly` to keep the slider focusable and included in form submissions, while drags, keys, and screen reader adjustments leave its value unchanged.
+
+<Wrapper>
+	<ReadOnlySlider />
+</Wrapper>
+
+```tsx
+<Field.Root maxW="xs" w="full">
+	<Slider.Root name="storage" defaultValue={50} readOnly>
+		<HStack justify="space-between">
+			<Field.Label>Storage</Field.Label>
+			<Slider.Value />
+		</HStack>
+		<Slider.Track>
+			<Slider.FilledTrack />
+			<Slider.Thumb />
+		</Slider.Track>
+	</Slider.Root>
+	<Field.Hint>Set by your plan.</Field.Hint>
+</Field.Root>
+```
+
+### Controlled
+
+Pass `value` and `onValueChange` to control the slider. Every change receives `(value, details)`, where `details.reason` tells you what triggered the change (`drag`, `track-press`, `step-key`, etc.). Call `details.cancel()` to keep the current value.
+
+<Wrapper>
+	<ControlledSlider />
+</Wrapper>
+
+```tsx
+function ControlledSlider() {
+	const [value, setValue] = useState(40);
+
+	return (
+		<VStack align="start" gap={4} maxW="sm" w="full">
+			<Button size="xs" variant="outline" onClick={() => setValue(40)}>
+				Reset
+			</Button>
+			<Field.Root w="full">
+				<Slider.Root
+					value={value}
+					onValueChange={(nextValue, details) => {
+						setValue(nextValue);
+						console.log(`${nextValue} (${details.reason})`);
+					}}
+				>
+					<HStack justify="space-between">
+						<Field.Label>Volume</Field.Label>
+						<Slider.Value />
+					</HStack>
+					<Slider.Track>
+						<Slider.FilledTrack />
+						<Slider.Thumb />
+					</Slider.Track>
+				</Slider.Root>
+			</Field.Root>
+		</VStack>
+	);
 }
+```
+
+### Step and Bounds
+
+`min` and `max` set the bounds (0 and 100 by default), and `step` sets how far one step moves, counted from `min`. Decimal steps avoid floating-point drift, so a `0.1` step reaches `0.3` cleanly.
+
+<Wrapper>
+	<StepAndBoundsSlider />
+</Wrapper>
+
+```tsx
+<VStack align="start" gap={6} maxW="xs" w="full">
+	<Field.Root w="full">
+		<Slider.Root
+			defaultValue={2010}
+			min={1990}
+			max={2030}
+			step={5}
+			format={{ useGrouping: false }}
+		>
+			<HStack justify="space-between">
+				<Field.Label>Year</Field.Label>
+				<Slider.Value />
+			</HStack>
+			<Slider.Track>
+				<Slider.FilledTrack />
+				<Slider.Thumb />
+			</Slider.Track>
+		</Slider.Root>
+	</Field.Root>
+	<Field.Root w="full">
+		<Slider.Root defaultValue={0.5} min={0} max={1} step={0.05}>
+			<HStack justify="space-between">
+				<Field.Label>Opacity</Field.Label>
+				<Slider.Value />
+			</HStack>
+			<Slider.Track>
+				<Slider.FilledTrack />
+				<Slider.Thumb />
+			</Slider.Track>
+		</Slider.Root>
+	</Field.Root>
+</VStack>
+```
+
+### Large Step
+
+Arrow keys move one `step`. `PageUp`, `PageDown`, and `Shift` with an arrow key move by `largeStep`, which is 10 steps unless you set it. `Home` and `End` go to `min` and `max`.
+
+<Wrapper>
+	<LargeStepSlider />
+</Wrapper>
+
+```tsx
+<Field.Root maxW="xs" w="full">
+	<Slider.Root
+		defaultValue={100}
+		min={25}
+		max={400}
+		largeStep={25}
+		format={{ style: "unit", unit: "percent" }}
+	>
+		<HStack justify="space-between">
+			<Field.Label>Zoom</Field.Label>
+			<Slider.Value />
+		</HStack>
+		<Slider.Track>
+			<Slider.FilledTrack />
+			<Slider.Thumb />
+		</Slider.Track>
+	</Slider.Root>
+</Field.Root>
+```
+
+### Format and Locale
+
+`format` takes `Intl.NumberFormatOptions` (such as currency, percent, or unit) or a custom formatter function. It controls both `Slider.Value` and what screen readers announce. `locale` sets separators, digits, and symbol placement.
+
+<Wrapper>
+	<FormatAndLocaleSliders />
+</Wrapper>
+
+```tsx
+const sliders = [
+	{
+		label: "Budget",
+		defaultValue: 40,
+		max: 100,
+		step: 1,
+		format: { style: "currency", currency: "USD", maximumFractionDigits: 0 }
+	},
+	{
+		label: "Opacity",
+		defaultValue: 0.6,
+		max: 1,
+		step: 0.01,
+		format: { style: "percent" }
+	},
+	{
+		label: "Weight",
+		defaultValue: 20,
+		max: 50,
+		step: 0.5,
+		format: { style: "unit", unit: "kilogram" }
+	},
+	{
+		label: "Duration",
+		defaultValue: 90,
+		max: 600,
+		step: 15,
+		format: (seconds: number) => `${Math.floor(seconds / 60)} min ${seconds % 60} s`
+	},
+	{
+		label: "Preis",
+		defaultValue: 40,
+		max: 100,
+		step: 1,
+		format: { style: "currency", currency: "EUR" },
+		locale: "de-DE"
+	}
+];
+```
+
+### Saving on Commit
+
+`onValueChange` runs on every step of a drag. `onValueCommit` runs once when the interaction ends (pointer lift, key up, or screen reader adjustment). Use `onValueCommit` to persist changes without spamming requests.
+
+<Wrapper>
+	<CommitSlider />
+</Wrapper>
+
+```tsx
+<Field.Root w="full">
+	<Slider.Root
+		defaultValue={50}
+		onValueCommit={(value, details) => console.log(`Saved ${value} (${details.reason})`)}
+	>
+		<HStack justify="space-between">
+			<Field.Label>Brightness</Field.Label>
+			<Slider.Value />
+		</HStack>
+		<Slider.Track>
+			<Slider.FilledTrack />
+			<Slider.Thumb />
+		</Slider.Track>
+	</Slider.Root>
+</Field.Root>
+```
+
+### Controller
+
+Create an imperative controller with `Slider.createSliderController()` to move the slider with `setValue()`, read it with `getValue()`, and focus the thumb with `focus()` from anywhere.
+
+<Wrapper>
+	<ControllerSlider />
+</Wrapper>
+
+```tsx
+function ControllerSlider() {
+	const [volume] = useState(() => Slider.createSliderController<number>());
+
+	return (
+		<VStack align="start" gap={4} maxW="sm" w="full">
+			<Flex gap={2}>
+				<Button size="xs" variant="outline" onClick={() => volume.setValue(0)}>
+					Mute
+				</Button>
+				<Button size="xs" variant="outline" onClick={() => volume.setValue(volume.getValue() + 10)}>
+					Louder
+				</Button>
+				<Button size="xs" variant="outline" onClick={() => volume.focus()}>
+					Focus
+				</Button>
+			</Flex>
+			<Field.Root w="full">
+				<Slider.Root defaultValue={40} controller={volume}>
+					<HStack justify="space-between">
+						<Field.Label>Volume</Field.Label>
+						<Slider.Value />
+					</HStack>
+					<Slider.Track>
+						<Slider.FilledTrack />
+						<Slider.Thumb />
+					</Slider.Track>
+				</Slider.Root>
+			</Field.Root>
+		</VStack>
+	);
+}
+```
+
+### Form
+
+Set `name` to include the slider in native `FormData` and form reset. Set `form` to associate a slider outside the `<form>` element by id.
+
+<Wrapper>
+	<FormSlider />
+</Wrapper>
+
+```tsx
+function FormSlider() {
+	const formId = useId();
+
+	return (
+		<>
+			<form id={formId} onSubmit={(e) => e.preventDefault()}>
+				<Field.Root>
+					<Slider.Root name="rating" defaultValue={3} min={1} max={5}>
+						<HStack justify="space-between">
+							<Field.Label>Minimum rating</Field.Label>
+							<Slider.Value />
+						</HStack>
+						<Slider.Track>
+							<Slider.FilledTrack />
+							<Slider.Thumb />
+						</Slider.Track>
+					</Slider.Root>
+				</Field.Root>
+			</form>
+			<Field.Root>
+				<Slider.Root
+					name="distance"
+					form={formId}
+					defaultValue={25}
+					max={100}
+					step={5}
+					format={{ style: "unit", unit: "kilometer" }}
+				>
+					<HStack justify="space-between">
+						<Field.Label>Distance (outside form)</Field.Label>
+						<Slider.Value />
+					</HStack>
+					<Slider.Track>
+						<Slider.FilledTrack />
+						<Slider.Thumb />
+					</Slider.Track>
+				</Slider.Root>
+			</Field.Root>
+		</>
+	);
+}
+```
+
+### Vertical
+
+Set `orientation="vertical"` and give the slider a height. The bottom is the minimum, `ArrowUp` increases the value, and parts expose `data-orientation="vertical"`.
+
+<Wrapper>
+	<VerticalSliders />
+</Wrapper>
+
+```tsx
+<HStack align="end" gap={8}>
+	<Field.Root align="center" w="auto">
+		<Slider.Root orientation="vertical" defaultValue={50} h="180px">
+			<Slider.Track>
+				<Slider.FilledTrack />
+				<Slider.Thumb />
+			</Slider.Track>
+		</Slider.Root>
+		<Field.Label>Bass</Field.Label>
+	</Field.Root>
+	<Field.Root align="center" w="auto">
+		<Slider.Root orientation="vertical" defaultValue={25} h="180px">
+			<Slider.Track>
+				<Slider.FilledTrack />
+				<Slider.Thumb />
+			</Slider.Track>
+		</Slider.Root>
+		<Field.Label>Treble</Field.Label>
+	</Field.Root>
+</HStack>
+```
+
+### Custom Rendering
+
+`Slider.Value` and `Slider.Thumb` accept `render` and state-aware function `children` so you can customize the output or render a floating badge above the thumb using `state.thumbValue` and `state.percent`.
+
+<Wrapper>
+	<CustomRenderingSlider />
+</Wrapper>
+
+```tsx
+<Field.Root maxW="xs" pt={6} w="full">
+	<Slider.Root defaultValue={60}>
+		<HStack justify="space-between">
+			<Field.Label>Brightness</Field.Label>
+			<Slider.Value>{(state) => `${state.text}%`}</Slider.Value>
+		</HStack>
+		<Slider.Track>
+			<Slider.FilledTrack />
+			<Slider.Thumb>
+				{(state) => <span>{state.thumbValue}</span>}
+			</Slider.Thumb>
+		</Slider.Track>
+	</Slider.Root>
+</Field.Root>
 ```
 
 ### Size
 
-You can change the size of the Slider by using the `size` prop. This adjusts both the track height/width and the thumb size.
+Change the size of the Slider using `size` (`sm`, `md`, `lg`). This adjusts both the track thickness and the thumb size.
 
 <Wrapper>
 	<VStack w="full" gap={10}>
-		<Slider.Root size='sm'>
+		<Slider.Root size="sm" aria-label="Small slider">
 			<Slider.Track maxW="xs">
 				<Slider.FilledTrack />
 				<Slider.Thumb />
 			</Slider.Track>
 		</Slider.Root>
-		<Slider.Root size='md'>
+		<Slider.Root size="md" aria-label="Medium slider">
 			<Slider.Track maxW="xs">
 				<Slider.FilledTrack />
 				<Slider.Thumb />
 			</Slider.Track>
 		</Slider.Root>
-		<Slider.Root size='lg'>
+		<Slider.Root size="lg" aria-label="Large slider">
 			<Slider.Track maxW="xs">
 				<Slider.FilledTrack />
 				<Slider.Thumb />
@@ -96,19 +500,19 @@ You can change the size of the Slider by using the `size` prop. This adjusts bot
 
 ```tsx
 <VStack w="full" gap={10}>
-	<Slider.Root size='sm'>
+	<Slider.Root size="sm">
 		<Slider.Track maxW="xs">
 			<Slider.FilledTrack />
 			<Slider.Thumb />
 		</Slider.Track>
 	</Slider.Root>
-	<Slider.Root size='md'>
+	<Slider.Root size="md">
 		<Slider.Track maxW="xs">
 			<Slider.FilledTrack />
 			<Slider.Thumb />
 		</Slider.Track>
 	</Slider.Root>
-	<Slider.Root size='lg'>
+	<Slider.Root size="lg">
 		<Slider.Track maxW="xs">
 			<Slider.FilledTrack />
 			<Slider.Thumb />
@@ -119,47 +523,47 @@ You can change the size of the Slider by using the `size` prop. This adjusts bot
 
 ### Scheme
 
-You can change the scheme of the Slider by using the `scheme` prop.
+Change the color scheme of the Slider with the `scheme` prop.
 
 <Wrapper>
 	<VStack w="full" gap={10}>
-		<Slider.Root scheme="primary">
+		<Slider.Root scheme="primary" aria-label="Primary">
 			<Slider.Track maxW="xs">
 				<Slider.FilledTrack />
 				<Slider.Thumb />
 			</Slider.Track>
 		</Slider.Root>
-		<Slider.Root scheme="secondary">
+		<Slider.Root scheme="secondary" aria-label="Secondary">
 			<Slider.Track maxW="xs">
 				<Slider.FilledTrack />
 				<Slider.Thumb />
 			</Slider.Track>
 		</Slider.Root>
-		<Slider.Root scheme="info">
+		<Slider.Root scheme="info" aria-label="Info">
 			<Slider.Track maxW="xs">
 				<Slider.FilledTrack />
 				<Slider.Thumb />
 			</Slider.Track>
 		</Slider.Root>
-		<Slider.Root scheme="success">
+		<Slider.Root scheme="success" aria-label="Success">
 			<Slider.Track maxW="xs">
 				<Slider.FilledTrack />
 				<Slider.Thumb />
 			</Slider.Track>
 		</Slider.Root>
-		<Slider.Root scheme="warning">
+		<Slider.Root scheme="warning" aria-label="Warning">
 			<Slider.Track maxW="xs">
 				<Slider.FilledTrack />
 				<Slider.Thumb />
 			</Slider.Track>
 		</Slider.Root>
-		<Slider.Root scheme="error">
+		<Slider.Root scheme="error" aria-label="Error">
 			<Slider.Track maxW="xs">
 				<Slider.FilledTrack />
 				<Slider.Thumb />
 			</Slider.Track>
 		</Slider.Root>
-		<Slider.Root scheme="none">
+		<Slider.Root scheme="none" aria-label="None">
 			<Slider.Track maxW="xs">
 				<Slider.FilledTrack />
 				<Slider.Thumb />
@@ -169,67 +573,7 @@ You can change the scheme of the Slider by using the `scheme` prop.
 </Wrapper>
 
 ```tsx
-<VStack w="full" gap={10}>
-	<Slider.Root scheme="primary">
-		<Slider.Track maxW="xs">
-			<Slider.FilledTrack />
-			<Slider.Thumb />
-		</Slider.Track>
-	</Slider.Root>
-	<Slider.Root scheme="secondary">
-		<Slider.Track maxW="xs">
-			<Slider.FilledTrack />
-			<Slider.Thumb />
-		</Slider.Track>
-	</Slider.Root>
-	<Slider.Root scheme="info">
-		<Slider.Track maxW="xs">
-			<Slider.FilledTrack />
-			<Slider.Thumb />
-		</Slider.Track>
-	</Slider.Root>
-	<Slider.Root scheme="success">
-		<Slider.Track maxW="xs">
-			<Slider.FilledTrack />
-			<Slider.Thumb />
-		</Slider.Track>
-	</Slider.Root>
-	<Slider.Root scheme="warning">
-		<Slider.Track maxW="xs">
-			<Slider.FilledTrack />
-			<Slider.Thumb />
-		</Slider.Track>
-	</Slider.Root>
-	<Slider.Root scheme="error">
-		<Slider.Track maxW="xs">
-			<Slider.FilledTrack />
-			<Slider.Thumb />
-		</Slider.Track>
-	</Slider.Root>
-	<Slider.Root scheme="none">
-		<Slider.Track maxW="xs">
-			<Slider.FilledTrack />
-			<Slider.Thumb />
-		</Slider.Track>
-	</Slider.Root>
-</VStack>
-```
-
-### Orientation
-
-You can change the orientation of the Slider by using the `orientation` prop.
-
-<Wrapper>
-	<Slider.Root orientation="vertical" h="200px">
-		<Slider.Track maxW="xs">
-			<Slider.FilledTrack />
-			<Slider.Thumb />
-		</Slider.Track>
-	</Slider.Root>
-</Wrapper>
-
-```tsx
-<Slider.Root orientation="vertical" h="200px">
+<Slider.Root scheme="success">
 	<Slider.Track maxW="xs">
 		<Slider.FilledTrack />
 		<Slider.Thumb />
@@ -239,10 +583,10 @@ You can change the orientation of the Slider by using the `orientation` prop.
 
 ### Reversed
 
-You can reverse the Slider by using the `isReversed` prop. The minimum value moves to the right and arrow keys follow the visual direction. This applies to horizontal sliders only.
+Use `isReversed` to place the minimum value on the right for horizontal sliders.
 
-<Wrapper>	
-	<Slider.Root isReversed>
+<Wrapper>
+	<Slider.Root isReversed aria-label="Reversed slider">
 		<Slider.Track maxW="xs">
 			<Slider.FilledTrack />
 			<Slider.Thumb />
@@ -261,23 +605,23 @@ You can reverse the Slider by using the `isReversed` prop. The minimum value mov
 
 ### Custom Thumb Size
 
-You can set a custom thumb size by using the `thumbSize` prop (in pixels). This is useful when you need precise control over the thumb size beyond the predefined `size` variants.
+Set `thumbSize` (in pixels) for precise control over the thumb diameter beyond the predefined `size` variants.
 
 <Wrapper>
 	<VStack w="full" gap={10}>
-		<Slider.Root thumbSize={16}>
+		<Slider.Root thumbSize={16} aria-label="16px thumb">
 			<Slider.Track maxW="xs">
 				<Slider.FilledTrack />
 				<Slider.Thumb />
 			</Slider.Track>
 		</Slider.Root>
-		<Slider.Root thumbSize={32}>
+		<Slider.Root thumbSize={32} aria-label="32px thumb">
 			<Slider.Track maxW="xs">
 				<Slider.FilledTrack />
 				<Slider.Thumb />
 			</Slider.Track>
 		</Slider.Root>
-		<Slider.Root thumbSize={48} scheme="info">
+		<Slider.Root thumbSize={48} scheme="info" aria-label="48px thumb">
 			<Slider.Track maxW="xs">
 				<Slider.FilledTrack />
 				<Slider.Thumb />
@@ -287,40 +631,26 @@ You can set a custom thumb size by using the `thumbSize` prop (in pixels). This 
 </Wrapper>
 
 ```tsx
-<VStack w="full" gap={10}>
-	<Slider.Root thumbSize={16}>
-		<Slider.Track maxW="xs">
-			<Slider.FilledTrack />
-			<Slider.Thumb />
-		</Slider.Track>
-	</Slider.Root>
-	<Slider.Root thumbSize={32}>
-		<Slider.Track maxW="xs">
-			<Slider.FilledTrack />
-			<Slider.Thumb />
-		</Slider.Track>
-	</Slider.Root>
-	<Slider.Root thumbSize={48} scheme="info">
-		<Slider.Track maxW="xs">
-			<Slider.FilledTrack />
-			<Slider.Thumb />
-		</Slider.Track>
-	</Slider.Root>
-</VStack>
+<Slider.Root thumbSize={32}>
+	<Slider.Track maxW="xs">
+		<Slider.FilledTrack />
+		<Slider.Thumb />
+	</Slider.Track>
+</Slider.Root>
 ```
 
 ### Hide Thumb
 
-You can hide the slider thumb by using the `hideThumb` prop. This is useful when you want a simpler slider appearance.
+Use `hideThumb` for a clean bar-style slider without a visible thumb.
 
 <Wrapper>
 	<VStack w="full" gap={10}>
-		<Slider.Root hideThumb>
+		<Slider.Root hideThumb aria-label="Hidden thumb">
 			<Slider.Track maxW="xs">
 				<Slider.FilledTrack />
 			</Slider.Track>
 		</Slider.Root>
-		<Slider.Root hideThumb scheme="success" defaultValue={70}>
+		<Slider.Root hideThumb scheme="success" defaultValue={70} aria-label="Hidden thumb 70%">
 			<Slider.Track maxW="xs">
 				<Slider.FilledTrack />
 			</Slider.Track>
@@ -329,47 +659,94 @@ You can hide the slider thumb by using the `hideThumb` prop. This is useful when
 </Wrapper>
 
 ```tsx
-<VStack w="full" gap={10}>
-	<Slider.Root hideThumb>
-		<Slider.Track maxW="xs">
-			<Slider.FilledTrack />
-		</Slider.Track>
-	</Slider.Root>
-	<Slider.Root hideThumb scheme="success" defaultValue={70}>
-		<Slider.Track maxW="xs">
-			<Slider.FilledTrack />
-		</Slider.Track>
-	</Slider.Root>
-</VStack>
+<Slider.Root hideThumb scheme="success" defaultValue={70}>
+	<Slider.Track maxW="xs">
+		<Slider.FilledTrack />
+	</Slider.Track>
+</Slider.Root>
 ```
 
-### Controlled
+### Marks
 
-You can control the Slider by using the `value` prop.
-ControlledSlider
+Use `Slider.Mark` inside `Slider.Track` to place reference markers at specific values.
 
 <Wrapper>
-	<ControlledSlider />
+	<Slider.Root defaultValue={50} aria-label="Slider with marks">
+		<Slider.Track maxW="xs">
+			<Slider.FilledTrack />
+			<Slider.Thumb />
+			<Slider.Mark value={25}>25%</Slider.Mark>
+			<Slider.Mark value={50}>50%</Slider.Mark>
+			<Slider.Mark value={75}>75%</Slider.Mark>
+		</Slider.Track>
+	</Slider.Root>
 </Wrapper>
 
 ```tsx
-function ControlledSlider() {
-    const [value, setValue] = useState(0);
-
-    return (
-        <>
-            <Text>
-                Slider value: {value}
-            </Text>
-
-            <Slider.Root value={value} onChangeValue={setValue}>
-                <Slider.Track maxW="xs">
-                    <Slider.FilledTrack />
-                    <Slider.Thumb />
-                </Slider.Track>
-            </Slider.Root>
-        </>
-    );
-}
-
+<Slider.Root defaultValue={50}>
+	<Slider.Track maxW="xs">
+		<Slider.FilledTrack />
+		<Slider.Thumb />
+		<Slider.Mark value={25}>25%</Slider.Mark>
+		<Slider.Mark value={50}>50%</Slider.Mark>
+		<Slider.Mark value={75}>75%</Slider.Mark>
+	</Slider.Track>
+</Slider.Root>
 ```
+
+## Styling & Data Attributes
+
+UI SDK sets CSS variables and state attributes on every part:
+
+- **CSS variables**:
+  - `--slider-indicator-start`: Indicator start position along the track in percent.
+  - `--slider-indicator-size`: Indicator width/height in percent.
+  - `--slider-thumb-position`: Thumb position along the track in percent.
+- **Data attributes**:
+  - `[data-slot="slider"]`, `[data-slot="slider-value"]`, `[data-slot="slider-control"]`, `[data-slot="slider-track"]`, `[data-slot="slider-indicator"]`, `[data-slot="slider-thumb"]`:
+  - `data-orientation`: `"horizontal"` or `"vertical"`.
+  - `data-disabled`: Present when disabled.
+  - `data-dragging`: Present while dragging (`slider-thumb` scopes to the active thumb).
+  - `data-invalid`: Present when `isInvalid` or `Field.Root invalid` is set.
+
+## API Reference
+
+### Slider.Root
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `value` | `number` | Controlled value |
+| `defaultValue` | `number` | Uncontrolled initial value (also used for form reset) |
+| `onValueChange` | `(value: number, details: SliderValueChangeDetails) => void` | Fires on every step while changing |
+| `onValueCommit` | `(value: number, details: SliderValueCommitDetails) => void` | Fires once when the interaction ends |
+| `min`, `max`, `step` | `number` | Bounds and step size (defaults `0`, `100`, `1`) |
+| `largeStep` | `number` | Step size for `PageUp`, `PageDown`, and `Shift` + Arrow |
+| `orientation` | `"horizontal" \| "vertical"` | Slider axis (vertical grows upward) |
+| `disabled`, `readOnly`, `required` | `boolean` | Interactive and form validation states |
+| `isInvalid` | `boolean` | Marks the slider as invalid for styling |
+| `name`, `form` | `string` | Native form field name and external form association |
+| `format` | `Intl.NumberFormatOptions \| ((value: number) => string)` | Value formatting for `Slider.Value` and screen readers |
+| `locale` | `string` | BCP 47 locale tag for number formatting |
+| `controller` | `SliderController<number>` | Imperative controller from `Slider.createSliderController()` |
+| `size` | `"sm" \| "md" \| "lg"` | Track and thumb preset size |
+| `scheme` | `"primary" \| "secondary" \| "info" \| "success" \| "warning" \| "error" \| "none"` | Color scheme |
+| `isReversed` | `boolean` | Places minimum value on the right (horizontal only) |
+| `thumbSize` | `number` | Custom thumb diameter in pixels |
+| `hideThumb` | `boolean` | Hides the thumb visually |
+| `debug` | `boolean` | Logs state transitions in development |
+
+### Controller & Reasons
+
+`Slider.createSliderController<number>()` returns `{ getValue(), setValue(value, options?), focus(thumb?) }`.
+Change `details.reason` values: `track-press`, `drag`, `step-key`, `accessibility-adjust`, `reset`, `restore`, `imperative`.
+
+## Accessibility & Keyboard
+
+Follows the [WAI-ARIA Slider Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/slider/). Each thumb wraps a native `<input type="range">` so screen readers announce formatted values and adjust them natively.
+
+| Key | Action |
+| --- | --- |
+| `ArrowRight` / `ArrowUp` | Increase by `step` (reversed in RTL) |
+| `ArrowLeft` / `ArrowDown` | Decrease by `step` (reversed in RTL) |
+| `PageUp` / `PageDown` / `Shift` + Arrow | Move by `largeStep` |
+| `Home` / `End` | Jump to `min` / `max` |

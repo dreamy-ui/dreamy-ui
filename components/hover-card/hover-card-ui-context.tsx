@@ -1,19 +1,14 @@
 "use client";
 
-import type { PortalProps } from "@dreamy-ui/react";
-import { createContext, useContext, useMemo, useState } from "react";
+import type { PositioningProps, UiSdkMotionController } from "@dreamy-ui/react";
+import { createContext, useContext } from "react";
 
 export interface HoverCardUiContextValue {
     hasArrow: boolean;
-    usePortal: boolean;
-    portalProps?: Omit<PortalProps, "children">;
+    arrowSize?: number;
     reduceMotion: boolean;
-    present: boolean;
-    onExitComplete: () => void;
-    contentLabelId: string | undefined;
-    setContentLabelId: (id: string) => void;
-    contentId: string | undefined;
-    setContentId: (id: string) => void;
+    motion: UiSdkMotionController;
+    positioning?: PositioningProps;
 }
 
 const HoverCardUiContext = createContext<HoverCardUiContextValue | null>(null);
@@ -22,29 +17,10 @@ export function HoverCardUiProvider({
     value,
     children
 }: {
-    value: Omit<
-        HoverCardUiContextValue,
-        "contentLabelId" | "setContentLabelId" | "contentId" | "setContentId"
-    >;
+    value: HoverCardUiContextValue;
     children: React.ReactNode;
 }) {
-    const [contentLabelId, setContentLabelId] = useState<string>();
-    const [contentId, setContentId] = useState<string>();
-
-    const merged = useMemo(
-        () => ({
-            ...value,
-            contentLabelId,
-            setContentLabelId,
-            contentId,
-            setContentId
-        }),
-        [contentId, contentLabelId, value]
-    );
-
-    return (
-        <HoverCardUiContext.Provider value={merged}>{children}</HoverCardUiContext.Provider>
-    );
+    return <HoverCardUiContext.Provider value={value}>{children}</HoverCardUiContext.Provider>;
 }
 
 export function useHoverCardUi() {

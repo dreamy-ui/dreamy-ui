@@ -5,13 +5,13 @@ import { render } from "../test/render";
 import * as Pagination from "./index";
 
 describe("Pagination", () => {
-    it("exposes a named navigation landmark with current page and named controls", () => {
+    it("exposes a named navigation landmark with current page, list, and UI SDK slots", () => {
         render(
             <Pagination.Root
                 aria-label="Pagination"
-                count={100}
                 defaultPage={1}
                 pageSize={10}
+                total={100}
             >
                 <Pagination.PrevTrigger />
                 <Pagination.Items />
@@ -22,13 +22,21 @@ describe("Pagination", () => {
 
         const nav = screen.getByRole("navigation", { name: "Pagination" });
         expect(nav.tagName).toBe("NAV");
+        expect(nav).toHaveAttribute("data-slot", "pagination");
 
         const current = within(nav).getByRole("button", { current: "page" });
         expect(current).toHaveAttribute("aria-current", "page");
+        expect(current).toHaveAttribute("data-current");
         expect(current).toHaveAttribute("aria-label", "Page 1");
 
-        expect(screen.getByRole("button", { name: "Previous page" })).toBeDisabled();
-        expect(screen.getByRole("button", { name: "Next page" })).not.toBeDisabled();
+        expect(screen.getByRole("button", { name: "Previous page" })).toHaveAttribute(
+            "aria-disabled",
+            "true"
+        );
+        expect(screen.getByRole("button", { name: "Next page" })).not.toHaveAttribute(
+            "aria-disabled",
+            "true"
+        );
         expect(screen.getByText("1 of 10")).toBeInTheDocument();
     });
 
@@ -39,10 +47,10 @@ describe("Pagination", () => {
         render(
             <Pagination.Root
                 aria-label="Pagination"
-                count={50}
                 defaultPage={1}
                 onPageChange={onPageChange}
                 pageSize={10}
+                total={50}
             >
                 <Pagination.PrevTrigger />
                 <Pagination.Items />
@@ -51,10 +59,10 @@ describe("Pagination", () => {
         );
 
         await user.click(screen.getByRole("button", { name: "Page 2" }));
-        expect(onPageChange).toHaveBeenCalledWith({ page: 2, pageSize: 10 });
+        expect(onPageChange).toHaveBeenCalledWith(2, expect.objectContaining({ reason: "item-press" }));
 
         await user.click(screen.getByRole("button", { name: "Next page" }));
-        expect(onPageChange).toHaveBeenCalledWith({ page: 3, pageSize: 10 });
+        expect(onPageChange).toHaveBeenCalledWith(3, expect.objectContaining({ reason: "next-press" }));
 
         expect(screen.getByRole("button", { name: "Page 3" })).toHaveAttribute(
             "aria-current",
@@ -68,10 +76,10 @@ describe("Pagination", () => {
 
         const { rerender } = render(
             <Pagination.Root
-                count={100}
                 onPageChange={onPageChange}
                 page={5}
                 pageSize={10}
+                total={100}
             >
                 <Pagination.Items />
                 <Pagination.NextTrigger />
@@ -84,7 +92,7 @@ describe("Pagination", () => {
         );
 
         await user.click(screen.getByRole("button", { name: "Next page" }));
-        expect(onPageChange).toHaveBeenCalledWith({ page: 6, pageSize: 10 });
+        expect(onPageChange).toHaveBeenCalledWith(6, expect.anything());
         expect(screen.getByRole("button", { name: "Page 5" })).toHaveAttribute(
             "aria-current",
             "page"
@@ -92,10 +100,10 @@ describe("Pagination", () => {
 
         rerender(
             <Pagination.Root
-                count={100}
                 onPageChange={onPageChange}
                 page={6}
                 pageSize={10}
+                total={100}
             >
                 <Pagination.Items />
                 <Pagination.NextTrigger />
@@ -108,14 +116,14 @@ describe("Pagination", () => {
         );
     });
 
-    it("jumps to the first and last page and disables the matching trigger", async () => {
+    it("jumps to the first and last page and marks the matching trigger disabled", async () => {
         const user = userEvent.setup();
 
         render(
             <Pagination.Root
-                count={100}
                 defaultPage={5}
                 pageSize={10}
+                total={100}
             >
                 <Pagination.FirstTrigger />
                 <Pagination.Items />
@@ -128,21 +136,27 @@ describe("Pagination", () => {
             "aria-current",
             "page"
         );
-        expect(screen.getByRole("button", { name: "Last page" })).toBeDisabled();
+        expect(screen.getByRole("button", { name: "Last page" })).toHaveAttribute(
+            "aria-disabled",
+            "true"
+        );
 
         await user.click(screen.getByRole("button", { name: "First page" }));
         expect(screen.getByRole("button", { name: "Page 1" })).toHaveAttribute(
             "aria-current",
             "page"
         );
-        expect(screen.getByRole("button", { name: "First page" })).toBeDisabled();
+        expect(screen.getByRole("button", { name: "First page" })).toHaveAttribute(
+            "aria-disabled",
+            "true"
+        );
     });
 
     it("labels the landmark by default and accepts custom translations", () => {
         render(
             <Pagination.Root
-                count={30}
                 pageSize={10}
+                total={30}
                 translations={{
                     nextTriggerLabel: "Suivant",
                     itemLabel: ({ page }) => `Aller à la page ${page}`
@@ -164,10 +178,10 @@ describe("Pagination", () => {
         render(
             <Pagination.Root
                 aria-label="Pagination"
-                count={100}
                 defaultPage={10}
                 pageSize={10}
-                siblingCount={1}
+                siblings={1}
+                total={100}
             >
                 <Pagination.PrevTrigger />
                 <Pagination.Items />
@@ -175,11 +189,35 @@ describe("Pagination", () => {
             </Pagination.Root>
         );
 
-        expect(screen.getByRole("button", { name: "Next page" })).toBeDisabled();
-        expect(screen.getByRole("button", { name: "Previous page" })).not.toBeDisabled();
+        expect(screen.getByRole("button", { name: "Next page" })).toHaveAttribute(
+            "aria-disabled",
+            "true"
+        );
+        expect(screen.getByRole("button", { name: "Previous page" })).not.toHaveAttribute(
+            "aria-disabled",
+            "true"
+        );
 
-        const ellipses = document.querySelectorAll("[aria-hidden='true']");
+        const ellipses = document.querySelectorAll('[data-slot="pagination-ellipsis"]');
         expect(ellipses.length).toBeGreaterThan(0);
+        expect(ellipses[0]).toHaveAttribute("aria-hidden", "true");
+    });
+
+    it("renders anchor links when getHref is provided", () => {
+        render(
+            <Pagination.Root
+                defaultPage={2}
+                getHref={(p) => `/posts?page=${p}`}
+                pageCount={5}
+            >
+                <Pagination.PrevTrigger />
+                <Pagination.Items />
+                <Pagination.NextTrigger />
+            </Pagination.Root>
+        );
+
+        const page3 = screen.getByRole("link", { name: "Page 3" });
+        expect(page3).toHaveAttribute("href", "/posts?page=3");
     });
 
     it("forwards size and remaining props to the root", () => {
@@ -187,10 +225,10 @@ describe("Pagination", () => {
             <Pagination.Root
                 aria-label="Pagination"
                 className="custom-pagination"
-                count={20}
                 data-testid="pagination-root"
                 pageSize={10}
                 size="sm"
+                total={20}
             >
                 <Pagination.Items />
             </Pagination.Root>

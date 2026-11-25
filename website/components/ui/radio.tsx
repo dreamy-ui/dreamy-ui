@@ -1,32 +1,50 @@
 "use client";
 
 import type { ChangeDetails } from "@ui-sdk/core";
+import { mergeProps } from "@ui-sdk/react/primitive";
 import {
     Radio as UiSdkRadio,
     RadioGroup as UiSdkRadioGroup,
     RadioIndicator as UiSdkRadioIndicator,
     createRadioGroupController,
+    type RadioGroupChangeOptions,
     type RadioGroupController,
-    type RadioGroupValueChangeReason
+    type RadioGroupState,
+    type RadioGroupValueChangeReason,
+    type RadioState
 } from "@ui-sdk/react/radio";
 import {
+    type DreamyHostProps,
     createContext,
     dataAttr,
     RadioGroupProvider as LegacyRadioGroupProvider,
+    useFieldContext,
     useFieldProps
 } from "@dreamy-ui/react";
 import {
     type ChangeEvent,
+    type ComponentProps,
     type KeyboardEvent,
     type PointerEvent,
+    type ReactNode,
+    cloneElement,
     useMemo,
     useRef,
     useState
 } from "react";
-import { cx } from "styled-system/css";
-import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
+import { css, cx } from "styled-system/css";
+import { type HTMLDreamyProps, dreamy, splitCssProps } from "styled-system/jsx";
 import { type RadioVariantProps, radio } from "styled-system/recipes";
 import { Flex, type FlexProps } from "./flex";
+
+export {
+    createRadioGroupController,
+    type RadioGroupChangeOptions,
+    type RadioGroupController,
+    type RadioGroupState,
+    type RadioGroupValueChangeReason,
+    type RadioState
+};
 
 const StyledRadioItem = dreamy("label", radio);
 
@@ -37,9 +55,11 @@ interface RadioGroupContextValue extends RadioVariantProps {
     isRequired?: boolean;
     reduceMotion?: boolean;
     name?: string;
+    fieldId?: string;
+    ariaDescribedBy?: string;
 }
 
-const [RadioGroupProvider, useRadioGroupContext] =
+export const [RadioGroupProvider, useRadioGroupContext] =
     createContext<RadioGroupContextValue>({
         strict: false,
         name: "RadioGroupContext"
@@ -55,6 +75,9 @@ export interface RadioProps
             | "onValueChange"
             | "isChecked"
             | "defaultChecked"
+            | "form"
+            | "render"
+            | "children"
         > {
     /**
      * The value this radio submits when checked. Inside a `RadioGroup` it joins
@@ -96,9 +119,21 @@ export interface RadioProps
      */
     name?: string;
     /**
+     * The id of a form to belong to, when used standalone outside that form.
+     */
+    form?: string;
+    /**
      * Marks the radio as invalid for styling purposes.
      */
     isInvalid?: boolean;
+    /**
+     * Renders the radio as a custom element, or a function receiving the part's props and state.
+     */
+    render?: ComponentProps<typeof UiSdkRadio>["render"];
+    /**
+     * Radio label content, or a function of the radio's state when `render` is used.
+     */
+    children?: ReactNode | ((state: RadioState) => ReactNode);
 }
 
 function RadioItem(props: RadioProps) {
@@ -113,8 +148,11 @@ function RadioItem(props: RadioProps) {
         readOnly: readOnlyProp,
         required: requiredProp,
         isInvalid: isInvalidProp,
+        id: idProp,
+        render,
         "aria-label": ariaLabel,
         "aria-labelledby": ariaLabelledby,
+        "aria-describedby": ariaDescribedbyProp,
         onPointerDown,
         onPointerUp,
         onPointerLeave,
@@ -122,18 +160,61 @@ function RadioItem(props: RadioProps) {
         onKeyUp,
         ...rest
     } = props;
-    const field = useFieldProps(props);
     const groupContext = useRadioGroupContext();
+    const fieldContext = useFieldContext();
+    const hasOwnField = Boolean(
+        fieldContext && (!groupContext || fieldContext.id !== groupContext.fieldId)
+    );
+    const field = useFieldProps({
+        isDisabled: disabledProp,
+        isInvalid: isInvalidProp,
+        isReadOnly: readOnlyProp,
+        isRequired: requiredProp,
+        id: idProp as string | undefined,
+        "aria-describedby": ariaDescribedbyProp as string | undefined
+    });
     const isDisabled =
-        Boolean(disabledProp) || field.isDisabled || groupContext?.isDisabled === true;
+        Boolean(disabledProp) ||
+        (hasOwnField && Boolean(field.isDisabled)) ||
+        groupContext?.isDisabled === true;
     const isReadOnly =
-        Boolean(readOnlyProp) || field.isReadOnly || groupContext?.isReadOnly === true;
+        Boolean(readOnlyProp) ||
+        (hasOwnField && Boolean(field.isReadOnly)) ||
+        groupContext?.isReadOnly === true;
     const isRequired =
-        Boolean(requiredProp) || field.isRequired || groupContext?.isRequired === true;
-    const isInvalid = isInvalidProp ?? groupContext?.isInvalid ?? field.isInvalid;
+        Boolean(requiredProp) ||
+        (hasOwnField && Boolean(field.isRequired)) ||
+        groupContext?.isRequired === true;
+    const isInvalid =
+        isInvalidProp ?? (hasOwnField ? field.isInvalid : undefined) ?? groupContext?.isInvalid;
+    const ariaDescribedBy =
+        (ariaDescribedbyProp as string | undefined) ??
+        (hasOwnField ? field["aria-describedby"] : groupContext?.ariaDescribedBy);
+    const resolvedId = (idProp as string | undefined) ?? (hasOwnField ? field.id : undefined);
     const isInteractionDisabled = isDisabled || isReadOnly;
     const [isActive, setIsActive] = useState(false);
     const active = isActive && !isInteractionDisabled;
+
+    if (render) {
+        const [cssProps, domProps] = splitCssProps(rest);
+        return (
+            <UiSdkRadio
+                {...(domProps as Record<string, unknown>)}
+                aria-describedby={ariaDescribedBy}
+                aria-invalid={isInvalid ? true : undefined}
+                aria-label={ariaLabel as string | undefined}
+                aria-labelledby={ariaLabelledby as string | undefined}
+                className={cx(className as string | undefined, css(cssProps))}
+                data-invalid={dataAttr(isInvalid)}
+                disabled={isDisabled}
+                id={resolvedId}
+                render={render}
+                value={value}
+            >
+                {children}
+            </UiSdkRadio>
+        );
+    }
 
     return (
         <StyledRadioItem
@@ -179,14 +260,14 @@ function RadioItem(props: RadioProps) {
             }}
         >
             <UiSdkRadio
-                aria-describedby={field["aria-describedby"]}
+                aria-describedby={ariaDescribedBy}
                 aria-invalid={isInvalid ? true : undefined}
                 aria-label={ariaLabel as string | undefined}
                 aria-labelledby={ariaLabelledby as string | undefined}
                 data-part="wrapper"
                 data-invalid={dataAttr(isInvalid)}
                 disabled={isDisabled}
-                id={field.id}
+                id={resolvedId}
                 value={value}
             >
                 <UiSdkRadioIndicator
@@ -195,7 +276,9 @@ function RadioItem(props: RadioProps) {
                     keepMounted
                 />
             </UiSdkRadio>
-            {children ? <span data-part="label">{children as React.ReactNode}</span> : null}
+            {typeof children === "function" ? null : children ? (
+                <span data-part="label">{children as ReactNode}</span>
+            ) : null}
         </StyledRadioItem>
     );
 }
@@ -214,6 +297,7 @@ export function Radio(props: RadioProps) {
         readOnly,
         required,
         name,
+        form,
         ...rest
     } = props;
     const groupContext = useRadioGroupContext();
@@ -235,6 +319,7 @@ export function Radio(props: RadioProps) {
         <UiSdkRadioGroup
             defaultValue={defaultChecked ? stringValue : null}
             disabled={disabled}
+            form={form}
             name={name}
             onValueChange={(next, details) => {
                 onCheckedChange?.(next === stringValue, details);
@@ -254,25 +339,29 @@ export function Radio(props: RadioProps) {
     );
 }
 
+type UiSdkRadioGroupPickedProps = Pick<
+    React.ComponentProps<typeof UiSdkRadioGroup>,
+    | "value"
+    | "defaultValue"
+    | "onValueChange"
+    | "disabled"
+    | "readOnly"
+    | "required"
+    | "name"
+    | "form"
+    | "loop"
+    | "controller"
+    | "debug"
+    | "render"
+>;
+
 export interface RadioGroupProps
     extends RadioVariantProps,
-        Pick<
-            React.ComponentProps<typeof UiSdkRadioGroup>,
-            | "value"
-            | "defaultValue"
-            | "onValueChange"
-            | "disabled"
-            | "readOnly"
-            | "required"
-            | "name"
-            | "form"
-            | "loop"
-            | "controller"
-            | "debug"
-        >,
-        Omit<FlexProps, "defaultValue" | "onChange" | "onValueChange"> {
+        UiSdkRadioGroupPickedProps,
+        DreamyHostProps<FlexProps, UiSdkRadioGroupPickedProps, "onChange" | "children"> {
     isInvalid?: boolean;
     reduceMotion?: boolean;
+    children?: ComponentProps<typeof UiSdkRadioGroup>["children"];
 }
 
 export function RadioGroup(props: RadioGroupProps) {
@@ -295,8 +384,27 @@ export function RadioGroup(props: RadioGroupProps) {
         loop,
         controller,
         debug,
+        render,
+        id: idProp,
+        "aria-describedby": ariaDescribedbyProp,
         ...rest
     } = props;
+
+    const field = useFieldProps({
+        isDisabled: disabled,
+        isInvalid,
+        isReadOnly: readOnly,
+        isRequired: required,
+        id: idProp as string | undefined,
+        "aria-describedby": ariaDescribedbyProp as string | undefined
+    });
+
+    const resolvedDisabled = Boolean(disabled) || Boolean(field.isDisabled);
+    const resolvedReadOnly = Boolean(readOnly) || Boolean(field.isReadOnly);
+    const resolvedRequired = Boolean(required) || Boolean(field.isRequired);
+    const resolvedInvalid = isInvalid ?? field.isInvalid;
+    const resolvedAriaDescribedBy = field["aria-describedby"];
+    const resolvedId = (idProp as string | undefined) ?? field.id;
 
     const internalControllerRef = useRef<RadioGroupController<string> | null>(null);
     if (internalControllerRef.current === null) {
@@ -328,10 +436,10 @@ export function RadioGroup(props: RadioGroupProps) {
                 reason: "imperative"
             });
         },
-        isDisabled: disabled,
-        isInvalid,
-        isRequired: required,
-        isReadOnly: readOnly,
+        isDisabled: resolvedDisabled,
+        isInvalid: resolvedInvalid,
+        isRequired: resolvedRequired,
+        isReadOnly: resolvedReadOnly,
         reduceMotion,
         variants: { scheme, size, variant }
     };
@@ -341,48 +449,75 @@ export function RadioGroup(props: RadioGroupProps) {
             size,
             scheme,
             variant,
-            isInvalid,
-            isDisabled: disabled,
-            isReadOnly: readOnly,
-            isRequired: required,
+            isInvalid: resolvedInvalid,
+            isDisabled: resolvedDisabled,
+            isReadOnly: resolvedReadOnly,
+            isRequired: resolvedRequired,
             reduceMotion,
-            name
+            name,
+            fieldId: field.id,
+            ariaDescribedBy: resolvedAriaDescribedBy
         }),
         [
             size,
             scheme,
             variant,
-            isInvalid,
-            disabled,
-            readOnly,
-            required,
+            resolvedInvalid,
+            resolvedDisabled,
+            resolvedReadOnly,
+            resolvedRequired,
             reduceMotion,
-            name
+            name,
+            field.id,
+            resolvedAriaDescribedBy
         ]
     );
+
+    const renderGroup = (): ComponentProps<typeof UiSdkRadioGroup>["render"] => {
+        if (!render) {
+            return (
+                <Flex
+                    {...rest}
+                    className={cx("dreamy-radio-group", className as string)}
+                />
+            );
+        }
+        const [cssProps, domProps] = splitCssProps(rest);
+        const extraProps = {
+            ...domProps,
+            className: cx("dreamy-radio-group", className as string, css(cssProps))
+        };
+        if (typeof render === "function") {
+            return (groupProps, state) => render(mergeProps(groupProps, extraProps), state);
+        }
+        return cloneElement(
+            render,
+            mergeProps(extraProps, render.props as Record<string, unknown>)
+        );
+    };
 
     return (
         <LegacyRadioGroupProvider value={legacyValue}>
             <RadioGroupProvider value={providerValue}>
                 <UiSdkRadioGroup
+                    aria-describedby={resolvedAriaDescribedBy}
+                    aria-invalid={resolvedInvalid ? true : undefined}
                     controller={activeController}
+                    data-invalid={dataAttr(resolvedInvalid)}
                     debug={debug}
                     defaultValue={defaultValue}
-                    disabled={disabled}
+                    disabled={resolvedDisabled}
                     form={form}
+                    id={resolvedId}
                     loop={loop}
                     name={name}
                     onValueChange={handleValueChange}
-                    readOnly={readOnly}
-                    required={required}
+                    readOnly={resolvedReadOnly}
+                    render={renderGroup()}
+                    required={resolvedRequired}
                     value={value}
                 >
-                    <Flex
-                        {...rest}
-                        className={cx("dreamy-radio-group", className as string)}
-                    >
-                        {children}
-                    </Flex>
+                    {children}
                 </UiSdkRadioGroup>
             </RadioGroupProvider>
         </LegacyRadioGroupProvider>

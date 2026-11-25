@@ -1,51 +1,50 @@
 ---
 title: Pin Input
-description: Pin Input can be used to collect a pin code from authenticator app.
+description: Pin Input collects one-time verification codes and segmented numeric or alphanumeric inputs.
 isServerComponent: false
-source: /packages/react/src/components/pin-input/pin-input.tsx  
-themeSource: /packages/system/src/recipes/input.ts
+source: /components/pin-input/index.tsx
 ---
 
 ## Installation
 
 ```bash
-pnpm dreamy add pin-input
+bunx dreamy add pin-input
 ```
 
 ## Usage
 
-`PinInput` is a wrapper component for `PinInputField` that provides a context for the pin input.
+`PinInput` wraps [UI SDK OTPInput](https://ui-sdk.dev/docs/components/otp-input) so screen readers and mobile autofill see a single real input while rendering individual `PinInput.Field` slots.
 
 <Wrapper>
-	<PinInput.Root>
-		<PinInput.Field />
-		<PinInput.Field />
-		<PinInput.Field />
-	</PinInput.Root>
+    <PinInput.Root aria-label="Verification code" defaultValue="123">
+        <PinInput.Field />
+        <PinInput.Field />
+        <PinInput.Field />
+    </PinInput.Root>
 </Wrapper>
 
 ```tsx
-<PinInput.Root>
-  <PinInput.Field />
-  <PinInput.Field />
-  <PinInput.Field />
+<PinInput.Root aria-label="Verification code" defaultValue="123">
+    <PinInput.Field />
+    <PinInput.Field />
+    <PinInput.Field />
 </PinInput.Root>
 ```
 
 ### Controlled
 
-<Wrapper>
-  <ControlledPinInput />
-</Wrapper>
+Use `value` and `onValueChange` to control the code, `onValueCommit` to react when every slot is filled, or `createOTPInputController` for imperative control.
 
 ```tsx
-export function ControlledPinInput() {
+function ControlledPinInput() {
     const [pin, setPin] = useState("2137");
 
     return (
         <PinInput.Root
+            aria-label="Verification code"
             value={pin}
-            onChange={setPin}
+            onValueChange={(next) => setPin(next)}
+            onValueCommit={(code) => console.log("Submitted:", code)}
         >
             <PinInput.Field />
             <PinInput.Field />
@@ -56,310 +55,211 @@ export function ControlledPinInput() {
 }
 ```
 
-### Pin Input Size
+### Sizes
 
-<Wrapper> 
-	<VStack w="full">
-    <PinInput.Root size="sm">
-      <PinInput.Field />
-      <PinInput.Field />
-      <PinInput.Field />
-    </PinInput.Root>
-
-    <PinInput.Root size="md">
-      <PinInput.Field />
-      <PinInput.Field />
-      <PinInput.Field />
-    </PinInput.Root>
-
-    <PinInput.Root size="lg">
-      <PinInput.Field />
-      <PinInput.Field />
-      <PinInput.Field />
-    </PinInput.Root>
-
-    <PinInput.Root size="xl">
-      <PinInput.Field />
-      <PinInput.Field />
-      <PinInput.Field />
-    </PinInput.Root>
-
-    <PinInput.Root size="2xl">
-      <PinInput.Field />
-      <PinInput.Field />
-      <PinInput.Field />
-    </PinInput.Root>
-  </VStack>
-</Wrapper>
-
-### Pin Input Variant
+Use `size` on `PinInput.Root` (`sm`, `md`, `lg`, `xl`, or `2xl`) to adjust the dimensions of each slot.
 
 <Wrapper>
-	<VStack w="full">
-		<PinInput.Root variant="outline">
-      <PinInput.Field />
-      <PinInput.Field />
-      <PinInput.Field />
-   </PinInput.Root>
+    <VStack w="full">
+        <PinInput.Root aria-label="Small pin" size="sm">
+            <PinInput.Field />
+            <PinInput.Field />
+            <PinInput.Field />
+        </PinInput.Root>
 
-    <PinInput.Root variant="filled">
-      <PinInput.Field />
-      <PinInput.Field />
-      <PinInput.Field />
-    </PinInput.Root>
- 
-    <PinInput.Root variant="flushed">
-      <PinInput.Field />
-			<PinInput.Field />
-			<PinInput.Field />
-		</PinInput.Root>
+        <PinInput.Root aria-label="Medium pin" size="md">
+            <PinInput.Field />
+            <PinInput.Field />
+            <PinInput.Field />
+        </PinInput.Root>
 
-    <PinInput.Root variant="filledOutline">
-      <PinInput.Field />
-      <PinInput.Field />
-      <PinInput.Field />
-    </PinInput.Root>
-	</VStack>
+        <PinInput.Root aria-label="Large pin" size="lg">
+            <PinInput.Field />
+            <PinInput.Field />
+            <PinInput.Field />
+        </PinInput.Root>
+    </VStack>
 </Wrapper>
 
 ```tsx
 <VStack w="full">
-  <PinInput.Root variant="outline">
-    <PinInput.Field />
-    <PinInput.Field />
-    <PinInput.Field />
-  </PinInput.Root>
-
-  <PinInput.Root variant="filled">
-    <PinInput.Field />
-    <PinInput.Field />
-    <PinInput.Field />
-  </PinInput.Root>
-
-  <PinInput.Root variant="flushed">
-    <PinInput.Field />
-    <PinInput.Field />
-    <PinInput.Field />
-  </PinInput.Root>
-
-  <PinInput.Root variant="filledOutline">
-    <PinInput.Field />
-    <PinInput.Field />
-    <PinInput.Field />
-  </PinInput.Root>
+    <PinInput.Root aria-label="Small pin" size="sm">
+        <PinInput.Field />
+        <PinInput.Field />
+        <PinInput.Field />
+    </PinInput.Root>
+    <PinInput.Root aria-label="Medium pin" size="md">
+        <PinInput.Field />
+        <PinInput.Field />
+        <PinInput.Field />
+    </PinInput.Root>
+    <PinInput.Root aria-label="Large pin" size="lg">
+        <PinInput.Field />
+        <PinInput.Field />
+        <PinInput.Field />
+    </PinInput.Root>
 </VStack>
 ```
 
-### Invalid
+### Variants
 
-Pass `isInvalid` prop to the `PinInput` to show the error state.
+Use `variant` on `PinInput.Root` (`outline`, `filled`, `flushed`, or `filledOutline`) to match your form styling.
 
 <Wrapper>
-	<PinInput.Root isInvalid>
-		<PinInput.Field />
-		<PinInput.Field />
-		<PinInput.Field />
-	</PinInput.Root>
+    <VStack w="full">
+        <PinInput.Root aria-label="Outline pin" variant="outline">
+            <PinInput.Field />
+            <PinInput.Field />
+            <PinInput.Field />
+        </PinInput.Root>
+
+        <PinInput.Root aria-label="Filled pin" variant="filled">
+            <PinInput.Field />
+            <PinInput.Field />
+            <PinInput.Field />
+        </PinInput.Root>
+
+        <PinInput.Root aria-label="Flushed pin" variant="flushed">
+            <PinInput.Field />
+            <PinInput.Field />
+            <PinInput.Field />
+        </PinInput.Root>
+
+        <PinInput.Root aria-label="Filled outline pin" variant="filledOutline">
+            <PinInput.Field />
+            <PinInput.Field />
+            <PinInput.Field />
+        </PinInput.Root>
+    </VStack>
 </Wrapper>
 
 ```tsx
-<PinInput.Root isInvalid>
-	<PinInput.Field />
-	<PinInput.Field />
-	<PinInput.Field />
-</PinInput.Root>
+<VStack w="full">
+    <PinInput.Root aria-label="Outline pin" variant="outline">
+        <PinInput.Field />
+        <PinInput.Field />
+        <PinInput.Field />
+    </PinInput.Root>
+    <PinInput.Root aria-label="Filled pin" variant="filled">
+        <PinInput.Field />
+        <PinInput.Field />
+        <PinInput.Field />
+    </PinInput.Root>
+    <PinInput.Root aria-label="Flushed pin" variant="flushed">
+        <PinInput.Field />
+        <PinInput.Field />
+        <PinInput.Field />
+    </PinInput.Root>
+    <PinInput.Root aria-label="Filled outline pin" variant="filledOutline">
+        <PinInput.Field />
+        <PinInput.Field />
+        <PinInput.Field />
+    </PinInput.Root>
+</VStack>
 ```
 
-### Disabled
+### Invalid & Disabled
 
-Pass `isDisabled` prop to the `PinInput` to show the disabled state.
+Pass `invalid` or `disabled` to `PinInput.Root` (or inherit them from `Field.Root`).
 
 <Wrapper>
-	<PinInput.Root isDisabled>
-		<PinInput.Field />
-	  <PinInput.Field />
-		<PinInput.Field />
-	</PinInput.Root>
+    <VStack w="full">
+        <PinInput.Root aria-label="Invalid pin" invalid>
+            <PinInput.Field />
+            <PinInput.Field />
+            <PinInput.Field />
+        </PinInput.Root>
+
+        <PinInput.Root aria-label="Disabled pin" disabled>
+            <PinInput.Field />
+            <PinInput.Field />
+            <PinInput.Field />
+        </PinInput.Root>
+    </VStack>
 </Wrapper>
 
 ```tsx
-<PinInput.Root isDisabled>
-	<PinInput.Field />
-	<PinInput.Field />
-	<PinInput.Field />
-</PinInput.Root>
+<VStack w="full">
+    <PinInput.Root aria-label="Invalid pin" invalid>
+        <PinInput.Field />
+        <PinInput.Field />
+        <PinInput.Field />
+    </PinInput.Root>
+    <PinInput.Root aria-label="Disabled pin" disabled>
+        <PinInput.Field />
+        <PinInput.Field />
+        <PinInput.Field />
+    </PinInput.Root>
+</VStack>
 ```
 
-### On change
+### Mask & Pattern
 
-Pass `onChange` prop to the `PinInput` to get the value when the pin input is changed.
+Use `mask` to hide characters visually, and `pattern` (`"digits"`, `"letters"`, `"alphanumeric"`, or a `RegExp`) to control accepted characters.
 
 <Wrapper>
-	<PinInput.Root onChange={(pin) => toast({ title: `Pin: ${pin}` })}>
-		<PinInput.Field />
-		<PinInput.Field />
-		<PinInput.Field />
-	</PinInput.Root>
+    <VStack w="full">
+        <PinInput.Root aria-label="Masked pin" mask>
+            <PinInput.Field />
+            <PinInput.Field />
+            <PinInput.Field />
+        </PinInput.Root>
+
+        <PinInput.Root aria-label="Alphanumeric code" pattern="alphanumeric">
+            <PinInput.Field />
+            <PinInput.Field />
+            <PinInput.Field />
+        </PinInput.Root>
+    </VStack>
 </Wrapper>
 
 ```tsx
-<PinInput.Root onChange={(pin) => toast({ title: `Pin: ${pin}` })}>
-	<PinInput.Field />
-	<PinInput.Field />
-	<PinInput.Field />
-</PinInput.Root>
+<VStack w="full">
+    <PinInput.Root aria-label="Masked pin" mask>
+        <PinInput.Field />
+        <PinInput.Field />
+        <PinInput.Field />
+    </PinInput.Root>
+    <PinInput.Root aria-label="Alphanumeric code" pattern="alphanumeric">
+        <PinInput.Field />
+        <PinInput.Field />
+        <PinInput.Field />
+    </PinInput.Root>
+</VStack>
 ```
 
-### On Complete
+### Split Fields
 
-Pass `onComplete` prop to the `PinInput` to get the complete value when the pin input is filled.
+Group slots with `PinInput.Group` and `PinInput.Separator`.
 
 <Wrapper>
-	<PinInput.Root onComplete={(pin) => toast({ title: `Pin: ${pin}` })}>
-		<PinInput.Field />
-		<PinInput.Field />
-		<PinInput.Field />
-		<PinInput.Field />
-	</PinInput.Root>
+    <PinInput.Root aria-label="6-digit code">
+        <PinInput.Group>
+            <PinInput.Field />
+            <PinInput.Field />
+            <PinInput.Field />
+        </PinInput.Group>
+        <PinInput.Separator />
+        <PinInput.Group>
+            <PinInput.Field />
+            <PinInput.Field />
+            <PinInput.Field />
+        </PinInput.Group>
+    </PinInput.Root>
 </Wrapper>
 
 ```tsx
-<PinInput.Root onComplete={(pin) => toast({ title: `Pin: ${pin}` })}>
-	<PinInput.Field />
-	<PinInput.Field />
-	<PinInput.Field />
-	<PinInput.Field />
-</PinInput.Root>
-```
-
-### OTP
-
-Pass `otp` prop to the `PinInput` to make the pin input an One Time Password input.
-
-<Wrapper>
-	<PinInput.Root otp>
-		<PinInput.Field />
-		<PinInput.Field />
-		<PinInput.Field />
-	</PinInput.Root>
-</Wrapper>
-
-```tsx
-<PinInput.Root otp>
-	<PinInput.Field />
-	<PinInput.Field />
-	<PinInput.Field />
-</PinInput.Root>
-```
-
-### Mask
-
-Pass `mask` prop to the `PinInput` to mask the input.
-
-<Wrapper>
-	<PinInput.Root mask>
-		<PinInput.Field />
-		<PinInput.Field />
-		<PinInput.Field />
-	</PinInput.Root>
-</Wrapper>
-
-```tsx
-<PinInput.Root mask>
-	<PinInput.Field />
-	<PinInput.Field />
-	<PinInput.Field />
-</PinInput.Root>
-```
-
-### Type
-
-The type of the pin inputs value. `"alphanumeric" | "number"`.
-
-<Wrapper>
-	<PinInput.Root type="alphanumeric">
-		<PinInput.Field />
-		<PinInput.Field />
-		<PinInput.Field />
-	</PinInput.Root>
-</Wrapper>
-
-```tsx
-<PinInput.Root type="alphanumeric">
-  <PinInput.Field />
-  <PinInput.Field />
-  <PinInput.Field />
-</PinInput.Root>
-```
-
-### Manage Focus
-
-Set `manageFocus` to `false` to disable the moving focus to the next input when the current input is filled.
-
-<Wrapper>
-	<PinInput.Root manageFocus={false}>
-		<PinInput.Field />
-		<PinInput.Field />
-		<PinInput.Field />
-	</PinInput.Root>
-</Wrapper>
-
-```tsx
-<PinInput.Root manageFocus={false}>
-	<PinInput.Field />
-	<PinInput.Field />
-	<PinInput.Field />
-</PinInput.Root>
-```
-
-### Auto Focus
-
-Use `autoFocus` to focus the first input when the pin input is mounted. Refresh the page to see the effect.
-
-<Wrapper>
-	<PinInput.Root autoFocus>
-		<PinInput.Field />
-		<PinInput.Field />
-		<PinInput.Field />
-	</PinInput.Root>
-</Wrapper>
-
-```tsx
-<PinInput.Root autoFocus>
-	<PinInput.Field />
-	<PinInput.Field />
-	<PinInput.Field />
-</PinInput.Root>
-```
-
-### Split fields
-
-You can enter custom content between the fields to split them.
-
-<Wrapper>
-	<PinInput.Root>
-		<PinInput.Field />
-		<PinInput.Field />
-		<PinInput.Field />
-
-    <Divider orientation="vertical" mx={2} h={8} />
-
-    <PinInput.Field />
-		<PinInput.Field />
-		<PinInput.Field />
-	</PinInput.Root>
-</Wrapper>
-
-```tsx
-<PinInput.Root>
-	<PinInput.Field />
-	<PinInput.Field />
-	<PinInput.Field />
-  
-    <Divider orientation="vertical" mx={2} h={8} />
-
-	<PinInput.Field />
-	<PinInput.Field />  
-	<PinInput.Field />  
+<PinInput.Root aria-label="6-digit code">
+    <PinInput.Group>
+        <PinInput.Field />
+        <PinInput.Field />
+        <PinInput.Field />
+    </PinInput.Group>
+    <PinInput.Separator />
+    <PinInput.Group>
+        <PinInput.Field />
+        <PinInput.Field />
+        <PinInput.Field />
+    </PinInput.Group>
 </PinInput.Root>
 ```

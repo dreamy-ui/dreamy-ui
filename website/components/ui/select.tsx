@@ -1,101 +1,103 @@
 "use client";
 
 import {
-    Select as ArkSelect,
-    createListCollection,
-    useSelectContext as useArkSelectContext,
-    type SelectRootProps as ArkSelectRootProps,
-    type SelectValueChangeDetails
-} from "@ark-ui/react/select";
-import {
+    type DreamyHostProps,
     type PositioningProps,
+    type UiSdkMotionController,
+    UiSdkMotionSync,
     ariaAttr,
-    dataAttr,
-    useControllableState,
+    mergeMotionRefs,
+    transformReducedMotion,
     useFieldProps,
+    useMotionVariants,
     useReducedMotion,
-    useSafeLayoutEffect
+    useSafeLayoutEffect,
+    useUiSdkMotion
 } from "@dreamy-ui/react";
+import type { ChangeDetails } from "@ui-sdk/core";
+import {
+    Select as UiSdkSelect,
+    SelectClear as UiSdkSelectClear,
+    SelectContent as UiSdkSelectContent,
+    SelectEmpty as UiSdkSelectEmpty,
+    SelectGroup as UiSdkSelectGroup,
+    SelectGroupLabel as UiSdkSelectGroupLabel,
+    SelectInput as UiSdkSelectInput,
+    SelectItem as UiSdkSelectItem,
+    SelectItemIndicator as UiSdkSelectItemIndicator,
+    SelectItemText as UiSdkSelectItemText,
+    SelectList as UiSdkSelectList,
+    type SelectOpenChangeReason,
+    type SelectProps as UiSdkSelectProps,
+    SelectSeparator as UiSdkSelectSeparator,
+    SelectTrigger as UiSdkSelectTrigger,
+    SelectValue as UiSdkSelectValue,
+    type SelectValueChangeReason
+} from "@ui-sdk/react/select";
 import { useVirtualizer } from "@tanstack/react-virtual";
+import type { Variants } from "motion/react";
 import type React from "react";
 import {
+    type CSSProperties,
     type ReactNode,
     type SVGProps,
-    useCallback,
-    useEffect,
-    useLayoutEffect,
     useMemo,
     useRef,
     useState
 } from "react";
-import { cx } from "styled-system/css";
-import { type HTMLDreamyProps, createStyleContext, dreamy, splitCssProps } from "styled-system/jsx";
+import { css, cx } from "styled-system/css";
+import {
+    type HTMLDreamyProps,
+    createStyleContext,
+    dreamy,
+    splitCssProps
+} from "styled-system/jsx";
 import { type SelectVariantProps, select } from "styled-system/recipes";
-import { Box } from "./box";
-import * as Popover from "./popover";
-import type { PopoverContentProps } from "./popover";
-import { SelectUiProvider, useSelectUi, type SelectItemData } from "./select-ui-context";
+import { MotionBox } from "./motion";
+import { mapUiSdkPositioning } from "./map-positioning";
+import { type SelectItemData, SelectUiProvider, useSelectUi } from "./select-ui-context";
 
 export type { SelectItemData };
 
 const { withProvider, withContext } = createStyleContext(select);
 
-export type SelectLayer = "dropdown" | "popover" | "tooltip";
-
-export type SelectPopoverProps = Omit<
-    Popover.PopoverProps,
-    "positioning" | "children" | "open" | "defaultOpen" | "onOpenChange"
+type UiSdkSelectBaseProps = Omit<
+    UiSdkSelectProps<string, boolean>,
+    "children" | "items" | "multiple" | "value" | "defaultValue" | "onValueChange"
 >;
 
 export interface SelectProps<
     T extends boolean = false,
     Item extends SelectItemData = SelectItemData
-> extends Omit<
-            ArkSelectRootProps<Item>,
-            | "collection"
+> extends UiSdkSelectBaseProps,
+        SelectVariantProps,
+        Omit<
+            HTMLDreamyProps<"div">,
+            | keyof UiSdkSelectBaseProps
+            | "items"
             | "value"
             | "defaultValue"
             | "onValueChange"
-            | "multiple"
-            | "disabled"
-            | "invalid"
-            | "required"
-            | "positioning"
-            | "closeOnSelect"
             | "onChange"
-        >,
-        SelectVariantProps,
-        Omit<HTMLDreamyProps<"div">, keyof ArkSelectRootProps<Item> | "items" | "onChange"> {
+            | "multiple"
+            | "children"
+        > {
     items: Item[];
     renderItem?: (item: Item) => ReactNode;
-    layer?: SelectLayer;
-    contentZIndex?: string;
     positioning?: PositioningProps;
-    popoverProps?: SelectPopoverProps;
-    isMultiple?: T;
+    multiple?: T;
     selectedStrategy?: "checkmark" | "background" | "both";
-    isClearable?: boolean;
+    clearable?: boolean;
     reduceMotion?: boolean;
-    closeOnSelect?: boolean;
-    isDisabled?: boolean;
-    isInvalid?: boolean;
-    isRequired?: boolean;
-    defaultValue?: T extends true ? string[] : string;
-    value?: T extends true ? string[] : string;
-    onChangeValue?: (value: T extends true ? string[] : string) => void;
-    onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
-    name?: string;
-    autoComplete?: string;
-    hiddenSelectProps?: React.ComponentPropsWithoutRef<"select">;
+    invalid?: boolean;
+    defaultValue?: T extends true ? string[] : string | null;
+    value?: T extends true ? string[] : string | null;
+    onValueChange?: (
+        value: T extends true ? string[] : string | null,
+        details: ChangeDetails<SelectValueChangeReason>
+    ) => void;
+    onOpenChange?: (open: boolean, details: ChangeDetails<SelectOpenChangeReason>) => void;
     children?: ReactNode;
-}
-
-function toValueArray<T extends boolean>(
-    value: string | string[] | undefined,
-    isMultiple: T
-): string[] | undefined {
-    if (value === undefined) return undefined;
-    return isMultiple ? (value as string[]) : [value as string];
 }
 
 function SelectRoot<T extends boolean = false, Item extends SelectItemData = SelectItemData>(
@@ -105,390 +107,350 @@ function SelectRoot<T extends boolean = false, Item extends SelectItemData = Sel
         children,
         items,
         renderItem,
-        layer,
-        contentZIndex: contentZIndexProp,
         positioning,
-        popoverProps,
-        isMultiple = false as T,
+        multiple = false as T,
         selectedStrategy = "both",
-        isClearable = false,
+        clearable = false,
         reduceMotion: reduceMotionProp,
-        closeOnSelect,
-        open: openProp,
+        open,
         defaultOpen,
         onOpenChange,
-        isDisabled,
-        isInvalid,
-        isRequired,
+        onOpenChangeComplete,
+        disabled,
+        readOnly,
+        invalid,
+        required,
         defaultValue,
         value,
-        onChangeValue,
-        onChange,
+        onValueChange,
         name,
-        autoComplete = "off",
-        hiddenSelectProps,
+        form,
+        autoComplete,
+        placeholder,
+        loop,
+        modal,
+        presentation,
+        dismissible,
+        onDismissAttempt,
+        controller,
+        debug,
+        container,
+        query,
+        defaultQuery,
+        onQueryChange,
+        filter,
+        status,
+        onLoadMore,
+        announcement,
+        onHighlight,
         className,
+        id,
         ...rest
     } = props;
 
-    const [, arkRest] = splitCssProps(rest);
-
+    const [cssProps, domProps] = splitCssProps(rest);
     const globalReduceMotion = useReducedMotion();
-    const reduceMotion = reduceMotionProp ?? popoverProps?.reduceMotion ?? globalReduceMotion ?? false;
-
-    const resolvedContentZIndex =
-        contentZIndexProp ?? (layer ? `var(--z-index-${layer})` : "var(--z-index-dropdown)");
+    const reduceMotion = reduceMotionProp ?? globalReduceMotion ?? false;
+    const motion = useUiSdkMotion({ open, defaultOpen, reduceMotion });
+    const handleOpenChange = motion.wrapOnOpenChange(onOpenChange);
 
     const {
         isDisabled: isDisabledField = false,
         isRequired: isRequiredField = false,
         isInvalid: isInvalidField = false,
+        isReadOnly: isReadOnlyField = false,
         id: fieldId,
         "aria-describedby": ariaDescribedByField
     } = useFieldProps({
-        isDisabled,
-        isInvalid,
-        isRequired,
-        id: props.id
+        isDisabled: disabled,
+        isInvalid: invalid,
+        isRequired: required,
+        isReadOnly: readOnly,
+        id
     });
 
-    const resolvedIsDisabled = isDisabled ?? isDisabledField;
-    const resolvedIsRequired = isRequired ?? isRequiredField;
-    const resolvedIsInvalid = isInvalid ?? isInvalidField;
-
-    const collection = useMemo(
-        () =>
-            createListCollection({
-                items: items as SelectItemData[],
-                itemToValue: (item) => item.value,
-                itemToString: (item) => item.label,
-                isItemDisabled: (item) => !!item.disabled
-            }),
-        [items]
-    );
-
-    const handleValueChange = useCallback(
-        (details: SelectValueChangeDetails<Item>) => {
-            const next = details.value;
-            if (isMultiple) {
-                onChangeValue?.(next as T extends true ? string[] : string);
-            } else {
-                onChangeValue?.((next[0] ?? "") as T extends true ? string[] : string);
-            }
-        },
-        [isMultiple, onChangeValue]
-    );
-
-    const handleSelect = useCallback(
-        (details: { value: string }) => {
-            if (isMultiple) return;
-            onChangeValue?.(details.value as T extends true ? string[] : string);
-        },
-        [isMultiple, onChangeValue]
-    );
-
-    const [open, setOpen] = useControllableState({
-        value: openProp,
-        defaultValue: defaultOpen
-    });
-
-    const handleOpenChange = useCallback(
-        (details: Parameters<NonNullable<ArkSelectRootProps<Item>["onOpenChange"]>>[0]) => {
-            setOpen(details.open);
-            onOpenChange?.(details);
-        },
-        [onOpenChange, setOpen]
-    );
-
-    const popoverPositioning = useMemo(
-        () => ({
-            placement: "bottom-start" as const,
-            matchWidth: true,
-            shift: false,
-            ...positioning
-        }),
-        [positioning]
-    );
-
-    const { size: popoverSize, ...restPopoverProps } = popoverProps ?? {};
+    const resolvedDisabled = disabled ?? isDisabledField;
+    const resolvedRequired = required ?? isRequiredField;
+    const resolvedInvalid = invalid ?? isInvalidField;
+    const resolvedReadOnly = readOnly ?? isReadOnlyField;
 
     const uiValue = useMemo(
         () => ({
             items: items as SelectItemData[],
             renderItem: renderItem as ((item: SelectItemData) => ReactNode) | undefined,
             selectedStrategy,
-            isClearable,
+            clearable,
+            multiple: Boolean(multiple),
+            reduceMotion,
+            motion,
+            positioning,
             triggerFieldProps: {
                 id: fieldId,
                 "aria-describedby": ariaDescribedByField,
-                "aria-invalid": ariaAttr(resolvedIsInvalid),
-                "aria-required": ariaAttr(resolvedIsRequired)
-            },
-            onSingleValueChange: isMultiple
-                ? undefined
-                : (nextValue: string) => {
-                      onChangeValue?.(nextValue as T extends true ? string[] : string);
-                  }
+                "aria-invalid": ariaAttr(resolvedInvalid),
+                "data-invalid": resolvedInvalid ? "" : undefined
+            }
         }),
         [
             ariaDescribedByField,
+            clearable,
             fieldId,
-            isClearable,
-            isMultiple,
-            onChangeValue,
             items,
+            motion,
+            multiple,
+            positioning,
+            reduceMotion,
             renderItem,
-            resolvedIsInvalid,
-            resolvedIsRequired,
+            resolvedInvalid,
             selectedStrategy
         ]
     );
 
-    const controlledValue = toValueArray(value, isMultiple);
-    const controlledDefaultValue = toValueArray(defaultValue, isMultiple);
+    const listItems = useMemo(
+        () =>
+            items.map((item) => ({
+                value: item.value,
+                label: item.label,
+                disabled: item.disabled
+            })),
+        [items]
+    );
 
     return (
-        <SelectUiProvider value={uiValue}>
-            <ArkSelect.Root
-                {...(arkRest as ArkSelectRootProps<Item>)}
-                autoComplete={autoComplete}
-                className={cx("group", className)}
-                closeOnSelect={closeOnSelect ?? !isMultiple}
-                collection={collection as unknown as ArkSelectRootProps<Item>["collection"]}
-                composite
-                data-selected-strategy={selectedStrategy}
-                disabled={resolvedIsDisabled}
-                immediate
-                invalid={resolvedIsInvalid}
-                lazyMount={false}
-                multiple={isMultiple}
-                name={name}
-                required={resolvedIsRequired}
-                translations={{ clearTriggerLabel: "Clear selection" }}
-                unmountOnExit={false}
-                open={open}
-                {...(controlledValue !== undefined ? { value: controlledValue } : {})}
-                {...(controlledDefaultValue !== undefined ? { defaultValue: controlledDefaultValue } : {})}
-                onOpenChange={handleOpenChange}
-                onSelect={handleSelect}
-                onValueChange={handleValueChange}
-            >
-                <ArkSelect.HiddenSelect
-                    {...hiddenSelectProps}
-                    onChange={onChange}
-                />
-                <SelectValueChangeBridge
-                    isMultiple={isMultiple}
-                    onChangeValue={onChangeValue as (value: string | string[]) => void}
-                />
-                <SelectFocusBridge />
-                <Popover.Root
-                    {...restPopoverProps}
-                    autoFocus={false}
-                    closeOnEscape={false}
-                    closeOnInteractOutside={false}
-                    modal={false}
-                    open={open}
+        <dreamy.div
+            {...domProps}
+            className={cx("group", className as string | undefined, css(cssProps))}
+            data-selected-strategy={selectedStrategy}
+        >
+            <SelectUiProvider value={uiValue}>
+                <UiSdkSelect
+                    announcement={announcement}
+                    autoComplete={autoComplete}
+                    container={container}
+                    controller={controller}
+                    debug={debug}
+                    defaultOpen={defaultOpen}
+                    defaultQuery={defaultQuery}
+                    defaultValue={defaultValue as never}
+                    disabled={resolvedDisabled}
+                    dismissible={dismissible}
+                    filter={filter}
+                    form={form}
+                    items={listItems}
+                    loop={loop}
+                    modal={modal}
+                    multiple={multiple as never}
+                    name={name}
+                    onDismissAttempt={onDismissAttempt}
+                    onHighlight={onHighlight}
+                    onLoadMore={onLoadMore}
                     onOpenChange={handleOpenChange}
-                    positioning={popoverPositioning}
-                    portalProps={{
-                        zIndex: resolvedContentZIndex,
-                        ...popoverProps?.portalProps
-                    }}
-                    reduceMotion={reduceMotion}
-                    restoreFocus={false}
-                    size={popoverSize ?? "reference"}
+                    onOpenChangeComplete={onOpenChangeComplete}
+                    onQueryChange={onQueryChange}
+                    onValueChange={onValueChange as never}
+                    open={open}
+                    placeholder={placeholder}
+                    presentation={presentation}
+                    query={query}
+                    readOnly={resolvedReadOnly}
+                    required={resolvedRequired}
+                    status={status}
+                    value={value as never}
                 >
+                    <UiSdkMotionSync
+                        controller={motion}
+                        open={open}
+                    />
                     {children}
-                </Popover.Root>
-            </ArkSelect.Root>
-        </SelectUiProvider>
+                </UiSdkSelect>
+            </SelectUiProvider>
+        </dreamy.div>
     );
 }
 
-interface SelectValueChangeBridgeProps {
-    isMultiple: boolean;
-    onChangeValue?: (value: string | string[]) => void;
-}
-
-function focusSelectTrigger(api: { focus: () => void }) {
-    api.focus();
-    requestAnimationFrame(() => {
-        api.focus();
-    });
-}
-
-function SelectFocusBridge() {
-    const api = useArkSelectContext();
-    const wasOpen = useRef(api.open);
-
-    useLayoutEffect(() => {
-        if (wasOpen.current && !api.open) {
-            focusSelectTrigger(api);
-        }
-        wasOpen.current = api.open;
-    }, [api, api.open]);
-
-    return null;
-}
-
-function SelectValueChangeBridge({ isMultiple, onChangeValue }: SelectValueChangeBridgeProps) {
-    const api = useArkSelectContext();
-    const previousValue = useRef(api.valueAsString);
-
-    useEffect(() => {
-        const next = api.valueAsString;
-        if (next === previousValue.current) return;
-        previousValue.current = next;
-
-        if (!onChangeValue) return;
-
-        if (isMultiple) {
-            onChangeValue(api.value);
-            return;
-        }
-
-        onChangeValue(api.value[0] ?? "");
-    }, [api.value, api.valueAsString, isMultiple, onChangeValue]);
-
-    return null;
-}
-
+/**
+ * Select component — dropdown list for single or multiple selection.
+ *
+ * @see Docs https://dreamy-ui.com/docs/components/select
+ */
 export const Root: <T extends boolean = false, Item extends SelectItemData = SelectItemData>(
     props: SelectProps<T, Item>
 ) => React.JSX.Element = withProvider(SelectRoot, "root") as <
     T extends boolean = false,
     Item extends SelectItemData = SelectItemData
->(props: SelectProps<T, Item>) => React.JSX.Element;
+>(
+    props: SelectProps<T, Item>
+) => React.JSX.Element;
 
-const TriggerButton = withContext(dreamy.button, "trigger");
 const SelectAnchor = withContext(dreamy.div, "control");
 
-export interface SelectTriggerProps extends HTMLDreamyProps<"button"> {
-    icon?: React.ReactNode;
+export interface SelectTriggerProps extends Omit<HTMLDreamyProps<"button">, "children"> {
+    icon?: ReactNode;
     placeholder?: string;
     multipleSelectedText?: (selectedLabels: string[]) => string;
     children?: ReactNode;
 }
 
-export function Trigger({
+export const Trigger = withContext(function SelectTrigger({
     children,
     placeholder,
     icon,
     multipleSelectedText,
+    className,
+    style,
     ...rest
 }: SelectTriggerProps) {
-    const { triggerFieldProps, renderItem, isClearable, selectedStrategy } = useSelectUi();
-    const api = useArkSelectContext();
-    const selectedItems = api.selectedItems as SelectItemData[];
-    const selectedNames = selectedItems.map((item) => item.label);
+    const { items, triggerFieldProps, renderItem, clearable, selectedStrategy } = useSelectUi();
+    const [cssProps, domProps] = splitCssProps(rest);
+    const mergedClassName = cx(className as string | undefined, css(cssProps));
 
-    function getDisplayContent() {
-        if (selectedItems.length === 0) return placeholder;
-
-        if (renderItem) {
-            if (selectedItems.length === 1) {
-                return renderItem(selectedItems[0]);
-            }
-
-            return selectedItems.map((item, index) => (
-                <span key={item.value}>
-                    {index > 0 ? ", " : null}
-                    {renderItem(item)}
-                </span>
-            ));
+    const itemByValue = useMemo(() => {
+        const map = new Map<string, SelectItemData>();
+        for (const item of items) {
+            map.set(item.value, item);
         }
-
-        if (selectedNames.length === 1) return selectedNames[0];
-        return multipleSelectedText?.(selectedNames) ?? selectedNames.join(", ");
-    }
-
-    const showClear = isClearable && api.value.length > 0;
+        return map;
+    }, [items]);
 
     return (
-        <Popover.Anchor>
-            <SelectAnchor>
-                <ArkSelect.Trigger asChild>
-                    <TriggerButton
-                        {...triggerFieldProps}
-                        {...rest}
-                        data-part="trigger"
-                        data-open={dataAttr(api.open)}
-                        data-placeholder-shown={dataAttr(api.value.length === 0)}
-                        data-selected-strategy={selectedStrategy}
-                        type="button"
-                        onKeyDown={(event) => {
-                            rest.onKeyDown?.(event);
-                            if (event.defaultPrevented) return;
-                            if (event.key === "Escape" && api.open) {
-                                event.preventDefault();
-                                api.setOpen(false);
-                            }
-                        }}
-                    >
-                {icon && icon}
-                <dreamy.span data-part="value">{children ?? getDisplayContent()}</dreamy.span>
-                <SelectIndicatorGroup>
-                    {showClear && (
-                        <SelectClearButton
-                            aria-label="Clear selection"
-                            onClick={(event) => {
-                                event.preventDefault();
-                                event.stopPropagation();
-                                api.clearValue();
-                            }}
-                            onKeyDown={(event) => {
-                                if (event.key === "Enter" || event.key === " ") {
-                                    event.preventDefault();
-                                    event.stopPropagation();
-                                    api.clearValue();
-                                }
-                            }}
-                            role="button"
-                            tabIndex={0}
-                        />
-                    )}
-                    <ArkSelect.Indicator asChild>
-                        <SelectIndicator />
-                    </ArkSelect.Indicator>
-                </SelectIndicatorGroup>
-                    </TriggerButton>
-                </ArkSelect.Trigger>
-            </SelectAnchor>
-        </Popover.Anchor>
-    );
-}
+        <SelectAnchor>
+            <UiSdkSelectTrigger
+                {...(triggerFieldProps as Record<string, unknown>)}
+                {...(domProps as unknown as React.ComponentProps<typeof UiSdkSelectTrigger>)}
+                className={mergedClassName}
+                data-selected-strategy={selectedStrategy}
+                style={style as CSSProperties | undefined}
+            >
+                {icon ? icon : null}
+                <UiSdkSelectValue
+                    data-part="value"
+                    placeholder={placeholder}
+                >
+                    {(state) => {
+                        if (children !== undefined) return children;
+                        if (state.placeholder) return placeholder ?? "";
 
-export interface SelectContentProps extends Omit<PopoverContentProps, "children" | "transition"> {
+                        const values = Array.isArray(state.value)
+                            ? (state.value as string[])
+                            : state.value != null
+                              ? [String(state.value)]
+                              : [];
+
+                        if (renderItem && values.length > 0) {
+                            const selected = values
+                                .map((v) => itemByValue.get(v))
+                                .filter((entry): entry is SelectItemData => Boolean(entry));
+                            if (selected.length === 1) {
+                                return renderItem(selected[0]);
+                            }
+                            if (selected.length > 1) {
+                                return selected.map((entry, index) => (
+                                    <span key={entry.value}>
+                                        {index > 0 ? ", " : null}
+                                        {renderItem(entry)}
+                                    </span>
+                                ));
+                            }
+                        }
+
+                        if (state.labels.length > 1 && multipleSelectedText) {
+                            return multipleSelectedText(state.labels);
+                        }
+
+                        return state.label;
+                    }}
+                </UiSdkSelectValue>
+                <SelectIndicatorGroup>
+                    <SelectIndicator />
+                </SelectIndicatorGroup>
+            </UiSdkSelectTrigger>
+            {clearable ? <SelectClearButton aria-label="Clear selection" /> : null}
+        </SelectAnchor>
+    );
+}, "trigger");
+
+type UiSdkSelectContentProps = React.ComponentProps<typeof UiSdkSelectContent>;
+type UiSdkSelectContentPickedProps = Pick<
+    UiSdkSelectContentProps,
+    | "side"
+    | "align"
+    | "sideOffset"
+    | "alignOffset"
+    | "collisionPadding"
+    | "arrowPadding"
+    | "anchor"
+    | "container"
+    | "alignItemWithTrigger"
+    | "keepMounted"
+>;
+
+export interface SelectContentProps
+    extends DreamyHostProps<HTMLDreamyProps<"div">, UiSdkSelectContentPickedProps, "children">,
+        UiSdkSelectContentPickedProps {
     showItems?: boolean;
     children?: ReactNode;
 }
 
-const SelectContentEl = withContext(ArkSelect.Content, "content");
+function renderSelectPopoverMotion(
+    motion: UiSdkMotionController,
+    popoverVariants: Variants,
+    reduceMotion: boolean
+): UiSdkSelectContentProps["render"] {
+    return (partProps, state) => {
+        const {
+            ref: partRef,
+            style: partStyle,
+            children: partChildren,
+            ...restPartProps
+        } = partProps as React.ComponentPropsWithRef<"div">;
+        const isOpen = (state as { open?: boolean })?.open ?? motion.isOpen;
 
-function SelectListbox({ children }: { children: ReactNode }) {
-    const api = useArkSelectContext();
-
-    return (
-        <SelectContentEl
-            aria-hidden={!api.open}
-            hidden={false}
-            tabIndex={api.open ? 0 : -1}
-            onKeyDown={(event) => {
-                if (event.key === "Escape" && api.open) {
-                    event.preventDefault();
-                    api.setOpen(false);
-                }
-            }}
-        >
-            {children}
-        </SelectContentEl>
-    );
+        return (
+            <MotionBox
+                {...(restPartProps as Record<string, unknown>)}
+                animate={isOpen ? "initial" : "exit"}
+                initial={reduceMotion ? false : "exit"}
+                onAnimationComplete={() => {
+                    if (!isOpen) {
+                        motion.notifyAnimationComplete("content");
+                    }
+                }}
+                ref={mergeMotionRefs(partRef, (el) => {
+                    motion.register("content", el as HTMLElement | null);
+                })}
+                style={partStyle as CSSProperties | undefined}
+                variants={transformReducedMotion(popoverVariants, reduceMotion)}
+            >
+                {partChildren}
+            </MotionBox>
+        );
+    };
 }
 
-export function Content(props: SelectContentProps) {
-    const { showItems = true, children, motionProps, rootProps, ...contentProps } = props;
-    const { items, renderItem, selectedStrategy } = useSelectUi();
+export const Content = withContext(function SelectContent(props: SelectContentProps) {
+    const {
+        showItems = true,
+        children,
+        className,
+        style,
+        side,
+        align,
+        sideOffset,
+        alignOffset,
+        collisionPadding,
+        arrowPadding,
+        anchor,
+        container,
+        alignItemWithTrigger,
+        keepMounted,
+        ...rest
+    } = props;
+    const { items, renderItem, selectedStrategy, positioning, reduceMotion, motion } =
+        useSelectUi();
+    const { popover: popoverVariants } = useMotionVariants();
+    const mapped = mapUiSdkPositioning(positioning);
+    const [cssProps, domProps] = splitCssProps(rest);
+    const mergedClassName = cx(className as string | undefined, css(cssProps));
 
     const list = showItems
         ? items.map((item) => (
@@ -502,17 +464,27 @@ export function Content(props: SelectContentProps) {
         : children;
 
     return (
-        <Popover.Content
-            motionProps={motionProps}
-            role="presentation"
-            rootProps={rootProps}
-            tabIndex={-1}
-            {...contentProps}
+        <UiSdkSelectContent
+            {...(domProps as unknown as UiSdkSelectContentProps)}
+            align={align ?? mapped.align ?? "start"}
+            alignItemWithTrigger={alignItemWithTrigger}
+            alignOffset={alignOffset ?? mapped.alignOffset}
+            anchor={anchor}
+            arrowPadding={arrowPadding ?? mapped.arrowPadding}
+            className={mergedClassName}
+            collisionPadding={collisionPadding ?? mapped.collisionPadding}
+            container={container}
+            data-reduce-motion={reduceMotion ? "" : undefined}
+            keepMounted={keepMounted}
+            render={renderSelectPopoverMotion(motion, popoverVariants, reduceMotion)}
+            side={side ?? mapped.side ?? "bottom"}
+            sideOffset={sideOffset ?? mapped.sideOffset ?? 6}
+            style={style as CSSProperties | undefined}
         >
-            <SelectListbox>{list}</SelectListbox>
-        </Popover.Content>
+            {list}
+        </UiSdkSelectContent>
     );
-}
+}, "content");
 
 export interface SelectVirtualContentProps extends SelectContentProps {
     estimatedItemHeight?: number;
@@ -520,78 +492,101 @@ export interface SelectVirtualContentProps extends SelectContentProps {
     maxHeight?: number;
 }
 
-export function VirtualContent(props: SelectVirtualContentProps) {
+export const VirtualContent = withContext(function SelectVirtualContent(
+    props: SelectVirtualContentProps
+) {
     const {
         estimatedItemHeight = 32,
         overscan = 5,
         maxHeight = 300,
         showItems = true,
         children,
-        motionProps,
-        rootProps,
-        ...contentProps
+        className,
+        style,
+        side,
+        align,
+        sideOffset,
+        alignOffset,
+        collisionPadding,
+        arrowPadding,
+        anchor,
+        container,
+        alignItemWithTrigger,
+        keepMounted,
+        ...rest
     } = props;
 
-    const { items, renderItem, selectedStrategy } = useSelectUi();
-    const api = useArkSelectContext();
-
-    const list = showItems ? (
-        <VirtualizedList
-            estimatedItemHeight={estimatedItemHeight}
-            isOpen={api.open}
-            items={items}
-            maxHeight={maxHeight}
-            overscan={overscan}
-            renderItem={renderItem}
-            selectedStrategy={selectedStrategy}
-        />
-    ) : (
-        children
-    );
+    const { items, renderItem, selectedStrategy, positioning, reduceMotion, motion } =
+        useSelectUi();
+    const { popover: popoverVariants } = useMotionVariants();
+    const mapped = mapUiSdkPositioning(positioning);
+    const [cssProps, domProps] = splitCssProps(rest);
+    const mergedClassName = cx(className as string | undefined, css(cssProps));
 
     return (
-        <Popover.Content
-            motionProps={motionProps}
-            role="presentation"
-            rootProps={rootProps}
-            tabIndex={-1}
-            {...contentProps}
+        <UiSdkSelectContent
+            {...(domProps as unknown as UiSdkSelectContentProps)}
+            align={align ?? mapped.align ?? "start"}
+            alignItemWithTrigger={alignItemWithTrigger}
+            alignOffset={alignOffset ?? mapped.alignOffset}
+            anchor={anchor}
+            arrowPadding={arrowPadding ?? mapped.arrowPadding}
+            className={mergedClassName}
+            collisionPadding={collisionPadding ?? mapped.collisionPadding}
+            container={container}
+            data-reduce-motion={reduceMotion ? "" : undefined}
+            keepMounted={keepMounted}
+            render={renderSelectPopoverMotion(motion, popoverVariants, reduceMotion)}
+            side={side ?? mapped.side ?? "bottom"}
+            sideOffset={sideOffset ?? mapped.sideOffset ?? 6}
+            style={style as CSSProperties | undefined}
         >
-            <SelectListbox>{list}</SelectListbox>
-        </Popover.Content>
+            {(state) =>
+                showItems ? (
+                    <VirtualizedList
+                        estimatedItemHeight={estimatedItemHeight}
+                        isOpen={state.open}
+                        items={items}
+                        maxHeight={maxHeight}
+                        overscan={overscan}
+                        renderItem={renderItem}
+                        selectedStrategy={selectedStrategy}
+                    />
+                ) : (
+                    children
+                )
+            }
+        </UiSdkSelectContent>
     );
-}
+}, "content");
 
 interface SelectListItemProps {
     item: SelectItemData;
     renderItem?: (item: SelectItemData) => ReactNode;
     selectedStrategy: "checkmark" | "background" | "both";
+    index?: number;
 }
 
-const SelectItemEl = withContext(ArkSelect.Item, "item");
+const SelectItemSlot = withContext(function SelectItemSlotBase(
+    props: React.ComponentProps<typeof UiSdkSelectItem>
+) {
+    return <UiSdkSelectItem {...props} />;
+}, "item");
 
-function SelectListItem({ item, renderItem, selectedStrategy }: SelectListItemProps) {
-    const api = useArkSelectContext();
-    const { onSingleValueChange } = useSelectUi();
-    const state = api.getItemState({ item });
-
+function SelectListItem({ item, renderItem, selectedStrategy, index }: SelectListItemProps) {
     return (
-        <SelectItemEl
-            item={item}
-            data-focused={dataAttr(state.highlighted)}
-            data-selected={dataAttr(state.selected)}
+        <SelectItemSlot
             data-selected-strategy={selectedStrategy}
-            onClick={() => {
-                onSingleValueChange?.(item.value);
-            }}
+            disabled={item.disabled}
+            index={index}
+            label={item.label}
+            value={item.value}
         >
-            {renderItem ? renderItem(item) : <ArkSelect.ItemText>{item.label}</ArkSelect.ItemText>}
-            {(selectedStrategy === "checkmark" || selectedStrategy === "both") && state.selected && (
-                <ArkSelect.ItemIndicator asChild>
-                    <SelectItemIndicator />
-                </ArkSelect.ItemIndicator>
-            )}
-        </SelectItemEl>
+            {renderItem ? renderItem(item) : <UiSdkSelectItemText>{item.label}</UiSdkSelectItemText>}
+            {selectedStrategy === "checkmark" || selectedStrategy === "both" ? (
+                <UiSdkSelectItemIndicator render={<SelectItemIndicator />} />
+            ) : null}
+        </SelectItemSlot>
     );
 }
 
@@ -637,7 +632,6 @@ function VirtualizedList({
 
     const virtualItems = virtualizer.getVirtualItems();
     const totalSize = virtualizer.getTotalSize();
-
     const showFallback = isOpen && !hasMeasured && virtualItems.length === 0 && items.length > 0;
     const initialItemsToShow = Math.min(
         Math.ceil(maxHeight / estimatedItemHeight) + overscan,
@@ -673,6 +667,7 @@ function VirtualizedList({
                               }}
                           >
                               <SelectListItem
+                                  index={index}
                                   item={item}
                                   renderItem={renderItem}
                                   selectedStrategy={selectedStrategy}
@@ -693,6 +688,7 @@ function VirtualizedList({
                               }}
                           >
                               <SelectListItem
+                                  index={virtualItem.index}
                                   item={items[virtualItem.index]}
                                   renderItem={renderItem}
                                   selectedStrategy={selectedStrategy}
@@ -704,7 +700,7 @@ function VirtualizedList({
     );
 }
 
-const SelectIndicatorGroup = withContext(Box, "indicatorGroup");
+const SelectIndicatorGroup = withContext(dreamy.span, "indicatorGroup");
 
 function CheckIcon(props: SVGProps<SVGSVGElement>) {
     return (
@@ -747,14 +743,12 @@ function SelectIndicatorBase(props: SVGProps<SVGSVGElement>) {
 
 const SelectIndicator = withContext(SelectIndicatorBase, "indicator");
 
-export interface SelectClearButtonProps extends HTMLDreamyProps<"button"> {}
+export interface SelectClearButtonProps
+    extends Omit<React.ComponentProps<typeof UiSdkSelectClear>, "children"> {}
 
 const SelectClearButton = withContext(function SelectClearButton(props: SelectClearButtonProps) {
     return (
-        <dreamy.button
-            type="button"
-            {...props}
-        >
+        <UiSdkSelectClear {...props}>
             <svg
                 aria-hidden="true"
                 fill="none"
@@ -768,6 +762,13 @@ const SelectClearButton = withContext(function SelectClearButton(props: SelectCl
                 <path d="M18 6 6 18" />
                 <path d="m6 6 12 12" />
             </svg>
-        </dreamy.button>
+        </UiSdkSelectClear>
     );
 }, "clearButton");
+
+export const Group = UiSdkSelectGroup;
+export const GroupLabel = UiSdkSelectGroupLabel;
+export const Separator = UiSdkSelectSeparator;
+export const Input = UiSdkSelectInput;
+export const Empty = UiSdkSelectEmpty;
+export const List = UiSdkSelectList;

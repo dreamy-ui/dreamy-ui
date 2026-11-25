@@ -14,7 +14,7 @@ export function ControlledMenu() {
     return (
         <Menu.Root
             open={open}
-            onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
+            onOpenChange={(nextOpen) => setOpen(nextOpen)}
         >
             <Text>{open ? "Open" : "Closed"}</Text>
             <Menu.Trigger>
@@ -22,9 +22,9 @@ export function ControlledMenu() {
             </Menu.Trigger>
             <Menu.Content>
                 <Menu.Item
-                    as={<Link to="/" />}
                     command="{actionKey} h"
                     icon={<LuWarehouse />}
+                    render={<Link to="/" />}
                 >
                     Homepage
                 </Menu.Item>
@@ -100,9 +100,9 @@ export function InteractiveMenu() {
             </Menu.Trigger>
             <Menu.Content>
                 <Menu.Item
-                    as={<Link to="/" />}
                     command="{actionKey} h"
                     icon={<LuWarehouse />}
+                    render={<Link to="/" />}
                 >
                     Homepage
                 </Menu.Item>
@@ -159,9 +159,9 @@ export function VariantMenu({ variant }: { variant: string }) {
             </Menu.Trigger>
             <Menu.Content>
                 <Menu.Item
-                    as={<Link to="/" />}
                     command="{actionKey} h"
                     icon={<LuWarehouse />}
+                    render={<Link to="/" />}
                 >
                     Homepage
                 </Menu.Item>

@@ -1,175 +1,101 @@
 ---
 title: Field
-description: Field provides a way to add accessible labels to form elements.
+description: Field provides a way to add accessible labels, hints, and validation errors to form elements.
 isServerComponent: false
-source: /packages/react/src/components/field/field.tsx
-themeSource: /packages/system/src/recipes/field.ts
+source: /components/field/index.tsx
+themeSource: /components/field/field.ts
 ---
 
 ## Installation
 
 ```bash
-pnpm dreamy add field
+bunx dreamy add field
 ```
 
 ## Usage
 
-Field is a wrapper component that provides a way to create accessible form elements.
+Field connects a form control to its label, hint description, and error messages, powered by [UI SDK Field](https://ui-sdk.dev/docs/components/field).
 
 <Wrapper>
 	<Field.Root>
-		<Field.Label>
-			<>Username</>
-		</Field.Label>
+		<Field.Label>Username</Field.Label>
 		<Input placeholder="Enter your username" />
-		<Field.Hint>
-			<>This is the username you will use to login</>
-		</Field.Hint>
+		<Field.Hint>This is the username you will use to login</Field.Hint>
 	</Field.Root>
 </Wrapper>
 
 ```tsx
 <Field.Root>
-	<Field.Label>
-		Username
-	</Field.Label>
+	<Field.Label>Username</Field.Label>
 	<Input placeholder="Enter your username" />
-	<Field.Hint>
-		This is the username you will use to login
-	</Field.Hint>
+	<Field.Hint>This is the username you will use to login</Field.Hint>
 </Field.Root>
 ```
 
-- **Required**
+### Required
 
-Required indicator is automatically added to the label when the `isRequired` prop is passed.
+A required indicator is automatically added to the label when `required` is set on `Field.Root` or on the control.
 
 <Wrapper>
-	<Field.Root isRequired>
-		<Field.Label>
-			<>Username</>
-		</Field.Label>
+	<Field.Root required>
+		<Field.Label>Username</Field.Label>
 		<Input placeholder="Enter your username" />
 	</Field.Root>
 </Wrapper>
 
 ```tsx
-<Field.Root	isRequired>
-	<Field.Label>
-		Username
-	</Field.Label>
+<Field.Root required>
+	<Field.Label>Username</Field.Label>
 	<Input placeholder="Enter your username" />
 </Field.Root>
 ```
 
-- **Invalid**
+### Invalid
 
-Input will be marked as invalid when the `isInvalid` prop is passed. Also the `Field.Error` component will be shown if it is present.
-
-<Wrapper>
-	<Field.Root isInvalid>
-		<Field.Label>
-			<>Username</>
-		</Field.Label>
-		<Input placeholder="Enter your username" />
-	</Field.Root>
-</Wrapper>
-
-```tsx
-<Field.Root isInvalid>
-	<Field.Label>
-		Username
-	</Field.Label>
-	<Input placeholder="Enter your username" />
-</Field.Root>
-```
-
-- **Disabled**
-
-Whole field will be disabled when the `isDisabled` prop is passed.
+Controls are marked invalid when `invalid` is passed, and `Field.Error` becomes visible.
 
 <Wrapper>
-	<Field.Root isDisabled>
-		<Field.Label>
-			<>Username</>
-		</Field.Label>
-		<Input placeholder="Enter your username" />
-	</Field.Root>
-</Wrapper>
-
-```tsx
-<Field.Root isDisabled>
-	<Field.Label>
-		Username
-	</Field.Label>
-	<Input placeholder="Enter your username" />	
-</Field.Root>		
-```
-
-### Field Error
-
-Field error **will show only** when the `Field` has `isInvalid` prop.
-
-<Wrapper>
-	<Field.Root isInvalid>
-		<Field.Label>
-		<>Username</>
-		</Field.Label>
+	<Field.Root invalid>
+		<Field.Label>Username</Field.Label>
 		<Input placeholder="Enter your username" defaultValue="x" />
-		<Field.Error>
-			<>This username is too short!</>
-		</Field.Error>
+		<Field.Error>This username is too short!</Field.Error>
 	</Field.Root>
 </Wrapper>
 
 ```tsx
-<Field.Root isInvalid>
-	<Field.Label>
-		Username
-	</Field.Label>
+<Field.Root invalid>
+	<Field.Label>Username</Field.Label>
 	<Input placeholder="Enter your username" defaultValue="x" />
-	<Field.Error>
-		This username is too short!
-	</Field.Error>
+	<Field.Error>This username is too short!</Field.Error>
 </Field.Root>
 ```
 
-### Field Hint
+### Disabled
 
-Field hint can be used to prompt the user with additional information.
+The entire field and its control are disabled when `disabled` is passed.
 
 <Wrapper>
-	<Field.Root>
-		<Field.Label>
-			<>Username</>
-		</Field.Label>
+	<Field.Root disabled>
+		<Field.Label>Username</Field.Label>
 		<Input placeholder="Enter your username" />
-		<Field.Hint>
-			<>This is the username you will use to login</>
-		</Field.Hint>
 	</Field.Root>
 </Wrapper>
 
 ```tsx
-<Field.Root>
-	<Field.Label>
-		Username
-	</Field.Label>
+<Field.Root disabled>
+	<Field.Label>Username</Field.Label>
 	<Input placeholder="Enter your username" />
-	<Field.Hint>
-		This is the username you will use to login
-	</Field.Hint>
 </Field.Root>
 ```
 
 ### Using Field components as props
 
-You can use `label`, `hint`, `error` as props to the `Field` component. This can be helpful when you don't need to apply any additional props or styles to the particular components.
+You can pass `label`, `hint`, and `error` directly to `Field.Root` as shorthand props. `error` is shown when `invalid` is `true` or native validation fails, replacing `hint` while invalid.
 
 <Wrapper>
-	<Field.Root 
-		label="Username" 
-		hint="This is the username you will use to login" 
+	<Field.Root
+		label="Username"
+		hint="This is the username you will use to login"
 		error="This username is too short!"
 	>
 		<Input placeholder="Enter your username" />
@@ -177,9 +103,9 @@ You can use `label`, `hint`, `error` as props to the `Field` component. This can
 </Wrapper>
 
 ```tsx
-<Field.Root 
-	label="Username" 
-	hint="This is the username you will use to login" 
+<Field.Root
+	label="Username"
+	hint="This is the username you will use to login"
 	error="This username is too short!"
 >
 	<Input placeholder="Enter your username" />
@@ -188,13 +114,11 @@ You can use `label`, `hint`, `error` as props to the `Field` component. This can
 
 ### Horizontal
 
-If you prefer horizontal layout, you can use `orientation="horizontal"` prop.
+Use `orientation="horizontal"` to place the label beside the control.
 
 <Wrapper>
 	<Field.Root orientation="horizontal" maxW="sm">
-		<Field.Label>
-			<>Username</>
-		</Field.Label>
+		<Field.Label>Username</Field.Label>
 		<Input placeholder="Enter your username" />
 	</Field.Root>
 </Wrapper>

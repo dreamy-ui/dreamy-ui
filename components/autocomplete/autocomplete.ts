@@ -1,6 +1,6 @@
 import { getColorSchemes } from "@dreamy-ui/panda-preset";
-import type { SystemStyleObject } from "@pandacss/types";
 import { defineSlotRecipe } from "@pandacss/dev";
+import type { SystemStyleObject } from "@pandacss/types";
 
 export const autocomplete = defineSlotRecipe({
     className: "autocomplete",
@@ -33,7 +33,6 @@ export const autocomplete = defineSlotRecipe({
             gap: "1.5",
             position: "relative"
         },
-        // Structural wrapper that anchors the popover; no border/bg (the Input handles that)
         control: {
             position: "relative",
             display: "flex",
@@ -77,7 +76,7 @@ export const autocomplete = defineSlotRecipe({
             },
             transition: "transform {durations.normal} {easings.easeInOut}",
             transform: "rotate(0deg)",
-            "&[data-state=open]": {
+            "[data-open] &": {
                 transform: "rotate(180deg)"
             }
         },
@@ -105,8 +104,14 @@ export const autocomplete = defineSlotRecipe({
             gap: "0 !important",
             overflowY: "auto",
             borderRadius: "l2!",
-            width: "full",
-            minW: "0"
+            width: "var(--anchor-width)",
+            minW: "0",
+            backgroundColor: "bg",
+            boxShadow: "md",
+            borderWidth: "1px",
+            borderStyle: "solid",
+            borderColor: "{colors.border}",
+            transformOrigin: "var(--transform-origin, center)"
         },
         item: {
             position: "relative",
@@ -119,12 +124,13 @@ export const autocomplete = defineSlotRecipe({
             flex: "1",
             textAlign: "start",
             width: "full",
+            outline: "none",
             _hover: {
                 "&:not([data-selected])": {
                     bg: "alpha.50"
                 }
             },
-            "&[data-focused]": {
+            "&[data-focused], &[data-highlighted]": {
                 bg: "alpha.50"
             },
             "&[data-selected]": {
@@ -172,8 +178,6 @@ export const autocomplete = defineSlotRecipe({
         size: {
             xs: {
                 root: {
-                    // --ac-px: horizontal padding inside the indicator group
-                    // --ac-pe: right padding override injected into Input so text doesn't overlap indicators
                     "--ac-px": "{spacing.2}",
                     "--ac-pe": "{spacing.7}"
                 },

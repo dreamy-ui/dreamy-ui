@@ -16,10 +16,7 @@ describe("Select", () => {
         render(
             <Field.Root>
                 <Field.Label>Fruit</Field.Label>
-                <Select.Root
-                    items={fruits}
-                    popoverProps={{ usePortal: false }}
-                >
+                <Select.Root items={fruits}>
                     <Select.Trigger placeholder="Select a fruit" />
                     <Select.Content />
                 </Select.Root>
@@ -28,19 +25,20 @@ describe("Select", () => {
 
         const trigger = screen.getByRole("combobox", { name: /fruit|select a fruit/i });
 
+        expect(trigger).toHaveAttribute("data-slot", "select-trigger");
         expect(trigger).toHaveAttribute("aria-haspopup", "listbox");
         expect(trigger).toHaveAttribute("aria-expanded", "false");
     });
 
     it("navigates options with the keyboard and returns focus to the trigger", async () => {
         const user = userEvent.setup();
-        const onChangeValue = vi.fn();
+        const onValueChange = vi.fn();
 
         render(
             <Select.Root
                 items={fruits}
-                onChangeValue={onChangeValue}
-                popoverProps={{ usePortal: false, reduceMotion: true }}
+                onValueChange={onValueChange}
+                reduceMotion
             >
                 <Select.Trigger
                     aria-label="Fruit"
@@ -61,7 +59,7 @@ describe("Select", () => {
         await user.keyboard("{Enter}");
 
         await waitFor(function waitForSelection() {
-            expect(onChangeValue).toHaveBeenCalled();
+            expect(onValueChange).toHaveBeenCalledWith("strawberry", expect.anything());
         });
         expect(trigger).toHaveAttribute("aria-expanded", "false");
         await waitFor(function waitForTriggerFocus() {
@@ -69,15 +67,14 @@ describe("Select", () => {
         });
     });
 
-    it("opens a listbox of options and selects with keyboard", async () => {
+    it("opens a listbox of options and selects by pointer", async () => {
         const user = userEvent.setup();
-        const onChangeValue = vi.fn();
+        const onValueChange = vi.fn();
 
         render(
             <Select.Root
                 items={fruits}
-                onChangeValue={onChangeValue}
-                popoverProps={{ usePortal: false }}
+                onValueChange={onValueChange}
             >
                 <Select.Trigger
                     aria-label="Fruit"
@@ -92,45 +89,17 @@ describe("Select", () => {
         await user.click(trigger);
 
         expect(trigger).toHaveAttribute("aria-expanded", "true");
-
-        // APG select-only: popup must be a listbox with option children.
         expect(await screen.findByRole("listbox")).toBeInTheDocument();
         expect(screen.getAllByRole("option")).toHaveLength(3);
 
         await user.click(screen.getByRole("option", { name: "Banana" }));
 
         await waitFor(function waitForSelection() {
-            expect(onChangeValue).toHaveBeenCalledWith("banana");
+            expect(onValueChange).toHaveBeenCalledWith("banana", expect.anything());
         });
         expect(trigger).toHaveAttribute("aria-expanded", "false");
         await waitFor(function waitForTriggerFocus() {
             expect(trigger).toHaveFocus();
-        });
-    });
-
-    it("selects an item by pointer when the menu is open", async () => {
-        const user = userEvent.setup();
-        const onChangeValue = vi.fn();
-
-        render(
-            <Select.Root
-                items={fruits}
-                onChangeValue={onChangeValue}
-                popoverProps={{ usePortal: false }}
-            >
-                <Select.Trigger
-                    aria-label="Fruit"
-                    placeholder="Select a fruit"
-                />
-                <Select.Content />
-            </Select.Root>
-        );
-
-        await user.click(screen.getByRole("combobox", { name: "Fruit" }));
-        await user.click(screen.getByRole("option", { name: "Banana" }));
-
-        await waitFor(function waitForSelection() {
-            expect(onChangeValue).toHaveBeenCalledWith("banana");
         });
     });
 
@@ -140,7 +109,7 @@ describe("Select", () => {
         render(
             <Select.Root
                 items={fruits}
-                popoverProps={{ usePortal: false, reduceMotion: true }}
+                reduceMotion
             >
                 <Select.Trigger
                     aria-label="Fruit"
@@ -165,14 +134,11 @@ describe("Select", () => {
         });
     });
 
-    it("wires Field describedby and expects Field invalid on the trigger", () => {
+    it("wires Field describedby and invalid onto the trigger", () => {
         render(
-            <Field.Root isInvalid>
+            <Field.Root invalid>
                 <Field.Label>Country</Field.Label>
-                <Select.Root
-                    items={fruits}
-                    popoverProps={{ usePortal: false }}
-                >
+                <Select.Root items={fruits}>
                     <Select.Trigger placeholder="Select…" />
                     <Select.Content />
                 </Select.Root>
@@ -188,10 +154,7 @@ describe("Select", () => {
 
     it("marks chevron indicators as decorative", () => {
         render(
-            <Select.Root
-                items={fruits}
-                popoverProps={{ usePortal: false }}
-            >
+            <Select.Root items={fruits}>
                 <Select.Trigger
                     aria-label="Fruit"
                     placeholder="Select a fruit"
@@ -207,11 +170,13 @@ describe("Select", () => {
         }
     });
 
-    it("supports controlled value", () => {
+    it("supports controlled value and multiple mode", async () => {
+        const user = userEvent.setup();
+        const onMultipleChange = vi.fn();
+
         const { rerender } = render(
             <Select.Root
                 items={fruits}
-                popoverProps={{ usePortal: false }}
                 value="banana"
             >
                 <Select.Trigger
@@ -227,7 +192,6 @@ describe("Select", () => {
         rerender(
             <Select.Root
                 items={fruits}
-                popoverProps={{ usePortal: false }}
                 value="orange"
             >
                 <Select.Trigger
@@ -241,35 +205,73 @@ describe("Select", () => {
         expect(screen.getByRole("combobox", { name: "Fruit" })).toHaveTextContent("Orange");
     });
 
-    it("exposes a named clear button and keeps the hidden select out of the tab order", async () => {
+    it("supports multiple selection mode", async () => {
         const user = userEvent.setup();
+        const onMultipleChange = vi.fn();
 
         render(
             <Select.Root
-                defaultValue="banana"
-                isClearable
+                defaultValue={["strawberry"]}
                 items={fruits}
-                popoverProps={{ usePortal: false }}
+                multiple
+                onValueChange={onMultipleChange}
             >
                 <Select.Trigger
-                    aria-label="Fruit"
-                    placeholder="Select a fruit"
+                    aria-label="Fruits"
+                    placeholder="Select fruits"
                 />
                 <Select.Content />
             </Select.Root>
         );
 
+        await user.click(screen.getByRole("combobox", { name: "Fruits" }));
+        await user.click(screen.getByRole("option", { name: "Banana" }));
+
+        await waitFor(() => {
+            expect(onMultipleChange).toHaveBeenCalledWith(
+                ["strawberry", "banana"],
+                expect.anything()
+            );
+        });
+    });
+
+    it("exposes a named clear button and submits form value under name", async () => {
+        const user = userEvent.setup();
+        const onValueChange = vi.fn();
+
+        render(
+            <form>
+                <Select.Root
+                    clearable
+                    defaultValue="banana"
+                    items={fruits}
+                    name="fruit"
+                    onValueChange={onValueChange}
+                >
+                    <Select.Trigger
+                        aria-label="Fruit"
+                        placeholder="Select a fruit"
+                    />
+                    <Select.Content />
+                </Select.Root>
+            </form>
+        );
+
         const clear = screen.getByRole("button", { name: "Clear selection" });
         const clearIcon = clear.querySelector("svg");
-        const hiddenSelect = document.querySelector("select");
-
         expect(clearIcon).toHaveAttribute("aria-hidden", "true");
-        expect(hiddenSelect).toBeInTheDocument();
-        expect(hiddenSelect).toHaveValue("banana");
-        expect(hiddenSelect).toHaveAttribute("tabindex", "-1");
-        expect(hiddenSelect?.closest("[aria-hidden='true']")).toBeTruthy();
+
+        const form = document.querySelector("form") as HTMLFormElement;
+        expect(new FormData(form).get("fruit")).toBe("banana");
 
         await user.click(clear);
+
+        await waitFor(() => {
+            expect(onValueChange).toHaveBeenCalledWith(
+                null,
+                expect.objectContaining({ reason: "clear-press" })
+            );
+        });
         expect(screen.queryByRole("button", { name: "Clear selection" })).not.toBeInTheDocument();
     });
 });

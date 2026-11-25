@@ -6,14 +6,19 @@ import {
     SliderIndicator as UiSdkSliderIndicator,
     SliderThumb as UiSdkSliderThumb,
     SliderTrack as UiSdkSliderTrack,
+    SliderValue as UiSdkSliderValue,
+    createSliderController,
     type SliderController,
     type SliderOptions,
+    type SliderThumbState,
     type SliderValueChangeDetails,
-    type SliderValueCommitDetails
+    type SliderValueCommitDetails,
+    type SliderValueState
 } from "@ui-sdk/react/slider";
 import { dataAttr, useFieldProps } from "@dreamy-ui/react";
-import { Children, createContext, isValidElement, useContext } from "react";
-import { type HTMLDreamyProps, createStyleContext } from "styled-system/jsx";
+import { type CSSProperties, Children, createContext, isValidElement, useContext } from "react";
+import { css, cx } from "styled-system/css";
+import { type HTMLDreamyProps, createStyleContext, splitCssProps } from "styled-system/jsx";
 import { slider } from "styled-system/recipes";
 import { Box } from "../box";
 
@@ -48,6 +53,9 @@ const SliderMarkContext = createContext<SliderMarkContextValue>({
 });
 
 const { withProvider, withContext } = createStyleContext(slider);
+
+export { createSliderController };
+export type { SliderThumbState, SliderValueState };
 
 type UiSdkSliderProps = SliderOptions<number> &
     Omit<
@@ -190,9 +198,7 @@ export const Root = withProvider(function Component(props: SliderProps) {
                 {
                     ...style,
                     "--slider-thumb-size": `${thumbSize}px`,
-                    ...(orientation === "horizontal"
-                        ? { height: config.trackSize }
-                        : { width: config.trackSize })
+                    "--slider-track-size": config.trackSize
                 } as unknown as React.CSSProperties
             }
             value={value}
@@ -233,11 +239,16 @@ const TrackBar = withContext(UiSdkSliderTrack, "track");
  * and pointer hit-testing always match the visible track.
  */
 export const Track = withContext(function Component(props: SliderTrackProps) {
-    const { children, ...rest } = props;
+    const { children, className, style, ...rest } = props;
     const { trackChildren, thumbs } = splitTrackChildren(children as React.ReactNode);
+    const [cssProps, domProps] = splitCssProps(rest);
 
     return (
-        <UiSdkSliderControl {...rest}>
+        <UiSdkSliderControl
+            {...(domProps as unknown as React.ComponentProps<typeof UiSdkSliderControl>)}
+            className={cx(className as string | undefined, css(cssProps))}
+            style={style as CSSProperties | undefined}
+        >
             <TrackBar>{trackChildren}</TrackBar>
             {thumbs}
         </UiSdkSliderControl>
@@ -247,10 +258,21 @@ export const Track = withContext(function Component(props: SliderTrackProps) {
 export interface SliderFilledTrackProps extends HTMLDreamyProps<"div"> {}
 
 export const FilledTrack = withContext(function Component(props: SliderFilledTrackProps) {
-    return <UiSdkSliderIndicator {...props} />;
+    const { className, style, ...rest } = props;
+    const [cssProps, domProps] = splitCssProps(rest);
+
+    return (
+        <UiSdkSliderIndicator
+            {...(domProps as unknown as React.ComponentProps<typeof UiSdkSliderIndicator>)}
+            className={cx(className as string | undefined, css(cssProps))}
+            style={style as CSSProperties | undefined}
+        />
+    );
 }, "trackFilled");
 
-export interface SliderThumbProps extends HTMLDreamyProps<"div"> {}
+export interface SliderThumbProps
+    extends Omit<HTMLDreamyProps<"div">, "children">,
+        Pick<React.ComponentProps<typeof UiSdkSliderThumb>, "children" | "render"> {}
 
 function SliderThumbComponent(props: SliderThumbProps) {
     const control = useContext(SliderControlContext);
@@ -259,8 +281,13 @@ function SliderThumbComponent(props: SliderThumbProps) {
         "aria-label": ariaLabel,
         "aria-labelledby": ariaLabelledby,
         "aria-describedby": ariaDescribedby,
+        children,
+        render,
+        className,
+        style,
         ...rest
     } = props;
+    const [cssProps, domProps] = splitCssProps(rest);
     const thumbAria = control.thumbAria;
 
     return (
@@ -269,10 +296,18 @@ function SliderThumbComponent(props: SliderThumbProps) {
             aria-label={ariaLabel ?? thumbAria?.label}
             aria-labelledby={ariaLabelledby ?? thumbAria?.labelledby}
             aria-readonly={ariaReadonly ?? (control.isReadOnly || undefined)}
+            className={cx(className as string | undefined, css(cssProps))}
             data-invalid={dataAttr(control.isInvalid)}
             index={0}
-            {...rest}
-        />
+            render={render}
+            style={style as CSSProperties | undefined}
+            {...(domProps as unknown as Omit<
+                React.ComponentProps<typeof UiSdkSliderThumb>,
+                "index" | "children" | "render"
+            >)}
+        >
+            {children}
+        </UiSdkSliderThumb>
     );
 }
 
@@ -281,6 +316,29 @@ SliderThumbComponent.thumbType = SLIDER_THUMB_TYPE;
 export const Thumb = withContext(SliderThumbComponent, "thumb");
 
 (Thumb as { thumbType?: symbol }).thumbType = SLIDER_THUMB_TYPE;
+
+export interface SliderValueProps
+    extends Omit<HTMLDreamyProps<"output">, "children">,
+        Pick<React.ComponentProps<typeof UiSdkSliderValue>, "children" | "render"> {}
+
+export function Value(props: SliderValueProps) {
+    const { children, render, className, style, ...rest } = props;
+    const [cssProps, domProps] = splitCssProps(rest);
+
+    return (
+        <UiSdkSliderValue
+            {...(domProps as unknown as Omit<
+                React.ComponentProps<typeof UiSdkSliderValue>,
+                "children" | "render"
+            >)}
+            className={cx(className as string | undefined, css(cssProps))}
+            render={render}
+            style={style as CSSProperties | undefined}
+        >
+            {children}
+        </UiSdkSliderValue>
+    );
+}
 
 export interface SliderMarkProps extends HTMLDreamyProps<"div"> {
     value: number;

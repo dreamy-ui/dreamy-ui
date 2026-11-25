@@ -1,14 +1,5 @@
-import { Box } from "@/ui";
-import { Button } from "@/ui";
-import { Flex } from "@/ui";
-import { Grid } from "@/ui";
-import { Heading } from "@/ui";
-import { Icon } from "@/ui";
-import { Link } from "@/ui";
-import { HStack } from "@/ui";
-import { Text } from "@/ui";
+import { Box, Button, Flex, Grid, Heading, HStack, Icon, Link, Text } from "@/ui";
 import { m } from "motion/react";
-import { useState } from "react";
 import { BsGithub } from "react-icons/bs";
 import { FaDiscord } from "react-icons/fa";
 import { FiExternalLink } from "react-icons/fi";
@@ -22,31 +13,31 @@ const communities = [
     {
         title: "Discord",
         href: "/discord",
-        tagline: "Talk to builders, not bots.",
+        tagline: "Talk directly with builders.",
         description:
-            "Our Discord is where the real conversations happen. Ask questions, share what you've built, get unblocked fast, and shape the future of Dreamy UI alongside the core team.",
+            "Ask questions, share what you are building, get unblocked quickly, and help shape upcoming Dreamy UI primitives and AI tooling.",
         icon: FaDiscord,
-        scheme: "primary",
+        accent: "primary" as const,
         cta: "Join the server",
         highlights: [
-            { icon: RiDiscordLine, text: "Real-time help from maintainers" },
-            { icon: LuComponent, text: "Component feedback & proposals" },
-            { icon: MdOutlineBugReport, text: "Sneak peeks at coming features" }
+            { icon: RiDiscordLine, text: "Direct help from maintainers" },
+            { icon: LuComponent, text: "Component proposals & feedback" },
+            { icon: MdOutlineBugReport, text: "Early previews of upcoming releases" }
         ]
     },
     {
         title: "GitHub",
         href: `https://github.com/${import.meta.env.VITE_SOURCE_REPO}`,
-        tagline: "Open source, open arms.",
+        tagline: "Open source, open roadmap.",
         description:
-            "Every line of Dreamy UI is open source. Browse the code, file issues, send PRs, and help steer the roadmap. Contributions of any size are welcome and celebrated.",
+            "Every component, recipe, and MCP server tool is open source. Inspect the implementation, report issues, or contribute pull requests.",
         icon: BsGithub,
-        scheme: "secondary",
+        accent: "secondary" as const,
         cta: "View on GitHub",
         highlights: [
-            { icon: LuStar, text: "Star the repo to show support" },
-            { icon: LuGitPullRequest, text: "Submit PRs, all skills welcome" },
-            { icon: MdOutlineBugReport, text: "File issues and track bugs" }
+            { icon: LuStar, text: "Star the repository to support the project" },
+            { icon: LuGitPullRequest, text: "Submit pull requests of any size" },
+            { icon: MdOutlineBugReport, text: "File issues and track releases" }
         ]
     }
 ] satisfies CommunityCardProps[];
@@ -58,134 +49,6 @@ export default function Communities() {
             full
             gap={20}
         >
-            {/* CTA */}
-            <Flex
-                backdropBlur={"lg"}
-                backdropFilter={"auto"}
-                bg={"bg/60"}
-                border={"1px solid"}
-                borderColor={"border"}
-                col
-                full
-                gap={0}
-                itemsCenter
-                overflow={"hidden"}
-                pos={"relative"}
-                px={{ base: 8, md: 16 }}
-                py={{ base: 12, md: 20 }}
-                rounded={"2xl"}
-                textCenter
-            >
-                {/* Glow orbs */}
-                <Box
-                    bg={"primary"}
-                    blur={"80px"}
-                    filter={"auto"}
-                    h={"300px"}
-                    left={"50%"}
-                    opacity={0.12}
-                    pos={"absolute"}
-                    rounded={"full"}
-                    style={{ transform: "translateX(-50%)" }}
-                    top={"-100px"}
-                    w={"400px"}
-                />
-                <Box
-                    bg={"secondary"}
-                    blur={"60px"}
-                    bottom={"-60px"}
-                    filter={"auto"}
-                    h={"200px"}
-                    left={"30%"}
-                    opacity={0.08}
-                    pos={"absolute"}
-                    rounded={"full"}
-                    w={"300px"}
-                />
-
-                <Flex
-                    center
-                    col
-                    gap={6}
-                    maxW={"2xl"}
-                    pos={"relative"}
-                >
-                    <Flex
-                        col
-                        gap={3}
-                    >
-                        <Text
-                            color={"primary"}
-                            fontFamily={"mono"}
-                            fontWeight={"semibold"}
-                            letterSpacing={"widest"}
-                            size={"xs"}
-                            textTransform={"uppercase"}
-                        >
-                            Get started
-                        </Text>
-                        <Heading
-                            letterSpacing={"tight"}
-                            lineHeight={"1.1"}
-                            size={"5xl"}
-                        >
-                            Ready to build something{" "}
-                            <Box
-                                as={"span"}
-                                gradientFrom={"primary"}
-                                gradientTo={"secondary"}
-                                textGradient={"to-r"}
-                            >
-                                dreamy?
-                            </Box>
-                        </Heading>
-                    </Flex>
-                    <Text
-                        color={"fg.medium"}
-                        maxW={"lg"}
-                        size={"lg"}
-                        textCenter
-                    >
-                        Join developers shipping delightful products with Dreamy UI. Start in
-                        minutes, scale without limits.
-                    </Text>
-                    <HStack
-                        gap={3}
-                        justify={"center"}
-                        wrapped
-                    >
-                        <Button
-                            as={
-                                <RouterLink
-                                    prefetch="intent"
-                                    to="/docs/guide/introduction"
-                                />
-                            }
-                            px={7}
-                            rightIcon={<IoArrowForward />}
-                            size={"lg"}
-                            variant={"primary"}
-                        >
-                            Start Building
-                        </Button>
-                        <Button
-                            as={
-                                <RouterLink
-                                    prefetch="intent"
-                                    to="/docs/components/accordion"
-                                />
-                            }
-                            px={7}
-                            rightIcon={<LuComponent />}
-                            size={"lg"}
-                            variant={"outline"}
-                        >
-                            Browse Components
-                        </Button>
-                    </HStack>
-                </Flex>
-            </Flex>
-
             {/* Community cards */}
             <Flex
                 col
@@ -208,29 +71,22 @@ export default function Communities() {
                         Community
                     </Text>
                     <Heading
-                        size="4xl"
+                        color={"fg.max"}
+                        letterSpacing={"tight"}
+                        size={{ base: "3xl", md: "4xl" }}
                         textCenter
                     >
-                        You&apos;re not building{" "}
-                        <Box
-                            as={"span"}
-                            bg={"primary/10"}
-                            color={"primary"}
-                            px={2}
-                            py={0.5}
-                            rounded={"md"}
-                        >
-                            alone
-                        </Box>
+                        Built in the open
                     </Heading>
                     <Text
                         color={"fg.medium"}
+                        lineHeight={"relaxed"}
                         maxW={"xl"}
                         size={"lg"}
                         textCenter
                     >
-                        Dreamy UI is built in public, with and for the people who use it. Come hang
-                        out, contribute, or just lurk. All are welcome.
+                        Ask questions, propose new components, or contribute directly to the
+                        registry and MCP ecosystem.
                     </Text>
                 </Flex>
 
@@ -244,7 +100,7 @@ export default function Communities() {
                             initial={{ opacity: 0, y: 16 }}
                             key={community.title}
                             style={{ height: "100%" }}
-                            transition={{ duration: 0.4, delay: i * 0.12 }}
+                            transition={{ duration: 0.35, delay: i * 0.1 }}
                             viewport={{ once: true }}
                             whileInView={{ opacity: 1, y: 0 }}
                         >
@@ -252,6 +108,136 @@ export default function Communities() {
                         </m.div>
                     ))}
                 </Grid>
+            </Flex>
+
+            {/* Final CTA banner */}
+            <Flex
+                backdropBlur={"lg"}
+                backdropFilter={"auto"}
+                bg={"bg.panel/70"}
+                border={"1px solid"}
+                borderColor={"border"}
+                col
+                full
+                gap={0}
+                itemsCenter
+                overflow={"hidden"}
+                pos={"relative"}
+                px={{ base: 6, md: 16 }}
+                py={{ base: 12, md: 18 }}
+                rounded={"2xl"}
+                textCenter
+            >
+                {/* Ambient brand glows strictly using primary and secondary */}
+                <Box
+                    bg={"primary"}
+                    blur={"90px"}
+                    filter={"auto"}
+                    h={"280px"}
+                    left={"50%"}
+                    opacity={0.1}
+                    pos={"absolute"}
+                    rounded={"full"}
+                    style={{ transform: "translateX(-50%)" }}
+                    top={"-110px"}
+                    w={"420px"}
+                />
+                <Box
+                    bg={"secondary"}
+                    blur={"70px"}
+                    bottom={"-80px"}
+                    filter={"auto"}
+                    h={"200px"}
+                    left={"28%"}
+                    opacity={0.07}
+                    pos={"absolute"}
+                    rounded={"full"}
+                    w={"320px"}
+                />
+
+                <Flex
+                    center
+                    col
+                    gap={6}
+                    maxW={"2xl"}
+                    pos={"relative"}
+                >
+                    <Flex
+                        col
+                        gap={3}
+                    >
+                        <Text
+                            color={"primary"}
+                            fontFamily={"mono"}
+                            fontWeight={"semibold"}
+                            letterSpacing={"widest"}
+                            size={"xs"}
+                            textTransform={"uppercase"}
+                        >
+                            Get Started
+                        </Text>
+                        <Heading
+                            color={"fg.max"}
+                            letterSpacing={"tight"}
+                            lineHeight={"1.1"}
+                            size={{ base: "3xl", md: "5xl" }}
+                        >
+                            Ready to build something{" "}
+                            <Box
+                                as={"span"}
+                                gradientFrom={"primary"}
+                                gradientTo={"secondary"}
+                                textGradient={"to-r"}
+                            >
+                                dreamy?
+                            </Box>
+                        </Heading>
+                    </Flex>
+                    <Text
+                        color={"fg.medium"}
+                        lineHeight={"relaxed"}
+                        maxW={"lg"}
+                        size={"lg"}
+                        textCenter
+                    >
+                        Initialize Dreamy UI in seconds, connect the MCP server to your coding
+                        agent, and ship accessible React interfaces you completely own.
+                    </Text>
+                    <HStack
+                        gap={3}
+                        justify={"center"}
+                        wrapped
+                    >
+                        <Button
+                            px={7}
+                            render={
+                                <RouterLink
+                                    prefetch="intent"
+                                    to="/docs/guide/introduction"
+                                />
+                            }
+                            rightIcon={<IoArrowForward />}
+                            size={"lg"}
+                            variant={"primary"}
+                        >
+                            Start Building
+                        </Button>
+                        <Button
+                            px={7}
+                            render={
+                                <RouterLink
+                                    prefetch="intent"
+                                    to="/docs/components/accordion"
+                                />
+                            }
+                            rightIcon={<LuComponent />}
+                            size={"lg"}
+                            variant={"outline"}
+                        >
+                            Browse Components
+                        </Button>
+                    </HStack>
+                </Flex>
             </Flex>
         </Flex>
     );
@@ -263,7 +249,7 @@ interface CommunityCardProps {
     tagline: string;
     description: string;
     icon: React.ElementType;
-    scheme: string;
+    accent: "primary" | "secondary";
     cta: string;
     highlights: { icon: React.ElementType; text: string }[];
 }
@@ -274,56 +260,48 @@ function CommunityCard({
     tagline,
     description,
     icon,
-    scheme,
+    accent,
     cta,
     highlights
 }: CommunityCardProps) {
-    const [hovered, setHovered] = useState(false);
-    const colorVar = `var(--colors-${scheme})`;
+    const isSecondary = accent === "secondary";
 
     return (
         <Link
+            _hover={{
+                bg: "bg.panel",
+                borderColor: isSecondary ? "secondary/40" : "primary/40"
+            }}
             backdropBlur={"md"}
             backdropFilter={"auto"}
+            bg={"bg.panel/60"}
+            border={"1px solid"}
+            borderColor={"border"}
             col
             display={"flex"}
             gap={6}
             h={"full"}
             href={href}
             isExternal
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
             px={8}
             py={7}
             rounded={"2xl"}
-            style={{
-                background: hovered
-                    ? `color-mix(in srgb, ${colorVar} 5%, var(--colors-bg))`
-                    : "color-mix(in srgb, var(--colors-bg) 50%, transparent)",
-                borderWidth: "1px",
-                borderStyle: "solid",
-                borderColor: hovered
-                    ? `color-mix(in srgb, ${colorVar} 40%, transparent)`
-                    : "var(--colors-border)",
-                transition: "background 0.25s, border-color 0.25s"
-            }}
+            transition={"background-color 0.2s, border-color 0.2s"}
         >
             {/* Header */}
             <HStack gap={4}>
                 <Flex
                     align={"center"}
+                    bg={isSecondary ? "secondary/10" : "primary/10"}
                     boxSize={"14"}
                     center
                     rounded={"xl"}
                     shrink={"0"}
-                    style={{
-                        background: `color-mix(in srgb, ${colorVar} 12%, transparent)`
-                    }}
                 >
                     <Icon
                         as={icon}
                         boxSize={"7"}
-                        color={scheme as any}
+                        color={isSecondary ? "secondary" : "primary"}
                     />
                 </Flex>
                 <Flex
@@ -331,13 +309,14 @@ function CommunityCard({
                     gap={1}
                 >
                     <Text
+                        color={"fg.max"}
                         fontWeight={"bold"}
                         size={"xl"}
                     >
                         {title}
                     </Text>
                     <Text
-                        color={scheme as any}
+                        color={isSecondary ? "secondary" : "primary"}
                         fontFamily={"mono"}
                         size={"sm"}
                     >
@@ -367,18 +346,16 @@ function CommunityCard({
                     >
                         <Flex
                             align={"center"}
+                            bg={isSecondary ? "secondary/10" : "primary/10"}
                             boxSize={"7"}
                             center
                             rounded={"md"}
                             shrink={"0"}
-                            style={{
-                                background: `color-mix(in srgb, ${colorVar} 10%, transparent)`
-                            }}
                         >
                             <Icon
                                 as={h.icon}
                                 boxSize={"3.5"}
-                                color={scheme as any}
+                                color={isSecondary ? "secondary" : "primary"}
                             />
                         </Flex>
                         <Text
@@ -393,12 +370,12 @@ function CommunityCard({
 
             {/* CTA row */}
             <HStack
-                color={scheme as any}
+                color={isSecondary ? "secondary" : "primary"}
                 gap={1.5}
                 mt={"auto"}
             >
                 <Text
-                    color={scheme as any}
+                    color={isSecondary ? "secondary" : "primary"}
                     fontWeight={"semibold"}
                     size={"sm"}
                 >

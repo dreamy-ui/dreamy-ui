@@ -171,7 +171,7 @@ export const dateRangePicker = defineSlotRecipe({
                 borderColor: "primary",
                 fontWeight: "semibold"
             },
-            "&[data-outside-month]": {
+            "&[data-outside-month], &[data-outside]": {
                 opacity: 0.4
             }
         },

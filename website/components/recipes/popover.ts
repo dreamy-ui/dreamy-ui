@@ -79,7 +79,8 @@ export const popover = defineSlotRecipe({
             borderWidth: "1px",
             borderStyle: "solid",
             borderColor: "{colors.border}",
-            gap: 2
+            gap: 2,
+            transformOrigin: "var(--transform-origin, center)"
         },
         header: {
             display: "flex",
@@ -111,14 +112,35 @@ export const popover = defineSlotRecipe({
         arrow: {
             "--arrow-size": "8px",
             "--arrow-background": "{colors.bg.panel}",
-            zIndex: -1,
-            "& [data-part=arrow-tip]": {
-                backdropFilter: "blur({blurs.base})",
+            width: "var(--arrow-size)",
+            height: "var(--arrow-size)",
+            background: "var(--arrow-background)",
+            borderStyle: "solid",
+            borderColor: "border",
+            borderWidth: "0",
+            boxSizing: "border-box",
+            boxShadow: "var(--popper-arrow-shadow, none)",
+            rotate: "45deg",
+            pointerEvents: "none",
+            "&[data-side='bottom']": {
+                top: "calc(var(--arrow-size) / -2)",
                 borderTopWidth: "1px",
-                borderInlineStartWidth: "1px",
-                borderStyle: "solid",
-                borderColor: "border",
-                boxShadow: "var(--popper-arrow-shadow, none)"
+                borderLeftWidth: "1px"
+            },
+            "&[data-side='top']": {
+                bottom: "calc(var(--arrow-size) / -2)",
+                borderBottomWidth: "1px",
+                borderRightWidth: "1px"
+            },
+            "&[data-side='left']": {
+                right: "calc(var(--arrow-size) / -2)",
+                borderTopWidth: "1px",
+                borderRightWidth: "1px"
+            },
+            "&[data-side='right']": {
+                left: "calc(var(--arrow-size) / -2)",
+                borderBottomWidth: "1px",
+                borderLeftWidth: "1px"
             }
         }
     },

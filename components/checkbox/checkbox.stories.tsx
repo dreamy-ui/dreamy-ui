@@ -86,7 +86,7 @@ export function Controlled() {
             <Text>Selected: {isChecked ? "true" : "false"}</Text>
             <Checkbox
                 checked={isChecked}
-                onCheckedChange={setIsChecked}
+                onCheckedChange={(checked) => setIsChecked(checked === true)}
             >
                 Controlled
             </Checkbox>
@@ -95,13 +95,13 @@ export function Controlled() {
 }
 
 export function CheckboxGroupControl() {
-    const [value, setValue] = useState<Array<string | number>>(["1"]);
+    const [value, setValue] = useState<string[]>(["1"]);
 
     return (
         <>
             <Text>Selected: {value.join(", ")}</Text>
             <CheckboxGroup
-                onValueChange={setValue}
+                onValueChange={(nextValue) => setValue(nextValue)}
                 value={value}
             >
                 <Checkbox value="1">Option 1</Checkbox>

@@ -5,7 +5,7 @@ import type { IconButtonProps } from "./index";
 type ExpectTrue<T extends true> = T;
 
 assertType<string>({} as IconButtonProps["aria-label"]);
-assertType<boolean | undefined>({} as IconButtonProps["isDisabled"]);
+assertType<boolean | undefined>({} as IconButtonProps["disabled"]);
 assertType<boolean | undefined>({} as IconButtonProps["isLoading"]);
 assertType<ReactNode | undefined>({} as IconButtonProps["icon"]);
 
@@ -50,7 +50,7 @@ void (_requiresAriaLabel && _recipeProps && _styleProps && _variant && _size && 
 assertType<IconButtonProps>({
     "aria-label": "Edit profile",
     icon: null,
-    isDisabled: false,
+    disabled: false,
     isLoading: false,
     variant: "ghost",
     size: "sm",

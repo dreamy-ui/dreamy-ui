@@ -3,6 +3,9 @@ import { defineRecipe } from "@pandacss/dev";
 
 const parts = defineParts({
     root: { selector: "&" },
+    header: { selector: "& [data-part=header]" },
+    label: { selector: "& [data-part=label]" },
+    value: { selector: "& [data-part=value]" },
     track: { selector: "& [data-part=track]" },
     range: { selector: "& [data-part=range]" }
 });
@@ -24,13 +27,31 @@ export const progress = defineRecipe({
     base: parts({
         root: {
             width: "full",
-            bg: "{colors.alpha.100}",
-            overflow: "hidden",
+            display: "flex",
+            flexDirection: "column",
+            gap: 1.5,
             position: "relative"
+        },
+        header: {
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 2
+        },
+        label: {
+            textStyle: "sm",
+            fontWeight: "medium",
+            color: "fg"
+        },
+        value: {
+            textStyle: "sm",
+            color: "fg.medium",
+            fontVariantNumeric: "tabular-nums"
         },
         track: {
             width: "full",
-            height: "full",
+            bg: "{colors.alpha.100}",
+            overflow: "hidden",
             position: "relative"
         },
         range: {
@@ -53,13 +74,13 @@ export const progress = defineRecipe({
         },
         size: {
             sm: parts({
-                root: { h: "1", rounded: "l05" }
+                track: { h: "1", rounded: "l05" }
             }),
             md: parts({
-                root: { h: "2", rounded: "l05" }
+                track: { h: "2", rounded: "l05" }
             }),
             lg: parts({
-                root: { h: "4", rounded: "l1" }
+                track: { h: "4", rounded: "l1" }
             })
         },
         scheme: progressSchemeVariants

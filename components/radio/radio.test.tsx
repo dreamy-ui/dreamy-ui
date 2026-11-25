@@ -1,9 +1,9 @@
-import { screen } from "@testing-library/react";
+import { act, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import * as Field from "../field";
 import { render } from "../test/render";
-import { Radio, RadioGroup } from "./index";
+import { Radio, RadioGroup, createRadioGroupController } from "./index";
 
 describe("Radio", () => {
     it("exposes a radio role and checks with click", async () => {
@@ -88,7 +88,7 @@ describe("Radio", () => {
 
     it("wires Field describedby and expects Field invalid on radios", () => {
         render(
-            <Field.Root isInvalid>
+            <Field.Root invalid>
                 <Field.Label>Plan</Field.Label>
                 <RadioGroup defaultValue="pro">
                     <Radio value="pro">Pro</Radio>
@@ -176,5 +176,220 @@ describe("Radio", () => {
         expect(radios[1]).toBeChecked();
         expect(onValueChange).toHaveBeenCalled();
         expect(onValueChange.mock.calls.at(-1)?.[0]).toBe("team");
+    });
+
+    it("does not assign duplicate field ids to radios inside a RadioGroup", () => {
+        render(
+            <Field.Root>
+                <Field.Label>Plan</Field.Label>
+                <RadioGroup defaultValue="pro">
+                    <Radio value="pro">Pro</Radio>
+                    <Radio value="team">Team</Radio>
+                </RadioGroup>
+            </Field.Root>
+        );
+
+        const group = screen.getByRole("radiogroup");
+        const radios = screen.getAllByRole("radio");
+
+        expect(group.id).toBeTruthy();
+        expect(radios[0].id).not.toBe(group.id);
+        expect(radios[1].id).not.toBe(group.id);
+        expect(radios[0].id || radios[1].id).toBe("");
+    });
+
+    it("supports createRadioGroupController and cancellation", async () => {
+        const user = userEvent.setup();
+        const controller = createRadioGroupController<string>();
+        const onValueChange = vi.fn((next: string | null, details: { reason: string; cancel: () => void }) => {
+            if (next === "enterprise") {
+                details.cancel();
+            }
+        });
+
+        render(
+            <RadioGroup
+                aria-label="Plan"
+                controller={controller}
+                defaultValue="pro"
+                onValueChange={onValueChange}
+            >
+                <Radio value="pro">Pro</Radio>
+                <Radio value="team">Team</Radio>
+                <Radio value="enterprise">Enterprise</Radio>
+            </RadioGroup>
+        );
+
+        expect(controller.getValue()).toBe("pro");
+
+        act(() => {
+            expect(controller.setValue("team")).toBe(true);
+        });
+        expect(controller.getValue()).toBe("team");
+        expect(onValueChange.mock.calls.at(-1)?.[1]?.reason).toBe("imperative");
+
+        act(() => {
+            expect(controller.setValue("enterprise")).toBe(false);
+        });
+        expect(controller.getValue()).toBe("team");
+
+        const radios = screen.getAllByRole("radio");
+        await user.click(radios[0]);
+        expect(onValueChange.mock.calls.at(-1)?.[1]?.reason).toBe("item-press");
+    });
+
+    it("keeps readOnly radios focusable without changing selection", async () => {
+        const user = userEvent.setup();
+        const onValueChange = vi.fn();
+
+        render(
+            <RadioGroup
+                aria-label="Plan"
+                defaultValue="pro"
+                name="plan"
+                onValueChange={onValueChange}
+                readOnly
+            >
+                <Radio value="pro">Pro</Radio>
+                <Radio value="team">Team</Radio>
+            </RadioGroup>
+        );
+
+        const radios = screen.getAllByRole("radio");
+        radios[0].focus();
+        await user.keyboard("{ArrowDown}");
+        await user.click(radios[1]);
+
+        expect(radios[0]).toBeChecked();
+        expect(radios[1]).not.toBeChecked();
+        expect(onValueChange).not.toHaveBeenCalled();
+    });
+
+    it("stops at ends when loop is false", async () => {
+        const user = userEvent.setup();
+
+        render(
+            <RadioGroup
+                aria-label="Plan"
+                defaultValue="team"
+                loop={false}
+            >
+                <Radio value="pro">Pro</Radio>
+                <Radio value="team">Team</Radio>
+            </RadioGroup>
+        );
+
+        const radios = screen.getAllByRole("radio");
+        radios[1].focus();
+        await user.keyboard("{ArrowDown}");
+
+        expect(radios[1]).toBeChecked();
+        expect(radios[0]).not.toBeChecked();
+    });
+
+    it("forwards form on standalone Radio and supports form reset", async () => {
+        const user = userEvent.setup();
+        const onSubmit = vi.fn();
+
+        render(
+            <>
+                <Radio
+                    defaultChecked
+                    form="external-radio-form"
+                    name="billing"
+                    value="monthly"
+                >
+                    Monthly
+                </Radio>
+                <form
+                    id="external-radio-form"
+                    onSubmit={(event) => {
+                        event.preventDefault();
+                        onSubmit(new FormData(event.currentTarget).get("billing"));
+                    }}
+                >
+                    <button type="submit">Submit</button>
+                    <button type="reset">Reset</button>
+                </form>
+            </>
+        );
+
+        await user.click(screen.getByRole("button", { name: "Submit" }));
+        expect(onSubmit).toHaveBeenCalledWith("monthly");
+    });
+
+    it("resets RadioGroup to defaultValue on form reset", async () => {
+        const user = userEvent.setup();
+
+        render(
+            <form>
+                <RadioGroup
+                    aria-label="Speed"
+                    defaultValue="standard"
+                    name="speed"
+                >
+                    <Radio value="standard">Standard</Radio>
+                    <Radio value="express">Express</Radio>
+                </RadioGroup>
+                <button type="reset">Reset</button>
+            </form>
+        );
+
+        const radios = screen.getAllByRole("radio");
+        await user.click(radios[1]);
+        expect(radios[1]).toBeChecked();
+
+        await user.click(screen.getByRole("button", { name: "Reset" }));
+        await waitFor(() => {
+            expect(radios[0]).toBeChecked();
+            expect(radios[1]).not.toBeChecked();
+        });
+    });
+
+    it("supports render on RadioGroup and Radio", async () => {
+        const user = userEvent.setup();
+
+        render(
+            <RadioGroup
+                aria-label="Notifications"
+                defaultValue="mentions"
+                render={<section data-testid="custom-group" />}
+            >
+                <Radio
+                    render={(props, state) => (
+                        <button
+                            {...props}
+                            data-custom-checked={state.checked ? "yes" : "no"}
+                        >
+                            Everything
+                        </button>
+                    )}
+                    value="all"
+                />
+                <Radio
+                    render={(props, state) => (
+                        <button
+                            {...props}
+                            data-custom-checked={state.checked ? "yes" : "no"}
+                        >
+                            Mentions
+                        </button>
+                    )}
+                    value="mentions"
+                />
+            </RadioGroup>
+        );
+
+        const group = screen.getByTestId("custom-group");
+        expect(group).toHaveAttribute("role", "radiogroup");
+
+        const all = screen.getByRole("radio", { name: "Everything" });
+        const mentions = screen.getByRole("radio", { name: "Mentions" });
+        expect(mentions).toHaveAttribute("data-custom-checked", "yes");
+        expect(all).toHaveAttribute("data-custom-checked", "no");
+
+        await user.click(all);
+        expect(all).toHaveAttribute("data-custom-checked", "yes");
+        expect(mentions).toHaveAttribute("data-custom-checked", "no");
     });
 });

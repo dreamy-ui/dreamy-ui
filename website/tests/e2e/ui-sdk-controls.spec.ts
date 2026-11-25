@@ -60,4 +60,90 @@ test.describe("UI SDK text controls", () => {
         }
         await expectNoStoryErrors(page, errors);
     });
+
+    test("switch stretches thumb while active in unchecked and checked states", async ({ page }) => {
+        const errors = watchForStoryErrors(page);
+        await gotoStory(page, "switch--states");
+        await waitForStoryContent(page);
+
+        const defaultControl = page.getByRole("switch", { name: "Default" });
+        const defaultThumb = defaultControl.locator('[data-part="thumb"]');
+
+        await expect(defaultControl).toHaveCSS("cursor", "pointer");
+        await expect(defaultThumb).toHaveCSS("cursor", "pointer");
+
+        const restBox = await defaultThumb.boundingBox();
+        expect(restBox).not.toBeNull();
+
+        const controlBox = await defaultControl.boundingBox();
+        expect(controlBox).not.toBeNull();
+
+        await page.mouse.move(
+            controlBox!.x + controlBox!.width / 2,
+            controlBox!.y + controlBox!.height / 2
+        );
+        await page.mouse.down();
+
+        await expect
+            .poll(async () => (await defaultThumb.boundingBox())?.width ?? 0)
+            .toBeGreaterThan(restBox!.width + 4);
+
+        const activeUncheckedBox = await defaultThumb.boundingBox();
+        expect(activeUncheckedBox).not.toBeNull();
+        expect(Math.abs(activeUncheckedBox!.x - restBox!.x)).toBeLessThan(2);
+
+        await page.mouse.up();
+
+        await expect(defaultControl).toHaveAttribute("aria-checked", "true");
+        await expect
+            .poll(async () => (await defaultThumb.boundingBox())?.width ?? 0)
+            .toBeLessThan(restBox!.width + 1);
+
+        const checkedRestBox = await defaultThumb.boundingBox();
+        expect(checkedRestBox).not.toBeNull();
+
+        await page.mouse.down();
+
+        await expect
+            .poll(async () => (await defaultThumb.boundingBox())?.width ?? 0)
+            .toBeGreaterThan(checkedRestBox!.width + 4);
+
+        const activeCheckedBox = await defaultThumb.boundingBox();
+        expect(activeCheckedBox).not.toBeNull();
+        // When checked, the right edge stays anchored while stretching leftward.
+        expect(
+            Math.abs(
+                activeCheckedBox!.x +
+                    activeCheckedBox!.width -
+                    (checkedRestBox!.x + checkedRestBox!.width)
+            )
+        ).toBeLessThan(2);
+        expect(activeCheckedBox!.x).toBeLessThan(checkedRestBox!.x - 4);
+
+        await page.mouse.up();
+
+        // Disabled and read-only switches must not stretch when pressed.
+        for (const label of ["Disabled", "Read only"]) {
+            const control = page.getByRole("switch", { name: label, exact: true });
+            const thumb = control.locator('[data-part="thumb"]');
+            const before = await thumb.boundingBox();
+            const box = await control.boundingBox();
+            expect(before).not.toBeNull();
+            expect(box).not.toBeNull();
+
+            await page.mouse.move(box!.x + box!.width / 2, box!.y + box!.height / 2);
+            await page.mouse.down();
+            await page.waitForTimeout(200);
+            const during = await thumb.boundingBox();
+            await page.mouse.up();
+
+            expect(Math.abs((during?.width ?? 0) - before!.width)).toBeLessThan(1);
+            if (label === "Disabled") {
+                await expect(control).toHaveCSS("cursor", "not-allowed");
+                await expect(thumb).toHaveCSS("cursor", "not-allowed");
+            }
+        }
+
+        await expectNoStoryErrors(page, errors);
+    });
 });

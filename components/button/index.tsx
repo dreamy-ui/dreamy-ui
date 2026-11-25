@@ -13,6 +13,7 @@ import {
 } from "@dreamy-ui/react";
 import { m } from "motion/react";
 import {
+    Fragment,
     cloneElement,
     isValidElement,
     useCallback,
@@ -129,11 +130,20 @@ export function Button({
     render,
     debug,
     type,
+    asChild,
     onClick,
     onPointerDown: onPointerDownProp,
     scheme,
     ...rest
 }: ButtonProps) {
+    const isAsChild = Boolean(asChild) && isValidElement(children);
+    const asChildElement = isAsChild
+        ? (children as ReactElement<{ children?: React.ReactNode }>)
+        : null;
+    const resolvedRender =
+        render ??
+        (asChildElement ? cloneElement(asChildElement, { children: undefined }) : undefined);
+    const resolvedChildren = asChildElement ? asChildElement.props?.children : children;
     const {
         onClick: onRippleClickHandler,
         onClear: onClearRipple,
@@ -226,7 +236,7 @@ export function Button({
             disabled={isDisabled}
             focusableWhenDisabled={focusableWhenDisabled}
             pendingAnnouncement={pendingAnnouncement}
-            render={render}
+            render={resolvedRender}
             {...rest}
             // Scheme compound styles would override the success colors
             scheme={showSuccess ? undefined : scheme}
@@ -257,8 +267,8 @@ export function Button({
             )}
 
             {isContentHidden
-                ? statusText || <span style={{ opacity: 0 }}>{children as React.ReactNode}</span>
-                : children}
+                ? statusText || <span style={{ opacity: 0 }}>{resolvedChildren}</span>
+                : resolvedChildren}
 
             {isLoading && spinnerPlacement === "end" && (
                 <ButtonSpinner
@@ -336,18 +346,19 @@ interface ButtonIconProps extends HTMLDreamyProps<"span"> {}
 function ButtonIcon(props: ButtonIconProps) {
     const { children, className, ...rest } = props;
 
-    const _children = isValidElement(children)
-        ? cloneElement(
-              children as ReactElement<{
-                  "aria-hidden"?: boolean;
-                  focusable?: boolean;
-              }>,
-              {
-                  "aria-hidden": true,
-                  focusable: false
-              }
-          )
-        : children;
+    const _children =
+        isValidElement(children) && children.type !== Fragment
+            ? cloneElement(
+                  children as ReactElement<{
+                      "aria-hidden"?: boolean;
+                      focusable?: boolean;
+                  }>,
+                  {
+                      "aria-hidden": true,
+                      focusable: false
+                  }
+              )
+            : children;
 
     return <Span {...rest}>{_children}</Span>;
 }

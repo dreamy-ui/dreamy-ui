@@ -1,44 +1,86 @@
 "use client";
 
 import {
+    type DreamyHostProps,
     FieldProvider,
-    type UserFeedbackProps,
     useFieldContext,
     useFieldProvider
 } from "@dreamy-ui/react";
-
-import { type HTMLDreamyProps, dreamy } from "styled-system/jsx";
+import {
+    type FieldOptions,
+    Field as UiSdkField,
+    FieldControl as UiSdkFieldControl,
+    FieldDescription as UiSdkFieldDescription,
+    FieldError as UiSdkFieldError,
+    type FieldErrorProps as UiSdkFieldErrorProps,
+    FieldGroup as UiSdkFieldGroup,
+    FieldLabel as UiSdkFieldLabel,
+    FieldLegend as UiSdkFieldLegend,
+    FieldSet as UiSdkFieldSet,
+    useFieldControl
+} from "@ui-sdk/react/field";
+import type React from "react";
+import { type CSSProperties, type ReactNode, useEffect } from "react";
+import { css, cx } from "styled-system/css";
+import { type HTMLDreamyProps, dreamy, splitCssProps } from "styled-system/jsx";
 import { type FieldVariantProps, field } from "styled-system/recipes";
 import { Box } from "./box";
 import { Icon, type IconProps } from "./icon";
 
-export interface FieldLabelProps extends HTMLDreamyProps<"label"> {
-    requiredIndicator?: React.ReactNode;
-    optionalIndicator?: React.ReactNode;
+export { useFieldControl };
+export {
+    UiSdkFieldControl as Control,
+    UiSdkFieldGroup as Group,
+    UiSdkFieldLegend as Legend,
+    UiSdkFieldSet as Set
+};
+
+export interface FieldLabelProps extends Omit<HTMLDreamyProps<"label">, "children"> {
+    requiredIndicator?: ReactNode;
+    optionalIndicator?: ReactNode;
+    children?: ReactNode;
 }
 
 /**
- * Field Label — accessible label for the form control.
+ * Field Label — accessible label for the form control powered by UI SDK `FieldLabel`.
  */
 export function Label(props: FieldLabelProps) {
     const {
         children,
         requiredIndicator = <RequiredIndicator />,
-        optionalIndicator = null
+        optionalIndicator = null,
+        id,
+        className,
+        style,
+        htmlFor,
+        ...rest
     } = props;
 
-    const field = useFieldContext();
-    const ownProps = field?.getLabelProps(props) ?? props;
+    const fieldCtx = useFieldContext();
+    const [cssProps, domProps] = splitCssProps(rest);
+    const resolvedHtmlFor = (htmlFor as string | undefined) ?? fieldCtx?.id;
 
     return (
-        <Box
-            as={"label"}
+        <UiSdkFieldLabel
+            {...(domProps as unknown as React.ComponentProps<typeof UiSdkFieldLabel>)}
+            className={cx(className as string | undefined, css(cssProps))}
             data-part="label"
-            {...ownProps}
+            id={(id as string | undefined) ?? fieldCtx?.labelId}
+            render={(labelProps) => (
+                <label
+                    {...labelProps}
+                    htmlFor={resolvedHtmlFor ?? labelProps.htmlFor}
+                />
+            )}
+            style={style as CSSProperties | undefined}
         >
-            {children}
-            {field?.isRequired ? requiredIndicator : optionalIndicator}
-        </Box>
+            {(state) => (
+                <>
+                    {children}
+                    {fieldCtx?.isRequired || state.required ? requiredIndicator : optionalIndicator}
+                </>
+            )}
+        </UiSdkFieldLabel>
     );
 }
 
@@ -48,34 +90,52 @@ export interface RequiredIndicatorProps extends HTMLDreamyProps<"span"> {}
  * Field Required Indicator — marks the field as required.
  */
 export function RequiredIndicator(props: RequiredIndicatorProps) {
-    const field = useFieldContext();
-
-    if (!field?.isRequired) return null;
+    const { children = "*", ...rest } = props;
 
     return (
-        <Box
-            as={"span"}
+        <dreamy.span
+            aria-hidden="true"
             data-part="requiredIndicator"
-            {...field?.getRequiredIndicatorProps(props)}
-        />
+            role="presentation"
+            {...rest}
+        >
+            {children}
+        </dreamy.span>
     );
 }
 
-export interface FieldErrorProps extends HTMLDreamyProps<"label"> {}
+export interface FieldErrorProps
+    extends Omit<HTMLDreamyProps<"div">, "children">,
+        Pick<UiSdkFieldErrorProps, "match"> {
+    children?: ReactNode;
+}
 
 /**
- * Field Error — validation message shown when the field is invalid.
+ * Field Error — validation message shown when the field is invalid powered by UI SDK `FieldError`.
  */
 export function Error(props: FieldErrorProps) {
-    const field = useFieldContext();
+    const { match, children, id, className, style, ...rest } = props;
+    const fieldCtx = useFieldContext();
+    const [cssProps, domProps] = splitCssProps(rest);
+    const isExternallyInvalid = Boolean(fieldCtx?.isInvalid);
 
-    if (!field?.isInvalid) return null;
+    useEffect(() => {
+        if (!fieldCtx) return;
+        fieldCtx.setHasFeedbackText(isExternallyInvalid);
+        return () => fieldCtx.setHasFeedbackText(false);
+    }, [fieldCtx, isExternallyInvalid]);
 
     return (
-        <Box
+        <UiSdkFieldError
+            {...(domProps as unknown as React.ComponentProps<typeof UiSdkFieldError>)}
+            className={cx(className as string | undefined, css(cssProps))}
             data-part="error"
-            {...field?.getErrorMessageProps(props)}
-        />
+            id={(id as string | undefined) ?? fieldCtx?.feedbackId}
+            match={match ?? (isExternallyInvalid ? true : undefined)}
+            style={style as CSSProperties | undefined}
+        >
+            {children}
+        </UiSdkFieldError>
     );
 }
 
@@ -83,21 +143,16 @@ export function Error(props: FieldErrorProps) {
  * Field Error Icon — visual indicator that the field is invalid.
  */
 export function ErrorIcon(props: IconProps) {
-    const field = useFieldContext();
-
-    if (!field?.isInvalid) return null;
-
     return (
         <Icon
-            aria-hidden
+            aria-hidden="true"
             data-part="errorIcon"
             size={"sm"}
             {...props}
         >
             <svg
-                aria-label="Error"
+                aria-hidden="true"
                 fill="currentColor"
-                role="img"
                 viewBox="0 0 24 24"
             >
                 <path
@@ -109,49 +164,81 @@ export function ErrorIcon(props: IconProps) {
     );
 }
 
-export interface FieldHintProps extends HTMLDreamyProps<"div"> {}
+export interface FieldHintProps extends Omit<HTMLDreamyProps<"p">, "children"> {
+    children?: ReactNode;
+}
 
 /**
- * Field Hint — helper text shown when the field is valid.
+ * Field Hint — helper text shown when the field is valid powered by UI SDK `FieldDescription`.
  */
 export function Hint(props: FieldHintProps) {
-    const field = useFieldContext();
+    const { children, id, className, style, ...rest } = props;
+    const fieldCtx = useFieldContext();
+    const [cssProps, domProps] = splitCssProps(rest);
+    const isHidden = Boolean(fieldCtx?.isInvalid);
 
-    if (field?.isInvalid) return null;
+    useEffect(() => {
+        if (!fieldCtx) return;
+        fieldCtx.setHasHint(!isHidden);
+        return () => fieldCtx.setHasHint(false);
+    }, [fieldCtx, isHidden]);
+
+    if (isHidden) {
+        return null;
+    }
 
     return (
-        <Box
+        <UiSdkFieldDescription
+            {...(domProps as unknown as React.ComponentProps<typeof UiSdkFieldDescription>)}
+            className={cx(className as string | undefined, css(cssProps))}
             data-part="hint"
-            {...field?.getHintProps(props)}
-        />
+            id={(id as string | undefined) ?? fieldCtx?.hintId}
+            style={style as CSSProperties | undefined}
+        >
+            {children}
+        </UiSdkFieldDescription>
     );
 }
 
-interface FieldContext extends UserFeedbackProps {
+export interface FieldProps
+    extends FieldOptions,
+        FieldVariantProps,
+        DreamyHostProps<
+            HTMLDreamyProps<"div">,
+            FieldOptions,
+            "id" | "isDisabled" | "isInvalid" | "isRequired" | "isReadOnly"
+        > {
     /**
-     * The label text used to inform users as to what information is
-     * requested for a text field.
+     * Marks the field as required.
+     */
+    required?: boolean;
+    /**
+     * Marks the field as read-only.
+     */
+    readOnly?: boolean;
+    /**
+     * Custom `id` propagated to the form control and used to derive label/hint/error IDs.
+     */
+    id?: string;
+    /**
+     * Shorthand label text rendered via `Field.Label`.
      */
     label?: string;
     /**
-     * The custom `id` to use for the form control. This is passed directly to the form element (e.g, Input).
-     * - The form element (e.g. Input) gets the `id`
-     * - The form label id: `form-label-${id}`
-     * - The form error text id: `form-error-text-${id}`
-     * - The form hint id: `form-hint-${id}`
+     * Shorthand helper text rendered via `Field.Hint`.
      */
-    id?: string;
-}
-
-export interface FieldProps extends HTMLDreamyProps<"div">, FieldContext, FieldVariantProps {
     hint?: string;
+    /**
+     * Shorthand error text rendered via `Field.Error`.
+     */
     error?: string;
+    children?: ReactNode;
 }
 
 const StyledField = dreamy("div", field);
 
 /**
- * Field component — wraps a control with label, hint, and error messaging.
+ * Field component — wraps a control with label, hint, and error messaging powered by UI SDK `Field`.
  *
  * @see Docs https://dreamy-ui.com/docs/components/field
  *
@@ -162,17 +249,52 @@ const StyledField = dreamy("div", field);
  * </Field.Root>
  * ```
  */
-export function Root({ children, label, hint, error, ...props }: FieldProps) {
-    const { getRootProps, htmlProps: _, ...context } = useFieldProvider(props);
+export function Root(props: FieldProps) {
+    const {
+        children,
+        label,
+        hint,
+        error,
+        name,
+        disabled,
+        invalid,
+        required,
+        readOnly,
+        debug,
+        id,
+        orientation,
+        className,
+        ...rest
+    } = props;
+
+    const { getRootProps: _, htmlProps: __, ...context } = useFieldProvider({
+        id,
+        isDisabled: disabled,
+        isInvalid: invalid,
+        isRequired: required,
+        isReadOnly: readOnly
+    });
 
     return (
         <FieldProvider value={context}>
-            <StyledField {...getRootProps({ ref: props.ref })}>
+            <UiSdkField
+                debug={debug}
+                disabled={disabled}
+                invalid={invalid}
+                name={name}
+                render={
+                    <StyledField
+                        className={className}
+                        orientation={orientation}
+                        {...rest}
+                    />
+                }
+            >
                 {label ? <Label>{label}</Label> : null}
                 {children}
-                {hint && <Hint>{hint}</Hint>}
-                {error && <Error>{error}</Error>}
-            </StyledField>
+                {hint ? <Hint>{hint}</Hint> : null}
+                {error ? <Error>{error}</Error> : null}
+            </UiSdkField>
         </FieldProvider>
     );
 }

@@ -24,7 +24,7 @@ export default function GithubButton() {
                 md: "flex"
             }}
             icon={
-                <>
+                <span style={{ display: "contents" }}>
                     <AnimatePresence
                         initial={false}
                         mode="popLayout"
@@ -90,7 +90,7 @@ export default function GithubButton() {
                             </MotionBox>
                         )}
                     </AnimatePresence>
-                </>
+                </span>
             }
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}

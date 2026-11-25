@@ -74,9 +74,9 @@ export function Variants() {
 export function DoubleClick() {
     return (
         <Editable.Root
+            activationMode="dblclick"
             defaultValue="Meow"
             placeholder="Enter an animal sound"
-            useDoubleClick
         >
             <Editable.Preview />
             <Editable.Input />
@@ -89,7 +89,7 @@ export function Controlled() {
 
     return (
         <Editable.Root
-            onChange={setValue}
+            onValueChange={setValue}
             value={value}
         >
             <Editable.Preview />
@@ -109,29 +109,27 @@ export function AccessingInternalState() {
             defaultValue="Meow"
             placeholder="Enter an animal sound"
         >
-            {({ isEditing }) => {
-                return (
-                    <>
-                        <Text>isEditing: {isEditing ? "true" : "false"}</Text>
-                        <Editable.Preview />
-                        <Editable.Input />
-                        <HStack>
-                            <Editable.EditButton />
-                            <Editable.SubmitButton />
-                            <Editable.CancelButton />
-                        </HStack>
-                    </>
-                );
-            }}
+            {({ editing }) => (
+                <>
+                    <Text>editing: {editing ? "true" : "false"}</Text>
+                    <Editable.Preview />
+                    <Editable.Input />
+                    <HStack>
+                        <Editable.EditButton />
+                        <Editable.SubmitButton />
+                        <Editable.CancelButton />
+                    </HStack>
+                </>
+            )}
         </Editable.Root>
     );
 }
 
-export function IsPreviewFocusable() {
+export function NonFocusablePreview() {
     return (
         <Editable.Root
+            activationMode="none"
             defaultValue="Meow"
-            isPreviewFocusable={false}
             placeholder="Enter an animal sound"
         >
             <Editable.Preview />
@@ -145,12 +143,12 @@ export function IsPreviewFocusable() {
     );
 }
 
-export function SubmitOnBlur() {
+export function SubmitEnterOnly() {
     return (
         <Editable.Root
             defaultValue="Meow"
             placeholder="Enter an animal sound"
-            submitOnBlur={false}
+            submitMode="enter"
         >
             <Editable.Preview />
             <Editable.Input />
@@ -163,12 +161,12 @@ export function SubmitOnBlur() {
     );
 }
 
-export function SelectAllOnFocus() {
+export function SelectOnFocusDisabled() {
     return (
         <Editable.Root
             defaultValue="Meow"
             placeholder="Enter an animal sound"
-            selectAllOnFocus={false}
+            selectOnFocus={false}
         >
             <Editable.Preview />
             <Editable.Input />

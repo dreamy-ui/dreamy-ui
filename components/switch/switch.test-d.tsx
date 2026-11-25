@@ -1,7 +1,6 @@
 import type { MotionProps } from "motion/react";
-import type { SwitchController } from "@ui-sdk/core/switch";
 import { assertType } from "vitest";
-import type { SwitchProps } from "./index";
+import { type SwitchController, type SwitchProps, createSwitchController } from "./index";
 
 type ExpectTrue<T extends true> = T;
 
@@ -16,7 +15,14 @@ assertType<boolean | undefined>({} as SwitchProps["readOnly"]);
 assertType<boolean | undefined>({} as SwitchProps["required"]);
 assertType<boolean | undefined>({} as SwitchProps["isInvalid"]);
 
-assertType<React.ReactNode | undefined>({} as SwitchProps["icon"]);
+assertType<React.ReactNode | ((state: never) => React.ReactNode) | undefined>(
+    {} as SwitchProps["icon"]
+);
+assertType<SwitchProps>({
+    icon: (state) => (state.checked ? "On" : "Off")
+});
+const _controller = createSwitchController();
+assertType<SwitchController>(_controller);
 assertType<MotionProps | undefined>({} as SwitchProps["thumbProps"]);
 
 assertType<string | undefined>({} as SwitchProps["name"]);

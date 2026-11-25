@@ -20,7 +20,7 @@ export function Base() {
 
             <Drawer.Root
                 open={open}
-                onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
+                onOpenChange={(nextOpen) => setOpen(nextOpen)}
             >
                 <Drawer.Overlay />
                 <Drawer.Content>
@@ -53,7 +53,7 @@ export function Variants() {
 
                 <Drawer.Root
                     open={open}
-                    onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
+                    onOpenChange={(nextOpen) => setOpen(nextOpen)}
                     variant={variant}
                 >
                     <Drawer.Overlay />
@@ -102,7 +102,7 @@ export function Placements() {
 
                 <Drawer.Root
                     open={open}
-                    onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
+                    onOpenChange={(nextOpen) => setOpen(nextOpen)}
                     placement={placement}
                 >
                     <Drawer.Overlay />
@@ -151,7 +151,7 @@ export function Sizes() {
 
                 <Drawer.Root
                     open={open}
-                    onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
+                    onOpenChange={(nextOpen) => setOpen(nextOpen)}
                     size={size}
                 >
                     <Drawer.Overlay />
@@ -198,7 +198,7 @@ export function SnapPointsBottomSheet() {
             <Drawer.Root
                 defaultSnapPoint={0.5}
                 open={open}
-                onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
+                onOpenChange={(nextOpen) => setOpen(nextOpen)}
                 placement="bottom"
                 snapPoints={[0.25, 0.5, 1]}
                 size="full"
@@ -234,7 +234,7 @@ export function ScrollBehaviorInside() {
 
             <Drawer.Root
                 open={open}
-                onOpenChange={({ open: nextOpen }) => setOpen(nextOpen)}
+                onOpenChange={(nextOpen) => setOpen(nextOpen)}
                 scrollBehavior="inside"
                 size="lg"
             >

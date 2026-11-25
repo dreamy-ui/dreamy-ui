@@ -29,21 +29,30 @@ export const tabs = defineSlotRecipe({
         },
         tab: {
             position: "relative",
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexShrink: 0,
+            whiteSpace: "nowrap",
+            gap: 1.5,
             minWidth: 20,
             borderRadius: "none",
+            cursor: "pointer",
+            fontWeight: "medium",
             WebkitTapHighlightColor: "transparent",
-            "&[data-unselected=true]": {
-                opacity: 1
+            "&[data-disabled]": {
+                opacity: 0.4,
+                cursor: "not-allowed"
             }
         },
         tabPanels: {},
         tabPanel: {},
         tabIndicator: {
             position: "absolute",
-            top: "var(--top)",
-            width: "var(--width)",
-            height: "var(--height)",
-            borderRadius: "inherit"
+            left: 0,
+            right: 0,
+            borderRadius: "inherit",
+            pointerEvents: "none"
         }
     },
     variants: {
@@ -68,6 +77,8 @@ export const tabs = defineSlotRecipe({
                 tabIndicator: {
                     backgroundColor: { _dark: "alpha.100", _light: "bg" },
                     borderRadius: "l2",
+                    top: 0,
+                    bottom: 0,
                     zIndex: -1
                 }
             },
@@ -111,6 +122,8 @@ export const tabs = defineSlotRecipe({
                 tabIndicator: {
                     backgroundColor: "{colors.alpha.100}",
                     borderRadius: "l2",
+                    top: 0,
+                    bottom: 0,
                     zIndex: -1
                 }
             }
@@ -192,8 +205,10 @@ export const tabs = defineSlotRecipe({
                 },
                 tabIndicator: {
                     left: "auto",
-                    height: "var(--height)",
+                    height: "100%",
                     right: "-1px",
+                    top: 0,
+                    bottom: 0,
                     width: "2px"
                 }
             }

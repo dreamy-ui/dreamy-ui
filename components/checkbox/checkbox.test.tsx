@@ -32,8 +32,8 @@ describe("Checkbox", () => {
     it("wires Field label and describedby, and expects Field invalid", async () => {
         render(
             <Field.Root
-                isInvalid
-                isRequired
+                invalid
+                required
             >
                 <Field.Label>Accept terms</Field.Label>
                 <Checkbox />

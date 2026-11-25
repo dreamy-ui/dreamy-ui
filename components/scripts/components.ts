@@ -447,7 +447,10 @@ export async function main() {
         };
     });
 
-    const registryCompositions = [...components, ...modules];
+    const registryCompositions: Array<{ path: string; data: RegistryFileData }> = [
+        ...components,
+        ...modules
+    ];
 
     const indexFile = {
         path: join(publicDir, "components", "index.json"),

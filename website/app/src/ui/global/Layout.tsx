@@ -4,6 +4,7 @@ import { TRANSITION_EASINGS } from "@dreamy-ui/react";
 import { type PropsWithChildren, useState } from "react";
 import { useLocation } from "react-router";
 import { useIsMobile } from "~/src/hooks/useIsMobile";
+import HeroBackdrop from "~/src/ui/pages/landing/HeroBackdrop";
 import BlurryGradients from "./BlurryGradients";
 import Footer from "./Footer";
 import Header from "./Header";
@@ -14,7 +15,9 @@ export default function AppLayout({ children }: PropsWithChildren) {
 
     const isMobile = useIsMobile();
 
-    const isDocs = useLocation().pathname.includes("/docs");
+    const { pathname } = useLocation();
+    const isDocs = pathname.includes("/docs");
+    const isLanding = pathname === "/";
 
     return (
         <>
@@ -24,13 +27,16 @@ export default function AppLayout({ children }: PropsWithChildren) {
                 }}
                 col
                 flex={1}
+                isolation={"isolate"}
                 minH={"100dvh"}
+                pos={"relative"}
                 transition={{
                     duration: 0.3,
                     ease: TRANSITION_EASINGS.easeInOut
                 }}
                 w={"full"}
             >
+                {isLanding && <HeroBackdrop />}
                 <Header
                     isMenuOpen={isMenuOpen}
                     setIsMenuOpen={setIsMenuOpen}

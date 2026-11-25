@@ -1,23 +1,59 @@
 "use client";
 
+import type { DreamyHostProps } from "@dreamy-ui/react";
 import {
-    Pagination as ArkPagination,
-    type PaginationEllipsisProps as ArkPaginationEllipsisProps,
-    type PaginationRootProps as ArkPaginationRootProps,
-    usePaginationContext
-} from "@ark-ui/react/pagination";
+    Pagination as UiSdkPagination,
+    PaginationEllipsis as UiSdkPaginationEllipsis,
+    PaginationFirst as UiSdkPaginationFirst,
+    PaginationItem as UiSdkPaginationItem,
+    PaginationLast as UiSdkPaginationLast,
+    PaginationLink as UiSdkPaginationLink,
+    PaginationList as UiSdkPaginationList,
+    PaginationNext as UiSdkPaginationNext,
+    PaginationPrevious as UiSdkPaginationPrevious,
+    type PaginationOptions,
+    type PaginationRangeItem,
+    createPaginationController
+} from "@ui-sdk/react/pagination";
 import * as m from "motion/react-m";
-import { createContext, useContext, useId, useMemo } from "react";
-import { type HTMLDreamyProps, createStyleContext, dreamy } from "styled-system/jsx";
-import { type PaginationVariantProps, pagination } from "styled-system/recipes";
+import type React from "react";
+import {
+    type CSSProperties,
+    type ReactElement,
+    type ReactNode,
+    createContext,
+    useContext,
+    useMemo
+} from "react";
+import { css, cx } from "styled-system/css";
+import {
+    type HTMLDreamyProps,
+    createStyleContext,
+    dreamy,
+    splitCssProps
+} from "styled-system/jsx";
+import {
+    type ButtonVariantProps,
+    type PaginationVariantProps,
+    button,
+    pagination
+} from "styled-system/recipes";
 import { Icon } from "../icon";
-import { IconButton, type IconButtonProps } from "../icon-button";
 
 const { withProvider, withContext } = createStyleContext(pagination, {
     forwardVariants: ["size"]
 });
 
-type PaginationTranslations = Required<NonNullable<ArkPaginationRootProps["translations"]>>;
+export { createPaginationController };
+
+export interface PaginationTranslations {
+    rootLabel: string;
+    firstTriggerLabel: string;
+    prevTriggerLabel: string;
+    nextTriggerLabel: string;
+    lastTriggerLabel: string;
+    itemLabel: (details: { page: number; pageCount: number }) => string;
+}
 
 const DEFAULT_TRANSLATIONS: PaginationTranslations = {
     rootLabel: "Pagination",
@@ -28,155 +64,261 @@ const DEFAULT_TRANSLATIONS: PaginationTranslations = {
     itemLabel: ({ page }) => `Page ${page}`
 };
 
-interface PaginationUIContextValue {
-    size: IconButtonProps["size"];
+export interface PaginationContextValue {
+    page: number;
+    pageCount: number;
+    items: PaginationRangeItem[];
+    pageSize: number;
+    total: number;
+}
+
+interface PaginationUIContextValue extends PaginationContextValue {
+    size: ButtonVariantProps["size"];
     translations: PaginationTranslations;
 }
 
 const PaginationUIContext = createContext<PaginationUIContextValue>({
     size: "md",
-    translations: DEFAULT_TRANSLATIONS
+    translations: DEFAULT_TRANSLATIONS,
+    page: 1,
+    pageCount: 1,
+    items: [1],
+    pageSize: 10,
+    total: 0
 });
 
 export interface PaginationRootProps
-    extends Omit<ArkPaginationRootProps, "type" | "getPageUrl">,
-        Omit<HTMLDreamyProps<"nav">, keyof ArkPaginationRootProps>,
-        PaginationVariantProps {}
+    extends PaginationOptions,
+        PaginationVariantProps,
+        DreamyHostProps<HTMLDreamyProps<"nav">, PaginationOptions, "size"> {
+    translations?: Partial<PaginationTranslations>;
+    children?: ReactNode;
+}
+
+type PaginationRootBaseProps = PaginationOptions &
+    PaginationVariantProps &
+    Omit<React.ComponentPropsWithoutRef<"nav">, keyof PaginationOptions | "size"> & {
+        translations?: Partial<PaginationTranslations>;
+        children?: ReactNode;
+    };
+
+function PaginationRoot(props: PaginationRootBaseProps) {
+    const {
+        size = "md",
+        translations: translationsProp,
+        page,
+        defaultPage,
+        onPageChange,
+        pageCount,
+        total,
+        pageSize,
+        siblings,
+        boundaries,
+        getHref,
+        controller,
+        debug,
+        "aria-label": ariaLabel,
+        className,
+        style,
+        children,
+        ...rest
+    } = props;
+
+    const translations = useMemo<PaginationTranslations>(
+        () => ({ ...DEFAULT_TRANSLATIONS, ...translationsProp }),
+        [translationsProp]
+    );
+    const [cssProps, domProps] = splitCssProps(rest);
+    const resolvedPageSize = pageSize ?? 10;
+
+    return (
+        <UiSdkPagination
+            {...(domProps as unknown as React.ComponentProps<typeof UiSdkPagination>)}
+            aria-label={(ariaLabel as string | undefined) ?? translations.rootLabel}
+            boundaries={boundaries}
+            className={cx(className as string | undefined, css(cssProps))}
+            controller={controller}
+            debug={debug}
+            defaultPage={defaultPage}
+            getHref={getHref}
+            onPageChange={onPageChange}
+            page={page}
+            pageCount={pageCount}
+            pageSize={pageSize}
+            siblings={siblings}
+            style={style as CSSProperties | undefined}
+            total={total}
+        >
+            {(state) => (
+                <PaginationUIContext.Provider
+                    value={{
+                        size: size as ButtonVariantProps["size"],
+                        translations,
+                        page: state.page,
+                        pageCount: state.pageCount,
+                        items: state.items,
+                        pageSize: resolvedPageSize,
+                        total: total ?? state.pageCount * resolvedPageSize
+                    }}
+                >
+                    <UiSdkPaginationList>{children}</UiSdkPaginationList>
+                </PaginationUIContext.Provider>
+            )}
+        </UiSdkPagination>
+    );
+}
 
 /**
- * Pagination component — navigate between pages of content.
+ * Pagination component — navigate between pages of content powered by UI SDK.
  *
  * @see Docs https://dreamy-ui.com/docs/components/pagination
  *
  * @example
  * ```tsx
- * <Pagination.Root count={100} pageSize={10}>
+ * <Pagination.Root total={100} pageSize={10}>
  *   <Pagination.PrevTrigger />
  *   <Pagination.Items />
  *   <Pagination.NextTrigger />
  * </Pagination.Root>
  * ```
  */
-export const Root = withProvider(function PaginationRoot(props: PaginationRootProps) {
-    const { size = "md", translations: translationsProp, ...rest } = props;
+export const Root: (props: PaginationRootProps) => React.JSX.Element = withProvider(
+    PaginationRoot,
+    "root",
+    {
+        // `page` is also a CSS property, so the style factory would strip it otherwise.
+        forwardProps: ["page"]
+    } as never
+) as (props: PaginationRootProps) => React.JSX.Element;
 
-    const translations = useMemo(
-        () => ({ ...DEFAULT_TRANSLATIONS, ...translationsProp }) as PaginationTranslations,
-        [translationsProp]
-    );
-
-    const uiContext = useMemo(
-        () => ({ size: size as PaginationUIContextValue["size"], translations }),
-        [size, translations]
-    );
-
-    return (
-        <PaginationUIContext.Provider value={uiContext}>
-            <ArkPagination.Root
-                translations={translations}
-                {...rest}
-            />
-        </PaginationUIContext.Provider>
-    );
-}, "root", {
-    // `page` is also a CSS property, so the style factory would strip it otherwise.
-    forwardProps: ["page"]
-});
-
-/**
- * Render prop component that exposes the Ark pagination API (`page`, `pages`, `setPage`, ...).
- */
-export const Context = ArkPagination.Context;
-
-export interface PaginationItemProps extends Omit<Partial<IconButtonProps>, "value" | "type"> {
-    /**
-     * The page value for this item
-     */
-    value: number;
+export interface PaginationContextProps {
+    children: (state: PaginationContextValue) => ReactNode;
 }
 
 /**
- * Pagination Item — a single page number button.
+ * Render prop component that exposes the current pagination state (`page`, `pageCount`, `items`, `pageSize`, `total`).
  */
-export const Item = withContext(function PaginationItem(props: PaginationItemProps) {
-    const { value, children, ...rest } = props;
-    const { size, translations } = useContext(PaginationUIContext);
-    const { page, totalPages } = usePaginationContext();
+export function Context({ children }: PaginationContextProps) {
+    const { page, pageCount, items, pageSize, total } = useContext(PaginationUIContext);
+    return <>{children({ page, pageCount, items, pageSize, total })}</>;
+}
+
+export interface PaginationItemProps
+    extends Omit<HTMLDreamyProps<"button">, "page" | "children" | "size"> {
+    /**
+     * The page number for this item (1-based).
+     */
+    page: number;
+    render?: ReactElement;
+    children?: ReactNode;
+}
+
+type PaginationItemBaseProps = Omit<React.ComponentPropsWithoutRef<"button">, "page" | "children" | "size"> & {
+    page: number;
+    render?: ReactElement;
+    children?: ReactNode;
+};
+
+/**
+ * Pagination Item — a single page number button or link.
+ */
+export const Item: (props: PaginationItemProps) => React.JSX.Element = withContext(
+    function PaginationItem(props: PaginationItemBaseProps) {
+    const { page: itemPage, render, children, className, style, ...rest } = props;
+    const { size, translations, pageCount } = useContext(PaginationUIContext);
+    const [cssProps, domProps] = splitCssProps(rest);
 
     return (
-        <ArkPagination.Item
-            asChild
-            type="page"
-            value={value}
-        >
-            <IconButton
-                aria-label={translations.itemLabel({ page: value, totalPages })}
-                size={size}
-                variant="ghost"
-                {...rest}
+        <UiSdkPaginationItem>
+            <UiSdkPaginationLink
+                aria-label={translations.itemLabel({ page: itemPage, pageCount })}
+                {...(domProps as unknown as React.ComponentProps<typeof UiSdkPaginationLink>)}
+                className={cx(
+                    button({ variant: "ghost", size }),
+                    className as string | undefined,
+                    css(cssProps)
+                )}
+                data-type="icon-button"
+                page={itemPage}
+                render={render}
+                style={style as CSSProperties | undefined}
             >
-                {children ?? value}
-                {page === value && <m.div data-part="indicator" />}
-            </IconButton>
-        </ArkPagination.Item>
+                {(state) => (
+                    <>
+                        {children ?? itemPage}
+                        {state.current && <m.div data-part="indicator" />}
+                    </>
+                )}
+            </UiSdkPaginationLink>
+        </UiSdkPaginationItem>
     );
-}, "item");
+}, "item", {
+    forwardProps: ["page"]
+} as never) as (props: PaginationItemProps) => React.JSX.Element;
 
-export interface PaginationEllipsisProps
-    extends Omit<HTMLDreamyProps<"span">, keyof ArkPaginationEllipsisProps>,
-        Partial<Pick<ArkPaginationEllipsisProps, "index">> {
-    children?: React.ReactNode;
+export interface PaginationEllipsisProps extends Omit<HTMLDreamyProps<"span">, "children"> {
+    children?: ReactNode;
 }
 
 /**
  * Pagination Ellipsis — indicates skipped pages.
  */
 export const Ellipsis = withContext(function PaginationEllipsis(props: PaginationEllipsisProps) {
-    const { children = "...", index, ...rest } = props;
-    const fallbackId = useId();
+    const { children = "…", className, style, ...rest } = props;
+    const [cssProps, domProps] = splitCssProps(rest);
 
     return (
-        <ArkPagination.Ellipsis
-            asChild
-            index={index ?? 0}
-        >
-            <dreamy.span
-                aria-hidden="true"
-                {...(index === undefined && { id: fallbackId })}
-                {...rest}
+        <UiSdkPaginationItem>
+            <UiSdkPaginationEllipsis
+                {...(domProps as unknown as React.ComponentProps<typeof UiSdkPaginationEllipsis>)}
+                className={cx(className as string | undefined, css(cssProps))}
+                style={style as CSSProperties | undefined}
             >
                 {children}
-            </dreamy.span>
-        </ArkPagination.Ellipsis>
+            </UiSdkPaginationEllipsis>
+        </UiSdkPaginationItem>
     );
 }, "ellipsis");
 
-export interface PaginationFirstTriggerProps extends Partial<IconButtonProps> {}
+export interface PaginationTriggerProps extends Omit<HTMLDreamyProps<"button">, "children" | "size"> {
+    render?: ReactElement;
+    children?: ReactNode;
+}
+
+export interface PaginationFirstTriggerProps extends PaginationTriggerProps {}
+export interface PaginationPrevTriggerProps extends PaginationTriggerProps {}
+export interface PaginationNextTriggerProps extends PaginationTriggerProps {}
+export interface PaginationLastTriggerProps extends PaginationTriggerProps {}
 
 /**
- * Pagination First Trigger - navigates to the first page.
+ * Pagination First Trigger — navigates to the first page.
  */
 export const FirstTrigger = withContext(function PaginationFirstTrigger(
     props: PaginationFirstTriggerProps
 ) {
-    const { children, ...rest } = props;
+    const { children, render, className, style, ...rest } = props;
     const { size, translations } = useContext(PaginationUIContext);
+    const [cssProps, domProps] = splitCssProps(rest);
 
     return (
-        <ArkPagination.FirstTrigger asChild>
-            <IconButton
+        <UiSdkPaginationItem>
+            <UiSdkPaginationFirst
                 aria-label={translations.firstTriggerLabel}
-                size={size}
-                variant="ghost"
-                {...rest}
+                {...(domProps as unknown as React.ComponentProps<typeof UiSdkPaginationFirst>)}
+                className={cx(
+                    button({ variant: "ghost", size }),
+                    className as string | undefined,
+                    css(cssProps)
+                )}
+                data-type="icon-button"
+                render={render}
+                style={style as CSSProperties | undefined}
             >
                 {children ?? <ChevronsLeftIcon />}
-            </IconButton>
-        </ArkPagination.FirstTrigger>
+            </UiSdkPaginationFirst>
+        </UiSdkPaginationItem>
     );
 }, "firstTrigger");
-
-export interface PaginationPrevTriggerProps extends Partial<IconButtonProps> {}
 
 /**
  * Pagination Prev Trigger — navigates to the previous page.
@@ -184,24 +326,29 @@ export interface PaginationPrevTriggerProps extends Partial<IconButtonProps> {}
 export const PrevTrigger = withContext(function PaginationPrevTrigger(
     props: PaginationPrevTriggerProps
 ) {
-    const { children, ...rest } = props;
+    const { children, render, className, style, ...rest } = props;
     const { size, translations } = useContext(PaginationUIContext);
+    const [cssProps, domProps] = splitCssProps(rest);
 
     return (
-        <ArkPagination.PrevTrigger asChild>
-            <IconButton
+        <UiSdkPaginationItem>
+            <UiSdkPaginationPrevious
                 aria-label={translations.prevTriggerLabel}
-                size={size}
-                variant="ghost"
-                {...rest}
+                {...(domProps as unknown as React.ComponentProps<typeof UiSdkPaginationPrevious>)}
+                className={cx(
+                    button({ variant: "ghost", size }),
+                    className as string | undefined,
+                    css(cssProps)
+                )}
+                data-type="icon-button"
+                render={render}
+                style={style as CSSProperties | undefined}
             >
                 {children ?? <ChevronLeftIcon />}
-            </IconButton>
-        </ArkPagination.PrevTrigger>
+            </UiSdkPaginationPrevious>
+        </UiSdkPaginationItem>
     );
 }, "prevTrigger");
-
-export interface PaginationNextTriggerProps extends Partial<IconButtonProps> {}
 
 /**
  * Pagination Next Trigger — navigates to the next page.
@@ -209,45 +356,57 @@ export interface PaginationNextTriggerProps extends Partial<IconButtonProps> {}
 export const NextTrigger = withContext(function PaginationNextTrigger(
     props: PaginationNextTriggerProps
 ) {
-    const { children, ...rest } = props;
+    const { children, render, className, style, ...rest } = props;
     const { size, translations } = useContext(PaginationUIContext);
+    const [cssProps, domProps] = splitCssProps(rest);
 
     return (
-        <ArkPagination.NextTrigger asChild>
-            <IconButton
+        <UiSdkPaginationItem>
+            <UiSdkPaginationNext
                 aria-label={translations.nextTriggerLabel}
-                size={size}
-                variant="ghost"
-                {...rest}
+                {...(domProps as unknown as React.ComponentProps<typeof UiSdkPaginationNext>)}
+                className={cx(
+                    button({ variant: "ghost", size }),
+                    className as string | undefined,
+                    css(cssProps)
+                )}
+                data-type="icon-button"
+                render={render}
+                style={style as CSSProperties | undefined}
             >
                 {children ?? <ChevronRightIcon />}
-            </IconButton>
-        </ArkPagination.NextTrigger>
+            </UiSdkPaginationNext>
+        </UiSdkPaginationItem>
     );
 }, "nextTrigger");
 
-export interface PaginationLastTriggerProps extends Partial<IconButtonProps> {}
-
 /**
- * Pagination Last Trigger - navigates to the last page.
+ * Pagination Last Trigger — navigates to the last page.
  */
 export const LastTrigger = withContext(function PaginationLastTrigger(
     props: PaginationLastTriggerProps
 ) {
-    const { children, ...rest } = props;
+    const { children, render, className, style, ...rest } = props;
     const { size, translations } = useContext(PaginationUIContext);
+    const [cssProps, domProps] = splitCssProps(rest);
 
     return (
-        <ArkPagination.LastTrigger asChild>
-            <IconButton
+        <UiSdkPaginationItem>
+            <UiSdkPaginationLast
                 aria-label={translations.lastTriggerLabel}
-                size={size}
-                variant="ghost"
-                {...rest}
+                {...(domProps as unknown as React.ComponentProps<typeof UiSdkPaginationLast>)}
+                className={cx(
+                    button({ variant: "ghost", size }),
+                    className as string | undefined,
+                    css(cssProps)
+                )}
+                data-type="icon-button"
+                render={render}
+                style={style as CSSProperties | undefined}
             >
                 {children ?? <ChevronsRightIcon />}
-            </IconButton>
-        </ArkPagination.LastTrigger>
+            </UiSdkPaginationLast>
+        </UiSdkPaginationItem>
     );
 }, "lastTrigger");
 
@@ -333,64 +492,54 @@ export interface PaginationPageTextProps extends HTMLDreamyProps<"span"> {
  */
 export function PageText(props: PaginationPageTextProps) {
     const { format = "compact", ...rest } = props;
-    const { page, totalPages, pageRange, count } = usePaginationContext();
+    const { page, pageCount, pageSize, total } = useContext(PaginationUIContext);
 
     const content = useMemo(() => {
         if (format === "short") {
-            return `${page} / ${totalPages}`;
+            return `${page} / ${pageCount}`;
         }
         if (format === "compact") {
-            return `${page} of ${totalPages}`;
+            return `${page} of ${pageCount}`;
         }
-        return `${pageRange.start + 1}-${pageRange.end} of ${count}`;
-    }, [format, page, totalPages, pageRange, count]);
+        const start = total === 0 ? 0 : (page - 1) * pageSize + 1;
+        const end = Math.min(page * pageSize, total);
+        return `${start}-${end} of ${total}`;
+    }, [format, page, pageCount, pageSize, total]);
 
-    return <dreamy.span {...rest}>{content}</dreamy.span>;
-}
-
-export interface PageItem {
-    /**
-     * The page number
-     */
-    value: number;
-    /**
-     * The type of the page item
-     */
-    type: "page";
+    return (
+        <UiSdkPaginationItem>
+            <dreamy.span {...rest}>{content}</dreamy.span>
+        </UiSdkPaginationItem>
+    );
 }
 
 export interface PaginationItemsProps {
     /**
-     * Render function for page items
+     * Render function for custom page item content.
      */
-    render?: (page: PageItem) => React.ReactNode;
+    render?: (page: number) => ReactNode;
 }
 
 /**
- * Pagination Items — automatically renders page items and ellipsis.
+ * Pagination Items — automatically renders page items and ellipses.
  */
 export function Items(props: PaginationItemsProps) {
     const { render } = props;
-    const { pages } = usePaginationContext();
+    const { items } = useContext(PaginationUIContext);
 
     return (
         <>
-            {pages.map((pageItem, index) => {
-                if (pageItem.type === "ellipsis") {
-                    return (
-                        <Ellipsis
-                            index={index}
-                            key={`ellipsis-${index}`}
-                        />
-                    );
+            {items.map((item) => {
+                if (typeof item !== "number") {
+                    return <Ellipsis key={item} />;
                 }
 
                 return (
                     <Item
-                        key={pageItem.value}
-                        value={pageItem.value}
+                        key={item}
+                        page={item}
                     >
-                        {render?.(pageItem)}
+                        {render?.(item)}
                     </Item>
                 );
             })}

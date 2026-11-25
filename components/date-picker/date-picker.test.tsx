@@ -1,6 +1,6 @@
 import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import * as Field from "../field";
 import { render } from "../test/render";
 import * as DatePicker from "./index";
@@ -10,10 +10,7 @@ describe("DatePicker", () => {
         const user = userEvent.setup();
 
         render(
-            <DatePicker.Root
-                defaultValue={new Date(2026, 0, 15)}
-                popoverProps={{ usePortal: false }}
-            >
+            <DatePicker.Root defaultValue={new Date(2026, 0, 15)}>
                 <DatePicker.Input />
                 <DatePicker.Content>
                     <DatePicker.Header />
@@ -31,7 +28,7 @@ describe("DatePicker", () => {
         expect(screen.getByRole("button", { name: "Previous month" })).toBeInTheDocument();
         expect(screen.getByRole("button", { name: "Next month" })).toBeInTheDocument();
         expect(
-            screen.getByRole("button", { name: /Thursday, January 15, 2026/i })
+            screen.getByRole("gridcell", { name: /Thursday, January 15, 2026/i })
         ).toBeInTheDocument();
         expect(screen.getByPlaceholderText("Select date")).toHaveValue("Jan 15, 2026");
     });
@@ -40,7 +37,7 @@ describe("DatePicker", () => {
         render(
             <Field.Root>
                 <Field.Label>Start date</Field.Label>
-                <DatePicker.Root popoverProps={{ usePortal: false }}>
+                <DatePicker.Root>
                     <DatePicker.Input />
                     <DatePicker.Content>
                         <DatePicker.Header />
@@ -57,7 +54,7 @@ describe("DatePicker", () => {
         const user = userEvent.setup();
 
         render(
-            <DatePicker.Root popoverProps={{ usePortal: false }}>
+            <DatePicker.Root>
                 <DatePicker.Input />
                 <DatePicker.Content>
                     <DatePicker.Header />
@@ -81,13 +78,14 @@ describe("DatePicker", () => {
         expect(input).toHaveFocus();
     });
 
-    it("selects a day with pointer activation", async () => {
+    it("selects a day with pointer activation and calls onValueChange", async () => {
         const user = userEvent.setup();
+        const onValueChange = vi.fn();
 
         render(
             <DatePicker.Root
                 defaultValue={new Date(2026, 6, 16)}
-                popoverProps={{ usePortal: false }}
+                onValueChange={onValueChange}
             >
                 <DatePicker.Input />
                 <DatePicker.Content>
@@ -103,11 +101,12 @@ describe("DatePicker", () => {
             expect(screen.getByRole("grid")).toBeInTheDocument();
         });
 
-        await user.click(screen.getByRole("button", { name: /Friday, July 17, 2026/i }));
+        await user.click(screen.getByRole("gridcell", { name: /Friday, July 17, 2026/i }));
 
         await waitFor(function assertValue() {
             expect(screen.getByPlaceholderText("Select date")).toHaveValue("Jul 17, 2026");
         });
+        expect(onValueChange).toHaveBeenCalledWith(new Date(2026, 6, 17));
     });
 
     it("disables out-of-range days via minDate/maxDate", async () => {
@@ -118,7 +117,6 @@ describe("DatePicker", () => {
                 defaultValue={new Date(2026, 0, 15)}
                 maxDate={new Date(2026, 0, 20)}
                 minDate={new Date(2026, 0, 10)}
-                popoverProps={{ usePortal: false }}
             >
                 <DatePicker.Input />
                 <DatePicker.Content>
@@ -134,22 +132,21 @@ describe("DatePicker", () => {
             expect(screen.getByRole("grid")).toBeInTheDocument();
         });
 
-        expect(screen.getByRole("button", { name: /Friday, January 9, 2026/i })).toHaveAttribute(
-            "aria-disabled",
-            "true"
-        );
-        expect(screen.getByRole("button", { name: /Wednesday, January 21, 2026/i })).toHaveAttribute(
+        expect(screen.getByRole("gridcell", { name: /Friday, January 9, 2026/i })).toHaveAttribute(
             "aria-disabled",
             "true"
         );
         expect(
-            screen.getByRole("button", { name: /Thursday, January 15, 2026/i })
+            screen.getByRole("gridcell", { name: /Wednesday, January 21, 2026/i })
+        ).toHaveAttribute("aria-disabled", "true");
+        expect(
+            screen.getByRole("gridcell", { name: /Thursday, January 15, 2026/i })
         ).not.toHaveAttribute("aria-disabled", "true");
     });
 
     it("forwards inputGroupProps and endAddonProps to input parts", () => {
         const { container } = render(
-            <DatePicker.Root popoverProps={{ usePortal: false }}>
+            <DatePicker.Root>
                 <DatePicker.Input
                     endAddonProps={{ id: "date-picker-end-addon" }}
                     inputGroupProps={{ w: "full" }}
